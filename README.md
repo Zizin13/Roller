@@ -8,3 +8,6 @@ Currently a glorified text editor. Todos:
 - add 3D visualization
 - add sign visual editor
 - add wizards for generating common stunts
+
+External dependencies used:
+Qt 5.15.2: https://download.qt.io/archive/qt/5.15/5.15.2/single/qt-everywhere-src-5.15.2.zip.mirrorlist

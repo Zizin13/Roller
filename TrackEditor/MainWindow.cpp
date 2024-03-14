@@ -119,6 +119,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(pbRevertStunt, &QPushButton::clicked, this, &CMainWindow::OnCancelStuntClicked);
   connect(pbRevertTexture, &QPushButton::clicked, this, &CMainWindow::OnCancelTextureClicked);
   connect(pbRevertInfo, &QPushButton::clicked, this, &CMainWindow::OnCancelInfoClicked);
+  connect(pbDelete, &QPushButton::clicked, this, &CMainWindow::OnDeleteChunkClicked);
   connect(pbDeleteTuple, &QPushButton::clicked, this, &CMainWindow::OnDeleteTuplesClicked);
   connect(pbDeleteStunt, &QPushButton::clicked, this, &CMainWindow::OnDeleteStuntClicked);
   connect(pbDeleteBack, &QPushButton::clicked, this, &CMainWindow::OnDeleteBackClicked);
@@ -531,6 +532,29 @@ void CMainWindow::OnCancelTextureClicked()
 void CMainWindow::OnCancelInfoClicked()
 {
   RevertInfo();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnDeleteChunkClicked()
+{
+  if (p->m_track.m_chunkAy.empty()) return;
+  if (sbSelChunksFrom->value() > sbSelChunksTo->value() || sbSelChunksTo->value() > p->m_track.m_chunkAy.size()) {
+    assert(0);
+    return;
+  }
+  p->m_track.m_chunkAy.erase(
+    p->m_track.m_chunkAy.begin() + sbSelChunksFrom->value(), 
+    p->m_track.m_chunkAy.begin() + sbSelChunksTo->value() + 1);
+
+  g_pMainWindow->LogMessage("Deleted geometry chunk");
+  sbSelChunksFrom->blockSignals(true);
+  sbSelChunksTo->blockSignals(true);
+  UpdateWindow();
+  sbSelChunksTo->setValue(sbSelChunksFrom->value());
+  sbSelChunksFrom->blockSignals(false);
+  sbSelChunksTo->blockSignals(false);
+  UpdateGeometryEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1128,10 +1152,12 @@ void CMainWindow::UpdateInfoSelection()
 void CMainWindow::UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue)
 {
   pLineEdit->blockSignals(true);
-  pLineEdit->setText(sValue);
   if (sValue.compare(MIXED_DATA) == 0) {
-    pLineEdit->setStyleSheet("background-color: rgb(255,0,0)");
+    pLineEdit->setText("");
+    pLineEdit->setPlaceholderText(sValue);
+    //pLineEdit->setStyleSheet("background-color: rgb(255,0,0)");
   } else {
+    pLineEdit->setText(sValue);
     pLineEdit->setStyleSheet("");
   }
   pLineEdit->blockSignals(false);
@@ -1145,7 +1171,11 @@ bool CMainWindow::UpdateLEEditMode(QLineEdit *pLineEdit, const QString &sValue, 
   if (bNew) {
     pLineEdit->setStyleSheet("background-color: rgb(0,255,0)");
   } else if (bEditMode) {
-    pLineEdit->setStyleSheet("background-color: rgb(255,255,0)");
+    if (pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) == 0) {
+      pLineEdit->setStyleSheet("");
+    } else {
+      pLineEdit->setStyleSheet("background-color: rgb(255,255,0)");
+    }
   } else {
     pLineEdit->setStyleSheet("");
   }
@@ -1156,6 +1186,8 @@ bool CMainWindow::UpdateLEEditMode(QLineEdit *pLineEdit, const QString &sValue, 
 
 void CMainWindow::RevertGeometry()
 {
+  pbDelete->setEnabled(!p->m_track.m_chunkAy.empty());
+
   UpdateLEWithSelectionValue(leLShoulderWidth, p->sLeftShoulderWidth);
   UpdateLEWithSelectionValue(leLLaneWidth, p->sLeftLaneWidth);
   UpdateLEWithSelectionValue(leRLaneWidth, p->sRightLaneWidth);

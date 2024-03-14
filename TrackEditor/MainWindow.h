@@ -40,6 +40,7 @@ protected slots:
   void OnCancelStuntClicked();
   void OnCancelTextureClicked();
   void OnCancelInfoClicked();
+  void OnDeleteChunkClicked();
   void OnDeleteTuplesClicked();
   void OnDeleteStuntClicked();
   void OnDeleteBackClicked();

@@ -25,15 +25,20 @@ protected slots:
   void OnExportMangled();
   void OnDebug();
   void OnAbout();
+  void OnEditTabChanged(int iIndex);
   void OnSelChunksFromChanged(int iValue);
   void OnSelChunksToChanged(int iValue);
+  void OnSelectedTupleChanged(int iValue);
   void OnToChecked(bool bChecked);
   void OnApplyClicked();
+  void OnApplyTupleClicked();
   void OnCancelClicked();
+  void OnCancelTupleClicked();
   void OnEditLSurface();
   void OnEditCSurface();
   void OnEditRSurface();
   void UpdateGeometryEditMode();
+  void UpdateTuplesEditMode();
 
 private:
   void LoadSettings();
@@ -41,9 +46,11 @@ private:
   bool SaveChangesAndContinue();
   void UpdateWindow();
   void UpdateGeometrySelection();
+  void UpdateTupleSelection();
   void UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue);
   bool UpdateLEEditMode(QLineEdit *pLineEdit, const QString &sValue);
   void RevertGeometry();
+  void RevertTuples();
 
   CMainWindowPrivate *p;
   bool m_bUnsavedChanges;

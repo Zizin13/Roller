@@ -149,6 +149,7 @@ public:
   bool LoadTrack(const QString &sFilename);
   bool SaveTrack(const QString &sFilename);
   void GetGeometryCursorPos(int iStartIndex, int iEndIndex, int &iStartCursorPos, int &iEndCursorPos);
+  void GetTextureCursorPos(int iKey, int &iStartCursorPos, int &iEndCursorPos);
   void GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     , QString &sLeftShoulderWidth, QString &sLeftLaneWidth, QString &sRightLaneWidth, QString &sRightShoulderWidth
     , QString &sUnk1, QString &sUnk2, QString &sUnk3

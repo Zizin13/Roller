@@ -54,6 +54,11 @@ public:
   QString sStuntTimeFlat;
   QString sStuntExpandsContracts;
   QString sStuntBulge;
+
+  //selected texture values
+  QString sTex;
+  QString sBld;
+  QString sBackVal;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -95,11 +100,14 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(pbApply, &QPushButton::clicked, this, &CMainWindow::OnApplyClicked);
   connect(pbApplyTuple, &QPushButton::clicked, this, &CMainWindow::OnApplyTupleClicked);
   connect(pbApplyStunt, &QPushButton::clicked, this, &CMainWindow::OnApplyStuntClicked);
+  connect(pbApplyTexture, &QPushButton::clicked, this, &CMainWindow::OnApplyTextureClicked);
   connect(pbCancel, &QPushButton::clicked, this, &CMainWindow::OnCancelClicked);
   connect(pbRevertTuple, &QPushButton::clicked, this, &CMainWindow::OnCancelTupleClicked);
   connect(pbRevertStunt, &QPushButton::clicked, this, &CMainWindow::OnCancelStuntClicked);
+  connect(pbRevertTexture, &QPushButton::clicked, this, &CMainWindow::OnCancelTextureClicked);
   connect(pbDeleteTuple, &QPushButton::clicked, this, &CMainWindow::OnDeleteTuplesClicked);
   connect(pbDeleteStunt, &QPushButton::clicked, this, &CMainWindow::OnDeleteStuntClicked);
+  connect(pbDeleteBack, &QPushButton::clicked, this, &CMainWindow::OnDeleteBackClicked);
   connect(pbEditLSurface, &QPushButton::clicked, this, &CMainWindow::OnEditLSurface);
   connect(pbEditCSurface, &QPushButton::clicked, this, &CMainWindow::OnEditCSurface);
   connect(pbEditRSurface, &QPushButton::clicked, this, &CMainWindow::OnEditRSurface);
@@ -188,6 +196,11 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leStuntExpandContract, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
   connect(leStuntBulge, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
 
+  connect(leTex, &QLineEdit::textChanged, this, &CMainWindow::UpdateTexturesEditMode);
+  connect(leBld, &QLineEdit::textChanged, this, &CMainWindow::UpdateTexturesEditMode);
+  connect(leBackIndex, &QLineEdit::textChanged, this, &CMainWindow::OnBackIndexChanged);
+  connect(leBackVal, &QLineEdit::textChanged, this, &CMainWindow::UpdateTexturesEditMode);
+
   //open window
   LoadSettings();
 }
@@ -245,6 +258,8 @@ void CMainWindow::OnLoadTrack()
       leLVal->setText(QString::number(p->m_track.m_tupleMap.begin()->first));
     if (!p->m_track.m_stuntMap.empty())
       leStuntIndex->setText(QString::number(p->m_track.m_stuntMap.begin()->first));
+    if (!p->m_track.m_backsMap.empty())
+      leBackIndex->setText(QString::number(p->m_track.m_backsMap.begin()->first));
     m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
     m_sTrackFile = sFilename;
     m_bUnsavedChanges = false;
@@ -422,6 +437,20 @@ void CMainWindow::OnApplyStuntClicked()
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::OnApplyTextureClicked()
+{
+  //update value
+  p->m_track.m_backsMap[leBackIndex->text().toInt()] = leBackVal->text().toInt();
+  p->m_track.m_sTextureFile = leTex->text();
+  p->m_track.m_sBuildingFile = leBld->text();
+
+  m_bUnsavedChanges = true;
+  g_pMainWindow->LogMessage("Applied changes to tuples");
+  UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CMainWindow::OnCancelClicked()
 {
   RevertGeometry();
@@ -439,6 +468,17 @@ void CMainWindow::OnCancelTupleClicked()
 void CMainWindow::OnCancelStuntClicked()
 {
   RevertStunts();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnCancelTextureClicked()
+{
+  RevertBacks();
+  p->sTex = p->m_track.m_sTextureFile;
+  p->sBld = p->m_track.m_sBuildingFile;
+  UpdateLEWithSelectionValue(leTex, p->sTex);
+  UpdateLEWithSelectionValue(leBld, p->sBld);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -479,6 +519,26 @@ void CMainWindow::OnDeleteStuntClicked()
   g_pMainWindow->LogMessage("Deleted stunt");
   UpdateWindow();
   UpdateStuntsEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnDeleteBackClicked()
+{
+  //delete value from map
+  CTupleMap::iterator it = p->m_track.m_backsMap.find(leBackIndex->text().toInt());
+  if (it != p->m_track.m_backsMap.end()) {
+    it = p->m_track.m_backsMap.erase(it);
+    if (it != p->m_track.m_backsMap.end()) {
+      leBackIndex->setText(QString::number(it->first));
+    } else if (!p->m_track.m_backsMap.empty()) {
+      --it;
+      leBackIndex->setText(QString::number(it->first));
+    }
+  }
+  g_pMainWindow->LogMessage("Deleted back");
+  UpdateWindow();
+  UpdateTexturesEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -639,6 +699,31 @@ void CMainWindow::UpdateStuntsEditMode()
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::OnBackIndexChanged()
+{
+  UpdateBackSelection();
+  UpdateTexturesEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::UpdateTexturesEditMode()
+{
+  CTupleMap::iterator it = p->m_track.m_backsMap.find(leBackIndex->text().toInt());
+  bool bNew = (it == p->m_track.m_backsMap.end());
+
+  bool bLValEdited = false;
+  bLValEdited |= UpdateLEEditMode(leBackVal, p->sBackVal, bNew);
+  bLValEdited |= UpdateLEEditMode(leTex, p->sTex);
+  bLValEdited |= UpdateLEEditMode(leBld, p->sBld);
+
+  bool bEditMode = bNew || bLValEdited;
+  pbApplyTexture->setEnabled(bEditMode);
+  pbRevertTexture->setEnabled(bLValEdited);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CMainWindow::LoadSettings()
 {
   QSettings settings(m_sSettingsFile, QSettings::IniFormat);
@@ -792,7 +877,23 @@ void CMainWindow::UpdateWindow()
       break;
     case 3: //TEXTURES
     {
-      txData->appendPlainText("todo");
+      leBacksCount->setText(QString::number(p->m_track.m_backsMap.size()));
+      //stuff data
+      txData->appendPlainText("TEX:" + p->m_track.m_sTextureFile);
+      txData->appendPlainText("BLD:" + p->m_track.m_sBuildingFile);
+      CTupleMap::iterator it = p->m_track.m_backsMap.begin();
+      for (; it != p->m_track.m_backsMap.end(); ++it) {
+        char szLine[20];
+        snprintf(szLine, sizeof(szLine), "%d %d", it->first, it->second);
+        txData->appendPlainText(szLine);
+      }
+
+      //update selection
+      UpdateBackSelection();
+      p->sTex = p->m_track.m_sTextureFile;
+      p->sBld = p->m_track.m_sBuildingFile;
+      UpdateLEWithSelectionValue(leTex, p->sTex);
+      UpdateLEWithSelectionValue(leBld, p->sBld);
     }
       break;
     case 4: //INFO
@@ -888,6 +989,31 @@ void CMainWindow::UpdateStuntSelection()
   txData->setTextCursor(c);
 
   RevertStunts();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::UpdateBackSelection()
+{
+  //update values in edit window
+  int i = 0;
+  CTupleMap::iterator it = p->m_track.m_backsMap.begin();
+  for (; it != p->m_track.m_backsMap.end(); ++it, ++i) {
+    if (leBackIndex->text().toInt() == it->first) {
+      p->sBackVal = QString::number(it->second);
+      break;
+    }
+  }
+
+  //update view window selection
+  int iStart = 0, iEnd = 0;
+  p->m_track.GetTextureCursorPos(leBackIndex->text().toInt(), iStart, iEnd);
+  QTextCursor c = txData->textCursor();
+  c.setPosition(iStart);
+  c.setPosition(iEnd, QTextCursor::KeepAnchor);
+  txData->setTextCursor(c);
+
+  RevertBacks();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1045,6 +1171,25 @@ void CMainWindow::RevertStunts()
 
   pbApplyStunt->setEnabled(false);
   pbRevertStunt->setEnabled(false);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::RevertBacks()
+{
+  CTupleMap::iterator it = p->m_track.m_backsMap.find(leBackIndex->text().toInt());
+  if (it == p->m_track.m_backsMap.end()) {
+    leBackIndex->setStyleSheet("background-color: rgb(0,255,0)");
+    pbDeleteBack->setEnabled(false);
+  } else {
+    leBackIndex->setStyleSheet("");
+    pbDeleteBack->setEnabled(true);
+  }
+
+  UpdateLEWithSelectionValue(leBackVal, p->sBackVal);
+
+  pbApplyTexture->setEnabled(false);
+  pbRevertTexture->setEnabled(false);
 }
 
 //-------------------------------------------------------------------------------------------------

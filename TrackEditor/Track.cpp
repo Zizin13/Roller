@@ -340,6 +340,35 @@ void CTrack::GetGeometryCursorPos(int iStartIndex, int iEndIndex, int &iStartCur
 
 //-------------------------------------------------------------------------------------------------
 
+void CTrack::GetTextureCursorPos(int iKey, int &iStartCursorPos, int &iEndCursorPos)
+{
+  iStartCursorPos = 0;
+  iEndCursorPos = 0;
+  if (m_backsMap.empty()) return;
+  CTupleMap::iterator it = m_backsMap.find(iKey);
+  if (it == m_backsMap.end())
+    return;
+  
+  QString sTex = "TEX:";
+  QString sBld = "BLD:";
+  iEndCursorPos = sTex.length() + sBld.length() + m_sTextureFile.length() + m_sBuildingFile.length() + 2;
+  it = m_backsMap.begin();
+  for (; it != m_backsMap.end(); ++it) {
+    iStartCursorPos = iEndCursorPos;
+
+    char szLine[20];
+    snprintf(szLine, sizeof(szLine), "%d %d", it->first, it->second);
+    iEndCursorPos += (int)strlen(szLine) + 1;
+
+    if (it->first == iKey) {
+      break;
+    }
+  };
+  --iEndCursorPos;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     , QString &sLeftShoulderWidth, QString &sLeftLaneWidth, QString &sRightLaneWidth, QString &sRightShoulderWidth
     , QString &sUnk1, QString &sUnk2, QString &sUnk3

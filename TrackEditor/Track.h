@@ -12,22 +12,22 @@
 struct tTrackHeader
 {
   int iNumChunks;
-  long long llUnk1;
-  long long llUnk2;
-  long long llUnk3;
+  int iUnk1;
+  int iUnk2;
+  int iUnk3;
 };
 //-------------------------------------------------------------------------------------------------
 struct tGeometryChunk
 {
   std::string sString;
   //line 1
-  unsigned short unLeftShoulderWidth;
-  unsigned short unLeftLaneWidth;
-  unsigned short unRightLaneWidth;
-  unsigned short unRightShoulderWidth;
-  long long llUnk1; //todo
-  long long llUnk2; //todo
-  long long llUnk3; //todo
+  int iLeftShoulderWidth;
+  int iLeftLaneWidth;
+  int iRightLaneWidth;
+  int iRightShoulderWidth;
+  int iUnk1; //todo
+  int iUnk2; //todo
+  int iUnk3; //todo
   float fYaw;
   float fPitch;
   float fRoll;
@@ -38,61 +38,61 @@ struct tGeometryChunk
   unsigned short unTrackGrip;
   unsigned short unLeftShoulderGrip;
   unsigned short unRightShoulderGrip;
-  long long llUnk4; //todo
-  long long llUnk5; //todo
-  long long llUnk6; //todo
-  long long llUnk7; //todo
-  long long llUnk8; //todo
+  int iUnk4; //todo
+  int iUnk5; //todo
+  int iUnk6; //todo
+  int iUnk7; //todo
+  int iUnk8; //todo
   //line 2
-  unsigned long ulLeftSurfaceType;
-  unsigned long ulCenterSurfaceType;
-  unsigned long ulRightSurfaceType;
-  long long llUnk9; //todo
-  long long llUnk10; //todo
-  long long llUnk11; //todo
-  long long llUnk12; //todo
-  long long llUnk13; //todo
-  long long llUnk14; //todo
-  long long llUnk15; //todo
-  long long llUnk16; //todo
-  long long llUnk17; //todo
-  long long llUnk18; //todo
-  long long llUnk19; //todo
-  long long llUnk20; //todo
+  int iLeftSurfaceType;
+  int iCenterSurfaceType;
+  int iRightSurfaceType;
+  int iUnk9; //todo
+  int iUnk10; //todo
+  int iUnk11; //todo
+  int iUnk12; //todo
+  int iUnk13; //todo
+  int iUnk14; //todo
+  int iUnk15; //todo
+  int iUnk16; //todo
+  int iUnk17; //todo
+  int iUnk18; //todo
+  int iUnk19; //todo
+  int iUnk20; //todo
   float fUnk1; //todo
   float fUnk2; //todo
   float fUnk3; //todo
   //line 3
-  long long llUnk21; //todo
-  long long llUnk22; //todo
-  long long llUnk23; //todo
-  long long llUnk24; //todo
-  long long llUnk25; //todo
-  long long llUnk26; //todo
-  long long llUnk27; //todo
-  long long llUnk28; //todo
-  long long llUnk29; //todo
-  long long llUnk30; //todo
-  long long llUnk31; //todo
-  long long llUnk32; //todo
-  long long llUnk33; //todo
-  long long llUnk34; //todo
-  long long llUnk35; //todo
-  long long llUnk36; //todo
-  long long llUnk37; //todo
-  long long llUnk38; //todo
-  long long llUnk39; //todo
-  long long llUnk40; //todo
-  long long llUnk41; //todo
-  long long llUnk42; //todo
-  long long llUnk43; //todo
-  long long llUnk44; //todo
-  long long llUnk45; //todo
-  long long llUnk46; //todo
-  long long llUnk47; //todo
-  long long llUnk48; //todo
-  long long llUnk49; //todo
-  long long llUnk50; //todo
+  int iUnk21; //todo
+  int iUnk22; //todo
+  int iUnk23; //todo
+  int iUnk24; //todo
+  int iUnk25; //todo
+  int iUnk26; //todo
+  int iUnk27; //todo
+  int iUnk28; //todo
+  int iUnk29; //todo
+  int iUnk30; //todo
+  int iUnk31; //todo
+  int iUnk32; //todo
+  int iUnk33; //todo
+  int iUnk34; //todo
+  int iUnk35; //todo
+  int iUnk36; //todo
+  int iUnk37; //todo
+  int iUnk38; //todo
+  int iUnk39; //todo
+  int iUnk40; //todo
+  int iUnk41; //todo
+  int iUnk42; //todo
+  int iUnk43; //todo
+  int iUnk44; //todo
+  int iUnk45; //todo
+  int iUnk46; //todo
+  int iUnk47; //todo
+  int iUnk48; //todo
+  int iUnk49; //todo
+  int iUnk50; //todo
 };
 typedef std::vector<tGeometryChunk> CChunkAy;
 //-------------------------------------------------------------------------------------------------

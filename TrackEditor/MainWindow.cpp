@@ -1032,7 +1032,7 @@ void CMainWindow::UpdateWindow()
       for (; it != p->m_track.m_tupleMap.end(); ++it) {
         char szLine[20];
         memset(szLine, 0, sizeof(szLine));
-        snprintf(szLine, sizeof(szLine), "%5d%7d", it->first, it->second);
+        snprintf(szLine, sizeof(szLine), " %4d %6d", it->first, it->second);
         txData->appendPlainText(szLine);
       }
 
@@ -1049,7 +1049,7 @@ void CMainWindow::UpdateWindow()
       for (; it != p->m_track.m_stuntMap.end(); ++it) {
         char szLine[70];
         memset(szLine, 0, sizeof(szLine));
-        snprintf(szLine, sizeof(szLine), "%5d%7d%7d%7d%7d%7d%7d%7d%7d%7d", 
+        snprintf(szLine, sizeof(szLine), " %4d %6d %6d %6d %6d %6d %6d %6d %6d %6d", 
                  it->first, it->second.iScaleFactor, it->second.iAngle, it->second.iUnknown,
                  it->second.iTimingGroup, it->second.iHeight, it->second.iTimeBulging,
                  it->second.iTimeFlat, it->second.iSmallerExpandsLargerContracts, it->second.iBulge);
@@ -1090,12 +1090,12 @@ void CMainWindow::UpdateWindow()
       txData->appendPlainText(QString::number(p->m_track.m_raceInfo.iTrackNumber));
       char szLine[50];
       memset(szLine, 0, sizeof(szLine));
-      snprintf(szLine, sizeof(szLine), "%4d%5d%5d%5d%5d%5d",
+      snprintf(szLine, sizeof(szLine), "%4d %4d %4d %4d %4d %4d",
                p->m_track.m_raceInfo.iImpossibleLaps, p->m_track.m_raceInfo.iHardLaps, p->m_track.m_raceInfo.iTrickyLaps,
                p->m_track.m_raceInfo.iMediumLaps, p->m_track.m_raceInfo.iEasyLaps, p->m_track.m_raceInfo.iGirlieLaps);
       txData->appendPlainText(szLine);
       memset(szLine, 0, sizeof(szLine));
-      snprintf(szLine, sizeof(szLine), "%.2f%5d %.2f",
+      snprintf(szLine, sizeof(szLine), "%.2f %4d %.2f",
                p->m_track.m_raceInfo.fTrackMapSize, p->m_track.m_raceInfo.iTrackMapFidelity, p->m_track.m_raceInfo.fUnknown);
       txData->appendPlainText(szLine);
 

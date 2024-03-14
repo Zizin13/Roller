@@ -33,6 +33,7 @@ CTrack::~CTrack()
 void CTrack::ClearData()
 {
   memset(&m_header, 0, sizeof(m_header));
+  m_header.iUnk3 = 2048;
   m_chunkAy.clear();
   m_tupleMap.clear();
   m_stuntMap.clear();
@@ -70,9 +71,9 @@ bool CTrack::LoadTrack(const QString &sFilename)
         if (slLine.count() == HEADER_ELEMENT_COUNT) {
           //found header
           m_header.iNumChunks = slLine[0].toInt();
-          m_header.llUnk1 = slLine[1].toInt();
-          m_header.llUnk2 = slLine[2].toInt();
-          m_header.llUnk3 = slLine[3].toInt();
+          m_header.iUnk1 = slLine[1].toInt();
+          m_header.iUnk2 = slLine[2].toInt();
+          m_header.iUnk3 = slLine[3].toInt();
           section = GEOMETRY;
         }
         break;
@@ -97,13 +98,13 @@ bool CTrack::LoadTrack(const QString &sFilename)
             //start new chunk
             memset(&currChunk, 0, sizeof(currChunk));
             //process line 1
-            currChunk.unLeftShoulderWidth = slLine[0].toUShort();
-            currChunk.unLeftLaneWidth = slLine[1].toUShort();
-            currChunk.unRightLaneWidth = slLine[2].toUShort();
-            currChunk.unRightShoulderWidth = slLine[3].toUShort();
-            currChunk.llUnk1 = slLine[4].toLongLong();
-            currChunk.llUnk2 = slLine[5].toLongLong();
-            currChunk.llUnk3 = slLine[6].toLongLong();
+            currChunk.iLeftShoulderWidth = slLine[0].toInt();
+            currChunk.iLeftLaneWidth = slLine[1].toInt();
+            currChunk.iRightLaneWidth = slLine[2].toInt();
+            currChunk.iRightShoulderWidth = slLine[3].toInt();
+            currChunk.iUnk1 = slLine[4].toInt();
+            currChunk.iUnk2 = slLine[5].toInt();
+            currChunk.iUnk3 = slLine[6].toInt();
             currChunk.fYaw = slLine[7].toFloat();
             currChunk.fPitch = slLine[8].toFloat();
             currChunk.fRoll = slLine[9].toFloat();
@@ -114,11 +115,11 @@ bool CTrack::LoadTrack(const QString &sFilename)
             currChunk.unTrackGrip = slLine[14].toUShort();
             currChunk.unLeftShoulderGrip = slLine[15].toUShort();
             currChunk.unRightShoulderGrip = slLine[16].toUShort();
-            currChunk.llUnk4 = slLine[17].toLongLong();
-            currChunk.llUnk5 = slLine[18].toLongLong();
-            currChunk.llUnk6 = slLine[19].toLongLong();
-            currChunk.llUnk7 = slLine[20].toLongLong();
-            currChunk.llUnk8 = slLine[21].toLongLong();
+            currChunk.iUnk4 = slLine[17].toInt();
+            currChunk.iUnk5 = slLine[18].toInt();
+            currChunk.iUnk6 = slLine[19].toInt();
+            currChunk.iUnk7 = slLine[20].toInt();
+            currChunk.iUnk8 = slLine[21].toInt();
             //inc chunk index
             ++iChunkLine;
           }
@@ -130,21 +131,21 @@ bool CTrack::LoadTrack(const QString &sFilename)
             bSuccess = false;
           }
           //process line 2
-          currChunk.ulLeftSurfaceType = slLine[0].toULong();
-          currChunk.ulCenterSurfaceType = slLine[1].toULong();
-          currChunk.ulRightSurfaceType = slLine[2].toULong();
-          currChunk.llUnk9 = slLine[3].toLongLong();
-          currChunk.llUnk10 = slLine[4].toLongLong();
-          currChunk.llUnk11 = slLine[5].toLongLong();
-          currChunk.llUnk12 = slLine[6].toLongLong();
-          currChunk.llUnk13 = slLine[7].toLongLong();
-          currChunk.llUnk14 = slLine[8].toLongLong();
-          currChunk.llUnk15 = slLine[9].toLongLong();
-          currChunk.llUnk16 = slLine[10].toLongLong();
-          currChunk.llUnk17 = slLine[11].toLongLong();
-          currChunk.llUnk18 = slLine[12].toLongLong();
-          currChunk.llUnk19 = slLine[13].toLongLong();
-          currChunk.llUnk20 = slLine[14].toLongLong();
+          currChunk.iLeftSurfaceType = slLine[0].toInt();
+          currChunk.iCenterSurfaceType = slLine[1].toInt();
+          currChunk.iRightSurfaceType = slLine[2].toInt();
+          currChunk.iUnk9 = slLine[3].toInt();
+          currChunk.iUnk10 = slLine[4].toInt();
+          currChunk.iUnk11 = slLine[5].toInt();
+          currChunk.iUnk12 = slLine[6].toInt();
+          currChunk.iUnk13 = slLine[7].toInt();
+          currChunk.iUnk14 = slLine[8].toInt();
+          currChunk.iUnk15 = slLine[9].toInt();
+          currChunk.iUnk16 = slLine[10].toInt();
+          currChunk.iUnk17 = slLine[11].toInt();
+          currChunk.iUnk18 = slLine[12].toInt();
+          currChunk.iUnk19 = slLine[13].toInt();
+          currChunk.iUnk20 = slLine[14].toInt();
           currChunk.fUnk1 = slLine[15].toFloat();
           currChunk.fUnk2 = slLine[16].toFloat();
           currChunk.fUnk3 = slLine[17].toFloat();
@@ -157,36 +158,36 @@ bool CTrack::LoadTrack(const QString &sFilename)
             bSuccess = false;
           }
           //process line 3
-          currChunk.llUnk21 = slLine[0].toULong();
-          currChunk.llUnk22 = slLine[1].toULong();
-          currChunk.llUnk23 = slLine[2].toULong();
-          currChunk.llUnk24 = slLine[3].toULong();
-          currChunk.llUnk25 = slLine[4].toULong();
-          currChunk.llUnk26 = slLine[5].toULong();
-          currChunk.llUnk27 = slLine[6].toULong();
-          currChunk.llUnk28 = slLine[7].toULong();
-          currChunk.llUnk29 = slLine[8].toULong();
-          currChunk.llUnk30 = slLine[9].toULong();
-          currChunk.llUnk31 = slLine[10].toULong();
-          currChunk.llUnk32 = slLine[11].toULong();
-          currChunk.llUnk33 = slLine[12].toULong();
-          currChunk.llUnk34 = slLine[13].toULong();
-          currChunk.llUnk35 = slLine[14].toULong();
-          currChunk.llUnk36 = slLine[15].toULong();
-          currChunk.llUnk37 = slLine[16].toULong();
-          currChunk.llUnk38 = slLine[17].toULong();
-          currChunk.llUnk39 = slLine[18].toULong();
-          currChunk.llUnk40 = slLine[19].toULong();
-          currChunk.llUnk41 = slLine[20].toULong();
-          currChunk.llUnk42 = slLine[21].toULong();
-          currChunk.llUnk43 = slLine[22].toULong();
-          currChunk.llUnk44 = slLine[23].toULong();
-          currChunk.llUnk45 = slLine[24].toULong();
-          currChunk.llUnk46 = slLine[25].toULong();
-          currChunk.llUnk47 = slLine[26].toULong();
-          currChunk.llUnk48 = slLine[27].toULong();
-          currChunk.llUnk49 = slLine[28].toULong();
-          currChunk.llUnk50 = slLine[29].toULong();
+          currChunk.iUnk21 = slLine[0].toInt();
+          currChunk.iUnk22 = slLine[1].toInt();
+          currChunk.iUnk23 = slLine[2].toInt();
+          currChunk.iUnk24 = slLine[3].toInt();
+          currChunk.iUnk25 = slLine[4].toInt();
+          currChunk.iUnk26 = slLine[5].toInt();
+          currChunk.iUnk27 = slLine[6].toInt();
+          currChunk.iUnk28 = slLine[7].toInt();
+          currChunk.iUnk29 = slLine[8].toInt();
+          currChunk.iUnk30 = slLine[9].toInt();
+          currChunk.iUnk31 = slLine[10].toInt();
+          currChunk.iUnk32 = slLine[11].toInt();
+          currChunk.iUnk33 = slLine[12].toInt();
+          currChunk.iUnk34 = slLine[13].toInt();
+          currChunk.iUnk35 = slLine[14].toInt();
+          currChunk.iUnk36 = slLine[15].toInt();
+          currChunk.iUnk37 = slLine[16].toInt();
+          currChunk.iUnk38 = slLine[17].toInt();
+          currChunk.iUnk39 = slLine[18].toInt();
+          currChunk.iUnk40 = slLine[19].toInt();
+          currChunk.iUnk41 = slLine[20].toInt();
+          currChunk.iUnk42 = slLine[21].toInt();
+          currChunk.iUnk43 = slLine[22].toInt();
+          currChunk.iUnk44 = slLine[23].toInt();
+          currChunk.iUnk45 = slLine[24].toInt();
+          currChunk.iUnk46 = slLine[25].toInt();
+          currChunk.iUnk47 = slLine[26].toInt();
+          currChunk.iUnk48 = slLine[27].toInt();
+          currChunk.iUnk49 = slLine[28].toInt();
+          currChunk.iUnk50 = slLine[29].toInt();
           //chunk is complete, add to array and reset index
           m_chunkAy.push_back(currChunk);
           iChunkLine = 0;
@@ -311,11 +312,83 @@ bool CTrack::SaveTrack(const QString &sFilename)
     return false;
 
   QFile file(sFilename);
+  file.resize(0);
   if (file.open(QIODevice::ReadWrite)) {
     QTextStream stream(&file);
-    //stream << "something" << endl;
+
     //write header
-    //test
+    char szBuf[1024];
+    snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d  %6d", (int)m_chunkAy.size(), m_header.iUnk1, m_header.iUnk2, m_header.iUnk3);
+    stream << szBuf << Qt::endl << Qt::endl << Qt::endl;
+
+    //write chunks
+    for (int i = 0; i < m_chunkAy.size(); ++i) {
+      stream << m_chunkAy[i].sString.c_str() << Qt::endl;
+    }
+    
+    //write signs
+    for (CTupleMap::iterator it = m_tupleMap.begin(); it != m_tupleMap.end(); ++it) {
+      memset(szBuf, 0, sizeof(szBuf));
+      snprintf(szBuf, sizeof(szBuf), " %4d %6d", it->first, it->second);
+      stream << szBuf << Qt::endl;
+    }
+    memset(szBuf, 0, sizeof(szBuf));
+    snprintf(szBuf, sizeof(szBuf), " %4d %6d", -1, -1);
+    stream << szBuf << Qt::endl;
+    stream << Qt::endl;
+
+    //write stunts
+    for (CStuntMap::iterator it = m_stuntMap.begin(); it != m_stuntMap.end(); ++it) {
+      memset(szBuf, 0, sizeof(szBuf));
+      snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d %6d %6d %6d %6d %6d %6d",
+               it->first, it->second.iScaleFactor, it->second.iAngle, it->second.iUnknown,
+               it->second.iTimingGroup, it->second.iHeight, it->second.iTimeBulging,
+               it->second.iTimeFlat, it->second.iSmallerExpandsLargerContracts, it->second.iBulge);
+      stream << szBuf << Qt::endl;
+    }
+    memset(szBuf, 0, sizeof(szBuf));
+    snprintf(szBuf, sizeof(szBuf), " %4d", -1);
+    stream << szBuf << Qt::endl;
+    stream << Qt::endl;
+
+    //write textures
+    stream << "TEX:" << m_sTextureFile << Qt::endl;
+    stream << "BLD:" << m_sBuildingFile << Qt::endl;
+    stream << "BACKS:" << Qt::endl;
+    for (CTupleMap::iterator it = m_backsMap.begin(); it != m_backsMap.end(); ++it) {
+      memset(szBuf, 0, sizeof(szBuf));
+      snprintf(szBuf, sizeof(szBuf), "%d %d", it->first, it->second);
+      stream << szBuf << Qt::endl;
+    }
+    memset(szBuf, 0, sizeof(szBuf));
+    snprintf(szBuf, sizeof(szBuf), " %4d", -1);
+    stream << szBuf << Qt::endl;
+    stream << Qt::endl;
+
+    //write info
+    if (!(m_raceInfo.iTrackNumber == 0
+       && m_raceInfo.iTrackNumber == 0
+       && m_raceInfo.iImpossibleLaps == 0
+       && m_raceInfo.iHardLaps == 0
+       && m_raceInfo.iTrickyLaps == 0
+       && m_raceInfo.iMediumLaps == 0
+       && m_raceInfo.iEasyLaps == 0
+       && m_raceInfo.iGirlieLaps == 0
+       && m_raceInfo.fTrackMapSize == 0
+       && m_raceInfo.iTrackMapFidelity == 0
+       && m_raceInfo.fUnknown == 0)) {
+      stream << QString::number(m_raceInfo.iTrackNumber) << Qt::endl;
+      memset(szBuf, 0, sizeof(szBuf));
+      snprintf(szBuf, sizeof(szBuf), "%4d %4d %4d %4d %4d %4d",
+               m_raceInfo.iImpossibleLaps, m_raceInfo.iHardLaps, m_raceInfo.iTrickyLaps,
+               m_raceInfo.iMediumLaps, m_raceInfo.iEasyLaps, m_raceInfo.iGirlieLaps);
+      stream << szBuf << Qt::endl;
+      memset(szBuf, 0, sizeof(szBuf));
+      snprintf(szBuf, sizeof(szBuf), "%.2f %4d %.2f",
+               m_raceInfo.fTrackMapSize, m_raceInfo.iTrackMapFidelity, m_raceInfo.fUnknown);
+      stream << szBuf << Qt::endl << Qt::endl;
+    }
+
     file.close();
   }
   return true;
@@ -413,26 +486,26 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
 
   QString sVal;
   for (int i = iStartIndex; i <= iEndIndex; ++i) {
-    sVal = QString::number(m_chunkAy[i].unLeftShoulderWidth);
+    sVal = QString::number(m_chunkAy[i].iLeftShoulderWidth);
     if (sLeftShoulderWidth.isEmpty()) sLeftShoulderWidth = sVal;
     else if (sLeftShoulderWidth.compare(sVal) != 0) sLeftShoulderWidth = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].unLeftLaneWidth);
+    sVal = QString::number(m_chunkAy[i].iLeftLaneWidth);
     if (sLeftLaneWidth.isEmpty()) sLeftLaneWidth = sVal;
     else if (sLeftLaneWidth.compare(sVal) != 0) sLeftLaneWidth = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].unRightLaneWidth);
+    sVal = QString::number(m_chunkAy[i].iRightLaneWidth);
     if (sRightLaneWidth.isEmpty()) sRightLaneWidth = sVal;
     else if (sRightLaneWidth.compare(sVal) != 0) sRightLaneWidth = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].unRightShoulderWidth);
+    sVal = QString::number(m_chunkAy[i].iRightShoulderWidth);
     if (sRightShoulderWidth.isEmpty()) sRightShoulderWidth = sVal;
     else if (sRightShoulderWidth.compare(sVal) != 0) sRightShoulderWidth = MIXED_DATA;
 
-    sVal = QString::number(m_chunkAy[i].llUnk1);
+    sVal = QString::number(m_chunkAy[i].iUnk1);
     if (sUnk1.isEmpty()) sUnk1 = sVal;
     else if (sUnk1.compare(sVal) != 0) sUnk1 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk2);
+    sVal = QString::number(m_chunkAy[i].iUnk2);
     if (sUnk2.isEmpty()) sUnk2 = sVal;
     else if (sUnk2.compare(sVal) != 0) sUnk2 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk3);
+    sVal = QString::number(m_chunkAy[i].iUnk3);
     if (sUnk3.isEmpty()) sUnk3 = sVal;
     else if (sUnk3.compare(sVal) != 0) sUnk3 = MIXED_DATA;
 
@@ -469,66 +542,66 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     if (sRightShoulderGrip.isEmpty()) sRightShoulderGrip = sVal;
     else if (sRightShoulderGrip.compare(sVal) != 0) sRightShoulderGrip = MIXED_DATA;
 
-    sVal = QString::number(m_chunkAy[i].llUnk4);
+    sVal = QString::number(m_chunkAy[i].iUnk4);
     if (sUnk4.isEmpty()) sUnk4 = sVal;
     else if (sUnk4.compare(sVal) != 0) sUnk4 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk5);
+    sVal = QString::number(m_chunkAy[i].iUnk5);
     if (sUnk5.isEmpty()) sUnk5 = sVal;
     else if (sUnk5.compare(sVal) != 0) sUnk5 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk6);
+    sVal = QString::number(m_chunkAy[i].iUnk6);
     if (sUnk6.isEmpty()) sUnk6 = sVal;
     else if (sUnk6.compare(sVal) != 0) sUnk6 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk7);
+    sVal = QString::number(m_chunkAy[i].iUnk7);
     if (sUnk7.isEmpty()) sUnk7 = sVal;
     else if (sUnk7.compare(sVal) != 0) sUnk7 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk8);
+    sVal = QString::number(m_chunkAy[i].iUnk8);
     if (sUnk8.isEmpty()) sUnk8 = sVal;
     else if (sUnk8.compare(sVal) != 0) sUnk8 = MIXED_DATA;
 
-    sVal = QString::number(m_chunkAy[i].ulLeftSurfaceType);
+    sVal = QString::number(m_chunkAy[i].iLeftSurfaceType);
     if (sLeftSurfaceType.isEmpty()) sLeftSurfaceType = sVal;
     else if (sLeftSurfaceType.compare(sVal) != 0) sLeftSurfaceType = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].ulCenterSurfaceType);
+    sVal = QString::number(m_chunkAy[i].iCenterSurfaceType);
     if (sCenterSurfaceType.isEmpty()) sCenterSurfaceType = sVal;
     else if (sCenterSurfaceType.compare(sVal) != 0) sCenterSurfaceType = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].ulRightSurfaceType);
+    sVal = QString::number(m_chunkAy[i].iRightSurfaceType);
     if (sRightSurfaceType.isEmpty()) sRightSurfaceType = sVal;
     else if (sRightSurfaceType.compare(sVal) != 0) sRightSurfaceType = MIXED_DATA;
 
-    sVal = QString::number(m_chunkAy[i].llUnk9);
+    sVal = QString::number(m_chunkAy[i].iUnk9);
     if (sUnk9.isEmpty()) sUnk9 = sVal;
     else if (sUnk9.compare(sVal) != 0) sUnk9 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk10);
+    sVal = QString::number(m_chunkAy[i].iUnk10);
     if (sUnk10.isEmpty()) sUnk10 = sVal;
     else if (sUnk10.compare(sVal) != 0) sUnk10 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk11);
+    sVal = QString::number(m_chunkAy[i].iUnk11);
     if (sUnk11.isEmpty()) sUnk11 = sVal;
     else if (sUnk11.compare(sVal) != 0) sUnk11 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk12);
+    sVal = QString::number(m_chunkAy[i].iUnk12);
     if (sUnk12.isEmpty()) sUnk12 = sVal;
     else if (sUnk12.compare(sVal) != 0) sUnk12 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk13);
+    sVal = QString::number(m_chunkAy[i].iUnk13);
     if (sUnk13.isEmpty()) sUnk13 = sVal;
     else if (sUnk13.compare(sVal) != 0) sUnk13 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk14);
+    sVal = QString::number(m_chunkAy[i].iUnk14);
     if (sUnk14.isEmpty()) sUnk14 = sVal;
     else if (sUnk14.compare(sVal) != 0) sUnk14 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk15);
+    sVal = QString::number(m_chunkAy[i].iUnk15);
     if (sUnk15.isEmpty()) sUnk15 = sVal;
     else if (sUnk15.compare(sVal) != 0) sUnk15 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk16);
+    sVal = QString::number(m_chunkAy[i].iUnk16);
     if (sUnk16.isEmpty()) sUnk16 = sVal;
     else if (sUnk16.compare(sVal) != 0) sUnk16 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk17);
+    sVal = QString::number(m_chunkAy[i].iUnk17);
     if (sUnk17.isEmpty()) sUnk17 = sVal;
     else if (sUnk17.compare(sVal) != 0) sUnk17 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk18);
+    sVal = QString::number(m_chunkAy[i].iUnk18);
     if (sUnk18.isEmpty()) sUnk18 = sVal;
     else if (sUnk18.compare(sVal) != 0) sUnk18 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk19);
+    sVal = QString::number(m_chunkAy[i].iUnk19);
     if (sUnk19.isEmpty()) sUnk19 = sVal;
     else if (sUnk19.compare(sVal) != 0) sUnk19 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk20);
+    sVal = QString::number(m_chunkAy[i].iUnk20);
     if (sUnk20.isEmpty()) sUnk20 = sVal;
     else if (sUnk20.compare(sVal) != 0) sUnk20 = MIXED_DATA;
 
@@ -542,94 +615,94 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     if (sfUnk3.isEmpty()) sfUnk3 = sVal;
     else if (sfUnk3.compare(sVal) != 0) sfUnk3 = MIXED_DATA;
  
-    sVal = QString::number(m_chunkAy[i].llUnk21);
+    sVal = QString::number(m_chunkAy[i].iUnk21);
     if (sUnk21.isEmpty()) sUnk21 = sVal;
     else if (sUnk21.compare(sVal) != 0) sUnk21 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk22);
+    sVal = QString::number(m_chunkAy[i].iUnk22);
     if (sUnk22.isEmpty()) sUnk22 = sVal;
     else if (sUnk22.compare(sVal) != 0) sUnk22 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk23);
+    sVal = QString::number(m_chunkAy[i].iUnk23);
     if (sUnk23.isEmpty()) sUnk23 = sVal;
     else if (sUnk23.compare(sVal) != 0) sUnk23 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk24);
+    sVal = QString::number(m_chunkAy[i].iUnk24);
     if (sUnk24.isEmpty()) sUnk24 = sVal;
     else if (sUnk24.compare(sVal) != 0) sUnk24 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk25);
+    sVal = QString::number(m_chunkAy[i].iUnk25);
     if (sUnk25.isEmpty()) sUnk25 = sVal;
     else if (sUnk25.compare(sVal) != 0) sUnk25 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk26);
+    sVal = QString::number(m_chunkAy[i].iUnk26);
     if (sUnk26.isEmpty()) sUnk26 = sVal;
     else if (sUnk26.compare(sVal) != 0) sUnk26 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk27);
+    sVal = QString::number(m_chunkAy[i].iUnk27);
     if (sUnk27.isEmpty()) sUnk27 = sVal;
     else if (sUnk27.compare(sVal) != 0) sUnk27 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk28);
+    sVal = QString::number(m_chunkAy[i].iUnk28);
     if (sUnk28.isEmpty()) sUnk28 = sVal;
     else if (sUnk28.compare(sVal) != 0) sUnk28 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk29);
+    sVal = QString::number(m_chunkAy[i].iUnk29);
     if (sUnk29.isEmpty()) sUnk29 = sVal;
     else if (sUnk29.compare(sVal) != 0) sUnk29 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk30);
+    sVal = QString::number(m_chunkAy[i].iUnk30);
     if (sUnk30.isEmpty()) sUnk30 = sVal;
     else if (sUnk30.compare(sVal) != 0) sUnk30 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk31);
+    sVal = QString::number(m_chunkAy[i].iUnk31);
     if (sUnk31.isEmpty()) sUnk31 = sVal;
     else if (sUnk31.compare(sVal) != 0) sUnk31 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk32);
+    sVal = QString::number(m_chunkAy[i].iUnk32);
     if (sUnk32.isEmpty()) sUnk32 = sVal;
     else if (sUnk32.compare(sVal) != 0) sUnk32 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk33);
+    sVal = QString::number(m_chunkAy[i].iUnk33);
     if (sUnk33.isEmpty()) sUnk33 = sVal;
     else if (sUnk33.compare(sVal) != 0) sUnk33 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk34);
+    sVal = QString::number(m_chunkAy[i].iUnk34);
     if (sUnk34.isEmpty()) sUnk34 = sVal;
     else if (sUnk34.compare(sVal) != 0) sUnk34 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk35);
+    sVal = QString::number(m_chunkAy[i].iUnk35);
     if (sUnk35.isEmpty()) sUnk35 = sVal;
     else if (sUnk35.compare(sVal) != 0) sUnk35 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk36);
+    sVal = QString::number(m_chunkAy[i].iUnk36);
     if (sUnk36.isEmpty()) sUnk36 = sVal;
     else if (sUnk36.compare(sVal) != 0) sUnk36 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk37);
+    sVal = QString::number(m_chunkAy[i].iUnk37);
     if (sUnk37.isEmpty()) sUnk37 = sVal;
     else if (sUnk37.compare(sVal) != 0) sUnk37 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk38);
+    sVal = QString::number(m_chunkAy[i].iUnk38);
     if (sUnk38.isEmpty()) sUnk38 = sVal;
     else if (sUnk38.compare(sVal) != 0) sUnk38 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk39);
+    sVal = QString::number(m_chunkAy[i].iUnk39);
     if (sUnk39.isEmpty()) sUnk39 = sVal;
     else if (sUnk39.compare(sVal) != 0) sUnk39 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk40);
+    sVal = QString::number(m_chunkAy[i].iUnk40);
     if (sUnk40.isEmpty()) sUnk40 = sVal;
     else if (sUnk40.compare(sVal) != 0) sUnk40 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk41);
+    sVal = QString::number(m_chunkAy[i].iUnk41);
     if (sUnk41.isEmpty()) sUnk41 = sVal;
     else if (sUnk41.compare(sVal) != 0) sUnk41 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk42);
+    sVal = QString::number(m_chunkAy[i].iUnk42);
     if (sUnk42.isEmpty()) sUnk42 = sVal;
     else if (sUnk42.compare(sVal) != 0) sUnk42 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk43);
+    sVal = QString::number(m_chunkAy[i].iUnk43);
     if (sUnk43.isEmpty()) sUnk43 = sVal;
     else if (sUnk43.compare(sVal) != 0) sUnk43 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk44);
+    sVal = QString::number(m_chunkAy[i].iUnk44);
     if (sUnk44.isEmpty()) sUnk44 = sVal;
     else if (sUnk44.compare(sVal) != 0) sUnk44 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk45);
+    sVal = QString::number(m_chunkAy[i].iUnk45);
     if (sUnk45.isEmpty()) sUnk45 = sVal;
     else if (sUnk45.compare(sVal) != 0) sUnk45 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk46);
+    sVal = QString::number(m_chunkAy[i].iUnk46);
     if (sUnk46.isEmpty()) sUnk46 = sVal;
     else if (sUnk46.compare(sVal) != 0) sUnk46 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk47);
+    sVal = QString::number(m_chunkAy[i].iUnk47);
     if (sUnk47.isEmpty()) sUnk47 = sVal;
     else if (sUnk47.compare(sVal) != 0) sUnk47 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk48);
+    sVal = QString::number(m_chunkAy[i].iUnk48);
     if (sUnk48.isEmpty()) sUnk48 = sVal;
     else if (sUnk48.compare(sVal) != 0) sUnk48 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk49);
+    sVal = QString::number(m_chunkAy[i].iUnk49);
     if (sUnk49.isEmpty()) sUnk49 = sVal;
     else if (sUnk49.compare(sVal) != 0) sUnk49 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].llUnk50);
+    sVal = QString::number(m_chunkAy[i].iUnk50);
     if (sUnk50.isEmpty()) sUnk50 = sVal;
     else if (sUnk50.compare(sVal) != 0) sUnk50 = MIXED_DATA;
   }
@@ -655,13 +728,13 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex
     , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50)
 {
   for (int i = iStartIndex; i <= iEndIndex; ++i) {
-    if (!sLeftShoulderWidth.isEmpty()) m_chunkAy[i].unLeftShoulderWidth = sLeftShoulderWidth.toUShort();
-    if (!sLeftLaneWidth.isEmpty()) m_chunkAy[i].unLeftLaneWidth = sLeftLaneWidth.toUShort();
-    if (!sRightLaneWidth.isEmpty()) m_chunkAy[i].unRightLaneWidth = sRightLaneWidth.toUShort();
-    if (!sRightShoulderWidth.isEmpty()) m_chunkAy[i].unRightShoulderWidth = sRightShoulderWidth.toUShort();
-    if (!sUnk1.isEmpty()) m_chunkAy[i].llUnk1 = sUnk1.toLongLong();
-    if (!sUnk2.isEmpty()) m_chunkAy[i].llUnk2 = sUnk2.toLongLong();
-    if (!sUnk3.isEmpty()) m_chunkAy[i].llUnk3 = sUnk3.toLongLong();
+    if (!sLeftShoulderWidth.isEmpty()) m_chunkAy[i].iLeftShoulderWidth = sLeftShoulderWidth.toInt();
+    if (!sLeftLaneWidth.isEmpty()) m_chunkAy[i].iLeftLaneWidth = sLeftLaneWidth.toInt();
+    if (!sRightLaneWidth.isEmpty()) m_chunkAy[i].iRightLaneWidth = sRightLaneWidth.toInt();
+    if (!sRightShoulderWidth.isEmpty()) m_chunkAy[i].iRightShoulderWidth = sRightShoulderWidth.toInt();
+    if (!sUnk1.isEmpty()) m_chunkAy[i].iUnk1 = sUnk1.toInt();
+    if (!sUnk2.isEmpty()) m_chunkAy[i].iUnk2 = sUnk2.toInt();
+    if (!sUnk3.isEmpty()) m_chunkAy[i].iUnk3 = sUnk3.toInt();
     if (!sYaw.isEmpty()) m_chunkAy[i].fYaw = sYaw.toFloat();
     if (!sPitch.isEmpty()) m_chunkAy[i].fPitch = sPitch.toFloat();
     if (!sRoll.isEmpty()) m_chunkAy[i].fRoll = sRoll.toFloat();
@@ -672,59 +745,59 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex
     if (!sTrackGrip.isEmpty()) m_chunkAy[i].unTrackGrip = sTrackGrip.toUShort();
     if (!sLeftShoulderGrip.isEmpty()) m_chunkAy[i].unLeftShoulderGrip = sLeftShoulderGrip.toUShort();
     if (!sRightShoulderGrip.isEmpty()) m_chunkAy[i].unRightShoulderGrip = sRightShoulderGrip.toUShort();
-    if (!sUnk4.isEmpty()) m_chunkAy[i].llUnk4 = sUnk4.toLongLong();
-    if (!sUnk5.isEmpty()) m_chunkAy[i].llUnk5 = sUnk5.toLongLong();
-    if (!sUnk6.isEmpty()) m_chunkAy[i].llUnk6 = sUnk6.toLongLong();
-    if (!sUnk7.isEmpty()) m_chunkAy[i].llUnk7 = sUnk7.toLongLong();
-    if (!sUnk8.isEmpty()) m_chunkAy[i].llUnk8 = sUnk8.toLongLong();
-    if (!sLeftSurfaceType.isEmpty()) m_chunkAy[i].ulLeftSurfaceType = sLeftSurfaceType.toULong();
-    if (!sCenterSurfaceType.isEmpty()) m_chunkAy[i].ulCenterSurfaceType = sCenterSurfaceType.toULong();
-    if (!sRightSurfaceType.isEmpty()) m_chunkAy[i].ulRightSurfaceType = sRightSurfaceType.toULong();
-    if (!sUnk9.isEmpty()) m_chunkAy[i].llUnk9 = sUnk9.toLongLong();
-    if (!sUnk10.isEmpty()) m_chunkAy[i].llUnk10 = sUnk10.toLongLong();
-    if (!sUnk11.isEmpty()) m_chunkAy[i].llUnk11 = sUnk11.toLongLong();
-    if (!sUnk12.isEmpty()) m_chunkAy[i].llUnk12 = sUnk12.toLongLong();
-    if (!sUnk13.isEmpty()) m_chunkAy[i].llUnk13 = sUnk13.toLongLong();
-    if (!sUnk14.isEmpty()) m_chunkAy[i].llUnk14 = sUnk14.toLongLong();
-    if (!sUnk15.isEmpty()) m_chunkAy[i].llUnk15 = sUnk15.toLongLong();
-    if (!sUnk16.isEmpty()) m_chunkAy[i].llUnk16 = sUnk16.toLongLong();
-    if (!sUnk17.isEmpty()) m_chunkAy[i].llUnk17 = sUnk17.toLongLong();
-    if (!sUnk18.isEmpty()) m_chunkAy[i].llUnk18 = sUnk18.toLongLong();
-    if (!sUnk19.isEmpty()) m_chunkAy[i].llUnk19 = sUnk19.toLongLong();
-    if (!sUnk20.isEmpty()) m_chunkAy[i].llUnk20 = sUnk20.toLongLong();
+    if (!sUnk4.isEmpty()) m_chunkAy[i].iUnk4 = sUnk4.toInt();
+    if (!sUnk5.isEmpty()) m_chunkAy[i].iUnk5 = sUnk5.toInt();
+    if (!sUnk6.isEmpty()) m_chunkAy[i].iUnk6 = sUnk6.toInt();
+    if (!sUnk7.isEmpty()) m_chunkAy[i].iUnk7 = sUnk7.toInt();
+    if (!sUnk8.isEmpty()) m_chunkAy[i].iUnk8 = sUnk8.toInt();
+    if (!sLeftSurfaceType.isEmpty()) m_chunkAy[i].iLeftSurfaceType = sLeftSurfaceType.toInt();
+    if (!sCenterSurfaceType.isEmpty()) m_chunkAy[i].iCenterSurfaceType = sCenterSurfaceType.toInt();
+    if (!sRightSurfaceType.isEmpty()) m_chunkAy[i].iRightSurfaceType = sRightSurfaceType.toInt();
+    if (!sUnk9.isEmpty()) m_chunkAy[i].iUnk9 = sUnk9.toInt();
+    if (!sUnk10.isEmpty()) m_chunkAy[i].iUnk10 = sUnk10.toInt();
+    if (!sUnk11.isEmpty()) m_chunkAy[i].iUnk11 = sUnk11.toInt();
+    if (!sUnk12.isEmpty()) m_chunkAy[i].iUnk12 = sUnk12.toInt();
+    if (!sUnk13.isEmpty()) m_chunkAy[i].iUnk13 = sUnk13.toInt();
+    if (!sUnk14.isEmpty()) m_chunkAy[i].iUnk14 = sUnk14.toInt();
+    if (!sUnk15.isEmpty()) m_chunkAy[i].iUnk15 = sUnk15.toInt();
+    if (!sUnk16.isEmpty()) m_chunkAy[i].iUnk16 = sUnk16.toInt();
+    if (!sUnk17.isEmpty()) m_chunkAy[i].iUnk17 = sUnk17.toInt();
+    if (!sUnk18.isEmpty()) m_chunkAy[i].iUnk18 = sUnk18.toInt();
+    if (!sUnk19.isEmpty()) m_chunkAy[i].iUnk19 = sUnk19.toInt();
+    if (!sUnk20.isEmpty()) m_chunkAy[i].iUnk20 = sUnk20.toInt();
     if (!sfUnk1.isEmpty()) m_chunkAy[i].fUnk1 = sfUnk1.toFloat();
     if (!sfUnk2.isEmpty()) m_chunkAy[i].fUnk2 = sfUnk2.toFloat();
     if (!sfUnk3.isEmpty()) m_chunkAy[i].fUnk3 = sfUnk3.toFloat();
-    if (!sUnk21.isEmpty()) m_chunkAy[i].llUnk21 = sUnk21.toLongLong();
-    if (!sUnk22.isEmpty()) m_chunkAy[i].llUnk22 = sUnk22.toLongLong();
-    if (!sUnk23.isEmpty()) m_chunkAy[i].llUnk23 = sUnk23.toLongLong();
-    if (!sUnk24.isEmpty()) m_chunkAy[i].llUnk24 = sUnk24.toLongLong();
-    if (!sUnk25.isEmpty()) m_chunkAy[i].llUnk25 = sUnk25.toLongLong();
-    if (!sUnk26.isEmpty()) m_chunkAy[i].llUnk26 = sUnk26.toLongLong();
-    if (!sUnk27.isEmpty()) m_chunkAy[i].llUnk27 = sUnk27.toLongLong();
-    if (!sUnk28.isEmpty()) m_chunkAy[i].llUnk28 = sUnk28.toLongLong();
-    if (!sUnk29.isEmpty()) m_chunkAy[i].llUnk29 = sUnk29.toLongLong();
-    if (!sUnk30.isEmpty()) m_chunkAy[i].llUnk30 = sUnk30.toLongLong();
-    if (!sUnk31.isEmpty()) m_chunkAy[i].llUnk31 = sUnk31.toLongLong();
-    if (!sUnk32.isEmpty()) m_chunkAy[i].llUnk32 = sUnk32.toLongLong();
-    if (!sUnk33.isEmpty()) m_chunkAy[i].llUnk33 = sUnk33.toLongLong();
-    if (!sUnk34.isEmpty()) m_chunkAy[i].llUnk34 = sUnk34.toLongLong();
-    if (!sUnk35.isEmpty()) m_chunkAy[i].llUnk35 = sUnk35.toLongLong();
-    if (!sUnk36.isEmpty()) m_chunkAy[i].llUnk36 = sUnk36.toLongLong();
-    if (!sUnk37.isEmpty()) m_chunkAy[i].llUnk37 = sUnk37.toLongLong();
-    if (!sUnk38.isEmpty()) m_chunkAy[i].llUnk38 = sUnk38.toLongLong();
-    if (!sUnk39.isEmpty()) m_chunkAy[i].llUnk39 = sUnk39.toLongLong();
-    if (!sUnk40.isEmpty()) m_chunkAy[i].llUnk40 = sUnk40.toLongLong();
-    if (!sUnk41.isEmpty()) m_chunkAy[i].llUnk41 = sUnk41.toLongLong();
-    if (!sUnk42.isEmpty()) m_chunkAy[i].llUnk42 = sUnk42.toLongLong();
-    if (!sUnk43.isEmpty()) m_chunkAy[i].llUnk43 = sUnk43.toLongLong();
-    if (!sUnk44.isEmpty()) m_chunkAy[i].llUnk44 = sUnk44.toLongLong();
-    if (!sUnk45.isEmpty()) m_chunkAy[i].llUnk45 = sUnk45.toLongLong();
-    if (!sUnk46.isEmpty()) m_chunkAy[i].llUnk46 = sUnk46.toLongLong();
-    if (!sUnk47.isEmpty()) m_chunkAy[i].llUnk47 = sUnk47.toLongLong();
-    if (!sUnk48.isEmpty()) m_chunkAy[i].llUnk48 = sUnk48.toLongLong();
-    if (!sUnk49.isEmpty()) m_chunkAy[i].llUnk49 = sUnk49.toLongLong();
-    if (!sUnk50.isEmpty()) m_chunkAy[i].llUnk50 = sUnk50.toLongLong();
+    if (!sUnk21.isEmpty()) m_chunkAy[i].iUnk21 = sUnk21.toInt();
+    if (!sUnk22.isEmpty()) m_chunkAy[i].iUnk22 = sUnk22.toInt();
+    if (!sUnk23.isEmpty()) m_chunkAy[i].iUnk23 = sUnk23.toInt();
+    if (!sUnk24.isEmpty()) m_chunkAy[i].iUnk24 = sUnk24.toInt();
+    if (!sUnk25.isEmpty()) m_chunkAy[i].iUnk25 = sUnk25.toInt();
+    if (!sUnk26.isEmpty()) m_chunkAy[i].iUnk26 = sUnk26.toInt();
+    if (!sUnk27.isEmpty()) m_chunkAy[i].iUnk27 = sUnk27.toInt();
+    if (!sUnk28.isEmpty()) m_chunkAy[i].iUnk28 = sUnk28.toInt();
+    if (!sUnk29.isEmpty()) m_chunkAy[i].iUnk29 = sUnk29.toInt();
+    if (!sUnk30.isEmpty()) m_chunkAy[i].iUnk30 = sUnk30.toInt();
+    if (!sUnk31.isEmpty()) m_chunkAy[i].iUnk31 = sUnk31.toInt();
+    if (!sUnk32.isEmpty()) m_chunkAy[i].iUnk32 = sUnk32.toInt();
+    if (!sUnk33.isEmpty()) m_chunkAy[i].iUnk33 = sUnk33.toInt();
+    if (!sUnk34.isEmpty()) m_chunkAy[i].iUnk34 = sUnk34.toInt();
+    if (!sUnk35.isEmpty()) m_chunkAy[i].iUnk35 = sUnk35.toInt();
+    if (!sUnk36.isEmpty()) m_chunkAy[i].iUnk36 = sUnk36.toInt();
+    if (!sUnk37.isEmpty()) m_chunkAy[i].iUnk37 = sUnk37.toInt();
+    if (!sUnk38.isEmpty()) m_chunkAy[i].iUnk38 = sUnk38.toInt();
+    if (!sUnk39.isEmpty()) m_chunkAy[i].iUnk39 = sUnk39.toInt();
+    if (!sUnk40.isEmpty()) m_chunkAy[i].iUnk40 = sUnk40.toInt();
+    if (!sUnk41.isEmpty()) m_chunkAy[i].iUnk41 = sUnk41.toInt();
+    if (!sUnk42.isEmpty()) m_chunkAy[i].iUnk42 = sUnk42.toInt();
+    if (!sUnk43.isEmpty()) m_chunkAy[i].iUnk43 = sUnk43.toInt();
+    if (!sUnk44.isEmpty()) m_chunkAy[i].iUnk44 = sUnk44.toInt();
+    if (!sUnk45.isEmpty()) m_chunkAy[i].iUnk45 = sUnk45.toInt();
+    if (!sUnk46.isEmpty()) m_chunkAy[i].iUnk46 = sUnk46.toInt();
+    if (!sUnk47.isEmpty()) m_chunkAy[i].iUnk47 = sUnk47.toInt();
+    if (!sUnk48.isEmpty()) m_chunkAy[i].iUnk48 = sUnk48.toInt();
+    if (!sUnk49.isEmpty()) m_chunkAy[i].iUnk49 = sUnk49.toInt();
+    if (!sUnk50.isEmpty()) m_chunkAy[i].iUnk50 = sUnk50.toInt();
   }
   UpdateChunkStrings();
   g_pMainWindow->LogMessage("Applied changes to " + QString::number(iEndIndex - iStartIndex + 1) + " geometry chunks");
@@ -752,13 +825,13 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount
   for (int i = 0; i < iCount; ++i) {
     struct tGeometryChunk newChunk;
     memset(&newChunk, sizeof(newChunk), 0);
-    newChunk.unLeftShoulderWidth = sLeftShoulderWidth.toUShort();
-    newChunk.unLeftLaneWidth = sLeftLaneWidth.toUShort();
-    newChunk.unRightLaneWidth = sRightLaneWidth.toUShort();
-    newChunk.unRightShoulderWidth = sRightShoulderWidth.toUShort();
-    newChunk.llUnk1 = sUnk1.toLongLong();
-    newChunk.llUnk2 = sUnk2.toLongLong();
-    newChunk.llUnk3 = sUnk3.toLongLong();
+    newChunk.iLeftShoulderWidth = sLeftShoulderWidth.toInt();
+    newChunk.iLeftLaneWidth = sLeftLaneWidth.toInt();
+    newChunk.iRightLaneWidth = sRightLaneWidth.toInt();
+    newChunk.iRightShoulderWidth = sRightShoulderWidth.toInt();
+    newChunk.iUnk1 = sUnk1.toInt();
+    newChunk.iUnk2 = sUnk2.toInt();
+    newChunk.iUnk3 = sUnk3.toInt();
     newChunk.fYaw = sYaw.toFloat();
     newChunk.fPitch = sPitch.toFloat();
     newChunk.fRoll = sRoll.toFloat();
@@ -769,59 +842,59 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount
     newChunk.unTrackGrip = sTrackGrip.toUShort();
     newChunk.unLeftShoulderGrip = sLeftShoulderGrip.toUShort();
     newChunk.unRightShoulderGrip = sRightShoulderGrip.toUShort();
-    newChunk.llUnk4 = sUnk4.toLongLong();
-    newChunk.llUnk5 = sUnk5.toLongLong();
-    newChunk.llUnk6 = sUnk6.toLongLong();
-    newChunk.llUnk7 = sUnk7.toLongLong();
-    newChunk.llUnk8 = sUnk8.toLongLong();
-    newChunk.ulLeftSurfaceType = sLeftSurfaceType.toULong();
-    newChunk.ulCenterSurfaceType = sCenterSurfaceType.toULong();
-    newChunk.ulRightSurfaceType = sRightSurfaceType.toULong();
-    newChunk.llUnk9 = sUnk9.toLongLong();
-    newChunk.llUnk10 = sUnk10.toLongLong();
-    newChunk.llUnk11 = sUnk11.toLongLong();
-    newChunk.llUnk12 = sUnk12.toLongLong();
-    newChunk.llUnk13 = sUnk13.toLongLong();
-    newChunk.llUnk14 = sUnk14.toLongLong();
-    newChunk.llUnk15 = sUnk15.toLongLong();
-    newChunk.llUnk16 = sUnk16.toLongLong();
-    newChunk.llUnk17 = sUnk17.toLongLong();
-    newChunk.llUnk18 = sUnk18.toLongLong();
-    newChunk.llUnk19 = sUnk19.toLongLong();
-    newChunk.llUnk20 = sUnk20.toLongLong();
+    newChunk.iUnk4 = sUnk4.toInt();
+    newChunk.iUnk5 = sUnk5.toInt();
+    newChunk.iUnk6 = sUnk6.toInt();
+    newChunk.iUnk7 = sUnk7.toInt();
+    newChunk.iUnk8 = sUnk8.toInt();
+    newChunk.iLeftSurfaceType = sLeftSurfaceType.toInt();
+    newChunk.iCenterSurfaceType = sCenterSurfaceType.toInt();
+    newChunk.iRightSurfaceType = sRightSurfaceType.toInt();
+    newChunk.iUnk9 = sUnk9.toInt();
+    newChunk.iUnk10 = sUnk10.toInt();
+    newChunk.iUnk11 = sUnk11.toInt();
+    newChunk.iUnk12 = sUnk12.toInt();
+    newChunk.iUnk13 = sUnk13.toInt();
+    newChunk.iUnk14 = sUnk14.toInt();
+    newChunk.iUnk15 = sUnk15.toInt();
+    newChunk.iUnk16 = sUnk16.toInt();
+    newChunk.iUnk17 = sUnk17.toInt();
+    newChunk.iUnk18 = sUnk18.toInt();
+    newChunk.iUnk19 = sUnk19.toInt();
+    newChunk.iUnk20 = sUnk20.toInt();
     newChunk.fUnk1 = sfUnk1.toFloat();
     newChunk.fUnk2 = sfUnk2.toFloat();
     newChunk.fUnk3 = sfUnk3.toFloat();
-    newChunk.llUnk21 = sUnk21.toLongLong();
-    newChunk.llUnk22 = sUnk22.toLongLong();
-    newChunk.llUnk23 = sUnk23.toLongLong();
-    newChunk.llUnk24 = sUnk24.toLongLong();
-    newChunk.llUnk25 = sUnk25.toLongLong();
-    newChunk.llUnk26 = sUnk26.toLongLong();
-    newChunk.llUnk27 = sUnk27.toLongLong();
-    newChunk.llUnk28 = sUnk28.toLongLong();
-    newChunk.llUnk29 = sUnk29.toLongLong();
-    newChunk.llUnk30 = sUnk30.toLongLong();
-    newChunk.llUnk31 = sUnk31.toLongLong();
-    newChunk.llUnk32 = sUnk32.toLongLong();
-    newChunk.llUnk33 = sUnk33.toLongLong();
-    newChunk.llUnk34 = sUnk34.toLongLong();
-    newChunk.llUnk35 = sUnk35.toLongLong();
-    newChunk.llUnk36 = sUnk36.toLongLong();
-    newChunk.llUnk37 = sUnk37.toLongLong();
-    newChunk.llUnk38 = sUnk38.toLongLong();
-    newChunk.llUnk39 = sUnk39.toLongLong();
-    newChunk.llUnk40 = sUnk40.toLongLong();
-    newChunk.llUnk41 = sUnk41.toLongLong();
-    newChunk.llUnk42 = sUnk42.toLongLong();
-    newChunk.llUnk43 = sUnk43.toLongLong();
-    newChunk.llUnk44 = sUnk44.toLongLong();
-    newChunk.llUnk45 = sUnk45.toLongLong();
-    newChunk.llUnk46 = sUnk46.toLongLong();
-    newChunk.llUnk47 = sUnk47.toLongLong();
-    newChunk.llUnk48 = sUnk48.toLongLong();
-    newChunk.llUnk49 = sUnk49.toLongLong();
-    newChunk.llUnk50 = sUnk50.toLongLong();
+    newChunk.iUnk21 = sUnk21.toInt();
+    newChunk.iUnk22 = sUnk22.toInt();
+    newChunk.iUnk23 = sUnk23.toInt();
+    newChunk.iUnk24 = sUnk24.toInt();
+    newChunk.iUnk25 = sUnk25.toInt();
+    newChunk.iUnk26 = sUnk26.toInt();
+    newChunk.iUnk27 = sUnk27.toInt();
+    newChunk.iUnk28 = sUnk28.toInt();
+    newChunk.iUnk29 = sUnk29.toInt();
+    newChunk.iUnk30 = sUnk30.toInt();
+    newChunk.iUnk31 = sUnk31.toInt();
+    newChunk.iUnk32 = sUnk32.toInt();
+    newChunk.iUnk33 = sUnk33.toInt();
+    newChunk.iUnk34 = sUnk34.toInt();
+    newChunk.iUnk35 = sUnk35.toInt();
+    newChunk.iUnk36 = sUnk36.toInt();
+    newChunk.iUnk37 = sUnk37.toInt();
+    newChunk.iUnk38 = sUnk38.toInt();
+    newChunk.iUnk39 = sUnk39.toInt();
+    newChunk.iUnk40 = sUnk40.toInt();
+    newChunk.iUnk41 = sUnk41.toInt();
+    newChunk.iUnk42 = sUnk42.toInt();
+    newChunk.iUnk43 = sUnk43.toInt();
+    newChunk.iUnk44 = sUnk44.toInt();
+    newChunk.iUnk45 = sUnk45.toInt();
+    newChunk.iUnk46 = sUnk46.toInt();
+    newChunk.iUnk47 = sUnk47.toInt();
+    newChunk.iUnk48 = sUnk48.toInt();
+    newChunk.iUnk49 = sUnk49.toInt();
+    newChunk.iUnk50 = sUnk50.toInt();
     if (m_chunkAy.empty())
       m_chunkAy.push_back(newChunk);
     else
@@ -846,17 +919,17 @@ void CTrack::GenerateChunkString(tGeometryChunk &chunk)
 {
   char szGenerate[1024];
   snprintf(szGenerate, sizeof(szGenerate),
-           "%5d%7d%7d%7d%7lld%7lld%7lld%12.5f%12.5f%12.5f%6d%6d%6d%6d%5d%4d%4d%5lld%6lld%4lld%4lld%4lld\n" //line 1
-           "%9lu%7lu%7lu%7lld%7lld%7lld%7lld%10lld%7lld%10lld%7lld%7lld%5lld%7lld%7lld%7.1f%7.1f%7.1f\n"   //line 2
-           "%5lld%7lld%7lld%7lld%7lld%7lld%7lld%7lld%7lld%7lld%7lld%7lld%7lld"                             //line 3
-           "%4lld%4lld%4lld %lld %lld %lld %lld %lld %lld %lld %lld %lld %lld %lld%4lld%4lld%4lld\n"       //line 3 continued
-           , chunk.unLeftShoulderWidth
-           , chunk.unLeftLaneWidth
-           , chunk.unRightLaneWidth
-           , chunk.unRightShoulderWidth
-           , chunk.llUnk1
-           , chunk.llUnk2
-           , chunk.llUnk3
+           " %4d %6d %6d %6d %6d %6d %6d %11.5f %11.5f %11.5f %5d %5d %5d %5d %3d %3d %3d %4d %5d %3d %3d %3d\n" //line 1
+           "%6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %4d %6d %6d %6.1f %6.1f %6.1f\n"   //line 2
+           " %4d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d"                             //line 3
+           " %3d %3d %3d %d %d %d %d %d %d %d %d %d %d %d %3d %3d %3d\n"       //line 3 continued
+           , chunk.iLeftShoulderWidth
+           , chunk.iLeftLaneWidth
+           , chunk.iRightLaneWidth
+           , chunk.iRightShoulderWidth
+           , chunk.iUnk1
+           , chunk.iUnk2
+           , chunk.iUnk3
            , chunk.fYaw
            , chunk.fPitch
            , chunk.fRoll
@@ -867,59 +940,59 @@ void CTrack::GenerateChunkString(tGeometryChunk &chunk)
            , chunk.unTrackGrip
            , chunk.unLeftShoulderGrip
            , chunk.unRightShoulderGrip
-           , chunk.llUnk4
-           , chunk.llUnk5
-           , chunk.llUnk6
-           , chunk.llUnk7
-           , chunk.llUnk8
-           , chunk.ulLeftSurfaceType
-           , chunk.ulCenterSurfaceType
-           , chunk.ulRightSurfaceType
-           , chunk.llUnk9
-           , chunk.llUnk10
-           , chunk.llUnk11
-           , chunk.llUnk12
-           , chunk.llUnk13
-           , chunk.llUnk14
-           , chunk.llUnk15
-           , chunk.llUnk16
-           , chunk.llUnk17
-           , chunk.llUnk18
-           , chunk.llUnk19
-           , chunk.llUnk20
+           , chunk.iUnk4
+           , chunk.iUnk5
+           , chunk.iUnk6
+           , chunk.iUnk7
+           , chunk.iUnk8
+           , chunk.iLeftSurfaceType
+           , chunk.iCenterSurfaceType
+           , chunk.iRightSurfaceType
+           , chunk.iUnk9
+           , chunk.iUnk10
+           , chunk.iUnk11
+           , chunk.iUnk12
+           , chunk.iUnk13
+           , chunk.iUnk14
+           , chunk.iUnk15
+           , chunk.iUnk16
+           , chunk.iUnk17
+           , chunk.iUnk18
+           , chunk.iUnk19
+           , chunk.iUnk20
            , chunk.fUnk1
            , chunk.fUnk2
            , chunk.fUnk3
-           , chunk.llUnk21
-           , chunk.llUnk22
-           , chunk.llUnk23
-           , chunk.llUnk24
-           , chunk.llUnk25
-           , chunk.llUnk26
-           , chunk.llUnk27
-           , chunk.llUnk28
-           , chunk.llUnk29
-           , chunk.llUnk30
-           , chunk.llUnk31
-           , chunk.llUnk32
-           , chunk.llUnk33
-           , chunk.llUnk34
-           , chunk.llUnk35
-           , chunk.llUnk36
-           , chunk.llUnk37
-           , chunk.llUnk38
-           , chunk.llUnk39
-           , chunk.llUnk40
-           , chunk.llUnk41
-           , chunk.llUnk42
-           , chunk.llUnk43
-           , chunk.llUnk44
-           , chunk.llUnk45
-           , chunk.llUnk46
-           , chunk.llUnk47
-           , chunk.llUnk48
-           , chunk.llUnk49
-           , chunk.llUnk50);
+           , chunk.iUnk21
+           , chunk.iUnk22
+           , chunk.iUnk23
+           , chunk.iUnk24
+           , chunk.iUnk25
+           , chunk.iUnk26
+           , chunk.iUnk27
+           , chunk.iUnk28
+           , chunk.iUnk29
+           , chunk.iUnk30
+           , chunk.iUnk31
+           , chunk.iUnk32
+           , chunk.iUnk33
+           , chunk.iUnk34
+           , chunk.iUnk35
+           , chunk.iUnk36
+           , chunk.iUnk37
+           , chunk.iUnk38
+           , chunk.iUnk39
+           , chunk.iUnk40
+           , chunk.iUnk41
+           , chunk.iUnk42
+           , chunk.iUnk43
+           , chunk.iUnk44
+           , chunk.iUnk45
+           , chunk.iUnk46
+           , chunk.iUnk47
+           , chunk.iUnk48
+           , chunk.iUnk49
+           , chunk.iUnk50);
   chunk.sString = szGenerate;
 }
 

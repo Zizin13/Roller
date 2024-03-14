@@ -26,6 +26,8 @@ protected slots:
   void OnDebug();
   void OnAbout();
   void OnEditTabChanged(int iIndex);
+  void OnInsertBeforeClicked();
+  void OnInsertAfterClicked();
   void OnSelChunksFromChanged(int iValue);
   void OnSelChunksToChanged(int iValue);
   void OnSelectedTupleChanged(int iValue);
@@ -66,8 +68,8 @@ private:
   void UpdateStuntSelection();
   void UpdateBackSelection();
   void UpdateInfoSelection();
-  void UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue);
-  bool UpdateLEEditMode(QLineEdit *pLineEdit, const QString &sValue, bool bNew = false);
+  bool UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue);
+  void UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, const QString &sValue, bool bNew = false);
   void RevertGeometry();
   void RevertTuples();
   void RevertStunts();

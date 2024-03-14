@@ -732,6 +732,104 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex
 
 //-------------------------------------------------------------------------------------------------
 
+void CTrack::InsertGeometryChunk(int iIndex, int iCount
+  , const QString &sLeftShoulderWidth, const QString &sLeftLaneWidth, const QString &sRightLaneWidth, const QString &sRightShoulderWidth
+  , const QString &sUnk1, const QString &sUnk2, const QString &sUnk3
+  , const QString &sYaw, const QString &sPitch, const QString &sRoll
+  , const QString &sAILine1, const QString &sAILine2, const QString &sAILine3, const QString &sAILine4
+  , const QString &sTrackGrip, const QString &sLeftShoulderGrip, const QString &sRightShoulderGrip
+  , const QString &sUnk4, const QString &sUnk5, const QString &sUnk6, const QString &sUnk7, const QString &sUnk8
+  , const QString &sLeftSurfaceType, const QString &sCenterSurfaceType, const QString &sRightSurfaceType
+  , const QString &sUnk9, const QString &sUnk10, const QString &sUnk11, const QString &sUnk12, const QString &sUnk13, const QString &sUnk14
+  , const QString &sUnk15, const QString &sUnk16, const QString &sUnk17, const QString &sUnk18, const QString &sUnk19, const QString &sUnk20
+  , const QString &sfUnk1, const QString &sfUnk2, const QString &sfUnk3
+  , const QString &sUnk21, const QString &sUnk22, const QString &sUnk23, const QString &sUnk24, const QString &sUnk25, const QString &sUnk26
+  , const QString &sUnk27, const QString &sUnk28, const QString &sUnk29, const QString &sUnk30, const QString &sUnk31, const QString &sUnk32
+  , const QString &sUnk33, const QString &sUnk34, const QString &sUnk35, const QString &sUnk36, const QString &sUnk37, const QString &sUnk38
+  , const QString &sUnk39, const QString &sUnk40, const QString &sUnk41, const QString &sUnk42, const QString &sUnk43, const QString &sUnk44
+  , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50)
+{
+  for (int i = 0; i < iCount; ++i) {
+    struct tGeometryChunk newChunk;
+    memset(&newChunk, sizeof(newChunk), 0);
+    newChunk.unLeftShoulderWidth = sLeftShoulderWidth.toUShort();
+    newChunk.unLeftLaneWidth = sLeftLaneWidth.toUShort();
+    newChunk.unRightLaneWidth = sRightLaneWidth.toUShort();
+    newChunk.unRightShoulderWidth = sRightShoulderWidth.toUShort();
+    newChunk.llUnk1 = sUnk1.toLongLong();
+    newChunk.llUnk2 = sUnk2.toLongLong();
+    newChunk.llUnk3 = sUnk3.toLongLong();
+    newChunk.fYaw = sYaw.toFloat();
+    newChunk.fPitch = sPitch.toFloat();
+    newChunk.fRoll = sRoll.toFloat();
+    newChunk.iAILine1 = sAILine1.toInt();
+    newChunk.iAILine2 = sAILine2.toInt();
+    newChunk.iAILine3 = sAILine3.toInt();
+    newChunk.iAILine4 = sAILine4.toInt();
+    newChunk.unTrackGrip = sTrackGrip.toUShort();
+    newChunk.unLeftShoulderGrip = sLeftShoulderGrip.toUShort();
+    newChunk.unRightShoulderGrip = sRightShoulderGrip.toUShort();
+    newChunk.llUnk4 = sUnk4.toLongLong();
+    newChunk.llUnk5 = sUnk5.toLongLong();
+    newChunk.llUnk6 = sUnk6.toLongLong();
+    newChunk.llUnk7 = sUnk7.toLongLong();
+    newChunk.llUnk8 = sUnk8.toLongLong();
+    newChunk.ulLeftSurfaceType = sLeftSurfaceType.toULong();
+    newChunk.ulCenterSurfaceType = sCenterSurfaceType.toULong();
+    newChunk.ulRightSurfaceType = sRightSurfaceType.toULong();
+    newChunk.llUnk9 = sUnk9.toLongLong();
+    newChunk.llUnk10 = sUnk10.toLongLong();
+    newChunk.llUnk11 = sUnk11.toLongLong();
+    newChunk.llUnk12 = sUnk12.toLongLong();
+    newChunk.llUnk13 = sUnk13.toLongLong();
+    newChunk.llUnk14 = sUnk14.toLongLong();
+    newChunk.llUnk15 = sUnk15.toLongLong();
+    newChunk.llUnk16 = sUnk16.toLongLong();
+    newChunk.llUnk17 = sUnk17.toLongLong();
+    newChunk.llUnk18 = sUnk18.toLongLong();
+    newChunk.llUnk19 = sUnk19.toLongLong();
+    newChunk.llUnk20 = sUnk20.toLongLong();
+    newChunk.fUnk1 = sfUnk1.toFloat();
+    newChunk.fUnk2 = sfUnk2.toFloat();
+    newChunk.fUnk3 = sfUnk3.toFloat();
+    newChunk.llUnk21 = sUnk21.toLongLong();
+    newChunk.llUnk22 = sUnk22.toLongLong();
+    newChunk.llUnk23 = sUnk23.toLongLong();
+    newChunk.llUnk24 = sUnk24.toLongLong();
+    newChunk.llUnk25 = sUnk25.toLongLong();
+    newChunk.llUnk26 = sUnk26.toLongLong();
+    newChunk.llUnk27 = sUnk27.toLongLong();
+    newChunk.llUnk28 = sUnk28.toLongLong();
+    newChunk.llUnk29 = sUnk29.toLongLong();
+    newChunk.llUnk30 = sUnk30.toLongLong();
+    newChunk.llUnk31 = sUnk31.toLongLong();
+    newChunk.llUnk32 = sUnk32.toLongLong();
+    newChunk.llUnk33 = sUnk33.toLongLong();
+    newChunk.llUnk34 = sUnk34.toLongLong();
+    newChunk.llUnk35 = sUnk35.toLongLong();
+    newChunk.llUnk36 = sUnk36.toLongLong();
+    newChunk.llUnk37 = sUnk37.toLongLong();
+    newChunk.llUnk38 = sUnk38.toLongLong();
+    newChunk.llUnk39 = sUnk39.toLongLong();
+    newChunk.llUnk40 = sUnk40.toLongLong();
+    newChunk.llUnk41 = sUnk41.toLongLong();
+    newChunk.llUnk42 = sUnk42.toLongLong();
+    newChunk.llUnk43 = sUnk43.toLongLong();
+    newChunk.llUnk44 = sUnk44.toLongLong();
+    newChunk.llUnk45 = sUnk45.toLongLong();
+    newChunk.llUnk46 = sUnk46.toLongLong();
+    newChunk.llUnk47 = sUnk47.toLongLong();
+    newChunk.llUnk48 = sUnk48.toLongLong();
+    newChunk.llUnk49 = sUnk49.toLongLong();
+    newChunk.llUnk50 = sUnk50.toLongLong();
+    m_chunkAy.insert(m_chunkAy.begin() + iIndex, newChunk);
+  }
+  UpdateChunkStrings();
+  g_pMainWindow->LogMessage("Inserted " + QString::number(iCount) + " geometry chunks");
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CTrack::UpdateChunkStrings()
 {
   for (int i = 0; i < m_chunkAy.size(); ++i) {

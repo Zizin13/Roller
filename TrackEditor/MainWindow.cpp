@@ -106,6 +106,8 @@ CMainWindow::CMainWindow(const QString &sAppPath)
 
   connect(twEditor, &QTabWidget::currentChanged, this, &CMainWindow::OnEditTabChanged);
 
+  connect(pbInsertBefore, &QPushButton::clicked, this, &CMainWindow::OnInsertBeforeClicked);
+  connect(pbInsertAfter, &QPushButton::clicked, this, &CMainWindow::OnInsertAfterClicked);
   connect(sbSelChunksFrom, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksFromChanged(int)));
   connect(sbSelChunksTo, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksToChanged(int)));
   connect(ckTo, &QCheckBox::toggled, this, &CMainWindow::OnToChecked);
@@ -130,6 +132,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leLShoulderWidth, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leLLaneWidth, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leRLaneWidth, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leRShoulderWidth, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk1, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk2, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk3, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
@@ -357,6 +360,73 @@ void CMainWindow::OnEditTabChanged(int iIndex)
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::OnInsertBeforeClicked()
+{
+  p->m_track.InsertGeometryChunk(sbSelChunksFrom->value(), sbInsert->value()
+    , leLShoulderWidth->text(), leLLaneWidth->text(), leRLaneWidth->text(), leRShoulderWidth->text()
+    , leUnk1->text(), leUnk2->text(), leUnk3->text()
+    , leYaw->text(), lePitch->text(), leRoll->text()
+    , leAILine1->text(), leAILine2->text(), leAILine3->text(), leAILine4->text()
+    , leTrackGrip->text(), leLeftShoulderGrip->text(), leRShoulderGrip->text()
+    , leUnk4->text(), leUnk5->text(), leUnk6->text(), leUnk7->text(), leUnk8->text()
+    , leLeftSurfaceType->text(), leCenterSurfaceType->text(), leRightSurfaceType->text()
+    , leUnk9->text(), leUnk10->text(), leUnk11->text(), leUnk12->text(), leUnk13->text(), leUnk14->text()
+    , leUnk15->text(), leUnk16->text(), leUnk17->text(), leUnk18->text(), leUnk19->text(), leUnk20->text()
+    , leFloatUnk1->text(), leFloatUnk2->text(), leFloatUnk3->text()
+    , leUnk21->text(), leUnk22->text(), leUnk23->text(), leUnk24->text(), leUnk25->text(), leUnk26->text()
+    , leUnk27->text(), leUnk28->text(), leUnk29->text(), leUnk30->text(), leUnk31->text(), leUnk32->text()
+    , leUnk33->text(), leUnk34->text(), leUnk35->text(), leUnk36->text(), leUnk37->text(), leUnk38->text()
+    , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
+    , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text());
+
+  m_bUnsavedChanges = true;
+  sbSelChunksFrom->blockSignals(true);
+  sbSelChunksTo->blockSignals(true);
+  ckTo->blockSignals(true);
+  sbSelChunksTo->setValue(sbSelChunksFrom->value() + sbInsert->value() - 1);
+  ckTo->setChecked(sbInsert->value() > 1);
+  sbSelChunksFrom->blockSignals(false);
+  sbSelChunksTo->blockSignals(false);
+  ckTo->blockSignals(false);
+  UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnInsertAfterClicked()
+{
+  p->m_track.InsertGeometryChunk(sbSelChunksTo->value() + 1, sbInsert->value()
+    , leLShoulderWidth->text(), leLLaneWidth->text(), leRLaneWidth->text(), leRShoulderWidth->text()
+    , leUnk1->text(), leUnk2->text(), leUnk3->text()
+    , leYaw->text(), lePitch->text(), leRoll->text()
+    , leAILine1->text(), leAILine2->text(), leAILine3->text(), leAILine4->text()
+    , leTrackGrip->text(), leLeftShoulderGrip->text(), leRShoulderGrip->text()
+    , leUnk4->text(), leUnk5->text(), leUnk6->text(), leUnk7->text(), leUnk8->text()
+    , leLeftSurfaceType->text(), leCenterSurfaceType->text(), leRightSurfaceType->text()
+    , leUnk9->text(), leUnk10->text(), leUnk11->text(), leUnk12->text(), leUnk13->text(), leUnk14->text()
+    , leUnk15->text(), leUnk16->text(), leUnk17->text(), leUnk18->text(), leUnk19->text(), leUnk20->text()
+    , leFloatUnk1->text(), leFloatUnk2->text(), leFloatUnk3->text()
+    , leUnk21->text(), leUnk22->text(), leUnk23->text(), leUnk24->text(), leUnk25->text(), leUnk26->text()
+    , leUnk27->text(), leUnk28->text(), leUnk29->text(), leUnk30->text(), leUnk31->text(), leUnk32->text()
+    , leUnk33->text(), leUnk34->text(), leUnk35->text(), leUnk36->text(), leUnk37->text(), leUnk38->text()
+    , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
+    , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text());
+
+  m_bUnsavedChanges = true;
+  sbSelChunksFrom->blockSignals(true);
+  sbSelChunksTo->blockSignals(true);
+  ckTo->blockSignals(true);
+  sbSelChunksFrom->setValue(sbSelChunksTo->value() + 1);
+  sbSelChunksTo->setValue(sbSelChunksFrom->value() + sbInsert->value() - 1);
+  ckTo->setChecked(sbInsert->value() > 1);
+  sbSelChunksFrom->blockSignals(false);
+  sbSelChunksTo->blockSignals(false);
+  ckTo->blockSignals(false);
+  UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CMainWindow::OnAbout()
 {
   QMessageBox::information(this, "Git Gud", "YOU NEED MORE PRACTICE");
@@ -500,6 +570,7 @@ void CMainWindow::OnApplyInfoClicked()
 void CMainWindow::OnCancelClicked()
 {
   RevertGeometry();
+  UpdateGeometryEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -651,78 +722,82 @@ void CMainWindow::OnTupleLValChanged()
 void CMainWindow::UpdateGeometryEditMode()
 {
   bool bEditMode = false;
-  bEditMode |= UpdateLEEditMode(leLShoulderWidth, p->sLeftShoulderWidth);
-  bEditMode |= UpdateLEEditMode(leLLaneWidth, p->sLeftLaneWidth);
-  bEditMode |= UpdateLEEditMode(leRLaneWidth, p->sRightLaneWidth);
-  bEditMode |= UpdateLEEditMode(leRShoulderWidth, p->sRightShoulderWidth);
-  bEditMode |= UpdateLEEditMode(leUnk1, p->sUnk1);
-  bEditMode |= UpdateLEEditMode(leUnk2, p->sUnk2);
-  bEditMode |= UpdateLEEditMode(leUnk3, p->sUnk3);
-  bEditMode |= UpdateLEEditMode(leYaw, p->sYaw);
-  bEditMode |= UpdateLEEditMode(lePitch, p->sPitch);
-  bEditMode |= UpdateLEEditMode(leRoll, p->sRoll);
-  bEditMode |= UpdateLEEditMode(leAILine1, p->sAILine1);
-  bEditMode |= UpdateLEEditMode(leAILine2, p->sAILine2);
-  bEditMode |= UpdateLEEditMode(leAILine3, p->sAILine3);
-  bEditMode |= UpdateLEEditMode(leAILine4, p->sAILine4);
-  bEditMode |= UpdateLEEditMode(leTrackGrip, p->sTrackGrip);
-  bEditMode |= UpdateLEEditMode(leLeftShoulderGrip, p->sLeftShoulderGrip);
-  bEditMode |= UpdateLEEditMode(leRShoulderGrip, p->sRightShoulderGrip);
-  bEditMode |= UpdateLEEditMode(leUnk4, p->sUnk4);
-  bEditMode |= UpdateLEEditMode(leUnk5, p->sUnk5);
-  bEditMode |= UpdateLEEditMode(leUnk6, p->sUnk6);
-  bEditMode |= UpdateLEEditMode(leUnk7, p->sUnk7);
-  bEditMode |= UpdateLEEditMode(leUnk8, p->sUnk8);
-  bEditMode |= UpdateLEEditMode(leLeftSurfaceType, p->sLeftSurfaceType);
-  bEditMode |= UpdateLEEditMode(leCenterSurfaceType, p->sCenterSurfaceType);
-  bEditMode |= UpdateLEEditMode(leRightSurfaceType, p->sRightSurfaceType);
-  bEditMode |= UpdateLEEditMode(leUnk9, p->sUnk9);
-  bEditMode |= UpdateLEEditMode(leUnk10, p->sUnk10);
-  bEditMode |= UpdateLEEditMode(leUnk11, p->sUnk11);
-  bEditMode |= UpdateLEEditMode(leUnk12, p->sUnk12);
-  bEditMode |= UpdateLEEditMode(leUnk13, p->sUnk13);
-  bEditMode |= UpdateLEEditMode(leUnk14, p->sUnk14);
-  bEditMode |= UpdateLEEditMode(leUnk15, p->sUnk15);
-  bEditMode |= UpdateLEEditMode(leUnk16, p->sUnk16);
-  bEditMode |= UpdateLEEditMode(leUnk17, p->sUnk17);
-  bEditMode |= UpdateLEEditMode(leUnk18, p->sUnk18);
-  bEditMode |= UpdateLEEditMode(leUnk19, p->sUnk19);
-  bEditMode |= UpdateLEEditMode(leUnk20, p->sUnk20);
-  bEditMode |= UpdateLEEditMode(leFloatUnk1, p->sfUnk1);
-  bEditMode |= UpdateLEEditMode(leFloatUnk2, p->sfUnk2);
-  bEditMode |= UpdateLEEditMode(leFloatUnk3, p->sfUnk3);
-  bEditMode |= UpdateLEEditMode(leUnk21, p->sUnk21);
-  bEditMode |= UpdateLEEditMode(leUnk22, p->sUnk22);
-  bEditMode |= UpdateLEEditMode(leUnk23, p->sUnk23);
-  bEditMode |= UpdateLEEditMode(leUnk24, p->sUnk24);
-  bEditMode |= UpdateLEEditMode(leUnk25, p->sUnk25);
-  bEditMode |= UpdateLEEditMode(leUnk26, p->sUnk26);
-  bEditMode |= UpdateLEEditMode(leUnk27, p->sUnk27);
-  bEditMode |= UpdateLEEditMode(leUnk28, p->sUnk28);
-  bEditMode |= UpdateLEEditMode(leUnk29, p->sUnk29);
-  bEditMode |= UpdateLEEditMode(leUnk30, p->sUnk30);
-  bEditMode |= UpdateLEEditMode(leUnk31, p->sUnk31);
-  bEditMode |= UpdateLEEditMode(leUnk32, p->sUnk32);
-  bEditMode |= UpdateLEEditMode(leUnk33, p->sUnk33);
-  bEditMode |= UpdateLEEditMode(leUnk34, p->sUnk34);
-  bEditMode |= UpdateLEEditMode(leUnk35, p->sUnk35);
-  bEditMode |= UpdateLEEditMode(leUnk36, p->sUnk36);
-  bEditMode |= UpdateLEEditMode(leUnk37, p->sUnk37);
-  bEditMode |= UpdateLEEditMode(leUnk38, p->sUnk38);
-  bEditMode |= UpdateLEEditMode(leUnk39, p->sUnk39);
-  bEditMode |= UpdateLEEditMode(leUnk40, p->sUnk40);
-  bEditMode |= UpdateLEEditMode(leUnk41, p->sUnk41);
-  bEditMode |= UpdateLEEditMode(leUnk42, p->sUnk42);
-  bEditMode |= UpdateLEEditMode(leUnk43, p->sUnk43);
-  bEditMode |= UpdateLEEditMode(leUnk44, p->sUnk44);
-  bEditMode |= UpdateLEEditMode(leUnk45, p->sUnk45);
-  bEditMode |= UpdateLEEditMode(leUnk46, p->sUnk46);
-  bEditMode |= UpdateLEEditMode(leUnk47, p->sUnk47);
-  bEditMode |= UpdateLEEditMode(leUnk48, p->sUnk48);
-  bEditMode |= UpdateLEEditMode(leUnk49, p->sUnk49);
-  bEditMode |= UpdateLEEditMode(leUnk50, p->sUnk50);
+  bool bMixedData = false;
+  UpdateLEEditMode(bEditMode, bMixedData, leLShoulderWidth, p->sLeftShoulderWidth);
+  UpdateLEEditMode(bEditMode, bMixedData, leLLaneWidth, p->sLeftLaneWidth);
+  UpdateLEEditMode(bEditMode, bMixedData, leRLaneWidth, p->sRightLaneWidth);
+  UpdateLEEditMode(bEditMode, bMixedData, leRShoulderWidth, p->sRightShoulderWidth);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk1, p->sUnk1);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk2, p->sUnk2);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk3, p->sUnk3);
+  UpdateLEEditMode(bEditMode, bMixedData, leYaw, p->sYaw);
+  UpdateLEEditMode(bEditMode, bMixedData, lePitch, p->sPitch);
+  UpdateLEEditMode(bEditMode, bMixedData, leRoll, p->sRoll);
+  UpdateLEEditMode(bEditMode, bMixedData, leAILine1, p->sAILine1);
+  UpdateLEEditMode(bEditMode, bMixedData, leAILine2, p->sAILine2);
+  UpdateLEEditMode(bEditMode, bMixedData, leAILine3, p->sAILine3);
+  UpdateLEEditMode(bEditMode, bMixedData, leAILine4, p->sAILine4);
+  UpdateLEEditMode(bEditMode, bMixedData, leTrackGrip, p->sTrackGrip);
+  UpdateLEEditMode(bEditMode, bMixedData, leLeftShoulderGrip, p->sLeftShoulderGrip);
+  UpdateLEEditMode(bEditMode, bMixedData, leRShoulderGrip, p->sRightShoulderGrip);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk4, p->sUnk4);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk5, p->sUnk5);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk6, p->sUnk6);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk7, p->sUnk7);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk8, p->sUnk8);
+  UpdateLEEditMode(bEditMode, bMixedData, leLeftSurfaceType, p->sLeftSurfaceType);
+  UpdateLEEditMode(bEditMode, bMixedData, leCenterSurfaceType, p->sCenterSurfaceType);
+  UpdateLEEditMode(bEditMode, bMixedData, leRightSurfaceType, p->sRightSurfaceType);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk9, p->sUnk9);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk10, p->sUnk10);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk11, p->sUnk11);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk12, p->sUnk12);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk13, p->sUnk13);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk14, p->sUnk14);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk15, p->sUnk15);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk16, p->sUnk16);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk17, p->sUnk17);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk18, p->sUnk18);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk19, p->sUnk19);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk20, p->sUnk20);
+  UpdateLEEditMode(bEditMode, bMixedData, leFloatUnk1, p->sfUnk1);
+  UpdateLEEditMode(bEditMode, bMixedData, leFloatUnk2, p->sfUnk2);
+  UpdateLEEditMode(bEditMode, bMixedData, leFloatUnk3, p->sfUnk3);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk21, p->sUnk21);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk22, p->sUnk22);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk23, p->sUnk23);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk24, p->sUnk24);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk25, p->sUnk25);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk26, p->sUnk26);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk27, p->sUnk27);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk28, p->sUnk28);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk29, p->sUnk29);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk30, p->sUnk30);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk31, p->sUnk31);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk32, p->sUnk32);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk33, p->sUnk33);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk34, p->sUnk34);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk35, p->sUnk35);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk36, p->sUnk36);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk37, p->sUnk37);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk38, p->sUnk38);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk39, p->sUnk39);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk40, p->sUnk40);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk41, p->sUnk41);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk42, p->sUnk42);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk43, p->sUnk43);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk44, p->sUnk44);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk45, p->sUnk45);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk46, p->sUnk46);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk47, p->sUnk47);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk48, p->sUnk48);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk49, p->sUnk49);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk50, p->sUnk50);
+
   pbApply->setEnabled(bEditMode);
   pbCancel->setEnabled(bEditMode);
+  pbInsertAfter->setEnabled(!bMixedData);
+  pbInsertBefore->setEnabled(!bMixedData);
   sbSelChunksFrom->setEnabled(!bEditMode);
   ckTo->setEnabled(!bEditMode);
   sbSelChunksTo->setEnabled(!bEditMode && ckTo->isChecked());
@@ -735,7 +810,9 @@ void CMainWindow::UpdateTuplesEditMode()
   CTupleMap::iterator it = p->m_track.m_tupleMap.find(leLVal->text().toInt());
   bool bNew = (it == p->m_track.m_tupleMap.end());
 
-  bool bLValEdited = UpdateLEEditMode(leRVal, p->sTupleRVal, bNew);
+  bool bLValEdited = false;
+  bool bMixedData = false;
+  UpdateLEEditMode(bLValEdited, bMixedData, leRVal, p->sTupleRVal, bNew);
 
   bool bEditMode = bNew || bLValEdited;
   pbApplyTuple->setEnabled(bEditMode);
@@ -758,15 +835,16 @@ void CMainWindow::UpdateStuntsEditMode()
   bool bNew = (it == p->m_track.m_stuntMap.end());
 
   bool bLValEdited = false;
-  bLValEdited |= UpdateLEEditMode(leStuntScaleFact, p->sStuntScaleFactor, bNew);
-  bLValEdited |= UpdateLEEditMode(leStuntAngle, p->sStuntAngle, bNew);
-  bLValEdited |= UpdateLEEditMode(leStuntUnk, p->sStuntUnknown, bNew);
-  bLValEdited |= UpdateLEEditMode(leStuntTimingGroup, p->sStuntTimingGroup, bNew);
-  bLValEdited |= UpdateLEEditMode(leStuntHeight, p->sStuntHeight, bNew);
-  bLValEdited |= UpdateLEEditMode(leStuntTimeBulging, p->sStuntTimeBulging, bNew);
-  bLValEdited |= UpdateLEEditMode(leStuntTimeFlat, p->sStuntTimeFlat, bNew);
-  bLValEdited |= UpdateLEEditMode(leStuntExpandContract, p->sStuntExpandsContracts, bNew);
-  bLValEdited |= UpdateLEEditMode(leStuntBulge, p->sStuntBulge, bNew);
+  bool bMixedData = false;
+  UpdateLEEditMode(bLValEdited, bMixedData, leStuntScaleFact, p->sStuntScaleFactor, bNew);
+  UpdateLEEditMode(bLValEdited, bMixedData, leStuntAngle, p->sStuntAngle, bNew);
+  UpdateLEEditMode(bLValEdited, bMixedData, leStuntUnk, p->sStuntUnknown, bNew);
+  UpdateLEEditMode(bLValEdited, bMixedData, leStuntTimingGroup, p->sStuntTimingGroup, bNew);
+  UpdateLEEditMode(bLValEdited, bMixedData, leStuntHeight, p->sStuntHeight, bNew);
+  UpdateLEEditMode(bLValEdited, bMixedData, leStuntTimeBulging, p->sStuntTimeBulging, bNew);
+  UpdateLEEditMode(bLValEdited, bMixedData, leStuntTimeFlat, p->sStuntTimeFlat, bNew);
+  UpdateLEEditMode(bLValEdited, bMixedData, leStuntExpandContract, p->sStuntExpandsContracts, bNew);
+  UpdateLEEditMode(bLValEdited, bMixedData, leStuntBulge, p->sStuntBulge, bNew);
 
   bool bEditMode = bNew || bLValEdited;
   pbApplyStunt->setEnabled(bEditMode);
@@ -789,9 +867,10 @@ void CMainWindow::UpdateTexturesEditMode()
   bool bNew = (it == p->m_track.m_backsMap.end());
 
   bool bLValEdited = false;
-  bLValEdited |= UpdateLEEditMode(leBackVal, p->sBackVal, bNew);
-  bLValEdited |= UpdateLEEditMode(leTex, p->sTex);
-  bLValEdited |= UpdateLEEditMode(leBld, p->sBld);
+  bool bMixedData = false;
+  UpdateLEEditMode(bLValEdited, bMixedData, leBackVal, p->sBackVal, bNew);
+  UpdateLEEditMode(bLValEdited, bMixedData, leTex, p->sTex);
+  UpdateLEEditMode(bLValEdited, bMixedData, leBld, p->sBld);
 
   bool bEditMode = bNew || bLValEdited;
   pbApplyTexture->setEnabled(bEditMode);
@@ -803,16 +882,17 @@ void CMainWindow::UpdateTexturesEditMode()
 void CMainWindow::UpdateInfoEditMode()
 {
   bool bEditMode = false;
-  bEditMode |= UpdateLEEditMode(leTrackNum, p->sTrackNumber);
-  bEditMode |= UpdateLEEditMode(leImpossibleLaps, p->sImpossibleLaps);
-  bEditMode |= UpdateLEEditMode(leHardLaps, p->sHardLaps);
-  bEditMode |= UpdateLEEditMode(leTrickyLaps, p->sTrickyLaps);
-  bEditMode |= UpdateLEEditMode(leMediumLaps, p->sMediumLaps);
-  bEditMode |= UpdateLEEditMode(leEasyLaps, p->sEasyLaps);
-  bEditMode |= UpdateLEEditMode(leGirlieLaps, p->sGirlieLaps);
-  bEditMode |= UpdateLEEditMode(leMapFidelity, p->sTrackMapFidelity);
-  bEditMode |= UpdateLEEditMode(leMapSize, p->sTrackMapSize);
-  bEditMode |= UpdateLEEditMode(leInfoUnknown, p->sInfoUnknown);
+  bool bMixedData = false;
+  UpdateLEEditMode(bEditMode, bMixedData, leTrackNum, p->sTrackNumber);
+  UpdateLEEditMode(bEditMode, bMixedData, leImpossibleLaps, p->sImpossibleLaps);
+  UpdateLEEditMode(bEditMode, bMixedData, leHardLaps, p->sHardLaps);
+  UpdateLEEditMode(bEditMode, bMixedData, leTrickyLaps, p->sTrickyLaps);
+  UpdateLEEditMode(bEditMode, bMixedData, leMediumLaps, p->sMediumLaps);
+  UpdateLEEditMode(bEditMode, bMixedData, leEasyLaps, p->sEasyLaps);
+  UpdateLEEditMode(bEditMode, bMixedData, leGirlieLaps, p->sGirlieLaps);
+  UpdateLEEditMode(bEditMode, bMixedData, leMapFidelity, p->sTrackMapFidelity);
+  UpdateLEEditMode(bEditMode, bMixedData, leMapSize, p->sTrackMapSize);
+  UpdateLEEditMode(bEditMode, bMixedData, leInfoUnknown, p->sInfoUnknown);
 
   pbApplyInfo->setEnabled(bEditMode);
   pbRevertInfo->setEnabled(bEditMode);
@@ -1149,7 +1229,7 @@ void CMainWindow::UpdateInfoSelection()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue)
+bool CMainWindow::UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue)
 {
   pLineEdit->blockSignals(true);
   if (sValue.compare(MIXED_DATA) == 0) {
@@ -1161,25 +1241,26 @@ void CMainWindow::UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString
     pLineEdit->setStyleSheet("");
   }
   pLineEdit->blockSignals(false);
+  return (sValue.compare(MIXED_DATA) == 0) && pLineEdit->text().isEmpty();
 }
 
 //-------------------------------------------------------------------------------------------------
 
-bool CMainWindow::UpdateLEEditMode(QLineEdit *pLineEdit, const QString &sValue, bool bNew)
+void CMainWindow::UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, const QString &sValue, bool bNew)
 {
-  bool bEditMode = (pLineEdit->text().compare(sValue) != 0);
   if (bNew) {
     pLineEdit->setStyleSheet("background-color: rgb(0,255,0)");
-  } else if (bEditMode) {
+  } else if (pLineEdit->text().compare(sValue) != 0) {
     if (pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) == 0) {
+      bMixedData = true;
       pLineEdit->setStyleSheet("");
     } else {
+      bEdited = true;
       pLineEdit->setStyleSheet("background-color: rgb(255,255,0)");
     }
   } else {
     pLineEdit->setStyleSheet("");
   }
-  return bEditMode;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1188,77 +1269,80 @@ void CMainWindow::RevertGeometry()
 {
   pbDelete->setEnabled(!p->m_track.m_chunkAy.empty());
 
-  UpdateLEWithSelectionValue(leLShoulderWidth, p->sLeftShoulderWidth);
-  UpdateLEWithSelectionValue(leLLaneWidth, p->sLeftLaneWidth);
-  UpdateLEWithSelectionValue(leRLaneWidth, p->sRightLaneWidth);
-  UpdateLEWithSelectionValue(leRShoulderWidth, p->sRightShoulderWidth);
-  UpdateLEWithSelectionValue(leUnk1, p->sUnk1);
-  UpdateLEWithSelectionValue(leUnk2, p->sUnk2);
-  UpdateLEWithSelectionValue(leUnk3, p->sUnk3);
-  UpdateLEWithSelectionValue(leYaw, p->sYaw);
-  UpdateLEWithSelectionValue(lePitch, p->sPitch);
-  UpdateLEWithSelectionValue(leRoll, p->sRoll);
-  UpdateLEWithSelectionValue(leAILine1, p->sAILine1);
-  UpdateLEWithSelectionValue(leAILine2, p->sAILine2);
-  UpdateLEWithSelectionValue(leAILine3, p->sAILine3);
-  UpdateLEWithSelectionValue(leAILine4, p->sAILine4);
-  UpdateLEWithSelectionValue(leTrackGrip, p->sTrackGrip);
-  UpdateLEWithSelectionValue(leLeftShoulderGrip, p->sLeftShoulderGrip);
-  UpdateLEWithSelectionValue(leRShoulderGrip, p->sRightShoulderGrip);
-  UpdateLEWithSelectionValue(leUnk4, p->sUnk4);
-  UpdateLEWithSelectionValue(leUnk5, p->sUnk5);
-  UpdateLEWithSelectionValue(leUnk6, p->sUnk6);
-  UpdateLEWithSelectionValue(leUnk7, p->sUnk7);
-  UpdateLEWithSelectionValue(leUnk8, p->sUnk8);
-  UpdateLEWithSelectionValue(leLeftSurfaceType, p->sLeftSurfaceType);
-  UpdateLEWithSelectionValue(leCenterSurfaceType, p->sCenterSurfaceType);
-  UpdateLEWithSelectionValue(leRightSurfaceType, p->sRightSurfaceType);
-  UpdateLEWithSelectionValue(leUnk9, p->sUnk9);
-  UpdateLEWithSelectionValue(leUnk10, p->sUnk10);
-  UpdateLEWithSelectionValue(leUnk11, p->sUnk11);
-  UpdateLEWithSelectionValue(leUnk12, p->sUnk12);
-  UpdateLEWithSelectionValue(leUnk13, p->sUnk13);
-  UpdateLEWithSelectionValue(leUnk14, p->sUnk14);
-  UpdateLEWithSelectionValue(leUnk15, p->sUnk15);
-  UpdateLEWithSelectionValue(leUnk16, p->sUnk16);
-  UpdateLEWithSelectionValue(leUnk17, p->sUnk17);
-  UpdateLEWithSelectionValue(leUnk18, p->sUnk18);
-  UpdateLEWithSelectionValue(leUnk19, p->sUnk19);
-  UpdateLEWithSelectionValue(leUnk20, p->sUnk20);
-  UpdateLEWithSelectionValue(leFloatUnk1, p->sfUnk1);
-  UpdateLEWithSelectionValue(leFloatUnk2, p->sfUnk2);
-  UpdateLEWithSelectionValue(leFloatUnk3, p->sfUnk3);
-  UpdateLEWithSelectionValue(leUnk21, p->sUnk21);
-  UpdateLEWithSelectionValue(leUnk22, p->sUnk22);
-  UpdateLEWithSelectionValue(leUnk23, p->sUnk23);
-  UpdateLEWithSelectionValue(leUnk24, p->sUnk24);
-  UpdateLEWithSelectionValue(leUnk25, p->sUnk25);
-  UpdateLEWithSelectionValue(leUnk26, p->sUnk26);
-  UpdateLEWithSelectionValue(leUnk27, p->sUnk27);
-  UpdateLEWithSelectionValue(leUnk28, p->sUnk28);
-  UpdateLEWithSelectionValue(leUnk29, p->sUnk29);
-  UpdateLEWithSelectionValue(leUnk30, p->sUnk30);
-  UpdateLEWithSelectionValue(leUnk31, p->sUnk31);
-  UpdateLEWithSelectionValue(leUnk32, p->sUnk32);
-  UpdateLEWithSelectionValue(leUnk33, p->sUnk33);
-  UpdateLEWithSelectionValue(leUnk34, p->sUnk34);
-  UpdateLEWithSelectionValue(leUnk35, p->sUnk35);
-  UpdateLEWithSelectionValue(leUnk36, p->sUnk36);
-  UpdateLEWithSelectionValue(leUnk37, p->sUnk37);
-  UpdateLEWithSelectionValue(leUnk38, p->sUnk38);
-  UpdateLEWithSelectionValue(leUnk39, p->sUnk39);
-  UpdateLEWithSelectionValue(leUnk40, p->sUnk40);
-  UpdateLEWithSelectionValue(leUnk41, p->sUnk41);
-  UpdateLEWithSelectionValue(leUnk42, p->sUnk42);
-  UpdateLEWithSelectionValue(leUnk43, p->sUnk43);
-  UpdateLEWithSelectionValue(leUnk44, p->sUnk44);
-  UpdateLEWithSelectionValue(leUnk45, p->sUnk45);
-  UpdateLEWithSelectionValue(leUnk46, p->sUnk46);
-  UpdateLEWithSelectionValue(leUnk47, p->sUnk47);
-  UpdateLEWithSelectionValue(leUnk48, p->sUnk48);
-  UpdateLEWithSelectionValue(leUnk49, p->sUnk49);
-  UpdateLEWithSelectionValue(leUnk50, p->sUnk50);
+  bool bMixedData = false;
+  bMixedData |= UpdateLEWithSelectionValue(leLShoulderWidth, p->sLeftShoulderWidth);
+  bMixedData |= UpdateLEWithSelectionValue(leLLaneWidth, p->sLeftLaneWidth);
+  bMixedData |= UpdateLEWithSelectionValue(leRLaneWidth, p->sRightLaneWidth);
+  bMixedData |= UpdateLEWithSelectionValue(leRShoulderWidth, p->sRightShoulderWidth);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk1, p->sUnk1);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk2, p->sUnk2);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk3, p->sUnk3);
+  bMixedData |= UpdateLEWithSelectionValue(leYaw, p->sYaw);
+  bMixedData |= UpdateLEWithSelectionValue(lePitch, p->sPitch);
+  bMixedData |= UpdateLEWithSelectionValue(leRoll, p->sRoll);
+  bMixedData |= UpdateLEWithSelectionValue(leAILine1, p->sAILine1);
+  bMixedData |= UpdateLEWithSelectionValue(leAILine2, p->sAILine2);
+  bMixedData |= UpdateLEWithSelectionValue(leAILine3, p->sAILine3);
+  bMixedData |= UpdateLEWithSelectionValue(leAILine4, p->sAILine4);
+  bMixedData |= UpdateLEWithSelectionValue(leTrackGrip, p->sTrackGrip);
+  bMixedData |= UpdateLEWithSelectionValue(leLeftShoulderGrip, p->sLeftShoulderGrip);
+  bMixedData |= UpdateLEWithSelectionValue(leRShoulderGrip, p->sRightShoulderGrip);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk4, p->sUnk4);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk5, p->sUnk5);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk6, p->sUnk6);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk7, p->sUnk7);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk8, p->sUnk8);
+  bMixedData |= UpdateLEWithSelectionValue(leLeftSurfaceType, p->sLeftSurfaceType);
+  bMixedData |= UpdateLEWithSelectionValue(leCenterSurfaceType, p->sCenterSurfaceType);
+  bMixedData |= UpdateLEWithSelectionValue(leRightSurfaceType, p->sRightSurfaceType);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk9, p->sUnk9);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk10, p->sUnk10);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk11, p->sUnk11);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk12, p->sUnk12);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk13, p->sUnk13);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk14, p->sUnk14);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk15, p->sUnk15);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk16, p->sUnk16);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk17, p->sUnk17);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk18, p->sUnk18);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk19, p->sUnk19);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk20, p->sUnk20);
+  bMixedData |= UpdateLEWithSelectionValue(leFloatUnk1, p->sfUnk1);
+  bMixedData |= UpdateLEWithSelectionValue(leFloatUnk2, p->sfUnk2);
+  bMixedData |= UpdateLEWithSelectionValue(leFloatUnk3, p->sfUnk3);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk21, p->sUnk21);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk22, p->sUnk22);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk23, p->sUnk23);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk24, p->sUnk24);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk25, p->sUnk25);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk26, p->sUnk26);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk27, p->sUnk27);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk28, p->sUnk28);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk29, p->sUnk29);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk30, p->sUnk30);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk31, p->sUnk31);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk32, p->sUnk32);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk33, p->sUnk33);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk34, p->sUnk34);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk35, p->sUnk35);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk36, p->sUnk36);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk37, p->sUnk37);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk38, p->sUnk38);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk39, p->sUnk39);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk40, p->sUnk40);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk41, p->sUnk41);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk42, p->sUnk42);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk43, p->sUnk43);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk44, p->sUnk44);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk45, p->sUnk45);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk46, p->sUnk46);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk47, p->sUnk47);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk48, p->sUnk48);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk49, p->sUnk49);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk50, p->sUnk50);
 
+  pbInsertAfter->setEnabled(!bMixedData);
+  pbInsertBefore->setEnabled(!bMixedData);
   pbApply->setEnabled(false);
   pbCancel->setEnabled(false);
   sbSelChunksFrom->setEnabled(true);

@@ -40,6 +40,9 @@ public:
     , sUnk33, sUnk34, sUnk35, sUnk36, sUnk37, sUnk38
     , sUnk39, sUnk40, sUnk41, sUnk42, sUnk43, sUnk44
     , sUnk45, sUnk46, sUnk47, sUnk48, sUnk49, sUnk50;
+
+  //selected tuple values
+  QString sTupleLVal, sTupleRVal;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -72,11 +75,16 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(actDebug, &QAction::triggered, this, &CMainWindow::OnDebug);
   connect(actAbout, &QAction::triggered, this, &CMainWindow::OnAbout);
 
+  connect(twEditor, &QTabWidget::currentChanged, this, &CMainWindow::OnEditTabChanged);
+
   connect(sbSelChunksFrom, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksFromChanged(int)));
   connect(sbSelChunksTo, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksToChanged(int)));
+  connect(sbSelectedTuple, SIGNAL(valueChanged(int)), this, SLOT(OnSelectedTupleChanged(int)));
   connect(ckTo, &QCheckBox::toggled, this, &CMainWindow::OnToChecked);
   connect(pbApply, &QPushButton::clicked, this, &CMainWindow::OnApplyClicked);
+  connect(pbApplyTuple, &QPushButton::clicked, this, &CMainWindow::OnApplyTupleClicked);
   connect(pbCancel, &QPushButton::clicked, this, &CMainWindow::OnCancelClicked);
+  connect(pbRevertTuple, &QPushButton::clicked, this, &CMainWindow::OnCancelTupleClicked);
   connect(pbEditLSurface, &QPushButton::clicked, this, &CMainWindow::OnEditLSurface);
   connect(pbEditCSurface, &QPushButton::clicked, this, &CMainWindow::OnEditCSurface);
   connect(pbEditRSurface, &QPushButton::clicked, this, &CMainWindow::OnEditRSurface);
@@ -150,6 +158,9 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leUnk48, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk49, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk50, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+
+  connect(leLVal, &QLineEdit::textChanged, this, &CMainWindow::UpdateTuplesEditMode);
+  connect(leRVal, &QLineEdit::textChanged, this, &CMainWindow::UpdateTuplesEditMode);
 
   //open window
   LoadSettings();
@@ -267,6 +278,14 @@ void CMainWindow::OnDebug()
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::OnEditTabChanged(int iIndex)
+{
+  (void)(iIndex);
+  UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CMainWindow::OnAbout()
 {
   QMessageBox::information(this, "Git Gud", "YOU NEED MORE PRACTICE");
@@ -294,6 +313,14 @@ void CMainWindow::OnSelChunksToChanged(int iValue)
     sbSelChunksFrom->blockSignals(false);
   }
   UpdateGeometrySelection();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnSelectedTupleChanged(int iValue)
+{
+  (void)(iValue);
+  UpdateTupleSelection();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -332,9 +359,33 @@ void CMainWindow::OnApplyClicked()
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::OnApplyTupleClicked()
+{
+  //delete old value from map
+  CTupleMap::iterator it = p->m_track.m_tupleMap.find(p->sTupleLVal.toInt());
+  if (it != p->m_track.m_tupleMap.end()) {
+    p->m_track.m_tupleMap.erase(it);
+  }
+  //add new
+  p->m_track.m_tupleMap[leLVal->text().toInt()] = leRVal->text().toInt();
+
+  m_bUnsavedChanges = true;
+  g_pMainWindow->LogMessage("Applied changes to tuple");
+  UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CMainWindow::OnCancelClicked()
 {
   RevertGeometry();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnCancelTupleClicked()
+{
+  RevertTuples();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -442,6 +493,18 @@ void CMainWindow::UpdateGeometryEditMode()
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::UpdateTuplesEditMode()
+{
+  bool bEditMode = false;
+  bEditMode |= UpdateLEEditMode(leLVal, p->sTupleLVal);
+  bEditMode |= UpdateLEEditMode(leRVal, p->sTupleRVal);
+  pbApplyTuple->setEnabled(bEditMode);
+  pbRevertTuple->setEnabled(bEditMode);
+  sbSelectedTuple->setEnabled(!bEditMode);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CMainWindow::LoadSettings()
 {
   QSettings settings(m_sSettingsFile, QSettings::IniFormat);
@@ -536,23 +599,64 @@ void CMainWindow::UpdateWindow()
   setWindowTitle(sTitle);
 
   //update edit pane
-  leChunkCount->setText(QString::number(p->m_track.m_chunkAy.size()));
   twEditor->setEnabled(!m_sTrackFile.isEmpty());
 
   //update view pane
   txData->clear();
-  for (int i = 0; i < p->m_track.m_chunkAy.size(); ++i) {
-    txData->appendPlainText(p->m_track.m_chunkAy[i].sString.c_str());
+
+  switch (twEditor->currentIndex()) {
+    case 0: //CHUNKS
+    {
+      leChunkCount->setText(QString::number(p->m_track.m_chunkAy.size()));
+      //stuff data
+      for (int i = 0; i < p->m_track.m_chunkAy.size(); ++i) {
+        txData->appendPlainText(p->m_track.m_chunkAy[i].sString.c_str());
+      }
+
+      //update selection
+      sbSelChunksFrom->blockSignals(true);
+      sbSelChunksTo->blockSignals(true);
+      sbSelChunksFrom->setRange(0, (int)p->m_track.m_chunkAy.size() - 1);
+      sbSelChunksTo->setRange(0, (int)p->m_track.m_chunkAy.size() - 1);
+      sbSelChunksFrom->blockSignals(false);
+      sbSelChunksTo->blockSignals(false);
+      UpdateGeometrySelection();
+    }
+      break;
+    case 1: //TUPLES
+    {
+      leTuplesCount->setText(QString::number(p->m_track.m_tupleMap.size()));
+      //stuff data
+      CTupleMap::iterator it = p->m_track.m_tupleMap.begin();
+      for (; it != p->m_track.m_tupleMap.end(); ++it) {
+        char szLine[20];
+        snprintf(szLine, sizeof(szLine), "%5d%7d", it->first, it->second);
+        txData->appendPlainText(szLine);
+      }
+
+      //update selection
+      sbSelectedTuple->blockSignals(true);
+      sbSelectedTuple->setRange(0, (int)p->m_track.m_tupleMap.size() - 1);
+      sbSelectedTuple->blockSignals(false);
+      UpdateTupleSelection();
+    }
+      break;
+    case 2: //STUNTS
+    {
+      txData->appendPlainText("todo");
+    }
+      break;
+    case 3: //TEXTURES
+    {
+      txData->appendPlainText("todo");
+    }
+      break;
+    case 4: //INFO
+    {
+      txData->appendPlainText("todo");
+    }
+      break;
   }
-  
-  //update selection
-  sbSelChunksFrom->blockSignals(true);
-  sbSelChunksTo->blockSignals(true);
-  sbSelChunksFrom->setRange(0, (int)p->m_track.m_chunkAy.size() - 1);
-  sbSelChunksTo->setRange(0, (int)p->m_track.m_chunkAy.size() - 1);
-  sbSelChunksFrom->blockSignals(false);
-  sbSelChunksTo->blockSignals(false);
-  UpdateGeometrySelection();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -586,6 +690,30 @@ void CMainWindow::UpdateGeometrySelection()
     , p->sUnk45, p->sUnk46, p->sUnk47, p->sUnk48, p->sUnk49, p->sUnk50);
 
   RevertGeometry();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::UpdateTupleSelection()
+{
+  //update view window selection
+  QTextCursor c = txData->textCursor();
+  c.setPosition(sbSelectedTuple->value() * 13);
+  c.setPosition((sbSelectedTuple->value() + 1) * 13 - 1, QTextCursor::KeepAnchor);
+  txData->setTextCursor(c);
+
+  //update values in edit window
+  int i = 0;
+  CTupleMap::iterator it = p->m_track.m_tupleMap.begin();
+  for (; it != p->m_track.m_tupleMap.end(); ++it, ++i) {
+    if (i == sbSelectedTuple->value()) {
+      p->sTupleLVal = QString::number(it->first);
+      p->sTupleRVal = QString::number(it->second);
+      break;
+    }
+  }
+  
+  RevertTuples();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -695,6 +823,18 @@ void CMainWindow::RevertGeometry()
   sbSelChunksFrom->setEnabled(true);
   ckTo->setEnabled(true);
   sbSelChunksTo->setEnabled(ckTo->isChecked());
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::RevertTuples()
+{
+  UpdateLEWithSelectionValue(leLVal, p->sTupleLVal);
+  UpdateLEWithSelectionValue(leRVal, p->sTupleRVal);
+
+  pbApplyTuple->setEnabled(false);
+  pbRevertTuple->setEnabled(false);
+  sbSelectedTuple->setEnabled(true);
 }
 
 //-------------------------------------------------------------------------------------------------

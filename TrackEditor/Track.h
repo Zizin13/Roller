@@ -2,6 +2,7 @@
 #define _TRACKEDITOR_TRACK_H
 //-------------------------------------------------------------------------------------------------
 #include <vector>
+#include <map>
 #include "qstring.h"
 //-------------------------------------------------------------------------------------------------
 #define MIXED_DATA "<mixed>"
@@ -93,7 +94,7 @@ struct tGeometryChunk
 };
 typedef std::vector<tGeometryChunk> CChunkAy;
 //-------------------------------------------------------------------------------------------------
-typedef std::vector<std::tuple<int, int>> CTupleAy;
+typedef std::map<int, int> CTupleMap;
 //-------------------------------------------------------------------------------------------------
 struct tStunt
 {
@@ -183,11 +184,11 @@ public:
 
   tTrackHeader m_header;
   CChunkAy m_chunkAy;
-  CTupleAy m_tupleAy;
+  CTupleMap m_tupleMap;
   CStuntAy m_stuntAy;
   QString m_sTextureFile;
   QString m_sBuildingFile;
-  CTupleAy m_backsAy;
+  CTupleMap m_backsMap;
   tRaceInfo m_raceInfo;
 
 private:

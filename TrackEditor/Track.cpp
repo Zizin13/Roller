@@ -34,11 +34,11 @@ void CTrack::ClearData()
 {
   memset(&m_header, 0, sizeof(m_header));
   m_chunkAy.clear();
-  m_tupleAy.clear();
+  m_tupleMap.clear();
   m_stuntAy.clear();
   m_sTextureFile = "";
   m_sBuildingFile = "";
-  m_backsAy.clear();
+  m_backsMap.clear();
   memset(&m_raceInfo, 0, sizeof(m_raceInfo));
 }
 
@@ -248,7 +248,7 @@ bool CTrack::LoadTrack(const QString &sFilename)
           }
         } else if (slLine.count() == BACKS_COUNT) {
           //process backs
-          m_backsAy.push_back(std::make_tuple(slLine[0].toInt(), slLine[1].toInt()));
+          m_backsMap[slLine[0].toInt()] = slLine[1].toInt();
         } else {
           assert(0);
           g_pMainWindow->LogMessage("Error loading file: texture section ended before anticipated");
@@ -287,11 +287,11 @@ bool CTrack::LoadTrack(const QString &sFilename)
   QString sSuccess = (bSuccess ? "Successfully loaded" : "Failed to load");
   QString sLogMsg = sSuccess + " file " + sFilename + "\n"
     + "  geometry chunks: " + QString::number(m_chunkAy.size()) + "\n"
-    + "  unknown tuples: " + QString::number(m_tupleAy.size()) + "\n"
+    + "  unknown tuples: " + QString::number(m_tupleMap.size()) + "\n"
     + "  stunts: " + QString::number(m_stuntAy.size()) + "\n"
     + "  texture file: " + m_sTextureFile + "\n"
     + "  building file: " + m_sBuildingFile + "\n"
-    + "  backs: " + QString::number(m_backsAy.size());
+    + "  backs: " + QString::number(m_backsMap.size());
   g_pMainWindow->LogMessage(sLogMsg);
 
   //generate strings
@@ -802,7 +802,7 @@ void CTrack::ProcessTuple(const QStringList &slLine, eFileSection &section)
     section = STUNTS;
   } else {
     //process tuple
-    m_tupleAy.push_back(std::make_tuple(iVal0, iVal1));
+    m_tupleMap[iVal0] = iVal1;
   }
 }
 

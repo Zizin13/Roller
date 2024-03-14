@@ -3,12 +3,6 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-bin64/
-
-# QT Generated Files
-moc/*.cpp
-ui/*.h
-qrc/*.cpp
  
 # User-specific files
 *.rsuser
@@ -372,3 +366,4 @@ FodyWeavers.xsd
 /TrackEditor/null
 /TrackEditor/ui
 /TrackEditor/moc
+/bin64

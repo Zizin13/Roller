@@ -6,6 +6,8 @@
 #include "qstring.h"
 //-------------------------------------------------------------------------------------------------
 #define MIXED_DATA "<mixed>"
+#define TUPLE_LINE_LENGTH 13
+#define STUNT_LINE_LENGTH 69
 //-------------------------------------------------------------------------------------------------
 struct tTrackHeader
 {
@@ -98,7 +100,6 @@ typedef std::map<int, int> CTupleMap;
 //-------------------------------------------------------------------------------------------------
 struct tStunt
 {
-  int iGeometryIndex;
   int iScaleFactor;
   int iAngle;
   int iUnknown; //todo
@@ -109,7 +110,7 @@ struct tStunt
   int iSmallerExpandsLargerContracts;
   int iBulge;
 };
-typedef std::vector<tStunt> CStuntAy;
+typedef std::map<int, tStunt> CStuntMap;
 //-------------------------------------------------------------------------------------------------
 struct tRaceInfo
 {
@@ -185,7 +186,7 @@ public:
   tTrackHeader m_header;
   CChunkAy m_chunkAy;
   CTupleMap m_tupleMap;
-  CStuntAy m_stuntAy;
+  CStuntMap m_stuntMap;
   QString m_sTextureFile;
   QString m_sBuildingFile;
   CTupleMap m_backsMap;

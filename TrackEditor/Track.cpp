@@ -35,7 +35,7 @@ void CTrack::ClearData()
   memset(&m_header, 0, sizeof(m_header));
   m_chunkAy.clear();
   m_tupleMap.clear();
-  m_stuntAy.clear();
+  m_stuntMap.clear();
   m_sTextureFile = "";
   m_sBuildingFile = "";
   m_backsMap.clear();
@@ -211,7 +211,7 @@ bool CTrack::LoadTrack(const QString &sFilename)
           //process stunt
           tStunt stunt;
           memset(&stunt, 0, sizeof(stunt));
-          stunt.iGeometryIndex = slLine[0].toInt();
+          int iGeometryIndex = slLine[0].toInt();
           stunt.iScaleFactor = slLine[1].toInt();
           stunt.iAngle = slLine[2].toInt();
           stunt.iUnknown = slLine[3].toInt();
@@ -221,7 +221,7 @@ bool CTrack::LoadTrack(const QString &sFilename)
           stunt.iTimeFlat = slLine[7].toInt();
           stunt.iSmallerExpandsLargerContracts = slLine[8].toInt();
           stunt.iBulge = slLine[9].toInt();
-          m_stuntAy.push_back(stunt);
+          m_stuntMap[iGeometryIndex] = stunt;
         } else {
           assert(0);
           g_pMainWindow->LogMessage("Error loading file: stunts section ended before anticipated");
@@ -288,7 +288,7 @@ bool CTrack::LoadTrack(const QString &sFilename)
   QString sLogMsg = sSuccess + " file " + sFilename + "\n"
     + "  geometry chunks: " + QString::number(m_chunkAy.size()) + "\n"
     + "  unknown tuples: " + QString::number(m_tupleMap.size()) + "\n"
-    + "  stunts: " + QString::number(m_stuntAy.size()) + "\n"
+    + "  stunts: " + QString::number(m_stuntMap.size()) + "\n"
     + "  texture file: " + m_sTextureFile + "\n"
     + "  building file: " + m_sBuildingFile + "\n"
     + "  backs: " + QString::number(m_backsMap.size());

@@ -43,6 +43,17 @@ public:
 
   //selected tuple values
   QString sTupleRVal;
+
+  //selected stunt values
+  QString sStuntScaleFactor;
+  QString sStuntAngle;
+  QString sStuntUnknown;
+  QString sStuntTimingGroup;
+  QString sStuntHeight;
+  QString sStuntTimeBulging;
+  QString sStuntTimeFlat;
+  QString sStuntExpandsContracts;
+  QString sStuntBulge;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -83,9 +94,12 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(ckTo, &QCheckBox::toggled, this, &CMainWindow::OnToChecked);
   connect(pbApply, &QPushButton::clicked, this, &CMainWindow::OnApplyClicked);
   connect(pbApplyTuple, &QPushButton::clicked, this, &CMainWindow::OnApplyTupleClicked);
+  connect(pbApplyStunt, &QPushButton::clicked, this, &CMainWindow::OnApplyStuntClicked);
   connect(pbCancel, &QPushButton::clicked, this, &CMainWindow::OnCancelClicked);
   connect(pbRevertTuple, &QPushButton::clicked, this, &CMainWindow::OnCancelTupleClicked);
+  connect(pbRevertStunt, &QPushButton::clicked, this, &CMainWindow::OnCancelStuntClicked);
   connect(pbDeleteTuple, &QPushButton::clicked, this, &CMainWindow::OnDeleteTuplesClicked);
+  connect(pbDeleteStunt, &QPushButton::clicked, this, &CMainWindow::OnDeleteStuntClicked);
   connect(pbEditLSurface, &QPushButton::clicked, this, &CMainWindow::OnEditLSurface);
   connect(pbEditCSurface, &QPushButton::clicked, this, &CMainWindow::OnEditCSurface);
   connect(pbEditRSurface, &QPushButton::clicked, this, &CMainWindow::OnEditRSurface);
@@ -163,6 +177,17 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leLVal, &QLineEdit::textChanged, this, &CMainWindow::OnTupleLValChanged);
   connect(leRVal, &QLineEdit::textChanged, this, &CMainWindow::UpdateTuplesEditMode);
 
+  connect(leStuntIndex, &QLineEdit::textChanged, this, &CMainWindow::OnStuntIndexChanged);
+  connect(leStuntScaleFact, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
+  connect(leStuntAngle, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
+  connect(leStuntUnk, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
+  connect(leStuntTimingGroup, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
+  connect(leStuntHeight, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
+  connect(leStuntTimeBulging, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
+  connect(leStuntTimeFlat, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
+  connect(leStuntExpandContract, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
+  connect(leStuntBulge, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
+
   //open window
   LoadSettings();
 }
@@ -216,6 +241,10 @@ void CMainWindow::OnLoadTrack()
     //load successful
     sbSelChunksFrom->setValue(0);
     sbSelChunksTo->setValue(0);
+    if (!p->m_track.m_tupleMap.empty())
+      leLVal->setText(QString::number(p->m_track.m_tupleMap.begin()->first));
+    if (!p->m_track.m_stuntMap.empty())
+      leStuntIndex->setText(QString::number(p->m_track.m_stuntMap.begin()->first));
     m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
     m_sTrackFile = sFilename;
     m_bUnsavedChanges = false;
@@ -372,6 +401,27 @@ void CMainWindow::OnApplyTupleClicked()
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::OnApplyStuntClicked()
+{
+  //update value
+  tStunt *pStunt = &p->m_track.m_stuntMap[leStuntIndex->text().toInt()];
+  pStunt->iScaleFactor = leStuntScaleFact->text().toInt();
+  pStunt->iAngle = leStuntAngle->text().toInt();
+  pStunt->iUnknown = leStuntUnk->text().toInt();
+  pStunt->iTimingGroup = leStuntTimingGroup->text().toInt();
+  pStunt->iHeight = leStuntHeight->text().toInt();
+  pStunt->iTimeBulging = leStuntTimeBulging->text().toInt();
+  pStunt->iTimeFlat = leStuntTimeFlat->text().toInt();
+  pStunt->iSmallerExpandsLargerContracts = leStuntExpandContract->text().toInt();
+  pStunt->iBulge = leStuntBulge->text().toInt();
+
+  m_bUnsavedChanges = true;
+  g_pMainWindow->LogMessage("Applied changes to stunt");
+  UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CMainWindow::OnCancelClicked()
 {
   RevertGeometry();
@@ -382,6 +432,13 @@ void CMainWindow::OnCancelClicked()
 void CMainWindow::OnCancelTupleClicked()
 {
   RevertTuples();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnCancelStuntClicked()
+{
+  RevertStunts();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -402,6 +459,26 @@ void CMainWindow::OnDeleteTuplesClicked()
   g_pMainWindow->LogMessage("Deleted tuple");
   UpdateWindow();
   UpdateTuplesEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnDeleteStuntClicked()
+{
+  //delete value from map
+  CStuntMap::iterator it = p->m_track.m_stuntMap.find(leStuntIndex->text().toInt());
+  if (it != p->m_track.m_stuntMap.end()) {
+    it = p->m_track.m_stuntMap.erase(it);
+    if (it != p->m_track.m_stuntMap.end()) {
+      leStuntIndex->setText(QString::number(it->first));
+    } else if (!p->m_track.m_stuntMap.empty()) {
+      --it;
+      leStuntIndex->setText(QString::number(it->first));
+    }
+  }
+  g_pMainWindow->LogMessage("Deleted stunt");
+  UpdateWindow();
+  UpdateStuntsEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -519,13 +596,45 @@ void CMainWindow::UpdateGeometryEditMode()
 
 void CMainWindow::UpdateTuplesEditMode()
 {
-  bool bEditMode = false;
   CTupleMap::iterator it = p->m_track.m_tupleMap.find(leLVal->text().toInt());
-  bEditMode |= it == p->m_track.m_tupleMap.end();
+  bool bEditMode = (it == p->m_track.m_tupleMap.end());
+
   bool bLValEdited = UpdateLEEditMode(leRVal, p->sTupleRVal);
+
   bEditMode |= bLValEdited;
   pbApplyTuple->setEnabled(bEditMode);
   pbRevertTuple->setEnabled(bLValEdited);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnStuntIndexChanged()
+{
+  UpdateStuntSelection();
+  UpdateStuntsEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::UpdateStuntsEditMode()
+{
+  CStuntMap::iterator it = p->m_track.m_stuntMap.find(leStuntIndex->text().toInt());
+  bool bEditMode = (it == p->m_track.m_stuntMap.end());
+
+  bool bLValEdited = false;
+  bLValEdited |= UpdateLEEditMode(leStuntScaleFact, p->sStuntScaleFactor);
+  bLValEdited |= UpdateLEEditMode(leStuntAngle, p->sStuntAngle);
+  bLValEdited |= UpdateLEEditMode(leStuntUnk, p->sStuntUnknown);
+  bLValEdited |= UpdateLEEditMode(leStuntTimingGroup, p->sStuntTimingGroup);
+  bLValEdited |= UpdateLEEditMode(leStuntHeight, p->sStuntHeight);
+  bLValEdited |= UpdateLEEditMode(leStuntTimeBulging, p->sStuntTimeBulging);
+  bLValEdited |= UpdateLEEditMode(leStuntTimeFlat, p->sStuntTimeFlat);
+  bLValEdited |= UpdateLEEditMode(leStuntExpandContract, p->sStuntExpandsContracts);
+  bLValEdited |= UpdateLEEditMode(leStuntBulge, p->sStuntBulge);
+
+  bEditMode |= bLValEdited;
+  pbApplyStunt->setEnabled(bEditMode);
+  pbRevertStunt->setEnabled(bLValEdited);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -665,7 +774,20 @@ void CMainWindow::UpdateWindow()
       break;
     case 2: //STUNTS
     {
-      txData->appendPlainText("todo");
+      leStuntsCount->setText(QString::number(p->m_track.m_stuntMap.size()));
+      //stuff data
+      CStuntMap::iterator it = p->m_track.m_stuntMap.begin();
+      for (; it != p->m_track.m_stuntMap.end(); ++it) {
+        char szLine[70];
+        snprintf(szLine, sizeof(szLine), "%5d%7d%7d%7d%7d%7d%7d%7d%7d%7d", 
+                 it->first, it->second.iScaleFactor, it->second.iAngle, it->second.iUnknown,
+                 it->second.iTimingGroup, it->second.iHeight, it->second.iTimeBulging,
+                 it->second.iTimeFlat, it->second.iSmallerExpandsLargerContracts, it->second.iBulge);
+        txData->appendPlainText(szLine);
+      }
+
+      //update selection
+      UpdateStuntSelection();
     }
       break;
     case 3: //TEXTURES
@@ -730,11 +852,42 @@ void CMainWindow::UpdateTupleSelection()
 
   //update view window selection
   QTextCursor c = txData->textCursor();
-  c.setPosition(i * 13);
-  c.setPosition((i + 1) * 13 - 1, QTextCursor::KeepAnchor);
+  c.setPosition(i * TUPLE_LINE_LENGTH);
+  c.setPosition((i + 1) * TUPLE_LINE_LENGTH - 1, QTextCursor::KeepAnchor);
   txData->setTextCursor(c);
   
   RevertTuples();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::UpdateStuntSelection()
+{
+  //update values in edit window
+  int i = 0;
+  CStuntMap::iterator it = p->m_track.m_stuntMap.begin();
+  for (; it != p->m_track.m_stuntMap.end(); ++it, ++i) {
+    if (leStuntIndex->text().toInt() == it->first) {
+      p->sStuntScaleFactor = QString::number(it->second.iScaleFactor);
+      p->sStuntAngle = QString::number(it->second.iAngle);
+      p->sStuntUnknown = QString::number(it->second.iUnknown);
+      p->sStuntTimingGroup = QString::number(it->second.iTimingGroup);
+      p->sStuntHeight = QString::number(it->second.iHeight);
+      p->sStuntTimeBulging = QString::number(it->second.iTimeBulging);
+      p->sStuntTimeFlat = QString::number(it->second.iTimeFlat);
+      p->sStuntExpandsContracts = QString::number(it->second.iSmallerExpandsLargerContracts);
+      p->sStuntBulge = QString::number(it->second.iBulge);
+      break;
+    }
+  }
+
+  //update view window selection
+  QTextCursor c = txData->textCursor();
+  c.setPosition(i * STUNT_LINE_LENGTH);
+  c.setPosition((i + 1) * STUNT_LINE_LENGTH - 1, QTextCursor::KeepAnchor);
+  txData->setTextCursor(c);
+
+  RevertStunts();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -863,6 +1016,33 @@ void CMainWindow::RevertTuples()
 
   pbApplyTuple->setEnabled(false);
   pbRevertTuple->setEnabled(false);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::RevertStunts()
+{
+  CStuntMap::iterator it = p->m_track.m_stuntMap.find(leStuntIndex->text().toInt());
+  if (it == p->m_track.m_stuntMap.end()) {
+    leStuntIndex->setStyleSheet("background-color: rgb(0,255,0)");
+    pbDeleteStunt->setEnabled(false);
+  } else {
+    leStuntIndex->setStyleSheet("");
+    pbDeleteStunt->setEnabled(true);
+  }
+
+  UpdateLEWithSelectionValue(leStuntScaleFact, p->sStuntScaleFactor);
+  UpdateLEWithSelectionValue(leStuntAngle, p->sStuntAngle);
+  UpdateLEWithSelectionValue(leStuntUnk, p->sStuntUnknown);
+  UpdateLEWithSelectionValue(leStuntTimingGroup, p->sStuntTimingGroup);
+  UpdateLEWithSelectionValue(leStuntHeight, p->sStuntHeight);
+  UpdateLEWithSelectionValue(leStuntTimeBulging, p->sStuntTimeBulging);
+  UpdateLEWithSelectionValue(leStuntTimeFlat, p->sStuntTimeFlat);
+  UpdateLEWithSelectionValue(leStuntExpandContract, p->sStuntExpandsContracts);
+  UpdateLEWithSelectionValue(leStuntBulge, p->sStuntBulge);
+
+  pbApplyStunt->setEnabled(false);
+  pbRevertStunt->setEnabled(false);
 }
 
 //-------------------------------------------------------------------------------------------------

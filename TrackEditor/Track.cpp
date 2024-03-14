@@ -312,6 +312,7 @@ bool CTrack::SaveTrack(const QString &sFilename)
     QTextStream stream(&file);
     //stream << "something" << endl;
     //write header
+    //test
     file.close();
   }
   return true;

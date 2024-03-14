@@ -395,7 +395,7 @@ void CMainWindow::OnApplyTupleClicked()
   p->m_track.m_tupleMap[leLVal->text().toInt()] = leRVal->text().toInt();
 
   m_bUnsavedChanges = true;
-  g_pMainWindow->LogMessage("Applied changes to tuple");
+  g_pMainWindow->LogMessage("Applied changes to tuples");
   UpdateWindow();
 }
 
@@ -416,7 +416,7 @@ void CMainWindow::OnApplyStuntClicked()
   pStunt->iBulge = leStuntBulge->text().toInt();
 
   m_bUnsavedChanges = true;
-  g_pMainWindow->LogMessage("Applied changes to stunt");
+  g_pMainWindow->LogMessage("Applied changes to stunts");
   UpdateWindow();
 }
 
@@ -597,11 +597,11 @@ void CMainWindow::UpdateGeometryEditMode()
 void CMainWindow::UpdateTuplesEditMode()
 {
   CTupleMap::iterator it = p->m_track.m_tupleMap.find(leLVal->text().toInt());
-  bool bEditMode = (it == p->m_track.m_tupleMap.end());
+  bool bNew = (it == p->m_track.m_tupleMap.end());
 
-  bool bLValEdited = UpdateLEEditMode(leRVal, p->sTupleRVal);
+  bool bLValEdited = UpdateLEEditMode(leRVal, p->sTupleRVal, bNew);
 
-  bEditMode |= bLValEdited;
+  bool bEditMode = bNew || bLValEdited;
   pbApplyTuple->setEnabled(bEditMode);
   pbRevertTuple->setEnabled(bLValEdited);
 }
@@ -619,20 +619,20 @@ void CMainWindow::OnStuntIndexChanged()
 void CMainWindow::UpdateStuntsEditMode()
 {
   CStuntMap::iterator it = p->m_track.m_stuntMap.find(leStuntIndex->text().toInt());
-  bool bEditMode = (it == p->m_track.m_stuntMap.end());
+  bool bNew = (it == p->m_track.m_stuntMap.end());
 
   bool bLValEdited = false;
-  bLValEdited |= UpdateLEEditMode(leStuntScaleFact, p->sStuntScaleFactor);
-  bLValEdited |= UpdateLEEditMode(leStuntAngle, p->sStuntAngle);
-  bLValEdited |= UpdateLEEditMode(leStuntUnk, p->sStuntUnknown);
-  bLValEdited |= UpdateLEEditMode(leStuntTimingGroup, p->sStuntTimingGroup);
-  bLValEdited |= UpdateLEEditMode(leStuntHeight, p->sStuntHeight);
-  bLValEdited |= UpdateLEEditMode(leStuntTimeBulging, p->sStuntTimeBulging);
-  bLValEdited |= UpdateLEEditMode(leStuntTimeFlat, p->sStuntTimeFlat);
-  bLValEdited |= UpdateLEEditMode(leStuntExpandContract, p->sStuntExpandsContracts);
-  bLValEdited |= UpdateLEEditMode(leStuntBulge, p->sStuntBulge);
+  bLValEdited |= UpdateLEEditMode(leStuntScaleFact, p->sStuntScaleFactor, bNew);
+  bLValEdited |= UpdateLEEditMode(leStuntAngle, p->sStuntAngle, bNew);
+  bLValEdited |= UpdateLEEditMode(leStuntUnk, p->sStuntUnknown, bNew);
+  bLValEdited |= UpdateLEEditMode(leStuntTimingGroup, p->sStuntTimingGroup, bNew);
+  bLValEdited |= UpdateLEEditMode(leStuntHeight, p->sStuntHeight, bNew);
+  bLValEdited |= UpdateLEEditMode(leStuntTimeBulging, p->sStuntTimeBulging, bNew);
+  bLValEdited |= UpdateLEEditMode(leStuntTimeFlat, p->sStuntTimeFlat, bNew);
+  bLValEdited |= UpdateLEEditMode(leStuntExpandContract, p->sStuntExpandsContracts, bNew);
+  bLValEdited |= UpdateLEEditMode(leStuntBulge, p->sStuntBulge, bNew);
 
-  bEditMode |= bLValEdited;
+  bool bEditMode = bNew || bLValEdited;
   pbApplyStunt->setEnabled(bEditMode);
   pbRevertStunt->setEnabled(bLValEdited);
 }
@@ -906,15 +906,17 @@ void CMainWindow::UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString
 
 //-------------------------------------------------------------------------------------------------
 
-bool CMainWindow::UpdateLEEditMode(QLineEdit *pLineEdit, const QString &sValue)
+bool CMainWindow::UpdateLEEditMode(QLineEdit *pLineEdit, const QString &sValue, bool bNew)
 {
-  if (pLineEdit->text().compare(sValue) != 0) {
+  bool bEditMode = (pLineEdit->text().compare(sValue) != 0);
+  if (bNew) {
+    pLineEdit->setStyleSheet("background-color: rgb(0,255,0)");
+  } else if (bEditMode) {
     pLineEdit->setStyleSheet("background-color: rgb(255,255,0)");
-    return true;
   } else {
     pLineEdit->setStyleSheet("");
-    return false;
   }
+  return bEditMode;
 }
 
 //-------------------------------------------------------------------------------------------------

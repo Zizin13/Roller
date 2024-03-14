@@ -56,7 +56,7 @@ private:
   void UpdateTupleSelection();
   void UpdateStuntSelection();
   void UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue);
-  bool UpdateLEEditMode(QLineEdit *pLineEdit, const QString &sValue);
+  bool UpdateLEEditMode(QLineEdit *pLineEdit, const QString &sValue, bool bNew = false);
   void RevertGeometry();
   void RevertTuples();
   void RevertStunts();

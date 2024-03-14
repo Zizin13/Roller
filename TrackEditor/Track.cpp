@@ -822,7 +822,10 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount
     newChunk.llUnk48 = sUnk48.toLongLong();
     newChunk.llUnk49 = sUnk49.toLongLong();
     newChunk.llUnk50 = sUnk50.toLongLong();
-    m_chunkAy.insert(m_chunkAy.begin() + iIndex, newChunk);
+    if (m_chunkAy.empty())
+      m_chunkAy.push_back(newChunk);
+    else
+      m_chunkAy.insert(m_chunkAy.begin() + iIndex, newChunk);
   }
   UpdateChunkStrings();
   g_pMainWindow->LogMessage("Inserted " + QString::number(iCount) + " geometry chunks");

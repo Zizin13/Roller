@@ -76,12 +76,16 @@
             </widget>
            </item>
            <item>
-            <widget class="QSpinBox" name="sbInsert"/>
+            <widget class="QSpinBox" name="sbInsert">
+             <property name="minimum">
+              <number>1</number>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QPushButton" name="pbInsertBefore">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="toolTip">
               <string>must set all values marked as &lt;mixed&gt;</string>
@@ -94,7 +98,7 @@
            <item>
             <widget class="QPushButton" name="pbInsertAfter">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="toolTip">
               <string>must set all values marked as &lt;mixed&gt;</string>
@@ -168,6 +172,9 @@
            </item>
            <item>
             <widget class="QPushButton" name="pbDelete">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
              <property name="text">
               <string>Delete</string>
              </property>

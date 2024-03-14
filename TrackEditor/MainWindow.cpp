@@ -90,7 +90,6 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   setupUi(this);
   splitter->setStretchFactor(0, 1);
   splitter->setStretchFactor(1, 3);
-  twEditor->setEnabled(false);
   p->m_logDialog.hide();
   txData->setFont(QFont("Courier", 8));
 
@@ -261,7 +260,12 @@ void CMainWindow::OnNewTrack()
   if (!SaveChangesAndContinue())
     return;
 
-  QMessageBox::warning(this, "Fatality!", "Not implemented yet");
+  sbSelChunksFrom->setValue(0);
+  sbSelChunksTo->setValue(0);
+  p->m_track.ClearData();
+  m_sTrackFile = "";
+  m_bUnsavedChanges = false;
+  UpdateWindow();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -383,6 +387,8 @@ void CMainWindow::OnInsertBeforeClicked()
   sbSelChunksFrom->blockSignals(true);
   sbSelChunksTo->blockSignals(true);
   ckTo->blockSignals(true);
+  sbSelChunksFrom->setRange(0, (int)p->m_track.m_chunkAy.size() - 1);
+  sbSelChunksTo->setRange(0, (int)p->m_track.m_chunkAy.size() - 1);
   sbSelChunksTo->setValue(sbSelChunksFrom->value() + sbInsert->value() - 1);
   ckTo->setChecked(sbInsert->value() > 1);
   sbSelChunksFrom->blockSignals(false);
@@ -416,6 +422,8 @@ void CMainWindow::OnInsertAfterClicked()
   sbSelChunksFrom->blockSignals(true);
   sbSelChunksTo->blockSignals(true);
   ckTo->blockSignals(true);
+  sbSelChunksFrom->setRange(0, (int)p->m_track.m_chunkAy.size() - 1);
+  sbSelChunksTo->setRange(0, (int)p->m_track.m_chunkAy.size() - 1);
   sbSelChunksFrom->setValue(sbSelChunksTo->value() + 1);
   sbSelChunksTo->setValue(sbSelChunksFrom->value() + sbInsert->value() - 1);
   ckTo->setChecked(sbInsert->value() > 1);
@@ -972,10 +980,9 @@ bool CMainWindow::SaveChangesAndContinue()
     }
     if (!p->m_track.SaveTrack(sFilename))
       return false;
+    m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
   }
 
-  //save successful, update app
-  m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
   m_sTrackFile = sFilename;
   UpdateWindow();
   return true;
@@ -993,9 +1000,6 @@ void CMainWindow::UpdateWindow()
     sTitle = QString("* ") + sTitle;
   setWindowTitle(sTitle);
 
-  //update edit pane
-  twEditor->setEnabled(!m_sTrackFile.isEmpty());
-
   //update view pane
   txData->clear();
 
@@ -1011,11 +1015,13 @@ void CMainWindow::UpdateWindow()
       //update selection
       sbSelChunksFrom->blockSignals(true);
       sbSelChunksTo->blockSignals(true);
+      sbInsert->setRange(1, 65535 - (int)p->m_track.m_chunkAy.size());
       sbSelChunksFrom->setRange(0, (int)p->m_track.m_chunkAy.size() - 1);
       sbSelChunksTo->setRange(0, (int)p->m_track.m_chunkAy.size() - 1);
       sbSelChunksFrom->blockSignals(false);
       sbSelChunksTo->blockSignals(false);
       UpdateGeometrySelection();
+      UpdateGeometryEditMode();
     }
       break;
     case 1: //TUPLES
@@ -1032,6 +1038,7 @@ void CMainWindow::UpdateWindow()
 
       //update selection
       UpdateTupleSelection();
+      UpdateTuplesEditMode();
     }
       break;
     case 2: //STUNTS
@@ -1051,6 +1058,7 @@ void CMainWindow::UpdateWindow()
 
       //update selection
       UpdateStuntSelection();
+      UpdateStuntsEditMode();
     }
       break;
     case 3: //TEXTURES
@@ -1073,6 +1081,7 @@ void CMainWindow::UpdateWindow()
       p->sBld = p->m_track.m_sBuildingFile;
       UpdateLEWithSelectionValue(leTex, p->sTex);
       UpdateLEWithSelectionValue(leBld, p->sBld);
+      UpdateTexturesEditMode();
     }
       break;
     case 4: //INFO
@@ -1092,6 +1101,7 @@ void CMainWindow::UpdateWindow()
 
       //update selection
       UpdateInfoSelection();
+      UpdateInfoEditMode();
     }
       break;
   }

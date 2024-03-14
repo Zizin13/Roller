@@ -368,3 +368,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/TrackEditor/resource.cpp
+/TrackEditor/null
+/TrackEditor/ui
+/TrackEditor/moc

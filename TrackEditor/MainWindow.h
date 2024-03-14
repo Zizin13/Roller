@@ -34,9 +34,11 @@ protected slots:
   void OnApplyTupleClicked();
   void OnCancelClicked();
   void OnCancelTupleClicked();
+  void OnDeleteTuplesClicked();
   void OnEditLSurface();
   void OnEditCSurface();
   void OnEditRSurface();
+  void OnTupleLValChanged();
   void UpdateGeometryEditMode();
   void UpdateTuplesEditMode();
 

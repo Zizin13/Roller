@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="TrackEditor.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Track.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="LogDialog.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="moc\moc_MainWindow.cpp">
+      <Filter>Qt Generated Files\Moc Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="moc\moc_LogDialog.cpp">
+      <Filter>Qt Generated Files\Moc Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="resource.cpp">
+      <Filter>Qt Generated Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Track.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="TrackEditor.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_LogDialog.h">
+      <Filter>Qt Generated Files\Ui Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_MainWindow.h">
+      <Filter>Qt Generated Files\Ui Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="LogDialog.h">
+      <Filter>Headers</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MainWindow.h">
+      <Filter>Headers</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MainWindow.ui">
+      <Filter>Resources</Filter>
+    </CustomBuild>
+    <CustomBuild Include="LogDialog.ui">
+      <Filter>Resources</Filter>
+    </CustomBuild>
+    <CustomBuild Include="resource.qrc">
+      <Filter>Resources</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{b043e814-9fc2-47a3-81c4-5833fb1b46c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{b166bc93-943e-4574-940b-21e993f8df1b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{e49d801a-ca5f-4db3-9608-528c5dc43b57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Qt Generated Files">
+      <UniqueIdentifier>{89944c0d-12d1-4842-8cfb-f7d6f3386786}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Qt Generated Files\Moc Source Files">
+      <UniqueIdentifier>{f1b327d6-4201-422b-902a-c82864979390}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Qt Generated Files\Ui Header Files">
+      <UniqueIdentifier>{4be68ce6-135e-43f6-a554-a92c9e7fe9b5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="images\stunt.ico">
+      <Filter>Resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="TrackEditor.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

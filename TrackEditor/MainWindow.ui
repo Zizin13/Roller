@@ -1,0 +1,1195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>699</width>
+    <height>637</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Track Editor</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="resource.qrc">
+    <normaloff>:/images/stunt.png</normaloff>:/images/stunt.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="opaqueResize">
+       <bool>true</bool>
+      </property>
+      <widget class="QTabWidget" name="twEditor">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="tab">
+        <attribute name="title">
+         <string>Geometry</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_9">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QLabel" name="lblChunkCount">
+             <property name="text">
+              <string>Chunk Count</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="leChunkCount">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QLabel" name="lblSelChunks">
+             <property name="text">
+              <string>Selected Chunks</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="sbSelChunksFrom">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="ckTo">
+             <property name="text">
+              <string>to</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="sbSelChunksTo">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pbDelete">
+             <property name="text">
+              <string>Delete</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QPushButton" name="pbApply">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Apply to Selected</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pbCancel">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="text">
+              <string>Revert</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QLabel" name="lblInsert">
+             <property name="text">
+              <string>Insert</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QSpinBox" name="sbInsert"/>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pbInsertBefore">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>must set all values marked as &lt;mixed&gt;</string>
+             </property>
+             <property name="text">
+              <string>Before</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pbInsertAfter">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>must set all values marked as &lt;mixed&gt;</string>
+             </property>
+             <property name="text">
+              <string>After</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QScrollArea" name="scrollAreaChunkEdit">
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="scrollAreaWidgetContents_2">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>449</width>
+              <height>978</height>
+             </rect>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_8">
+             <item>
+              <layout class="QGridLayout" name="gridLayout_4">
+               <item row="4" column="1">
+                <widget class="QLabel" name="lblPitch">
+                 <property name="text">
+                  <string>Pitch</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QLabel" name="lblRLW">
+                 <property name="text">
+                  <string>R lane width</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="2">
+                <widget class="QLineEdit" name="leRoll"/>
+               </item>
+               <item row="8" column="2">
+                <widget class="QLabel" name="lblRSHoulderGrip">
+                 <property name="text">
+                  <string>Right shoulder grip?</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <widget class="QLineEdit" name="leTrackGrip"/>
+               </item>
+               <item row="5" column="1">
+                <widget class="QLineEdit" name="lePitch"/>
+               </item>
+               <item row="4" column="2">
+                <widget class="QLabel" name="lblRoll">
+                 <property name="text">
+                  <string>Roll</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLineEdit" name="leUnk1"/>
+               </item>
+               <item row="12" column="0">
+                <widget class="QLabel" name="label_28">
+                 <property name="text">
+                  <string>unknown 5</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLineEdit" name="leYaw"/>
+               </item>
+               <item row="6" column="2">
+                <widget class="QLabel" name="lblAILine3">
+                 <property name="text">
+                  <string>AI line 3</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QLineEdit" name="leAILine2"/>
+               </item>
+               <item row="9" column="1">
+                <widget class="QLineEdit" name="leLeftShoulderGrip"/>
+               </item>
+               <item row="1" column="2">
+                <widget class="QLineEdit" name="leRLaneWidth"/>
+               </item>
+               <item row="13" column="1">
+                <widget class="QLineEdit" name="leUnk6"/>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLineEdit" name="leLLaneWidth"/>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="lblAILine1">
+                 <property name="text">
+                  <string>AI line 1</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="2">
+                <widget class="QLabel" name="label_30">
+                 <property name="text">
+                  <string>unknown 7</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="3">
+                <widget class="QLineEdit" name="leRShoulderWidth"/>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="lblYaw">
+                 <property name="text">
+                  <string>Yaw</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="2">
+                <widget class="QLineEdit" name="leUnk7"/>
+               </item>
+               <item row="7" column="2">
+                <widget class="QLineEdit" name="leAILine3"/>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLineEdit" name="leAILine1"/>
+               </item>
+               <item row="6" column="3">
+                <widget class="QLabel" name="lblAILine4">
+                 <property name="text">
+                  <string>AI line 4</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="0">
+                <widget class="QLineEdit" name="leUnk5"/>
+               </item>
+               <item row="12" column="1">
+                <widget class="QLabel" name="label_29">
+                 <property name="text">
+                  <string>unknown 6</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLineEdit" name="leLShoulderWidth"/>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_14">
+                 <property name="text">
+                  <string>unknown 1</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="3">
+                <widget class="QLineEdit" name="leAILine4"/>
+               </item>
+               <item row="9" column="2">
+                <widget class="QLineEdit" name="leRShoulderGrip"/>
+               </item>
+               <item row="0" column="3">
+                <widget class="QLabel" name="lblRShW">
+                 <property name="text">
+                  <string>R shoulder width</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLabel" name="lblLLW">
+                 <property name="text">
+                  <string>L lane width</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLineEdit" name="leUnk2"/>
+               </item>
+               <item row="6" column="1">
+                <widget class="QLabel" name="lblAILine2">
+                 <property name="text">
+                  <string>AI line 2</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="0">
+                <widget class="QLabel" name="label_27">
+                 <property name="text">
+                  <string>unknown 4</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="lblLShW">
+                 <property name="text">
+                  <string>L shoulder width</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="2">
+                <widget class="QLineEdit" name="leUnk3"/>
+               </item>
+               <item row="2" column="2">
+                <widget class="QLabel" name="label_16">
+                 <property name="text">
+                  <string>unknown 3</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="0">
+                <widget class="QLabel" name="lblTrackGrip">
+                 <property name="text">
+                  <string>Track grip</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLabel" name="label_15">
+                 <property name="text">
+                  <string>unknown 2</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="3">
+                <widget class="QLabel" name="label_31">
+                 <property name="text">
+                  <string>unknown 8</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="1">
+                <widget class="QLabel" name="label_25">
+                 <property name="text">
+                  <string>Left shoulder grip?</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="3">
+                <widget class="QLineEdit" name="leUnk8"/>
+               </item>
+               <item row="11" column="0">
+                <widget class="QLineEdit" name="leUnk4"/>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="Line" name="line_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QGridLayout" name="gridLayout_2">
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_35">
+                 <property name="text">
+                  <string>unknown 9</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLineEdit" name="leUnk10"/>
+               </item>
+               <item row="3" column="2">
+                <widget class="QLabel" name="label_46">
+                 <property name="text">
+                  <string>unknown 11</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="1">
+                <widget class="QLineEdit" name="leUnk14"/>
+               </item>
+               <item row="11" column="1">
+                <widget class="QLineEdit" name="leUnk18"/>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="lblLeftSurfaceType">
+                 <property name="text">
+                  <string>Left Surface Type</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="2">
+                <widget class="QLineEdit" name="leUnk11"/>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="lblCenterSurfaceType">
+                 <property name="text">
+                  <string>Center Surface Type</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="lblRightSurfaceType">
+                 <property name="text">
+                  <string>Right Surface Type</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLineEdit" name="leUnk9"/>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLabel" name="label_47">
+                 <property name="text">
+                  <string>unknown 10</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="16" column="1">
+                <widget class="QLineEdit" name="leFloatUnk2"/>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="label_48">
+                 <property name="text">
+                  <string>unknown 13</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="15" column="0">
+                <widget class="QLabel" name="label_34">
+                 <property name="text">
+                  <string>unknown float 1</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="3">
+                <widget class="QLabel" name="label_40">
+                 <property name="text">
+                  <string>unknown 12</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="3">
+                <widget class="QLineEdit" name="leUnk12"/>
+               </item>
+               <item row="7" column="2">
+                <widget class="QLabel" name="label_42">
+                 <property name="text">
+                  <string>unknown 15</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="3">
+                <widget class="QLabel" name="label_33">
+                 <property name="text">
+                  <string>unknown 16</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="0">
+                <widget class="QLineEdit" name="leUnk13"/>
+               </item>
+               <item row="8" column="2">
+                <widget class="QLineEdit" name="leUnk15"/>
+               </item>
+               <item row="7" column="1">
+                <widget class="QLabel" name="label_45">
+                 <property name="text">
+                  <string>unknown 14</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QPushButton" name="pbEditLSurface">
+                 <property name="text">
+                  <string>Edit Bits</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="3">
+                <widget class="QPushButton" name="pbEditCSurface">
+                 <property name="text">
+                  <string>Edit Bits</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="3">
+                <widget class="QPushButton" name="pbEditRSurface">
+                 <property name="text">
+                  <string>Edit Bits</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1" colspan="2">
+                <widget class="QLineEdit" name="leLeftSurfaceType"/>
+               </item>
+               <item row="1" column="1" colspan="2">
+                <widget class="QLineEdit" name="leCenterSurfaceType"/>
+               </item>
+               <item row="2" column="1" colspan="2">
+                <widget class="QLineEdit" name="leRightSurfaceType"/>
+               </item>
+               <item row="10" column="0">
+                <widget class="QLabel" name="label_36">
+                 <property name="text">
+                  <string>unknown 17</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="0">
+                <widget class="QLineEdit" name="leUnk17"/>
+               </item>
+               <item row="10" column="1">
+                <widget class="QLabel" name="label_41">
+                 <property name="text">
+                  <string>unknown 18</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="2">
+                <widget class="QLabel" name="label_49">
+                 <property name="text">
+                  <string>unknown 19</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="3">
+                <widget class="QLabel" name="label_32">
+                 <property name="text">
+                  <string>unknown 20</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="2">
+                <widget class="QLineEdit" name="leUnk19"/>
+               </item>
+               <item row="11" column="3">
+                <widget class="QLineEdit" name="leUnk20"/>
+               </item>
+               <item row="8" column="3">
+                <widget class="QLineEdit" name="leUnk16"/>
+               </item>
+               <item row="15" column="2">
+                <widget class="QLabel" name="label_37">
+                 <property name="text">
+                  <string>unknown float 3</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="16" column="0">
+                <widget class="QLineEdit" name="leFloatUnk1"/>
+               </item>
+               <item row="15" column="1">
+                <widget class="QLabel" name="label_44">
+                 <property name="text">
+                  <string>unknown float 2</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="16" column="2">
+                <widget class="QLineEdit" name="leFloatUnk3"/>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <widget class="Line" name="line">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QGridLayout" name="gridLayout_3">
+               <item row="3" column="1">
+                <widget class="QLabel" name="label_76">
+                 <property name="text">
+                  <string>unknown 26</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="label_69">
+                 <property name="text">
+                  <string>unknown 33</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="2">
+                <widget class="QLabel" name="label_74">
+                 <property name="text">
+                  <string>unknown 39</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="3">
+                <widget class="QLineEdit" name="leUnk32"/>
+               </item>
+               <item row="11" column="1">
+                <widget class="QLabel" name="label_61">
+                 <property name="text">
+                  <string>unknown 42</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="14" column="2">
+                <widget class="QLineEdit" name="leUnk47"/>
+               </item>
+               <item row="7" column="3">
+                <widget class="QLabel" name="label_79">
+                 <property name="text">
+                  <string>unknown 36</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QLabel" name="label_75">
+                 <property name="text">
+                  <string>unknown 24</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="2">
+                <widget class="QLabel" name="label_63">
+                 <property name="text">
+                  <string>unknown 31</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="3">
+                <widget class="QLabel" name="label_55">
+                 <property name="text">
+                  <string>unknown 32</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="15" column="1">
+                <widget class="QLabel" name="label_80">
+                 <property name="text">
+                  <string>unknown 50</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="2">
+                <widget class="QLineEdit" name="leUnk43"/>
+               </item>
+               <item row="13" column="0">
+                <widget class="QLabel" name="label_67">
+                 <property name="text">
+                  <string>unknown 45</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_54">
+                 <property name="text">
+                  <string>unknown 21</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="15" column="0">
+                <widget class="QLabel" name="label_57">
+                 <property name="text">
+                  <string>unknown 49</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="2">
+                <widget class="QLineEdit" name="leUnk35"/>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_52">
+                 <property name="text">
+                  <string>unknown 25</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="16" column="1">
+                <widget class="QLineEdit" name="leUnk50"/>
+               </item>
+               <item row="10" column="1">
+                <widget class="QLineEdit" name="leUnk38"/>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLineEdit" name="leUnk29"/>
+               </item>
+               <item row="8" column="0">
+                <widget class="QLineEdit" name="leUnk33"/>
+               </item>
+               <item row="8" column="3">
+                <widget class="QLineEdit" name="leUnk36"/>
+               </item>
+               <item row="14" column="1">
+                <widget class="QLineEdit" name="leUnk46"/>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLineEdit" name="leUnk26"/>
+               </item>
+               <item row="9" column="1">
+                <widget class="QLabel" name="label_81">
+                 <property name="text">
+                  <string>unknown 38</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLineEdit" name="leUnk21"/>
+               </item>
+               <item row="10" column="2">
+                <widget class="QLineEdit" name="leUnk39"/>
+               </item>
+               <item row="4" column="3">
+                <widget class="QLineEdit" name="leUnk28"/>
+               </item>
+               <item row="8" column="1">
+                <widget class="QLineEdit" name="leUnk34"/>
+               </item>
+               <item row="9" column="3">
+                <widget class="QLabel" name="label_77">
+                 <property name="text">
+                  <string>unknown 40</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QLineEdit" name="leUnk22">
+                 <property name="styleSheet">
+                  <string notr="true"/>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLabel" name="label_72">
+                 <property name="text">
+                  <string>unknown 22</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="0">
+                <widget class="QLineEdit" name="leUnk41"/>
+               </item>
+               <item row="6" column="1">
+                <widget class="QLineEdit" name="leUnk30"/>
+               </item>
+               <item row="7" column="1">
+                <widget class="QLabel" name="label_56">
+                 <property name="text">
+                  <string>unknown 34</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QLabel" name="label_62">
+                 <property name="text">
+                  <string>unknown 23</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="12" column="3">
+                <widget class="QLineEdit" name="leUnk44"/>
+               </item>
+               <item row="1" column="2">
+                <widget class="QLineEdit" name="leUnk23"/>
+               </item>
+               <item row="10" column="3">
+                <widget class="QLineEdit" name="leUnk40"/>
+               </item>
+               <item row="14" column="0">
+                <widget class="QLineEdit" name="leUnk45"/>
+               </item>
+               <item row="14" column="3">
+                <widget class="QLineEdit" name="leUnk48"/>
+               </item>
+               <item row="6" column="2">
+                <widget class="QLineEdit" name="leUnk31"/>
+               </item>
+               <item row="13" column="2">
+                <widget class="QLabel" name="label_71">
+                 <property name="text">
+                  <string>unknown 47</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="2">
+                <widget class="QLabel" name="label_58">
+                 <property name="text">
+                  <string>unknown 27</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="0">
+                <widget class="QLabel" name="label_73">
+                 <property name="text">
+                  <string>unknown 37</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="3">
+                <widget class="QLabel" name="label_64">
+                 <property name="text">
+                  <string>unknown 48</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QLabel" name="label_68">
+                 <property name="text">
+                  <string>unknown 30</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="3">
+                <widget class="QLabel" name="label_59">
+                 <property name="text">
+                  <string>unknown 28</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="2">
+                <widget class="QLabel" name="label_70">
+                 <property name="text">
+                  <string>unknown 35</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="0">
+                <widget class="QLabel" name="label_66">
+                 <property name="text">
+                  <string>unknown 41</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="2">
+                <widget class="QLabel" name="label_60">
+                 <property name="text">
+                  <string>unknown 43</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="3">
+                <widget class="QLineEdit" name="leUnk24"/>
+               </item>
+               <item row="13" column="1">
+                <widget class="QLabel" name="label_78">
+                 <property name="text">
+                  <string>unknown 46</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="2">
+                <widget class="QLineEdit" name="leUnk27"/>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLineEdit" name="leUnk25"/>
+               </item>
+               <item row="12" column="1">
+                <widget class="QLineEdit" name="leUnk42"/>
+               </item>
+               <item row="16" column="0">
+                <widget class="QLineEdit" name="leUnk49"/>
+               </item>
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_65">
+                 <property name="text">
+                  <string>unknown 29</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="0">
+                <widget class="QLineEdit" name="leUnk37"/>
+               </item>
+               <item row="11" column="3">
+                <widget class="QLabel" name="label_53">
+                 <property name="text">
+                  <string>unknown 44</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_2">
+        <attribute name="title">
+         <string>Tuples</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <widget class="QLabel" name="label_4">
+           <property name="text">
+            <string>what is this</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_5">
+        <attribute name="title">
+         <string>Stunts</string>
+        </attribute>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="label_5">
+           <property name="text">
+            <string>Not implemented yet</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_6">
+        <attribute name="title">
+         <string>Textures</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <widget class="QLabel" name="label_6">
+           <property name="text">
+            <string>Not implemented yet</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_7">
+        <attribute name="title">
+         <string>Info</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_7">
+         <item>
+          <widget class="QLabel" name="label_7">
+           <property name="text">
+            <string>Not implemented yet</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+      <widget class="QTabWidget" name="twViewer">
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="tab_3">
+        <attribute name="title">
+         <string>Data</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QPlainTextEdit" name="txData">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">selection-background-color: rgb(0,170,255)</string>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::NoTextInteraction</set>
+           </property>
+           <property name="centerOnScroll">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_4">
+        <attribute name="title">
+         <string>Preview</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QScrollArea" name="scrollArea">
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="scrollAreaWidgetContents">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>582</width>
+              <height>513</height>
+             </rect>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <item>
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Not implemented yet</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="pixmap">
+                <pixmap resource="resource.qrc">:/images/crab.png</pixmap>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>699</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actNew"/>
+    <addaction name="actLoad"/>
+    <addaction name="actSave"/>
+    <addaction name="actSaveAs"/>
+    <addaction name="separator"/>
+    <addaction name="actImportMangled"/>
+    <addaction name="actExportMangled"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actAbout"/>
+   </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actDebug"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuView"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actNew">
+   <property name="text">
+    <string>New Track</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actLoad">
+   <property name="text">
+    <string>Load Track</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
+  </action>
+  <action name="actSave">
+   <property name="text">
+    <string>Save Track</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actSaveAs">
+   <property name="text">
+    <string>Save Track As...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+H</string>
+   </property>
+  </action>
+  <action name="actImportMangled">
+   <property name="text">
+    <string>Import Mangled TRK</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actExportMangled">
+   <property name="text">
+    <string>Export Mangled TRK</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+E</string>
+   </property>
+  </action>
+  <action name="actDebug">
+   <property name="text">
+    <string>Debug</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+G</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
+ <connections/>
+</ui>

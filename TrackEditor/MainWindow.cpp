@@ -42,7 +42,7 @@ public:
     , sUnk45, sUnk46, sUnk47, sUnk48, sUnk49, sUnk50;
 
   //selected tuple values
-  QString sTupleLVal, sTupleRVal;
+  QString sTupleRVal;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -64,6 +64,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   splitter->setStretchFactor(1, 3);
   twEditor->setEnabled(false);
   p->m_logDialog.hide();
+  txData->setFont(QFont("Courier", 8));
 
   //signals
   connect(actNew, &QAction::triggered, this, &CMainWindow::OnNewTrack);
@@ -79,12 +80,12 @@ CMainWindow::CMainWindow(const QString &sAppPath)
 
   connect(sbSelChunksFrom, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksFromChanged(int)));
   connect(sbSelChunksTo, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksToChanged(int)));
-  connect(sbSelectedTuple, SIGNAL(valueChanged(int)), this, SLOT(OnSelectedTupleChanged(int)));
   connect(ckTo, &QCheckBox::toggled, this, &CMainWindow::OnToChecked);
   connect(pbApply, &QPushButton::clicked, this, &CMainWindow::OnApplyClicked);
   connect(pbApplyTuple, &QPushButton::clicked, this, &CMainWindow::OnApplyTupleClicked);
   connect(pbCancel, &QPushButton::clicked, this, &CMainWindow::OnCancelClicked);
   connect(pbRevertTuple, &QPushButton::clicked, this, &CMainWindow::OnCancelTupleClicked);
+  connect(pbDeleteTuple, &QPushButton::clicked, this, &CMainWindow::OnDeleteTuplesClicked);
   connect(pbEditLSurface, &QPushButton::clicked, this, &CMainWindow::OnEditLSurface);
   connect(pbEditCSurface, &QPushButton::clicked, this, &CMainWindow::OnEditCSurface);
   connect(pbEditRSurface, &QPushButton::clicked, this, &CMainWindow::OnEditRSurface);
@@ -159,7 +160,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leUnk49, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk50, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
 
-  connect(leLVal, &QLineEdit::textChanged, this, &CMainWindow::UpdateTuplesEditMode);
+  connect(leLVal, &QLineEdit::textChanged, this, &CMainWindow::OnTupleLValChanged);
   connect(leRVal, &QLineEdit::textChanged, this, &CMainWindow::UpdateTuplesEditMode);
 
   //open window
@@ -361,12 +362,7 @@ void CMainWindow::OnApplyClicked()
 
 void CMainWindow::OnApplyTupleClicked()
 {
-  //delete old value from map
-  CTupleMap::iterator it = p->m_track.m_tupleMap.find(p->sTupleLVal.toInt());
-  if (it != p->m_track.m_tupleMap.end()) {
-    p->m_track.m_tupleMap.erase(it);
-  }
-  //add new
+  //update value
   p->m_track.m_tupleMap[leLVal->text().toInt()] = leRVal->text().toInt();
 
   m_bUnsavedChanges = true;
@@ -390,6 +386,26 @@ void CMainWindow::OnCancelTupleClicked()
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::OnDeleteTuplesClicked()
+{
+  //delete value from map
+  CTupleMap::iterator it = p->m_track.m_tupleMap.find(leLVal->text().toInt());
+  if (it != p->m_track.m_tupleMap.end()) {
+    it = p->m_track.m_tupleMap.erase(it);
+    if (it != p->m_track.m_tupleMap.end()) {
+      leLVal->setText(QString::number(it->first));
+    } else if (!p->m_track.m_tupleMap.empty()) {
+      --it;
+      leLVal->setText(QString::number(it->first));
+    }
+  }
+  g_pMainWindow->LogMessage("Deleted tuple");
+  UpdateWindow();
+  UpdateTuplesEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CMainWindow::OnEditLSurface()
 {
   QMessageBox::warning(this, "Fatality!", "Not implemented yet");
@@ -407,6 +423,14 @@ void CMainWindow::OnEditCSurface()
 void CMainWindow::OnEditRSurface()
 {
   QMessageBox::warning(this, "Fatality!", "Not implemented yet");
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnTupleLValChanged()
+{
+  UpdateTupleSelection();
+  UpdateTuplesEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -496,11 +520,12 @@ void CMainWindow::UpdateGeometryEditMode()
 void CMainWindow::UpdateTuplesEditMode()
 {
   bool bEditMode = false;
-  bEditMode |= UpdateLEEditMode(leLVal, p->sTupleLVal);
-  bEditMode |= UpdateLEEditMode(leRVal, p->sTupleRVal);
+  CTupleMap::iterator it = p->m_track.m_tupleMap.find(leLVal->text().toInt());
+  bEditMode |= it == p->m_track.m_tupleMap.end();
+  bool bLValEdited = UpdateLEEditMode(leRVal, p->sTupleRVal);
+  bEditMode |= bLValEdited;
   pbApplyTuple->setEnabled(bEditMode);
-  pbRevertTuple->setEnabled(bEditMode);
-  sbSelectedTuple->setEnabled(!bEditMode);
+  pbRevertTuple->setEnabled(bLValEdited);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -635,9 +660,6 @@ void CMainWindow::UpdateWindow()
       }
 
       //update selection
-      sbSelectedTuple->blockSignals(true);
-      sbSelectedTuple->setRange(0, (int)p->m_track.m_tupleMap.size() - 1);
-      sbSelectedTuple->blockSignals(false);
       UpdateTupleSelection();
     }
       break;
@@ -696,22 +718,21 @@ void CMainWindow::UpdateGeometrySelection()
 
 void CMainWindow::UpdateTupleSelection()
 {
-  //update view window selection
-  QTextCursor c = txData->textCursor();
-  c.setPosition(sbSelectedTuple->value() * 13);
-  c.setPosition((sbSelectedTuple->value() + 1) * 13 - 1, QTextCursor::KeepAnchor);
-  txData->setTextCursor(c);
-
   //update values in edit window
   int i = 0;
   CTupleMap::iterator it = p->m_track.m_tupleMap.begin();
   for (; it != p->m_track.m_tupleMap.end(); ++it, ++i) {
-    if (i == sbSelectedTuple->value()) {
-      p->sTupleLVal = QString::number(it->first);
+    if (leLVal->text().toInt() == it->first) {
       p->sTupleRVal = QString::number(it->second);
       break;
     }
   }
+
+  //update view window selection
+  QTextCursor c = txData->textCursor();
+  c.setPosition(i * 13);
+  c.setPosition((i + 1) * 13 - 1, QTextCursor::KeepAnchor);
+  txData->setTextCursor(c);
   
   RevertTuples();
 }
@@ -735,7 +756,7 @@ void CMainWindow::UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString
 bool CMainWindow::UpdateLEEditMode(QLineEdit *pLineEdit, const QString &sValue)
 {
   if (pLineEdit->text().compare(sValue) != 0) {
-    pLineEdit->setStyleSheet("background-color: rgb(0,255,0)");
+    pLineEdit->setStyleSheet("background-color: rgb(255,255,0)");
     return true;
   } else {
     pLineEdit->setStyleSheet("");
@@ -829,12 +850,19 @@ void CMainWindow::RevertGeometry()
 
 void CMainWindow::RevertTuples()
 {
-  UpdateLEWithSelectionValue(leLVal, p->sTupleLVal);
+  CTupleMap::iterator it = p->m_track.m_tupleMap.find(leLVal->text().toInt());
+  if (it == p->m_track.m_tupleMap.end()) {
+    leLVal->setStyleSheet("background-color: rgb(0,255,0)");
+    pbDeleteTuple->setEnabled(false);
+  } else {
+    leLVal->setStyleSheet("");
+    pbDeleteTuple->setEnabled(true);
+  }
+
   UpdateLEWithSelectionValue(leRVal, p->sTupleRVal);
 
   pbApplyTuple->setEnabled(false);
   pbRevertTuple->setEnabled(false);
-  sbSelectedTuple->setEnabled(true);
 }
 
 //-------------------------------------------------------------------------------------------------

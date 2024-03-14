@@ -1029,7 +1029,7 @@
        </widget>
        <widget class="QWidget" name="tab_2">
         <attribute name="title">
-         <string>Tuples</string>
+         <string>Signs</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
@@ -1057,18 +1057,11 @@
           </layout>
          </item>
          <item>
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>We don't know what this section is</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
             <widget class="QLabel" name="lblTuplesCount">
              <property name="text">
-              <string>Tuples Count</string>
+              <string>Signs Count</string>
              </property>
             </widget>
            </item>
@@ -1086,34 +1079,34 @@
          </item>
          <item>
           <layout class="QGridLayout" name="gridLayout">
-           <item row="1" column="1">
+           <item row="1" column="3">
             <widget class="QLineEdit" name="leRVal"/>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="lblLVal">
+           <item row="1" column="4">
+            <widget class="QPushButton" name="pbDeleteTuple">
              <property name="text">
-              <string>L Value</string>
+              <string>Delete</string>
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
+           <item row="1" column="1">
             <widget class="QLineEdit" name="leLVal">
              <property name="text">
               <string/>
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="lblRVal">
+           <item row="1" column="0">
+            <widget class="QLabel" name="lblLVal">
              <property name="text">
-              <string>R Value</string>
+              <string>Geometry Index</string>
              </property>
             </widget>
            </item>
            <item row="1" column="2">
-            <widget class="QPushButton" name="pbDeleteTuple">
+            <widget class="QLabel" name="lblRVal">
              <property name="text">
-              <string>Delete</string>
+              <string>Value</string>
              </property>
             </widget>
            </item>
@@ -1431,7 +1424,7 @@
            <item>
             <widget class="QLabel" name="lblBackIndex">
              <property name="text">
-              <string>Index</string>
+              <string>Geometry Index</string>
              </property>
             </widget>
            </item>

@@ -203,7 +203,7 @@ bool CTrack::LoadTrack(const QString &sFilename)
         break;
       case STUNTS:
         if (slLine.count() == 1) {
-          if (!slLine[0].isEmpty() && slLine[0].toInt() == -1) {
+          if (!slLine[0].simplified().isEmpty() && slLine[0].toInt() == -1) {
             //stunts section always ends with a single -1 value
             section = TEXTURE;
           }
@@ -230,7 +230,7 @@ bool CTrack::LoadTrack(const QString &sFilename)
         break;
       case TEXTURE:
         if (slLine.count() == 1) {
-          if (slLine[0].isEmpty()) {
+          if (slLine[0].simplified().isEmpty()) {
             //do nothing
           } if (slLine[0].toInt() == -1) {
             //texture section always ends with a single -1 value
@@ -257,8 +257,12 @@ bool CTrack::LoadTrack(const QString &sFilename)
         break;
       case TRACK_NUM:
         if (slLine.count() == 1) {
-          m_raceInfo.iTrackNumber = slLine[0].toInt();
-          section = LAPS;
+          if (slLine[0].simplified().isEmpty()) {
+            //do nothing
+          } else {
+            m_raceInfo.iTrackNumber = slLine[0].toInt();
+            section = LAPS;
+          }
         }
         break;
       case LAPS:
@@ -269,7 +273,7 @@ bool CTrack::LoadTrack(const QString &sFilename)
           m_raceInfo.iMediumLaps = slLine[3].toInt();
           m_raceInfo.iEasyLaps = slLine[4].toInt();
           m_raceInfo.iGirlieLaps = slLine[5].toInt();
-          section = LAPS;
+          section = MAP;
         }
         break;
       case MAP:
@@ -277,7 +281,6 @@ bool CTrack::LoadTrack(const QString &sFilename)
           m_raceInfo.fTrackMapSize = slLine[0].toFloat();
           m_raceInfo.iTrackMapFidelity = slLine[1].toInt();
           m_raceInfo.fUnknown = slLine[2].toFloat();
-          section = LAPS;
         }
         break;
     }

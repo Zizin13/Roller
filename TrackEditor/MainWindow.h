@@ -34,10 +34,12 @@ protected slots:
   void OnApplyTupleClicked();
   void OnApplyStuntClicked();
   void OnApplyTextureClicked();
+  void OnApplyInfoClicked();
   void OnCancelClicked();
   void OnCancelTupleClicked();
   void OnCancelStuntClicked();
   void OnCancelTextureClicked();
+  void OnCancelInfoClicked();
   void OnDeleteTuplesClicked();
   void OnDeleteStuntClicked();
   void OnDeleteBackClicked();
@@ -51,6 +53,7 @@ protected slots:
   void UpdateStuntsEditMode();
   void OnBackIndexChanged();
   void UpdateTexturesEditMode();
+  void UpdateInfoEditMode();
 
 private:
   void LoadSettings();
@@ -61,12 +64,14 @@ private:
   void UpdateTupleSelection();
   void UpdateStuntSelection();
   void UpdateBackSelection();
+  void UpdateInfoSelection();
   void UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue);
   bool UpdateLEEditMode(QLineEdit *pLineEdit, const QString &sValue, bool bNew = false);
   void RevertGeometry();
   void RevertTuples();
   void RevertStunts();
   void RevertBacks();
+  void RevertInfo();
 
   CMainWindowPrivate *p;
   bool m_bUnsavedChanges;

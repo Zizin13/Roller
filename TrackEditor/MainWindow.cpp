@@ -59,6 +59,18 @@ public:
   QString sTex;
   QString sBld;
   QString sBackVal;
+
+  //selected info values
+  QString sTrackNumber;
+  QString sImpossibleLaps;
+  QString sHardLaps;
+  QString sTrickyLaps;
+  QString sMediumLaps;
+  QString sEasyLaps;
+  QString sGirlieLaps;
+  QString sTrackMapSize;
+  QString sTrackMapFidelity;
+  QString sInfoUnknown;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -101,10 +113,12 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(pbApplyTuple, &QPushButton::clicked, this, &CMainWindow::OnApplyTupleClicked);
   connect(pbApplyStunt, &QPushButton::clicked, this, &CMainWindow::OnApplyStuntClicked);
   connect(pbApplyTexture, &QPushButton::clicked, this, &CMainWindow::OnApplyTextureClicked);
+  connect(pbApplyInfo, &QPushButton::clicked, this, &CMainWindow::OnApplyInfoClicked);
   connect(pbCancel, &QPushButton::clicked, this, &CMainWindow::OnCancelClicked);
   connect(pbRevertTuple, &QPushButton::clicked, this, &CMainWindow::OnCancelTupleClicked);
   connect(pbRevertStunt, &QPushButton::clicked, this, &CMainWindow::OnCancelStuntClicked);
   connect(pbRevertTexture, &QPushButton::clicked, this, &CMainWindow::OnCancelTextureClicked);
+  connect(pbRevertInfo, &QPushButton::clicked, this, &CMainWindow::OnCancelInfoClicked);
   connect(pbDeleteTuple, &QPushButton::clicked, this, &CMainWindow::OnDeleteTuplesClicked);
   connect(pbDeleteStunt, &QPushButton::clicked, this, &CMainWindow::OnDeleteStuntClicked);
   connect(pbDeleteBack, &QPushButton::clicked, this, &CMainWindow::OnDeleteBackClicked);
@@ -200,6 +214,17 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leBld, &QLineEdit::textChanged, this, &CMainWindow::UpdateTexturesEditMode);
   connect(leBackIndex, &QLineEdit::textChanged, this, &CMainWindow::OnBackIndexChanged);
   connect(leBackVal, &QLineEdit::textChanged, this, &CMainWindow::UpdateTexturesEditMode);
+
+  connect(leTrackNum, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
+  connect(leImpossibleLaps, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
+  connect(leHardLaps, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
+  connect(leTrickyLaps, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
+  connect(leMediumLaps, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
+  connect(leEasyLaps, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
+  connect(leGirlieLaps, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
+  connect(leMapSize, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
+  connect(leMapFidelity, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
+  connect(leInfoUnknown, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
 
   //open window
   LoadSettings();
@@ -445,7 +470,27 @@ void CMainWindow::OnApplyTextureClicked()
   p->m_track.m_sBuildingFile = leBld->text();
 
   m_bUnsavedChanges = true;
-  g_pMainWindow->LogMessage("Applied changes to tuples");
+  g_pMainWindow->LogMessage("Applied changes to texture");
+  UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnApplyInfoClicked()
+{
+  p->m_track.m_raceInfo.iTrackNumber = leTrackNum->text().toInt();
+  p->m_track.m_raceInfo.iImpossibleLaps = leImpossibleLaps->text().toInt();
+  p->m_track.m_raceInfo.iHardLaps = leHardLaps->text().toInt();
+  p->m_track.m_raceInfo.iTrickyLaps = leTrickyLaps->text().toInt();
+  p->m_track.m_raceInfo.iMediumLaps = leMediumLaps->text().toInt();
+  p->m_track.m_raceInfo.iEasyLaps = leEasyLaps->text().toInt();
+  p->m_track.m_raceInfo.iGirlieLaps = leGirlieLaps->text().toInt();
+  p->m_track.m_raceInfo.fTrackMapSize = leMapSize->text().toFloat();
+  p->m_track.m_raceInfo.iTrackMapFidelity = leMapFidelity->text().toInt();
+  p->m_track.m_raceInfo.fUnknown = leInfoUnknown->text().toFloat();
+
+  m_bUnsavedChanges = true;
+  g_pMainWindow->LogMessage("Applied changes to track info");
   UpdateWindow();
 }
 
@@ -479,6 +524,13 @@ void CMainWindow::OnCancelTextureClicked()
   p->sBld = p->m_track.m_sBuildingFile;
   UpdateLEWithSelectionValue(leTex, p->sTex);
   UpdateLEWithSelectionValue(leBld, p->sBld);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnCancelInfoClicked()
+{
+  RevertInfo();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -724,6 +776,26 @@ void CMainWindow::UpdateTexturesEditMode()
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::UpdateInfoEditMode()
+{
+  bool bEditMode = false;
+  bEditMode |= UpdateLEEditMode(leTrackNum, p->sTrackNumber);
+  bEditMode |= UpdateLEEditMode(leImpossibleLaps, p->sImpossibleLaps);
+  bEditMode |= UpdateLEEditMode(leHardLaps, p->sHardLaps);
+  bEditMode |= UpdateLEEditMode(leTrickyLaps, p->sTrickyLaps);
+  bEditMode |= UpdateLEEditMode(leMediumLaps, p->sMediumLaps);
+  bEditMode |= UpdateLEEditMode(leEasyLaps, p->sEasyLaps);
+  bEditMode |= UpdateLEEditMode(leGirlieLaps, p->sGirlieLaps);
+  bEditMode |= UpdateLEEditMode(leMapFidelity, p->sTrackMapFidelity);
+  bEditMode |= UpdateLEEditMode(leMapSize, p->sTrackMapSize);
+  bEditMode |= UpdateLEEditMode(leInfoUnknown, p->sInfoUnknown);
+
+  pbApplyInfo->setEnabled(bEditMode);
+  pbRevertInfo->setEnabled(bEditMode);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CMainWindow::LoadSettings()
 {
   QSettings settings(m_sSettingsFile, QSettings::IniFormat);
@@ -849,6 +921,7 @@ void CMainWindow::UpdateWindow()
       CTupleMap::iterator it = p->m_track.m_tupleMap.begin();
       for (; it != p->m_track.m_tupleMap.end(); ++it) {
         char szLine[20];
+        memset(szLine, 0, sizeof(szLine));
         snprintf(szLine, sizeof(szLine), "%5d%7d", it->first, it->second);
         txData->appendPlainText(szLine);
       }
@@ -864,6 +937,7 @@ void CMainWindow::UpdateWindow()
       CStuntMap::iterator it = p->m_track.m_stuntMap.begin();
       for (; it != p->m_track.m_stuntMap.end(); ++it) {
         char szLine[70];
+        memset(szLine, 0, sizeof(szLine));
         snprintf(szLine, sizeof(szLine), "%5d%7d%7d%7d%7d%7d%7d%7d%7d%7d", 
                  it->first, it->second.iScaleFactor, it->second.iAngle, it->second.iUnknown,
                  it->second.iTimingGroup, it->second.iHeight, it->second.iTimeBulging,
@@ -884,6 +958,7 @@ void CMainWindow::UpdateWindow()
       CTupleMap::iterator it = p->m_track.m_backsMap.begin();
       for (; it != p->m_track.m_backsMap.end(); ++it) {
         char szLine[20];
+        memset(szLine, 0, sizeof(szLine));
         snprintf(szLine, sizeof(szLine), "%d %d", it->first, it->second);
         txData->appendPlainText(szLine);
       }
@@ -898,7 +973,21 @@ void CMainWindow::UpdateWindow()
       break;
     case 4: //INFO
     {
-      txData->appendPlainText("todo");
+      //stuff data
+      txData->appendPlainText(QString::number(p->m_track.m_raceInfo.iTrackNumber));
+      char szLine[50];
+      memset(szLine, 0, sizeof(szLine));
+      snprintf(szLine, sizeof(szLine), "%4d%5d%5d%5d%5d%5d",
+               p->m_track.m_raceInfo.iImpossibleLaps, p->m_track.m_raceInfo.iHardLaps, p->m_track.m_raceInfo.iTrickyLaps,
+               p->m_track.m_raceInfo.iMediumLaps, p->m_track.m_raceInfo.iEasyLaps, p->m_track.m_raceInfo.iGirlieLaps);
+      txData->appendPlainText(szLine);
+      memset(szLine, 0, sizeof(szLine));
+      snprintf(szLine, sizeof(szLine), "%.2f%5d %.2f",
+               p->m_track.m_raceInfo.fTrackMapSize, p->m_track.m_raceInfo.iTrackMapFidelity, p->m_track.m_raceInfo.fUnknown);
+      txData->appendPlainText(szLine);
+
+      //update selection
+      UpdateInfoSelection();
     }
       break;
   }
@@ -1014,6 +1103,24 @@ void CMainWindow::UpdateBackSelection()
   txData->setTextCursor(c);
 
   RevertBacks();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::UpdateInfoSelection()
+{
+  p->sTrackNumber = QString::number(p->m_track.m_raceInfo.iTrackNumber);
+  p->sImpossibleLaps = QString::number(p->m_track.m_raceInfo.iImpossibleLaps);
+  p->sHardLaps = QString::number(p->m_track.m_raceInfo.iHardLaps);
+  p->sTrickyLaps = QString::number(p->m_track.m_raceInfo.iTrickyLaps);
+  p->sMediumLaps = QString::number(p->m_track.m_raceInfo.iMediumLaps);
+  p->sEasyLaps = QString::number(p->m_track.m_raceInfo.iEasyLaps);
+  p->sGirlieLaps = QString::number(p->m_track.m_raceInfo.iGirlieLaps);
+  p->sTrackMapSize = QString::number(p->m_track.m_raceInfo.fTrackMapSize, 'f', 2);
+  p->sTrackMapFidelity = QString::number(p->m_track.m_raceInfo.iTrackMapFidelity);
+  p->sInfoUnknown = QString::number(p->m_track.m_raceInfo.fUnknown, 'f', 2);
+
+  RevertInfo();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1190,6 +1297,25 @@ void CMainWindow::RevertBacks()
 
   pbApplyTexture->setEnabled(false);
   pbRevertTexture->setEnabled(false);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::RevertInfo()
+{
+  UpdateLEWithSelectionValue(leTrackNum, p->sTrackNumber);
+  UpdateLEWithSelectionValue(leImpossibleLaps, p->sImpossibleLaps);
+  UpdateLEWithSelectionValue(leHardLaps, p->sHardLaps);
+  UpdateLEWithSelectionValue(leTrickyLaps, p->sTrickyLaps);
+  UpdateLEWithSelectionValue(leMediumLaps, p->sMediumLaps);
+  UpdateLEWithSelectionValue(leEasyLaps, p->sEasyLaps);
+  UpdateLEWithSelectionValue(leGirlieLaps, p->sGirlieLaps);
+  UpdateLEWithSelectionValue(leMapSize, p->sTrackMapSize);
+  UpdateLEWithSelectionValue(leMapFidelity, p->sTrackMapFidelity);
+  UpdateLEWithSelectionValue(leInfoUnknown, p->sInfoUnknown);
+
+  pbApplyInfo->setEnabled(false);
+  pbRevertInfo->setEnabled(false);
 }
 
 //-------------------------------------------------------------------------------------------------

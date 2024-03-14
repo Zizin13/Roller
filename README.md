@@ -6,3 +6,5 @@ Currently a glorified text editor. Todos:
 - add export/import of mangled files
 - add history/undo
 - add 3D visualization
+- add sign visual editor
+- add wizards for generating common stunts

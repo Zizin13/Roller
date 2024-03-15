@@ -1,5 +1,6 @@
 # Roller
 Currently a glorified text editor. Todos:
+- data fields limit input to legal values
 - users can make selections from data viewer
 - update map keys for signs/stunts/etc when chunks are added/removed
 - add surface bit edit dialog

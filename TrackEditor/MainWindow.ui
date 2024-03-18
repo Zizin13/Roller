@@ -196,7 +196,7 @@
               <x>0</x>
               <y>0</y>
               <width>449</width>
-              <height>978</height>
+              <height>1048</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -225,7 +225,7 @@
                   <string>0 = full grip, 12 = ice</string>
                  </property>
                  <property name="text">
-                  <string>Right shoulder grip?</string>
+                  <string>Right shoulder grip</string>
                  </property>
                 </widget>
                </item>
@@ -247,7 +247,7 @@
                 </widget>
                </item>
                <item row="3" column="0">
-                <widget class="QLineEdit" name="leUnk1"/>
+                <widget class="QLineEdit" name="leLShoulderHeight"/>
                </item>
                <item row="12" column="0">
                 <widget class="QLabel" name="label_28">
@@ -287,7 +287,7 @@
                 <widget class="QLineEdit" name="leRLaneWidth"/>
                </item>
                <item row="13" column="1">
-                <widget class="QLineEdit" name="leUnk6"/>
+                <widget class="QLineEdit" name="leUnk06"/>
                </item>
                <item row="1" column="1">
                 <widget class="QLineEdit" name="leLLaneWidth"/>
@@ -320,7 +320,7 @@
                 </widget>
                </item>
                <item row="13" column="2">
-                <widget class="QLineEdit" name="leUnk7"/>
+                <widget class="QLineEdit" name="leUnk07"/>
                </item>
                <item row="7" column="2">
                 <widget class="QLineEdit" name="leAILine3">
@@ -347,7 +347,7 @@
                 </widget>
                </item>
                <item row="13" column="0">
-                <widget class="QLineEdit" name="leUnk5"/>
+                <widget class="QLineEdit" name="leUnk05"/>
                </item>
                <item row="12" column="1">
                 <widget class="QLabel" name="label_29">
@@ -369,7 +369,7 @@
                <item row="2" column="0">
                 <widget class="QLabel" name="label_14">
                  <property name="text">
-                  <string>unknown 1</string>
+                  <string>L shoulder height</string>
                  </property>
                 </widget>
                </item>
@@ -402,7 +402,7 @@
                 </widget>
                </item>
                <item row="3" column="1">
-                <widget class="QLineEdit" name="leUnk2"/>
+                <widget class="QLineEdit" name="leRShoulderHeight"/>
                </item>
                <item row="6" column="1">
                 <widget class="QLabel" name="lblAILine2">
@@ -429,12 +429,12 @@
                 </widget>
                </item>
                <item row="3" column="2">
-                <widget class="QLineEdit" name="leUnk3"/>
+                <widget class="QLineEdit" name="leLength"/>
                </item>
                <item row="2" column="2">
                 <widget class="QLabel" name="label_16">
                  <property name="text">
-                  <string>unknown 3</string>
+                  <string>Length</string>
                  </property>
                 </widget>
                </item>
@@ -451,7 +451,7 @@
                <item row="2" column="1">
                 <widget class="QLabel" name="label_15">
                  <property name="text">
-                  <string>unknown 2</string>
+                  <string>R shoulder height</string>
                  </property>
                 </widget>
                </item>
@@ -468,15 +468,15 @@
                   <string>0 = full grip, 12 = ice</string>
                  </property>
                  <property name="text">
-                  <string>Left shoulder grip?</string>
+                  <string>Left shoulder grip</string>
                  </property>
                 </widget>
                </item>
                <item row="13" column="3">
-                <widget class="QLineEdit" name="leUnk8"/>
+                <widget class="QLineEdit" name="leUnk08"/>
                </item>
                <item row="11" column="0">
-                <widget class="QLineEdit" name="leUnk4"/>
+                <widget class="QLineEdit" name="leUnk04"/>
                </item>
               </layout>
              </item>
@@ -492,17 +492,17 @@
                <item row="3" column="0">
                 <widget class="QLabel" name="label_35">
                  <property name="text">
-                  <string>unknown 9</string>
+                  <string>Left wall type</string>
                  </property>
                 </widget>
                </item>
                <item row="4" column="1">
-                <widget class="QLineEdit" name="leUnk10"/>
+                <widget class="QLineEdit" name="leRWallType"/>
                </item>
                <item row="3" column="2">
                 <widget class="QLabel" name="label_46">
                  <property name="text">
-                  <string>unknown 11</string>
+                  <string>Roof type</string>
                  </property>
                 </widget>
                </item>
@@ -510,7 +510,7 @@
                 <widget class="QLineEdit" name="leUnk14"/>
                </item>
                <item row="11" column="1">
-                <widget class="QLineEdit" name="leUnk18"/>
+                <widget class="QLineEdit" name="leSignType"/>
                </item>
                <item row="0" column="0">
                 <widget class="QLabel" name="lblLeftSurfaceType">
@@ -523,7 +523,7 @@
                 </widget>
                </item>
                <item row="4" column="2">
-                <widget class="QLineEdit" name="leUnk11"/>
+                <widget class="QLineEdit" name="leRoofType"/>
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="lblCenterSurfaceType">
@@ -546,12 +546,12 @@
                 </widget>
                </item>
                <item row="4" column="0">
-                <widget class="QLineEdit" name="leUnk9"/>
+                <widget class="QLineEdit" name="leLWallType"/>
                </item>
                <item row="3" column="1">
                 <widget class="QLabel" name="label_47">
                  <property name="text">
-                  <string>unknown 10</string>
+                  <string>Right wall type</string>
                  </property>
                 </widget>
                </item>
@@ -561,7 +561,8 @@
                <item row="7" column="0">
                 <widget class="QLabel" name="label_48">
                  <property name="text">
-                  <string>unknown 13</string>
+                  <string>L outer extra
+wall type</string>
                  </property>
                 </widget>
                </item>
@@ -585,7 +586,8 @@
                <item row="7" column="2">
                 <widget class="QLabel" name="label_42">
                  <property name="text">
-                  <string>unknown 15</string>
+                  <string>R outer extra
+wall type</string>
                  </property>
                 </widget>
                </item>
@@ -597,10 +599,10 @@
                 </widget>
                </item>
                <item row="8" column="0">
-                <widget class="QLineEdit" name="leUnk13"/>
+                <widget class="QLineEdit" name="leLOuterExtraWallType"/>
                </item>
                <item row="8" column="2">
-                <widget class="QLineEdit" name="leUnk15"/>
+                <widget class="QLineEdit" name="leROuterExtraWallType"/>
                </item>
                <item row="7" column="1">
                 <widget class="QLabel" name="label_45">
@@ -654,17 +656,18 @@
                <item row="10" column="0">
                 <widget class="QLabel" name="label_36">
                  <property name="text">
-                  <string>unknown 17</string>
+                  <string>Environment floor
+type</string>
                  </property>
                 </widget>
                </item>
                <item row="11" column="0">
-                <widget class="QLineEdit" name="leUnk17"/>
+                <widget class="QLineEdit" name="leEnvironmentFloorType"/>
                </item>
                <item row="10" column="1">
                 <widget class="QLabel" name="label_41">
                  <property name="text">
-                  <string>unknown 18</string>
+                  <string>Sign type</string>
                  </property>
                 </widget>
                </item>
@@ -725,7 +728,8 @@
                <item row="3" column="1">
                 <widget class="QLabel" name="label_76">
                  <property name="text">
-                  <string>unknown 26</string>
+                  <string>Right outer upper
+extra wall angle</string>
                  </property>
                 </widget>
                </item>
@@ -744,7 +748,7 @@
                 </widget>
                </item>
                <item row="6" column="3">
-                <widget class="QLineEdit" name="leUnk32"/>
+                <widget class="QLineEdit" name="leROuterUpperExtraWallHeight"/>
                </item>
                <item row="11" column="1">
                 <widget class="QLabel" name="label_61">
@@ -773,14 +777,16 @@
                <item row="5" column="2">
                 <widget class="QLabel" name="label_63">
                  <property name="text">
-                  <string>unknown 31</string>
+                  <string>Right outer lower
+extra wall height</string>
                  </property>
                 </widget>
                </item>
                <item row="5" column="3">
                 <widget class="QLabel" name="label_55">
                  <property name="text">
-                  <string>unknown 32</string>
+                  <string>Right outer upper
+extra wall height</string>
                  </property>
                 </widget>
                </item>
@@ -804,7 +810,8 @@
                <item row="0" column="0">
                 <widget class="QLabel" name="label_54">
                  <property name="text">
-                  <string>unknown 21</string>
+                  <string>Left outer upper
+extra wall angle</string>
                  </property>
                 </widget>
                </item>
@@ -821,7 +828,8 @@
                <item row="3" column="0">
                 <widget class="QLabel" name="label_52">
                  <property name="text">
-                  <string>unknown 25</string>
+                  <string>Right outer lower
+extra wall angle</string>
                  </property>
                 </widget>
                </item>
@@ -844,7 +852,7 @@
                 <widget class="QLineEdit" name="leUnk46"/>
                </item>
                <item row="4" column="1">
-                <widget class="QLineEdit" name="leUnk26"/>
+                <widget class="QLineEdit" name="leROuterUpperExtraWallAngle"/>
                </item>
                <item row="9" column="1">
                 <widget class="QLabel" name="label_81">
@@ -854,13 +862,13 @@
                 </widget>
                </item>
                <item row="1" column="0">
-                <widget class="QLineEdit" name="leUnk21"/>
+                <widget class="QLineEdit" name="leLOuterUpperExtraWallAngle"/>
                </item>
                <item row="10" column="2">
                 <widget class="QLineEdit" name="leUnk39"/>
                </item>
                <item row="4" column="3">
-                <widget class="QLineEdit" name="leUnk28"/>
+                <widget class="QLineEdit" name="leLOuterLowerExtraWallHeight"/>
                </item>
                <item row="8" column="1">
                 <widget class="QLineEdit" name="leUnk34"/>
@@ -873,7 +881,7 @@
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QLineEdit" name="leUnk22">
+                <widget class="QLineEdit" name="leLOuterLowerExtraWallAngle">
                  <property name="styleSheet">
                   <string notr="true"/>
                  </property>
@@ -882,7 +890,8 @@
                <item row="0" column="1">
                 <widget class="QLabel" name="label_72">
                  <property name="text">
-                  <string>unknown 22</string>
+                  <string>Left outer lower
+extra wall angle</string>
                  </property>
                 </widget>
                </item>
@@ -922,7 +931,7 @@
                 <widget class="QLineEdit" name="leUnk48"/>
                </item>
                <item row="6" column="2">
-                <widget class="QLineEdit" name="leUnk31"/>
+                <widget class="QLineEdit" name="leROuterLowerExtraWallHeight"/>
                </item>
                <item row="13" column="2">
                 <widget class="QLabel" name="label_71">
@@ -934,7 +943,8 @@
                <item row="3" column="2">
                 <widget class="QLabel" name="label_58">
                  <property name="text">
-                  <string>unknown 27</string>
+                  <string>Left outer upper
+extra wall height</string>
                  </property>
                 </widget>
                </item>
@@ -962,7 +972,8 @@
                <item row="3" column="3">
                 <widget class="QLabel" name="label_59">
                  <property name="text">
-                  <string>unknown 28</string>
+                  <string>Left outer lower
+extra wall height</string>
                  </property>
                 </widget>
                </item>
@@ -998,10 +1009,10 @@
                 </widget>
                </item>
                <item row="4" column="2">
-                <widget class="QLineEdit" name="leUnk27"/>
+                <widget class="QLineEdit" name="leLOuterUpperExtraWallHeight"/>
                </item>
                <item row="4" column="0">
-                <widget class="QLineEdit" name="leUnk25"/>
+                <widget class="QLineEdit" name="leROuterLowerExtraWallAngle"/>
                </item>
                <item row="12" column="1">
                 <widget class="QLineEdit" name="leUnk42"/>

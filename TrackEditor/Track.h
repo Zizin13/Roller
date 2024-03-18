@@ -12,9 +12,9 @@
 struct tTrackHeader
 {
   int iNumChunks;
-  int iUnk1;
-  int iUnk2;
-  int iUnk3;
+  int iHeaderUnk1;
+  int iHeaderUnk2;
+  int iHeaderUnk3;
 };
 //-------------------------------------------------------------------------------------------------
 struct tGeometryChunk
@@ -25,9 +25,9 @@ struct tGeometryChunk
   int iLeftLaneWidth;
   int iRightLaneWidth;
   int iRightShoulderWidth;
-  int iUnk1; //todo
-  int iUnk2; //todo
-  int iUnk3; //todo
+  int iLeftShoulderHeight;
+  int iRightShoulderHeight;
+  int iLength;
   float fYaw;
   float fPitch;
   float fRoll;
@@ -38,43 +38,43 @@ struct tGeometryChunk
   unsigned short unTrackGrip;
   unsigned short unLeftShoulderGrip;
   unsigned short unRightShoulderGrip;
-  int iUnk4; //todo
-  int iUnk5; //todo
-  int iUnk6; //todo
-  int iUnk7; //todo
-  int iUnk8; //todo
+  int iUnk04; //todo
+  int iUnk05; //todo
+  int iUnk06; //todo
+  int iUnk07; //todo
+  int iUnk08; //todo
   //line 2
   int iLeftSurfaceType;
   int iCenterSurfaceType;
   int iRightSurfaceType;
-  int iUnk9; //todo
-  int iUnk10; //todo
-  int iUnk11; //todo
+  int iLeftWallType;
+  int iRightWallType;
+  int iRoofType;
   int iUnk12; //todo
-  int iUnk13; //todo
+  int iLeftOuterExtraWallType;
   int iUnk14; //todo
-  int iUnk15; //todo
+  int iRightOuterExtraWallType;
   int iUnk16; //todo
-  int iUnk17; //todo
-  int iUnk18; //todo
+  int iEnvironmentFloorType;
+  int iSignType;
   int iUnk19; //todo
   int iUnk20; //todo
   float fUnk1; //todo
   float fUnk2; //todo
   float fUnk3; //todo
   //line 3
-  int iUnk21; //todo
-  int iUnk22; //todo
+  int iLeftOuterUpperExtraWallAngle;
+  int iLeftOuterLowerExtraWallAngle;
   int iUnk23; //todo
   int iUnk24; //todo
-  int iUnk25; //todo
-  int iUnk26; //todo
-  int iUnk27; //todo
-  int iUnk28; //todo
+  int iRightOuterLowerExtraWallAngle;
+  int iRightOuterUpperExtraWallAngle;
+  int iLeftOuterUpperExtraWallHeight;
+  int iLeftOuterLowerExtraWallHeight;
   int iUnk29; //todo
   int iUnk30; //todo
-  int iUnk31; //todo
-  int iUnk32; //todo
+  int iRightOuterLowerExtraWallHeight;
+  int iRightOuterUpperExtraWallHeight;
   int iUnk33; //todo
   int iUnk34; //todo
   int iUnk35; //todo
@@ -152,49 +152,49 @@ public:
   void GetTextureCursorPos(int iKey, int &iStartCursorPos, int &iEndCursorPos);
   void GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     , QString &sLeftShoulderWidth, QString &sLeftLaneWidth, QString &sRightLaneWidth, QString &sRightShoulderWidth
-    , QString &sUnk1, QString &sUnk2, QString &sUnk3
+    , QString &sLShoulderHeight, QString &sRShoulderHeight, QString &sLength
     , QString &sYaw, QString &sPitch, QString &sRoll
     , QString &sAILine1, QString &sAILine2, QString &sAILine3, QString &sAILine4
     , QString &sTrackGrip, QString &sLeftShoulderGrip, QString &sRightShoulderGrip
-    , QString &sUnk4, QString &sUnk5, QString &sUnk6, QString &sUnk7, QString &sUnk8
+    , QString &sUnk04, QString &sUnk05, QString &sUnk06, QString &sUnk07, QString &sUnk08
     , QString &sLeftSurfaceType, QString &sCenterSurfaceType, QString &sRightSurfaceType
-    , QString &sUnk9, QString &sUnk10, QString &sUnk11, QString &sUnk12, QString &sUnk13, QString &sUnk14
-    , QString &sUnk15, QString &sUnk16, QString &sUnk17, QString &sUnk18, QString &sUnk19, QString &sUnk20
+    , QString &sLWallType, QString &sRWallType, QString &sRoofType, QString &sUnk12, QString &sLOuterExtraWallType, QString &sUnk14
+    , QString &sROuterExtraWallType, QString &sUnk16, QString &sEnvironmentFloorType, QString &sSignType, QString &sUnk19, QString &sUnk20
     , QString &sfUnk1, QString &sfUnk2, QString &sfUnk3
-    , QString &sUnk21, QString &sUnk22, QString &sUnk23, QString &sUnk24, QString &sUnk25, QString &sUnk26
-    , QString &sUnk27, QString &sUnk28, QString &sUnk29, QString &sUnk30, QString &sUnk31, QString &sUnk32
+    , QString &sLOuterUpperExtraWallAngle, QString &sLOuterLowerExtraWallAngle, QString &sUnk23, QString &sUnk24, QString &sROuterLowerExtraWallAngle, QString &sROuterUpperExtraWallAngle
+    , QString &sLOuterUpperExtraWallHeight, QString &sLOuterLowerExtraWallHeight, QString &sUnk29, QString &sUnk30, QString &sROuterLowerExtraWallHeight, QString &sROuterUpperExtraWallHeight
     , QString &sUnk33, QString &sUnk34, QString &sUnk35, QString &sUnk36, QString &sUnk37, QString &sUnk38
     , QString &sUnk39, QString &sUnk40, QString &sUnk41, QString &sUnk42, QString &sUnk43, QString &sUnk44
     , QString &sUnk45, QString &sUnk46, QString &sUnk47, QString &sUnk48, QString &sUnk49, QString &sUnk50);
   void ApplyGeometrySettings(int iStartIndex, int iEndIndex
     , const QString &sLeftShoulderWidth, const QString &sLeftLaneWidth, const QString &sRightLaneWidth, const QString &sRightShoulderWidth
-    , const QString &sUnk1, const QString &sUnk2, const QString &sUnk3
+    , const QString &sLShoulderHeight, const QString &sRShoulderHeight, const QString &sLength
     , const QString &sYaw, const QString &sPitch, const QString &sRoll
     , const QString &sAILine1, const QString &sAILine2, const QString &sAILine3, const QString &sAILine4
     , const QString &sTrackGrip, const QString &sLeftShoulderGrip, const QString &sRightShoulderGrip
-    , const QString &sUnk4, const QString &sUnk5, const QString &sUnk6, const QString &sUnk7, const QString &sUnk8
+    , const QString &sUnk04, const QString &sUnk05, const QString &sUnk06, const QString &sUnk07, const QString &sUnk08
     , const QString &sLeftSurfaceType, const QString &sCenterSurfaceType, const QString &sRightSurfaceType
-    , const QString &sUnk9, const QString &sUnk10, const QString &sUnk11, const QString &sUnk12, const QString &sUnk13, const QString &sUnk14
-    , const QString &sUnk15, const QString &sUnk16, const QString &sUnk17, const QString &sUnk18, const QString &sUnk19, const QString &sUnk20
+    , const QString &sLWallType, const QString &sRWallType, const QString &sRoofType, const QString &sUnk12, const QString &sLOuterExtraWallType, const QString &sUnk14
+    , const QString &sROuterExtraWallType, const QString &sUnk16, const QString &sEnvironmentFloorType, const QString &sSignType, const QString &sUnk19, const QString &sUnk20
     , const QString &sfUnk1, const QString &sfUnk2, const QString &sfUnk3
-    , const QString &sUnk21, const QString &sUnk22, const QString &sUnk23, const QString &sUnk24, const QString &sUnk25, const QString &sUnk26
-    , const QString &sUnk27, const QString &sUnk28, const QString &sUnk29, const QString &sUnk30, const QString &sUnk31, const QString &sUnk32
+    , const QString &sLOuterUpperExtraWallAngle, const QString &sLOuterLowerExtraWallAngle, const QString &sUnk23, const QString &sUnk24, const QString &sROuterLowerExtraWallAngle, const QString &sROuterUpperExtraWallAngle
+    , const QString &sLOuterUpperExtraWallHeight, const QString &sLOuterLowerExtraWallHeight, const QString &sUnk29, const QString &sUnk30, const QString &sROuterLowerExtraWallHeight, const QString &sROuterUpperExtraWallHeight
     , const QString &sUnk33, const QString &sUnk34, const QString &sUnk35, const QString &sUnk36, const QString &sUnk37, const QString &sUnk38
     , const QString &sUnk39, const QString &sUnk40, const QString &sUnk41, const QString &sUnk42, const QString &sUnk43, const QString &sUnk44
     , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50);
   void InsertGeometryChunk(int iIndex, int iCount
     , const QString &sLeftShoulderWidth, const QString &sLeftLaneWidth, const QString &sRightLaneWidth, const QString &sRightShoulderWidth
-    , const QString &sUnk1, const QString &sUnk2, const QString &sUnk3
+    , const QString &sLShoulderHeight, const QString &sRShoulderHeight, const QString &sLength
     , const QString &sYaw, const QString &sPitch, const QString &sRoll
     , const QString &sAILine1, const QString &sAILine2, const QString &sAILine3, const QString &sAILine4
     , const QString &sTrackGrip, const QString &sLeftShoulderGrip, const QString &sRightShoulderGrip
-    , const QString &sUnk4, const QString &sUnk5, const QString &sUnk6, const QString &sUnk7, const QString &sUnk8
+    , const QString &sUnk04, const QString &sUnk05, const QString &sUnk06, const QString &sUnk07, const QString &sUnk08
     , const QString &sLeftSurfaceType, const QString &sCenterSurfaceType, const QString &sRightSurfaceType
-    , const QString &sUnk9, const QString &sUnk10, const QString &sUnk11, const QString &sUnk12, const QString &sUnk13, const QString &sUnk14
-    , const QString &sUnk15, const QString &sUnk16, const QString &sUnk17, const QString &sUnk18, const QString &sUnk19, const QString &sUnk20
+    , const QString &sLWallType, const QString &sRWallType, const QString &sRoofType, const QString &sUnk12, const QString &sLOuterExtraWallType, const QString &sUnk14
+    , const QString &sROuterExtraWallType, const QString &sUnk16, const QString &sEnvironmentFloorType, const QString &sSignType, const QString &sUnk19, const QString &sUnk20
     , const QString &sfUnk1, const QString &sfUnk2, const QString &sfUnk3
-    , const QString &sUnk21, const QString &sUnk22, const QString &sUnk23, const QString &sUnk24, const QString &sUnk25, const QString &sUnk26
-    , const QString &sUnk27, const QString &sUnk28, const QString &sUnk29, const QString &sUnk30, const QString &sUnk31, const QString &sUnk32
+    , const QString &sLOuterUpperExtraWallAngle, const QString &sLOuterLowerExtraWallAngle, const QString &sUnk23, const QString &sUnk24, const QString &sROuterLowerExtraWallAngle, const QString &sROuterUpperExtraWallAngle
+    , const QString &sLOuterUpperExtraWallHeight, const QString &sLOuterLowerExtraWallHeight, const QString &sUnk29, const QString &sUnk30, const QString &sROuterLowerExtraWallHeight, const QString &sROuterUpperExtraWallHeight
     , const QString &sUnk33, const QString &sUnk34, const QString &sUnk35, const QString &sUnk36, const QString &sUnk37, const QString &sUnk38
     , const QString &sUnk39, const QString &sUnk40, const QString &sUnk41, const QString &sUnk42, const QString &sUnk43, const QString &sUnk44
     , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50);

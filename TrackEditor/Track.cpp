@@ -9,7 +9,7 @@
 #define CHUNK_LINE_0_COUNT 22
 #define CHUNK_LINE_1_COUNT 18
 #define CHUNK_LINE_2_COUNT 30
-#define TUPLES_COUNT 2
+#define SIGNS_COUNT 2
 #define STUNTS_COUNT 10
 #define BACKS_COUNT 2
 #define LAPS_COUNT 6
@@ -35,7 +35,7 @@ void CTrack::ClearData()
   memset(&m_header, 0, sizeof(m_header));
   m_header.iHeaderUnk3 = 2048;
   m_chunkAy.clear();
-  m_tupleMap.clear();
+  m_signMap.clear();
   m_stuntMap.clear();
   m_sTextureFile = "";
   m_sBuildingFile = "";
@@ -60,7 +60,6 @@ bool CTrack::LoadTrack(const QString &sFilename)
   int iChunkLine = 0;
   struct tGeometryChunk currChunk;
   eFileSection section = HEADER;
-  std::tuple<int, int> firstTuple;
   while (!file.atEnd()) {
     QByteArray baLine = file.readLine();
     QString sLine = baLine.data();
@@ -79,7 +78,7 @@ bool CTrack::LoadTrack(const QString &sFilename)
         break;
       case GEOMETRY:
         if (iChunkLine == 0) {
-          if (slLine.count() == TUPLES_COUNT) {
+          if (slLine.count() == SIGNS_COUNT) {
             if (m_chunkAy.size() != m_header.iNumChunks) {
               QString sLogMsg = "Warning loading file: number of chunks loaded ("
                 + QString::number(m_chunkAy.size())
@@ -92,8 +91,8 @@ bool CTrack::LoadTrack(const QString &sFilename)
             // there is no defined end to geometry chunks
             // more chunks than the count at the top of the file is allowed
             // so we must detect the beginning of the next section
-            section = TUPLES;
-            ProcessTuple(slLine, section);
+            section = SIGNS;
+            ProcessSign(slLine, section);
           } else if (slLine.count() == CHUNK_LINE_0_COUNT) {
             //start new chunk
             memset(&currChunk, 0, sizeof(currChunk));
@@ -193,12 +192,12 @@ bool CTrack::LoadTrack(const QString &sFilename)
           iChunkLine = 0;
         }
         break;
-      case TUPLES:
-        if (slLine.count() == TUPLES_COUNT) {
-          ProcessTuple(slLine, section);
+      case SIGNS:
+        if (slLine.count() == SIGNS_COUNT) {
+          ProcessSign(slLine, section);
         } else {
           assert(0);
-          g_pMainWindow->LogMessage("Error loading file: tuples section ended before anticipated");
+          g_pMainWindow->LogMessage("Error loading file: signs section ended before anticipated");
           bSuccess = false;
         }
         break;
@@ -291,7 +290,7 @@ bool CTrack::LoadTrack(const QString &sFilename)
   QString sSuccess = (bSuccess ? "Successfully loaded" : "Failed to load");
   QString sLogMsg = sSuccess + " file " + sFilename + "\n"
     + "  geometry chunks: " + QString::number(m_chunkAy.size()) + "\n"
-    + "  unknown tuples: " + QString::number(m_tupleMap.size()) + "\n"
+    + "  unknown signs: " + QString::number(m_signMap.size()) + "\n"
     + "  stunts: " + QString::number(m_stuntMap.size()) + "\n"
     + "  texture file: " + m_sTextureFile + "\n"
     + "  building file: " + m_sBuildingFile + "\n"
@@ -327,7 +326,7 @@ bool CTrack::SaveTrack(const QString &sFilename)
     }
     
     //write signs
-    for (CTupleMap::iterator it = m_tupleMap.begin(); it != m_tupleMap.end(); ++it) {
+    for (CSignMap::iterator it = m_signMap.begin(); it != m_signMap.end(); ++it) {
       memset(szBuf, 0, sizeof(szBuf));
       snprintf(szBuf, sizeof(szBuf), " %4d %6d", it->first, it->second);
       stream << szBuf << Qt::endl;
@@ -355,7 +354,7 @@ bool CTrack::SaveTrack(const QString &sFilename)
     stream << "TEX:" << m_sTextureFile << Qt::endl;
     stream << "BLD:" << m_sBuildingFile << Qt::endl;
     stream << "BACKS:" << Qt::endl;
-    for (CTupleMap::iterator it = m_backsMap.begin(); it != m_backsMap.end(); ++it) {
+    for (CSignMap::iterator it = m_backsMap.begin(); it != m_backsMap.end(); ++it) {
       memset(szBuf, 0, sizeof(szBuf));
       snprintf(szBuf, sizeof(szBuf), "%d %d", it->first, it->second);
       stream << szBuf << Qt::endl;
@@ -421,7 +420,7 @@ void CTrack::GetTextureCursorPos(int iKey, int &iStartCursorPos, int &iEndCursor
   iStartCursorPos = 0;
   iEndCursorPos = 0;
   if (m_backsMap.empty()) return;
-  CTupleMap::iterator it = m_backsMap.find(iKey);
+  CSignMap::iterator it = m_backsMap.find(iKey);
   if (it == m_backsMap.end())
     return;
   
@@ -998,17 +997,17 @@ void CTrack::GenerateChunkString(tGeometryChunk &chunk)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrack::ProcessTuple(const QStringList &slLine, eFileSection &section)
+void CTrack::ProcessSign(const QStringList &slLine, eFileSection &section)
 {
   //helper function because this process must be done in two places
   int iVal0 = slLine[0].toInt();
   int iVal1 = slLine[1].toInt();
   if (iVal0 == -1 || iVal1 == -1) {
-    //tuple section always ends in two -1 values
+    //sign section always ends in two -1 values
     section = STUNTS;
   } else {
-    //process tuple
-    m_tupleMap[iVal0] = iVal1;
+    //process sign
+    m_signMap[iVal0] = iVal1;
   }
 }
 

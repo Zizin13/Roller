@@ -6,7 +6,7 @@
 #include "qstring.h"
 //-------------------------------------------------------------------------------------------------
 #define MIXED_DATA "<mixed>"
-#define TUPLE_LINE_LENGTH 13
+#define SIGN_LINE_LENGTH 13
 #define STUNT_LINE_LENGTH 69
 //-------------------------------------------------------------------------------------------------
 struct tTrackHeader
@@ -96,7 +96,7 @@ struct tGeometryChunk
 };
 typedef std::vector<tGeometryChunk> CChunkAy;
 //-------------------------------------------------------------------------------------------------
-typedef std::map<int, int> CTupleMap;
+typedef std::map<int, int> CSignMap;
 //-------------------------------------------------------------------------------------------------
 struct tStunt
 {
@@ -130,7 +130,7 @@ enum eFileSection
 {
   HEADER = 0,
   GEOMETRY,
-  TUPLES,
+  SIGNS,
   STUNTS,
   TEXTURE,
   TRACK_NUM,
@@ -202,16 +202,16 @@ public:
 
   tTrackHeader m_header;
   CChunkAy m_chunkAy;
-  CTupleMap m_tupleMap;
+  CSignMap m_signMap;
   CStuntMap m_stuntMap;
   QString m_sTextureFile;
   QString m_sBuildingFile;
-  CTupleMap m_backsMap;
+  CSignMap m_backsMap;
   tRaceInfo m_raceInfo;
 
 private:
   void GenerateChunkString(tGeometryChunk &chunk);
-  void ProcessTuple(const QStringList &slLine, eFileSection &section);
+  void ProcessSign(const QStringList &slLine, eFileSection &section);
 };
 
 //-------------------------------------------------------------------------------------------------

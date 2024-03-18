@@ -41,8 +41,8 @@ public:
     , sUnk39, sUnk40, sUnk41, sUnk42, sUnk43, sUnk44
     , sUnk45, sUnk46, sUnk47, sUnk48, sUnk49, sUnk50;
 
-  //selected tuple values
-  QString sTupleRVal;
+  //selected sign values
+  QString sSignRVal;
 
   //selected stunt values
   QString sStuntScaleFactor;
@@ -111,17 +111,17 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(sbSelChunksTo, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksToChanged(int)));
   connect(ckTo, &QCheckBox::toggled, this, &CMainWindow::OnToChecked);
   connect(pbApply, &QPushButton::clicked, this, &CMainWindow::OnApplyClicked);
-  connect(pbApplyTuple, &QPushButton::clicked, this, &CMainWindow::OnApplyTupleClicked);
+  connect(pbApplySign, &QPushButton::clicked, this, &CMainWindow::OnApplySignClicked);
   connect(pbApplyStunt, &QPushButton::clicked, this, &CMainWindow::OnApplyStuntClicked);
   connect(pbApplyTexture, &QPushButton::clicked, this, &CMainWindow::OnApplyTextureClicked);
   connect(pbApplyInfo, &QPushButton::clicked, this, &CMainWindow::OnApplyInfoClicked);
   connect(pbCancel, &QPushButton::clicked, this, &CMainWindow::OnCancelClicked);
-  connect(pbRevertTuple, &QPushButton::clicked, this, &CMainWindow::OnCancelTupleClicked);
+  connect(pbRevertSign, &QPushButton::clicked, this, &CMainWindow::OnCancelSignClicked);
   connect(pbRevertStunt, &QPushButton::clicked, this, &CMainWindow::OnCancelStuntClicked);
   connect(pbRevertTexture, &QPushButton::clicked, this, &CMainWindow::OnCancelTextureClicked);
   connect(pbRevertInfo, &QPushButton::clicked, this, &CMainWindow::OnCancelInfoClicked);
   connect(pbDelete, &QPushButton::clicked, this, &CMainWindow::OnDeleteChunkClicked);
-  connect(pbDeleteTuple, &QPushButton::clicked, this, &CMainWindow::OnDeleteTuplesClicked);
+  connect(pbDeleteSign, &QPushButton::clicked, this, &CMainWindow::OnDeleteSignsClicked);
   connect(pbDeleteStunt, &QPushButton::clicked, this, &CMainWindow::OnDeleteStuntClicked);
   connect(pbDeleteBack, &QPushButton::clicked, this, &CMainWindow::OnDeleteBackClicked);
   connect(pbEditLSurface, &QPushButton::clicked, this, &CMainWindow::OnEditLSurface);
@@ -199,8 +199,8 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leUnk49, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk50, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
 
-  connect(leLVal, &QLineEdit::textChanged, this, &CMainWindow::OnTupleLValChanged);
-  connect(leRVal, &QLineEdit::textChanged, this, &CMainWindow::UpdateTuplesEditMode);
+  connect(leSignIndex, &QLineEdit::textChanged, this, &CMainWindow::OnSignIndexChanged);
+  connect(leSignVal, &QLineEdit::textChanged, this, &CMainWindow::UpdateSignsEditMode);
 
   connect(leStuntIndex, &QLineEdit::textChanged, this, &CMainWindow::OnStuntIndexChanged);
   connect(leStuntScaleFact, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
@@ -287,8 +287,8 @@ void CMainWindow::OnLoadTrack()
     //load successful
     sbSelChunksFrom->setValue(0);
     sbSelChunksTo->setValue(0);
-    if (!p->m_track.m_tupleMap.empty())
-      leLVal->setText(QString::number(p->m_track.m_tupleMap.begin()->first));
+    if (!p->m_track.m_signMap.empty())
+      leSignIndex->setText(QString::number(p->m_track.m_signMap.begin()->first));
     if (!p->m_track.m_stuntMap.empty())
       leStuntIndex->setText(QString::number(p->m_track.m_stuntMap.begin()->first));
     if (!p->m_track.m_backsMap.empty())
@@ -466,10 +466,10 @@ void CMainWindow::OnSelChunksToChanged(int iValue)
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::OnSelectedTupleChanged(int iValue)
+void CMainWindow::OnSelectedSignChanged(int iValue)
 {
   (void)(iValue);
-  UpdateTupleSelection();
+  UpdateSignSelection();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -508,13 +508,13 @@ void CMainWindow::OnApplyClicked()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::OnApplyTupleClicked()
+void CMainWindow::OnApplySignClicked()
 {
   //update value
-  p->m_track.m_tupleMap[leLVal->text().toInt()] = leRVal->text().toInt();
+  p->m_track.m_signMap[leSignIndex->text().toInt()] = leSignVal->text().toInt();
 
   m_bUnsavedChanges = true;
-  g_pMainWindow->LogMessage("Applied changes to tuples");
+  g_pMainWindow->LogMessage("Applied changes to signs");
   UpdateWindow();
 }
 
@@ -583,9 +583,9 @@ void CMainWindow::OnCancelClicked()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::OnCancelTupleClicked()
+void CMainWindow::OnCancelSignClicked()
 {
-  RevertTuples();
+  RevertSigns();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -638,22 +638,22 @@ void CMainWindow::OnDeleteChunkClicked()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::OnDeleteTuplesClicked()
+void CMainWindow::OnDeleteSignsClicked()
 {
   //delete value from map
-  CTupleMap::iterator it = p->m_track.m_tupleMap.find(leLVal->text().toInt());
-  if (it != p->m_track.m_tupleMap.end()) {
-    it = p->m_track.m_tupleMap.erase(it);
-    if (it != p->m_track.m_tupleMap.end()) {
-      leLVal->setText(QString::number(it->first));
-    } else if (!p->m_track.m_tupleMap.empty()) {
+  CSignMap::iterator it = p->m_track.m_signMap.find(leSignIndex->text().toInt());
+  if (it != p->m_track.m_signMap.end()) {
+    it = p->m_track.m_signMap.erase(it);
+    if (it != p->m_track.m_signMap.end()) {
+      leSignIndex->setText(QString::number(it->first));
+    } else if (!p->m_track.m_signMap.empty()) {
       --it;
-      leLVal->setText(QString::number(it->first));
+      leSignIndex->setText(QString::number(it->first));
     }
   }
-  g_pMainWindow->LogMessage("Deleted tuple");
+  g_pMainWindow->LogMessage("Deleted sign");
   UpdateWindow();
-  UpdateTuplesEditMode();
+  UpdateSignsEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -681,7 +681,7 @@ void CMainWindow::OnDeleteStuntClicked()
 void CMainWindow::OnDeleteBackClicked()
 {
   //delete value from map
-  CTupleMap::iterator it = p->m_track.m_backsMap.find(leBackIndex->text().toInt());
+  CSignMap::iterator it = p->m_track.m_backsMap.find(leBackIndex->text().toInt());
   if (it != p->m_track.m_backsMap.end()) {
     it = p->m_track.m_backsMap.erase(it);
     if (it != p->m_track.m_backsMap.end()) {
@@ -719,10 +719,10 @@ void CMainWindow::OnEditRSurface()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::OnTupleLValChanged()
+void CMainWindow::OnSignIndexChanged()
 {
-  UpdateTupleSelection();
-  UpdateTuplesEditMode();
+  UpdateSignSelection();
+  UpdateSignsEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -813,18 +813,18 @@ void CMainWindow::UpdateGeometryEditMode()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::UpdateTuplesEditMode()
+void CMainWindow::UpdateSignsEditMode()
 {
-  CTupleMap::iterator it = p->m_track.m_tupleMap.find(leLVal->text().toInt());
-  bool bNew = (it == p->m_track.m_tupleMap.end());
+  CSignMap::iterator it = p->m_track.m_signMap.find(leSignIndex->text().toInt());
+  bool bNew = (it == p->m_track.m_signMap.end());
 
   bool bLValEdited = false;
   bool bMixedData = false;
-  UpdateLEEditMode(bLValEdited, bMixedData, leRVal, p->sTupleRVal, bNew);
+  UpdateLEEditMode(bLValEdited, bMixedData, leSignVal, p->sSignRVal, bNew);
 
   bool bEditMode = bNew || bLValEdited;
-  pbApplyTuple->setEnabled(bEditMode);
-  pbRevertTuple->setEnabled(bLValEdited);
+  pbApplySign->setEnabled(bEditMode);
+  pbRevertSign->setEnabled(bLValEdited);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -871,7 +871,7 @@ void CMainWindow::OnBackIndexChanged()
 
 void CMainWindow::UpdateTexturesEditMode()
 {
-  CTupleMap::iterator it = p->m_track.m_backsMap.find(leBackIndex->text().toInt());
+  CSignMap::iterator it = p->m_track.m_backsMap.find(leBackIndex->text().toInt());
   bool bNew = (it == p->m_track.m_backsMap.end());
 
   bool bLValEdited = false;
@@ -1024,12 +1024,12 @@ void CMainWindow::UpdateWindow()
       UpdateGeometryEditMode();
     }
       break;
-    case 1: //TUPLES
+    case 1: //SIGNS
     {
-      leTuplesCount->setText(QString::number(p->m_track.m_tupleMap.size()));
+      leSignsCount->setText(QString::number(p->m_track.m_signMap.size()));
       //stuff data
-      CTupleMap::iterator it = p->m_track.m_tupleMap.begin();
-      for (; it != p->m_track.m_tupleMap.end(); ++it) {
+      CSignMap::iterator it = p->m_track.m_signMap.begin();
+      for (; it != p->m_track.m_signMap.end(); ++it) {
         char szLine[20];
         memset(szLine, 0, sizeof(szLine));
         snprintf(szLine, sizeof(szLine), " %4d %6d", it->first, it->second);
@@ -1037,8 +1037,8 @@ void CMainWindow::UpdateWindow()
       }
 
       //update selection
-      UpdateTupleSelection();
-      UpdateTuplesEditMode();
+      UpdateSignSelection();
+      UpdateSignsEditMode();
     }
       break;
     case 2: //STUNTS
@@ -1067,7 +1067,7 @@ void CMainWindow::UpdateWindow()
       //stuff data
       txData->appendPlainText("TEX:" + p->m_track.m_sTextureFile);
       txData->appendPlainText("BLD:" + p->m_track.m_sBuildingFile);
-      CTupleMap::iterator it = p->m_track.m_backsMap.begin();
+      CSignMap::iterator it = p->m_track.m_backsMap.begin();
       for (; it != p->m_track.m_backsMap.end(); ++it) {
         char szLine[20];
         memset(szLine, 0, sizeof(szLine));
@@ -1142,25 +1142,25 @@ void CMainWindow::UpdateGeometrySelection()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::UpdateTupleSelection()
+void CMainWindow::UpdateSignSelection()
 {
   //update values in edit window
   int i = 0;
-  CTupleMap::iterator it = p->m_track.m_tupleMap.begin();
-  for (; it != p->m_track.m_tupleMap.end(); ++it, ++i) {
-    if (leLVal->text().toInt() == it->first) {
-      p->sTupleRVal = QString::number(it->second);
+  CSignMap::iterator it = p->m_track.m_signMap.begin();
+  for (; it != p->m_track.m_signMap.end(); ++it, ++i) {
+    if (leSignIndex->text().toInt() == it->first) {
+      p->sSignRVal = QString::number(it->second);
       break;
     }
   }
 
   //update view window selection
   QTextCursor c = txData->textCursor();
-  c.setPosition(i * TUPLE_LINE_LENGTH);
-  c.setPosition((i + 1) * TUPLE_LINE_LENGTH - 1, QTextCursor::KeepAnchor);
+  c.setPosition(i * SIGN_LINE_LENGTH);
+  c.setPosition((i + 1) * SIGN_LINE_LENGTH - 1, QTextCursor::KeepAnchor);
   txData->setTextCursor(c);
   
-  RevertTuples();
+  RevertSigns();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1200,7 +1200,7 @@ void CMainWindow::UpdateBackSelection()
 {
   //update values in edit window
   int i = 0;
-  CTupleMap::iterator it = p->m_track.m_backsMap.begin();
+  CSignMap::iterator it = p->m_track.m_backsMap.begin();
   for (; it != p->m_track.m_backsMap.end(); ++it, ++i) {
     if (leBackIndex->text().toInt() == it->first) {
       p->sBackVal = QString::number(it->second);
@@ -1362,21 +1362,21 @@ void CMainWindow::RevertGeometry()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::RevertTuples()
+void CMainWindow::RevertSigns()
 {
-  CTupleMap::iterator it = p->m_track.m_tupleMap.find(leLVal->text().toInt());
-  if (it == p->m_track.m_tupleMap.end()) {
-    leLVal->setStyleSheet("background-color: rgb(0,255,0)");
-    pbDeleteTuple->setEnabled(false);
+  CSignMap::iterator it = p->m_track.m_signMap.find(leSignIndex->text().toInt());
+  if (it == p->m_track.m_signMap.end()) {
+    leSignIndex->setStyleSheet("background-color: rgb(0,255,0)");
+    pbDeleteSign->setEnabled(false);
   } else {
-    leLVal->setStyleSheet("");
-    pbDeleteTuple->setEnabled(true);
+    leSignIndex->setStyleSheet("");
+    pbDeleteSign->setEnabled(true);
   }
 
-  UpdateLEWithSelectionValue(leRVal, p->sTupleRVal);
+  UpdateLEWithSelectionValue(leSignVal, p->sSignRVal);
 
-  pbApplyTuple->setEnabled(false);
-  pbRevertTuple->setEnabled(false);
+  pbApplySign->setEnabled(false);
+  pbRevertSign->setEnabled(false);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1410,7 +1410,7 @@ void CMainWindow::RevertStunts()
 
 void CMainWindow::RevertBacks()
 {
-  CTupleMap::iterator it = p->m_track.m_backsMap.find(leBackIndex->text().toInt());
+  CSignMap::iterator it = p->m_track.m_backsMap.find(leBackIndex->text().toInt());
   if (it == p->m_track.m_backsMap.end()) {
     leBackIndex->setStyleSheet("background-color: rgb(0,255,0)");
     pbDeleteBack->setEnabled(false);

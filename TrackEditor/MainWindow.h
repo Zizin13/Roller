@@ -62,6 +62,7 @@ private:
   void LoadSettings();
   void SaveSettings();
   bool SaveChangesAndContinue();
+  void LoadTextures();
   void UpdateWindow();
   void UpdateGeometrySelection();
   void UpdateSignSelection();

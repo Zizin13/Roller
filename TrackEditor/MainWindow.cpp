@@ -6,6 +6,8 @@
 #include "qdesktopwidget.h"
 #include "Track.h"
 #include "LogDialog.h"
+#include "Palette.h"
+#include "Texture.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
 #endif
@@ -19,9 +21,19 @@ public:
   CMainWindowPrivate(CMainWindow *pMainWindow)
     : m_logDialog(pMainWindow)
   {};
-  ~CMainWindowPrivate() {};
+  ~CMainWindowPrivate() 
+  {
+    for (std::vector<QLabel *>::iterator it = m_texLabelAy.begin(); it != m_texLabelAy.end(); ++it) {
+      delete *it;
+    }
+    m_texLabelAy.clear();
+  };
 
   CTrack m_track;
+  CPalette m_palette;
+  CTexture m_tex;
+  CTexture m_bld;
+  std::vector<QLabel *> m_texLabelAy;
   CLogDialog m_logDialog;
 
   //selected geometry values
@@ -266,6 +278,7 @@ void CMainWindow::OnNewTrack()
   m_sTrackFile = "";
   m_bUnsavedChanges = false;
   UpdateWindow();
+  LoadTextures();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -279,12 +292,15 @@ void CMainWindow::OnLoadTrack()
   //load track
   QString sFilename = QDir::toNativeSeparators(QFileDialog::getOpenFileName(
     this, "Load Track", m_sTrackFilesFolder, QString("Track Files (*.TRK)")));
+  if (sFilename.isEmpty())
+    return;
+
   if (!p->m_track.LoadTrack(sFilename)) {
     //load failed
     m_sTrackFile = "";
     m_bUnsavedChanges = false;
-  } else {
-    //load successful
+  } else { //load successful
+    //update ui
     sbSelChunksFrom->setValue(0);
     sbSelChunksTo->setValue(0);
     if (!p->m_track.m_signMap.empty())
@@ -293,12 +309,15 @@ void CMainWindow::OnLoadTrack()
       leStuntIndex->setText(QString::number(p->m_track.m_stuntMap.begin()->first));
     if (!p->m_track.m_backsMap.empty())
       leBackIndex->setText(QString::number(p->m_track.m_backsMap.begin()->first));
+    
+    //update variables
     m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
     m_sTrackFile = sFilename;
     m_bUnsavedChanges = false;
   }
   //update app
   UpdateWindow();
+  LoadTextures();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -551,6 +570,7 @@ void CMainWindow::OnApplyTextureClicked()
   m_bUnsavedChanges = true;
   g_pMainWindow->LogMessage("Applied changes to texture");
   UpdateWindow();
+  LoadTextures();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1104,6 +1124,43 @@ void CMainWindow::UpdateWindow()
       UpdateInfoEditMode();
     }
       break;
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::LoadTextures()
+{
+  //avoid memory leak
+  for (std::vector<QLabel *>::iterator it = p->m_texLabelAy.begin(); it != p->m_texLabelAy.end(); ++it) {
+    delete *it;
+  }
+  p->m_texLabelAy.clear();
+
+  //load textures
+  bool bPalLoaded = p->m_palette.LoadPalette(m_sTrackFilesFolder + QDir::separator() + "PALETTE.PAL");
+  bool bTexLoaded = p->m_tex.LoadTexture(m_sTrackFilesFolder + QDir::separator() + p->m_track.m_sTextureFile, p->m_palette);
+  bool bBldLoaded = p->m_bld.LoadTexture(m_sTrackFilesFolder + QDir::separator() + p->m_track.m_sBuildingFile, p->m_palette);
+  lblPalletteLoaded->setVisible(!bPalLoaded);
+  lblTextureLoaded->setText(bTexLoaded ? p->m_track.m_sTextureFile : "Texture not loaded");
+  lblBuildingsLoaded->setText(bBldLoaded ? p->m_track.m_sBuildingFile : "Buildings not loaded");
+
+  //add tiles to viewer layouts
+  int iTilesPerLine = (twViewer->width() - 256) / (TILE_WIDTH + 6);
+  for (int i = 0; i < p->m_tex.m_tileAy.size(); ++i) {
+    QLabel *pImageLabel = new QLabel();
+    QPixmap pixmap;
+    pixmap.convertFromImage(p->m_tex.m_tileAy[i]);
+    pImageLabel->setPixmap(pixmap);
+    texLayout->addWidget(pImageLabel, i / iTilesPerLine, i % iTilesPerLine);
+  }
+  for (int i = 0; i < p->m_bld.m_tileAy.size(); ++i) {
+    QLabel *pImageLabel = new QLabel();
+    QPixmap pixmap;
+    pixmap.convertFromImage(p->m_bld.m_tileAy[i]);
+    pImageLabel->setPixmap(pixmap);
+    bldLayout->addWidget(pImageLabel, i / iTilesPerLine, i % iTilesPerLine);
+    p->m_texLabelAy.push_back(pImageLabel);
   }
 }
 

@@ -35,7 +35,7 @@
         </sizepolicy>
        </property>
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tab">
         <attribute name="title">
@@ -1661,7 +1661,7 @@ extra wall height</string>
        <property name="currentIndex">
         <number>0</number>
        </property>
-       <widget class="QWidget" name="tab_3">
+       <widget class="QWidget" name="tabData">
         <attribute name="title">
          <string>Data</string>
         </attribute>
@@ -1687,7 +1687,7 @@ extra wall height</string>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tab_4">
+       <widget class="QWidget" name="tabPreview">
         <attribute name="title">
          <string>Preview</string>
         </attribute>
@@ -1702,8 +1702,8 @@ extra wall height</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>120</width>
-              <height>51</height>
+              <width>582</width>
+              <height>513</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1723,6 +1723,114 @@ extra wall height</string>
                 <pixmap resource="resource.qrc">:/images/crab.png</pixmap>
                </property>
               </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tabTexture">
+        <attribute name="title">
+         <string>Texture</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_11">
+         <item>
+          <widget class="QScrollArea" name="scrollArea_2">
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="scrollAreaWidgetContents_3">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>158</width>
+              <height>530</height>
+             </rect>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_12">
+             <item>
+              <widget class="QLabel" name="lblPalletteLoaded">
+               <property name="text">
+                <string>PALLETE.PAL not found</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblTextureLoaded">
+               <property name="text">
+                <string>Texture not loaded</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="frmTex">
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <layout class="QGridLayout" name="texLayout">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="lblBuildingsLoaded">
+               <property name="text">
+                <string>Buildings not loaded</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="frmBld">
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Raised</enum>
+               </property>
+               <layout class="QGridLayout" name="bldLayout">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <spacer name="verticalSpacer_5">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
              </item>
             </layout>
            </widget>

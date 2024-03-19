@@ -130,7 +130,9 @@ exit 1
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="moc\moc_LogDialog.cpp" />
     <ClCompile Include="moc\moc_MainWindow.cpp" />
+    <ClCompile Include="Palette.cpp" />
     <ClCompile Include="resource.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Track.cpp" />
     <ClCompile Include="TrackEditor.cpp" />
   </ItemGroup>
@@ -170,7 +172,9 @@ exit 1
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
+    <ClInclude Include="Palette.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Track.h" />
     <ClInclude Include="TrackEditor.h" />
     <ClInclude Include="ui\ui_LogDialog.h" />

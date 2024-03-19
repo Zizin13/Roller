@@ -22,6 +22,12 @@
     <ClCompile Include="resource.cpp">
       <Filter>Qt Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="Palette.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Track.h">
@@ -38,6 +44,12 @@
     </ClInclude>
     <ClInclude Include="ui\ui_MainWindow.h">
       <Filter>Qt Generated Files\Ui Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Palette.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

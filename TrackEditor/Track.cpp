@@ -47,14 +47,18 @@ void CTrack::ClearData()
 
 bool CTrack::LoadTrack(const QString &sFilename)
 {
-  if (sFilename.isEmpty())
+  ClearData();
+
+  if (sFilename.isEmpty()) {
+    g_pMainWindow->LogMessage("Track filename empty: " + sFilename);
     return false;
+  }
 
   QFile file(sFilename);
-  if (!file.open(QIODevice::ReadOnly))
+  if (!file.open(QIODevice::ReadOnly)) {
+    g_pMainWindow->LogMessage("Failed to open track: " + sFilename);
     return false;
-
-  ClearData();
+  }
 
   bool bSuccess = true;
   int iChunkLine = 0;

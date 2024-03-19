@@ -251,8 +251,10 @@ bool CTrack::LoadTrack(const QString &sFilename)
         } else if (slLine.count() == BACKS_COUNT) {
           //process backs
           int iGeometryIndex = slLine[0].toInt();
-          if (iGeometryIndex < m_chunkAy.size())
+          if (iGeometryIndex < m_chunkAy.size()) {
             m_chunkAy[iGeometryIndex].unBackTexture = slLine[1].toUShort();
+            m_chunkAy[iGeometryIndex].bHasBack = true;
+          }
         } else {
           assert(0);
           g_pMainWindow->LogMessage("Error loading file: texture section ended before anticipated");
@@ -327,10 +329,10 @@ bool CTrack::SaveTrack(const QString &sFilename)
     CSignMap backsMap;
     for (int i = 0; i < m_chunkAy.size(); ++i) {
       stream << m_chunkAy[i].sString.c_str() << Qt::endl;
-      if (m_chunkAy[i].unSignTexture > 0) { //todo: is 0 a valid index?
+      if (m_chunkAy[i].bHasSign) {
         signMap[i] = m_chunkAy[i].unSignTexture;
       }
-      if (m_chunkAy[i].unBackTexture > 0) { //todo: is 0 a valid index?
+      if (m_chunkAy[i].bHasBack) {
         backsMap[i] = m_chunkAy[i].unBackTexture;
       }
     }
@@ -688,10 +690,10 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     if (sUnk50.isEmpty()) sUnk50 = sVal;
     else if (sUnk50.compare(sVal) != 0) sUnk50 = MIXED_DATA;
 
-    sVal = QString::number(m_chunkAy[i].unSignTexture);
+    sVal = m_chunkAy[i].bHasSign ? QString::number(m_chunkAy[i].unSignTexture) : NO_TEX_DATA;
     if (sSignTexture.isEmpty()) sSignTexture = sVal;
-    else if (sSignTexture.compare(sVal) != 0) sSignTexture = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].unBackTexture);
+    else if (sSignTexture.compare(sVal) != 0) sSignTexture = MIXED_DATA;\
+    sVal = m_chunkAy[i].bHasBack ? QString::number(m_chunkAy[i].unBackTexture) : NO_TEX_DATA;
     if (sBackTexture.isEmpty()) sBackTexture = sVal;
     else if (sBackTexture.compare(sVal) != 0) sBackTexture = MIXED_DATA;
   }
@@ -714,7 +716,8 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex
     , const QString &sLOuterUpperExtraWallHeight, const QString &sLOuterLowerExtraWallHeight, const QString &sUnk29, const QString &sUnk30, const QString &sROuterLowerExtraWallHeight, const QString &sROuterUpperExtraWallHeight
     , const QString &sUnk33, const QString &sUnk34, const QString &sUnk35, const QString &sUnk36, const QString &sUnk37, const QString &sUnk38
     , const QString &sUnk39, const QString &sUnk40, const QString &sUnk41, const QString &sUnk42, const QString &sUnk43, const QString &sUnk44
-    , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50)
+    , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50
+    , const QString &sSignValue, const QString &sBackValue)
 {
   for (int i = iStartIndex; i <= iEndIndex; ++i) {
     if (!sLeftShoulderWidth.isEmpty()) m_chunkAy[i].iLeftShoulderWidth = sLeftShoulderWidth.toInt();
@@ -787,6 +790,10 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex
     if (!sUnk48.isEmpty()) m_chunkAy[i].iUnk48 = sUnk48.toInt();
     if (!sUnk49.isEmpty()) m_chunkAy[i].iUnk49 = sUnk49.toInt();
     if (!sUnk50.isEmpty()) m_chunkAy[i].iUnk50 = sUnk50.toInt();
+    if (!sSignValue.isEmpty() && sSignValue.compare(MIXED_DATA) != 0) m_chunkAy[i].unSignTexture = sSignValue.toUShort();
+    m_chunkAy[i].bHasSign = sSignValue.compare(NO_TEX_DATA) != 0;
+    if (!sBackValue.isEmpty() && sBackValue.compare(MIXED_DATA) != 0) m_chunkAy[i].unBackTexture = sBackValue.toUShort();
+    m_chunkAy[i].bHasBack = sBackValue.compare(NO_TEX_DATA) != 0;
   }
   UpdateChunkStrings();
   g_pMainWindow->LogMessage("Applied changes to " + QString::number(iEndIndex - iStartIndex + 1) + " geometry chunks");
@@ -809,7 +816,8 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount
   , const QString &sLOuterUpperExtraWallHeight, const QString &sLOuterLowerExtraWallHeight, const QString &sUnk29, const QString &sUnk30, const QString &sROuterLowerExtraWallHeight, const QString &sROuterUpperExtraWallHeight
   , const QString &sUnk33, const QString &sUnk34, const QString &sUnk35, const QString &sUnk36, const QString &sUnk37, const QString &sUnk38
   , const QString &sUnk39, const QString &sUnk40, const QString &sUnk41, const QString &sUnk42, const QString &sUnk43, const QString &sUnk44
-  , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50)
+  , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50
+  , const QString &sSignValue, const QString &sBackValue)
 {
   for (int i = 0; i < iCount; ++i) {
     struct tGeometryChunk newChunk;
@@ -884,6 +892,10 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount
     newChunk.iUnk48 = sUnk48.toInt();
     newChunk.iUnk49 = sUnk49.toInt();
     newChunk.iUnk50 = sUnk50.toInt();
+    newChunk.unSignTexture = sSignValue.toUShort();
+    newChunk.bHasSign = sSignValue.compare(NO_TEX_DATA) != 0;
+    newChunk.unBackTexture = sBackValue.toUShort();
+    newChunk.bHasBack = sBackValue.compare(NO_TEX_DATA) != 0;
     if (m_chunkAy.empty())
       m_chunkAy.push_back(newChunk);
     else
@@ -999,6 +1011,7 @@ void CTrack::ProcessSign(const QStringList &slLine, eFileSection &section)
     //process sign
     if (iVal0 < m_chunkAy.size()) {
       m_chunkAy[iVal0].unSignTexture = slLine[1].toUShort();
+      m_chunkAy[iVal0].bHasSign = true;
     }
   }
 }

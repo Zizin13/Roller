@@ -49,6 +49,10 @@ protected slots:
   void UpdateStuntsEditMode();
   void UpdateTexturesEditMode();
   void UpdateInfoEditMode();
+  void OnSignClicked();
+  void OnBackClicked();
+  void OnApplySignToggled(bool bChecked);
+  void OnApplyBackToggled(bool bChecked);
 
 private:
   void LoadSettings();
@@ -61,7 +65,9 @@ private:
   void UpdateInfoSelection();
   bool UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue);
   bool UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLabel *pLabel, const QString &sValue);
+  void UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCheckbox, QLabel *pLabel);
   void UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, const QString &sValue, bool bNew = false);
+  void UpdateSignEditMode(bool &bEdited, bool &bMixedData, QPushButton *pPushButton, QWidget *pWidget, const QString &sValue);
   void RevertGeometry();
   void RevertStunts();
   void RevertInfo();

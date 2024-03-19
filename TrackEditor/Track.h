@@ -6,6 +6,7 @@
 #include "qstring.h"
 //-------------------------------------------------------------------------------------------------
 #define MIXED_DATA "<mixed>"
+#define NO_TEX_DATA "<none>"
 #define SIGN_LINE_LENGTH 13
 #define STUNT_LINE_LENGTH 69
 //-------------------------------------------------------------------------------------------------
@@ -96,7 +97,9 @@ struct tGeometryChunk
 
   //additional data
   unsigned short unSignTexture;
+  bool bHasSign;
   unsigned short unBackTexture;
+  bool bHasBack;
 };
 typedef std::vector<tGeometryChunk> CChunkAy;
 //-------------------------------------------------------------------------------------------------
@@ -185,7 +188,8 @@ public:
     , const QString &sLOuterUpperExtraWallHeight, const QString &sLOuterLowerExtraWallHeight, const QString &sUnk29, const QString &sUnk30, const QString &sROuterLowerExtraWallHeight, const QString &sROuterUpperExtraWallHeight
     , const QString &sUnk33, const QString &sUnk34, const QString &sUnk35, const QString &sUnk36, const QString &sUnk37, const QString &sUnk38
     , const QString &sUnk39, const QString &sUnk40, const QString &sUnk41, const QString &sUnk42, const QString &sUnk43, const QString &sUnk44
-    , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50);
+    , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50
+    , const QString &sSignValue, const QString &sBackValue);
   void InsertGeometryChunk(int iIndex, int iCount
     , const QString &sLeftShoulderWidth, const QString &sLeftLaneWidth, const QString &sRightLaneWidth, const QString &sRightShoulderWidth
     , const QString &sLShoulderHeight, const QString &sRShoulderHeight, const QString &sLength
@@ -201,7 +205,8 @@ public:
     , const QString &sLOuterUpperExtraWallHeight, const QString &sLOuterLowerExtraWallHeight, const QString &sUnk29, const QString &sUnk30, const QString &sROuterLowerExtraWallHeight, const QString &sROuterUpperExtraWallHeight
     , const QString &sUnk33, const QString &sUnk34, const QString &sUnk35, const QString &sUnk36, const QString &sUnk37, const QString &sUnk38
     , const QString &sUnk39, const QString &sUnk40, const QString &sUnk41, const QString &sUnk42, const QString &sUnk43, const QString &sUnk44
-    , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50);
+    , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50
+    , const QString &sSignValue, const QString &sBackValue);
   void UpdateChunkStrings();
 
   tTrackHeader m_header;

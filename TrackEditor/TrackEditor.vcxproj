@@ -130,9 +130,11 @@ exit 1
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="moc\moc_LogDialog.cpp" />
     <ClCompile Include="moc\moc_MainWindow.cpp" />
+    <ClCompile Include="moc\moc_TilePicker.cpp" />
     <ClCompile Include="Palette.cpp" />
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TilePicker.cpp" />
     <ClCompile Include="Track.cpp" />
     <ClCompile Include="TrackEditor.cpp" />
   </ItemGroup>
@@ -162,6 +164,7 @@ exit 1
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ui\ui_TilePicker.h" />
     <CustomBuild Include="LogDialog.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
@@ -175,6 +178,16 @@ exit 1
     <ClInclude Include="Palette.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Texture.h" />
+    <CustomBuild Include="TilePicker.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC'ing %(Filename).h...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC'ing %(Filename).h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
     <ClInclude Include="Track.h" />
     <ClInclude Include="TrackEditor.h" />
     <ClInclude Include="ui\ui_LogDialog.h" />
@@ -199,6 +212,17 @@ exit 1
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="LogDialog.ui">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UIC'ing %(Filename).ui...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UIC'ing %(Filename).ui...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)ui\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)ui\ui_%(Filename).h;%(Outputs)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="TilePicker.ui">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>

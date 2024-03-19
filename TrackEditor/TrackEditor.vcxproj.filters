@@ -28,6 +28,12 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="TilePicker.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="moc\moc_TilePicker.cpp">
+      <Filter>Qt Generated Files\Moc Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Track.h">
@@ -51,6 +57,9 @@
     <ClInclude Include="Texture.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="ui\ui_TilePicker.h">
+      <Filter>Qt Generated Files\Ui Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="LogDialog.h">
@@ -67,6 +76,12 @@
     </CustomBuild>
     <CustomBuild Include="resource.qrc">
       <Filter>Resources</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TilePicker.ui">
+      <Filter>Resources</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TilePicker.h">
+      <Filter>Headers</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

@@ -194,9 +194,9 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-841</y>
+              <y>-877</y>
               <width>449</width>
-              <height>1251</height>
+              <height>1287</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -1048,75 +1048,6 @@ extra wall height</string>
              </item>
              <item>
               <layout class="QGridLayout" name="layoutSigns">
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_3">
-                 <property name="text">
-                  <string>Sign</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="1">
-                <widget class="QPushButton" name="pbBack">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>90</horstretch>
-                   <verstretch>90</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>90</width>
-                   <height>90</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>90</width>
-                   <height>90</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>&lt;none&gt;</string>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>64</width>
-                   <height>64</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QPushButton" name="pbSign">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                   <horstretch>90</horstretch>
-                   <verstretch>90</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>90</width>
-                   <height>90</height>
-                  </size>
-                 </property>
-                 <property name="maximumSize">
-                  <size>
-                   <width>90</width>
-                   <height>90</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>&lt;none&gt;</string>
-                 </property>
-                 <property name="iconSize">
-                  <size>
-                   <width>64</width>
-                   <height>64</height>
-                  </size>
-                 </property>
-                </widget>
-               </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="label_5">
                  <property name="text">
@@ -1124,21 +1055,68 @@ extra wall height</string>
                  </property>
                 </widget>
                </item>
-               <item row="1" column="2">
-                <widget class="QCheckBox" name="ckApplyBack">
+               <item row="0" column="1">
+                <widget class="QWidget" name="widgetSign" native="true">
+                 <layout class="QHBoxLayout" name="horizontalLayout_4">
+                  <item>
+                   <widget class="QPushButton" name="pbSign">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>90</horstretch>
+                      <verstretch>90</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>90</width>
+                      <height>90</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>90</width>
+                      <height>90</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>&lt;none&gt;</string>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>64</width>
+                      <height>64</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="ckApplySign">
+                    <property name="text">
+                     <string>Apply Texture</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="lblSignValue">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
+                    <property name="text">
+                     <string>(value)</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_3">
                  <property name="text">
-                  <string>Apply Texture</string>
+                  <string>Sign</string>
                  </property>
                 </widget>
                </item>
                <item row="0" column="2">
-                <widget class="QCheckBox" name="ckApplySign">
-                 <property name="text">
-                  <string>Apply Texture</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="4">
                 <spacer name="horizontalSpacer_2">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
@@ -1151,24 +1129,58 @@ extra wall height</string>
                  </property>
                 </spacer>
                </item>
-               <item row="0" column="3">
-                <widget class="QLabel" name="lblSignValue">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="text">
-                  <string>(value)</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="3">
-                <widget class="QLabel" name="lblBackValue">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="text">
-                  <string>(value)</string>
-                 </property>
+               <item row="1" column="1">
+                <widget class="QWidget" name="widgetBack" native="true">
+                 <layout class="QHBoxLayout" name="horizontalLayout_7">
+                  <item>
+                   <widget class="QPushButton" name="pbBack">
+                    <property name="sizePolicy">
+                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                      <horstretch>90</horstretch>
+                      <verstretch>90</verstretch>
+                     </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                     <size>
+                      <width>90</width>
+                      <height>90</height>
+                     </size>
+                    </property>
+                    <property name="maximumSize">
+                     <size>
+                      <width>90</width>
+                      <height>90</height>
+                     </size>
+                    </property>
+                    <property name="text">
+                     <string>&lt;none&gt;</string>
+                    </property>
+                    <property name="iconSize">
+                     <size>
+                      <width>64</width>
+                      <height>64</height>
+                     </size>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="ckApplyBack">
+                    <property name="text">
+                     <string>Apply Texture</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLabel" name="lblBackValue">
+                    <property name="enabled">
+                     <bool>true</bool>
+                    </property>
+                    <property name="text">
+                     <string>(value)</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
                 </widget>
                </item>
               </layout>
@@ -1655,7 +1667,7 @@ extra wall height</string>
               <x>0</x>
               <y>0</y>
               <width>582</width>
-              <height>513</height>
+              <height>498</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1723,8 +1735,8 @@ extra wall height</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>158</width>
-              <height>530</height>
+              <width>133</width>
+              <height>94</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_12">

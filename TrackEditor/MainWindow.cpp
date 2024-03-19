@@ -8,6 +8,7 @@
 #include "LogDialog.h"
 #include "Palette.h"
 #include "Texture.h"
+#include "TilePicker.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
 #endif
@@ -53,9 +54,6 @@ public:
     , sUnk39, sUnk40, sUnk41, sUnk42, sUnk43, sUnk44
     , sUnk45, sUnk46, sUnk47, sUnk48, sUnk49, sUnk50
     , sSignTexture, sBackTexture;
-
-  //selected sign values
-  QString sSignRVal;
 
   //selected stunt values
   QString sStuntScaleFactor;
@@ -209,6 +207,10 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leUnk48, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk49, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk50, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(pbSign, &QPushButton::clicked, this, &CMainWindow::OnSignClicked);
+  connect(pbBack, &QPushButton::clicked, this, &CMainWindow::OnBackClicked);
+  connect(ckApplySign, &QCheckBox::toggled, this, &CMainWindow::OnApplySignToggled);
+  connect(ckApplyBack, &QCheckBox::toggled, this, &CMainWindow::OnApplyBackToggled);
 
   connect(leStuntIndex, &QLineEdit::textChanged, this, &CMainWindow::OnStuntIndexChanged);
   connect(leStuntScaleFact, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
@@ -390,7 +392,8 @@ void CMainWindow::OnInsertBeforeClicked()
     , leLOuterUpperExtraWallHeight->text(), leLOuterLowerExtraWallHeight->text(), leUnk29->text(), leUnk30->text(), leROuterLowerExtraWallHeight->text(), leROuterUpperExtraWallHeight->text()
     , leUnk33->text(), leUnk34->text(), leUnk35->text(), leUnk36->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
-    , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text());
+    , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
+    , pbSign->property("value").toString(), pbBack->property("value").toString());
 
   m_bUnsavedChanges = true;
   sbSelChunksFrom->blockSignals(true);
@@ -425,7 +428,8 @@ void CMainWindow::OnInsertAfterClicked()
     , leLOuterUpperExtraWallHeight->text(), leLOuterLowerExtraWallHeight->text(), leUnk29->text(), leUnk30->text(), leROuterLowerExtraWallHeight->text(), leROuterUpperExtraWallHeight->text()
     , leUnk33->text(), leUnk34->text(), leUnk35->text(), leUnk36->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
-    , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text());
+    , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
+    , pbSign->property("value").toString(), pbBack->property("value").toString());
 
   m_bUnsavedChanges = true;
   sbSelChunksFrom->blockSignals(true);
@@ -502,7 +506,8 @@ void CMainWindow::OnApplyClicked()
     , leLOuterUpperExtraWallHeight->text(), leLOuterLowerExtraWallHeight->text(), leUnk29->text(), leUnk30->text(), leROuterLowerExtraWallHeight->text(), leROuterUpperExtraWallHeight->text()
     , leUnk33->text(), leUnk34->text(), leUnk35->text(), leUnk36->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
-    , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text());
+    , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
+    , pbSign->property("value").toString(), pbBack->property("value").toString());
   m_bUnsavedChanges = true;
   UpdateWindow();
 }
@@ -607,6 +612,7 @@ void CMainWindow::OnDeleteChunkClicked()
     p->m_track.m_chunkAy.begin() + sbSelChunksFrom->value(), 
     p->m_track.m_chunkAy.begin() + sbSelChunksTo->value() + 1);
 
+  m_bUnsavedChanges = true;
   g_pMainWindow->LogMessage("Deleted geometry chunk");
   sbSelChunksFrom->blockSignals(true);
   sbSelChunksTo->blockSignals(true);
@@ -734,6 +740,8 @@ void CMainWindow::UpdateGeometryEditMode()
   UpdateLEEditMode(bEditMode, bMixedData, leUnk48, p->sUnk48);
   UpdateLEEditMode(bEditMode, bMixedData, leUnk49, p->sUnk49);
   UpdateLEEditMode(bEditMode, bMixedData, leUnk50, p->sUnk50);
+  UpdateSignEditMode(bEditMode, bMixedData, pbSign, widgetSign, p->sSignTexture);
+  UpdateSignEditMode(bEditMode, bMixedData, pbBack, widgetBack, p->sBackTexture);
 
   pbApply->setEnabled(bEditMode);
   pbCancel->setEnabled(bEditMode);
@@ -809,6 +817,100 @@ void CMainWindow::UpdateInfoEditMode()
 
   pbApplyInfo->setEnabled(bEditMode);
   pbRevertInfo->setEnabled(bEditMode);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnSignClicked()
+{
+  QString sValue = pbSign->property("value").toString();
+  unsigned short unValue = sValue.toUShort();
+  unsigned short unBldIndex = unValue & 0x00FF;
+  unBldIndex = unBldIndex >> 1;
+
+  CTilePicker dlg(this, &p->m_bld, unBldIndex);
+  if (dlg.exec()) {
+    int iIndex = dlg.GetSelected();
+    if (iIndex < 0) {
+      sValue = NO_TEX_DATA;
+    } else {
+      unBldIndex = (unsigned short)iIndex;
+      unValue = unBldIndex << 1;
+      if (ckApplySign->isChecked()) {
+        unValue |= 0x0100;
+      } else {
+        unValue &= 0x00FF;
+      }
+      sValue = QString::number(unValue);
+    }
+  }
+
+  pbSign->setProperty("value", sValue);
+  UpdateSignButtonDisplay(pbSign, ckApplySign, lblSignValue);
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnBackClicked()
+{
+  QString sValue = pbBack->property("value").toString();
+  unsigned short unValue = sValue.toUShort();
+  unsigned short unBldIndex = unValue & 0x00FF;
+  unBldIndex = unBldIndex >> 1;
+
+  CTilePicker dlg(this, &p->m_bld, unBldIndex);
+  if (dlg.exec()) {
+    int iIndex = dlg.GetSelected();
+    if (iIndex < 0) {
+      sValue = NO_TEX_DATA;
+    } else {
+      unBldIndex = (unsigned short)iIndex;
+      unValue = unBldIndex << 1;
+      if (ckApplyBack->isChecked()) {
+        unValue |= 0x0100;
+      } else {
+        unValue &= 0x00FF;
+      }
+      sValue = QString::number(unValue);
+    }
+  }
+
+  pbBack->setProperty("value", sValue);
+  UpdateSignButtonDisplay(pbBack, ckApplyBack, lblBackValue);
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnApplySignToggled(bool bChecked)
+{
+  unsigned short unValue = pbSign->property("value").toString().toUShort();
+  if (bChecked) {
+    unValue |= 0x0100;
+  } else {
+    unValue &= 0x00FF;
+  }
+  QString sNewValue = QString::number(unValue);
+  pbSign->setProperty("value", sNewValue);
+  UpdateSignButtonDisplay(pbSign, ckApplySign, lblSignValue);
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnApplyBackToggled(bool bChecked)
+{
+  unsigned short unValue = pbBack->property("value").toString().toUShort();
+  if (bChecked) {
+    unValue |= 0x0100;
+  } else {
+    unValue &= 0x00FF;
+  }
+  QString sNewValue = QString::number(unValue);
+  pbBack->setProperty("value", sNewValue);
+  UpdateSignButtonDisplay(pbBack, ckApplyBack, lblBackValue);
+  UpdateGeometryEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1143,41 +1245,46 @@ bool CMainWindow::UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString
 
 bool CMainWindow::UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLabel *pLabel, const QString &sValue)
 {
+  pPushButton->setProperty("value", sValue);
+  UpdateSignButtonDisplay(pPushButton, pCheckbox, pLabel);
+  return sValue.compare(MIXED_DATA) == 0;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCheckbox, QLabel *pLabel)
+{
   pCheckbox->blockSignals(true);
-  if (!sValue.isEmpty() && sValue.compare("0") != 0) {
-    if (sValue.compare(MIXED_DATA) == 0) {
-      pPushButton->setIcon(QIcon());
-      pPushButton->setText(sValue);
-      pCheckbox->setEnabled(false);
-      pCheckbox->setChecked(false);
-      pLabel->setVisible(false);
-    } else {
-      unsigned short unValue = sValue.toUShort();
-      bool bChecked = unValue & 0x01;
-      unsigned short unBldIndex = unValue & 0x7F;
-      unBldIndex = unBldIndex >> 1;
-      if (unBldIndex < p->m_bld.m_tileAy.size()) {
-        QPixmap pixmap;
-        pixmap.convertFromImage(p->m_bld.m_tileAy[unBldIndex]);
-        pPushButton->setIcon(pixmap);
-        pPushButton->setText("");
-      }
-      pCheckbox->setEnabled(true);
-      pCheckbox->setChecked(bChecked);
-      pLabel->setVisible(true);
-      //char szValueText[100];
-      //snprintf(szValueText, sizeof(szValueText), "(value: 0x%02x, in file: %d)", unValue, (int)unValue);
-      pLabel->setText("(" + sValue + ")");
-    }
-  } else {
+  QString sValue = pPushButton->property("value").toString();
+  if (sValue.compare(NO_TEX_DATA) == 0) {
     pPushButton->setIcon(QIcon());
     pPushButton->setText("<none>");
     pCheckbox->setEnabled(false);
     pCheckbox->setChecked(false);
     pLabel->setVisible(false);
+  } else if (sValue.compare(MIXED_DATA) == 0) {
+    pPushButton->setIcon(QIcon());
+    pPushButton->setText(sValue);
+    pCheckbox->setEnabled(false);
+    pCheckbox->setChecked(false);
+    pLabel->setVisible(false);
+  } else {
+    unsigned short unValue = sValue.toUShort();
+    bool bChecked = unValue & 0x0100;
+    unsigned short unBldIndex = unValue & 0x00FF;
+    unBldIndex = unBldIndex >> 1;
+    if (unBldIndex < p->m_bld.m_tileAy.size()) {
+      QPixmap pixmap;
+      pixmap.convertFromImage(p->m_bld.m_tileAy[unBldIndex]);
+      pPushButton->setIcon(pixmap);
+      pPushButton->setText("");
+    }
+    pCheckbox->setEnabled(true);
+    pCheckbox->setChecked(bChecked);
+    pLabel->setVisible(true);
+    pLabel->setText("(" + sValue + ")");
   }
   pCheckbox->blockSignals(false);
-  return (sValue.compare(MIXED_DATA) == 0);// todo: &&pLineEdit->text().isEmpty();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1196,6 +1303,24 @@ void CMainWindow::UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *p
     }
   } else {
     pLineEdit->setStyleSheet("");
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::UpdateSignEditMode(bool &bEdited, bool &bMixedData, QPushButton *pPushButton, QWidget *pWidget, const QString &sValue)
+{
+  QString sButtonValue = pPushButton->property("value").toString();
+  if (sButtonValue.compare(sValue) != 0) {
+    if (sButtonValue.compare(MIXED_DATA) == 0) {
+      bMixedData = true;
+      pWidget->setStyleSheet("");
+    } else {
+      bEdited = true;
+      pWidget->setStyleSheet("background-color: rgb(255,255,0)");
+    }
+  } else {
+    pWidget->setStyleSheet("");
   }
 }
 

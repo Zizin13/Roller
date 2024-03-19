@@ -37,7 +37,7 @@
        <property name="currentIndex">
         <number>0</number>
        </property>
-       <widget class="QWidget" name="tab">
+       <widget class="QWidget" name="tabGeometry">
         <attribute name="title">
          <string>Geometry</string>
         </attribute>
@@ -194,9 +194,9 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>0</y>
+              <y>-841</y>
               <width>449</width>
-              <height>1048</height>
+              <height>1251</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -1039,113 +1039,147 @@ extra wall height</string>
                </item>
               </layout>
              </item>
+             <item>
+              <widget class="Line" name="line_4">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QGridLayout" name="layoutSigns">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_3">
+                 <property name="text">
+                  <string>Sign</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QPushButton" name="pbBack">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>90</horstretch>
+                   <verstretch>90</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>90</width>
+                   <height>90</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>90</width>
+                   <height>90</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>&lt;none&gt;</string>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QPushButton" name="pbSign">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>90</horstretch>
+                   <verstretch>90</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>90</width>
+                   <height>90</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>90</width>
+                   <height>90</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>&lt;none&gt;</string>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_5">
+                 <property name="text">
+                  <string>Back</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QCheckBox" name="ckApplyBack">
+                 <property name="text">
+                  <string>Apply Texture</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QCheckBox" name="ckApplySign">
+                 <property name="text">
+                  <string>Apply Texture</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="4">
+                <spacer name="horizontalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="0" column="3">
+                <widget class="QLabel" name="lblSignValue">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="text">
+                  <string>(value)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="3">
+                <widget class="QLabel" name="lblBackValue">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="text">
+                  <string>(value)</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
             </layout>
            </widget>
           </widget>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tab_2">
-        <attribute name="title">
-         <string>Signs</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_5">
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_8">
-           <item>
-            <widget class="QPushButton" name="pbApplySign">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string>Apply</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pbRevertSign">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string>Revert</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
-           <item>
-            <widget class="QLabel" name="lblSignsCount">
-             <property name="text">
-              <string>Signs Count</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="leSignsCount">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QGridLayout" name="gridLayout">
-           <item row="1" column="3">
-            <widget class="QLineEdit" name="leSignVal"/>
-           </item>
-           <item row="1" column="4">
-            <widget class="QPushButton" name="pbDeleteSign">
-             <property name="text">
-              <string>Delete</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLineEdit" name="leSignIndex">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="lblLVal">
-             <property name="text">
-              <string>Geometry Index</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QLabel" name="lblRVal">
-             <property name="text">
-              <string>Value</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="tab_5">
+       <widget class="QWidget" name="tabStunts">
         <attribute name="title">
          <string>Stunts</string>
         </attribute>
@@ -1363,7 +1397,7 @@ extra wall height</string>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tab_6">
+       <widget class="QWidget" name="tabTextures">
         <attribute name="title">
          <string>Textures</string>
         </attribute>
@@ -1417,62 +1451,6 @@ extra wall height</string>
           </layout>
          </item>
          <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_7">
-           <item>
-            <widget class="QLabel" name="lblBacksCount">
-             <property name="text">
-              <string>BACKS count</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="leBacksCount">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="readOnly">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_12">
-           <item>
-            <widget class="QLabel" name="lblBackIndex">
-             <property name="text">
-              <string>Geometry Index</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="leBackIndex">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLabel" name="lblBackVal">
-             <property name="text">
-              <string>Value</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QLineEdit" name="leBackVal"/>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pbDeleteBack">
-             <property name="text">
-              <string>Delete</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
           <widget class="Line" name="line_3">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -1494,7 +1472,7 @@ extra wall height</string>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tab_7">
+       <widget class="QWidget" name="tabInfo">
         <attribute name="title">
          <string>Info</string>
         </attribute>
@@ -1659,34 +1637,8 @@ extra wall height</string>
       </widget>
       <widget class="QTabWidget" name="twViewer">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
-       <widget class="QWidget" name="tabData">
-        <attribute name="title">
-         <string>Data</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_4">
-         <item>
-          <widget class="QPlainTextEdit" name="txData">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">selection-background-color: rgb(0,170,255)</string>
-           </property>
-           <property name="readOnly">
-            <bool>true</bool>
-           </property>
-           <property name="textInteractionFlags">
-            <set>Qt::NoTextInteraction</set>
-           </property>
-           <property name="centerOnScroll">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
        <widget class="QWidget" name="tabPreview">
         <attribute name="title">
          <string>Preview</string>
@@ -1726,6 +1678,32 @@ extra wall height</string>
              </item>
             </layout>
            </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tabData">
+        <attribute name="title">
+         <string>Data</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QPlainTextEdit" name="txData">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">selection-background-color: rgb(0,170,255)</string>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+           <property name="textInteractionFlags">
+            <set>Qt::NoTextInteraction</set>
+           </property>
+           <property name="centerOnScroll">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
         </layout>

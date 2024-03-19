@@ -93,10 +93,14 @@ struct tGeometryChunk
   int iUnk48; //todo
   int iUnk49; //todo
   int iUnk50; //todo
+
+  //additional data
+  unsigned short unSignTexture;
+  unsigned short unBackTexture;
 };
 typedef std::vector<tGeometryChunk> CChunkAy;
 //-------------------------------------------------------------------------------------------------
-typedef std::map<int, int> CSignMap;
+typedef std::map<int, unsigned short> CSignMap;
 //-------------------------------------------------------------------------------------------------
 struct tStunt
 {
@@ -149,7 +153,6 @@ public:
   bool LoadTrack(const QString &sFilename);
   bool SaveTrack(const QString &sFilename);
   void GetGeometryCursorPos(int iStartIndex, int iEndIndex, int &iStartCursorPos, int &iEndCursorPos);
-  void GetTextureCursorPos(int iKey, int &iStartCursorPos, int &iEndCursorPos);
   void GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     , QString &sLeftShoulderWidth, QString &sLeftLaneWidth, QString &sRightLaneWidth, QString &sRightShoulderWidth
     , QString &sLShoulderHeight, QString &sRShoulderHeight, QString &sLength
@@ -165,7 +168,8 @@ public:
     , QString &sLOuterUpperExtraWallHeight, QString &sLOuterLowerExtraWallHeight, QString &sUnk29, QString &sUnk30, QString &sROuterLowerExtraWallHeight, QString &sROuterUpperExtraWallHeight
     , QString &sUnk33, QString &sUnk34, QString &sUnk35, QString &sUnk36, QString &sUnk37, QString &sUnk38
     , QString &sUnk39, QString &sUnk40, QString &sUnk41, QString &sUnk42, QString &sUnk43, QString &sUnk44
-    , QString &sUnk45, QString &sUnk46, QString &sUnk47, QString &sUnk48, QString &sUnk49, QString &sUnk50);
+    , QString &sUnk45, QString &sUnk46, QString &sUnk47, QString &sUnk48, QString &sUnk49, QString &sUnk50
+    , QString &sSignTexture, QString &sBackTexture);
   void ApplyGeometrySettings(int iStartIndex, int iEndIndex
     , const QString &sLeftShoulderWidth, const QString &sLeftLaneWidth, const QString &sRightLaneWidth, const QString &sRightShoulderWidth
     , const QString &sLShoulderHeight, const QString &sRShoulderHeight, const QString &sLength
@@ -202,11 +206,9 @@ public:
 
   tTrackHeader m_header;
   CChunkAy m_chunkAy;
-  CSignMap m_signMap;
   CStuntMap m_stuntMap;
   QString m_sTextureFile;
   QString m_sBuildingFile;
-  CSignMap m_backsMap;
   tRaceInfo m_raceInfo;
 
 private:

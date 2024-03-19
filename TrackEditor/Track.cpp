@@ -35,11 +35,9 @@ void CTrack::ClearData()
   memset(&m_header, 0, sizeof(m_header));
   m_header.iHeaderUnk3 = 2048;
   m_chunkAy.clear();
-  m_signMap.clear();
   m_stuntMap.clear();
   m_sTextureFile = "";
   m_sBuildingFile = "";
-  m_backsMap.clear();
   memset(&m_raceInfo, 0, sizeof(m_raceInfo));
 }
 
@@ -252,7 +250,9 @@ bool CTrack::LoadTrack(const QString &sFilename)
           }
         } else if (slLine.count() == BACKS_COUNT) {
           //process backs
-          m_backsMap[slLine[0].toInt()] = slLine[1].toInt();
+          int iGeometryIndex = slLine[0].toInt();
+          if (iGeometryIndex < m_chunkAy.size())
+            m_chunkAy[iGeometryIndex].unBackTexture = slLine[1].toUShort();
         } else {
           assert(0);
           g_pMainWindow->LogMessage("Error loading file: texture section ended before anticipated");
@@ -294,11 +294,9 @@ bool CTrack::LoadTrack(const QString &sFilename)
   QString sSuccess = (bSuccess ? "Successfully loaded" : "Failed to load");
   QString sLogMsg = sSuccess + " file " + sFilename + "\n"
     + "  geometry chunks: " + QString::number(m_chunkAy.size()) + "\n"
-    + "  unknown signs: " + QString::number(m_signMap.size()) + "\n"
     + "  stunts: " + QString::number(m_stuntMap.size()) + "\n"
     + "  texture file: " + m_sTextureFile + "\n"
-    + "  building file: " + m_sBuildingFile + "\n"
-    + "  backs: " + QString::number(m_backsMap.size());
+    + "  building file: " + m_sBuildingFile;
   g_pMainWindow->LogMessage(sLogMsg);
 
   //generate strings
@@ -325,14 +323,22 @@ bool CTrack::SaveTrack(const QString &sFilename)
     stream << szBuf << Qt::endl << Qt::endl << Qt::endl;
 
     //write chunks
+    CSignMap signMap;
+    CSignMap backsMap;
     for (int i = 0; i < m_chunkAy.size(); ++i) {
       stream << m_chunkAy[i].sString.c_str() << Qt::endl;
+      if (m_chunkAy[i].unSignTexture > 0) { //todo: is 0 a valid index?
+        signMap[i] = m_chunkAy[i].unSignTexture;
+      }
+      if (m_chunkAy[i].unBackTexture > 0) { //todo: is 0 a valid index?
+        backsMap[i] = m_chunkAy[i].unBackTexture;
+      }
     }
     
     //write signs
-    for (CSignMap::iterator it = m_signMap.begin(); it != m_signMap.end(); ++it) {
+    for (CSignMap::iterator it = signMap.begin(); it != signMap.end(); ++it) {
       memset(szBuf, 0, sizeof(szBuf));
-      snprintf(szBuf, sizeof(szBuf), " %4d %6d", it->first, it->second);
+      snprintf(szBuf, sizeof(szBuf), " %4d %6d", it->first, (int)it->second);
       stream << szBuf << Qt::endl;
     }
     memset(szBuf, 0, sizeof(szBuf));
@@ -358,9 +364,9 @@ bool CTrack::SaveTrack(const QString &sFilename)
     stream << "TEX:" << m_sTextureFile << Qt::endl;
     stream << "BLD:" << m_sBuildingFile << Qt::endl;
     stream << "BACKS:" << Qt::endl;
-    for (CSignMap::iterator it = m_backsMap.begin(); it != m_backsMap.end(); ++it) {
+    for (CSignMap::iterator it = backsMap.begin(); it != backsMap.end(); ++it) {
       memset(szBuf, 0, sizeof(szBuf));
-      snprintf(szBuf, sizeof(szBuf), "%d %d", it->first, it->second);
+      snprintf(szBuf, sizeof(szBuf), "%d %d", it->first, (int)it->second);
       stream << szBuf << Qt::endl;
     }
     memset(szBuf, 0, sizeof(szBuf));
@@ -419,35 +425,6 @@ void CTrack::GetGeometryCursorPos(int iStartIndex, int iEndIndex, int &iStartCur
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrack::GetTextureCursorPos(int iKey, int &iStartCursorPos, int &iEndCursorPos)
-{
-  iStartCursorPos = 0;
-  iEndCursorPos = 0;
-  if (m_backsMap.empty()) return;
-  CSignMap::iterator it = m_backsMap.find(iKey);
-  if (it == m_backsMap.end())
-    return;
-  
-  QString sTex = "TEX:";
-  QString sBld = "BLD:";
-  iEndCursorPos = sTex.length() + sBld.length() + m_sTextureFile.length() + m_sBuildingFile.length() + 2;
-  it = m_backsMap.begin();
-  for (; it != m_backsMap.end(); ++it) {
-    iStartCursorPos = iEndCursorPos;
-
-    char szLine[20];
-    snprintf(szLine, sizeof(szLine), "%d %d", it->first, it->second);
-    iEndCursorPos += (int)strlen(szLine) + 1;
-
-    if (it->first == iKey) {
-      break;
-    }
-  };
-  --iEndCursorPos;
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     , QString &sLeftShoulderWidth, QString &sLeftLaneWidth, QString &sRightLaneWidth, QString &sRightShoulderWidth
     , QString &sLShoulderHeight, QString &sRShoulderHeight, QString &sLength
@@ -463,7 +440,8 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     , QString &sLOuterUpperExtraWallHeight, QString &sLOuterLowerExtraWallHeight, QString &sUnk29, QString &sUnk30, QString &sROuterLowerExtraWallHeight, QString &sROuterUpperExtraWallHeight
     , QString &sUnk33, QString &sUnk34, QString &sUnk35, QString &sUnk36, QString &sUnk37, QString &sUnk38
     , QString &sUnk39, QString &sUnk40, QString &sUnk41, QString &sUnk42, QString &sUnk43, QString &sUnk44
-    , QString &sUnk45, QString &sUnk46, QString &sUnk47, QString &sUnk48, QString &sUnk49, QString &sUnk50)
+    , QString &sUnk45, QString &sUnk46, QString &sUnk47, QString &sUnk48, QString &sUnk49, QString &sUnk50
+    , QString &sSignTexture, QString &sBackTexture)
 {
   if (m_chunkAy.empty()) return;
   if (iEndIndex < iStartIndex || iEndIndex >= m_chunkAy.size()) {
@@ -486,6 +464,7 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
   sUnk33 = ""; sUnk34 = ""; sUnk35 = ""; sUnk36 = ""; sUnk37 = ""; sUnk38 = "";
   sUnk39 = ""; sUnk40 = ""; sUnk41 = ""; sUnk42 = ""; sUnk43 = ""; sUnk44 = "";
   sUnk45 = ""; sUnk46 = ""; sUnk47 = ""; sUnk48 = ""; sUnk49 = ""; sUnk50 = "";
+  sSignTexture = ""; sBackTexture = "";
 
   QString sVal;
   for (int i = iStartIndex; i <= iEndIndex; ++i) {
@@ -708,6 +687,13 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     sVal = QString::number(m_chunkAy[i].iUnk50);
     if (sUnk50.isEmpty()) sUnk50 = sVal;
     else if (sUnk50.compare(sVal) != 0) sUnk50 = MIXED_DATA;
+
+    sVal = QString::number(m_chunkAy[i].unSignTexture);
+    if (sSignTexture.isEmpty()) sSignTexture = sVal;
+    else if (sSignTexture.compare(sVal) != 0) sSignTexture = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].unBackTexture);
+    if (sBackTexture.isEmpty()) sBackTexture = sVal;
+    else if (sBackTexture.compare(sVal) != 0) sBackTexture = MIXED_DATA;
   }
 }
 
@@ -1011,7 +997,9 @@ void CTrack::ProcessSign(const QStringList &slLine, eFileSection &section)
     section = STUNTS;
   } else {
     //process sign
-    m_signMap[iVal0] = iVal1;
+    if (iVal0 < m_chunkAy.size()) {
+      m_chunkAy[iVal0].unSignTexture = slLine[1].toUShort();
+    }
   }
 }
 

@@ -51,7 +51,8 @@ public:
     , sLOuterUpperExtraWallHeight, sLOuterLowerExtraWallHeight, sUnk29, sUnk30, sROuterLowerExtraWallHeight, sROuterUpperExtraWallHeight
     , sUnk33, sUnk34, sUnk35, sUnk36, sUnk37, sUnk38
     , sUnk39, sUnk40, sUnk41, sUnk42, sUnk43, sUnk44
-    , sUnk45, sUnk46, sUnk47, sUnk48, sUnk49, sUnk50;
+    , sUnk45, sUnk46, sUnk47, sUnk48, sUnk49, sUnk50
+    , sSignTexture, sBackTexture;
 
   //selected sign values
   QString sSignRVal;
@@ -104,6 +105,8 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   splitter->setStretchFactor(1, 3);
   p->m_logDialog.hide();
   txData->setFont(QFont("Courier", 8));
+  frmTex->hide();
+  frmBld->hide();
 
   //signals
   connect(actNew, &QAction::triggered, this, &CMainWindow::OnNewTrack);
@@ -123,19 +126,15 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(sbSelChunksTo, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksToChanged(int)));
   connect(ckTo, &QCheckBox::toggled, this, &CMainWindow::OnToChecked);
   connect(pbApply, &QPushButton::clicked, this, &CMainWindow::OnApplyClicked);
-  connect(pbApplySign, &QPushButton::clicked, this, &CMainWindow::OnApplySignClicked);
   connect(pbApplyStunt, &QPushButton::clicked, this, &CMainWindow::OnApplyStuntClicked);
   connect(pbApplyTexture, &QPushButton::clicked, this, &CMainWindow::OnApplyTextureClicked);
   connect(pbApplyInfo, &QPushButton::clicked, this, &CMainWindow::OnApplyInfoClicked);
   connect(pbCancel, &QPushButton::clicked, this, &CMainWindow::OnCancelClicked);
-  connect(pbRevertSign, &QPushButton::clicked, this, &CMainWindow::OnCancelSignClicked);
   connect(pbRevertStunt, &QPushButton::clicked, this, &CMainWindow::OnCancelStuntClicked);
   connect(pbRevertTexture, &QPushButton::clicked, this, &CMainWindow::OnCancelTextureClicked);
   connect(pbRevertInfo, &QPushButton::clicked, this, &CMainWindow::OnCancelInfoClicked);
   connect(pbDelete, &QPushButton::clicked, this, &CMainWindow::OnDeleteChunkClicked);
-  connect(pbDeleteSign, &QPushButton::clicked, this, &CMainWindow::OnDeleteSignsClicked);
   connect(pbDeleteStunt, &QPushButton::clicked, this, &CMainWindow::OnDeleteStuntClicked);
-  connect(pbDeleteBack, &QPushButton::clicked, this, &CMainWindow::OnDeleteBackClicked);
   connect(pbEditLSurface, &QPushButton::clicked, this, &CMainWindow::OnEditLSurface);
   connect(pbEditCSurface, &QPushButton::clicked, this, &CMainWindow::OnEditCSurface);
   connect(pbEditRSurface, &QPushButton::clicked, this, &CMainWindow::OnEditRSurface);
@@ -211,9 +210,6 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leUnk49, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk50, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
 
-  connect(leSignIndex, &QLineEdit::textChanged, this, &CMainWindow::OnSignIndexChanged);
-  connect(leSignVal, &QLineEdit::textChanged, this, &CMainWindow::UpdateSignsEditMode);
-
   connect(leStuntIndex, &QLineEdit::textChanged, this, &CMainWindow::OnStuntIndexChanged);
   connect(leStuntScaleFact, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
   connect(leStuntAngle, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
@@ -227,8 +223,6 @@ CMainWindow::CMainWindow(const QString &sAppPath)
 
   connect(leTex, &QLineEdit::textChanged, this, &CMainWindow::UpdateTexturesEditMode);
   connect(leBld, &QLineEdit::textChanged, this, &CMainWindow::UpdateTexturesEditMode);
-  connect(leBackIndex, &QLineEdit::textChanged, this, &CMainWindow::OnBackIndexChanged);
-  connect(leBackVal, &QLineEdit::textChanged, this, &CMainWindow::UpdateTexturesEditMode);
 
   connect(leTrackNum, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
   connect(leImpossibleLaps, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
@@ -277,8 +271,8 @@ void CMainWindow::OnNewTrack()
   p->m_track.ClearData();
   m_sTrackFile = "";
   m_bUnsavedChanges = false;
-  UpdateWindow();
   LoadTextures();
+  UpdateWindow();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -303,12 +297,8 @@ void CMainWindow::OnLoadTrack()
     //update ui
     sbSelChunksFrom->setValue(0);
     sbSelChunksTo->setValue(0);
-    if (!p->m_track.m_signMap.empty())
-      leSignIndex->setText(QString::number(p->m_track.m_signMap.begin()->first));
     if (!p->m_track.m_stuntMap.empty())
       leStuntIndex->setText(QString::number(p->m_track.m_stuntMap.begin()->first));
-    if (!p->m_track.m_backsMap.empty())
-      leBackIndex->setText(QString::number(p->m_track.m_backsMap.begin()->first));
     
     //update variables
     m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
@@ -316,8 +306,8 @@ void CMainWindow::OnLoadTrack()
     m_bUnsavedChanges = false;
   }
   //update app
-  UpdateWindow();
   LoadTextures();
+  UpdateWindow();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -485,14 +475,6 @@ void CMainWindow::OnSelChunksToChanged(int iValue)
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::OnSelectedSignChanged(int iValue)
-{
-  (void)(iValue);
-  UpdateSignSelection();
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CMainWindow::OnToChecked(bool bChecked)
 {
   sbSelChunksTo->setEnabled(bChecked && !pbApply->isEnabled());
@@ -527,18 +509,6 @@ void CMainWindow::OnApplyClicked()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::OnApplySignClicked()
-{
-  //update value
-  p->m_track.m_signMap[leSignIndex->text().toInt()] = leSignVal->text().toInt();
-
-  m_bUnsavedChanges = true;
-  g_pMainWindow->LogMessage("Applied changes to signs");
-  UpdateWindow();
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CMainWindow::OnApplyStuntClicked()
 {
   //update value
@@ -563,14 +533,13 @@ void CMainWindow::OnApplyStuntClicked()
 void CMainWindow::OnApplyTextureClicked()
 {
   //update value
-  p->m_track.m_backsMap[leBackIndex->text().toInt()] = leBackVal->text().toInt();
   p->m_track.m_sTextureFile = leTex->text();
   p->m_track.m_sBuildingFile = leBld->text();
 
   m_bUnsavedChanges = true;
   g_pMainWindow->LogMessage("Applied changes to texture");
-  UpdateWindow();
   LoadTextures();
+  UpdateWindow();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -603,13 +572,6 @@ void CMainWindow::OnCancelClicked()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::OnCancelSignClicked()
-{
-  RevertSigns();
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CMainWindow::OnCancelStuntClicked()
 {
   RevertStunts();
@@ -619,7 +581,6 @@ void CMainWindow::OnCancelStuntClicked()
 
 void CMainWindow::OnCancelTextureClicked()
 {
-  RevertBacks();
   p->sTex = p->m_track.m_sTextureFile;
   p->sBld = p->m_track.m_sBuildingFile;
   UpdateLEWithSelectionValue(leTex, p->sTex);
@@ -658,26 +619,6 @@ void CMainWindow::OnDeleteChunkClicked()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::OnDeleteSignsClicked()
-{
-  //delete value from map
-  CSignMap::iterator it = p->m_track.m_signMap.find(leSignIndex->text().toInt());
-  if (it != p->m_track.m_signMap.end()) {
-    it = p->m_track.m_signMap.erase(it);
-    if (it != p->m_track.m_signMap.end()) {
-      leSignIndex->setText(QString::number(it->first));
-    } else if (!p->m_track.m_signMap.empty()) {
-      --it;
-      leSignIndex->setText(QString::number(it->first));
-    }
-  }
-  g_pMainWindow->LogMessage("Deleted sign");
-  UpdateWindow();
-  UpdateSignsEditMode();
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CMainWindow::OnDeleteStuntClicked()
 {
   //delete value from map
@@ -694,26 +635,6 @@ void CMainWindow::OnDeleteStuntClicked()
   g_pMainWindow->LogMessage("Deleted stunt");
   UpdateWindow();
   UpdateStuntsEditMode();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnDeleteBackClicked()
-{
-  //delete value from map
-  CSignMap::iterator it = p->m_track.m_backsMap.find(leBackIndex->text().toInt());
-  if (it != p->m_track.m_backsMap.end()) {
-    it = p->m_track.m_backsMap.erase(it);
-    if (it != p->m_track.m_backsMap.end()) {
-      leBackIndex->setText(QString::number(it->first));
-    } else if (!p->m_track.m_backsMap.empty()) {
-      --it;
-      leBackIndex->setText(QString::number(it->first));
-    }
-  }
-  g_pMainWindow->LogMessage("Deleted back");
-  UpdateWindow();
-  UpdateTexturesEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -735,14 +656,6 @@ void CMainWindow::OnEditCSurface()
 void CMainWindow::OnEditRSurface()
 {
   QMessageBox::warning(this, "Fatality!", "Not implemented yet");
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnSignIndexChanged()
-{
-  UpdateSignSelection();
-  UpdateSignsEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -833,22 +746,6 @@ void CMainWindow::UpdateGeometryEditMode()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::UpdateSignsEditMode()
-{
-  CSignMap::iterator it = p->m_track.m_signMap.find(leSignIndex->text().toInt());
-  bool bNew = (it == p->m_track.m_signMap.end());
-
-  bool bLValEdited = false;
-  bool bMixedData = false;
-  UpdateLEEditMode(bLValEdited, bMixedData, leSignVal, p->sSignRVal, bNew);
-
-  bool bEditMode = bNew || bLValEdited;
-  pbApplySign->setEnabled(bEditMode);
-  pbRevertSign->setEnabled(bLValEdited);
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CMainWindow::OnStuntIndexChanged()
 {
   UpdateStuntSelection();
@@ -881,26 +778,14 @@ void CMainWindow::UpdateStuntsEditMode()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::OnBackIndexChanged()
-{
-  UpdateBackSelection();
-  UpdateTexturesEditMode();
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CMainWindow::UpdateTexturesEditMode()
 {
-  CSignMap::iterator it = p->m_track.m_backsMap.find(leBackIndex->text().toInt());
-  bool bNew = (it == p->m_track.m_backsMap.end());
-
   bool bLValEdited = false;
   bool bMixedData = false;
-  UpdateLEEditMode(bLValEdited, bMixedData, leBackVal, p->sBackVal, bNew);
   UpdateLEEditMode(bLValEdited, bMixedData, leTex, p->sTex);
   UpdateLEEditMode(bLValEdited, bMixedData, leBld, p->sBld);
 
-  bool bEditMode = bNew || bLValEdited;
+  bool bEditMode = bLValEdited;
   pbApplyTexture->setEnabled(bEditMode);
   pbRevertTexture->setEnabled(bLValEdited);
 }
@@ -1044,24 +929,7 @@ void CMainWindow::UpdateWindow()
       UpdateGeometryEditMode();
     }
       break;
-    case 1: //SIGNS
-    {
-      leSignsCount->setText(QString::number(p->m_track.m_signMap.size()));
-      //stuff data
-      CSignMap::iterator it = p->m_track.m_signMap.begin();
-      for (; it != p->m_track.m_signMap.end(); ++it) {
-        char szLine[20];
-        memset(szLine, 0, sizeof(szLine));
-        snprintf(szLine, sizeof(szLine), " %4d %6d", it->first, it->second);
-        txData->appendPlainText(szLine);
-      }
-
-      //update selection
-      UpdateSignSelection();
-      UpdateSignsEditMode();
-    }
-      break;
-    case 2: //STUNTS
+    case 1: //STUNTS
     {
       leStuntsCount->setText(QString::number(p->m_track.m_stuntMap.size()));
       //stuff data
@@ -1081,14 +949,20 @@ void CMainWindow::UpdateWindow()
       UpdateStuntsEditMode();
     }
       break;
-    case 3: //TEXTURES
+    case 2: //TEXTURES
     {
-      leBacksCount->setText(QString::number(p->m_track.m_backsMap.size()));
       //stuff data
       txData->appendPlainText("TEX:" + p->m_track.m_sTextureFile);
       txData->appendPlainText("BLD:" + p->m_track.m_sBuildingFile);
-      CSignMap::iterator it = p->m_track.m_backsMap.begin();
-      for (; it != p->m_track.m_backsMap.end(); ++it) {
+
+      CSignMap backsMap;
+      for (int i = 0; i < p->m_track.m_chunkAy.size(); ++i) {
+        if (p->m_track.m_chunkAy[i].unBackTexture > 0)
+          backsMap[i] = p->m_track.m_chunkAy[i].unBackTexture;
+      }
+      
+      CSignMap::iterator it = backsMap.begin();
+      for (; it != backsMap.end(); ++it) {
         char szLine[20];
         memset(szLine, 0, sizeof(szLine));
         snprintf(szLine, sizeof(szLine), "%d %d", it->first, it->second);
@@ -1096,7 +970,6 @@ void CMainWindow::UpdateWindow()
       }
 
       //update selection
-      UpdateBackSelection();
       p->sTex = p->m_track.m_sTextureFile;
       p->sBld = p->m_track.m_sBuildingFile;
       UpdateLEWithSelectionValue(leTex, p->sTex);
@@ -1104,7 +977,7 @@ void CMainWindow::UpdateWindow()
       UpdateTexturesEditMode();
     }
       break;
-    case 4: //INFO
+    case 3: //INFO
     {
       //stuff data
       txData->appendPlainText(QString::number(p->m_track.m_raceInfo.iTrackNumber));
@@ -1142,6 +1015,8 @@ void CMainWindow::LoadTextures()
   bool bTexLoaded = p->m_tex.LoadTexture(m_sTrackFilesFolder + QDir::separator() + p->m_track.m_sTextureFile, p->m_palette);
   bool bBldLoaded = p->m_bld.LoadTexture(m_sTrackFilesFolder + QDir::separator() + p->m_track.m_sBuildingFile, p->m_palette);
   lblPalletteLoaded->setVisible(!bPalLoaded);
+  frmTex->setVisible(bTexLoaded);
+  frmBld->setVisible(bBldLoaded);
   lblTextureLoaded->setText(bTexLoaded ? p->m_track.m_sTextureFile : "Texture not loaded");
   lblBuildingsLoaded->setText(bBldLoaded ? p->m_track.m_sBuildingFile : "Buildings not loaded");
 
@@ -1192,32 +1067,10 @@ void CMainWindow::UpdateGeometrySelection()
     , p->sLOuterUpperExtraWallHeight, p->sLOuterLowerExtraWallHeight, p->sUnk29, p->sUnk30, p->sROuterLowerExtraWallHeight, p->sROuterUpperExtraWallHeight
     , p->sUnk33, p->sUnk34, p->sUnk35, p->sUnk36, p->sUnk37, p->sUnk38
     , p->sUnk39, p->sUnk40, p->sUnk41, p->sUnk42, p->sUnk43, p->sUnk44
-    , p->sUnk45, p->sUnk46, p->sUnk47, p->sUnk48, p->sUnk49, p->sUnk50);
+    , p->sUnk45, p->sUnk46, p->sUnk47, p->sUnk48, p->sUnk49, p->sUnk50
+    , p->sSignTexture, p->sBackTexture);
 
   RevertGeometry();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::UpdateSignSelection()
-{
-  //update values in edit window
-  int i = 0;
-  CSignMap::iterator it = p->m_track.m_signMap.begin();
-  for (; it != p->m_track.m_signMap.end(); ++it, ++i) {
-    if (leSignIndex->text().toInt() == it->first) {
-      p->sSignRVal = QString::number(it->second);
-      break;
-    }
-  }
-
-  //update view window selection
-  QTextCursor c = txData->textCursor();
-  c.setPosition(i * SIGN_LINE_LENGTH);
-  c.setPosition((i + 1) * SIGN_LINE_LENGTH - 1, QTextCursor::KeepAnchor);
-  txData->setTextCursor(c);
-  
-  RevertSigns();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1253,31 +1106,6 @@ void CMainWindow::UpdateStuntSelection()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::UpdateBackSelection()
-{
-  //update values in edit window
-  int i = 0;
-  CSignMap::iterator it = p->m_track.m_backsMap.begin();
-  for (; it != p->m_track.m_backsMap.end(); ++it, ++i) {
-    if (leBackIndex->text().toInt() == it->first) {
-      p->sBackVal = QString::number(it->second);
-      break;
-    }
-  }
-
-  //update view window selection
-  int iStart = 0, iEnd = 0;
-  p->m_track.GetTextureCursorPos(leBackIndex->text().toInt(), iStart, iEnd);
-  QTextCursor c = txData->textCursor();
-  c.setPosition(iStart);
-  c.setPosition(iEnd, QTextCursor::KeepAnchor);
-  txData->setTextCursor(c);
-
-  RevertBacks();
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CMainWindow::UpdateInfoSelection()
 {
   p->sTrackNumber = QString::number(p->m_track.m_raceInfo.iTrackNumber);
@@ -1309,6 +1137,47 @@ bool CMainWindow::UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString
   }
   pLineEdit->blockSignals(false);
   return (sValue.compare(MIXED_DATA) == 0) && pLineEdit->text().isEmpty();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CMainWindow::UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLabel *pLabel, const QString &sValue)
+{
+  pCheckbox->blockSignals(true);
+  if (!sValue.isEmpty() && sValue.compare("0") != 0) {
+    if (sValue.compare(MIXED_DATA) == 0) {
+      pPushButton->setIcon(QIcon());
+      pPushButton->setText(sValue);
+      pCheckbox->setEnabled(false);
+      pCheckbox->setChecked(false);
+      pLabel->setVisible(false);
+    } else {
+      unsigned short unValue = sValue.toUShort();
+      bool bChecked = unValue & 0x01;
+      unsigned short unBldIndex = unValue & 0x7F;
+      unBldIndex = unBldIndex >> 1;
+      if (unBldIndex < p->m_bld.m_tileAy.size()) {
+        QPixmap pixmap;
+        pixmap.convertFromImage(p->m_bld.m_tileAy[unBldIndex]);
+        pPushButton->setIcon(pixmap);
+        pPushButton->setText("");
+      }
+      pCheckbox->setEnabled(true);
+      pCheckbox->setChecked(bChecked);
+      pLabel->setVisible(true);
+      //char szValueText[100];
+      //snprintf(szValueText, sizeof(szValueText), "(value: 0x%02x, in file: %d)", unValue, (int)unValue);
+      pLabel->setText("(" + sValue + ")");
+    }
+  } else {
+    pPushButton->setIcon(QIcon());
+    pPushButton->setText("<none>");
+    pCheckbox->setEnabled(false);
+    pCheckbox->setChecked(false);
+    pLabel->setVisible(false);
+  }
+  pCheckbox->blockSignals(false);
+  return (sValue.compare(MIXED_DATA) == 0);// todo: &&pLineEdit->text().isEmpty();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1407,6 +1276,8 @@ void CMainWindow::RevertGeometry()
   bMixedData |= UpdateLEWithSelectionValue(leUnk48, p->sUnk48);
   bMixedData |= UpdateLEWithSelectionValue(leUnk49, p->sUnk49);
   bMixedData |= UpdateLEWithSelectionValue(leUnk50, p->sUnk50);
+  bMixedData |= UpdateSignWithSelectionValue(pbSign, ckApplySign, lblSignValue, p->sSignTexture);
+  bMixedData |= UpdateSignWithSelectionValue(pbBack, ckApplyBack, lblBackValue, p->sBackTexture);
 
   pbInsertAfter->setEnabled(!bMixedData);
   pbInsertBefore->setEnabled(!bMixedData);
@@ -1415,25 +1286,6 @@ void CMainWindow::RevertGeometry()
   sbSelChunksFrom->setEnabled(true);
   ckTo->setEnabled(true);
   sbSelChunksTo->setEnabled(ckTo->isChecked());
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::RevertSigns()
-{
-  CSignMap::iterator it = p->m_track.m_signMap.find(leSignIndex->text().toInt());
-  if (it == p->m_track.m_signMap.end()) {
-    leSignIndex->setStyleSheet("background-color: rgb(0,255,0)");
-    pbDeleteSign->setEnabled(false);
-  } else {
-    leSignIndex->setStyleSheet("");
-    pbDeleteSign->setEnabled(true);
-  }
-
-  UpdateLEWithSelectionValue(leSignVal, p->sSignRVal);
-
-  pbApplySign->setEnabled(false);
-  pbRevertSign->setEnabled(false);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1461,25 +1313,6 @@ void CMainWindow::RevertStunts()
 
   pbApplyStunt->setEnabled(false);
   pbRevertStunt->setEnabled(false);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::RevertBacks()
-{
-  CSignMap::iterator it = p->m_track.m_backsMap.find(leBackIndex->text().toInt());
-  if (it == p->m_track.m_backsMap.end()) {
-    leBackIndex->setStyleSheet("background-color: rgb(0,255,0)");
-    pbDeleteBack->setEnabled(false);
-  } else {
-    leBackIndex->setStyleSheet("");
-    pbDeleteBack->setEnabled(true);
-  }
-
-  UpdateLEWithSelectionValue(leBackVal, p->sBackVal);
-
-  pbApplyTexture->setEnabled(false);
-  pbRevertTexture->setEnabled(false);
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -194,9 +194,9 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-1053</y>
+              <y>-1052</y>
               <width>449</width>
-              <height>1463</height>
+              <height>1462</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -1193,13 +1193,6 @@ extra wall height</string>
               </widget>
              </item>
              <item>
-              <widget class="QCheckBox" name="ckHasStunt">
-               <property name="text">
-                <string>Chunk has stunt</string>
-               </property>
-              </widget>
-             </item>
-             <item>
               <layout class="QGridLayout" name="gridLayout_6">
                <item row="3" column="2">
                 <widget class="QLineEdit" name="leStuntTimeBulging"/>
@@ -1324,6 +1317,13 @@ extra wall height</string>
                   </size>
                  </property>
                 </spacer>
+               </item>
+               <item row="6" column="2">
+                <widget class="QPushButton" name="pbDeleteStunt">
+                 <property name="text">
+                  <string>Delete</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
@@ -1590,8 +1590,8 @@ extra wall height</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>582</width>
-              <height>513</height>
+              <width>120</width>
+              <height>51</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1659,8 +1659,8 @@ extra wall height</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>158</width>
-              <height>530</height>
+              <width>133</width>
+              <height>94</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_12">

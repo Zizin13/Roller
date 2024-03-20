@@ -116,7 +116,6 @@ struct tGeometryChunk
   
   //stunt
   tStunt stunt;
-  bool bHasStunt;
 };
 typedef std::vector<tGeometryChunk> CChunkAy;
 //-------------------------------------------------------------------------------------------------
@@ -177,7 +176,7 @@ public:
     , QString &sUnk39, QString &sUnk40, QString &sUnk41, QString &sUnk42, QString &sUnk43, QString &sUnk44
     , QString &sUnk45, QString &sUnk46, QString &sUnk47, QString &sUnk48, QString &sUnk49, QString &sUnk50
     , QString &sSignTexture, QString &sBackTexture
-    , QString &sHasStunt, QString &sStuntScaleFactor, QString &sStuntAngle, QString &sStuntUnknown, QString &sStuntTimingGroup, QString &sStuntHeight, QString &sStuntTimeBulging
+    , QString &sStuntScaleFactor, QString &sStuntAngle, QString &sStuntUnknown, QString &sStuntTimingGroup, QString &sStuntHeight, QString &sStuntTimeBulging
     , QString &sStuntTimeFlat, QString &sStuntExpandsContracts, QString &sStuntBulge);
   void ApplyGeometrySettings(int iStartIndex, int iEndIndex
     , const QString &sLeftShoulderWidth, const QString &sLeftLaneWidth, const QString &sRightLaneWidth, const QString &sRightShoulderWidth
@@ -196,7 +195,7 @@ public:
     , const QString &sUnk39, const QString &sUnk40, const QString &sUnk41, const QString &sUnk42, const QString &sUnk43, const QString &sUnk44
     , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50
     , const QString &sSignValue, const QString &sBackValue
-    , const QString &sHasStunt, const QString &sStuntScaleFactor, const QString &sStuntAngle, const QString &sStuntUnknown, const QString &sStuntTimingGroup, const QString &sStuntHeight, const QString &sStuntTimeBulging
+    , const QString &sStuntScaleFactor, const QString &sStuntAngle, const QString &sStuntUnknown, const QString &sStuntTimingGroup, const QString &sStuntHeight, const QString &sStuntTimeBulging
     , const QString &sStuntTimeFlat, const QString &sStuntExpandsContracts, const QString &sStuntBulge);
   void InsertGeometryChunk(int iIndex, int iCount
     , const QString &sLeftShoulderWidth, const QString &sLeftLaneWidth, const QString &sRightLaneWidth, const QString &sRightShoulderWidth
@@ -215,7 +214,7 @@ public:
     , const QString &sUnk39, const QString &sUnk40, const QString &sUnk41, const QString &sUnk42, const QString &sUnk43, const QString &sUnk44
     , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50
     , const QString &sSignValue, const QString &sBackValue
-    , bool bHasStunt, const QString &sStuntScaleFactor, const QString &sStuntAngle, const QString &sStuntUnknown, const QString &sStuntTimingGroup, const QString &sStuntHeight, const QString &sStuntTimeBulging
+    , const QString &sStuntScaleFactor, const QString &sStuntAngle, const QString &sStuntUnknown, const QString &sStuntTimingGroup, const QString &sStuntHeight, const QString &sStuntTimeBulging
     , const QString &sStuntTimeFlat, const QString &sStuntExpandsContracts, const QString &sStuntBulge);
   void UpdateChunkStrings();
 

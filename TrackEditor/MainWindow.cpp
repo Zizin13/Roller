@@ -56,7 +56,6 @@ public:
     , sSignTexture, sBackTexture;
 
   //selected stunt values
-  QString sHasStunt;
   QString sStuntScaleFactor;
   QString sStuntAngle;
   QString sStuntUnknown;
@@ -219,6 +218,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leStuntTimeFlat, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leStuntExpandContract, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leStuntBulge, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(pbDeleteStunt, &QPushButton::clicked, this, &CMainWindow::OnDeleteStuntClicked);
 
   connect(leTex, &QLineEdit::textChanged, this, &CMainWindow::UpdateTexturesEditMode);
   connect(leBld, &QLineEdit::textChanged, this, &CMainWindow::UpdateTexturesEditMode);
@@ -389,7 +389,7 @@ void CMainWindow::OnInsertBeforeClicked()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
     , pbSign->property("value").toString(), pbBack->property("value").toString()
-    , ckHasStunt->checkState() == Qt::Checked, leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
+    , leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
     , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntBulge->text());
 
   m_bUnsavedChanges = true;
@@ -427,7 +427,7 @@ void CMainWindow::OnInsertAfterClicked()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
     , pbSign->property("value").toString(), pbBack->property("value").toString()
-    , ckHasStunt->checkState() == Qt::Checked, leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
+    , leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
     , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntBulge->text());
 
   m_bUnsavedChanges = true;
@@ -490,19 +490,6 @@ void CMainWindow::OnToChecked(bool bChecked)
 
 void CMainWindow::OnApplyClicked()
 {
-  QString sHasStunt;
-  switch (ckHasStunt->checkState()) {
-    case Qt::Checked:
-      sHasStunt = "true";
-      break;
-    case Qt::PartiallyChecked:
-      sHasStunt = MIXED_DATA;
-      break;
-    case Qt::Unchecked:
-      sHasStunt = "false";
-      break;
-  }
-
   p->m_track.ApplyGeometrySettings(sbSelChunksFrom->value(), sbSelChunksTo->value()
     , leLShoulderWidth->text(), leLLaneWidth->text(), leRLaneWidth->text(), leRShoulderWidth->text()
     , leLShoulderHeight->text(), leRShoulderHeight->text(), leLength->text()
@@ -520,7 +507,7 @@ void CMainWindow::OnApplyClicked()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
     , pbSign->property("value").toString(), pbBack->property("value").toString()
-    , sHasStunt, leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
+    , leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
     , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntBulge->text());
   m_bUnsavedChanges = true;
   UpdateWindow();
@@ -708,7 +695,6 @@ void CMainWindow::UpdateGeometryEditMode()
   UpdateLEEditMode(bEditMode, bMixedData, leUnk50, p->sUnk50);
   UpdateSignEditMode(bEditMode, bMixedData, pbSign, widgetSign, p->sSignTexture);
   UpdateSignEditMode(bEditMode, bMixedData, pbBack, widgetBack, p->sBackTexture);
-  UpdateCKEditMode(bEditMode, bMixedData, ckHasStunt, p->sHasStunt);
   UpdateLEEditMode(bEditMode, bMixedData, leStuntScaleFact, p->sStuntScaleFactor);
   UpdateLEEditMode(bEditMode, bMixedData, leStuntAngle, p->sStuntAngle);
   UpdateLEEditMode(bEditMode, bMixedData, leStuntUnk, p->sStuntUnknown);
@@ -854,6 +840,43 @@ void CMainWindow::OnApplyBackToggled(bool bChecked)
   QString sNewValue = QString::number(unValue);
   pbBack->setProperty("value", sNewValue);
   UpdateSignButtonDisplay(pbBack, ckApplyBack, lblBackValue);
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnDeleteStuntClicked()
+{
+  leStuntScaleFact->blockSignals(true);
+  leStuntAngle->blockSignals(true);
+  leStuntUnk->blockSignals(true);
+  leStuntTimingGroup->blockSignals(true);
+  leStuntHeight->blockSignals(true);
+  leStuntTimeBulging->blockSignals(true);
+  leStuntTimeFlat->blockSignals(true);
+  leStuntExpandContract->blockSignals(true);
+  leStuntBulge->blockSignals(true);
+
+  leStuntScaleFact->setText("0");
+  leStuntAngle->setText("0");
+  leStuntUnk->setText("0");
+  leStuntTimingGroup->setText("0");
+  leStuntHeight->setText("0");
+  leStuntTimeBulging->setText("0");
+  leStuntTimeFlat->setText("0");
+  leStuntExpandContract->setText("0");
+  leStuntBulge->setText("0");
+
+  leStuntScaleFact->blockSignals(false);
+  leStuntAngle->blockSignals(false);
+  leStuntUnk->blockSignals(false);
+  leStuntTimingGroup->blockSignals(false);
+  leStuntHeight->blockSignals(false);
+  leStuntTimeBulging->blockSignals(false);
+  leStuntTimeFlat->blockSignals(false);
+  leStuntExpandContract->blockSignals(false);
+  leStuntBulge->blockSignals(false);
+
   UpdateGeometryEditMode();
 }
 
@@ -1095,7 +1118,7 @@ void CMainWindow::UpdateGeometrySelection()
     , p->sUnk39, p->sUnk40, p->sUnk41, p->sUnk42, p->sUnk43, p->sUnk44
     , p->sUnk45, p->sUnk46, p->sUnk47, p->sUnk48, p->sUnk49, p->sUnk50
     , p->sSignTexture, p->sBackTexture
-    , p->sHasStunt, p->sStuntScaleFactor, p->sStuntAngle, p->sStuntUnknown, p->sStuntTimingGroup, p->sStuntHeight, p->sStuntTimeBulging
+    , p->sStuntScaleFactor, p->sStuntAngle, p->sStuntUnknown, p->sStuntTimingGroup, p->sStuntHeight, p->sStuntTimeBulging
     , p->sStuntTimeFlat, p->sStuntExpandsContracts, p->sStuntBulge);
 
   RevertGeometry();
@@ -1129,28 +1152,12 @@ bool CMainWindow::UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString
     pLineEdit->setPlaceholderText(sValue);
     //pLineEdit->setStyleSheet("background-color: rgb(255,0,0)");
   } else {
+    pLineEdit->setPlaceholderText("");
     pLineEdit->setText(sValue);
     pLineEdit->setStyleSheet("");
   }
   pLineEdit->blockSignals(false);
   return (sValue.compare(MIXED_DATA) == 0) && pLineEdit->text().isEmpty();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-bool CMainWindow::UpdateCKWithSelectionValue(QCheckBox *pCheckbox, const QString &sValue)
-{
-  pCheckbox->blockSignals(true);
-  if (sValue.compare(MIXED_DATA) == 0) {
-    pCheckbox->setText("");
-    pCheckbox->setCheckState(Qt::PartiallyChecked);
-    //pLineEdit->setStyleSheet("background-color: rgb(255,0,0)");
-  } else {
-    pCheckbox->setCheckState(sValue.compare("true") == 0 ? Qt::Checked : Qt::Unchecked);
-    pCheckbox->setStyleSheet("");
-  }
-  pCheckbox->blockSignals(false);
-  return (sValue.compare(MIXED_DATA) == 0);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1203,9 +1210,11 @@ void CMainWindow::UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *p
 
 void CMainWindow::UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, const QString &sValue)
 {
-  std::string sTest1 = pLineEdit->text().toLatin1().constData();
-  std::string sStest2 = sValue.toLatin1().constData();
-  if (pLineEdit->text().compare(sValue) != 0) {
+  QString sLineEditVal = pLineEdit->text();
+  if (sLineEditVal.isEmpty())
+    sLineEditVal = "0";
+
+  if (sLineEditVal.compare(sValue) != 0) {
     if (pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) == 0) {
       bMixedData = true;
       pLineEdit->setStyleSheet("");
@@ -1233,36 +1242,6 @@ void CMainWindow::UpdateSignEditMode(bool &bEdited, bool &bMixedData, QPushButto
     }
   } else {
     pWidget->setStyleSheet("");
-  }
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::UpdateCKEditMode(bool &bEdited, bool &bMixedData, QCheckBox *pCheckbox, const QString &sValue)
-{
-  QString sChecked;
-  switch (ckHasStunt->checkState()) {
-    case Qt::Checked:
-      sChecked = "true";
-      break;
-    case Qt::PartiallyChecked:
-      sChecked = MIXED_DATA;
-      break;
-    case Qt::Unchecked:
-      sChecked = "false";
-      break;
-  }
-
-  if (sChecked.compare(sValue) != 0) {
-    if (sChecked.compare(MIXED_DATA) == 0) {
-      bMixedData = true;
-      pCheckbox->setStyleSheet("");
-    } else {
-      bEdited = true;
-      pCheckbox->setStyleSheet("background-color: rgb(255,255,0)");
-    }
-  } else {
-    pCheckbox->setStyleSheet("");
   }
 }
 
@@ -1345,7 +1324,6 @@ void CMainWindow::RevertGeometry()
   bMixedData |= UpdateLEWithSelectionValue(leUnk50, p->sUnk50);
   bMixedData |= UpdateSignWithSelectionValue(pbSign, ckApplySign, lblSignValue, p->sSignTexture);
   bMixedData |= UpdateSignWithSelectionValue(pbBack, ckApplyBack, lblBackValue, p->sBackTexture);
-  bMixedData |= UpdateCKWithSelectionValue(ckHasStunt, p->sHasStunt);
   bMixedData |= UpdateLEWithSelectionValue(leStuntScaleFact, p->sStuntScaleFactor);
   bMixedData |= UpdateLEWithSelectionValue(leStuntAngle, p->sStuntAngle);
   bMixedData |= UpdateLEWithSelectionValue(leStuntUnk, p->sStuntUnknown);

@@ -6,7 +6,7 @@
 #include "qstring.h"
 //-------------------------------------------------------------------------------------------------
 #define MIXED_DATA "<mixed>"
-#define NO_TEX_DATA "<none>"
+#define NONE_DATA "<none>"
 #define SIGN_LINE_LENGTH 13
 #define STUNT_LINE_LENGTH 69
 //-------------------------------------------------------------------------------------------------
@@ -16,6 +16,19 @@ struct tTrackHeader
   int iHeaderUnk1;
   int iHeaderUnk2;
   int iHeaderUnk3;
+};
+//-------------------------------------------------------------------------------------------------
+struct tStunt
+{
+  int iScaleFactor;
+  int iAngle;
+  int iUnknown; //todo
+  int iTimingGroup;
+  int iHeight;
+  int iTimeBulging;
+  int iTimeFlat;
+  int iSmallerExpandsLargerContracts;
+  int iBulge;
 };
 //-------------------------------------------------------------------------------------------------
 struct tGeometryChunk
@@ -100,24 +113,15 @@ struct tGeometryChunk
   bool bHasSign;
   unsigned short unBackTexture;
   bool bHasBack;
+  
+  //stunt
+  tStunt stunt;
+  bool bHasStunt;
 };
 typedef std::vector<tGeometryChunk> CChunkAy;
 //-------------------------------------------------------------------------------------------------
 typedef std::map<int, unsigned short> CSignMap;
-//-------------------------------------------------------------------------------------------------
-struct tStunt
-{
-  int iScaleFactor;
-  int iAngle;
-  int iUnknown; //todo
-  int iTimingGroup;
-  int iHeight;
-  int iTimeBulging;
-  int iTimeFlat;
-  int iSmallerExpandsLargerContracts;
-  int iBulge;
-};
-typedef std::map<int, tStunt> CStuntMap;
+typedef std::map<int, tStunt *> CStuntMap;
 //-------------------------------------------------------------------------------------------------
 struct tRaceInfo
 {
@@ -172,7 +176,9 @@ public:
     , QString &sUnk33, QString &sUnk34, QString &sUnk35, QString &sUnk36, QString &sUnk37, QString &sUnk38
     , QString &sUnk39, QString &sUnk40, QString &sUnk41, QString &sUnk42, QString &sUnk43, QString &sUnk44
     , QString &sUnk45, QString &sUnk46, QString &sUnk47, QString &sUnk48, QString &sUnk49, QString &sUnk50
-    , QString &sSignTexture, QString &sBackTexture);
+    , QString &sSignTexture, QString &sBackTexture
+    , QString &sHasStunt, QString &sStuntScaleFactor, QString &sStuntAngle, QString &sStuntUnknown, QString &sStuntTimingGroup, QString &sStuntHeight, QString &sStuntTimeBulging
+    , QString &sStuntTimeFlat, QString &sStuntExpandsContracts, QString &sStuntBulge);
   void ApplyGeometrySettings(int iStartIndex, int iEndIndex
     , const QString &sLeftShoulderWidth, const QString &sLeftLaneWidth, const QString &sRightLaneWidth, const QString &sRightShoulderWidth
     , const QString &sLShoulderHeight, const QString &sRShoulderHeight, const QString &sLength
@@ -189,7 +195,9 @@ public:
     , const QString &sUnk33, const QString &sUnk34, const QString &sUnk35, const QString &sUnk36, const QString &sUnk37, const QString &sUnk38
     , const QString &sUnk39, const QString &sUnk40, const QString &sUnk41, const QString &sUnk42, const QString &sUnk43, const QString &sUnk44
     , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50
-    , const QString &sSignValue, const QString &sBackValue);
+    , const QString &sSignValue, const QString &sBackValue
+    , const QString &sHasStunt, const QString &sStuntScaleFactor, const QString &sStuntAngle, const QString &sStuntUnknown, const QString &sStuntTimingGroup, const QString &sStuntHeight, const QString &sStuntTimeBulging
+    , const QString &sStuntTimeFlat, const QString &sStuntExpandsContracts, const QString &sStuntBulge);
   void InsertGeometryChunk(int iIndex, int iCount
     , const QString &sLeftShoulderWidth, const QString &sLeftLaneWidth, const QString &sRightLaneWidth, const QString &sRightShoulderWidth
     , const QString &sLShoulderHeight, const QString &sRShoulderHeight, const QString &sLength
@@ -206,12 +214,13 @@ public:
     , const QString &sUnk33, const QString &sUnk34, const QString &sUnk35, const QString &sUnk36, const QString &sUnk37, const QString &sUnk38
     , const QString &sUnk39, const QString &sUnk40, const QString &sUnk41, const QString &sUnk42, const QString &sUnk43, const QString &sUnk44
     , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50
-    , const QString &sSignValue, const QString &sBackValue);
+    , const QString &sSignValue, const QString &sBackValue
+    , bool bHasStunt, const QString &sStuntScaleFactor, const QString &sStuntAngle, const QString &sStuntUnknown, const QString &sStuntTimingGroup, const QString &sStuntHeight, const QString &sStuntTimeBulging
+    , const QString &sStuntTimeFlat, const QString &sStuntExpandsContracts, const QString &sStuntBulge);
   void UpdateChunkStrings();
 
   tTrackHeader m_header;
   CChunkAy m_chunkAy;
-  CStuntMap m_stuntMap;
   QString m_sTextureFile;
   QString m_sBuildingFile;
   tRaceInfo m_raceInfo;

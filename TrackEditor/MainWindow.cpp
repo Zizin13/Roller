@@ -56,6 +56,7 @@ public:
     , sSignTexture, sBackTexture;
 
   //selected stunt values
+  QString sHasStunt;
   QString sStuntScaleFactor;
   QString sStuntAngle;
   QString sStuntUnknown;
@@ -124,15 +125,12 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(sbSelChunksTo, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksToChanged(int)));
   connect(ckTo, &QCheckBox::toggled, this, &CMainWindow::OnToChecked);
   connect(pbApply, &QPushButton::clicked, this, &CMainWindow::OnApplyClicked);
-  connect(pbApplyStunt, &QPushButton::clicked, this, &CMainWindow::OnApplyStuntClicked);
   connect(pbApplyTexture, &QPushButton::clicked, this, &CMainWindow::OnApplyTextureClicked);
   connect(pbApplyInfo, &QPushButton::clicked, this, &CMainWindow::OnApplyInfoClicked);
   connect(pbCancel, &QPushButton::clicked, this, &CMainWindow::OnCancelClicked);
-  connect(pbRevertStunt, &QPushButton::clicked, this, &CMainWindow::OnCancelStuntClicked);
   connect(pbRevertTexture, &QPushButton::clicked, this, &CMainWindow::OnCancelTextureClicked);
   connect(pbRevertInfo, &QPushButton::clicked, this, &CMainWindow::OnCancelInfoClicked);
   connect(pbDelete, &QPushButton::clicked, this, &CMainWindow::OnDeleteChunkClicked);
-  connect(pbDeleteStunt, &QPushButton::clicked, this, &CMainWindow::OnDeleteStuntClicked);
   connect(pbEditLSurface, &QPushButton::clicked, this, &CMainWindow::OnEditLSurface);
   connect(pbEditCSurface, &QPushButton::clicked, this, &CMainWindow::OnEditCSurface);
   connect(pbEditRSurface, &QPushButton::clicked, this, &CMainWindow::OnEditRSurface);
@@ -212,16 +210,15 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(ckApplySign, &QCheckBox::toggled, this, &CMainWindow::OnApplySignToggled);
   connect(ckApplyBack, &QCheckBox::toggled, this, &CMainWindow::OnApplyBackToggled);
 
-  connect(leStuntIndex, &QLineEdit::textChanged, this, &CMainWindow::OnStuntIndexChanged);
-  connect(leStuntScaleFact, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
-  connect(leStuntAngle, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
-  connect(leStuntUnk, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
-  connect(leStuntTimingGroup, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
-  connect(leStuntHeight, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
-  connect(leStuntTimeBulging, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
-  connect(leStuntTimeFlat, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
-  connect(leStuntExpandContract, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
-  connect(leStuntBulge, &QLineEdit::textChanged, this, &CMainWindow::UpdateStuntsEditMode);
+  connect(leStuntScaleFact, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leStuntAngle, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leStuntUnk, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leStuntTimingGroup, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leStuntHeight, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leStuntTimeBulging, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leStuntTimeFlat, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leStuntExpandContract, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leStuntBulge, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
 
   connect(leTex, &QLineEdit::textChanged, this, &CMainWindow::UpdateTexturesEditMode);
   connect(leBld, &QLineEdit::textChanged, this, &CMainWindow::UpdateTexturesEditMode);
@@ -299,8 +296,6 @@ void CMainWindow::OnLoadTrack()
     //update ui
     sbSelChunksFrom->setValue(0);
     sbSelChunksTo->setValue(0);
-    if (!p->m_track.m_stuntMap.empty())
-      leStuntIndex->setText(QString::number(p->m_track.m_stuntMap.begin()->first));
     
     //update variables
     m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
@@ -393,7 +388,9 @@ void CMainWindow::OnInsertBeforeClicked()
     , leUnk33->text(), leUnk34->text(), leUnk35->text(), leUnk36->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
-    , pbSign->property("value").toString(), pbBack->property("value").toString());
+    , pbSign->property("value").toString(), pbBack->property("value").toString()
+    , ckHasStunt->checkState() == Qt::Checked, leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
+    , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntBulge->text());
 
   m_bUnsavedChanges = true;
   sbSelChunksFrom->blockSignals(true);
@@ -429,7 +426,9 @@ void CMainWindow::OnInsertAfterClicked()
     , leUnk33->text(), leUnk34->text(), leUnk35->text(), leUnk36->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
-    , pbSign->property("value").toString(), pbBack->property("value").toString());
+    , pbSign->property("value").toString(), pbBack->property("value").toString()
+    , ckHasStunt->checkState() == Qt::Checked, leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
+    , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntBulge->text());
 
   m_bUnsavedChanges = true;
   sbSelChunksFrom->blockSignals(true);
@@ -491,6 +490,19 @@ void CMainWindow::OnToChecked(bool bChecked)
 
 void CMainWindow::OnApplyClicked()
 {
+  QString sHasStunt;
+  switch (ckHasStunt->checkState()) {
+    case Qt::Checked:
+      sHasStunt = "true";
+      break;
+    case Qt::PartiallyChecked:
+      sHasStunt = MIXED_DATA;
+      break;
+    case Qt::Unchecked:
+      sHasStunt = "false";
+      break;
+  }
+
   p->m_track.ApplyGeometrySettings(sbSelChunksFrom->value(), sbSelChunksTo->value()
     , leLShoulderWidth->text(), leLLaneWidth->text(), leRLaneWidth->text(), leRShoulderWidth->text()
     , leLShoulderHeight->text(), leRShoulderHeight->text(), leLength->text()
@@ -507,29 +519,10 @@ void CMainWindow::OnApplyClicked()
     , leUnk33->text(), leUnk34->text(), leUnk35->text(), leUnk36->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
-    , pbSign->property("value").toString(), pbBack->property("value").toString());
+    , pbSign->property("value").toString(), pbBack->property("value").toString()
+    , sHasStunt, leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
+    , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntBulge->text());
   m_bUnsavedChanges = true;
-  UpdateWindow();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnApplyStuntClicked()
-{
-  //update value
-  tStunt *pStunt = &p->m_track.m_stuntMap[leStuntIndex->text().toInt()];
-  pStunt->iScaleFactor = leStuntScaleFact->text().toInt();
-  pStunt->iAngle = leStuntAngle->text().toInt();
-  pStunt->iUnknown = leStuntUnk->text().toInt();
-  pStunt->iTimingGroup = leStuntTimingGroup->text().toInt();
-  pStunt->iHeight = leStuntHeight->text().toInt();
-  pStunt->iTimeBulging = leStuntTimeBulging->text().toInt();
-  pStunt->iTimeFlat = leStuntTimeFlat->text().toInt();
-  pStunt->iSmallerExpandsLargerContracts = leStuntExpandContract->text().toInt();
-  pStunt->iBulge = leStuntBulge->text().toInt();
-
-  m_bUnsavedChanges = true;
-  g_pMainWindow->LogMessage("Applied changes to stunts");
   UpdateWindow();
 }
 
@@ -577,13 +570,6 @@ void CMainWindow::OnCancelClicked()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::OnCancelStuntClicked()
-{
-  RevertStunts();
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CMainWindow::OnCancelTextureClicked()
 {
   p->sTex = p->m_track.m_sTextureFile;
@@ -621,26 +607,6 @@ void CMainWindow::OnDeleteChunkClicked()
   sbSelChunksFrom->blockSignals(false);
   sbSelChunksTo->blockSignals(false);
   UpdateGeometryEditMode();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnDeleteStuntClicked()
-{
-  //delete value from map
-  CStuntMap::iterator it = p->m_track.m_stuntMap.find(leStuntIndex->text().toInt());
-  if (it != p->m_track.m_stuntMap.end()) {
-    it = p->m_track.m_stuntMap.erase(it);
-    if (it != p->m_track.m_stuntMap.end()) {
-      leStuntIndex->setText(QString::number(it->first));
-    } else if (!p->m_track.m_stuntMap.empty()) {
-      --it;
-      leStuntIndex->setText(QString::number(it->first));
-    }
-  }
-  g_pMainWindow->LogMessage("Deleted stunt");
-  UpdateWindow();
-  UpdateStuntsEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -742,6 +708,16 @@ void CMainWindow::UpdateGeometryEditMode()
   UpdateLEEditMode(bEditMode, bMixedData, leUnk50, p->sUnk50);
   UpdateSignEditMode(bEditMode, bMixedData, pbSign, widgetSign, p->sSignTexture);
   UpdateSignEditMode(bEditMode, bMixedData, pbBack, widgetBack, p->sBackTexture);
+  UpdateCKEditMode(bEditMode, bMixedData, ckHasStunt, p->sHasStunt);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntScaleFact, p->sStuntScaleFactor);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntAngle, p->sStuntAngle);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntUnk, p->sStuntUnknown);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntTimingGroup, p->sStuntTimingGroup);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntHeight, p->sStuntHeight);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntTimeBulging, p->sStuntTimeBulging);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntTimeFlat, p->sStuntTimeFlat);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntExpandContract, p->sStuntExpandsContracts);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntBulge, p->sStuntBulge);
 
   pbApply->setEnabled(bEditMode);
   pbCancel->setEnabled(bEditMode);
@@ -750,38 +726,6 @@ void CMainWindow::UpdateGeometryEditMode()
   sbSelChunksFrom->setEnabled(!bEditMode);
   ckTo->setEnabled(!bEditMode);
   sbSelChunksTo->setEnabled(!bEditMode && ckTo->isChecked());
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnStuntIndexChanged()
-{
-  UpdateStuntSelection();
-  UpdateStuntsEditMode();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::UpdateStuntsEditMode()
-{
-  CStuntMap::iterator it = p->m_track.m_stuntMap.find(leStuntIndex->text().toInt());
-  bool bNew = (it == p->m_track.m_stuntMap.end());
-
-  bool bLValEdited = false;
-  bool bMixedData = false;
-  UpdateLEEditMode(bLValEdited, bMixedData, leStuntScaleFact, p->sStuntScaleFactor, bNew);
-  UpdateLEEditMode(bLValEdited, bMixedData, leStuntAngle, p->sStuntAngle, bNew);
-  UpdateLEEditMode(bLValEdited, bMixedData, leStuntUnk, p->sStuntUnknown, bNew);
-  UpdateLEEditMode(bLValEdited, bMixedData, leStuntTimingGroup, p->sStuntTimingGroup, bNew);
-  UpdateLEEditMode(bLValEdited, bMixedData, leStuntHeight, p->sStuntHeight, bNew);
-  UpdateLEEditMode(bLValEdited, bMixedData, leStuntTimeBulging, p->sStuntTimeBulging, bNew);
-  UpdateLEEditMode(bLValEdited, bMixedData, leStuntTimeFlat, p->sStuntTimeFlat, bNew);
-  UpdateLEEditMode(bLValEdited, bMixedData, leStuntExpandContract, p->sStuntExpandsContracts, bNew);
-  UpdateLEEditMode(bLValEdited, bMixedData, leStuntBulge, p->sStuntBulge, bNew);
-
-  bool bEditMode = bNew || bLValEdited;
-  pbApplyStunt->setEnabled(bEditMode);
-  pbRevertStunt->setEnabled(bLValEdited);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -832,7 +776,7 @@ void CMainWindow::OnSignClicked()
   if (dlg.exec()) {
     int iIndex = dlg.GetSelected();
     if (iIndex < 0) {
-      sValue = NO_TEX_DATA;
+      sValue = NONE_DATA;
     } else {
       unBldIndex = (unsigned short)iIndex;
       unValue = unBldIndex << 1;
@@ -863,7 +807,7 @@ void CMainWindow::OnBackClicked()
   if (dlg.exec()) {
     int iIndex = dlg.GetSelected();
     if (iIndex < 0) {
-      sValue = NO_TEX_DATA;
+      sValue = NONE_DATA;
     } else {
       unBldIndex = (unsigned short)iIndex;
       unValue = unBldIndex << 1;
@@ -1031,27 +975,7 @@ void CMainWindow::UpdateWindow()
       UpdateGeometryEditMode();
     }
       break;
-    case 1: //STUNTS
-    {
-      leStuntsCount->setText(QString::number(p->m_track.m_stuntMap.size()));
-      //stuff data
-      CStuntMap::iterator it = p->m_track.m_stuntMap.begin();
-      for (; it != p->m_track.m_stuntMap.end(); ++it) {
-        char szLine[70];
-        memset(szLine, 0, sizeof(szLine));
-        snprintf(szLine, sizeof(szLine), " %4d %6d %6d %6d %6d %6d %6d %6d %6d %6d", 
-                 it->first, it->second.iScaleFactor, it->second.iAngle, it->second.iUnknown,
-                 it->second.iTimingGroup, it->second.iHeight, it->second.iTimeBulging,
-                 it->second.iTimeFlat, it->second.iSmallerExpandsLargerContracts, it->second.iBulge);
-        txData->appendPlainText(szLine);
-      }
-
-      //update selection
-      UpdateStuntSelection();
-      UpdateStuntsEditMode();
-    }
-      break;
-    case 2: //TEXTURES
+    case 1: //TEXTURES
     {
       //stuff data
       txData->appendPlainText("TEX:" + p->m_track.m_sTextureFile);
@@ -1079,7 +1003,7 @@ void CMainWindow::UpdateWindow()
       UpdateTexturesEditMode();
     }
       break;
-    case 3: //INFO
+    case 2: //INFO
     {
       //stuff data
       txData->appendPlainText(QString::number(p->m_track.m_raceInfo.iTrackNumber));
@@ -1170,40 +1094,11 @@ void CMainWindow::UpdateGeometrySelection()
     , p->sUnk33, p->sUnk34, p->sUnk35, p->sUnk36, p->sUnk37, p->sUnk38
     , p->sUnk39, p->sUnk40, p->sUnk41, p->sUnk42, p->sUnk43, p->sUnk44
     , p->sUnk45, p->sUnk46, p->sUnk47, p->sUnk48, p->sUnk49, p->sUnk50
-    , p->sSignTexture, p->sBackTexture);
+    , p->sSignTexture, p->sBackTexture
+    , p->sHasStunt, p->sStuntScaleFactor, p->sStuntAngle, p->sStuntUnknown, p->sStuntTimingGroup, p->sStuntHeight, p->sStuntTimeBulging
+    , p->sStuntTimeFlat, p->sStuntExpandsContracts, p->sStuntBulge);
 
   RevertGeometry();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::UpdateStuntSelection()
-{
-  //update values in edit window
-  int i = 0;
-  CStuntMap::iterator it = p->m_track.m_stuntMap.begin();
-  for (; it != p->m_track.m_stuntMap.end(); ++it, ++i) {
-    if (leStuntIndex->text().toInt() == it->first) {
-      p->sStuntScaleFactor = QString::number(it->second.iScaleFactor);
-      p->sStuntAngle = QString::number(it->second.iAngle);
-      p->sStuntUnknown = QString::number(it->second.iUnknown);
-      p->sStuntTimingGroup = QString::number(it->second.iTimingGroup);
-      p->sStuntHeight = QString::number(it->second.iHeight);
-      p->sStuntTimeBulging = QString::number(it->second.iTimeBulging);
-      p->sStuntTimeFlat = QString::number(it->second.iTimeFlat);
-      p->sStuntExpandsContracts = QString::number(it->second.iSmallerExpandsLargerContracts);
-      p->sStuntBulge = QString::number(it->second.iBulge);
-      break;
-    }
-  }
-
-  //update view window selection
-  QTextCursor c = txData->textCursor();
-  c.setPosition(i * STUNT_LINE_LENGTH);
-  c.setPosition((i + 1) * STUNT_LINE_LENGTH - 1, QTextCursor::KeepAnchor);
-  txData->setTextCursor(c);
-
-  RevertStunts();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1243,6 +1138,23 @@ bool CMainWindow::UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString
 
 //-------------------------------------------------------------------------------------------------
 
+bool CMainWindow::UpdateCKWithSelectionValue(QCheckBox *pCheckbox, const QString &sValue)
+{
+  pCheckbox->blockSignals(true);
+  if (sValue.compare(MIXED_DATA) == 0) {
+    pCheckbox->setText("");
+    pCheckbox->setCheckState(Qt::PartiallyChecked);
+    //pLineEdit->setStyleSheet("background-color: rgb(255,0,0)");
+  } else {
+    pCheckbox->setCheckState(sValue.compare("true") == 0 ? Qt::Checked : Qt::Unchecked);
+    pCheckbox->setStyleSheet("");
+  }
+  pCheckbox->blockSignals(false);
+  return (sValue.compare(MIXED_DATA) == 0);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 bool CMainWindow::UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLabel *pLabel, const QString &sValue)
 {
   pPushButton->setProperty("value", sValue);
@@ -1256,7 +1168,7 @@ void CMainWindow::UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *p
 {
   pCheckbox->blockSignals(true);
   QString sValue = pPushButton->property("value").toString();
-  if (sValue.compare(NO_TEX_DATA) == 0) {
+  if (sValue.compare(NONE_DATA) == 0) {
     pPushButton->setIcon(QIcon());
     pPushButton->setText("<none>");
     pCheckbox->setEnabled(false);
@@ -1289,11 +1201,11 @@ void CMainWindow::UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *p
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, const QString &sValue, bool bNew)
+void CMainWindow::UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, const QString &sValue)
 {
-  if (bNew) {
-    pLineEdit->setStyleSheet("background-color: rgb(0,255,0)");
-  } else if (pLineEdit->text().compare(sValue) != 0) {
+  std::string sTest1 = pLineEdit->text().toLatin1().constData();
+  std::string sStest2 = sValue.toLatin1().constData();
+  if (pLineEdit->text().compare(sValue) != 0) {
     if (pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) == 0) {
       bMixedData = true;
       pLineEdit->setStyleSheet("");
@@ -1321,6 +1233,36 @@ void CMainWindow::UpdateSignEditMode(bool &bEdited, bool &bMixedData, QPushButto
     }
   } else {
     pWidget->setStyleSheet("");
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::UpdateCKEditMode(bool &bEdited, bool &bMixedData, QCheckBox *pCheckbox, const QString &sValue)
+{
+  QString sChecked;
+  switch (ckHasStunt->checkState()) {
+    case Qt::Checked:
+      sChecked = "true";
+      break;
+    case Qt::PartiallyChecked:
+      sChecked = MIXED_DATA;
+      break;
+    case Qt::Unchecked:
+      sChecked = "false";
+      break;
+  }
+
+  if (sChecked.compare(sValue) != 0) {
+    if (sChecked.compare(MIXED_DATA) == 0) {
+      bMixedData = true;
+      pCheckbox->setStyleSheet("");
+    } else {
+      bEdited = true;
+      pCheckbox->setStyleSheet("background-color: rgb(255,255,0)");
+    }
+  } else {
+    pCheckbox->setStyleSheet("");
   }
 }
 
@@ -1403,6 +1345,16 @@ void CMainWindow::RevertGeometry()
   bMixedData |= UpdateLEWithSelectionValue(leUnk50, p->sUnk50);
   bMixedData |= UpdateSignWithSelectionValue(pbSign, ckApplySign, lblSignValue, p->sSignTexture);
   bMixedData |= UpdateSignWithSelectionValue(pbBack, ckApplyBack, lblBackValue, p->sBackTexture);
+  bMixedData |= UpdateCKWithSelectionValue(ckHasStunt, p->sHasStunt);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntScaleFact, p->sStuntScaleFactor);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntAngle, p->sStuntAngle);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntUnk, p->sStuntUnknown);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntTimingGroup, p->sStuntTimingGroup);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntHeight, p->sStuntHeight);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntTimeBulging, p->sStuntTimeBulging);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntTimeFlat, p->sStuntTimeFlat);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntExpandContract, p->sStuntExpandsContracts);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntBulge, p->sStuntBulge);
 
   pbInsertAfter->setEnabled(!bMixedData);
   pbInsertBefore->setEnabled(!bMixedData);
@@ -1411,33 +1363,6 @@ void CMainWindow::RevertGeometry()
   sbSelChunksFrom->setEnabled(true);
   ckTo->setEnabled(true);
   sbSelChunksTo->setEnabled(ckTo->isChecked());
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::RevertStunts()
-{
-  CStuntMap::iterator it = p->m_track.m_stuntMap.find(leStuntIndex->text().toInt());
-  if (it == p->m_track.m_stuntMap.end()) {
-    leStuntIndex->setStyleSheet("background-color: rgb(0,255,0)");
-    pbDeleteStunt->setEnabled(false);
-  } else {
-    leStuntIndex->setStyleSheet("");
-    pbDeleteStunt->setEnabled(true);
-  }
-
-  UpdateLEWithSelectionValue(leStuntScaleFact, p->sStuntScaleFactor);
-  UpdateLEWithSelectionValue(leStuntAngle, p->sStuntAngle);
-  UpdateLEWithSelectionValue(leStuntUnk, p->sStuntUnknown);
-  UpdateLEWithSelectionValue(leStuntTimingGroup, p->sStuntTimingGroup);
-  UpdateLEWithSelectionValue(leStuntHeight, p->sStuntHeight);
-  UpdateLEWithSelectionValue(leStuntTimeBulging, p->sStuntTimeBulging);
-  UpdateLEWithSelectionValue(leStuntTimeFlat, p->sStuntTimeFlat);
-  UpdateLEWithSelectionValue(leStuntExpandContract, p->sStuntExpandsContracts);
-  UpdateLEWithSelectionValue(leStuntBulge, p->sStuntBulge);
-
-  pbApplyStunt->setEnabled(false);
-  pbRevertStunt->setEnabled(false);
 }
 
 //-------------------------------------------------------------------------------------------------

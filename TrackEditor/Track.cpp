@@ -35,7 +35,6 @@ void CTrack::ClearData()
   memset(&m_header, 0, sizeof(m_header));
   m_header.iHeaderUnk3 = 2048;
   m_chunkAy.clear();
-  m_stuntMap.clear();
   m_sTextureFile = "";
   m_sBuildingFile = "";
   memset(&m_raceInfo, 0, sizeof(m_raceInfo));
@@ -223,7 +222,8 @@ bool CTrack::LoadTrack(const QString &sFilename)
           stunt.iTimeFlat = slLine[7].toInt();
           stunt.iSmallerExpandsLargerContracts = slLine[8].toInt();
           stunt.iBulge = slLine[9].toInt();
-          m_stuntMap[iGeometryIndex] = stunt;
+          if (iGeometryIndex < m_chunkAy.size())
+            memcpy(&m_chunkAy[iGeometryIndex].stunt, &stunt, sizeof(stunt));
         } else {
           assert(0);
           g_pMainWindow->LogMessage("Error loading file: stunts section ended before anticipated");
@@ -296,7 +296,6 @@ bool CTrack::LoadTrack(const QString &sFilename)
   QString sSuccess = (bSuccess ? "Successfully loaded" : "Failed to load");
   QString sLogMsg = sSuccess + " file " + sFilename + "\n"
     + "  geometry chunks: " + QString::number(m_chunkAy.size()) + "\n"
-    + "  stunts: " + QString::number(m_stuntMap.size()) + "\n"
     + "  texture file: " + m_sTextureFile + "\n"
     + "  building file: " + m_sBuildingFile;
   g_pMainWindow->LogMessage(sLogMsg);
@@ -327,6 +326,7 @@ bool CTrack::SaveTrack(const QString &sFilename)
     //write chunks
     CSignMap signMap;
     CSignMap backsMap;
+    CStuntMap stuntMap;
     for (int i = 0; i < m_chunkAy.size(); ++i) {
       stream << m_chunkAy[i].sString.c_str() << Qt::endl;
       if (m_chunkAy[i].bHasSign) {
@@ -334,6 +334,9 @@ bool CTrack::SaveTrack(const QString &sFilename)
       }
       if (m_chunkAy[i].bHasBack) {
         backsMap[i] = m_chunkAy[i].unBackTexture;
+      }
+      if (m_chunkAy[i].bHasStunt) {
+        stuntMap[i] = &m_chunkAy[i].stunt;
       }
     }
     
@@ -349,12 +352,12 @@ bool CTrack::SaveTrack(const QString &sFilename)
     stream << Qt::endl;
 
     //write stunts
-    for (CStuntMap::iterator it = m_stuntMap.begin(); it != m_stuntMap.end(); ++it) {
+    for (CStuntMap::iterator it = stuntMap.begin(); it != stuntMap.end(); ++it) {
       memset(szBuf, 0, sizeof(szBuf));
       snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d %6d %6d %6d %6d %6d %6d",
-               it->first, it->second.iScaleFactor, it->second.iAngle, it->second.iUnknown,
-               it->second.iTimingGroup, it->second.iHeight, it->second.iTimeBulging,
-               it->second.iTimeFlat, it->second.iSmallerExpandsLargerContracts, it->second.iBulge);
+               it->first, it->second->iScaleFactor, it->second->iAngle, it->second->iUnknown,
+               it->second->iTimingGroup, it->second->iHeight, it->second->iTimeBulging,
+               it->second->iTimeFlat, it->second->iSmallerExpandsLargerContracts, it->second->iBulge);
       stream << szBuf << Qt::endl;
     }
     memset(szBuf, 0, sizeof(szBuf));
@@ -443,7 +446,9 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     , QString &sUnk33, QString &sUnk34, QString &sUnk35, QString &sUnk36, QString &sUnk37, QString &sUnk38
     , QString &sUnk39, QString &sUnk40, QString &sUnk41, QString &sUnk42, QString &sUnk43, QString &sUnk44
     , QString &sUnk45, QString &sUnk46, QString &sUnk47, QString &sUnk48, QString &sUnk49, QString &sUnk50
-    , QString &sSignTexture, QString &sBackTexture)
+    , QString &sSignTexture, QString &sBackTexture
+    , QString &sHasStunt, QString &sStuntScaleFactor, QString &sStuntAngle, QString &sStuntUnknown, QString &sStuntTimingGroup, QString &sStuntHeight, QString &sStuntTimeBulging
+    , QString &sStuntTimeFlat, QString &sStuntExpandsContracts, QString &sStuntBulge)
 {
   if (m_chunkAy.empty()) return;
   if (iEndIndex < iStartIndex || iEndIndex >= m_chunkAy.size()) {
@@ -467,6 +472,8 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
   sUnk39 = ""; sUnk40 = ""; sUnk41 = ""; sUnk42 = ""; sUnk43 = ""; sUnk44 = "";
   sUnk45 = ""; sUnk46 = ""; sUnk47 = ""; sUnk48 = ""; sUnk49 = ""; sUnk50 = "";
   sSignTexture = ""; sBackTexture = "";
+  sHasStunt = ""; sStuntScaleFactor = ""; sStuntAngle = ""; sStuntUnknown = ""; sStuntTimingGroup = ""; sStuntHeight = ""; sStuntTimeBulging = "";
+  sStuntTimeFlat = ""; sStuntExpandsContracts = ""; sStuntBulge = "";
 
   QString sVal;
   for (int i = iStartIndex; i <= iEndIndex; ++i) {
@@ -690,12 +697,43 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     if (sUnk50.isEmpty()) sUnk50 = sVal;
     else if (sUnk50.compare(sVal) != 0) sUnk50 = MIXED_DATA;
 
-    sVal = m_chunkAy[i].bHasSign ? QString::number(m_chunkAy[i].unSignTexture) : NO_TEX_DATA;
+    sVal = m_chunkAy[i].bHasSign ? QString::number(m_chunkAy[i].unSignTexture) : NONE_DATA;
     if (sSignTexture.isEmpty()) sSignTexture = sVal;
-    else if (sSignTexture.compare(sVal) != 0) sSignTexture = MIXED_DATA;\
-    sVal = m_chunkAy[i].bHasBack ? QString::number(m_chunkAy[i].unBackTexture) : NO_TEX_DATA;
+    else if (sSignTexture.compare(sVal) != 0) sSignTexture = MIXED_DATA;
+    sVal = m_chunkAy[i].bHasBack ? QString::number(m_chunkAy[i].unBackTexture) : NONE_DATA;
     if (sBackTexture.isEmpty()) sBackTexture = sVal;
     else if (sBackTexture.compare(sVal) != 0) sBackTexture = MIXED_DATA;
+
+    sVal = m_chunkAy[i].bHasStunt ? "true" : "false";
+    if (sHasStunt.isEmpty()) sHasStunt = sVal;
+    else if (sHasStunt.compare(sVal) != 0) sHasStunt = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].stunt.iScaleFactor);
+    if (sStuntScaleFactor.isEmpty()) sStuntScaleFactor = sVal;
+    else if (sStuntScaleFactor.compare(sVal) != 0) sStuntScaleFactor = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].stunt.iAngle);
+    if (sStuntAngle.isEmpty()) sStuntAngle = sVal;
+    else if (sStuntAngle.compare(sVal) != 0) sStuntAngle = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].stunt.iUnknown);
+    if (sStuntUnknown.isEmpty()) sStuntUnknown = sVal;
+    else if (sStuntUnknown.compare(sVal) != 0) sStuntUnknown = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].stunt.iTimingGroup);
+    if (sStuntTimingGroup.isEmpty()) sStuntTimingGroup = sVal;
+    else if (sStuntTimingGroup.compare(sVal) != 0) sStuntTimingGroup = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].stunt.iHeight);
+    if (sStuntHeight.isEmpty()) sStuntHeight = sVal;
+    else if (sStuntHeight.compare(sVal) != 0) sStuntHeight = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].stunt.iTimeBulging);
+    if (sStuntTimeBulging.isEmpty()) sStuntTimeBulging = sVal;
+    else if (sStuntTimeBulging.compare(sVal) != 0) sStuntTimeBulging = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].stunt.iTimeFlat);
+    if (sStuntTimeFlat.isEmpty()) sStuntTimeFlat = sVal;
+    else if (sStuntTimeFlat.compare(sVal) != 0) sStuntTimeFlat = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].stunt.iSmallerExpandsLargerContracts);
+    if (sStuntExpandsContracts.isEmpty()) sStuntExpandsContracts = sVal;
+    else if (sStuntExpandsContracts.compare(sVal) != 0) sStuntExpandsContracts = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].stunt.iBulge);
+    if (sStuntBulge.isEmpty()) sStuntBulge = sVal;
+    else if (sStuntBulge.compare(sVal) != 0) sStuntBulge = MIXED_DATA;
   }
 }
 
@@ -717,7 +755,9 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex
     , const QString &sUnk33, const QString &sUnk34, const QString &sUnk35, const QString &sUnk36, const QString &sUnk37, const QString &sUnk38
     , const QString &sUnk39, const QString &sUnk40, const QString &sUnk41, const QString &sUnk42, const QString &sUnk43, const QString &sUnk44
     , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50
-    , const QString &sSignValue, const QString &sBackValue)
+    , const QString &sSignValue, const QString &sBackValue
+    , const QString &sHasStunt, const QString &sStuntScaleFactor, const QString &sStuntAngle, const QString &sStuntUnknown, const QString &sStuntTimingGroup, const QString &sStuntHeight, const QString &sStuntTimeBulging
+    , const QString &sStuntTimeFlat, const QString &sStuntExpandsContracts, const QString &sStuntBulge)
 {
   for (int i = iStartIndex; i <= iEndIndex; ++i) {
     if (!sLeftShoulderWidth.isEmpty()) m_chunkAy[i].iLeftShoulderWidth = sLeftShoulderWidth.toInt();
@@ -791,9 +831,19 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex
     if (!sUnk49.isEmpty()) m_chunkAy[i].iUnk49 = sUnk49.toInt();
     if (!sUnk50.isEmpty()) m_chunkAy[i].iUnk50 = sUnk50.toInt();
     if (!sSignValue.isEmpty() && sSignValue.compare(MIXED_DATA) != 0) m_chunkAy[i].unSignTexture = sSignValue.toUShort();
-    m_chunkAy[i].bHasSign = sSignValue.compare(NO_TEX_DATA) != 0;
+    m_chunkAy[i].bHasSign = sSignValue.compare(NONE_DATA) != 0;
     if (!sBackValue.isEmpty() && sBackValue.compare(MIXED_DATA) != 0) m_chunkAy[i].unBackTexture = sBackValue.toUShort();
-    m_chunkAy[i].bHasBack = sBackValue.compare(NO_TEX_DATA) != 0;
+    m_chunkAy[i].bHasBack = sBackValue.compare(NONE_DATA) != 0;
+    if (sHasStunt.compare(MIXED_DATA) != 0) m_chunkAy[i].bHasStunt = (sHasStunt.compare("true") == 0);
+    if (!sStuntScaleFactor.isEmpty()) m_chunkAy[i].stunt.iScaleFactor = sStuntScaleFactor.toInt();
+    if (!sStuntAngle.isEmpty()) m_chunkAy[i].stunt.iAngle = sStuntAngle.toInt();
+    if (!sStuntUnknown.isEmpty()) m_chunkAy[i].stunt.iUnknown = sStuntUnknown.toInt();
+    if (!sStuntTimingGroup.isEmpty()) m_chunkAy[i].stunt.iTimingGroup = sStuntTimingGroup.toInt();
+    if (!sStuntHeight.isEmpty()) m_chunkAy[i].stunt.iHeight = sStuntHeight.toInt();
+    if (!sStuntTimeBulging.isEmpty()) m_chunkAy[i].stunt.iTimeBulging = sStuntTimeBulging.toInt();
+    if (!sStuntTimeFlat.isEmpty()) m_chunkAy[i].stunt.iTimeFlat = sStuntTimeFlat.toInt();
+    if (!sStuntExpandsContracts.isEmpty()) m_chunkAy[i].stunt.iSmallerExpandsLargerContracts = sStuntExpandsContracts.toInt();
+    if (!sStuntBulge.isEmpty()) m_chunkAy[i].stunt.iBulge = sStuntBulge.toInt();
   }
   UpdateChunkStrings();
   g_pMainWindow->LogMessage("Applied changes to " + QString::number(iEndIndex - iStartIndex + 1) + " geometry chunks");
@@ -817,7 +867,9 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount
   , const QString &sUnk33, const QString &sUnk34, const QString &sUnk35, const QString &sUnk36, const QString &sUnk37, const QString &sUnk38
   , const QString &sUnk39, const QString &sUnk40, const QString &sUnk41, const QString &sUnk42, const QString &sUnk43, const QString &sUnk44
   , const QString &sUnk45, const QString &sUnk46, const QString &sUnk47, const QString &sUnk48, const QString &sUnk49, const QString &sUnk50
-  , const QString &sSignValue, const QString &sBackValue)
+  , const QString &sSignValue, const QString &sBackValue
+  , bool bHasStunt, const QString &sStuntScaleFactor, const QString &sStuntAngle, const QString &sStuntUnknown, const QString &sStuntTimingGroup, const QString &sStuntHeight, const QString &sStuntTimeBulging
+  , const QString &sStuntTimeFlat, const QString &sStuntExpandsContracts, const QString &sStuntBulge)
 {
   for (int i = 0; i < iCount; ++i) {
     struct tGeometryChunk newChunk;
@@ -893,9 +945,19 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount
     newChunk.iUnk49 = sUnk49.toInt();
     newChunk.iUnk50 = sUnk50.toInt();
     newChunk.unSignTexture = sSignValue.toUShort();
-    newChunk.bHasSign = sSignValue.compare(NO_TEX_DATA) != 0;
+    newChunk.bHasSign = sSignValue.compare(NONE_DATA) != 0;
     newChunk.unBackTexture = sBackValue.toUShort();
-    newChunk.bHasBack = sBackValue.compare(NO_TEX_DATA) != 0;
+    newChunk.bHasBack = sBackValue.compare(NONE_DATA) != 0;
+    newChunk.bHasStunt = bHasStunt;
+    newChunk.stunt.iScaleFactor = sStuntScaleFactor.toInt();
+    newChunk.stunt.iAngle = sStuntAngle.toInt();
+    newChunk.stunt.iUnknown = sStuntUnknown.toInt();
+    newChunk.stunt.iTimingGroup = sStuntTimingGroup.toInt();
+    newChunk.stunt.iHeight = sStuntHeight.toInt();
+    newChunk.stunt.iTimeBulging = sStuntTimeBulging.toInt();
+    newChunk.stunt.iTimeFlat = sStuntTimeFlat.toInt();
+    newChunk.stunt.iSmallerExpandsLargerContracts = sStuntExpandsContracts.toInt();
+    newChunk.stunt.iBulge = sStuntBulge.toInt();
     if (m_chunkAy.empty())
       m_chunkAy.push_back(newChunk);
     else

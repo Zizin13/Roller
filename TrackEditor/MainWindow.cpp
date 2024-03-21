@@ -82,6 +82,25 @@ public:
   QString sTrackMapSize;
   QString sTrackMapFidelity;
   QString sInfoUnknown;
+
+  QString signAy[17] = { "TOWER"
+                       , "TOWER 2"
+                       , "SIGN 1"
+                       , "SIGN 2"
+                       , "BUILD"
+                       , "BUILD 1"
+                       , "BUILD 2"
+                       , "BUILD 3"
+                       , "HEELBAR"
+                       , "BALLOON"
+                       , "TREE"
+                       , "ADVERT"
+                       , "ADVERT 2"
+                       , "QUAD BLD"
+                       , "BLD 0"
+                       , "BIG BALL"
+                       , "BIG AD" };
+  size_t signAySize = sizeof(signAy) / sizeof(signAy[0]);
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -105,6 +124,11 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   txData->setFont(QFont("Courier", 8));
   frmTex->hide();
   frmBld->hide();
+
+  cbSignType->addItem(NONE_DATA, -1);
+  for (int i = 0; i < p->signAySize; ++i) {
+    cbSignType->addItem(p->signAy[i], i);
+  }
 
   //signals
   connect(actNew, &QAction::triggered, this, &CMainWindow::OnNewTrack);
@@ -168,7 +192,8 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leROuterExtraWallType, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk16, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leEnvironmentFloorType, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leSignType, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leSignType, &QLineEdit::textChanged, this, &CMainWindow::OnSignTypeLEChanged);
+  connect(cbSignType, SIGNAL(currentIndexChanged(int)), this, SLOT(OnSignTypeChanged(int)));
   connect(leUnk19, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk20, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leFloatUnk1, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
@@ -658,6 +683,7 @@ void CMainWindow::UpdateGeometryEditMode()
   UpdateLEEditMode(bEditMode, bMixedData, leUnk16, p->sUnk16);
   UpdateLEEditMode(bEditMode, bMixedData, leEnvironmentFloorType, p->sEnvironmentFloorType);
   UpdateLEEditMode(bEditMode, bMixedData, leSignType, p->sSignType);
+  UpdateCBEditMode(bEditMode, bMixedData, cbSignType, p->sSignType);
   UpdateLEEditMode(bEditMode, bMixedData, leUnk19, p->sUnk19);
   UpdateLEEditMode(bEditMode, bMixedData, leUnk20, p->sUnk20);
   UpdateLEEditMode(bEditMode, bMixedData, leFloatUnk1, p->sfUnk1);
@@ -876,6 +902,29 @@ void CMainWindow::OnDeleteStuntClicked()
   leStuntTimeFlat->blockSignals(false);
   leStuntExpandContract->blockSignals(false);
   leStuntBulge->blockSignals(false);
+
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnSignTypeChanged(int iIndex)
+{
+  int iData = cbSignType->itemData(iIndex).toInt();
+  leSignType->blockSignals(true);
+  leSignType->setText(QString::number(iData));
+  leSignType->blockSignals(false);
+
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnSignTypeLEChanged()
+{
+  cbSignType->blockSignals(true);
+  cbSignType->setCurrentIndex(cbSignType->findData(leSignType->text().toInt()));
+  cbSignType->blockSignals(false);
 
   UpdateGeometryEditMode();
 }
@@ -1162,6 +1211,24 @@ bool CMainWindow::UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString
 
 //-------------------------------------------------------------------------------------------------
 
+bool CMainWindow::UpdateCBWithSelectionValue(QComboBox *pComboBox, const QString &sValue)
+{
+  std::string sVal = sValue.toLatin1().constData();
+  pComboBox->blockSignals(true);
+  if (sValue.compare(MIXED_DATA) == 0) {
+    if (pComboBox->findData(MIXED_DATA) == -1)
+      pComboBox->addItem(MIXED_DATA, MIXED_DATA);
+    pComboBox->setCurrentIndex(pComboBox->findData(MIXED_DATA));
+  } else {
+    pComboBox->removeItem(pComboBox->findData(MIXED_DATA));
+    pComboBox->setCurrentIndex(pComboBox->findData(sValue.toInt()));
+  }
+  pComboBox->blockSignals(false);
+  return (sValue.compare(MIXED_DATA) == 0);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 bool CMainWindow::UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLabel *pLabel, const QString &sValue)
 {
   pPushButton->setProperty("value", sValue);
@@ -1229,6 +1296,25 @@ void CMainWindow::UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *p
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::UpdateCBEditMode(bool &bEdited, bool &bMixedData, QComboBox *pComboBox, const QString &sValue)
+{
+  QString sCbxVal = pComboBox->currentData().toString();
+  std::string sTest = sCbxVal.toLatin1().constData();
+  if (sCbxVal.compare(sValue) != 0 && pComboBox->currentIndex() != -1) {
+    if (sCbxVal.compare(MIXED_DATA) == 0) {
+      bMixedData = true;
+      pComboBox->setStyleSheet("");
+    } else {
+      bEdited = true;
+      pComboBox->setStyleSheet("background-color: rgb(255,255,0)");
+    }
+  } else {
+    pComboBox->setStyleSheet("");
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CMainWindow::UpdateSignEditMode(bool &bEdited, bool &bMixedData, QPushButton *pPushButton, QWidget *pWidget, const QString &sValue)
 {
   QString sButtonValue = pPushButton->property("value").toString();
@@ -1287,6 +1373,7 @@ void CMainWindow::RevertGeometry()
   bMixedData |= UpdateLEWithSelectionValue(leUnk16, p->sUnk16);
   bMixedData |= UpdateLEWithSelectionValue(leEnvironmentFloorType, p->sEnvironmentFloorType);
   bMixedData |= UpdateLEWithSelectionValue(leSignType, p->sSignType);
+  bMixedData |= UpdateCBWithSelectionValue(cbSignType, p->sSignType);
   bMixedData |= UpdateLEWithSelectionValue(leUnk19, p->sUnk19);
   bMixedData |= UpdateLEWithSelectionValue(leUnk20, p->sUnk20);
   bMixedData |= UpdateLEWithSelectionValue(leFloatUnk1, p->sfUnk1);

@@ -194,9 +194,9 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-1052</y>
+              <y>-323</y>
               <width>449</width>
-              <height>1462</height>
+              <height>1482</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -510,7 +510,14 @@
                 <widget class="QLineEdit" name="leUnk14"/>
                </item>
                <item row="11" column="1">
-                <widget class="QLineEdit" name="leSignType"/>
+                <widget class="QLineEdit" name="leSignType">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="toolTip">
+                  <string>sign type setting below</string>
+                 </property>
+                </widget>
                </item>
                <item row="0" column="0">
                 <widget class="QLabel" name="lblLeftSurfaceType">
@@ -666,6 +673,12 @@ type</string>
                </item>
                <item row="10" column="1">
                 <widget class="QLabel" name="label_41">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="toolTip">
+                  <string>sign type setting below</string>
+                 </property>
                  <property name="text">
                   <string>Sign type</string>
                  </property>
@@ -1048,12 +1061,56 @@ extra wall height</string>
              </item>
              <item>
               <layout class="QGridLayout" name="layoutSigns">
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_5">
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_3">
                  <property name="text">
-                  <string>Back</string>
+                  <string>Sign</string>
                  </property>
                 </widget>
+               </item>
+               <item row="0" column="3">
+                <layout class="QVBoxLayout" name="verticalLayout_5">
+                 <item>
+                  <spacer name="verticalSpacer_6">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblSignType">
+                   <property name="text">
+                    <string>Type</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="cbSignType">
+                   <property name="editable">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="verticalSpacer_2">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
                </item>
                <item row="0" column="1">
                 <widget class="QWidget" name="widgetSign" native="true">
@@ -1109,25 +1166,12 @@ extra wall height</string>
                  </layout>
                 </widget>
                </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_3">
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_5">
                  <property name="text">
-                  <string>Sign</string>
+                  <string>Back</string>
                  </property>
                 </widget>
-               </item>
-               <item row="0" column="2">
-                <spacer name="horizontalSpacer_2">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
                </item>
                <item row="1" column="1">
                 <widget class="QWidget" name="widgetBack" native="true">
@@ -1183,12 +1227,32 @@ extra wall height</string>
                  </layout>
                 </widget>
                </item>
+               <item row="0" column="2">
+                <spacer name="horizontalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
               </layout>
              </item>
              <item>
               <widget class="Line" name="line_5">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>Stunt</string>
                </property>
               </widget>
              </item>

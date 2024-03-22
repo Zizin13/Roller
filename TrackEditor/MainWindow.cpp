@@ -109,6 +109,7 @@ public:
 CMainWindow::CMainWindow(const QString &sAppPath)
   : QMainWindow(NULL)
   , m_bUnsavedChanges(false)
+  , m_bAlreadySaved(false)
   , m_sAppPath(sAppPath)
   , m_sTrackFile("")
   , m_sTrackFilesFolder("")
@@ -304,6 +305,7 @@ void CMainWindow::OnNewTrack()
   p->m_track.ClearData();
   m_sTrackFile = "";
   m_bUnsavedChanges = false;
+  m_bAlreadySaved = false;
   LoadTextures(p->m_track.m_bIsMangled);
   UpdateWindow();
 }
@@ -325,7 +327,6 @@ void CMainWindow::OnLoadTrack()
   if (!p->m_track.LoadTrack(sFilename)) {
     //load failed
     m_sTrackFile = "";
-    m_bUnsavedChanges = false;
   } else { //load successful
     //update ui
     sbSelChunksFrom->setValue(0);
@@ -334,8 +335,9 @@ void CMainWindow::OnLoadTrack()
     //update variables
     m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
     m_sTrackFile = sFilename;
-    m_bUnsavedChanges = false;
   }
+  m_bAlreadySaved = false;
+  m_bUnsavedChanges = false;
   //update app
   LoadTextures(p->m_track.m_bIsMangled);
   UpdateWindow();
@@ -345,7 +347,7 @@ void CMainWindow::OnLoadTrack()
 
 void CMainWindow::OnSaveTrack()
 {
-  if (!m_sTrackFile.isEmpty()) {
+  if (!m_sTrackFile.isEmpty() && m_bAlreadySaved) {
     m_bUnsavedChanges = !p->m_track.SaveTrack(m_sTrackFile);
     UpdateWindow();
   } else {
@@ -367,6 +369,7 @@ void CMainWindow::OnSaveTrackAs()
   m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
   m_sTrackFile = sFilename;
   m_bUnsavedChanges = false;
+  m_bAlreadySaved = true;
   UpdateWindow();
 }
 
@@ -387,7 +390,6 @@ void CMainWindow::OnImportMangled()
   if (!p->m_track.ImportMangled(sFilename)) {
     //load failed
     m_sTrackFile = "";
-    m_bUnsavedChanges = false;
   } else { //load successful
     //update ui
     sbSelChunksFrom->setValue(0);
@@ -396,8 +398,9 @@ void CMainWindow::OnImportMangled()
     //update variables
     m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
     m_sTrackFile = sFilename;
-    m_bUnsavedChanges = false;
   }
+  m_bAlreadySaved = false;
+  m_bUnsavedChanges = false;
   //update app
   LoadTextures(p->m_track.m_bIsMangled);
   UpdateWindow();

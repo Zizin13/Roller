@@ -90,6 +90,7 @@ private:
 
   CMainWindowPrivate *p;
   bool m_bUnsavedChanges;
+  bool m_bAlreadySaved;
   QString m_sAppPath;
   QString m_sSettingsFile;
   QString m_sTrackFile;

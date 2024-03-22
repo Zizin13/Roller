@@ -435,7 +435,7 @@ void CTrack::GetGeometryCursorPos(int iStartIndex, int iEndIndex, int &iStartCur
   for (int i = 0; i <= iEndIndex; ++i) {
     if (i <= iStartIndex)
       iStartCursorPos = iEndCursorPos;
-    iEndCursorPos += (int)m_chunkAy[i].sString.size() + 1;
+    iEndCursorPos += (int)m_chunkAy[i].sString.size() - 2;
   }
   --iEndCursorPos;
 }

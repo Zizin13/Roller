@@ -3,6 +3,7 @@
 #include "MainWindow.h"
 #include "qfile.h"
 #include "qtextstream.h"
+#include "Unmangler.h"
 #include <assert.h>
 //-------------------------------------------------------------------------------------------------
 #define HEADER_ELEMENT_COUNT 4
@@ -37,7 +38,44 @@ void CTrack::ClearData()
   m_chunkAy.clear();
   m_sTextureFile = "";
   m_sBuildingFile = "";
+  m_bIsMangled = false;
   memset(&m_raceInfo, 0, sizeof(m_raceInfo));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CTrack::ImportMangled(const QString &sFilename)
+{
+  ClearData();
+  m_bIsMangled = true;
+
+  if (sFilename.isEmpty()) {
+    g_pMainWindow->LogMessage("Track filename empty: " + sFilename);
+    return false;
+  }
+
+  QFile file(sFilename);
+  if (!file.open(QIODevice::ReadOnly)) {
+    g_pMainWindow->LogMessage("Failed to open track: " + sFilename);
+    return false;
+  }
+  QByteArray baData = file.readAll();
+
+  int iLength = GetUnmangledLength((uint8_t *)baData.constData(), baData.size());
+  uint8_t *szData = new uint8_t[iLength];
+  UnmangleFile((uint8_t *)baData.constData(), baData.size(), szData, iLength);
+
+  bool bSuccess = ProcessTrackData(QByteArray((char *)szData, iLength));
+
+  file.close();
+  QString sSuccess = (bSuccess ? "Successfully loaded" : "Failed to load");
+  QString sLogMsg = sSuccess + " file " + sFilename + "\n"
+    + "  geometry chunks: " + QString::number(m_chunkAy.size()) + "\n"
+    + "  texture file: " + m_sTextureFile + "\n"
+    + "  building file: " + m_sBuildingFile;
+  g_pMainWindow->LogMessage(sLogMsg);
+
+  return bSuccess;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -57,11 +95,29 @@ bool CTrack::LoadTrack(const QString &sFilename)
     return false;
   }
 
+  QByteArray baData = file.readAll();
+
+  bool bSuccess = ProcessTrackData(baData);
+
+  file.close();
+  QString sSuccess = (bSuccess ? "Successfully loaded" : "Failed to load");
+  QString sLogMsg = sSuccess + " file " + sFilename + "\n"
+    + "  geometry chunks: " + QString::number(m_chunkAy.size()) + "\n"
+    + "  texture file: " + m_sTextureFile + "\n"
+    + "  building file: " + m_sBuildingFile;
+  g_pMainWindow->LogMessage(sLogMsg);
+
+  return bSuccess;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CTrack::ProcessTrackData(const QByteArray &baData)
+{
   bool bSuccess = true;
   int iChunkLine = 0;
   struct tGeometryChunk currChunk;
   eFileSection section = HEADER;
-  QByteArray baData = file.readAll();
   QList<QByteArray> listData = baData.split('\n');
 
   for (const QByteArray &baLine : listData) {
@@ -296,14 +352,6 @@ bool CTrack::LoadTrack(const QString &sFilename)
     }
   }
 
-  file.close();
-  QString sSuccess = (bSuccess ? "Successfully loaded" : "Failed to load");
-  QString sLogMsg = sSuccess + " file " + sFilename + "\n"
-    + "  geometry chunks: " + QString::number(m_chunkAy.size()) + "\n"
-    + "  texture file: " + m_sTextureFile + "\n"
-    + "  building file: " + m_sBuildingFile;
-  g_pMainWindow->LogMessage(sLogMsg);
-
   //generate strings
   UpdateChunkStrings();
 
@@ -393,7 +441,6 @@ bool CTrack::SaveTrack(const QString &sFilename)
 
     //write info
     if (!(m_raceInfo.iTrackNumber == 0
-       && m_raceInfo.iTrackNumber == 0
        && m_raceInfo.iImpossibleLaps == 0
        && m_raceInfo.iHardLaps == 0
        && m_raceInfo.iTrickyLaps == 0

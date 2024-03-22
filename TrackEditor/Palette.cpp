@@ -1,6 +1,7 @@
 #include "Palette.h"
 #include "qfile.h"
 #include "MainWindow.h"
+#include "Unmangler.h"
 //-------------------------------------------------------------------------------------------------
 
 CPalette::CPalette()

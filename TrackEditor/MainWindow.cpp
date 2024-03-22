@@ -304,7 +304,7 @@ void CMainWindow::OnNewTrack()
   p->m_track.ClearData();
   m_sTrackFile = "";
   m_bUnsavedChanges = false;
-  LoadTextures();
+  LoadTextures(p->m_track.m_bIsMangled);
   UpdateWindow();
 }
 
@@ -337,7 +337,7 @@ void CMainWindow::OnLoadTrack()
     m_bUnsavedChanges = false;
   }
   //update app
-  LoadTextures();
+  LoadTextures(p->m_track.m_bIsMangled);
   UpdateWindow();
 }
 
@@ -374,7 +374,33 @@ void CMainWindow::OnSaveTrackAs()
 
 void CMainWindow::OnImportMangled()
 {
-  QMessageBox::warning(this, "Fatality!", "Not implemented yet");
+  //check for unsaved data
+  if (!SaveChangesAndContinue())
+    return;
+
+  //load track
+  QString sFilename = QDir::toNativeSeparators(QFileDialog::getOpenFileName(
+    this, "Load Track", m_sTrackFilesFolder, QString("Track Files (*.TRK)")));
+  if (sFilename.isEmpty())
+    return;
+
+  if (!p->m_track.ImportMangled(sFilename)) {
+    //load failed
+    m_sTrackFile = "";
+    m_bUnsavedChanges = false;
+  } else { //load successful
+    //update ui
+    sbSelChunksFrom->setValue(0);
+    sbSelChunksTo->setValue(0);
+
+    //update variables
+    m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
+    m_sTrackFile = sFilename;
+    m_bUnsavedChanges = false;
+  }
+  //update app
+  LoadTextures(p->m_track.m_bIsMangled);
+  UpdateWindow();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -557,7 +583,7 @@ void CMainWindow::OnApplyTextureClicked()
 
   m_bUnsavedChanges = true;
   g_pMainWindow->LogMessage("Applied changes to texture");
-  LoadTextures();
+  LoadTextures(p->m_track.m_bIsMangled);
   UpdateWindow();
 }
 
@@ -1316,7 +1342,7 @@ void CMainWindow::UpdateWindow()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::LoadTextures()
+void CMainWindow::LoadTextures(bool bMangled)
 {
   //avoid memory leak
   for (std::vector<QLabel *>::iterator it = p->m_texLabelAy.begin(); it != p->m_texLabelAy.end(); ++it) {
@@ -1326,8 +1352,8 @@ void CMainWindow::LoadTextures()
 
   //load textures
   bool bPalLoaded = p->m_palette.LoadPalette(m_sTrackFilesFolder + QDir::separator() + "PALETTE.PAL");
-  bool bTexLoaded = p->m_tex.LoadTexture(m_sTrackFilesFolder + QDir::separator() + p->m_track.m_sTextureFile, p->m_palette);
-  bool bBldLoaded = p->m_bld.LoadTexture(m_sTrackFilesFolder + QDir::separator() + p->m_track.m_sBuildingFile, p->m_palette);
+  bool bTexLoaded = p->m_tex.LoadTexture(m_sTrackFilesFolder + QDir::separator() + p->m_track.m_sTextureFile, p->m_palette, bMangled);
+  bool bBldLoaded = p->m_bld.LoadTexture(m_sTrackFilesFolder + QDir::separator() + p->m_track.m_sBuildingFile, p->m_palette, bMangled);
   lblPalletteLoaded->setVisible(!bPalLoaded);
   frmTex->setVisible(bTexLoaded);
   frmBld->setVisible(bBldLoaded);

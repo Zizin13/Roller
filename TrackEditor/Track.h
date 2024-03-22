@@ -154,6 +154,7 @@ public:
   ~CTrack();
 
   void ClearData();
+  bool ImportMangled(const QString &sFilename);
   bool LoadTrack(const QString &sFilename);
   bool SaveTrack(const QString &sFilename);
   void GetGeometryCursorPos(int iStartIndex, int iEndIndex, int &iStartCursorPos, int &iEndCursorPos);
@@ -221,8 +222,10 @@ public:
   QString m_sTextureFile;
   QString m_sBuildingFile;
   tRaceInfo m_raceInfo;
+  bool m_bIsMangled;
 
 private:
+  bool ProcessTrackData(const QByteArray &baData);
   void GenerateChunkString(tGeometryChunk &chunk);
   void ProcessSign(const QStringList &slLine, eFileSection &section);
 };

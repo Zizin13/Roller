@@ -17,7 +17,7 @@ public:
   ~CTexture();
 
   void ClearData();
-  bool LoadTexture(const QString &sFilename, const CPalette &palette);
+  bool LoadTexture(const QString &sFilename, const CPalette &palette, bool bMangled);
 
   std::vector<QImage> m_tileAy;
 };

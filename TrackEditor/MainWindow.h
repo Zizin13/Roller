@@ -73,7 +73,7 @@ private:
   void LoadSettings();
   void SaveSettings();
   bool SaveChangesAndContinue();
-  void LoadTextures();
+  void LoadTextures(bool bMangled);
   void UpdateWindow();
   void UpdateGeometrySelection();
   void UpdateInfoSelection();

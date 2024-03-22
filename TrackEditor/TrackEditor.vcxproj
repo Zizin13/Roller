@@ -57,14 +57,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>IS_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\external\Qt5\vc143-x64-md-lib\include;..\..\external\Qt5\vc143-x64-md-lib\include\QtCore;..\..\external\Qt5\vc143-x64-md-lib\include\QtWidgets;..\..\external\Qt5\vc143-x64-md-lib\include\QtGui;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Utils;..\..\external\Qt5\vc143-x64-md-lib\include;..\..\external\Qt5\vc143-x64-md-lib\include\QtCore;..\..\external\Qt5\vc143-x64-md-lib\include\QtWidgets;..\..\external\Qt5\vc143-x64-md-lib\include\QtGui;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
-      <AdditionalLibraryDirectories>..\..\external\Qt5\vc143-x64-md-lib\lib;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Qt5Cored.lib;Qt5OpenGLd.lib;Qt5Guid.lib;Qt5Widgetsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\external\Qt5\vc143-x64-md-lib\lib;..\lib\x64;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Qt5Cored.lib;Qt5OpenGLd.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Utils_staticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying QT dlls...
@@ -94,7 +94,7 @@ exit 1
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>IS_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\external\Qt5\vc143-x64-md-lib\include;..\..\external\Qt5\vc143-x64-md-lib\include\QtCore;..\..\external\Qt5\vc143-x64-md-lib\include\QtWidgets;..\..\external\Qt5\vc143-x64-md-lib\include\QtGui;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Utils;..\..\external\Qt5\vc143-x64-md-lib\include;..\..\external\Qt5\vc143-x64-md-lib\include\QtCore;..\..\external\Qt5\vc143-x64-md-lib\include\QtWidgets;..\..\external\Qt5\vc143-x64-md-lib\include\QtGui;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -102,8 +102,8 @@ exit 1
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
-      <AdditionalLibraryDirectories>..\..\external\Qt5\vc143-x64-md-lib\lib;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Qt5Core.lib;Qt5OpenGL.lib;Qt5Gui.lib;Qt5Widgets.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\external\Qt5\vc143-x64-md-lib\lib;..\lib\x64;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Qt5Core.lib;Qt5OpenGL.lib;Qt5Gui.lib;Qt5Widgets.lib;Utils_static.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying QT dlls...

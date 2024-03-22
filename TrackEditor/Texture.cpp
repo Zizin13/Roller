@@ -2,6 +2,7 @@
 #include "qfile.h"
 #include "MainWindow.h"
 #include "Palette.h"
+#include "Unmangler.h"
 //-------------------------------------------------------------------------------------------------
 
 CTexture::CTexture()
@@ -25,7 +26,7 @@ void CTexture::ClearData()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTexture::LoadTexture(const QString &sFilename, const CPalette &palette)
+bool CTexture::LoadTexture(const QString &sFilename, const CPalette &palette, bool bMangled)
 {
   ClearData();
 
@@ -41,6 +42,13 @@ bool CTexture::LoadTexture(const QString &sFilename, const CPalette &palette)
   }
 
   QByteArray baData = file.readAll();
+
+  if (bMangled) {
+    int iLength = GetUnmangledLength((uint8_t *)baData.constData(), baData.size());
+    uint8_t *szData = new uint8_t[iLength];
+    UnmangleFile((uint8_t *)baData.constData(), baData.size(), szData, iLength);
+    baData = QByteArray((char*)szData, iLength);
+  }
 
   int iPixelsPerTile = TILE_WIDTH * TILE_HEIGHT;
   int iNumTiles = baData.size() / iPixelsPerTile;

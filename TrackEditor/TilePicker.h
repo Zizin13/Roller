@@ -10,7 +10,7 @@ class CTilePicker : public QDialog, private Ui::TilePicker
   Q_OBJECT
 
 public:
-  CTilePicker(QWidget *pParent, CTexture *pTexture, int iIndex);
+  CTilePicker(QWidget *pParent, CTexture *pTexture, int iIndex, bool bAddNone);
   ~CTilePicker();
 
   int GetSelected();

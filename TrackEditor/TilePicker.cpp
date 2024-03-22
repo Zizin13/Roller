@@ -5,7 +5,7 @@
 #include "qdesktopwidget.h"
 //-------------------------------------------------------------------------------------------------
 
-CTilePicker::CTilePicker(QWidget *pParent, CTexture *pTexture, int iIndex)
+CTilePicker::CTilePicker(QWidget *pParent, CTexture *pTexture, int iIndex, bool bAddNone)
   : QDialog(pParent)
   , m_pTexture(pTexture)
   , m_iIndex(iIndex)
@@ -35,17 +35,19 @@ CTilePicker::CTilePicker(QWidget *pParent, CTexture *pTexture, int iIndex)
   }
 
   //add none option
-  QPushButton *pButton = new QPushButton(this);
-  pButton->setMaximumHeight(iButtonSize);
-  pButton->setMaximumWidth(iButtonSize);
-  pButton->setMinimumHeight(iButtonSize);
-  pButton->setMinimumWidth(iButtonSize);
-  pButton->setCheckable(true);
-  pButton->setChecked(i == m_iIndex);
-  pButton->setProperty("index", -1);
-  pButton->setText("<none>");
-  connect(pButton, &QPushButton::clicked, this, &CTilePicker::OnButtonClicked);
-  layoutTextures->addWidget(pButton, i / iTilesPerLine, i %iTilesPerLine);
+  if (bAddNone) {
+    QPushButton *pButton = new QPushButton(this);
+    pButton->setMaximumHeight(iButtonSize);
+    pButton->setMaximumWidth(iButtonSize);
+    pButton->setMinimumHeight(iButtonSize);
+    pButton->setMinimumWidth(iButtonSize);
+    pButton->setCheckable(true);
+    pButton->setChecked(i == m_iIndex);
+    pButton->setProperty("index", -1);
+    pButton->setText("<none>");
+    connect(pButton, &QPushButton::clicked, this, &CTilePicker::OnButtonClicked);
+    layoutTextures->addWidget(pButton, i / iTilesPerLine, i % iTilesPerLine);
+  }
 
   connect(pbCancel, &QPushButton::clicked, this, &CTilePicker::reject);
 }

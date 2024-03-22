@@ -9,6 +9,7 @@
 #include "Palette.h"
 #include "Texture.h"
 #include "TilePicker.h"
+#include "EditSurfaceDialog.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
 #endif
@@ -625,21 +626,45 @@ void CMainWindow::OnDeleteChunkClicked()
 
 void CMainWindow::OnEditLSurface()
 {
-  QMessageBox::warning(this, "Fatality!", "Not implemented yet");
+  int iValue = leLeftSurfaceType->text().toInt();
+
+  CEditSurfaceDialog dlg(this, &p->m_tex, iValue);
+  if (dlg.exec()) {
+    iValue = dlg.GetValue();
+    leLeftSurfaceType->setText(QString::number(iValue));
+  }
+
+  UpdateGeometryEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CMainWindow::OnEditCSurface()
 {
-  QMessageBox::warning(this, "Fatality!", "Not implemented yet");
+  int iValue = leCenterSurfaceType->text().toInt();
+
+  CEditSurfaceDialog dlg(this, &p->m_tex, iValue);
+  if (dlg.exec()) {
+    iValue = dlg.GetValue();
+    leCenterSurfaceType->setText(QString::number(iValue));
+  }
+
+  UpdateGeometryEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CMainWindow::OnEditRSurface()
 {
-  QMessageBox::warning(this, "Fatality!", "Not implemented yet");
+  int iValue = leRightSurfaceType->text().toInt();
+
+  CEditSurfaceDialog dlg(this, &p->m_tex, iValue);
+  if (dlg.exec()) {
+    iValue = dlg.GetValue();
+    leRightSurfaceType->setText(QString::number(iValue));
+  }
+
+  UpdateGeometryEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -784,7 +809,7 @@ void CMainWindow::OnSignClicked()
   unsigned short unBldIndex = unValue & 0x00FF;
   unBldIndex = unBldIndex >> 1;
 
-  CTilePicker dlg(this, &p->m_bld, unBldIndex);
+  CTilePicker dlg(this, &p->m_bld, unBldIndex, true);
   if (dlg.exec()) {
     int iIndex = dlg.GetSelected();
     if (iIndex < 0) {
@@ -815,7 +840,7 @@ void CMainWindow::OnBackClicked()
   unsigned short unBldIndex = unValue & 0x00FF;
   unBldIndex = unBldIndex >> 1;
 
-  CTilePicker dlg(this, &p->m_bld, unBldIndex);
+  CTilePicker dlg(this, &p->m_bld, unBldIndex, true);
   if (dlg.exec()) {
     int iIndex = dlg.GetSelected();
     if (iIndex < 0) {

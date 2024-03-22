@@ -181,9 +181,9 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leUnk06, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk07, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk08, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leLeftSurfaceType, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leCenterSurfaceType, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leRightSurfaceType, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leLeftSurfaceType, &QLineEdit::textChanged, this, &CMainWindow::OnLSurfaceLEChanged);
+  connect(leCenterSurfaceType, &QLineEdit::textChanged, this, &CMainWindow::OnCSurfaceLEChanged);
+  connect(leRightSurfaceType, &QLineEdit::textChanged, this, &CMainWindow::OnRSurfaceLEChanged);
   connect(leLWallType, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leRWallType, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leRoofType, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
@@ -968,6 +968,30 @@ void CMainWindow::OnSignLEChanged()
 void CMainWindow::OnBackLEChanged()
 {
   UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack);
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnLSurfaceLEChanged()
+{
+  UpdateTextures();
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnCSurfaceLEChanged()
+{
+  UpdateTextures();
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnRSurfaceLEChanged()
+{
+  UpdateTextures();
   UpdateGeometryEditMode();
 }
 

@@ -53,6 +53,9 @@ protected slots:
   void OnSignTypeLEChanged();
   void OnSignLEChanged();
   void OnBackLEChanged();
+  void OnLSurfaceLEChanged();
+  void OnCSurfaceLEChanged();
+  void OnRSurfaceLEChanged();
 
 private:
   void LoadSettings();

@@ -1520,7 +1520,6 @@ void CMainWindow::UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *p
 void CMainWindow::UpdateCBEditMode(bool &bEdited, bool &bMixedData, QComboBox *pComboBox, const QString &sValue)
 {
   QString sCbxVal = pComboBox->currentData().toString();
-  std::string sTest = sCbxVal.toLatin1().constData();
   if (sCbxVal.compare(sValue) != 0 && pComboBox->currentIndex() != -1) {
     if (sCbxVal.compare(MIXED_DATA) == 0) {
       bMixedData = true;
@@ -1542,8 +1541,6 @@ void CMainWindow::UpdateSignEditMode(bool &bEdited, bool &bMixedData, QLineEdit 
   if (sLineEditVal.isEmpty())
     sLineEditVal = "0";
 
-  std::string sTest = pLineEdit->text().toLatin1().constData();
-  std::string sTestt = pLineEdit->placeholderText().toLatin1().constData();
   if (sLineEditVal.compare(sValue) != 0) {
     if (pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) == 0) {
       bMixedData = true;

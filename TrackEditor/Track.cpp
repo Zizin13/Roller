@@ -61,8 +61,10 @@ bool CTrack::LoadTrack(const QString &sFilename)
   int iChunkLine = 0;
   struct tGeometryChunk currChunk;
   eFileSection section = HEADER;
-  while (!file.atEnd()) {
-    QByteArray baLine = file.readLine();
+  QByteArray baData = file.readAll();
+  QList<QByteArray> listData = baData.split('\n');
+
+  for (const QByteArray &baLine : listData) {
     QString sLine = baLine.data();
     QStringList slLine = sLine.split(' ', Qt::SkipEmptyParts);
     switch (section) {
@@ -323,14 +325,14 @@ bool CTrack::SaveTrack(const QString &sFilename)
     //write header
     char szBuf[1024];
     snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d", (int)m_chunkAy.size(), m_header.iHeaderUnk1, m_header.iHeaderUnk2, m_header.iHeaderUnk3);
-    stream << szBuf << Qt::endl << Qt::endl << Qt::endl;
+    stream << szBuf << "\r\n" << "\r\n" << "\r\n";
 
     //write chunks
     CSignMap signMap;
     CSignMap backsMap;
     CStuntMap stuntMap;
     for (int i = 0; i < m_chunkAy.size(); ++i) {
-      stream << m_chunkAy[i].sString.c_str() << Qt::endl;
+      stream << m_chunkAy[i].sString.c_str() << "\r\n";
       if (m_chunkAy[i].iSignTexture >= 0) {
         signMap[i] = m_chunkAy[i].iSignTexture;
       }
@@ -354,12 +356,12 @@ bool CTrack::SaveTrack(const QString &sFilename)
     for (CSignMap::iterator it = signMap.begin(); it != signMap.end(); ++it) {
       memset(szBuf, 0, sizeof(szBuf));
       snprintf(szBuf, sizeof(szBuf), " %4d %6d", it->first, (int)it->second);
-      stream << szBuf << Qt::endl;
+      stream << szBuf << "\r\n";
     }
     memset(szBuf, 0, sizeof(szBuf));
     snprintf(szBuf, sizeof(szBuf), " %4d %6d", -1, -1);
-    stream << szBuf << Qt::endl;
-    stream << Qt::endl;
+    stream << szBuf << "\r\n";
+    stream << "\r\n";
 
     //write stunts
     for (CStuntMap::iterator it = stuntMap.begin(); it != stuntMap.end(); ++it) {
@@ -368,26 +370,26 @@ bool CTrack::SaveTrack(const QString &sFilename)
                it->first, it->second->iScaleFactor, it->second->iAngle, it->second->iUnknown,
                it->second->iTimingGroup, it->second->iHeight, it->second->iTimeBulging,
                it->second->iTimeFlat, it->second->iSmallerExpandsLargerContracts, it->second->iBulge);
-      stream << szBuf << Qt::endl;
+      stream << szBuf << "\r\n";
     }
     memset(szBuf, 0, sizeof(szBuf));
     snprintf(szBuf, sizeof(szBuf), " %4d", -1);
-    stream << szBuf << Qt::endl;
-    stream << Qt::endl;
+    stream << szBuf << "\r\n";
+    stream << "\r\n";
 
     //write textures
-    stream << "TEX:" << m_sTextureFile << Qt::endl;
-    stream << "BLD:" << m_sBuildingFile << Qt::endl;
-    stream << "BACKS:" << Qt::endl;
+    stream << "TEX:" << m_sTextureFile << "\r\n";
+    stream << "BLD:" << m_sBuildingFile << "\r\n";
+    stream << "BACKS:" << "\r\n";
     for (CSignMap::iterator it = backsMap.begin(); it != backsMap.end(); ++it) {
       memset(szBuf, 0, sizeof(szBuf));
       snprintf(szBuf, sizeof(szBuf), "%d %d", it->first, (int)it->second);
-      stream << szBuf << Qt::endl;
+      stream << szBuf << "\r\n";
     }
     memset(szBuf, 0, sizeof(szBuf));
     snprintf(szBuf, sizeof(szBuf), " %4d", -1);
-    stream << szBuf << Qt::endl;
-    stream << Qt::endl;
+    stream << szBuf << "\r\n";
+    stream << "\r\n";
 
     //write info
     if (!(m_raceInfo.iTrackNumber == 0
@@ -401,16 +403,16 @@ bool CTrack::SaveTrack(const QString &sFilename)
        && m_raceInfo.dTrackMapSize == 0
        && m_raceInfo.iTrackMapFidelity == 0
        && m_raceInfo.dUnknown == 0)) {
-      stream << QString::number(m_raceInfo.iTrackNumber) << Qt::endl;
+      stream << QString::number(m_raceInfo.iTrackNumber) << "\r\n";
       memset(szBuf, 0, sizeof(szBuf));
       snprintf(szBuf, sizeof(szBuf), "%4d %4d %4d %4d %4d %4d",
                m_raceInfo.iImpossibleLaps, m_raceInfo.iHardLaps, m_raceInfo.iTrickyLaps,
                m_raceInfo.iMediumLaps, m_raceInfo.iEasyLaps, m_raceInfo.iGirlieLaps);
-      stream << szBuf << Qt::endl;
+      stream << szBuf << "\r\n";
       memset(szBuf, 0, sizeof(szBuf));
       snprintf(szBuf, sizeof(szBuf), "%.2lf %4d %.2lf",
                m_raceInfo.dTrackMapSize, m_raceInfo.iTrackMapFidelity, m_raceInfo.dUnknown);
-      stream << szBuf << Qt::endl << Qt::endl;
+      stream << szBuf << "\r\n" << "\r\n";
     }
 
     file.close();
@@ -983,10 +985,10 @@ void CTrack::GenerateChunkString(tGeometryChunk &chunk)
 {
   char szGenerate[1024];
   snprintf(szGenerate, sizeof(szGenerate),
-           " %4d %6d %6d %6d %6d %6d %6d %11.5lf %11.5lf %11.5lf %5d %5d %5d %5d %3d %3d %3d %4d %5d %3d %3d %3d\n" //line 1
-           "%6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %4d %6d %6d %6.1lf %6.1lf %6.1lf\n"   //line 2
+           " %4d %6d %6d %6d %6d %6d %6d %11.5lf %11.5lf %11.5lf %5d %5d %5d %5d %3d %3d %3d %4d %5d %3d %3d %3d\r\n" //line 1
+           "%6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %4d %6d %6d %6.1lf %6.1lf %6.1lf\r\n"   //line 2
            " %4d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d"                             //line 3 TODO: first val does not have space if negative
-           " %3d %3d %3d %d %d %d %d %d %d %d %d %d %d %d %3d %3d %3d\n"       //line 3 continued
+           " %3d %3d %3d %d %d %d %d %d %d %d %d %d %d %d %3d %3d %3d\r\n"       //line 3 continued
            , chunk.iLeftShoulderWidth
            , chunk.iLeftLaneWidth
            , chunk.iRightLaneWidth

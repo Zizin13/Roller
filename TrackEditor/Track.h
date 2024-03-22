@@ -42,9 +42,9 @@ struct tGeometryChunk
   int iLeftShoulderHeight;
   int iRightShoulderHeight;
   int iLength;
-  float fYaw;
-  float fPitch;
-  float fRoll;
+  double dYaw;
+  double dPitch;
+  double dRoll;
   int iAILine1;
   int iAILine2;
   int iAILine3;
@@ -73,9 +73,9 @@ struct tGeometryChunk
   int iSignType;
   int iUnk19; //todo
   int iUnk20; //todo
-  float fUnk1; //todo
-  float fUnk2; //todo
-  float fUnk3; //todo
+  double dUnk1; //todo
+  double dUnk2; //todo
+  double dUnk3; //todo
   //line 3
   int iLeftOuterUpperExtraWallAngle;
   int iLeftOuterLowerExtraWallAngle;
@@ -129,9 +129,9 @@ struct tRaceInfo
   int iMediumLaps;
   int iEasyLaps;
   int iGirlieLaps;
-  float fTrackMapSize;
+  double dTrackMapSize;
   int iTrackMapFidelity;
-  float fUnknown; //todo
+  double dUnknown; //todo
 };
 //-------------------------------------------------------------------------------------------------
 enum eFileSection

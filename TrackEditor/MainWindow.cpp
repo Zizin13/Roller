@@ -572,9 +572,9 @@ void CMainWindow::OnApplyInfoClicked()
   p->m_track.m_raceInfo.iMediumLaps = leMediumLaps->text().toInt();
   p->m_track.m_raceInfo.iEasyLaps = leEasyLaps->text().toInt();
   p->m_track.m_raceInfo.iGirlieLaps = leGirlieLaps->text().toInt();
-  p->m_track.m_raceInfo.fTrackMapSize = leMapSize->text().toFloat();
+  p->m_track.m_raceInfo.dTrackMapSize = leMapSize->text().toDouble();
   p->m_track.m_raceInfo.iTrackMapFidelity = leMapFidelity->text().toInt();
-  p->m_track.m_raceInfo.fUnknown = leInfoUnknown->text().toFloat();
+  p->m_track.m_raceInfo.dUnknown = leInfoUnknown->text().toDouble();
 
   m_bUnsavedChanges = true;
   g_pMainWindow->LogMessage("Applied changes to track info");
@@ -1302,8 +1302,8 @@ void CMainWindow::UpdateWindow()
                p->m_track.m_raceInfo.iMediumLaps, p->m_track.m_raceInfo.iEasyLaps, p->m_track.m_raceInfo.iGirlieLaps);
       txData->appendPlainText(szLine);
       memset(szLine, 0, sizeof(szLine));
-      snprintf(szLine, sizeof(szLine), "%.2f %4d %.2f",
-               p->m_track.m_raceInfo.fTrackMapSize, p->m_track.m_raceInfo.iTrackMapFidelity, p->m_track.m_raceInfo.fUnknown);
+      snprintf(szLine, sizeof(szLine), "%.2lf %4d %.2lf",
+               p->m_track.m_raceInfo.dTrackMapSize, p->m_track.m_raceInfo.iTrackMapFidelity, p->m_track.m_raceInfo.dUnknown);
       txData->appendPlainText(szLine);
 
       //update selection
@@ -1400,9 +1400,9 @@ void CMainWindow::UpdateInfoSelection()
   p->sMediumLaps = QString::number(p->m_track.m_raceInfo.iMediumLaps);
   p->sEasyLaps = QString::number(p->m_track.m_raceInfo.iEasyLaps);
   p->sGirlieLaps = QString::number(p->m_track.m_raceInfo.iGirlieLaps);
-  p->sTrackMapSize = QString::number(p->m_track.m_raceInfo.fTrackMapSize, 'f', 2);
+  p->sTrackMapSize = QString::number(p->m_track.m_raceInfo.dTrackMapSize, 'f', 2);
   p->sTrackMapFidelity = QString::number(p->m_track.m_raceInfo.iTrackMapFidelity);
-  p->sInfoUnknown = QString::number(p->m_track.m_raceInfo.fUnknown, 'f', 2);
+  p->sInfoUnknown = QString::number(p->m_track.m_raceInfo.dUnknown, 'f', 2);
 
   RevertInfo();
 }

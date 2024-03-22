@@ -107,9 +107,9 @@ bool CTrack::LoadTrack(const QString &sFilename)
             currChunk.iLeftShoulderHeight = slLine[4].toInt();
             currChunk.iRightShoulderHeight = slLine[5].toInt();
             currChunk.iLength = slLine[6].toInt();
-            currChunk.fYaw = slLine[7].toFloat();
-            currChunk.fPitch = slLine[8].toFloat();
-            currChunk.fRoll = slLine[9].toFloat();
+            currChunk.dYaw = slLine[7].toDouble();
+            currChunk.dPitch = slLine[8].toDouble();
+            currChunk.dRoll = slLine[9].toDouble();
             currChunk.iAILine1 = slLine[10].toInt();
             currChunk.iAILine2 = slLine[11].toInt();
             currChunk.iAILine3 = slLine[12].toInt();
@@ -148,9 +148,9 @@ bool CTrack::LoadTrack(const QString &sFilename)
           currChunk.iSignType = slLine[12].toInt();
           currChunk.iUnk19 = slLine[13].toInt();
           currChunk.iUnk20 = slLine[14].toInt();
-          currChunk.fUnk1 = slLine[15].toFloat();
-          currChunk.fUnk2 = slLine[16].toFloat();
-          currChunk.fUnk3 = slLine[17].toFloat();
+          currChunk.dUnk1 = slLine[15].toDouble();
+          currChunk.dUnk2 = slLine[16].toDouble();
+          currChunk.dUnk3 = slLine[17].toDouble();
           //inc chunk index
           ++iChunkLine;
         } else if (iChunkLine == 2) {
@@ -286,9 +286,9 @@ bool CTrack::LoadTrack(const QString &sFilename)
         break;
       case MAP:
         if (slLine.count() == MAP_COUNT) {
-          m_raceInfo.fTrackMapSize = slLine[0].toFloat();
+          m_raceInfo.dTrackMapSize = slLine[0].toDouble();
           m_raceInfo.iTrackMapFidelity = slLine[1].toInt();
-          m_raceInfo.fUnknown = slLine[2].toFloat();
+          m_raceInfo.dUnknown = slLine[2].toDouble();
         }
         break;
     }
@@ -398,9 +398,9 @@ bool CTrack::SaveTrack(const QString &sFilename)
        && m_raceInfo.iMediumLaps == 0
        && m_raceInfo.iEasyLaps == 0
        && m_raceInfo.iGirlieLaps == 0
-       && m_raceInfo.fTrackMapSize == 0
+       && m_raceInfo.dTrackMapSize == 0
        && m_raceInfo.iTrackMapFidelity == 0
-       && m_raceInfo.fUnknown == 0)) {
+       && m_raceInfo.dUnknown == 0)) {
       stream << QString::number(m_raceInfo.iTrackNumber) << Qt::endl;
       memset(szBuf, 0, sizeof(szBuf));
       snprintf(szBuf, sizeof(szBuf), "%4d %4d %4d %4d %4d %4d",
@@ -408,8 +408,8 @@ bool CTrack::SaveTrack(const QString &sFilename)
                m_raceInfo.iMediumLaps, m_raceInfo.iEasyLaps, m_raceInfo.iGirlieLaps);
       stream << szBuf << Qt::endl;
       memset(szBuf, 0, sizeof(szBuf));
-      snprintf(szBuf, sizeof(szBuf), "%.2f %4d %.2f",
-               m_raceInfo.fTrackMapSize, m_raceInfo.iTrackMapFidelity, m_raceInfo.fUnknown);
+      snprintf(szBuf, sizeof(szBuf), "%.2lf %4d %.2lf",
+               m_raceInfo.dTrackMapSize, m_raceInfo.iTrackMapFidelity, m_raceInfo.dUnknown);
       stream << szBuf << Qt::endl << Qt::endl;
     }
 
@@ -510,13 +510,13 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     if (sLength.isEmpty()) sLength = sVal;
     else if (sLength.compare(sVal) != 0) sLength = MIXED_DATA;
 
-    sVal = QString::number(m_chunkAy[i].fYaw, 'f', 5);
+    sVal = QString::number(m_chunkAy[i].dYaw, 'f', 5);
     if (sYaw.isEmpty()) sYaw = sVal;
     else if (sYaw.compare(sVal) != 0) sYaw = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].fPitch, 'f', 5);
+    sVal = QString::number(m_chunkAy[i].dPitch, 'f', 5);
     if (sPitch.isEmpty()) sPitch = sVal;
     else if (sPitch.compare(sVal) != 0) sPitch = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].fRoll, 'f', 5);
+    sVal = QString::number(m_chunkAy[i].dRoll, 'f', 5);
     if (sRoll.isEmpty()) sRoll = sVal;
     else if (sRoll.compare(sVal) != 0) sRoll = MIXED_DATA;
 
@@ -606,13 +606,13 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     if (sUnk20.isEmpty()) sUnk20 = sVal;
     else if (sUnk20.compare(sVal) != 0) sUnk20 = MIXED_DATA;
 
-    sVal = QString::number(m_chunkAy[i].fUnk1, 'f', 1);
+    sVal = QString::number(m_chunkAy[i].dUnk1, 'f', 1);
     if (sfUnk1.isEmpty()) sfUnk1 = sVal;
     else if (sfUnk1.compare(sVal) != 0) sfUnk1 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].fUnk2, 'f', 1);
+    sVal = QString::number(m_chunkAy[i].dUnk2, 'f', 1);
     if (sfUnk2.isEmpty()) sfUnk2 = sVal;
     else if (sfUnk2.compare(sVal) != 0) sfUnk2 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].fUnk3, 'f', 1);
+    sVal = QString::number(m_chunkAy[i].dUnk3, 'f', 1);
     if (sfUnk3.isEmpty()) sfUnk3 = sVal;
     else if (sfUnk3.compare(sVal) != 0) sfUnk3 = MIXED_DATA;
  
@@ -774,9 +774,9 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex
     if (!sLShoulderHeight.isEmpty()) m_chunkAy[i].iLeftShoulderHeight = sLShoulderHeight.toInt();
     if (!sRShoulderHeight.isEmpty()) m_chunkAy[i].iRightShoulderHeight = sRShoulderHeight.toInt();
     if (!sLength.isEmpty()) m_chunkAy[i].iLength = sLength.toInt();
-    if (!sYaw.isEmpty()) m_chunkAy[i].fYaw = sYaw.toFloat();
-    if (!sPitch.isEmpty()) m_chunkAy[i].fPitch = sPitch.toFloat();
-    if (!sRoll.isEmpty()) m_chunkAy[i].fRoll = sRoll.toFloat();
+    if (!sYaw.isEmpty()) m_chunkAy[i].dYaw = sYaw.toDouble();
+    if (!sPitch.isEmpty()) m_chunkAy[i].dPitch = sPitch.toDouble();
+    if (!sRoll.isEmpty()) m_chunkAy[i].dRoll = sRoll.toDouble();
     if (!sAILine1.isEmpty()) m_chunkAy[i].iAILine1 = sAILine1.toInt();
     if (!sAILine2.isEmpty()) m_chunkAy[i].iAILine2 = sAILine2.toInt();
     if (!sAILine3.isEmpty()) m_chunkAy[i].iAILine3 = sAILine3.toInt();
@@ -804,9 +804,9 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex
     if (!sSignType.isEmpty()) m_chunkAy[i].iSignType = sSignType.toInt();
     if (!sUnk19.isEmpty()) m_chunkAy[i].iUnk19 = sUnk19.toInt();
     if (!sUnk20.isEmpty()) m_chunkAy[i].iUnk20 = sUnk20.toInt();
-    if (!sfUnk1.isEmpty()) m_chunkAy[i].fUnk1 = sfUnk1.toFloat();
-    if (!sfUnk2.isEmpty()) m_chunkAy[i].fUnk2 = sfUnk2.toFloat();
-    if (!sfUnk3.isEmpty()) m_chunkAy[i].fUnk3 = sfUnk3.toFloat();
+    if (!sfUnk1.isEmpty()) m_chunkAy[i].dUnk1 = sfUnk1.toDouble();
+    if (!sfUnk2.isEmpty()) m_chunkAy[i].dUnk2 = sfUnk2.toDouble();
+    if (!sfUnk3.isEmpty()) m_chunkAy[i].dUnk3 = sfUnk3.toDouble();
     if (!sLOuterUpperExtraWallAngle.isEmpty()) m_chunkAy[i].iLeftOuterUpperExtraWallAngle = sLOuterUpperExtraWallAngle.toInt();
     if (!sLOuterLowerExtraWallAngle.isEmpty()) m_chunkAy[i].iLeftOuterLowerExtraWallAngle = sLOuterLowerExtraWallAngle.toInt();
     if (!sUnk23.isEmpty()) m_chunkAy[i].iUnk23 = sUnk23.toInt();
@@ -885,9 +885,9 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount
     newChunk.iLeftShoulderHeight = sLShoulderHeight.toInt();
     newChunk.iRightShoulderHeight = sRShoulderHeight.toInt();
     newChunk.iLength = sLength.toInt();
-    newChunk.fYaw = sYaw.toFloat();
-    newChunk.fPitch = sPitch.toFloat();
-    newChunk.fRoll = sRoll.toFloat();
+    newChunk.dYaw = sYaw.toDouble();
+    newChunk.dPitch = sPitch.toDouble();
+    newChunk.dRoll = sRoll.toDouble();
     newChunk.iAILine1 = sAILine1.toInt();
     newChunk.iAILine2 = sAILine2.toInt();
     newChunk.iAILine3 = sAILine3.toInt();
@@ -915,9 +915,9 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount
     newChunk.iSignType = sSignType.toInt();
     newChunk.iUnk19 = sUnk19.toInt();
     newChunk.iUnk20 = sUnk20.toInt();
-    newChunk.fUnk1 = sfUnk1.toFloat();
-    newChunk.fUnk2 = sfUnk2.toFloat();
-    newChunk.fUnk3 = sfUnk3.toFloat();
+    newChunk.dUnk1 = sfUnk1.toDouble();
+    newChunk.dUnk2 = sfUnk2.toDouble();
+    newChunk.dUnk3 = sfUnk3.toDouble();
     newChunk.iLeftOuterUpperExtraWallAngle = sLOuterUpperExtraWallAngle.toInt();
     newChunk.iLeftOuterLowerExtraWallAngle = sLOuterLowerExtraWallAngle.toInt();
     newChunk.iUnk23 = sUnk23.toInt();
@@ -983,8 +983,8 @@ void CTrack::GenerateChunkString(tGeometryChunk &chunk)
 {
   char szGenerate[1024];
   snprintf(szGenerate, sizeof(szGenerate),
-           " %4d %6d %6d %6d %6d %6d %6d %11.5f %11.5f %11.5f %5d %5d %5d %5d %3d %3d %3d %4d %5d %3d %3d %3d\n" //line 1
-           "%6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %4d %6d %6d %6.1f %6.1f %6.1f\n"   //line 2
+           " %4d %6d %6d %6d %6d %6d %6d %11.5lf %11.5lf %11.5lf %5d %5d %5d %5d %3d %3d %3d %4d %5d %3d %3d %3d\n" //line 1
+           "%6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %4d %6d %6d %6.1lf %6.1lf %6.1lf\n"   //line 2
            " %4d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d"                             //line 3 TODO: first val does not have space if negative
            " %3d %3d %3d %d %d %d %d %d %d %d %d %d %d %d %3d %3d %3d\n"       //line 3 continued
            , chunk.iLeftShoulderWidth
@@ -994,9 +994,9 @@ void CTrack::GenerateChunkString(tGeometryChunk &chunk)
            , chunk.iLeftShoulderHeight
            , chunk.iRightShoulderHeight
            , chunk.iLength
-           , chunk.fYaw
-           , chunk.fPitch
-           , chunk.fRoll
+           , chunk.dYaw
+           , chunk.dPitch
+           , chunk.dRoll
            , chunk.iAILine1
            , chunk.iAILine2
            , chunk.iAILine3
@@ -1024,9 +1024,9 @@ void CTrack::GenerateChunkString(tGeometryChunk &chunk)
            , chunk.iSignType
            , chunk.iUnk19
            , chunk.iUnk20
-           , chunk.fUnk1
-           , chunk.fUnk2
-           , chunk.fUnk3
+           , chunk.dUnk1
+           , chunk.dUnk2
+           , chunk.dUnk3
            , chunk.iLeftOuterUpperExtraWallAngle
            , chunk.iLeftOuterLowerExtraWallAngle
            , chunk.iUnk23

@@ -39,9 +39,9 @@ bool UnmangleFile(const uint8_t *pSource, int iSourceLen, uint8_t *pDestination,
       iInputPos++;
     } else if (iValue <= 0x5F) // 0x50 to 0x5F: generate ascending words based on last 2 words
     {
-      short sDelta = (short)(pDestination[iOutputPos - 2]) - (short)(pDestination[iOutputPos - 4]);
+      short sDelta = *(short*)(pDestination + iOutputPos - 2) - *(short*)(pDestination + iOutputPos - 4);
       for (int i = 0; i < ((iValue & 0x0F) + 2); i++) {
-        short sNewShort = (short)(pDestination[iOutputPos - 2] + sDelta);
+        short sNewShort = (*(short *)(pDestination + iOutputPos - 2)) + sDelta;
         pDestination[iOutputPos] = (uint8_t)(sNewShort & 0xFF);
         pDestination[iOutputPos + 1] = (uint8_t)((sNewShort >> 8) & 0xFF);
         iOutputPos += 2;

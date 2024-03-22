@@ -3,16 +3,6 @@
 #include "Texture.h"
 #include "TilePicker.h"
 //-------------------------------------------------------------------------------------------------
-#define SURFACE_FLAG_PIT           0x01000000
-#define SURFACE_FLAG_WALL          0x00200000
-#define SURFACE_FLAG_TRANSPARENT   0x00100000
-#define SURFACE_FLAG_NON_MAGNETIC  0x00080000
-#define SURFACE_FLAG_FLIP_VERT     0x00020000
-#define SURFACE_FLAG_NON_SOLID     0x00010000
-#define SURFACE_FLAG_TEXTURE_PAIR  0x00008000
-#define SURFACE_FLAG_FLIP_HORIZ    0x00004000
-#define SURFACE_FLAG_APPLY_TEXTURE 0x00000100
-#define SURFACE_TEXTURE_INDEX      0x000000FE
 
 CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, int iValue)
   : QDialog(pParent)

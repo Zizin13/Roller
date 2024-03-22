@@ -194,9 +194,9 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>0</y>
+              <y>-122</y>
               <width>449</width>
-              <height>1482</height>
+              <height>1611</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -489,6 +489,40 @@
              </item>
              <item>
               <layout class="QGridLayout" name="gridLayout_2">
+               <item row="15" column="1">
+                <widget class="QLabel" name="label_44">
+                 <property name="text">
+                  <string>unknown float 2</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="3">
+                <widget class="QLabel" name="label_32">
+                 <property name="text">
+                  <string>unknown 20</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="1">
+                <widget class="QLineEdit" name="leUnk14"/>
+               </item>
+               <item row="11" column="0">
+                <widget class="QLineEdit" name="leEnvironmentFloorType"/>
+               </item>
+               <item row="16" column="1">
+                <widget class="QLineEdit" name="leFloatUnk2"/>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLineEdit" name="leLWallType"/>
+               </item>
+               <item row="7" column="0">
+                <widget class="QLabel" name="label_48">
+                 <property name="text">
+                  <string>L outer extra
+wall type</string>
+                 </property>
+                </widget>
+               </item>
                <item row="3" column="0">
                 <widget class="QLabel" name="label_35">
                  <property name="text">
@@ -496,51 +530,18 @@
                  </property>
                 </widget>
                </item>
-               <item row="4" column="1">
-                <widget class="QLineEdit" name="leRWallType"/>
+               <item row="16" column="0">
+                <widget class="QLineEdit" name="leFloatUnk1"/>
                </item>
-               <item row="3" column="2">
-                <widget class="QLabel" name="label_46">
+               <item row="7" column="3">
+                <widget class="QLabel" name="label_33">
                  <property name="text">
-                  <string>Roof type</string>
+                  <string>unknown 16</string>
                  </property>
                 </widget>
                </item>
-               <item row="8" column="1">
-                <widget class="QLineEdit" name="leUnk14"/>
-               </item>
-               <item row="11" column="1">
-                <widget class="QLineEdit" name="leSignType">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="toolTip">
-                  <string>sign type setting below</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="lblLeftSurfaceType">
-                 <property name="toolTip">
-                  <string>524703 590082 590082 appears to define a moving ramp or at least a surface the car can fly off of vertically</string>
-                 </property>
-                 <property name="text">
-                  <string>Left Surface Type</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="2">
-                <widget class="QLineEdit" name="leRoofType"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="lblCenterSurfaceType">
-                 <property name="toolTip">
-                  <string>524703 590082 590082 appears to define a moving ramp or at least a surface the car can fly off of vertically</string>
-                 </property>
-                 <property name="text">
-                  <string>Center Surface Type</string>
-                 </property>
-                </widget>
+               <item row="16" column="2">
+                <widget class="QLineEdit" name="leFloatUnk3"/>
                </item>
                <item row="2" column="0">
                 <widget class="QLabel" name="lblRightSurfaceType">
@@ -552,8 +553,12 @@
                  </property>
                 </widget>
                </item>
-               <item row="4" column="0">
-                <widget class="QLineEdit" name="leLWallType"/>
+               <item row="7" column="1">
+                <widget class="QLabel" name="label_45">
+                 <property name="text">
+                  <string>unknown 14</string>
+                 </property>
+                </widget>
                </item>
                <item row="3" column="1">
                 <widget class="QLabel" name="label_47">
@@ -562,21 +567,29 @@
                  </property>
                 </widget>
                </item>
-               <item row="16" column="1">
-                <widget class="QLineEdit" name="leFloatUnk2"/>
+               <item row="8" column="0">
+                <widget class="QLineEdit" name="leLOuterExtraWallType"/>
                </item>
-               <item row="7" column="0">
-                <widget class="QLabel" name="label_48">
+               <item row="8" column="3">
+                <widget class="QLineEdit" name="leUnk16"/>
+               </item>
+               <item row="4" column="3">
+                <widget class="QLineEdit" name="leUnk12"/>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="lblLeftSurfaceType">
+                 <property name="toolTip">
+                  <string>524703 590082 590082 appears to define a moving ramp or at least a surface the car can fly off of vertically</string>
+                 </property>
                  <property name="text">
-                  <string>L outer extra
-wall type</string>
+                  <string>Left Surface Type</string>
                  </property>
                 </widget>
                </item>
-               <item row="15" column="0">
-                <widget class="QLabel" name="label_34">
+               <item row="3" column="2">
+                <widget class="QLabel" name="label_46">
                  <property name="text">
-                  <string>unknown float 1</string>
+                  <string>Roof type</string>
                  </property>
                 </widget>
                </item>
@@ -587,8 +600,69 @@ wall type</string>
                  </property>
                 </widget>
                </item>
-               <item row="4" column="3">
-                <widget class="QLineEdit" name="leUnk12"/>
+               <item row="8" column="2">
+                <widget class="QLineEdit" name="leROuterExtraWallType"/>
+               </item>
+               <item row="10" column="2">
+                <widget class="QLabel" name="label_49">
+                 <property name="text">
+                  <string>unknown 19</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="1">
+                <widget class="QLabel" name="label_41">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="toolTip">
+                  <string>sign type setting below</string>
+                 </property>
+                 <property name="text">
+                  <string>Sign type</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="1">
+                <widget class="QLineEdit" name="leSignType">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="toolTip">
+                  <string>sign type setting below</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="15" column="2">
+                <widget class="QLabel" name="label_37">
+                 <property name="text">
+                  <string>unknown float 3</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="10" column="0">
+                <widget class="QLabel" name="label_36">
+                 <property name="text">
+                  <string>Environment floor
+type</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="3">
+                <widget class="QLineEdit" name="leUnk20"/>
+               </item>
+               <item row="4" column="2">
+                <widget class="QLineEdit" name="leRoofType"/>
+               </item>
+               <item row="15" column="0">
+                <widget class="QLabel" name="label_34">
+                 <property name="text">
+                  <string>unknown float 1</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QLineEdit" name="leRWallType"/>
                </item>
                <item row="7" column="2">
                 <widget class="QLabel" name="label_42">
@@ -598,23 +672,37 @@ wall type</string>
                  </property>
                 </widget>
                </item>
-               <item row="7" column="3">
-                <widget class="QLabel" name="label_33">
+               <item row="1" column="0">
+                <widget class="QLabel" name="lblCenterSurfaceType">
+                 <property name="toolTip">
+                  <string>524703 590082 590082 appears to define a moving ramp or at least a surface the car can fly off of vertically</string>
+                 </property>
                  <property name="text">
-                  <string>unknown 16</string>
+                  <string>Center Surface Type</string>
                  </property>
                 </widget>
                </item>
-               <item row="8" column="0">
-                <widget class="QLineEdit" name="leLOuterExtraWallType"/>
+               <item row="11" column="2">
+                <widget class="QLineEdit" name="leUnk19"/>
                </item>
-               <item row="8" column="2">
-                <widget class="QLineEdit" name="leROuterExtraWallType"/>
+               <item row="0" column="1">
+                <widget class="QLineEdit" name="leLeftSurfaceType">
+                 <property name="toolTip">
+                  <string>524703 590082 590082 appears to define a moving ramp or at least a surface the car can fly off of vertically</string>
+                 </property>
+                </widget>
                </item>
-               <item row="7" column="1">
-                <widget class="QLabel" name="label_45">
-                 <property name="text">
-                  <string>unknown 14</string>
+               <item row="1" column="1">
+                <widget class="QLineEdit" name="leCenterSurfaceType">
+                 <property name="toolTip">
+                  <string>524703 590082 590082 appears to define a moving ramp or at least a surface the car can fly off of vertically</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLineEdit" name="leRightSurfaceType">
+                 <property name="toolTip">
+                  <string>524703 590082 590082 appears to define a moving ramp or at least a surface the car can fly off of vertically</string>
                  </property>
                 </widget>
                </item>
@@ -639,93 +727,131 @@ wall type</string>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1" colspan="2">
-                <widget class="QLineEdit" name="leLeftSurfaceType">
-                 <property name="toolTip">
-                  <string>524703 590082 590082 appears to define a moving ramp or at least a surface the car can fly off of vertically</string>
-                 </property>
-                </widget>
+               <item row="0" column="2">
+                <layout class="QHBoxLayout" name="horizontalLayout">
+                 <item>
+                  <widget class="QLabel" name="lblLSurfaceTex1">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>64</width>
+                     <height>64</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblLSurfaceTex2">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>64</width>
+                     <height>64</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
-               <item row="1" column="1" colspan="2">
-                <widget class="QLineEdit" name="leCenterSurfaceType">
-                 <property name="toolTip">
-                  <string>524703 590082 590082 appears to define a moving ramp or at least a surface the car can fly off of vertically</string>
-                 </property>
-                </widget>
+               <item row="1" column="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_8">
+                 <item>
+                  <widget class="QLabel" name="lblCSurfaceTex1">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>64</width>
+                     <height>64</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblCSurfaceTex2">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>64</width>
+                     <height>64</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
-               <item row="2" column="1" colspan="2">
-                <widget class="QLineEdit" name="leRightSurfaceType">
-                 <property name="toolTip">
-                  <string>524703 590082 590082 appears to define a moving ramp or at least a surface the car can fly off of vertically</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="10" column="0">
-                <widget class="QLabel" name="label_36">
-                 <property name="text">
-                  <string>Environment floor
-type</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="11" column="0">
-                <widget class="QLineEdit" name="leEnvironmentFloorType"/>
-               </item>
-               <item row="10" column="1">
-                <widget class="QLabel" name="label_41">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="toolTip">
-                  <string>sign type setting below</string>
-                 </property>
-                 <property name="text">
-                  <string>Sign type</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="10" column="2">
-                <widget class="QLabel" name="label_49">
-                 <property name="text">
-                  <string>unknown 19</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="10" column="3">
-                <widget class="QLabel" name="label_32">
-                 <property name="text">
-                  <string>unknown 20</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="11" column="2">
-                <widget class="QLineEdit" name="leUnk19"/>
-               </item>
-               <item row="11" column="3">
-                <widget class="QLineEdit" name="leUnk20"/>
-               </item>
-               <item row="8" column="3">
-                <widget class="QLineEdit" name="leUnk16"/>
-               </item>
-               <item row="15" column="2">
-                <widget class="QLabel" name="label_37">
-                 <property name="text">
-                  <string>unknown float 3</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="16" column="0">
-                <widget class="QLineEdit" name="leFloatUnk1"/>
-               </item>
-               <item row="15" column="1">
-                <widget class="QLabel" name="label_44">
-                 <property name="text">
-                  <string>unknown float 2</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="16" column="2">
-                <widget class="QLineEdit" name="leFloatUnk3"/>
+               <item row="2" column="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_9">
+                 <item>
+                  <widget class="QLabel" name="lblRSurfaceTex1">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>64</width>
+                     <height>64</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblRSurfaceTex2">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>64</width>
+                     <height>64</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
               </layout>
              </item>

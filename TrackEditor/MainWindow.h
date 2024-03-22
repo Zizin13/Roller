@@ -69,6 +69,7 @@ private:
   void UpdateSignEditMode(bool &bEdited, bool &bMixedData, QPushButton *pPushButton, QWidget *pWidget, const QString &sValue);
   void RevertGeometry();
   void RevertInfo();
+  void UpdateTextures();
 
   CMainWindowPrivate *p;
   bool m_bUnsavedChanges;

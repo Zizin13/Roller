@@ -635,6 +635,7 @@ void CMainWindow::OnEditLSurface()
   }
 
   UpdateGeometryEditMode();
+  UpdateTextures();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -650,6 +651,7 @@ void CMainWindow::OnEditCSurface()
   }
 
   UpdateGeometryEditMode();
+  UpdateTextures();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -665,6 +667,7 @@ void CMainWindow::OnEditRSurface()
   }
 
   UpdateGeometryEditMode();
+  UpdateTextures();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1446,6 +1449,7 @@ void CMainWindow::RevertGeometry()
   bMixedData |= UpdateLEWithSelectionValue(leStuntExpandContract, p->sStuntExpandsContracts);
   bMixedData |= UpdateLEWithSelectionValue(leStuntBulge, p->sStuntBulge);
 
+  UpdateTextures();
   pbInsertAfter->setEnabled(!bMixedData);
   pbInsertBefore->setEnabled(!bMixedData);
   pbApply->setEnabled(false);
@@ -1472,6 +1476,58 @@ void CMainWindow::RevertInfo()
 
   pbApplyInfo->setEnabled(false);
   pbRevertInfo->setEnabled(false);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::UpdateTextures()
+{
+  //textures
+  QPixmap pixmap;
+  int iLSurfaceType = leLeftSurfaceType->text().toInt();
+  int iIndex = iLSurfaceType & SURFACE_TEXTURE_INDEX;
+  iIndex = iIndex >> 1;
+  if (iIndex < p->m_tex.m_tileAy.size()) {
+    pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex]);
+    lblLSurfaceTex1->setPixmap(pixmap);
+
+    if (iLSurfaceType & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
+      pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex - 1]);
+      lblLSurfaceTex2->setPixmap(pixmap);
+    } else {
+      lblLSurfaceTex2->setPixmap(QPixmap());
+    }
+  }
+
+  int iCSurfaceType = leCenterSurfaceType->text().toInt();
+  iIndex = iCSurfaceType & SURFACE_TEXTURE_INDEX;
+  iIndex = iIndex >> 1;
+  if (iIndex < p->m_tex.m_tileAy.size()) {
+    pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex]);
+    lblCSurfaceTex1->setPixmap(pixmap);
+
+    if (iCSurfaceType & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
+      pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex - 1]);
+      lblCSurfaceTex2->setPixmap(pixmap);
+    } else {
+      lblCSurfaceTex2->setPixmap(QPixmap());
+    }
+  }
+
+  int iRSurfaceType = leRightSurfaceType->text().toInt();
+  iIndex = iRSurfaceType & SURFACE_TEXTURE_INDEX;
+  iIndex = iIndex >> 1;
+  if (iIndex < p->m_tex.m_tileAy.size()) {
+    pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex]);
+    lblRSurfaceTex1->setPixmap(pixmap);
+
+    if (iRSurfaceType & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
+      pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex - 1]);
+      lblRSurfaceTex2->setPixmap(pixmap);
+    } else {
+      lblRSurfaceTex2->setPixmap(QPixmap());
+    }
+  }
 }
 
 //-------------------------------------------------------------------------------------------------

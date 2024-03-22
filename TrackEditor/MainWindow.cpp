@@ -158,6 +158,12 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(pbEditLSurface, &QPushButton::clicked, this, &CMainWindow::OnEditLSurface);
   connect(pbEditCSurface, &QPushButton::clicked, this, &CMainWindow::OnEditCSurface);
   connect(pbEditRSurface, &QPushButton::clicked, this, &CMainWindow::OnEditRSurface);
+  connect(pbEditLWall, &QPushButton::clicked, this, &CMainWindow::OnEditLWall);
+  connect(pbEditRWall, &QPushButton::clicked, this, &CMainWindow::OnEditRWall);
+  connect(pbEditRoof, &QPushButton::clicked, this, &CMainWindow::OnEditRoof);
+  connect(pbEditLOuterExtraWall, &QPushButton::clicked, this, &CMainWindow::OnEditLOuterExtraWall);
+  connect(pbEditROuterExtraWall, &QPushButton::clicked, this, &CMainWindow::OnEditROuterExtraWall);
+  connect(pbEditEnvirFloor, &QPushButton::clicked, this, &CMainWindow::OnEditEnvirFloor);
 
   connect(leLShoulderWidth, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leLLaneWidth, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
@@ -184,15 +190,15 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leLeftSurfaceType, &QLineEdit::textChanged, this, &CMainWindow::OnLSurfaceLEChanged);
   connect(leCenterSurfaceType, &QLineEdit::textChanged, this, &CMainWindow::OnCSurfaceLEChanged);
   connect(leRightSurfaceType, &QLineEdit::textChanged, this, &CMainWindow::OnRSurfaceLEChanged);
-  connect(leLWallType, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leRWallType, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leRoofType, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leLWallType, &QLineEdit::textChanged, this, &CMainWindow::OnLWallLEChanged);
+  connect(leRWallType, &QLineEdit::textChanged, this, &CMainWindow::OnRWallLEChanged);
+  connect(leRoofType, &QLineEdit::textChanged, this, &CMainWindow::OnRoofLEChanged);
   connect(leUnk12, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leLOuterExtraWallType, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leLOuterExtraWallType, &QLineEdit::textChanged, this, &CMainWindow::OnLOuterExtraWallLEChanged);
   connect(leUnk14, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leROuterExtraWallType, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leROuterExtraWallType, &QLineEdit::textChanged, this, &CMainWindow::OnROuterExtraWallLEChanged);
   connect(leUnk16, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leEnvironmentFloorType, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leEnvironmentFloorType, &QLineEdit::textChanged, this, &CMainWindow::OnEnvirFloorChanged);
   connect(leSignType, &QLineEdit::textChanged, this, &CMainWindow::OnSignTypeLEChanged);
   connect(cbSignType, SIGNAL(currentIndexChanged(int)), this, SLOT(OnSignTypeChanged(int)));
   connect(leUnk19, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
@@ -637,7 +643,7 @@ void CMainWindow::OnEditLSurface()
   }
 
   UpdateGeometryEditMode();
-  UpdateTextures();
+  UpdateTextures(leLeftSurfaceType, lblLSurfaceTex1, lblLSurfaceTex2);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -653,7 +659,7 @@ void CMainWindow::OnEditCSurface()
   }
 
   UpdateGeometryEditMode();
-  UpdateTextures();
+  UpdateTextures(leCenterSurfaceType, lblCSurfaceTex1, lblCSurfaceTex2);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -669,7 +675,103 @@ void CMainWindow::OnEditRSurface()
   }
 
   UpdateGeometryEditMode();
-  UpdateTextures();
+  UpdateTextures(leRightSurfaceType, lblRSurfaceTex1, lblRSurfaceTex2);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnEditLWall()
+{
+  int iValue = leLWallType->text().toInt();
+
+  CEditSurfaceDialog dlg(this, &p->m_tex, iValue);
+  if (dlg.exec()) {
+    iValue = dlg.GetValue();
+    leLWallType->setText(QString::number(iValue));
+  }
+
+  UpdateGeometryEditMode();
+  UpdateTextures(leLWallType, lblLWallTex1, lblLWallTex2);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnEditRWall()
+{
+  int iValue = leRWallType->text().toInt();
+
+  CEditSurfaceDialog dlg(this, &p->m_tex, iValue);
+  if (dlg.exec()) {
+    iValue = dlg.GetValue();
+    leRWallType->setText(QString::number(iValue));
+  }
+
+  UpdateGeometryEditMode();
+  UpdateTextures(leRWallType, lblRWallTex1, lblRWallTex2);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnEditRoof()
+{
+  int iValue = leRoofType->text().toInt();
+
+  CEditSurfaceDialog dlg(this, &p->m_tex, iValue);
+  if (dlg.exec()) {
+    iValue = dlg.GetValue();
+    leRoofType->setText(QString::number(iValue));
+  }
+
+  UpdateGeometryEditMode();
+  UpdateTextures(leRoofType, lblRoofTex1, lblRoofTex2);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnEditLOuterExtraWall()
+{
+  int iValue = leLOuterExtraWallType->text().toInt();
+
+  CEditSurfaceDialog dlg(this, &p->m_tex, iValue);
+  if (dlg.exec()) {
+    iValue = dlg.GetValue();
+    leLOuterExtraWallType->setText(QString::number(iValue));
+  }
+
+  UpdateGeometryEditMode();
+  UpdateTextures(leLOuterExtraWallType, lblLOuterExtraWallTex1, lblLOuterExtraWallTex2);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnEditROuterExtraWall()
+{
+  int iValue = leROuterExtraWallType->text().toInt();
+
+  CEditSurfaceDialog dlg(this, &p->m_tex, iValue);
+  if (dlg.exec()) {
+    iValue = dlg.GetValue();
+    leROuterExtraWallType->setText(QString::number(iValue));
+  }
+
+  UpdateGeometryEditMode();
+  UpdateTextures(leROuterExtraWallType, lblROuterExtraWallTex1, lblROuterExtraWallTex2);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnEditEnvirFloor()
+{
+  int iValue = leEnvironmentFloorType->text().toInt();
+
+  CEditSurfaceDialog dlg(this, &p->m_tex, iValue);
+  if (dlg.exec()) {
+    iValue = dlg.GetValue();
+    leROuterExtraWallType->setText(QString::number(iValue));
+  }
+
+  UpdateGeometryEditMode();
+  UpdateTextures(leEnvironmentFloorType, lblEnvirFloorTex1, lblEnvirFloorTex2);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -975,7 +1077,7 @@ void CMainWindow::OnBackLEChanged()
 
 void CMainWindow::OnLSurfaceLEChanged()
 {
-  UpdateTextures();
+  UpdateTextures(leLeftSurfaceType, lblLSurfaceTex1, lblLSurfaceTex2);
   UpdateGeometryEditMode();
 }
 
@@ -983,7 +1085,7 @@ void CMainWindow::OnLSurfaceLEChanged()
 
 void CMainWindow::OnCSurfaceLEChanged()
 {
-  UpdateTextures();
+  UpdateTextures(leCenterSurfaceType, lblCSurfaceTex1, lblCSurfaceTex2);
   UpdateGeometryEditMode();
 }
 
@@ -991,7 +1093,55 @@ void CMainWindow::OnCSurfaceLEChanged()
 
 void CMainWindow::OnRSurfaceLEChanged()
 {
-  UpdateTextures();
+  UpdateTextures(leRightSurfaceType, lblRSurfaceTex1, lblRSurfaceTex2);
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnLWallLEChanged()
+{
+  UpdateTextures(leLWallType, lblLWallTex1, lblLWallTex2);
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnRWallLEChanged()
+{
+  UpdateTextures(leRWallType, lblRWallTex1, lblRWallTex2);
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnRoofLEChanged()
+{
+  UpdateTextures(leRoofType, lblRoofTex1, lblRoofTex2);
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnLOuterExtraWallLEChanged()
+{
+  UpdateTextures(leLOuterExtraWallType, lblLOuterExtraWallTex1, lblLOuterExtraWallTex2);
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnROuterExtraWallLEChanged()
+{
+  UpdateTextures(leROuterExtraWallType, lblROuterExtraWallTex1, lblROuterExtraWallTex2);
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnEnvirFloorChanged()
+{
+  UpdateTextures(leEnvironmentFloorType, lblEnvirFloorTex1, lblEnvirFloorTex2);
   UpdateGeometryEditMode();
 }
 
@@ -1497,7 +1647,16 @@ void CMainWindow::RevertGeometry()
   bMixedData |= UpdateLEWithSelectionValue(leStuntExpandContract, p->sStuntExpandsContracts);
   bMixedData |= UpdateLEWithSelectionValue(leStuntBulge, p->sStuntBulge);
 
-  UpdateTextures();
+  UpdateTextures(leLeftSurfaceType, lblLSurfaceTex1, lblLSurfaceTex2);
+  UpdateTextures(leCenterSurfaceType, lblCSurfaceTex1, lblCSurfaceTex2);
+  UpdateTextures(leRightSurfaceType, lblRSurfaceTex1, lblRSurfaceTex2);
+  UpdateTextures(leLWallType, lblLWallTex1, lblLWallTex2);
+  UpdateTextures(leRWallType, lblRWallTex1, lblRWallTex2);
+  UpdateTextures(leRoofType, lblRWallTex1, lblRWallTex2);
+  UpdateTextures(leLOuterExtraWallType, lblLOuterExtraWallTex1, lblLOuterExtraWallTex2);
+  UpdateTextures(leROuterExtraWallType, lblROuterExtraWallTex1, lblROuterExtraWallTex2);
+  UpdateTextures(leEnvironmentFloorType, lblEnvirFloorTex1, lblEnvirFloorTex2);
+
   pbInsertAfter->setEnabled(!bMixedData);
   pbInsertBefore->setEnabled(!bMixedData);
   pbApply->setEnabled(false);
@@ -1528,69 +1687,32 @@ void CMainWindow::RevertInfo()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::UpdateTextures()
+void CMainWindow::UpdateTextures(QLineEdit *pLineEdit, QLabel *pTex1, QLabel *pTex2)
 {
   //textures
   QPixmap pixmap;
   int iIndex;
-  if (!leLeftSurfaceType->text().isEmpty() && leLeftSurfaceType->placeholderText().compare(MIXED_DATA) != 0) {
-    int iLSurfaceType = leLeftSurfaceType->text().toInt();
+  if (pLineEdit->text().compare("-1") == 0) {
+    pTex1->setPixmap(QPixmap());
+    pTex2->setPixmap(QPixmap());
+  } else if (!pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) != 0) {
+    int iLSurfaceType = pLineEdit->text().toInt();
     iIndex = iLSurfaceType & SURFACE_TEXTURE_INDEX;
     iIndex = iIndex >> 1;
     if (iIndex < p->m_tex.m_tileAy.size()) {
       pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex]);
-      lblLSurfaceTex1->setPixmap(pixmap);
+      pTex1->setPixmap(pixmap);
 
       if (iLSurfaceType & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
         pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex - 1]);
-        lblLSurfaceTex2->setPixmap(pixmap);
+        pTex2->setPixmap(pixmap);
       } else {
-        lblLSurfaceTex2->setPixmap(QPixmap());
+        pTex2->setPixmap(QPixmap());
       }
     }
   } else {
-    lblLSurfaceTex1->setPixmap(QPixmap());
-    lblLSurfaceTex2->setPixmap(QPixmap());
-  }
-
-  if (!leCenterSurfaceType->text().isEmpty() && leCenterSurfaceType->placeholderText().compare(MIXED_DATA) != 0) {
-    int iCSurfaceType = leCenterSurfaceType->text().toInt();
-    iIndex = iCSurfaceType & SURFACE_TEXTURE_INDEX;
-    iIndex = iIndex >> 1;
-    if (iIndex < p->m_tex.m_tileAy.size()) {
-      pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex]);
-      lblCSurfaceTex1->setPixmap(pixmap);
-
-      if (iCSurfaceType & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
-        pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex - 1]);
-        lblCSurfaceTex2->setPixmap(pixmap);
-      } else {
-        lblCSurfaceTex2->setPixmap(QPixmap());
-      }
-    }
-  } else {
-    lblCSurfaceTex1->setPixmap(QPixmap());
-    lblCSurfaceTex2->setPixmap(QPixmap());
-  }
-
-  if (!leRightSurfaceType->text().isEmpty() && leRightSurfaceType->placeholderText().compare(MIXED_DATA) != 0) {
-    int iRSurfaceType = leRightSurfaceType->text().toInt();
-    iIndex = iRSurfaceType & SURFACE_TEXTURE_INDEX;
-    iIndex = iIndex >> 1;
-    if (iIndex < p->m_tex.m_tileAy.size()) {
-      pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex]);
-      lblRSurfaceTex1->setPixmap(pixmap);
-
-      if (iRSurfaceType & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
-        pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex - 1]);
-        lblRSurfaceTex2->setPixmap(pixmap);
-      } else {
-        lblRSurfaceTex2->setPixmap(QPixmap());
-      }
-    }
-  } else {
-    lblRSurfaceTex1->setPixmap(QPixmap());
-    lblRSurfaceTex2->setPixmap(QPixmap());
+    pTex1->setPixmap(QPixmap());
+    pTex2->setPixmap(QPixmap());
   }
 }
 

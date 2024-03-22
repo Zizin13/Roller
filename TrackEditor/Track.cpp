@@ -985,7 +985,7 @@ void CTrack::GenerateChunkString(tGeometryChunk &chunk)
   snprintf(szGenerate, sizeof(szGenerate),
            " %4d %6d %6d %6d %6d %6d %6d %11.5f %11.5f %11.5f %5d %5d %5d %5d %3d %3d %3d %4d %5d %3d %3d %3d\n" //line 1
            "%6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %4d %6d %6d %6.1f %6.1f %6.1f\n"   //line 2
-           " %4d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d"                             //line 3
+           " %4d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d"                             //line 3 TODO: first val does not have space if negative
            " %3d %3d %3d %d %d %d %d %d %d %d %d %d %d %d %3d %3d %3d\n"       //line 3 continued
            , chunk.iLeftShoulderWidth
            , chunk.iLeftLaneWidth

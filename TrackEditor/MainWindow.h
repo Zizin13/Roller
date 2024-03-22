@@ -41,6 +41,12 @@ protected slots:
   void OnEditLSurface();
   void OnEditCSurface();
   void OnEditRSurface();
+  void OnEditLWall();
+  void OnEditRWall();
+  void OnEditRoof();
+  void OnEditLOuterExtraWall();
+  void OnEditROuterExtraWall();
+  void OnEditEnvirFloor();
   void UpdateGeometryEditMode();
   void UpdateTexturesEditMode();
   void UpdateInfoEditMode();
@@ -56,6 +62,12 @@ protected slots:
   void OnLSurfaceLEChanged();
   void OnCSurfaceLEChanged();
   void OnRSurfaceLEChanged();
+  void OnLWallLEChanged();
+  void OnRWallLEChanged();
+  void OnRoofLEChanged();
+  void OnLOuterExtraWallLEChanged();
+  void OnROuterExtraWallLEChanged();
+  void OnEnvirFloorChanged();
 
 private:
   void LoadSettings();
@@ -74,7 +86,7 @@ private:
   void UpdateSignEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, QWidget *pWidget, const QString &sValue);
   void RevertGeometry();
   void RevertInfo();
-  void UpdateTextures();
+  void UpdateTextures(QLineEdit *pLineEdit, QLabel *pTex1, QLabel *pTex2);
 
   CMainWindowPrivate *p;
   bool m_bUnsavedChanges;

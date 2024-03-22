@@ -126,7 +126,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   frmTex->hide();
   frmBld->hide();
 
-  cbSignType->addItem(NONE_DATA, -1);
+  cbSignType->addItem("<none>", -1);
   for (int i = 0; i < p->signAySize; ++i) {
     cbSignType->addItem(p->signAy[i], i);
   }
@@ -230,6 +230,8 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leUnk48, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk49, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk50, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leSign, &QLineEdit::textChanged, this, &CMainWindow::OnSignLEChanged);
+  connect(leBack, &QLineEdit::textChanged, this, &CMainWindow::OnBackLEChanged);
   connect(pbSign, &QPushButton::clicked, this, &CMainWindow::OnSignClicked);
   connect(pbBack, &QPushButton::clicked, this, &CMainWindow::OnBackClicked);
   connect(ckApplySign, &QCheckBox::toggled, this, &CMainWindow::OnApplySignToggled);
@@ -747,8 +749,8 @@ void CMainWindow::UpdateGeometryEditMode()
   UpdateLEEditMode(bEditMode, bMixedData, leUnk48, p->sUnk48);
   UpdateLEEditMode(bEditMode, bMixedData, leUnk49, p->sUnk49);
   UpdateLEEditMode(bEditMode, bMixedData, leUnk50, p->sUnk50);
-  UpdateSignEditMode(bEditMode, bMixedData, pbSign, widgetSign, p->sSignTexture);
-  UpdateSignEditMode(bEditMode, bMixedData, pbBack, widgetBack, p->sBackTexture);
+  UpdateSignEditMode(bEditMode, bMixedData, leSign, widgetSign, p->sSignTexture);
+  UpdateSignEditMode(bEditMode, bMixedData, leBack, widgetBack, p->sBackTexture);
   UpdateLEEditMode(bEditMode, bMixedData, leStuntScaleFact, p->sStuntScaleFactor);
   UpdateLEEditMode(bEditMode, bMixedData, leStuntAngle, p->sStuntAngle);
   UpdateLEEditMode(bEditMode, bMixedData, leStuntUnk, p->sStuntUnknown);
@@ -807,30 +809,28 @@ void CMainWindow::UpdateInfoEditMode()
 
 void CMainWindow::OnSignClicked()
 {
-  QString sValue = pbSign->property("value").toString();
-  unsigned short unValue = sValue.toUShort();
-  unsigned short unBldIndex = unValue & 0x00FF;
-  unBldIndex = unBldIndex >> 1;
+  QString sValue = leSign->text();
+  int iValue = sValue.toInt();
+  int iBldIndex = iValue & SURFACE_TEXTURE_INDEX;
+  iBldIndex = iBldIndex >> 1;
 
-  CTilePicker dlg(this, &p->m_bld, unBldIndex, true);
+  CTilePicker dlg(this, &p->m_bld, iBldIndex, true);
   if (dlg.exec()) {
     int iIndex = dlg.GetSelected();
-    if (iIndex < 0) {
-      sValue = NONE_DATA;
-    } else {
-      unBldIndex = (unsigned short)iIndex;
-      unValue = unBldIndex << 1;
+    if (iIndex >= 0) {
+      iBldIndex = iIndex;
+      iValue = iBldIndex << 1;
       if (ckApplySign->isChecked()) {
-        unValue |= 0x0100;
+        iValue |= SURFACE_FLAG_APPLY_TEXTURE;
       } else {
-        unValue &= 0x00FF;
+        iValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
       }
-      sValue = QString::number(unValue);
+      sValue = QString::number(iValue);
     }
   }
 
-  pbSign->setProperty("value", sValue);
-  UpdateSignButtonDisplay(pbSign, ckApplySign, lblSignValue);
+  leSign->setText(sValue);
+  UpdateSignButtonDisplay(pbSign, ckApplySign, leSign);
   UpdateGeometryEditMode();
 }
 
@@ -838,30 +838,28 @@ void CMainWindow::OnSignClicked()
 
 void CMainWindow::OnBackClicked()
 {
-  QString sValue = pbBack->property("value").toString();
-  unsigned short unValue = sValue.toUShort();
-  unsigned short unBldIndex = unValue & 0x00FF;
-  unBldIndex = unBldIndex >> 1;
+  QString sValue = leBack->text();
+  int iValue = sValue.toInt();
+  int iBldIndex = iValue & SURFACE_TEXTURE_INDEX;
+  iBldIndex = iBldIndex >> 1;
 
-  CTilePicker dlg(this, &p->m_bld, unBldIndex, true);
+  CTilePicker dlg(this, &p->m_bld, iBldIndex, true);
   if (dlg.exec()) {
     int iIndex = dlg.GetSelected();
-    if (iIndex < 0) {
-      sValue = NONE_DATA;
-    } else {
-      unBldIndex = (unsigned short)iIndex;
-      unValue = unBldIndex << 1;
+    if (iIndex >= 0) {
+      iBldIndex = iIndex;
+      iValue = iBldIndex << 1;
       if (ckApplyBack->isChecked()) {
-        unValue |= 0x0100;
+        iValue |= SURFACE_FLAG_APPLY_TEXTURE;
       } else {
-        unValue &= 0x00FF;
+        iValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
       }
-      sValue = QString::number(unValue);
     }
+    sValue = QString::number(iValue);
   }
 
-  pbBack->setProperty("value", sValue);
-  UpdateSignButtonDisplay(pbBack, ckApplyBack, lblBackValue);
+  leBack->setText(sValue);
+  UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack);
   UpdateGeometryEditMode();
 }
 
@@ -869,15 +867,15 @@ void CMainWindow::OnBackClicked()
 
 void CMainWindow::OnApplySignToggled(bool bChecked)
 {
-  unsigned short unValue = pbSign->property("value").toString().toUShort();
+  int iValue = leSign->text().toInt();
   if (bChecked) {
-    unValue |= 0x0100;
+    iValue |= SURFACE_FLAG_APPLY_TEXTURE;
   } else {
-    unValue &= 0x00FF;
+    iValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
   }
-  QString sNewValue = QString::number(unValue);
-  pbSign->setProperty("value", sNewValue);
-  UpdateSignButtonDisplay(pbSign, ckApplySign, lblSignValue);
+  QString sNewValue = QString::number(iValue);
+  leSign->setText(sNewValue);
+  UpdateSignButtonDisplay(pbSign, ckApplySign, leSign);
   UpdateGeometryEditMode();
 }
 
@@ -885,15 +883,15 @@ void CMainWindow::OnApplySignToggled(bool bChecked)
 
 void CMainWindow::OnApplyBackToggled(bool bChecked)
 {
-  unsigned short unValue = pbBack->property("value").toString().toUShort();
+  int iValue = leBack->text().toInt();
   if (bChecked) {
-    unValue |= 0x0100;
+    iValue |= SURFACE_FLAG_APPLY_TEXTURE;
   } else {
-    unValue &= 0x00FF;
+    iValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
   }
-  QString sNewValue = QString::number(unValue);
-  pbBack->setProperty("value", sNewValue);
-  UpdateSignButtonDisplay(pbBack, ckApplyBack, lblBackValue);
+  QString sNewValue = QString::number(iValue);
+  leBack->setText(sNewValue);
+  UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack);
   UpdateGeometryEditMode();
 }
 
@@ -954,6 +952,22 @@ void CMainWindow::OnSignTypeLEChanged()
   cbSignType->setCurrentIndex(cbSignType->findData(leSignType->text().toInt()));
   cbSignType->blockSignals(false);
 
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnSignLEChanged()
+{
+  UpdateSignButtonDisplay(pbSign, ckApplySign, leSign);
+  UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnBackLEChanged()
+{
+  UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack);
   UpdateGeometryEditMode();
 }
 
@@ -1083,8 +1097,8 @@ void CMainWindow::UpdateWindow()
 
       CSignMap backsMap;
       for (int i = 0; i < p->m_track.m_chunkAy.size(); ++i) {
-        if (p->m_track.m_chunkAy[i].unBackTexture > 0)
-          backsMap[i] = p->m_track.m_chunkAy[i].unBackTexture;
+        if (p->m_track.m_chunkAy[i].iBackTexture > 0)
+          backsMap[i] = p->m_track.m_chunkAy[i].iBackTexture;
       }
       
       CSignMap::iterator it = backsMap.begin();
@@ -1257,46 +1271,51 @@ bool CMainWindow::UpdateCBWithSelectionValue(QComboBox *pComboBox, const QString
 
 //-------------------------------------------------------------------------------------------------
 
-bool CMainWindow::UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLabel *pLabel, const QString &sValue)
+bool CMainWindow::UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit, const QString &sValue)
 {
-  pPushButton->setProperty("value", sValue);
-  UpdateSignButtonDisplay(pPushButton, pCheckbox, pLabel);
-  return sValue.compare(MIXED_DATA) == 0;
+  pLineEdit->blockSignals(true);
+  if (sValue.compare(MIXED_DATA) == 0) {
+    pLineEdit->setText("");
+    pLineEdit->setPlaceholderText(sValue);
+    //pLineEdit->setStyleSheet("background-color: rgb(255,0,0)");
+  } else {
+    pLineEdit->setPlaceholderText("");
+    pLineEdit->setText(sValue);
+    pLineEdit->setStyleSheet("");
+  }
+  pLineEdit->blockSignals(false);
+  UpdateSignButtonDisplay(pPushButton, pCheckbox, pLineEdit);
+  return (sValue.compare(MIXED_DATA) == 0) && pLineEdit->text().isEmpty();
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCheckbox, QLabel *pLabel)
+void CMainWindow::UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit)
 {
   pCheckbox->blockSignals(true);
-  QString sValue = pPushButton->property("value").toString();
-  if (sValue.compare(NONE_DATA) == 0) {
+  if (pLineEdit->text().compare("-1") == 0) {
     pPushButton->setIcon(QIcon());
     pPushButton->setText("<none>");
     pCheckbox->setEnabled(false);
     pCheckbox->setChecked(false);
-    pLabel->setVisible(false);
-  } else if (sValue.compare(MIXED_DATA) == 0) {
+  } else if (pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) == 0) {
     pPushButton->setIcon(QIcon());
-    pPushButton->setText(sValue);
+    pPushButton->setText(MIXED_DATA);
     pCheckbox->setEnabled(false);
     pCheckbox->setChecked(false);
-    pLabel->setVisible(false);
   } else {
-    unsigned short unValue = sValue.toUShort();
-    bool bChecked = unValue & 0x0100;
-    unsigned short unBldIndex = unValue & 0x00FF;
-    unBldIndex = unBldIndex >> 1;
-    if (unBldIndex < p->m_bld.m_tileAy.size()) {
+    int iValue = pLineEdit->text().toInt();
+    bool bChecked = iValue & SURFACE_FLAG_APPLY_TEXTURE;
+    int iBldIndex = iValue & SURFACE_TEXTURE_INDEX;
+    iBldIndex = iBldIndex >> 1;
+    if (iBldIndex < p->m_bld.m_tileAy.size()) {
       QPixmap pixmap;
-      pixmap.convertFromImage(p->m_bld.m_tileAy[unBldIndex]);
+      pixmap.convertFromImage(p->m_bld.m_tileAy[iBldIndex]);
       pPushButton->setIcon(pixmap);
       pPushButton->setText("");
     }
     pCheckbox->setEnabled(true);
     pCheckbox->setChecked(bChecked);
-    pLabel->setVisible(true);
-    pLabel->setText("(" + sValue + ")");
   }
   pCheckbox->blockSignals(false);
 }
@@ -1343,11 +1362,16 @@ void CMainWindow::UpdateCBEditMode(bool &bEdited, bool &bMixedData, QComboBox *p
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::UpdateSignEditMode(bool &bEdited, bool &bMixedData, QPushButton *pPushButton, QWidget *pWidget, const QString &sValue)
+void CMainWindow::UpdateSignEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, QWidget *pWidget, const QString &sValue)
 {
-  QString sButtonValue = pPushButton->property("value").toString();
-  if (sButtonValue.compare(sValue) != 0) {
-    if (sButtonValue.compare(MIXED_DATA) == 0) {
+  QString sLineEditVal = pLineEdit->text();
+  if (sLineEditVal.isEmpty())
+    sLineEditVal = "0";
+
+  std::string sTest = pLineEdit->text().toLatin1().constData();
+  std::string sTestt = pLineEdit->placeholderText().toLatin1().constData();
+  if (sLineEditVal.compare(sValue) != 0) {
+    if (pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) == 0) {
       bMixedData = true;
       pWidget->setStyleSheet("");
     } else {
@@ -1437,8 +1461,8 @@ void CMainWindow::RevertGeometry()
   bMixedData |= UpdateLEWithSelectionValue(leUnk48, p->sUnk48);
   bMixedData |= UpdateLEWithSelectionValue(leUnk49, p->sUnk49);
   bMixedData |= UpdateLEWithSelectionValue(leUnk50, p->sUnk50);
-  bMixedData |= UpdateSignWithSelectionValue(pbSign, ckApplySign, lblSignValue, p->sSignTexture);
-  bMixedData |= UpdateSignWithSelectionValue(pbBack, ckApplyBack, lblBackValue, p->sBackTexture);
+  bMixedData |= UpdateSignWithSelectionValue(pbSign, ckApplySign, leSign, p->sSignTexture);
+  bMixedData |= UpdateSignWithSelectionValue(pbBack, ckApplyBack, leBack, p->sBackTexture);
   bMixedData |= UpdateLEWithSelectionValue(leStuntScaleFact, p->sStuntScaleFactor);
   bMixedData |= UpdateLEWithSelectionValue(leStuntAngle, p->sStuntAngle);
   bMixedData |= UpdateLEWithSelectionValue(leStuntUnk, p->sStuntUnknown);

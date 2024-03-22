@@ -6,7 +6,7 @@
 #include "qstring.h"
 //-------------------------------------------------------------------------------------------------
 #define MIXED_DATA "<mixed>"
-#define NONE_DATA "<none>"
+//#define NONE_DATA "<none>"
 #define SIGN_LINE_LENGTH 13
 #define STUNT_LINE_LENGTH 69
 //-------------------------------------------------------------------------------------------------
@@ -49,9 +49,9 @@ struct tGeometryChunk
   int iAILine2;
   int iAILine3;
   int iAILine4;
-  unsigned short unTrackGrip;
-  unsigned short unLeftShoulderGrip;
-  unsigned short unRightShoulderGrip;
+  int iTrackGrip;
+  int iLeftShoulderGrip;
+  int iRightShoulderGrip;
   int iUnk04; //todo
   int iUnk05; //todo
   int iUnk06; //todo
@@ -109,17 +109,15 @@ struct tGeometryChunk
   int iUnk50; //todo
 
   //additional data
-  unsigned short unSignTexture;
-  bool bHasSign;
-  unsigned short unBackTexture;
-  bool bHasBack;
+  int iSignTexture;
+  int iBackTexture;
   
   //stunt
   tStunt stunt;
 };
 typedef std::vector<tGeometryChunk> CChunkAy;
 //-------------------------------------------------------------------------------------------------
-typedef std::map<int, unsigned short> CSignMap;
+typedef std::map<int, int> CSignMap;
 typedef std::map<int, tStunt *> CStuntMap;
 //-------------------------------------------------------------------------------------------------
 struct tRaceInfo

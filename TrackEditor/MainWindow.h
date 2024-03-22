@@ -51,6 +51,8 @@ protected slots:
   void OnDeleteStuntClicked();
   void OnSignTypeChanged(int iIndex);
   void OnSignTypeLEChanged();
+  void OnSignLEChanged();
+  void OnBackLEChanged();
 
 private:
   void LoadSettings();
@@ -62,11 +64,11 @@ private:
   void UpdateInfoSelection();
   bool UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue);
   bool UpdateCBWithSelectionValue(QComboBox *pComboBox, const QString &sValue);
-  bool UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLabel *pLabel, const QString &sValue);
-  void UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCheckbox, QLabel *pLabel);
+  bool UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit, const QString &sValue);
+  void UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit);
   void UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, const QString &sValue);
   void UpdateCBEditMode(bool &bEdited, bool &bMixedData, QComboBox *pComboBox, const QString &sValue);
-  void UpdateSignEditMode(bool &bEdited, bool &bMixedData, QPushButton *pPushButton, QWidget *pWidget, const QString &sValue);
+  void UpdateSignEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, QWidget *pWidget, const QString &sValue);
   void RevertGeometry();
   void RevertInfo();
   void UpdateTextures();

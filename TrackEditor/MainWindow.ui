@@ -194,7 +194,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-122</y>
+              <y>-962</y>
               <width>449</width>
               <height>1611</height>
              </rect>
@@ -1242,6 +1242,9 @@ extra wall height</string>
                 <widget class="QWidget" name="widgetSign" native="true">
                  <layout class="QHBoxLayout" name="horizontalLayout_4">
                   <item>
+                   <widget class="QLineEdit" name="leSign"/>
+                  </item>
+                  <item>
                    <widget class="QPushButton" name="pbSign">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -1279,16 +1282,6 @@ extra wall height</string>
                     </property>
                    </widget>
                   </item>
-                  <item>
-                   <widget class="QLabel" name="lblSignValue">
-                    <property name="enabled">
-                     <bool>true</bool>
-                    </property>
-                    <property name="text">
-                     <string>(0)</string>
-                    </property>
-                   </widget>
-                  </item>
                  </layout>
                 </widget>
                </item>
@@ -1302,6 +1295,9 @@ extra wall height</string>
                <item row="1" column="1">
                 <widget class="QWidget" name="widgetBack" native="true">
                  <layout class="QHBoxLayout" name="horizontalLayout_7">
+                  <item>
+                   <widget class="QLineEdit" name="leBack"/>
+                  </item>
                   <item>
                    <widget class="QPushButton" name="pbBack">
                     <property name="sizePolicy">
@@ -1337,16 +1333,6 @@ extra wall height</string>
                    <widget class="QCheckBox" name="ckApplyBack">
                     <property name="text">
                      <string>Apply Texture</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QLabel" name="lblBackValue">
-                    <property name="enabled">
-                     <bool>true</bool>
-                    </property>
-                    <property name="text">
-                     <string>(0)</string>
                     </property>
                    </widget>
                   </item>
@@ -1780,8 +1766,8 @@ extra wall height</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>582</width>
-              <height>513</height>
+              <width>120</width>
+              <height>51</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1849,8 +1835,8 @@ extra wall height</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>158</width>
-              <height>530</height>
+              <width>133</width>
+              <height>94</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_12">

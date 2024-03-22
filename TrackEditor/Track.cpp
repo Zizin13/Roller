@@ -97,6 +97,8 @@ bool CTrack::LoadTrack(const QString &sFilename)
           } else if (slLine.count() == CHUNK_LINE_0_COUNT) {
             //start new chunk
             memset(&currChunk, 0, sizeof(currChunk));
+            currChunk.iBackTexture = -1;
+            currChunk.iSignTexture = -1;
             //process line 1
             currChunk.iLeftShoulderWidth = slLine[0].toInt();
             currChunk.iLeftLaneWidth = slLine[1].toInt();
@@ -112,9 +114,9 @@ bool CTrack::LoadTrack(const QString &sFilename)
             currChunk.iAILine2 = slLine[11].toInt();
             currChunk.iAILine3 = slLine[12].toInt();
             currChunk.iAILine4 = slLine[13].toInt();
-            currChunk.unTrackGrip = slLine[14].toUShort();
-            currChunk.unLeftShoulderGrip = slLine[15].toUShort();
-            currChunk.unRightShoulderGrip = slLine[16].toUShort();
+            currChunk.iTrackGrip = slLine[14].toInt();
+            currChunk.iLeftShoulderGrip = slLine[15].toInt();
+            currChunk.iRightShoulderGrip = slLine[16].toInt();
             currChunk.iUnk04 = slLine[17].toInt();
             currChunk.iUnk05 = slLine[18].toInt();
             currChunk.iUnk06 = slLine[19].toInt();
@@ -253,8 +255,7 @@ bool CTrack::LoadTrack(const QString &sFilename)
           //process backs
           int iGeometryIndex = slLine[0].toInt();
           if (iGeometryIndex < m_chunkAy.size()) {
-            m_chunkAy[iGeometryIndex].unBackTexture = slLine[1].toUShort();
-            m_chunkAy[iGeometryIndex].bHasBack = true;
+            m_chunkAy[iGeometryIndex].iBackTexture = slLine[1].toInt();
           }
         } else {
           assert(0);
@@ -321,7 +322,7 @@ bool CTrack::SaveTrack(const QString &sFilename)
 
     //write header
     char szBuf[1024];
-    snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d  %6d", (int)m_chunkAy.size(), m_header.iHeaderUnk1, m_header.iHeaderUnk3, m_header.iHeaderUnk3);
+    snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d", (int)m_chunkAy.size(), m_header.iHeaderUnk1, m_header.iHeaderUnk2, m_header.iHeaderUnk3);
     stream << szBuf << Qt::endl << Qt::endl << Qt::endl;
 
     //write chunks
@@ -330,11 +331,11 @@ bool CTrack::SaveTrack(const QString &sFilename)
     CStuntMap stuntMap;
     for (int i = 0; i < m_chunkAy.size(); ++i) {
       stream << m_chunkAy[i].sString.c_str() << Qt::endl;
-      if (m_chunkAy[i].bHasSign) {
-        signMap[i] = m_chunkAy[i].unSignTexture;
+      if (m_chunkAy[i].iSignTexture >= 0) {
+        signMap[i] = m_chunkAy[i].iSignTexture;
       }
-      if (m_chunkAy[i].bHasBack) {
-        backsMap[i] = m_chunkAy[i].unBackTexture;
+      if (m_chunkAy[i].iBackTexture >= 0) {
+        backsMap[i] = m_chunkAy[i].iBackTexture;
       }
       if (m_chunkAy[i].stunt.iScaleFactor != 0
           || m_chunkAy[i].stunt.iAngle != 0
@@ -532,13 +533,13 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     if (sAILine4.isEmpty()) sAILine4 = sVal;
     else if (sAILine4.compare(sVal) != 0) sAILine4 = MIXED_DATA;
 
-    sVal = QString::number(m_chunkAy[i].unTrackGrip);
+    sVal = QString::number(m_chunkAy[i].iTrackGrip);
     if (sTrackGrip.isEmpty()) sTrackGrip = sVal;
     else if (sTrackGrip.compare(sVal) != 0) sTrackGrip = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].unLeftShoulderGrip);
+    sVal = QString::number(m_chunkAy[i].iLeftShoulderGrip);
     if (sLeftShoulderGrip.isEmpty()) sLeftShoulderGrip = sVal;
     else if (sLeftShoulderGrip.compare(sVal) != 0) sLeftShoulderGrip = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].unRightShoulderGrip);
+    sVal = QString::number(m_chunkAy[i].iRightShoulderGrip);
     if (sRightShoulderGrip.isEmpty()) sRightShoulderGrip = sVal;
     else if (sRightShoulderGrip.compare(sVal) != 0) sRightShoulderGrip = MIXED_DATA;
 
@@ -706,10 +707,10 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     if (sUnk50.isEmpty()) sUnk50 = sVal;
     else if (sUnk50.compare(sVal) != 0) sUnk50 = MIXED_DATA;
 
-    sVal = m_chunkAy[i].bHasSign ? QString::number(m_chunkAy[i].unSignTexture) : NONE_DATA;
+    sVal = QString::number(m_chunkAy[i].iSignTexture);
     if (sSignTexture.isEmpty()) sSignTexture = sVal;
     else if (sSignTexture.compare(sVal) != 0) sSignTexture = MIXED_DATA;
-    sVal = m_chunkAy[i].bHasBack ? QString::number(m_chunkAy[i].unBackTexture) : NONE_DATA;
+    sVal = QString::number(m_chunkAy[i].iBackTexture);
     if (sBackTexture.isEmpty()) sBackTexture = sVal;
     else if (sBackTexture.compare(sVal) != 0) sBackTexture = MIXED_DATA;
 
@@ -780,9 +781,9 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex
     if (!sAILine2.isEmpty()) m_chunkAy[i].iAILine2 = sAILine2.toInt();
     if (!sAILine3.isEmpty()) m_chunkAy[i].iAILine3 = sAILine3.toInt();
     if (!sAILine4.isEmpty()) m_chunkAy[i].iAILine4 = sAILine4.toInt();
-    if (!sTrackGrip.isEmpty()) m_chunkAy[i].unTrackGrip = sTrackGrip.toUShort();
-    if (!sLeftShoulderGrip.isEmpty()) m_chunkAy[i].unLeftShoulderGrip = sLeftShoulderGrip.toUShort();
-    if (!sRightShoulderGrip.isEmpty()) m_chunkAy[i].unRightShoulderGrip = sRightShoulderGrip.toUShort();
+    if (!sTrackGrip.isEmpty()) m_chunkAy[i].iTrackGrip = sTrackGrip.toInt();
+    if (!sLeftShoulderGrip.isEmpty()) m_chunkAy[i].iLeftShoulderGrip = sLeftShoulderGrip.toInt();
+    if (!sRightShoulderGrip.isEmpty()) m_chunkAy[i].iRightShoulderGrip = sRightShoulderGrip.toInt();
     if (!sUnk04.isEmpty()) m_chunkAy[i].iUnk04 = sUnk04.toInt();
     if (!sUnk05.isEmpty()) m_chunkAy[i].iUnk05 = sUnk05.toInt();
     if (!sUnk06.isEmpty()) m_chunkAy[i].iUnk06 = sUnk06.toInt();
@@ -836,10 +837,8 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex
     if (!sUnk48.isEmpty()) m_chunkAy[i].iUnk48 = sUnk48.toInt();
     if (!sUnk49.isEmpty()) m_chunkAy[i].iUnk49 = sUnk49.toInt();
     if (!sUnk50.isEmpty()) m_chunkAy[i].iUnk50 = sUnk50.toInt();
-    if (!sSignValue.isEmpty() && sSignValue.compare(MIXED_DATA) != 0) m_chunkAy[i].unSignTexture = sSignValue.toUShort();
-    m_chunkAy[i].bHasSign = sSignValue.compare(NONE_DATA) != 0;
-    if (!sBackValue.isEmpty() && sBackValue.compare(MIXED_DATA) != 0) m_chunkAy[i].unBackTexture = sBackValue.toUShort();
-    m_chunkAy[i].bHasBack = sBackValue.compare(NONE_DATA) != 0;
+    if (!sSignValue.isEmpty()) m_chunkAy[i].iSignTexture = sSignValue.toInt();
+    if (!sBackValue.isEmpty()) m_chunkAy[i].iBackTexture = sBackValue.toInt();
     if (!sStuntScaleFactor.isEmpty()) m_chunkAy[i].stunt.iScaleFactor = sStuntScaleFactor.toInt();
     if (!sStuntAngle.isEmpty()) m_chunkAy[i].stunt.iAngle = sStuntAngle.toInt();
     if (!sStuntUnknown.isEmpty()) m_chunkAy[i].stunt.iUnknown = sStuntUnknown.toInt();
@@ -893,9 +892,9 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount
     newChunk.iAILine2 = sAILine2.toInt();
     newChunk.iAILine3 = sAILine3.toInt();
     newChunk.iAILine4 = sAILine4.toInt();
-    newChunk.unTrackGrip = sTrackGrip.toUShort();
-    newChunk.unLeftShoulderGrip = sLeftShoulderGrip.toUShort();
-    newChunk.unRightShoulderGrip = sRightShoulderGrip.toUShort();
+    newChunk.iTrackGrip = sTrackGrip.toInt();
+    newChunk.iLeftShoulderGrip = sLeftShoulderGrip.toInt();
+    newChunk.iRightShoulderGrip = sRightShoulderGrip.toInt();
     newChunk.iUnk04 = sUnk04.toInt();
     newChunk.iUnk05 = sUnk05.toInt();
     newChunk.iUnk06 = sUnk06.toInt();
@@ -949,10 +948,8 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount
     newChunk.iUnk48 = sUnk48.toInt();
     newChunk.iUnk49 = sUnk49.toInt();
     newChunk.iUnk50 = sUnk50.toInt();
-    newChunk.unSignTexture = sSignValue.toUShort();
-    newChunk.bHasSign = sSignValue.compare(NONE_DATA) != 0;
-    newChunk.unBackTexture = sBackValue.toUShort();
-    newChunk.bHasBack = sBackValue.compare(NONE_DATA) != 0;
+    newChunk.iSignTexture = sSignValue.toInt();
+    newChunk.iBackTexture = sBackValue.toInt();
     newChunk.stunt.iScaleFactor = sStuntScaleFactor.toInt();
     newChunk.stunt.iAngle = sStuntAngle.toInt();
     newChunk.stunt.iUnknown = sStuntUnknown.toInt();
@@ -1004,9 +1001,9 @@ void CTrack::GenerateChunkString(tGeometryChunk &chunk)
            , chunk.iAILine2
            , chunk.iAILine3
            , chunk.iAILine4
-           , chunk.unTrackGrip
-           , chunk.unLeftShoulderGrip
-           , chunk.unRightShoulderGrip
+           , chunk.iTrackGrip
+           , chunk.iLeftShoulderGrip
+           , chunk.iRightShoulderGrip
            , chunk.iUnk04
            , chunk.iUnk05
            , chunk.iUnk06
@@ -1076,8 +1073,7 @@ void CTrack::ProcessSign(const QStringList &slLine, eFileSection &section)
   } else {
     //process sign
     if (iVal0 < m_chunkAy.size()) {
-      m_chunkAy[iVal0].unSignTexture = slLine[1].toUShort();
-      m_chunkAy[iVal0].bHasSign = true;
+      m_chunkAy[iVal0].iSignTexture = slLine[1].toInt();
     }
   }
 }

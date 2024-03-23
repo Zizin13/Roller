@@ -416,7 +416,20 @@ void CMainWindow::OnImportMangled()
 
 void CMainWindow::OnExportMangled()
 {
+#if !defined(_DEBUG)
   QMessageBox::warning(this, "Fatality!", "Not implemented yet");
+#else
+  //save track
+  QString sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
+    this, "Export Mangled", m_sTrackFilesFolder, "Track Files (*.TRK)"));
+  if (!p->m_track.SaveTrack(sFilename, true))
+    return;
+  
+  //save successful, update app
+  m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
+  m_sTrackFile = sFilename;
+  UpdateWindow();
+#endif
 }
 
 //-------------------------------------------------------------------------------------------------

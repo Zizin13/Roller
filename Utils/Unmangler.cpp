@@ -101,4 +101,69 @@ bool UnmangleFile(const uint8_t *pSource, int iSourceLen, uint8_t *pDestination,
   return true;
 }
 
+
+// find next string of repeating bytes with length of at least 3, starting in the next 0x3F bytes
+std::vector<int> FindMaxRepeats(const std::vector<uint8_t> &inputData, int startPos)
+{
+  int offset = 0, length = 0;
+  for (int i = std::max(startPos, 1); (i < (int)inputData.size()) && (i < startPos + 0x3F); i++) {
+    length = 1;
+    while ((i + length < (int)inputData.size()) && (inputData[i + length] == inputData[i + length - 1])) {
+      length++;
+    }
+    if (length >= 3) {
+      offset = i - startPos;
+      break;
+    }
+  }
+  int adj = 1;
+  if (startPos != 0) {
+    if ((offset == 0) && (inputData[startPos] == inputData[startPos - 1])) {
+      adj = 0; // continuation of previous bytes
+    }
+  }
+  std::vector<int> output = { offset + adj, length - adj };
+  return output;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void MangleFile(const std::vector<uint8_t> &source, std::vector<uint8_t> &destination)
+{
+  destination.push_back(0);
+  destination.push_back(0);
+  destination.push_back(0);
+  destination.push_back(0);
+  int iSourceLen = (int)source.size();
+  for (int i = 0; i < 4; i++)
+    destination[3 - i] = (iSourceLen >> (i * 8));
+  int iInputPos = 0;
+  while (iInputPos < iSourceLen) {
+    std::vector<int> nextRepeats = FindMaxRepeats(source, iInputPos);
+    int iOffset = nextRepeats[0];
+    int iLength = std::min(nextRepeats[1], 18);
+    if (iLength >= 3) // clone last byte in output
+    {
+      if (iOffset > 0) // output non-repeating bytes
+      {
+        destination.push_back(iOffset);
+        for (int i = iInputPos; i < iInputPos + iOffset; ++i) {
+          destination.push_back(source[i]);
+        }
+        iInputPos += iOffset;
+      }
+      uint8_t byVal = (uint8_t)(iLength - 3) + 0x60;
+      destination.push_back(byVal);
+      iInputPos += iLength;
+    } else // no repeating bytes
+    {
+      int iNextLength = std::min((int)source.size() - iInputPos, 0x3F);
+      destination.push_back((uint8_t)iNextLength);
+      for (int i = iInputPos; i < iInputPos + iNextLength; ++i)
+        destination.push_back(source[i]);
+      iInputPos += iNextLength;
+    }
+  }
+}
+ 
 //-------------------------------------------------------------------------------------------------

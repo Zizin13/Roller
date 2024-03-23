@@ -340,11 +340,11 @@ bool CTrack::SaveTrack(const QString &sFilename, bool bIsMangled)
     return false;
 
   std::vector<uint8_t> data;
+  std::vector<uint8_t> mangledData;
   GetTrackData(data);
 
   std::vector<uint8_t> *pOutData;
   if (bIsMangled) {
-    std::vector<uint8_t> mangledData;
     MangleFile(data, mangledData);
     pOutData = &mangledData;
   } else {
@@ -1066,7 +1066,7 @@ void CTrack::GetTrackData(std::vector<uint8_t> &data)
     WriteToVector(data, szBuf);
   }
   memset(szBuf, 0, sizeof(szBuf));
-  snprintf(szBuf, sizeof(szBuf), " %4d %6d\r\n\r\n", -1, -1);
+  snprintf(szBuf, sizeof(szBuf), " %4d %6d\r\n", -1, -1);
   WriteToVector(data, szBuf);
 
   //write stunts
@@ -1078,6 +1078,7 @@ void CTrack::GetTrackData(std::vector<uint8_t> &data)
              it->second->iTimeFlat, it->second->iSmallerExpandsLargerContracts, it->second->iBulge);
     WriteToVector(data, szBuf);
   }
+  WriteToVector(data, "\r\n");
   memset(szBuf, 0, sizeof(szBuf));
   snprintf(szBuf, sizeof(szBuf), " %4d\r\n\r\n", -1);
   WriteToVector(data, szBuf);

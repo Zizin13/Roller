@@ -68,12 +68,13 @@ protected slots:
   void OnLOuterExtraWallLEChanged();
   void OnROuterExtraWallLEChanged();
   void OnEnvirFloorChanged();
+  void OnUnmangleTexturesToggled(bool bChecked);
 
 private:
   void LoadSettings();
   void SaveSettings();
   bool SaveChangesAndContinue();
-  void LoadTextures(bool bMangled);
+  void LoadTextures();
   void UpdateWindow();
   void UpdateGeometrySelection();
   void UpdateInfoSelection();

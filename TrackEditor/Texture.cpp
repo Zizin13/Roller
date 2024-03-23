@@ -45,9 +45,15 @@ bool CTexture::LoadTexture(const QString &sFilename, const CPalette &palette, bo
 
   if (bMangled) {
     int iLength = GetUnmangledLength((uint8_t *)baData.constData(), baData.size());
-    uint8_t *szData = new uint8_t[iLength];
-    UnmangleFile((uint8_t *)baData.constData(), baData.size(), szData, iLength);
-    baData = QByteArray((char*)szData, iLength);
+    if (iLength > 0) {
+      uint8_t *szData = new uint8_t[iLength];
+      UnmangleFile((uint8_t *)baData.constData(), baData.size(), szData, iLength);
+      baData = QByteArray((char *)szData, iLength);
+    } else {
+      g_pMainWindow->LogMessage("Error loading texture " + sFilename + " unable to unmangle");
+      assert(0);
+      return false;
+    }
   }
 
   int iPixelsPerTile = TILE_WIDTH * TILE_HEIGHT;

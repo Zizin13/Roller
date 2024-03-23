@@ -269,6 +269,8 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leMapFidelity, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
   connect(leInfoUnknown, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
 
+  connect(ckUnmangleTextures, &QCheckBox::toggled, this, &CMainWindow::OnUnmangleTexturesToggled);
+
   //open window
   LoadSettings();
 }
@@ -306,7 +308,7 @@ void CMainWindow::OnNewTrack()
   m_sTrackFile = "";
   m_bUnsavedChanges = false;
   m_bAlreadySaved = false;
-  LoadTextures(p->m_track.m_bIsMangled);
+  LoadTextures();
   UpdateWindow();
 }
 
@@ -339,7 +341,10 @@ void CMainWindow::OnLoadTrack()
   m_bAlreadySaved = false;
   m_bUnsavedChanges = false;
   //update app
-  LoadTextures(p->m_track.m_bIsMangled);
+  ckUnmangleTextures->blockSignals(true);
+  ckUnmangleTextures->setChecked(p->m_track.m_bIsMangled);
+  ckUnmangleTextures->blockSignals(false);
+  LoadTextures();
   UpdateWindow();
 }
 
@@ -402,7 +407,10 @@ void CMainWindow::OnImportMangled()
   m_bAlreadySaved = false;
   m_bUnsavedChanges = false;
   //update app
-  LoadTextures(p->m_track.m_bIsMangled);
+  ckUnmangleTextures->blockSignals(true);
+  ckUnmangleTextures->setChecked(p->m_track.m_bIsMangled);
+  ckUnmangleTextures->blockSignals(false);
+  LoadTextures();
   UpdateWindow();
 }
 
@@ -586,7 +594,7 @@ void CMainWindow::OnApplyTextureClicked()
 
   m_bUnsavedChanges = true;
   g_pMainWindow->LogMessage("Applied changes to texture");
-  LoadTextures(p->m_track.m_bIsMangled);
+  LoadTextures();
   UpdateWindow();
 }
 
@@ -1176,6 +1184,15 @@ void CMainWindow::OnEnvirFloorChanged()
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::OnUnmangleTexturesToggled(bool bChecked)
+{
+  (void)(bChecked);
+  LoadTextures();
+  UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CMainWindow::LoadSettings()
 {
   QSettings settings(m_sSettingsFile, QSettings::IniFormat);
@@ -1345,8 +1362,9 @@ void CMainWindow::UpdateWindow()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::LoadTextures(bool bMangled)
+void CMainWindow::LoadTextures()
 {
+  bool bMangled = ckUnmangleTextures->isChecked();
   //avoid memory leak
   for (std::vector<QLabel *>::iterator it = p->m_texLabelAy.begin(); it != p->m_texLabelAy.end(); ++it) {
     delete *it;

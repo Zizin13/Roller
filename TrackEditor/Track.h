@@ -228,6 +228,8 @@ private:
   bool ProcessTrackData(const QByteArray &baData);
   void GenerateChunkString(tGeometryChunk &chunk);
   void ProcessSign(const QStringList &slLine, eFileSection &section);
+  void GetTrackData(std::vector<uint8_t> &data);
+  void WriteToVector(std::vector<uint8_t> &data, const char *szText);
 };
 
 //-------------------------------------------------------------------------------------------------

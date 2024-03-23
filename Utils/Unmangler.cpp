@@ -1,6 +1,14 @@
+#define _CRT_SECURE_NO_DEPRECATE
 #include "Unmangler.h"
 #include <string.h>
 #include <stdlib.h>
+#include <algorithm>
+#include <iostream>
+#include <sstream>
+//-------------------------------------------------------------------------------------------------
+#if defined(_DEBUG) && defined(IS_WINDOWS)
+  #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
+#endif
 //-------------------------------------------------------------------------------------------------
 
 int GetUnmangledLength(const uint8_t *pSource, int iSourceLen)

@@ -366,105 +366,19 @@ bool CTrack::SaveTrack(const QString &sFilename)
   if (sFilename.isEmpty())
     return false;
 
+  std::vector<uint8_t> data;
+  GetTrackData(data);
+
   QFile file(sFilename);
   file.resize(0);
   if (file.open(QIODevice::ReadWrite)) {
     QTextStream stream(&file);
-
-    //write header
-    char szBuf[1024];
-    snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d", (int)m_chunkAy.size(), m_header.iHeaderUnk1, m_header.iHeaderUnk2, m_header.iHeaderUnk3);
-    stream << szBuf << "\r\n" << "\r\n" << "\r\n";
-
-    //write chunks
-    CSignMap signMap;
-    CSignMap backsMap;
-    CStuntMap stuntMap;
-    for (int i = 0; i < m_chunkAy.size(); ++i) {
-      stream << m_chunkAy[i].sString.c_str() << "\r\n";
-      if (m_chunkAy[i].iSignTexture >= 0) {
-        signMap[i] = m_chunkAy[i].iSignTexture;
-      }
-      if (m_chunkAy[i].iBackTexture >= 0) {
-        backsMap[i] = m_chunkAy[i].iBackTexture;
-      }
-      if (m_chunkAy[i].stunt.iScaleFactor != 0
-          || m_chunkAy[i].stunt.iAngle != 0
-          || m_chunkAy[i].stunt.iUnknown != 0
-          || m_chunkAy[i].stunt.iTimingGroup != 0
-          || m_chunkAy[i].stunt.iHeight != 0
-          || m_chunkAy[i].stunt.iTimeBulging != 0
-          || m_chunkAy[i].stunt.iTimeFlat != 0
-          || m_chunkAy[i].stunt.iSmallerExpandsLargerContracts != 0
-          || m_chunkAy[i].stunt.iBulge != 0) {
-        stuntMap[i] = &m_chunkAy[i].stunt;
-      }
+    for (int i = 0; i < data.size(); ++i) {
+      stream << (char)data[i];
     }
-    
-    //write signs
-    for (CSignMap::iterator it = signMap.begin(); it != signMap.end(); ++it) {
-      memset(szBuf, 0, sizeof(szBuf));
-      snprintf(szBuf, sizeof(szBuf), " %4d %6d", it->first, (int)it->second);
-      stream << szBuf << "\r\n";
-    }
-    memset(szBuf, 0, sizeof(szBuf));
-    snprintf(szBuf, sizeof(szBuf), " %4d %6d", -1, -1);
-    stream << szBuf << "\r\n";
-    stream << "\r\n";
-
-    //write stunts
-    for (CStuntMap::iterator it = stuntMap.begin(); it != stuntMap.end(); ++it) {
-      memset(szBuf, 0, sizeof(szBuf));
-      snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d %6d %6d %6d %6d %6d %6d",
-               it->first, it->second->iScaleFactor, it->second->iAngle, it->second->iUnknown,
-               it->second->iTimingGroup, it->second->iHeight, it->second->iTimeBulging,
-               it->second->iTimeFlat, it->second->iSmallerExpandsLargerContracts, it->second->iBulge);
-      stream << szBuf << "\r\n";
-    }
-    memset(szBuf, 0, sizeof(szBuf));
-    snprintf(szBuf, sizeof(szBuf), " %4d", -1);
-    stream << szBuf << "\r\n";
-    stream << "\r\n";
-
-    //write textures
-    stream << "TEX:" << m_sTextureFile << "\r\n";
-    stream << "BLD:" << m_sBuildingFile << "\r\n";
-    stream << "BACKS:" << "\r\n";
-    for (CSignMap::iterator it = backsMap.begin(); it != backsMap.end(); ++it) {
-      memset(szBuf, 0, sizeof(szBuf));
-      snprintf(szBuf, sizeof(szBuf), "%d %d", it->first, (int)it->second);
-      stream << szBuf << "\r\n";
-    }
-    memset(szBuf, 0, sizeof(szBuf));
-    snprintf(szBuf, sizeof(szBuf), " %4d", -1);
-    stream << szBuf << "\r\n";
-    stream << "\r\n";
-
-    //write info
-    if (!(m_raceInfo.iTrackNumber == 0
-       && m_raceInfo.iImpossibleLaps == 0
-       && m_raceInfo.iHardLaps == 0
-       && m_raceInfo.iTrickyLaps == 0
-       && m_raceInfo.iMediumLaps == 0
-       && m_raceInfo.iEasyLaps == 0
-       && m_raceInfo.iGirlieLaps == 0
-       && m_raceInfo.dTrackMapSize == 0
-       && m_raceInfo.iTrackMapFidelity == 0
-       && m_raceInfo.dUnknown == 0)) {
-      stream << QString::number(m_raceInfo.iTrackNumber) << "\r\n";
-      memset(szBuf, 0, sizeof(szBuf));
-      snprintf(szBuf, sizeof(szBuf), "%4d %4d %4d %4d %4d %4d",
-               m_raceInfo.iImpossibleLaps, m_raceInfo.iHardLaps, m_raceInfo.iTrickyLaps,
-               m_raceInfo.iMediumLaps, m_raceInfo.iEasyLaps, m_raceInfo.iGirlieLaps);
-      stream << szBuf << "\r\n";
-      memset(szBuf, 0, sizeof(szBuf));
-      snprintf(szBuf, sizeof(szBuf), "%.2lf %4d %.2lf",
-               m_raceInfo.dTrackMapSize, m_raceInfo.iTrackMapFidelity, m_raceInfo.dUnknown);
-      stream << szBuf << "\r\n" << "\r\n";
-    }
-
     file.close();
   }
+
   return true;
 }
 
@@ -1125,6 +1039,118 @@ void CTrack::ProcessSign(const QStringList &slLine, eFileSection &section)
     if (iVal0 < m_chunkAy.size()) {
       m_chunkAy[iVal0].iSignTexture = slLine[1].toInt();
     }
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrack::GetTrackData(std::vector<uint8_t> &data)
+{
+  //write header
+  char szBuf[1024];
+  snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d\r\n\r\n\r\n", (int)m_chunkAy.size(), m_header.iHeaderUnk1, m_header.iHeaderUnk2, m_header.iHeaderUnk3);
+  WriteToVector(data, szBuf);
+
+  //write chunks
+  CSignMap signMap;
+  CSignMap backsMap;
+  CStuntMap stuntMap;
+  for (int i = 0; i < m_chunkAy.size(); ++i) {
+    WriteToVector(data, m_chunkAy[i].sString.c_str());
+    WriteToVector(data, "\r\n");
+    if (m_chunkAy[i].iSignTexture >= 0) {
+      signMap[i] = m_chunkAy[i].iSignTexture;
+    }
+    if (m_chunkAy[i].iBackTexture >= 0) {
+      backsMap[i] = m_chunkAy[i].iBackTexture;
+    }
+    if (m_chunkAy[i].stunt.iScaleFactor != 0
+        || m_chunkAy[i].stunt.iAngle != 0
+        || m_chunkAy[i].stunt.iUnknown != 0
+        || m_chunkAy[i].stunt.iTimingGroup != 0
+        || m_chunkAy[i].stunt.iHeight != 0
+        || m_chunkAy[i].stunt.iTimeBulging != 0
+        || m_chunkAy[i].stunt.iTimeFlat != 0
+        || m_chunkAy[i].stunt.iSmallerExpandsLargerContracts != 0
+        || m_chunkAy[i].stunt.iBulge != 0) {
+      stuntMap[i] = &m_chunkAy[i].stunt;
+    }
+  }
+
+  //write signs
+  for (CSignMap::iterator it = signMap.begin(); it != signMap.end(); ++it) {
+    memset(szBuf, 0, sizeof(szBuf));
+    snprintf(szBuf, sizeof(szBuf), " %4d %6d\r\n", it->first, (int)it->second);
+    WriteToVector(data, szBuf);
+  }
+  memset(szBuf, 0, sizeof(szBuf));
+  snprintf(szBuf, sizeof(szBuf), " %4d %6d\r\n\r\n", -1, -1);
+  WriteToVector(data, szBuf);
+
+  //write stunts
+  for (CStuntMap::iterator it = stuntMap.begin(); it != stuntMap.end(); ++it) {
+    memset(szBuf, 0, sizeof(szBuf));
+    snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d %6d %6d %6d %6d %6d %6d",
+             it->first, it->second->iScaleFactor, it->second->iAngle, it->second->iUnknown,
+             it->second->iTimingGroup, it->second->iHeight, it->second->iTimeBulging,
+             it->second->iTimeFlat, it->second->iSmallerExpandsLargerContracts, it->second->iBulge);
+    WriteToVector(data, szBuf);
+  }
+  memset(szBuf, 0, sizeof(szBuf));
+  snprintf(szBuf, sizeof(szBuf), " %4d\r\n\r\n", -1);
+  WriteToVector(data, szBuf);
+
+  //write textures
+  WriteToVector(data, "TEX:");
+  WriteToVector(data, m_sTextureFile.toLatin1().constData());
+  WriteToVector(data, "\r\n");
+  WriteToVector(data, "BLD:");
+  WriteToVector(data, m_sBuildingFile.toLatin1().constData());
+  WriteToVector(data, "\r\n");
+  WriteToVector(data, "BACKS:");
+  WriteToVector(data, "\r\n");
+  for (CSignMap::iterator it = backsMap.begin(); it != backsMap.end(); ++it) {
+    memset(szBuf, 0, sizeof(szBuf));
+    snprintf(szBuf, sizeof(szBuf), "%d %d\r\n", it->first, (int)it->second);
+    WriteToVector(data, szBuf);
+  }
+  memset(szBuf, 0, sizeof(szBuf));
+  snprintf(szBuf, sizeof(szBuf), " %4d\r\n\r\n", -1);
+  WriteToVector(data, szBuf);
+
+  //write info
+  if (!(m_raceInfo.iTrackNumber == 0
+        && m_raceInfo.iImpossibleLaps == 0
+        && m_raceInfo.iHardLaps == 0
+        && m_raceInfo.iTrickyLaps == 0
+        && m_raceInfo.iMediumLaps == 0
+        && m_raceInfo.iEasyLaps == 0
+        && m_raceInfo.iGirlieLaps == 0
+        && m_raceInfo.dTrackMapSize == 0
+        && m_raceInfo.iTrackMapFidelity == 0
+        && m_raceInfo.dUnknown == 0)) {
+    WriteToVector(data, QString::number(m_raceInfo.iTrackNumber).toLatin1().constData());
+    WriteToVector(data, "\r\n");
+    memset(szBuf, 0, sizeof(szBuf));
+    snprintf(szBuf, sizeof(szBuf), "%4d %4d %4d %4d %4d %4d\r\n",
+             m_raceInfo.iImpossibleLaps, m_raceInfo.iHardLaps, m_raceInfo.iTrickyLaps,
+             m_raceInfo.iMediumLaps, m_raceInfo.iEasyLaps, m_raceInfo.iGirlieLaps);
+    WriteToVector(data, szBuf);
+    memset(szBuf, 0, sizeof(szBuf));
+    snprintf(szBuf, sizeof(szBuf), "%.2lf %4d %.2lf\r\n\r\n",
+             m_raceInfo.dTrackMapSize, m_raceInfo.iTrackMapFidelity, m_raceInfo.dUnknown);
+    WriteToVector(data, szBuf);
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrack::WriteToVector(std::vector<uint8_t> &data, const char *szText)
+{
+  int iLength = (int)strlen(szText);
+  for (int i = 0; i < iLength; ++i) {
+    uint8_t val = (uint8_t)szText[i];
+    data.push_back(val);
   }
 }
 

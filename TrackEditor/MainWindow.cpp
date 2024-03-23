@@ -28,18 +28,12 @@ public:
     : m_logDialog(pMainWindow)
   {};
   ~CMainWindowPrivate() 
-  {
-    for (std::vector<QLabel *>::iterator it = m_texLabelAy.begin(); it != m_texLabelAy.end(); ++it) {
-      delete *it;
-    }
-    m_texLabelAy.clear();
-  };
+  {};
 
   CTrack m_track;
   CPalette m_palette;
   CTexture m_tex;
   CTexture m_bld;
-  std::vector<QLabel *> m_texLabelAy;
   CLogDialog m_logDialog;
 
   //selected geometry values
@@ -1369,11 +1363,35 @@ void CMainWindow::UpdateWindow()
 void CMainWindow::LoadTextures()
 {
   bool bMangled = ckUnmangleTextures->isChecked();
+
   //avoid memory leak
-  for (std::vector<QLabel *>::iterator it = p->m_texLabelAy.begin(); it != p->m_texLabelAy.end(); ++it) {
-    delete *it;
+  QLayoutItem *pItem;
+  QLayout *pSublayout;
+  QWidget *pWidget;
+  while ((pItem = texLayout->takeAt(0))) {
+    if ((pSublayout = pItem->layout()) != 0) {
+      //should not have any of these
+      assert(0);
+    } else if ((pWidget = pItem->widget()) != 0) {
+      pWidget->hide();
+      delete pWidget;
+    } else { 
+      delete pItem;
+    }
   }
-  p->m_texLabelAy.clear();
+  while ((pItem = bldLayout->takeAt(0))) {
+    if ((pSublayout = pItem->layout()) != 0) {
+      //should not have any of these
+      assert(0);
+    } else if ((pWidget = pItem->widget()) != 0) {
+      pWidget->hide();
+      delete pWidget;
+    } else {
+      delete pItem;
+    }
+  }
+  assert(texLayout->isEmpty());
+  assert(bldLayout->isEmpty());
 
   //load textures
   bool bPalLoaded = p->m_palette.LoadPalette(m_sTrackFilesFolder + QDir::separator() + "PALETTE.PAL");
@@ -1400,7 +1418,6 @@ void CMainWindow::LoadTextures()
     pixmap.convertFromImage(p->m_bld.m_tileAy[i]);
     pImageLabel->setPixmap(pixmap);
     bldLayout->addWidget(pImageLabel, i / iTilesPerLine, i % iTilesPerLine);
-    p->m_texLabelAy.push_back(pImageLabel);
   }
 }
 

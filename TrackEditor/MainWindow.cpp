@@ -427,7 +427,6 @@ void CMainWindow::OnExportMangled()
   
   //save successful, update app
   m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
-  m_sTrackFile = sFilename;
   UpdateWindow();
 #endif
 }

@@ -3,7 +3,10 @@
 #include "MainWindow.h"
 #include "Unmangler.h"
 //-------------------------------------------------------------------------------------------------
-
+#if defined(_DEBUG) && defined(IS_WINDOWS)
+  #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
+#endif
+//-------------------------------------------------------------------------------------------------
 CPalette::CPalette()
 {
 

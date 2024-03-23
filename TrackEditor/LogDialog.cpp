@@ -1,6 +1,10 @@
 #include "TrackEditor.h"
 #include "LogDialog.h"
 //-------------------------------------------------------------------------------------------------
+#if defined(_DEBUG) && defined(IS_WINDOWS)
+  #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
+#endif
+//-------------------------------------------------------------------------------------------------
 
 CLogDialog::CLogDialog(QWidget *pParent)
   : QDialog(pParent)

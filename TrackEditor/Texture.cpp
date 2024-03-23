@@ -4,6 +4,10 @@
 #include "Palette.h"
 #include "Unmangler.h"
 //-------------------------------------------------------------------------------------------------
+#if defined(_DEBUG) && defined(IS_WINDOWS)
+  #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
+#endif
+//-------------------------------------------------------------------------------------------------
 
 CTexture::CTexture()
 {
@@ -49,9 +53,9 @@ bool CTexture::LoadTexture(const QString &sFilename, const CPalette &palette, bo
       uint8_t *szData = new uint8_t[iLength];
       UnmangleFile((uint8_t *)baData.constData(), baData.size(), szData, iLength);
       baData = QByteArray((char *)szData, iLength);
+      delete [] szData;
     } else {
       g_pMainWindow->LogMessage("Error loading texture " + sFilename + " unable to unmangle");
-      assert(0);
       return false;
     }
   }

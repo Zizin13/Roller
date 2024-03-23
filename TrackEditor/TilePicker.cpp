@@ -4,6 +4,10 @@
 #include "qpushbutton.h"
 #include "qdesktopwidget.h"
 //-------------------------------------------------------------------------------------------------
+#if defined(_DEBUG) && defined(IS_WINDOWS)
+  #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
+#endif
+//-------------------------------------------------------------------------------------------------
 
 CTilePicker::CTilePicker(QWidget *pParent, CTexture *pTexture, int iIndex, bool bAddNone)
   : QDialog(pParent)

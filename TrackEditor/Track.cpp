@@ -66,6 +66,7 @@ bool CTrack::ImportMangled(const QString &sFilename)
   UnmangleFile((uint8_t *)baData.constData(), baData.size(), szData, iLength);
 
   bool bSuccess = ProcessTrackData(QByteArray((char *)szData, iLength));
+  delete [] szData;
 
   file.close();
   QString sSuccess = (bSuccess ? "Successfully loaded" : "Failed to load");

@@ -44,7 +44,7 @@ void CTrack::ClearData()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrack::ImportMangled(const QString &sFilename)
+bool CTrack::LoadTrack(const QString &sFilename, bool bIsMangled)
 {
   ClearData();
   m_bIsMangled = true;
@@ -59,46 +59,19 @@ bool CTrack::ImportMangled(const QString &sFilename)
     g_pMainWindow->LogMessage("Failed to open track: " + sFilename);
     return false;
   }
-  QByteArray baData = file.readAll();
-
-  int iLength = GetUnmangledLength((uint8_t *)baData.constData(), baData.size());
-  uint8_t *szData = new uint8_t[iLength];
-  UnmangleFile((uint8_t *)baData.constData(), baData.size(), szData, iLength);
-
-  bool bSuccess = ProcessTrackData(QByteArray((char *)szData, iLength));
-  delete [] szData;
-
-  file.close();
-  QString sSuccess = (bSuccess ? "Successfully loaded" : "Failed to load");
-  QString sLogMsg = sSuccess + " file " + sFilename + "\n"
-    + "  geometry chunks: " + QString::number(m_chunkAy.size()) + "\n"
-    + "  texture file: " + m_sTextureFile + "\n"
-    + "  building file: " + m_sBuildingFile;
-  g_pMainWindow->LogMessage(sLogMsg);
-
-  return bSuccess;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-bool CTrack::LoadTrack(const QString &sFilename)
-{
-  ClearData();
-
-  if (sFilename.isEmpty()) {
-    g_pMainWindow->LogMessage("Track filename empty: " + sFilename);
-    return false;
-  }
-
-  QFile file(sFilename);
-  if (!file.open(QIODevice::ReadOnly)) {
-    g_pMainWindow->LogMessage("Failed to open track: " + sFilename);
-    return false;
-  }
 
   QByteArray baData = file.readAll();
+  bool bSuccess = false;
 
-  bool bSuccess = ProcessTrackData(baData);
+  if (bIsMangled) {
+    int iLength = GetUnmangledLength((uint8_t *)baData.constData(), baData.size());
+    uint8_t *szData = new uint8_t[iLength];
+    UnmangleFile((uint8_t *)baData.constData(), baData.size(), szData, iLength);
+    bSuccess = ProcessTrackData(QByteArray((char *)szData, iLength));
+    delete[] szData;
+  } else {
+    bSuccess = ProcessTrackData(baData);
+  }
 
   file.close();
   QString sSuccess = (bSuccess ? "Successfully loaded" : "Failed to load");
@@ -361,7 +334,7 @@ bool CTrack::ProcessTrackData(const QByteArray &baData)
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrack::SaveTrack(const QString &sFilename)
+bool CTrack::SaveTrack(const QString &sFilename, bool bIsMangled)
 {
   if (sFilename.isEmpty())
     return false;
@@ -369,12 +342,21 @@ bool CTrack::SaveTrack(const QString &sFilename)
   std::vector<uint8_t> data;
   GetTrackData(data);
 
+  std::vector<uint8_t> *pOutData;
+  if (bIsMangled) {
+    std::vector<uint8_t> mangledData;
+    MangleFile(data, mangledData);
+    pOutData = &mangledData;
+  } else {
+    pOutData = &data;
+  }
+
   QFile file(sFilename);
   file.resize(0);
   if (file.open(QIODevice::ReadWrite)) {
     QTextStream stream(&file);
-    for (int i = 0; i < data.size(); ++i) {
-      stream << (char)data[i];
+    for (int i = 0; i < pOutData->size(); ++i) {
+      stream << (char)((*pOutData)[i]);
     }
     file.close();
   }
@@ -1090,7 +1072,7 @@ void CTrack::GetTrackData(std::vector<uint8_t> &data)
   //write stunts
   for (CStuntMap::iterator it = stuntMap.begin(); it != stuntMap.end(); ++it) {
     memset(szBuf, 0, sizeof(szBuf));
-    snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d %6d %6d %6d %6d %6d %6d",
+    snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d %6d %6d %6d %6d %6d %6d\r\n",
              it->first, it->second->iScaleFactor, it->second->iAngle, it->second->iUnknown,
              it->second->iTimingGroup, it->second->iHeight, it->second->iTimeBulging,
              it->second->iTimeFlat, it->second->iSmallerExpandsLargerContracts, it->second->iBulge);

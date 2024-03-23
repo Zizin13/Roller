@@ -324,7 +324,7 @@ void CMainWindow::OnLoadTrack()
   if (sFilename.isEmpty())
     return;
 
-  if (!p->m_track.LoadTrack(sFilename)) {
+  if (!p->m_track.LoadTrack(sFilename, false)) {
     //load failed
     m_sTrackFile = "";
   } else { //load successful
@@ -351,7 +351,7 @@ void CMainWindow::OnLoadTrack()
 void CMainWindow::OnSaveTrack()
 {
   if (!m_sTrackFile.isEmpty() && m_bAlreadySaved) {
-    m_bUnsavedChanges = !p->m_track.SaveTrack(m_sTrackFile);
+    m_bUnsavedChanges = !p->m_track.SaveTrack(m_sTrackFile, false);
     UpdateWindow();
   } else {
     OnSaveTrackAs();
@@ -365,7 +365,7 @@ void CMainWindow::OnSaveTrackAs()
   //save track
   QString sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
     this, "Save Track As", m_sTrackFilesFolder, "Track Files (*.TRK)"));
-  if (!p->m_track.SaveTrack(sFilename))
+  if (!p->m_track.SaveTrack(sFilename, false))
     return;
 
   //save successful, update app
@@ -390,7 +390,7 @@ void CMainWindow::OnImportMangled()
   if (sFilename.isEmpty())
     return;
 
-  if (!p->m_track.ImportMangled(sFilename)) {
+  if (!p->m_track.LoadTrack(sFilename, true)) {
     //load failed
     m_sTrackFile = "";
   } else { //load successful
@@ -1261,7 +1261,7 @@ bool CMainWindow::SaveChangesAndContinue()
     if (sFilename.isEmpty()) {
       return false;
     }
-    if (!p->m_track.SaveTrack(sFilename))
+    if (!p->m_track.SaveTrack(sFilename, false))
       return false;
     m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
   }

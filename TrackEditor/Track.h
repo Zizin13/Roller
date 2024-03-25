@@ -6,9 +6,10 @@
 #include "qstring.h"
 //-------------------------------------------------------------------------------------------------
 #define MIXED_DATA "<mixed>"
-//#define NONE_DATA "<none>"
 #define SIGN_LINE_LENGTH 13
 #define STUNT_LINE_LENGTH 69
+//-------------------------------------------------------------------------------------------------
+class CChunkEditValues;
 //-------------------------------------------------------------------------------------------------
 struct tTrackHeader
 {
@@ -157,189 +158,9 @@ public:
   bool LoadTrack(const QString &sFilename, bool bIsMangled);
   bool SaveTrack(const QString &sFilename, bool bIsMangled);
   void GetGeometryCursorPos(int iStartIndex, int iEndIndex, int &iStartCursorPos, int &iEndCursorPos);
-  void GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
-    , QString &sLeftShoulderWidth, QString &sLeftLaneWidth, QString &sRightLaneWidth, QString &sRightShoulderWidth
-    , QString &sLShoulderHeight, QString &sRShoulderHeight, QString &sLength
-    , QString &sYaw, QString &sPitch, QString &sRoll
-    , QString &sAILine1, QString &sAILine2, QString &sAILine3, QString &sAILine4
-    , QString &sTrackGrip, QString &sLeftShoulderGrip, QString &sRightShoulderGrip
-    , QString &sUnk04, QString &sUnk05, QString &sUnk06, QString &sUnk07, QString &sUnk08
-    , QString &sLeftSurfaceType, QString &sCenterSurfaceType, QString &sRightSurfaceType
-    , QString &sLWallType, QString &sRWallType, QString &sRoofType, QString &sLUOuterWallType, QString &sLLOuterWallType, QString &sOuterFloorType
-    , QString &sRLOuterWallType, QString &sRUOuterWallType, QString &sEnvironmentFloorType, QString &sSignType, QString &sSignHorizOffset, QString &sSignVertOffset
-    , QString &sSignYaw, QString &sSignPitch, QString &sSignRoll
-    , QString &sLUOuterWallAngle, QString &sLLOuterWallAngle, QString &sUnk23, QString &sUnk24, QString &sRLOuterWallAngle, QString &sRUOuterWallAngle
-    , QString &sLUOuterWallHeight, QString &sLLOuterWallHeight, QString &sUnk29, QString &sUnk30, QString &sRLOuterWallHeight, QString &sRUOuterWallHeight
-    , QString &sRoofHeight, QString &sDrawOrder1, QString &sDrawOrder2, QString &sDrawOrder3, QString &sUnk37, QString &sUnk38
-    , QString &sUnk39, QString &sUnk40, QString &sUnk41, QString &sUnk42, QString &sUnk43, QString &sUnk44
-    , QString &sUnk45, QString &sUnk46, QString &sUnk47, QString &sUnk48, QString &sUnk49, QString &sUnk50
-    , QString &sSignTexture, QString &sBackTexture
-    , QString &sStuntScaleFactor, QString &sStuntAngle, QString &sStuntUnknown, QString &sStuntTimingGroup, QString &sStuntHeight, QString &sStuntTimeBulging
-    , QString &sStuntTimeFlat, QString &sStuntExpandsContracts, QString &sStuntBulge);
-  void ApplyGeometrySettings(int iStartIndex, int iEndIndex
-                           , const QString &sLeftShoulderWidth
-                           , const QString &sLeftLaneWidth
-                           , const QString &sRightLaneWidth
-                           , const QString &sRightShoulderWidth
-                           , const QString &sLShoulderHeight
-                           , const QString &sRShoulderHeight
-                           , const QString &sLength
-                           , const QString &sYaw
-                           , const QString &sPitch
-                           , const QString &sRoll
-                           , const QString &sAILine1
-                           , const QString &sAILine2
-                           , const QString &sAILine3
-                           , const QString &sAILine4
-                           , const QString &sTrackGrip
-                           , const QString &sLeftShoulderGrip
-                           , const QString &sRightShoulderGrip
-                           , const QString &sUnk04
-                           , const QString &sUnk05
-                           , const QString &sUnk06
-                           , const QString &sUnk07
-                           , const QString &sUnk08
-                           , const QString &sLeftSurfaceType
-                           , const QString &sCenterSurfaceType
-                           , const QString &sRightSurfaceType
-                           , const QString &sLWallType
-                           , const QString &sRWallType
-                           , const QString &sRoofType
-                           , const QString &sLUOuterWallType
-                           , const QString &sLLOuterWallType
-                           , const QString &sOuterFloorType
-                           , const QString &sRLOuterWallType
-                           , const QString &sRUOuterWallType
-                           , const QString &sEnvironmentFloorType
-                           , const QString &sSignType
-                           , const QString &sSignHorizOffset
-                           , const QString &sSignVertOffset
-                           , const QString &sSignYaw
-                           , const QString &sSignPitch
-                           , const QString &sSignRoll
-                           , const QString &sLUOuterWallAngle
-                           , const QString &sLLOuterWallAngle
-                           , const QString &sUnk23
-                           , const QString &sUnk24
-                           , const QString &sRLOuterWallAngle
-                           , const QString &sRUOuterWallAngle
-                           , const QString &sLUOuterWallHeight
-                           , const QString &sLLOuterWallHeight
-                           , const QString &sUnk29
-                           , const QString &sUnk30
-                           , const QString &sRLOuterWallHeight
-                           , const QString &sRUOuterWallHeight
-                           , const QString &sRoofHeight
-                           , const QString &sDrawOrder1
-                           , const QString &sDrawOrder2
-                           , const QString &sDrawOrder3
-                           , const QString &sUnk37
-                           , const QString &sUnk38
-                           , const QString &sUnk39
-                           , const QString &sUnk40
-                           , const QString &sUnk41
-                           , const QString &sUnk42
-                           , const QString &sUnk43
-                           , const QString &sUnk44
-                           , const QString &sUnk45
-                           , const QString &sUnk46
-                           , const QString &sUnk47
-                           , const QString &sUnk48
-                           , const QString &sUnk49
-                           , const QString &sUnk50
-                           , const QString &sSignTexture
-                           , const QString &sBackTexture
-                           , const QString &sStuntScaleFactor
-                           , const QString &sStuntAngle
-                           , const QString &sStuntUnknown
-                           , const QString &sStuntTimingGroup
-                           , const QString &sStuntHeight
-                           , const QString &sStuntTimeBulging
-                           , const QString &sStuntTimeFlat
-                           , const QString &sStuntExpandsContracts
-                           , const QString &sStuntBulge);
-  void InsertGeometryChunk(int iIndex, int iCount
-                           , const QString &sLeftShoulderWidth
-                           , const QString &sLeftLaneWidth
-                           , const QString &sRightLaneWidth
-                           , const QString &sRightShoulderWidth
-                           , const QString &sLShoulderHeight
-                           , const QString &sRShoulderHeight
-                           , const QString &sLength
-                           , const QString &sYaw
-                           , const QString &sPitch
-                           , const QString &sRoll
-                           , const QString &sAILine1
-                           , const QString &sAILine2
-                           , const QString &sAILine3
-                           , const QString &sAILine4
-                           , const QString &sTrackGrip
-                           , const QString &sLeftShoulderGrip
-                           , const QString &sRightShoulderGrip
-                           , const QString &sUnk04
-                           , const QString &sUnk05
-                           , const QString &sUnk06
-                           , const QString &sUnk07
-                           , const QString &sUnk08
-                           , const QString &sLeftSurfaceType
-                           , const QString &sCenterSurfaceType
-                           , const QString &sRightSurfaceType
-                           , const QString &sLWallType
-                           , const QString &sRWallType
-                           , const QString &sRoofType
-                           , const QString &sLUOuterWallType
-                           , const QString &sLLOuterWallType
-                           , const QString &sOuterFloorType
-                           , const QString &sRLOuterWallType
-                           , const QString &sRUOuterWallType
-                           , const QString &sEnvironmentFloorType
-                           , const QString &sSignType
-                           , const QString &sSignHorizOffset
-                           , const QString &sSignVertOffset
-                           , const QString &sSignYaw
-                           , const QString &sSignPitch
-                           , const QString &sSignRoll
-                           , const QString &sLUOuterWallAngle
-                           , const QString &sLLOuterWallAngle
-                           , const QString &sUnk23
-                           , const QString &sUnk24
-                           , const QString &sRLOuterWallAngle
-                           , const QString &sRUOuterWallAngle
-                           , const QString &sLUOuterWallHeight
-                           , const QString &sLLOuterWallHeight
-                           , const QString &sUnk29
-                           , const QString &sUnk30
-                           , const QString &sRLOuterWallHeight
-                           , const QString &sRUOuterWallHeight
-                           , const QString &sRoofHeight
-                           , const QString &sDrawOrder1
-                           , const QString &sDrawOrder2
-                           , const QString &sDrawOrder3
-                           , const QString &sUnk37
-                           , const QString &sUnk38
-                           , const QString &sUnk39
-                           , const QString &sUnk40
-                           , const QString &sUnk41
-                           , const QString &sUnk42
-                           , const QString &sUnk43
-                           , const QString &sUnk44
-                           , const QString &sUnk45
-                           , const QString &sUnk46
-                           , const QString &sUnk47
-                           , const QString &sUnk48
-                           , const QString &sUnk49
-                           , const QString &sUnk50
-                           , const QString &sSignTexture
-                           , const QString &sBackTexture
-                           , const QString &sStuntScaleFactor
-                           , const QString &sStuntAngle
-                           , const QString &sStuntUnknown
-                           , const QString &sStuntTimingGroup
-                           , const QString &sStuntHeight
-                           , const QString &sStuntTimeBulging
-                           , const QString &sStuntTimeFlat
-                           , const QString &sStuntExpandsContracts
-                           , const QString &sStuntBulge);
+  void GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex, CChunkEditValues &editVals);
+  void ApplyGeometrySettings(int iStartIndex, int iEndIndex, const CChunkEditValues &editVals);
+  void InsertGeometryChunk(int iIndex, int iCount, const CChunkEditValues &editVals);
   void UpdateChunkStrings();
 
   tTrackHeader m_header;

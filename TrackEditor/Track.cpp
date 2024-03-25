@@ -4,6 +4,7 @@
 #include "qfile.h"
 #include "qtextstream.h"
 #include "Unmangler.h"
+#include "ChunkEditValues.h"
 #include <assert.h>
 //-------------------------------------------------------------------------------------------------
 #define HEADER_ELEMENT_COUNT 4
@@ -386,25 +387,7 @@ void CTrack::GetGeometryCursorPos(int iStartIndex, int iEndIndex, int &iStartCur
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
-    , QString &sLeftShoulderWidth, QString &sLeftLaneWidth, QString &sRightLaneWidth, QString &sRightShoulderWidth
-    , QString &sLShoulderHeight, QString &sRShoulderHeight, QString &sLength
-    , QString &sYaw, QString &sPitch, QString &sRoll
-    , QString &sAILine1, QString &sAILine2, QString &sAILine3, QString &sAILine4
-    , QString &sTrackGrip, QString &sLeftShoulderGrip, QString &sRightShoulderGrip
-    , QString &sUnk04, QString &sUnk05, QString &sUnk06, QString &sUnk07, QString &sUnk08
-    , QString &sLeftSurfaceType, QString &sCenterSurfaceType, QString &sRightSurfaceType
-    , QString &sLWallType, QString &sRWallType, QString &sRoofType, QString &sLUOuterWallType, QString &sLLOuterWallType, QString &sOuterFloorType
-    , QString &sRLOuterWallType, QString &sRUOuterWallType, QString &sEnvironmentFloorType, QString &sSignType, QString &sSignHorizOffset, QString &sSignVertOffset
-    , QString &sSignYaw, QString &sSignPitch, QString &sSignRoll
-    , QString &sLUOuterWallAngle, QString &sLLOuterWallAngle, QString &sUnk23, QString &sUnk24, QString &sRLOuterWallAngle, QString &sRUOuterWallAngle
-    , QString &sLUOuterWallHeight, QString &sLLOuterWallHeight, QString &sUnk29, QString &sUnk30, QString &sRLOuterWallHeight, QString &sRUOuterWallHeight
-    , QString &sRoofHeight, QString &sDrawOrder1, QString &sDrawOrder2, QString &sDrawOrder3, QString &sUnk37, QString &sUnk38
-    , QString &sUnk39, QString &sUnk40, QString &sUnk41, QString &sUnk42, QString &sUnk43, QString &sUnk44
-    , QString &sUnk45, QString &sUnk46, QString &sUnk47, QString &sUnk48, QString &sUnk49, QString &sUnk50
-    , QString &sSignTexture, QString &sBackTexture
-    , QString &sStuntScaleFactor, QString &sStuntAngle, QString &sStuntUnknown, QString &sStuntTimingGroup, QString &sStuntHeight, QString &sStuntTimeBulging
-    , QString &sStuntTimeFlat, QString &sStuntExpandsContracts, QString &sStuntBulge)
+void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex, CChunkEditValues &editVals)
 {
   if (m_chunkAy.empty()) return;
   if (iEndIndex < iStartIndex || iEndIndex >= m_chunkAy.size()) {
@@ -412,451 +395,351 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex
     return;
   }
 
-  sLeftShoulderWidth = ""; sLeftLaneWidth = ""; sRightLaneWidth = ""; sRightShoulderWidth = "";
-  sLShoulderHeight = ""; sRShoulderHeight = ""; sLength = "";
-  sYaw = ""; sPitch = ""; sRoll = "";
-  sAILine1 = ""; sAILine2 = ""; sAILine3 = ""; sAILine4 = "";
-  sTrackGrip = ""; sLeftShoulderGrip = ""; sRightShoulderGrip = "";
-  sUnk04 = ""; sUnk05 = ""; sUnk06 = ""; sUnk07 = ""; sUnk08 = "";
-  sLeftSurfaceType = ""; sCenterSurfaceType = ""; sRightSurfaceType = "";
-  sLWallType = ""; sRWallType = ""; sRoofType = ""; sLUOuterWallType = ""; sLLOuterWallType = ""; sOuterFloorType = "";
-  sRLOuterWallType = ""; sRUOuterWallType = ""; sEnvironmentFloorType = ""; sSignType = ""; sSignHorizOffset = ""; sSignVertOffset = "";
-  sSignYaw = ""; sSignPitch = ""; sSignRoll = "";
-  sLUOuterWallAngle = ""; sLLOuterWallAngle = ""; sUnk23 = ""; sUnk24 = ""; sRLOuterWallAngle = ""; sRUOuterWallAngle = "";
-  sLUOuterWallHeight = ""; sLLOuterWallHeight = ""; sUnk29 = ""; sUnk30 = ""; sRLOuterWallHeight = ""; sRUOuterWallHeight = "";
-  sRoofHeight = ""; sDrawOrder1 = ""; sDrawOrder2 = ""; sDrawOrder3 = ""; sUnk37 = ""; sUnk38 = "";
-  sUnk39 = ""; sUnk40 = ""; sUnk41 = ""; sUnk42 = ""; sUnk43 = ""; sUnk44 = "";
-  sUnk45 = ""; sUnk46 = ""; sUnk47 = ""; sUnk48 = ""; sUnk49 = ""; sUnk50 = "";
-  sSignTexture = ""; sBackTexture = "";
-  sStuntScaleFactor = ""; sStuntAngle = ""; sStuntUnknown = ""; sStuntTimingGroup = ""; sStuntHeight = ""; sStuntTimeBulging = "";
-  sStuntTimeFlat = ""; sStuntExpandsContracts = ""; sStuntBulge = "";
-
   QString sVal;
   for (int i = iStartIndex; i <= iEndIndex; ++i) {
     sVal = QString::number(m_chunkAy[i].iLeftShoulderWidth);
-    if (sLeftShoulderWidth.isEmpty()) sLeftShoulderWidth = sVal;
-    else if (sLeftShoulderWidth.compare(sVal) != 0) sLeftShoulderWidth = MIXED_DATA;
+    if (editVals.sLeftShoulderWidth.isEmpty()) editVals.sLeftShoulderWidth = sVal;
+    else if (editVals.sLeftShoulderWidth.compare(sVal) != 0) editVals.sLeftShoulderWidth = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iLeftLaneWidth);
-    if (sLeftLaneWidth.isEmpty()) sLeftLaneWidth = sVal;
-    else if (sLeftLaneWidth.compare(sVal) != 0) sLeftLaneWidth = MIXED_DATA;
+    if (editVals.sLeftLaneWidth.isEmpty()) editVals.sLeftLaneWidth = sVal;
+    else if (editVals.sLeftLaneWidth.compare(sVal) != 0) editVals.sLeftLaneWidth = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iRightLaneWidth);
-    if (sRightLaneWidth.isEmpty()) sRightLaneWidth = sVal;
-    else if (sRightLaneWidth.compare(sVal) != 0) sRightLaneWidth = MIXED_DATA;
+    if (editVals.sRightLaneWidth.isEmpty()) editVals.sRightLaneWidth = sVal;
+    else if (editVals.sRightLaneWidth.compare(sVal) != 0) editVals.sRightLaneWidth = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iRightShoulderWidth);
-    if (sRightShoulderWidth.isEmpty()) sRightShoulderWidth = sVal;
-    else if (sRightShoulderWidth.compare(sVal) != 0) sRightShoulderWidth = MIXED_DATA;
+    if (editVals.sRightShoulderWidth.isEmpty()) editVals.sRightShoulderWidth = sVal;
+    else if (editVals.sRightShoulderWidth.compare(sVal) != 0) editVals.sRightShoulderWidth = MIXED_DATA;
 
     sVal = QString::number(m_chunkAy[i].iLeftShoulderHeight);
-    if (sLShoulderHeight.isEmpty()) sLShoulderHeight = sVal;
-    else if (sLShoulderHeight.compare(sVal) != 0) sLShoulderHeight = MIXED_DATA;
+    if (editVals.sLShoulderHeight.isEmpty()) editVals.sLShoulderHeight = sVal;
+    else if (editVals.sLShoulderHeight.compare(sVal) != 0) editVals.sLShoulderHeight = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iRightShoulderHeight);
-    if (sRShoulderHeight.isEmpty()) sRShoulderHeight = sVal;
-    else if (sRShoulderHeight.compare(sVal) != 0) sRShoulderHeight = MIXED_DATA;
+    if (editVals.sRShoulderHeight.isEmpty()) editVals.sRShoulderHeight = sVal;
+    else if (editVals.sRShoulderHeight.compare(sVal) != 0) editVals.sRShoulderHeight = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iLength);
-    if (sLength.isEmpty()) sLength = sVal;
-    else if (sLength.compare(sVal) != 0) sLength = MIXED_DATA;
+    if (editVals.sLength.isEmpty()) editVals.sLength = sVal;
+    else if (editVals.sLength.compare(sVal) != 0) editVals.sLength = MIXED_DATA;
 
     sVal = QString::number(m_chunkAy[i].dYaw, 'f', 5);
-    if (sYaw.isEmpty()) sYaw = sVal;
-    else if (sYaw.compare(sVal) != 0) sYaw = MIXED_DATA;
+    if (editVals.sYaw.isEmpty()) editVals.sYaw = sVal;
+    else if (editVals.sYaw.compare(sVal) != 0) editVals.sYaw = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].dPitch, 'f', 5);
-    if (sPitch.isEmpty()) sPitch = sVal;
-    else if (sPitch.compare(sVal) != 0) sPitch = MIXED_DATA;
+    if (editVals.sPitch.isEmpty()) editVals.sPitch = sVal;
+    else if (editVals.sPitch.compare(sVal) != 0) editVals.sPitch = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].dRoll, 'f', 5);
-    if (sRoll.isEmpty()) sRoll = sVal;
-    else if (sRoll.compare(sVal) != 0) sRoll = MIXED_DATA;
+    if (editVals.sRoll.isEmpty()) editVals.sRoll = sVal;
+    else if (editVals.sRoll.compare(sVal) != 0) editVals.sRoll = MIXED_DATA;
 
     sVal = QString::number(m_chunkAy[i].iAILine1);
-    if (sAILine1.isEmpty()) sAILine1 = sVal;
-    else if (sAILine1.compare(sVal) != 0) sAILine1 = MIXED_DATA;
+    if (editVals.sAILine1.isEmpty()) editVals.sAILine1 = sVal;
+    else if (editVals.sAILine1.compare(sVal) != 0) editVals.sAILine1 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iAILine2);
-    if (sAILine2.isEmpty()) sAILine2 = sVal;
-    else if (sAILine2.compare(sVal) != 0) sAILine2 = MIXED_DATA;
+    if (editVals.sAILine2.isEmpty()) editVals.sAILine2 = sVal;
+    else if (editVals.sAILine2.compare(sVal) != 0) editVals.sAILine2 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iAILine3);
-    if (sAILine3.isEmpty()) sAILine3 = sVal;
-    else if (sAILine3.compare(sVal) != 0) sAILine3 = MIXED_DATA;
+    if (editVals.sAILine3.isEmpty()) editVals.sAILine3 = sVal;
+    else if (editVals.sAILine3.compare(sVal) != 0) editVals.sAILine3 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iAILine4);
-    if (sAILine4.isEmpty()) sAILine4 = sVal;
-    else if (sAILine4.compare(sVal) != 0) sAILine4 = MIXED_DATA;
+    if (editVals.sAILine4.isEmpty()) editVals.sAILine4 = sVal;
+    else if (editVals.sAILine4.compare(sVal) != 0) editVals.sAILine4 = MIXED_DATA;
 
     sVal = QString::number(m_chunkAy[i].iTrackGrip);
-    if (sTrackGrip.isEmpty()) sTrackGrip = sVal;
-    else if (sTrackGrip.compare(sVal) != 0) sTrackGrip = MIXED_DATA;
+    if (editVals.sTrackGrip.isEmpty()) editVals.sTrackGrip = sVal;
+    else if (editVals.sTrackGrip.compare(sVal) != 0) editVals.sTrackGrip = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iLeftShoulderGrip);
-    if (sLeftShoulderGrip.isEmpty()) sLeftShoulderGrip = sVal;
-    else if (sLeftShoulderGrip.compare(sVal) != 0) sLeftShoulderGrip = MIXED_DATA;
+    if (editVals.sLeftShoulderGrip.isEmpty()) editVals.sLeftShoulderGrip = sVal;
+    else if (editVals.sLeftShoulderGrip.compare(sVal) != 0) editVals.sLeftShoulderGrip = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iRightShoulderGrip);
-    if (sRightShoulderGrip.isEmpty()) sRightShoulderGrip = sVal;
-    else if (sRightShoulderGrip.compare(sVal) != 0) sRightShoulderGrip = MIXED_DATA;
+    if (editVals.sRightShoulderGrip.isEmpty()) editVals.sRightShoulderGrip = sVal;
+    else if (editVals.sRightShoulderGrip.compare(sVal) != 0) editVals.sRightShoulderGrip = MIXED_DATA;
 
     sVal = QString::number(m_chunkAy[i].iUnk04);
-    if (sUnk04.isEmpty()) sUnk04 = sVal;
-    else if (sUnk04.compare(sVal) != 0) sUnk04 = MIXED_DATA;
+    if (editVals.sUnk04.isEmpty()) editVals.sUnk04 = sVal;
+    else if (editVals.sUnk04.compare(sVal) != 0) editVals.sUnk04 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk05);
-    if (sUnk05.isEmpty()) sUnk05 = sVal;
-    else if (sUnk05.compare(sVal) != 0) sUnk05 = MIXED_DATA;
+    if (editVals.sUnk05.isEmpty()) editVals.sUnk05 = sVal;
+    else if (editVals.sUnk05.compare(sVal) != 0) editVals.sUnk05 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk06);
-    if (sUnk06.isEmpty()) sUnk06 = sVal;
-    else if (sUnk06.compare(sVal) != 0) sUnk06 = MIXED_DATA;
+    if (editVals.sUnk06.isEmpty()) editVals.sUnk06 = sVal;
+    else if (editVals.sUnk06.compare(sVal) != 0) editVals.sUnk06 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk07);
-    if (sUnk07.isEmpty()) sUnk07 = sVal;
-    else if (sUnk07.compare(sVal) != 0) sUnk07 = MIXED_DATA;
+    if (editVals.sUnk07.isEmpty()) editVals.sUnk07 = sVal;
+    else if (editVals.sUnk07.compare(sVal) != 0) editVals.sUnk07 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk08);
-    if (sUnk08.isEmpty()) sUnk08 = sVal;
-    else if (sUnk08.compare(sVal) != 0) sUnk08 = MIXED_DATA;
+    if (editVals.sUnk08.isEmpty()) editVals.sUnk08 = sVal;
+    else if (editVals.sUnk08.compare(sVal) != 0) editVals.sUnk08 = MIXED_DATA;
 
     sVal = QString::number(m_chunkAy[i].iLeftSurfaceType);
-    if (sLeftSurfaceType.isEmpty()) sLeftSurfaceType = sVal;
-    else if (sLeftSurfaceType.compare(sVal) != 0) sLeftSurfaceType = MIXED_DATA;
+    if (editVals.sLeftSurfaceType.isEmpty()) editVals.sLeftSurfaceType = sVal;
+    else if (editVals.sLeftSurfaceType.compare(sVal) != 0) editVals.sLeftSurfaceType = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iCenterSurfaceType);
-    if (sCenterSurfaceType.isEmpty()) sCenterSurfaceType = sVal;
-    else if (sCenterSurfaceType.compare(sVal) != 0) sCenterSurfaceType = MIXED_DATA;
+    if (editVals.sCenterSurfaceType.isEmpty()) editVals.sCenterSurfaceType = sVal;
+    else if (editVals.sCenterSurfaceType.compare(sVal) != 0) editVals.sCenterSurfaceType = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iRightSurfaceType);
-    if (sRightSurfaceType.isEmpty()) sRightSurfaceType = sVal;
-    else if (sRightSurfaceType.compare(sVal) != 0) sRightSurfaceType = MIXED_DATA;
+    if (editVals.sRightSurfaceType.isEmpty()) editVals.sRightSurfaceType = sVal;
+    else if (editVals.sRightSurfaceType.compare(sVal) != 0) editVals.sRightSurfaceType = MIXED_DATA;
 
     sVal = QString::number(m_chunkAy[i].iLeftWallType);
-    if (sLWallType.isEmpty()) sLWallType = sVal;
-    else if (sLWallType.compare(sVal) != 0) sLWallType = MIXED_DATA;
+    if (editVals.sLWallType.isEmpty()) editVals.sLWallType = sVal;
+    else if (editVals.sLWallType.compare(sVal) != 0) editVals.sLWallType = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iRightWallType);
-    if (sRWallType.isEmpty()) sRWallType = sVal;
-    else if (sRWallType.compare(sVal) != 0) sRWallType = MIXED_DATA;
+    if (editVals.sRWallType.isEmpty()) editVals.sRWallType = sVal;
+    else if (editVals.sRWallType.compare(sVal) != 0) editVals.sRWallType = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iRoofType);
-    if (sRoofType.isEmpty()) sRoofType = sVal;
-    else if (sRoofType.compare(sVal) != 0) sRoofType = MIXED_DATA;
+    if (editVals.sRoofType.isEmpty()) editVals.sRoofType = sVal;
+    else if (editVals.sRoofType.compare(sVal) != 0) editVals.sRoofType = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iLUOuterWallType);
-    if (sLUOuterWallType.isEmpty()) sLUOuterWallType = sVal;
-    else if (sLUOuterWallType.compare(sVal) != 0) sLUOuterWallType = MIXED_DATA;
+    if (editVals.sLUOuterWallType.isEmpty()) editVals.sLUOuterWallType = sVal;
+    else if (editVals.sLUOuterWallType.compare(sVal) != 0) editVals.sLUOuterWallType = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iLLOuterWallType);
-    if (sLLOuterWallType.isEmpty()) sLLOuterWallType = sVal;
-    else if (sLLOuterWallType.compare(sVal) != 0) sLLOuterWallType = MIXED_DATA;
+    if (editVals.sLLOuterWallType.isEmpty()) editVals.sLLOuterWallType = sVal;
+    else if (editVals.sLLOuterWallType.compare(sVal) != 0) editVals.sLLOuterWallType = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iOuterFloorType);
-    if (sOuterFloorType.isEmpty()) sOuterFloorType = sVal;
-    else if (sOuterFloorType.compare(sVal) != 0) sOuterFloorType = MIXED_DATA;
+    if (editVals.sOuterFloorType.isEmpty()) editVals.sOuterFloorType = sVal;
+    else if (editVals.sOuterFloorType.compare(sVal) != 0) editVals.sOuterFloorType = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iRLOuterWallType);
-    if (sRLOuterWallType.isEmpty()) sRLOuterWallType = sVal;
-    else if (sRLOuterWallType.compare(sVal) != 0) sRLOuterWallType = MIXED_DATA;
+    if (editVals.sRLOuterWallType.isEmpty())editVals.sRLOuterWallType = sVal;
+    else if (editVals.sRLOuterWallType.compare(sVal) != 0) editVals.sRLOuterWallType = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iRUOuterWallType);
-    if (sRUOuterWallType.isEmpty()) sRUOuterWallType = sVal;
-    else if (sRUOuterWallType.compare(sVal) != 0) sRUOuterWallType = MIXED_DATA;
+    if (editVals.sRUOuterWallType.isEmpty()) editVals.sRUOuterWallType = sVal;
+    else if (editVals.sRUOuterWallType.compare(sVal) != 0) editVals.sRUOuterWallType = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iEnvironmentFloorType);
-    if (sEnvironmentFloorType.isEmpty()) sEnvironmentFloorType = sVal;
-    else if (sEnvironmentFloorType.compare(sVal) != 0) sEnvironmentFloorType = MIXED_DATA;
+    if (editVals.sEnvironmentFloorType.isEmpty()) editVals.sEnvironmentFloorType = sVal;
+    else if (editVals.sEnvironmentFloorType.compare(sVal) != 0) editVals.sEnvironmentFloorType = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iSignType);
-    if (sSignType.isEmpty()) sSignType = sVal;
-    else if (sSignType.compare(sVal) != 0) sSignType = MIXED_DATA;
+    if (editVals.sSignType.isEmpty()) editVals.sSignType = sVal;
+    else if (editVals.sSignType.compare(sVal) != 0) editVals.sSignType = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iSignHorizOffset);
-    if (sSignHorizOffset.isEmpty()) sSignHorizOffset = sVal;
-    else if (sSignHorizOffset.compare(sVal) != 0) sSignHorizOffset = MIXED_DATA;
+    if (editVals.sSignHorizOffset.isEmpty()) editVals.sSignHorizOffset = sVal;
+    else if (editVals.sSignHorizOffset.compare(sVal) != 0) editVals.sSignHorizOffset = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iSignVertOffset);
-    if (sSignVertOffset.isEmpty()) sSignVertOffset = sVal;
-    else if (sSignVertOffset.compare(sVal) != 0) sSignVertOffset = MIXED_DATA;
+    if (editVals.sSignVertOffset.isEmpty()) editVals.sSignVertOffset = sVal;
+    else if (editVals.sSignVertOffset.compare(sVal) != 0) editVals.sSignVertOffset = MIXED_DATA;
 
     sVal = QString::number(m_chunkAy[i].dSignYaw, 'f', 1);
-    if (sSignYaw.isEmpty()) sSignYaw = sVal;
-    else if (sSignYaw.compare(sVal) != 0) sSignYaw = MIXED_DATA;
+    if (editVals.sSignYaw.isEmpty()) editVals.sSignYaw = sVal;
+    else if (editVals.sSignYaw.compare(sVal) != 0) editVals.sSignYaw = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].dSignPitch, 'f', 1);
-    if (sSignPitch.isEmpty()) sSignPitch = sVal;
-    else if (sSignPitch.compare(sVal) != 0) sSignPitch = MIXED_DATA;
+    if (editVals.sSignPitch.isEmpty()) editVals.sSignPitch = sVal;
+    else if (editVals.sSignPitch.compare(sVal) != 0) editVals.sSignPitch = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].dSignRoll, 'f', 1);
-    if (sSignRoll.isEmpty()) sSignRoll = sVal;
-    else if (sSignRoll.compare(sVal) != 0) sSignRoll = MIXED_DATA;
+    if (editVals.sSignRoll.isEmpty()) editVals.sSignRoll = sVal;
+    else if (editVals.sSignRoll.compare(sVal) != 0) editVals.sSignRoll = MIXED_DATA;
  
     sVal = QString::number(m_chunkAy[i].iLUOuterWallAngle);
-    if (sLUOuterWallAngle.isEmpty()) sLUOuterWallAngle = sVal;
-    else if (sLUOuterWallAngle.compare(sVal) != 0) sLUOuterWallAngle = MIXED_DATA;
+    if (editVals.sLUOuterWallAngle.isEmpty()) editVals.sLUOuterWallAngle = sVal;
+    else if (editVals.sLUOuterWallAngle.compare(sVal) != 0) editVals.sLUOuterWallAngle = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iLLOuterWallAngle);
-    if (sLLOuterWallAngle.isEmpty()) sLLOuterWallAngle = sVal;
-    else if (sLLOuterWallAngle.compare(sVal) != 0) sLLOuterWallAngle = MIXED_DATA;
+    if (editVals.sLLOuterWallAngle.isEmpty()) editVals.sLLOuterWallAngle = sVal;
+    else if (editVals.sLLOuterWallAngle.compare(sVal) != 0) editVals.sLLOuterWallAngle = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk23);
-    if (sUnk23.isEmpty()) sUnk23 = sVal;
-    else if (sUnk23.compare(sVal) != 0) sUnk23 = MIXED_DATA;
+    if (editVals.sUnk23.isEmpty()) editVals.sUnk23 = sVal;
+    else if (editVals.sUnk23.compare(sVal) != 0) editVals.sUnk23 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk24);
-    if (sUnk24.isEmpty()) sUnk24 = sVal;
-    else if (sUnk24.compare(sVal) != 0) sUnk24 = MIXED_DATA;
+    if (editVals.sUnk24.isEmpty()) editVals.sUnk24 = sVal;
+    else if (editVals.sUnk24.compare(sVal) != 0) editVals.sUnk24 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iRLOuterWallAngle);
-    if (sRLOuterWallAngle.isEmpty()) sRLOuterWallAngle = sVal;
-    else if (sRLOuterWallAngle.compare(sVal) != 0) sRLOuterWallAngle = MIXED_DATA;
+    if (editVals.sRLOuterWallAngle.isEmpty()) editVals.sRLOuterWallAngle = sVal;
+    else if (editVals.sRLOuterWallAngle.compare(sVal) != 0) editVals.sRLOuterWallAngle = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iRUOuterWallAngle);
-    if (sRUOuterWallAngle.isEmpty()) sRUOuterWallAngle = sVal;
-    else if (sRUOuterWallAngle.compare(sVal) != 0) sRUOuterWallAngle = MIXED_DATA;
+    if (editVals.sRUOuterWallAngle.isEmpty()) editVals.sRUOuterWallAngle = sVal;
+    else if (editVals.sRUOuterWallAngle.compare(sVal) != 0) editVals.sRUOuterWallAngle = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iLUOuterWallHeight);
-    if (sLUOuterWallHeight.isEmpty()) sLUOuterWallHeight = sVal;
-    else if (sLUOuterWallHeight.compare(sVal) != 0) sLUOuterWallHeight = MIXED_DATA;
+    if (editVals.sLUOuterWallHeight.isEmpty()) editVals.sLUOuterWallHeight = sVal;
+    else if (editVals.sLUOuterWallHeight.compare(sVal) != 0) editVals.sLUOuterWallHeight = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iLLOuterWallHeight);
-    if (sLLOuterWallHeight.isEmpty()) sLLOuterWallHeight = sVal;
-    else if (sLLOuterWallHeight.compare(sVal) != 0) sLLOuterWallHeight = MIXED_DATA;
+    if (editVals.sLLOuterWallHeight.isEmpty()) editVals.sLLOuterWallHeight = sVal;
+    else if (editVals.sLLOuterWallHeight.compare(sVal) != 0) editVals.sLLOuterWallHeight = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk29);
-    if (sUnk29.isEmpty()) sUnk29 = sVal;
-    else if (sUnk29.compare(sVal) != 0) sUnk29 = MIXED_DATA;
+    if (editVals.sUnk29.isEmpty()) editVals.sUnk29 = sVal;
+    else if (editVals.sUnk29.compare(sVal) != 0) editVals.sUnk29 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk30);
-    if (sUnk30.isEmpty()) sUnk30 = sVal;
-    else if (sUnk30.compare(sVal) != 0) sUnk30 = MIXED_DATA;
+    if (editVals.sUnk30.isEmpty()) editVals.sUnk30 = sVal;
+    else if (editVals.sUnk30.compare(sVal) != 0) editVals.sUnk30 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iRLOuterWallHeight);
-    if (sRLOuterWallHeight.isEmpty()) sRLOuterWallHeight = sVal;
-    else if (sRLOuterWallHeight.compare(sVal) != 0) sRLOuterWallHeight = MIXED_DATA;
+    if (editVals.sRLOuterWallHeight.isEmpty()) editVals.sRLOuterWallHeight = sVal;
+    else if (editVals.sRLOuterWallHeight.compare(sVal) != 0) editVals.sRLOuterWallHeight = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iRUOuterWallHeight);
-    if (sRUOuterWallHeight.isEmpty()) sRUOuterWallHeight = sVal;
-    else if (sRUOuterWallHeight.compare(sVal) != 0) sRUOuterWallHeight = MIXED_DATA;
+    if (editVals.sRUOuterWallHeight.isEmpty()) editVals.sRUOuterWallHeight = sVal;
+    else if (editVals.sRUOuterWallHeight.compare(sVal) != 0) editVals.sRUOuterWallHeight = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iRoofHeight);
-    if (sRoofHeight.isEmpty()) sRoofHeight = sVal;
-    else if (sRoofHeight.compare(sVal) != 0) sRoofHeight = MIXED_DATA;
+    if (editVals.sRoofHeight.isEmpty()) editVals.sRoofHeight = sVal;
+    else if (editVals.sRoofHeight.compare(sVal) != 0) editVals.sRoofHeight = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iDrawOrder1);
-    if (sDrawOrder1.isEmpty()) sDrawOrder1 = sVal;
-    else if (sDrawOrder1.compare(sVal) != 0) sDrawOrder1 = MIXED_DATA;
+    if (editVals.sDrawOrder1.isEmpty()) editVals.sDrawOrder1 = sVal;
+    else if (editVals.sDrawOrder1.compare(sVal) != 0) editVals.sDrawOrder1 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iDrawOrder2);
-    if (sDrawOrder2.isEmpty()) sDrawOrder2 = sVal;
-    else if (sDrawOrder2.compare(sVal) != 0) sDrawOrder2 = MIXED_DATA;
+    if (editVals.sDrawOrder2.isEmpty()) editVals.sDrawOrder2 = sVal;
+    else if (editVals.sDrawOrder2.compare(sVal) != 0) editVals.sDrawOrder2 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iDrawOrder3);
-    if (sDrawOrder3.isEmpty()) sDrawOrder3 = sVal;
-    else if (sDrawOrder3.compare(sVal) != 0) sDrawOrder3 = MIXED_DATA;
+    if (editVals.sDrawOrder3.isEmpty()) editVals.sDrawOrder3 = sVal;
+    else if (editVals.sDrawOrder3.compare(sVal) != 0) editVals.sDrawOrder3 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk37);
-    if (sUnk37.isEmpty()) sUnk37 = sVal;
-    else if (sUnk37.compare(sVal) != 0) sUnk37 = MIXED_DATA;
+    if (editVals.sUnk37.isEmpty()) editVals.sUnk37 = sVal;
+    else if (editVals.sUnk37.compare(sVal) != 0) editVals.sUnk37 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk38);
-    if (sUnk38.isEmpty()) sUnk38 = sVal;
-    else if (sUnk38.compare(sVal) != 0) sUnk38 = MIXED_DATA;
+    if (editVals.sUnk38.isEmpty()) editVals.sUnk38 = sVal;
+    else if (editVals.sUnk38.compare(sVal) != 0) editVals.sUnk38 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk39);
-    if (sUnk39.isEmpty()) sUnk39 = sVal;
-    else if (sUnk39.compare(sVal) != 0) sUnk39 = MIXED_DATA;
+    if (editVals.sUnk39.isEmpty()) editVals.sUnk39 = sVal;
+    else if (editVals.sUnk39.compare(sVal) != 0) editVals.sUnk39 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk40);
-    if (sUnk40.isEmpty()) sUnk40 = sVal;
-    else if (sUnk40.compare(sVal) != 0) sUnk40 = MIXED_DATA;
+    if (editVals.sUnk40.isEmpty()) editVals.sUnk40 = sVal;
+    else if (editVals.sUnk40.compare(sVal) != 0) editVals.sUnk40 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk41);
-    if (sUnk41.isEmpty()) sUnk41 = sVal;
-    else if (sUnk41.compare(sVal) != 0) sUnk41 = MIXED_DATA;
+    if (editVals.sUnk41.isEmpty()) editVals.sUnk41 = sVal;
+    else if (editVals.sUnk41.compare(sVal) != 0) editVals.sUnk41 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk42);
-    if (sUnk42.isEmpty()) sUnk42 = sVal;
-    else if (sUnk42.compare(sVal) != 0) sUnk42 = MIXED_DATA;
+    if (editVals.sUnk42.isEmpty()) editVals.sUnk42 = sVal;
+    else if (editVals.sUnk42.compare(sVal) != 0) editVals.sUnk42 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk43);
-    if (sUnk43.isEmpty()) sUnk43 = sVal;
-    else if (sUnk43.compare(sVal) != 0) sUnk43 = MIXED_DATA;
+    if (editVals.sUnk43.isEmpty()) editVals.sUnk43 = sVal;
+    else if (editVals.sUnk43.compare(sVal) != 0) editVals.sUnk43 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk44);
-    if (sUnk44.isEmpty()) sUnk44 = sVal;
-    else if (sUnk44.compare(sVal) != 0) sUnk44 = MIXED_DATA;
+    if (editVals.sUnk44.isEmpty()) editVals.sUnk44 = sVal;
+    else if (editVals.sUnk44.compare(sVal) != 0) editVals.sUnk44 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk45);
-    if (sUnk45.isEmpty()) sUnk45 = sVal;
-    else if (sUnk45.compare(sVal) != 0) sUnk45 = MIXED_DATA;
+    if (editVals.sUnk45.isEmpty()) editVals.sUnk45 = sVal;
+    else if (editVals.sUnk45.compare(sVal) != 0) editVals.sUnk45 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk46);
-    if (sUnk46.isEmpty()) sUnk46 = sVal;
-    else if (sUnk46.compare(sVal) != 0) sUnk46 = MIXED_DATA;
+    if (editVals.sUnk46.isEmpty()) editVals.sUnk46 = sVal;
+    else if (editVals.sUnk46.compare(sVal) != 0) editVals.sUnk46 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk47);
-    if (sUnk47.isEmpty()) sUnk47 = sVal;
-    else if (sUnk47.compare(sVal) != 0) sUnk47 = MIXED_DATA;
+    if (editVals.sUnk47.isEmpty()) editVals.sUnk47 = sVal;
+    else if (editVals.sUnk47.compare(sVal) != 0) editVals.sUnk47 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk48);
-    if (sUnk48.isEmpty()) sUnk48 = sVal;
-    else if (sUnk48.compare(sVal) != 0) sUnk48 = MIXED_DATA;
+    if (editVals.sUnk48.isEmpty()) editVals.sUnk48 = sVal;
+    else if (editVals.sUnk48.compare(sVal) != 0) editVals.sUnk48 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk49);
-    if (sUnk49.isEmpty()) sUnk49 = sVal;
-    else if (sUnk49.compare(sVal) != 0) sUnk49 = MIXED_DATA;
+    if (editVals.sUnk49.isEmpty()) editVals.sUnk49 = sVal;
+    else if (editVals.sUnk49.compare(sVal) != 0) editVals.sUnk49 = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk50);
-    if (sUnk50.isEmpty()) sUnk50 = sVal;
-    else if (sUnk50.compare(sVal) != 0) sUnk50 = MIXED_DATA;
+    if (editVals.sUnk50.isEmpty()) editVals.sUnk50 = sVal;
+    else if (editVals.sUnk50.compare(sVal) != 0) editVals.sUnk50 = MIXED_DATA;
 
     sVal = QString::number(m_chunkAy[i].iSignTexture);
-    if (sSignTexture.isEmpty()) sSignTexture = sVal;
-    else if (sSignTexture.compare(sVal) != 0) sSignTexture = MIXED_DATA;
+    if (editVals.sSignTexture.isEmpty()) editVals.sSignTexture = sVal;
+    else if (editVals.sSignTexture.compare(sVal) != 0) editVals.sSignTexture = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iBackTexture);
-    if (sBackTexture.isEmpty()) sBackTexture = sVal;
-    else if (sBackTexture.compare(sVal) != 0) sBackTexture = MIXED_DATA;
+    if (editVals.sBackTexture.isEmpty()) editVals.sBackTexture = sVal;
+    else if (editVals.sBackTexture.compare(sVal) != 0) editVals.sBackTexture = MIXED_DATA;
 
     sVal = QString::number(m_chunkAy[i].stunt.iScaleFactor);
-    if (sStuntScaleFactor.isEmpty()) sStuntScaleFactor = sVal;
-    else if (sStuntScaleFactor.compare(sVal) != 0) sStuntScaleFactor = MIXED_DATA;
+    if (editVals.sStuntScaleFactor.isEmpty()) editVals.sStuntScaleFactor = sVal;
+    else if (editVals.sStuntScaleFactor.compare(sVal) != 0) editVals.sStuntScaleFactor = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].stunt.iAngle);
-    if (sStuntAngle.isEmpty()) sStuntAngle = sVal;
-    else if (sStuntAngle.compare(sVal) != 0) sStuntAngle = MIXED_DATA;
+    if (editVals.sStuntAngle.isEmpty()) editVals.sStuntAngle = sVal;
+    else if (editVals.sStuntAngle.compare(sVal) != 0) editVals.sStuntAngle = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].stunt.iUnknown);
-    if (sStuntUnknown.isEmpty()) sStuntUnknown = sVal;
-    else if (sStuntUnknown.compare(sVal) != 0) sStuntUnknown = MIXED_DATA;
+    if (editVals.sStuntUnknown.isEmpty()) editVals.sStuntUnknown = sVal;
+    else if (editVals.sStuntUnknown.compare(sVal) != 0) editVals.sStuntUnknown = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].stunt.iTimingGroup);
-    if (sStuntTimingGroup.isEmpty()) sStuntTimingGroup = sVal;
-    else if (sStuntTimingGroup.compare(sVal) != 0) sStuntTimingGroup = MIXED_DATA;
+    if (editVals.sStuntTimingGroup.isEmpty()) editVals.sStuntTimingGroup = sVal;
+    else if (editVals.sStuntTimingGroup.compare(sVal) != 0) editVals.sStuntTimingGroup = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].stunt.iHeight);
-    if (sStuntHeight.isEmpty()) sStuntHeight = sVal;
-    else if (sStuntHeight.compare(sVal) != 0) sStuntHeight = MIXED_DATA;
+    if (editVals.sStuntHeight.isEmpty()) editVals.sStuntHeight = sVal;
+    else if (editVals.sStuntHeight.compare(sVal) != 0) editVals.sStuntHeight = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].stunt.iTimeBulging);
-    if (sStuntTimeBulging.isEmpty()) sStuntTimeBulging = sVal;
-    else if (sStuntTimeBulging.compare(sVal) != 0) sStuntTimeBulging = MIXED_DATA;
+    if (editVals.sStuntTimeBulging.isEmpty()) editVals.sStuntTimeBulging = sVal;
+    else if (editVals.sStuntTimeBulging.compare(sVal) != 0) editVals.sStuntTimeBulging = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].stunt.iTimeFlat);
-    if (sStuntTimeFlat.isEmpty()) sStuntTimeFlat = sVal;
-    else if (sStuntTimeFlat.compare(sVal) != 0) sStuntTimeFlat = MIXED_DATA;
+    if (editVals.sStuntTimeFlat.isEmpty()) editVals.sStuntTimeFlat = sVal;
+    else if (editVals.sStuntTimeFlat.compare(sVal) != 0) editVals.sStuntTimeFlat = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].stunt.iSmallerExpandsLargerContracts);
-    if (sStuntExpandsContracts.isEmpty()) sStuntExpandsContracts = sVal;
-    else if (sStuntExpandsContracts.compare(sVal) != 0) sStuntExpandsContracts = MIXED_DATA;
+    if (editVals.sStuntExpandsContracts.isEmpty()) editVals.sStuntExpandsContracts = sVal;
+    else if (editVals.sStuntExpandsContracts.compare(sVal) != 0) editVals.sStuntExpandsContracts = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].stunt.iBulge);
-    if (sStuntBulge.isEmpty()) sStuntBulge = sVal;
-    else if (sStuntBulge.compare(sVal) != 0) sStuntBulge = MIXED_DATA;
+    if (editVals.sStuntBulge.isEmpty()) editVals.sStuntBulge = sVal;
+    else if (editVals.sStuntBulge.compare(sVal) != 0) editVals.sStuntBulge = MIXED_DATA;
   }
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex
-                           , const QString &sLeftShoulderWidth
-                           , const QString &sLeftLaneWidth
-                           , const QString &sRightLaneWidth
-                           , const QString &sRightShoulderWidth
-                           , const QString &sLShoulderHeight
-                           , const QString &sRShoulderHeight
-                           , const QString &sLength
-                           , const QString &sYaw
-                           , const QString &sPitch
-                           , const QString &sRoll
-                           , const QString &sAILine1
-                           , const QString &sAILine2
-                           , const QString &sAILine3
-                           , const QString &sAILine4
-                           , const QString &sTrackGrip
-                           , const QString &sLeftShoulderGrip
-                           , const QString &sRightShoulderGrip
-                           , const QString &sUnk04
-                           , const QString &sUnk05
-                           , const QString &sUnk06
-                           , const QString &sUnk07
-                           , const QString &sUnk08
-                           , const QString &sLeftSurfaceType
-                           , const QString &sCenterSurfaceType
-                           , const QString &sRightSurfaceType
-                           , const QString &sLWallType
-                           , const QString &sRWallType
-                           , const QString &sRoofType
-                           , const QString &sLUOuterWallType
-                           , const QString &sLLOuterWallType
-                           , const QString &sOuterFloorType
-                           , const QString &sRLOuterWallType
-                           , const QString &sRUOuterWallType
-                           , const QString &sEnvironmentFloorType
-                           , const QString &sSignType
-                           , const QString &sSignHorizOffset
-                           , const QString &sSignVertOffset
-                           , const QString &sSignYaw
-                           , const QString &sSignPitch
-                           , const QString &sSignRoll
-                           , const QString &sLUOuterWallAngle
-                           , const QString &sLLOuterWallAngle
-                           , const QString &sUnk23
-                           , const QString &sUnk24
-                           , const QString &sRLOuterWallAngle
-                           , const QString &sRUOuterWallAngle
-                           , const QString &sLUOuterWallHeight
-                           , const QString &sLLOuterWallHeight
-                           , const QString &sUnk29
-                           , const QString &sUnk30
-                           , const QString &sRLOuterWallHeight
-                           , const QString &sRUOuterWallHeight
-                           , const QString &sRoofHeight
-                           , const QString &sDrawOrder1
-                           , const QString &sDrawOrder2
-                           , const QString &sDrawOrder3
-                           , const QString &sUnk37
-                           , const QString &sUnk38
-                           , const QString &sUnk39
-                           , const QString &sUnk40
-                           , const QString &sUnk41
-                           , const QString &sUnk42
-                           , const QString &sUnk43
-                           , const QString &sUnk44
-                           , const QString &sUnk45
-                           , const QString &sUnk46
-                           , const QString &sUnk47
-                           , const QString &sUnk48
-                           , const QString &sUnk49
-                           , const QString &sUnk50
-                           , const QString &sSignTexture
-                           , const QString &sBackTexture
-                           , const QString &sStuntScaleFactor
-                           , const QString &sStuntAngle
-                           , const QString &sStuntUnknown
-                           , const QString &sStuntTimingGroup
-                           , const QString &sStuntHeight
-                           , const QString &sStuntTimeBulging
-                           , const QString &sStuntTimeFlat
-                           , const QString &sStuntExpandsContracts
-                           , const QString &sStuntBulge)
+void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex, const CChunkEditValues &editVals)
 {
   for (int i = iStartIndex; i <= iEndIndex; ++i) {
-    if (!sLeftShoulderWidth.isEmpty()) m_chunkAy[i].iLeftShoulderWidth = sLeftShoulderWidth.toInt();
-    if (!sLeftLaneWidth.isEmpty()) m_chunkAy[i].iLeftLaneWidth = sLeftLaneWidth.toInt();
-    if (!sRightLaneWidth.isEmpty()) m_chunkAy[i].iRightLaneWidth = sRightLaneWidth.toInt();
-    if (!sRightShoulderWidth.isEmpty()) m_chunkAy[i].iRightShoulderWidth = sRightShoulderWidth.toInt();
-    if (!sLShoulderHeight.isEmpty()) m_chunkAy[i].iLeftShoulderHeight = sLShoulderHeight.toInt();
-    if (!sRShoulderHeight.isEmpty()) m_chunkAy[i].iRightShoulderHeight = sRShoulderHeight.toInt();
-    if (!sLength.isEmpty()) m_chunkAy[i].iLength = sLength.toInt();
-    if (!sYaw.isEmpty()) m_chunkAy[i].dYaw = sYaw.toDouble();
-    if (!sPitch.isEmpty()) m_chunkAy[i].dPitch = sPitch.toDouble();
-    if (!sRoll.isEmpty()) m_chunkAy[i].dRoll = sRoll.toDouble();
-    if (!sAILine1.isEmpty()) m_chunkAy[i].iAILine1 = sAILine1.toInt();
-    if (!sAILine2.isEmpty()) m_chunkAy[i].iAILine2 = sAILine2.toInt();
-    if (!sAILine3.isEmpty()) m_chunkAy[i].iAILine3 = sAILine3.toInt();
-    if (!sAILine4.isEmpty()) m_chunkAy[i].iAILine4 = sAILine4.toInt();
-    if (!sTrackGrip.isEmpty()) m_chunkAy[i].iTrackGrip = sTrackGrip.toInt();
-    if (!sLeftShoulderGrip.isEmpty()) m_chunkAy[i].iLeftShoulderGrip = sLeftShoulderGrip.toInt();
-    if (!sRightShoulderGrip.isEmpty()) m_chunkAy[i].iRightShoulderGrip = sRightShoulderGrip.toInt();
-    if (!sUnk04.isEmpty()) m_chunkAy[i].iUnk04 = sUnk04.toInt();
-    if (!sUnk05.isEmpty()) m_chunkAy[i].iUnk05 = sUnk05.toInt();
-    if (!sUnk06.isEmpty()) m_chunkAy[i].iUnk06 = sUnk06.toInt();
-    if (!sUnk07.isEmpty()) m_chunkAy[i].iUnk07 = sUnk07.toInt();
-    if (!sUnk08.isEmpty()) m_chunkAy[i].iUnk08 = sUnk08.toInt();
-    if (!sLeftSurfaceType.isEmpty()) m_chunkAy[i].iLeftSurfaceType = sLeftSurfaceType.toInt();
-    if (!sCenterSurfaceType.isEmpty()) m_chunkAy[i].iCenterSurfaceType = sCenterSurfaceType.toInt();
-    if (!sRightSurfaceType.isEmpty()) m_chunkAy[i].iRightSurfaceType = sRightSurfaceType.toInt();
-    if (!sLWallType.isEmpty()) m_chunkAy[i].iLeftWallType = sLWallType.toInt();
-    if (!sRWallType.isEmpty()) m_chunkAy[i].iRightWallType = sRWallType.toInt();
-    if (!sRoofType.isEmpty()) m_chunkAy[i].iRoofType = sRoofType.toInt();
-    if (!sLUOuterWallType.isEmpty()) m_chunkAy[i].iLUOuterWallType = sLUOuterWallType.toInt();
-    if (!sLLOuterWallType.isEmpty()) m_chunkAy[i].iLLOuterWallType = sLLOuterWallType.toInt();
-    if (!sOuterFloorType.isEmpty()) m_chunkAy[i].iOuterFloorType = sOuterFloorType.toInt();
-    if (!sRLOuterWallType.isEmpty()) m_chunkAy[i].iRLOuterWallType = sRLOuterWallType.toInt();
-    if (!sRUOuterWallType.isEmpty()) m_chunkAy[i].iRUOuterWallType = sRUOuterWallType.toInt();
-    if (!sEnvironmentFloorType.isEmpty()) m_chunkAy[i].iEnvironmentFloorType = sEnvironmentFloorType.toInt();
-    if (!sSignType.isEmpty()) m_chunkAy[i].iSignType = sSignType.toInt();
-    if (!sSignHorizOffset.isEmpty()) m_chunkAy[i].iSignHorizOffset = sSignHorizOffset.toInt();
-    if (!sSignVertOffset.isEmpty()) m_chunkAy[i].iSignVertOffset = sSignVertOffset.toInt();
-    if (!sSignYaw.isEmpty()) m_chunkAy[i].dSignYaw = sSignYaw.toDouble();
-    if (!sSignPitch.isEmpty()) m_chunkAy[i].dSignPitch = sSignPitch.toDouble();
-    if (!sSignRoll.isEmpty()) m_chunkAy[i].dSignRoll = sSignRoll.toDouble();
-    if (!sLUOuterWallAngle.isEmpty()) m_chunkAy[i].iLUOuterWallAngle = sLUOuterWallAngle.toInt();
-    if (!sLLOuterWallAngle.isEmpty()) m_chunkAy[i].iLLOuterWallAngle = sLLOuterWallAngle.toInt();
-    if (!sUnk23.isEmpty()) m_chunkAy[i].iUnk23 = sUnk23.toInt();
-    if (!sUnk24.isEmpty()) m_chunkAy[i].iUnk24 = sUnk24.toInt();
-    if (!sRLOuterWallAngle.isEmpty()) m_chunkAy[i].iRLOuterWallAngle = sRLOuterWallAngle.toInt();
-    if (!sRUOuterWallAngle.isEmpty()) m_chunkAy[i].iRUOuterWallAngle = sRUOuterWallAngle.toInt();
-    if (!sLUOuterWallHeight.isEmpty()) m_chunkAy[i].iLUOuterWallHeight = sLUOuterWallHeight.toInt();
-    if (!sLLOuterWallHeight.isEmpty()) m_chunkAy[i].iLLOuterWallHeight = sLLOuterWallHeight.toInt();
-    if (!sUnk29.isEmpty()) m_chunkAy[i].iUnk29 = sUnk29.toInt();
-    if (!sUnk30.isEmpty()) m_chunkAy[i].iUnk30 = sUnk30.toInt();
-    if (!sRLOuterWallHeight.isEmpty()) m_chunkAy[i].iRLOuterWallHeight = sRLOuterWallHeight.toInt();
-    if (!sRUOuterWallHeight.isEmpty()) m_chunkAy[i].iRUOuterWallHeight = sRUOuterWallHeight.toInt();
-    if (!sRoofHeight.isEmpty()) m_chunkAy[i].iRoofHeight = sRoofHeight.toInt();
-    if (!sDrawOrder1.isEmpty()) m_chunkAy[i].iDrawOrder1 = sDrawOrder1.toInt();
-    if (!sDrawOrder2.isEmpty()) m_chunkAy[i].iDrawOrder2 = sDrawOrder2.toInt();
-    if (!sDrawOrder3.isEmpty()) m_chunkAy[i].iDrawOrder3 = sDrawOrder3.toInt();
-    if (!sUnk37.isEmpty()) m_chunkAy[i].iUnk37 = sUnk37.toInt();
-    if (!sUnk38.isEmpty()) m_chunkAy[i].iUnk38 = sUnk38.toInt();
-    if (!sUnk39.isEmpty()) m_chunkAy[i].iUnk39 = sUnk39.toInt();
-    if (!sUnk40.isEmpty()) m_chunkAy[i].iUnk40 = sUnk40.toInt();
-    if (!sUnk41.isEmpty()) m_chunkAy[i].iUnk41 = sUnk41.toInt();
-    if (!sUnk42.isEmpty()) m_chunkAy[i].iUnk42 = sUnk42.toInt();
-    if (!sUnk43.isEmpty()) m_chunkAy[i].iUnk43 = sUnk43.toInt();
-    if (!sUnk44.isEmpty()) m_chunkAy[i].iUnk44 = sUnk44.toInt();
-    if (!sUnk45.isEmpty()) m_chunkAy[i].iUnk45 = sUnk45.toInt();
-    if (!sUnk46.isEmpty()) m_chunkAy[i].iUnk46 = sUnk46.toInt();
-    if (!sUnk47.isEmpty()) m_chunkAy[i].iUnk47 = sUnk47.toInt();
-    if (!sUnk48.isEmpty()) m_chunkAy[i].iUnk48 = sUnk48.toInt();
-    if (!sUnk49.isEmpty()) m_chunkAy[i].iUnk49 = sUnk49.toInt();
-    if (!sUnk50.isEmpty()) m_chunkAy[i].iUnk50 = sUnk50.toInt();
-    if (!sSignTexture.isEmpty()) m_chunkAy[i].iSignTexture = sSignTexture.toInt();
-    if (!sBackTexture.isEmpty()) m_chunkAy[i].iBackTexture = sBackTexture.toInt();
-    if (!sStuntScaleFactor.isEmpty()) m_chunkAy[i].stunt.iScaleFactor = sStuntScaleFactor.toInt();
-    if (!sStuntAngle.isEmpty()) m_chunkAy[i].stunt.iAngle = sStuntAngle.toInt();
-    if (!sStuntUnknown.isEmpty()) m_chunkAy[i].stunt.iUnknown = sStuntUnknown.toInt();
-    if (!sStuntTimingGroup.isEmpty()) m_chunkAy[i].stunt.iTimingGroup = sStuntTimingGroup.toInt();
-    if (!sStuntHeight.isEmpty()) m_chunkAy[i].stunt.iHeight = sStuntHeight.toInt();
-    if (!sStuntTimeBulging.isEmpty()) m_chunkAy[i].stunt.iTimeBulging = sStuntTimeBulging.toInt();
-    if (!sStuntTimeFlat.isEmpty()) m_chunkAy[i].stunt.iTimeFlat = sStuntTimeFlat.toInt();
-    if (!sStuntExpandsContracts.isEmpty()) m_chunkAy[i].stunt.iSmallerExpandsLargerContracts = sStuntExpandsContracts.toInt();
-    if (!sStuntBulge.isEmpty()) m_chunkAy[i].stunt.iBulge = sStuntBulge.toInt();
+    if (!editVals.sLeftShoulderWidth.isEmpty()) m_chunkAy[i].iLeftShoulderWidth = editVals.sLeftShoulderWidth.toInt();
+    if (!editVals.sLeftLaneWidth.isEmpty()) m_chunkAy[i].iLeftLaneWidth = editVals.sLeftLaneWidth.toInt();
+    if (!editVals.sRightLaneWidth.isEmpty()) m_chunkAy[i].iRightLaneWidth = editVals.sRightLaneWidth.toInt();
+    if (!editVals.sRightShoulderWidth.isEmpty()) m_chunkAy[i].iRightShoulderWidth = editVals.sRightShoulderWidth.toInt();
+    if (!editVals.sLShoulderHeight.isEmpty()) m_chunkAy[i].iLeftShoulderHeight = editVals.sLShoulderHeight.toInt();
+    if (!editVals.sRShoulderHeight.isEmpty()) m_chunkAy[i].iRightShoulderHeight = editVals.sRShoulderHeight.toInt();
+    if (!editVals.sLength.isEmpty()) m_chunkAy[i].iLength = editVals.sLength.toInt();
+    if (!editVals.sYaw.isEmpty()) m_chunkAy[i].dYaw = editVals.sYaw.toDouble();
+    if (!editVals.sPitch.isEmpty()) m_chunkAy[i].dPitch = editVals.sPitch.toDouble();
+    if (!editVals.sRoll.isEmpty()) m_chunkAy[i].dRoll = editVals.sRoll.toDouble();
+    if (!editVals.sAILine1.isEmpty()) m_chunkAy[i].iAILine1 = editVals.sAILine1.toInt();
+    if (!editVals.sAILine2.isEmpty()) m_chunkAy[i].iAILine2 = editVals.sAILine2.toInt();
+    if (!editVals.sAILine3.isEmpty()) m_chunkAy[i].iAILine3 = editVals.sAILine3.toInt();
+    if (!editVals.sAILine4.isEmpty()) m_chunkAy[i].iAILine4 = editVals.sAILine4.toInt();
+    if (!editVals.sTrackGrip.isEmpty()) m_chunkAy[i].iTrackGrip = editVals.sTrackGrip.toInt();
+    if (!editVals.sLeftShoulderGrip.isEmpty()) m_chunkAy[i].iLeftShoulderGrip = editVals.sLeftShoulderGrip.toInt();
+    if (!editVals.sRightShoulderGrip.isEmpty()) m_chunkAy[i].iRightShoulderGrip = editVals.sRightShoulderGrip.toInt();
+    if (!editVals.sUnk04.isEmpty()) m_chunkAy[i].iUnk04 = editVals.sUnk04.toInt();
+    if (!editVals.sUnk05.isEmpty()) m_chunkAy[i].iUnk05 = editVals.sUnk05.toInt();
+    if (!editVals.sUnk06.isEmpty()) m_chunkAy[i].iUnk06 = editVals.sUnk06.toInt();
+    if (!editVals.sUnk07.isEmpty()) m_chunkAy[i].iUnk07 = editVals.sUnk07.toInt();
+    if (!editVals.sUnk08.isEmpty()) m_chunkAy[i].iUnk08 = editVals.sUnk08.toInt();
+    if (!editVals.sLeftSurfaceType.isEmpty()) m_chunkAy[i].iLeftSurfaceType = editVals.sLeftSurfaceType.toInt();
+    if (!editVals.sCenterSurfaceType.isEmpty()) m_chunkAy[i].iCenterSurfaceType = editVals.sCenterSurfaceType.toInt();
+    if (!editVals.sRightSurfaceType.isEmpty()) m_chunkAy[i].iRightSurfaceType = editVals.sRightSurfaceType.toInt();
+    if (!editVals.sLWallType.isEmpty()) m_chunkAy[i].iLeftWallType = editVals.sLWallType.toInt();
+    if (!editVals.sRWallType.isEmpty()) m_chunkAy[i].iRightWallType = editVals.sRWallType.toInt();
+    if (!editVals.sRoofType.isEmpty()) m_chunkAy[i].iRoofType = editVals.sRoofType.toInt();
+    if (!editVals.sLUOuterWallType.isEmpty()) m_chunkAy[i].iLUOuterWallType = editVals.sLUOuterWallType.toInt();
+    if (!editVals.sLLOuterWallType.isEmpty()) m_chunkAy[i].iLLOuterWallType = editVals.sLLOuterWallType.toInt();
+    if (!editVals.sOuterFloorType.isEmpty()) m_chunkAy[i].iOuterFloorType = editVals.sOuterFloorType.toInt();
+    if (!editVals.sRLOuterWallType.isEmpty()) m_chunkAy[i].iRLOuterWallType = editVals.sRLOuterWallType.toInt();
+    if (!editVals.sRUOuterWallType.isEmpty()) m_chunkAy[i].iRUOuterWallType = editVals.sRUOuterWallType.toInt();
+    if (!editVals.sEnvironmentFloorType.isEmpty()) m_chunkAy[i].iEnvironmentFloorType = editVals.sEnvironmentFloorType.toInt();
+    if (!editVals.sSignType.isEmpty()) m_chunkAy[i].iSignType = editVals.sSignType.toInt();
+    if (!editVals.sSignHorizOffset.isEmpty()) m_chunkAy[i].iSignHorizOffset = editVals.sSignHorizOffset.toInt();
+    if (!editVals.sSignVertOffset.isEmpty()) m_chunkAy[i].iSignVertOffset = editVals.sSignVertOffset.toInt();
+    if (!editVals.sSignYaw.isEmpty()) m_chunkAy[i].dSignYaw = editVals.sSignYaw.toDouble();
+    if (!editVals.sSignPitch.isEmpty()) m_chunkAy[i].dSignPitch = editVals.sSignPitch.toDouble();
+    if (!editVals.sSignRoll.isEmpty()) m_chunkAy[i].dSignRoll = editVals.sSignRoll.toDouble();
+    if (!editVals.sLUOuterWallAngle.isEmpty()) m_chunkAy[i].iLUOuterWallAngle = editVals.sLUOuterWallAngle.toInt();
+    if (!editVals.sLLOuterWallAngle.isEmpty()) m_chunkAy[i].iLLOuterWallAngle = editVals.sLLOuterWallAngle.toInt();
+    if (!editVals.sUnk23.isEmpty()) m_chunkAy[i].iUnk23 = editVals.sUnk23.toInt();
+    if (!editVals.sUnk24.isEmpty()) m_chunkAy[i].iUnk24 = editVals.sUnk24.toInt();
+    if (!editVals.sRLOuterWallAngle.isEmpty()) m_chunkAy[i].iRLOuterWallAngle = editVals.sRLOuterWallAngle.toInt();
+    if (!editVals.sRUOuterWallAngle.isEmpty()) m_chunkAy[i].iRUOuterWallAngle = editVals.sRUOuterWallAngle.toInt();
+    if (!editVals.sLUOuterWallHeight.isEmpty()) m_chunkAy[i].iLUOuterWallHeight = editVals.sLUOuterWallHeight.toInt();
+    if (!editVals.sLLOuterWallHeight.isEmpty()) m_chunkAy[i].iLLOuterWallHeight = editVals.sLLOuterWallHeight.toInt();
+    if (!editVals.sUnk29.isEmpty()) m_chunkAy[i].iUnk29 = editVals.sUnk29.toInt();
+    if (!editVals.sUnk30.isEmpty()) m_chunkAy[i].iUnk30 = editVals.sUnk30.toInt();
+    if (!editVals.sRLOuterWallHeight.isEmpty()) m_chunkAy[i].iRLOuterWallHeight = editVals.sRLOuterWallHeight.toInt();
+    if (!editVals.sRUOuterWallHeight.isEmpty()) m_chunkAy[i].iRUOuterWallHeight = editVals.sRUOuterWallHeight.toInt();
+    if (!editVals.sRoofHeight.isEmpty()) m_chunkAy[i].iRoofHeight = editVals.sRoofHeight.toInt();
+    if (!editVals.sDrawOrder1.isEmpty()) m_chunkAy[i].iDrawOrder1 = editVals.sDrawOrder1.toInt();
+    if (!editVals.sDrawOrder2.isEmpty()) m_chunkAy[i].iDrawOrder2 = editVals.sDrawOrder2.toInt();
+    if (!editVals.sDrawOrder3.isEmpty()) m_chunkAy[i].iDrawOrder3 = editVals.sDrawOrder3.toInt();
+    if (!editVals.sUnk37.isEmpty()) m_chunkAy[i].iUnk37 = editVals.sUnk37.toInt();
+    if (!editVals.sUnk38.isEmpty()) m_chunkAy[i].iUnk38 = editVals.sUnk38.toInt();
+    if (!editVals.sUnk39.isEmpty()) m_chunkAy[i].iUnk39 = editVals.sUnk39.toInt();
+    if (!editVals.sUnk40.isEmpty()) m_chunkAy[i].iUnk40 = editVals.sUnk40.toInt();
+    if (!editVals.sUnk41.isEmpty()) m_chunkAy[i].iUnk41 = editVals.sUnk41.toInt();
+    if (!editVals.sUnk42.isEmpty()) m_chunkAy[i].iUnk42 = editVals.sUnk42.toInt();
+    if (!editVals.sUnk43.isEmpty()) m_chunkAy[i].iUnk43 = editVals.sUnk43.toInt();
+    if (!editVals.sUnk44.isEmpty()) m_chunkAy[i].iUnk44 = editVals.sUnk44.toInt();
+    if (!editVals.sUnk45.isEmpty()) m_chunkAy[i].iUnk45 = editVals.sUnk45.toInt();
+    if (!editVals.sUnk46.isEmpty()) m_chunkAy[i].iUnk46 = editVals.sUnk46.toInt();
+    if (!editVals.sUnk47.isEmpty()) m_chunkAy[i].iUnk47 = editVals.sUnk47.toInt();
+    if (!editVals.sUnk48.isEmpty()) m_chunkAy[i].iUnk48 = editVals.sUnk48.toInt();
+    if (!editVals.sUnk49.isEmpty()) m_chunkAy[i].iUnk49 = editVals.sUnk49.toInt();
+    if (!editVals.sUnk50.isEmpty()) m_chunkAy[i].iUnk50 = editVals.sUnk50.toInt();
+    if (!editVals.sSignTexture.isEmpty()) m_chunkAy[i].iSignTexture = editVals.sSignTexture.toInt();
+    if (!editVals.sBackTexture.isEmpty()) m_chunkAy[i].iBackTexture = editVals.sBackTexture.toInt();
+    if (!editVals.sStuntScaleFactor.isEmpty()) m_chunkAy[i].stunt.iScaleFactor = editVals.sStuntScaleFactor.toInt();
+    if (!editVals.sStuntAngle.isEmpty()) m_chunkAy[i].stunt.iAngle = editVals.sStuntAngle.toInt();
+    if (!editVals.sStuntUnknown.isEmpty()) m_chunkAy[i].stunt.iUnknown = editVals.sStuntUnknown.toInt();
+    if (!editVals.sStuntTimingGroup.isEmpty()) m_chunkAy[i].stunt.iTimingGroup = editVals.sStuntTimingGroup.toInt();
+    if (!editVals.sStuntHeight.isEmpty()) m_chunkAy[i].stunt.iHeight = editVals.sStuntHeight.toInt();
+    if (!editVals.sStuntTimeBulging.isEmpty()) m_chunkAy[i].stunt.iTimeBulging = editVals.sStuntTimeBulging.toInt();
+    if (!editVals.sStuntTimeFlat.isEmpty()) m_chunkAy[i].stunt.iTimeFlat = editVals.sStuntTimeFlat.toInt();
+    if (!editVals.sStuntExpandsContracts.isEmpty()) m_chunkAy[i].stunt.iSmallerExpandsLargerContracts = editVals.sStuntExpandsContracts.toInt();
+    if (!editVals.sStuntBulge.isEmpty()) m_chunkAy[i].stunt.iBulge = editVals.sStuntBulge.toInt();
   }
   UpdateChunkStrings();
   g_pMainWindow->LogMessage("Applied changes to " + QString::number(iEndIndex - iStartIndex + 1) + " geometry chunks");
@@ -864,173 +747,92 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrack::InsertGeometryChunk(int iIndex, int iCount
-                           , const QString &sLeftShoulderWidth
-                           , const QString &sLeftLaneWidth
-                           , const QString &sRightLaneWidth
-                           , const QString &sRightShoulderWidth
-                           , const QString &sLShoulderHeight
-                           , const QString &sRShoulderHeight
-                           , const QString &sLength
-                           , const QString &sYaw
-                           , const QString &sPitch
-                           , const QString &sRoll
-                           , const QString &sAILine1
-                           , const QString &sAILine2
-                           , const QString &sAILine3
-                           , const QString &sAILine4
-                           , const QString &sTrackGrip
-                           , const QString &sLeftShoulderGrip
-                           , const QString &sRightShoulderGrip
-                           , const QString &sUnk04
-                           , const QString &sUnk05
-                           , const QString &sUnk06
-                           , const QString &sUnk07
-                           , const QString &sUnk08
-                           , const QString &sLeftSurfaceType
-                           , const QString &sCenterSurfaceType
-                           , const QString &sRightSurfaceType
-                           , const QString &sLWallType
-                           , const QString &sRWallType
-                           , const QString &sRoofType
-                           , const QString &sLUOuterWallType
-                           , const QString &sLLOuterWallType
-                           , const QString &sOuterFloorType
-                           , const QString &sRLOuterWallType
-                           , const QString &sRUOuterWallType
-                           , const QString &sEnvironmentFloorType
-                           , const QString &sSignType
-                           , const QString &sSignHorizOffset
-                           , const QString &sSignVertOffset
-                           , const QString &sSignYaw
-                           , const QString &sSignPitch
-                           , const QString &sSignRoll
-                           , const QString &sLUOuterWallAngle
-                           , const QString &sLLOuterWallAngle
-                           , const QString &sUnk23
-                           , const QString &sUnk24
-                           , const QString &sRLOuterWallAngle
-                           , const QString &sRUOuterWallAngle
-                           , const QString &sLUOuterWallHeight
-                           , const QString &sLLOuterWallHeight
-                           , const QString &sUnk29
-                           , const QString &sUnk30
-                           , const QString &sRLOuterWallHeight
-                           , const QString &sRUOuterWallHeight
-                           , const QString &sRoofHeight
-                           , const QString &sDrawOrder1
-                           , const QString &sDrawOrder2
-                           , const QString &sDrawOrder3
-                           , const QString &sUnk37
-                           , const QString &sUnk38
-                           , const QString &sUnk39
-                           , const QString &sUnk40
-                           , const QString &sUnk41
-                           , const QString &sUnk42
-                           , const QString &sUnk43
-                           , const QString &sUnk44
-                           , const QString &sUnk45
-                           , const QString &sUnk46
-                           , const QString &sUnk47
-                           , const QString &sUnk48
-                           , const QString &sUnk49
-                           , const QString &sUnk50
-                           , const QString &sSignTexture
-                           , const QString &sBackTexture
-                           , const QString &sStuntScaleFactor
-                           , const QString &sStuntAngle
-                           , const QString &sStuntUnknown
-                           , const QString &sStuntTimingGroup
-                           , const QString &sStuntHeight
-                           , const QString &sStuntTimeBulging
-                           , const QString &sStuntTimeFlat
-                           , const QString &sStuntExpandsContracts
-                           , const QString &sStuntBulge)
+void CTrack::InsertGeometryChunk(int iIndex, int iCount, const CChunkEditValues &editVals)
 {
   for (int i = 0; i < iCount; ++i) {
     struct tGeometryChunk newChunk;
     memset(&newChunk, sizeof(newChunk), 0);
-    newChunk.iLeftShoulderWidth = sLeftShoulderWidth.toInt();
-    newChunk.iLeftLaneWidth = sLeftLaneWidth.toInt();
-    newChunk.iRightLaneWidth = sRightLaneWidth.toInt();
-    newChunk.iRightShoulderWidth = sRightShoulderWidth.toInt();
-    newChunk.iLeftShoulderHeight = sLShoulderHeight.toInt();
-    newChunk.iRightShoulderHeight = sRShoulderHeight.toInt();
-    newChunk.iLength = sLength.toInt();
-    newChunk.dYaw = sYaw.toDouble();
-    newChunk.dPitch = sPitch.toDouble();
-    newChunk.dRoll = sRoll.toDouble();
-    newChunk.iAILine1 = sAILine1.toInt();
-    newChunk.iAILine2 = sAILine2.toInt();
-    newChunk.iAILine3 = sAILine3.toInt();
-    newChunk.iAILine4 = sAILine4.toInt();
-    newChunk.iTrackGrip = sTrackGrip.toInt();
-    newChunk.iLeftShoulderGrip = sLeftShoulderGrip.toInt();
-    newChunk.iRightShoulderGrip = sRightShoulderGrip.toInt();
-    newChunk.iUnk04 = sUnk04.toInt();
-    newChunk.iUnk05 = sUnk05.toInt();
-    newChunk.iUnk06 = sUnk06.toInt();
-    newChunk.iUnk07 = sUnk07.toInt();
-    newChunk.iUnk08 = sUnk08.toInt();
-    newChunk.iLeftSurfaceType = sLeftSurfaceType.toInt();
-    newChunk.iCenterSurfaceType = sCenterSurfaceType.toInt();
-    newChunk.iRightSurfaceType = sRightSurfaceType.toInt();
-    newChunk.iLeftWallType = sLWallType.toInt();
-    newChunk.iRightWallType = sRWallType.toInt();
-    newChunk.iRoofType = sRoofType.toInt();
-    newChunk.iLUOuterWallType = sLUOuterWallType.toInt();
-    newChunk.iLLOuterWallType = sLLOuterWallType.toInt();
-    newChunk.iOuterFloorType = sOuterFloorType.toInt();
-    newChunk.iRLOuterWallType = sRLOuterWallType.toInt();
-    newChunk.iRUOuterWallType = sRUOuterWallType.toInt();
-    newChunk.iEnvironmentFloorType = sEnvironmentFloorType.toInt();
-    newChunk.iSignType = sSignType.toInt();
-    newChunk.iSignHorizOffset = sSignHorizOffset.toInt();
-    newChunk.iSignVertOffset = sSignVertOffset.toInt();
-    newChunk.dSignYaw = sSignYaw.toDouble();
-    newChunk.dSignPitch = sSignPitch.toDouble();
-    newChunk.dSignRoll = sSignRoll.toDouble();
-    newChunk.iLUOuterWallAngle = sLUOuterWallAngle.toInt();
-    newChunk.iLLOuterWallAngle = sLLOuterWallAngle.toInt();
-    newChunk.iUnk23 = sUnk23.toInt();
-    newChunk.iUnk24 = sUnk24.toInt();
-    newChunk.iRLOuterWallAngle = sRLOuterWallAngle.toInt();
-    newChunk.iRUOuterWallAngle = sRUOuterWallAngle.toInt();
-    newChunk.iLUOuterWallHeight = sLUOuterWallHeight.toInt();
-    newChunk.iLLOuterWallHeight = sLLOuterWallHeight.toInt();
-    newChunk.iUnk29 = sUnk29.toInt();
-    newChunk.iUnk30 = sUnk30.toInt();
-    newChunk.iRLOuterWallHeight = sRLOuterWallHeight.toInt();
-    newChunk.iRUOuterWallHeight = sRUOuterWallHeight.toInt();
-    newChunk.iRoofHeight = sRoofHeight.toInt();
-    newChunk.iDrawOrder1 = sDrawOrder1.toInt();
-    newChunk.iDrawOrder2 = sDrawOrder2.toInt();
-    newChunk.iDrawOrder3 = sDrawOrder3.toInt();
-    newChunk.iUnk37 = sUnk37.toInt();
-    newChunk.iUnk38 = sUnk38.toInt();
-    newChunk.iUnk39 = sUnk39.toInt();
-    newChunk.iUnk40 = sUnk40.toInt();
-    newChunk.iUnk41 = sUnk41.toInt();
-    newChunk.iUnk42 = sUnk42.toInt();
-    newChunk.iUnk43 = sUnk43.toInt();
-    newChunk.iUnk44 = sUnk44.toInt();
-    newChunk.iUnk45 = sUnk45.toInt();
-    newChunk.iUnk46 = sUnk46.toInt();
-    newChunk.iUnk47 = sUnk47.toInt();
-    newChunk.iUnk48 = sUnk48.toInt();
-    newChunk.iUnk49 = sUnk49.toInt();
-    newChunk.iUnk50 = sUnk50.toInt();
-    newChunk.iSignTexture = sSignTexture.toInt();
-    newChunk.iBackTexture = sBackTexture.toInt();
-    newChunk.stunt.iScaleFactor = sStuntScaleFactor.toInt();
-    newChunk.stunt.iAngle = sStuntAngle.toInt();
-    newChunk.stunt.iUnknown = sStuntUnknown.toInt();
-    newChunk.stunt.iTimingGroup = sStuntTimingGroup.toInt();
-    newChunk.stunt.iHeight = sStuntHeight.toInt();
-    newChunk.stunt.iTimeBulging = sStuntTimeBulging.toInt();
-    newChunk.stunt.iTimeFlat = sStuntTimeFlat.toInt();
-    newChunk.stunt.iSmallerExpandsLargerContracts = sStuntExpandsContracts.toInt();
-    newChunk.stunt.iBulge = sStuntBulge.toInt();
+    newChunk.iLeftShoulderWidth = editVals.sLeftShoulderWidth.toInt();
+    newChunk.iLeftLaneWidth = editVals.sLeftLaneWidth.toInt();
+    newChunk.iRightLaneWidth = editVals.sRightLaneWidth.toInt();
+    newChunk.iRightShoulderWidth = editVals.sRightShoulderWidth.toInt();
+    newChunk.iLeftShoulderHeight = editVals.sLShoulderHeight.toInt();
+    newChunk.iRightShoulderHeight = editVals.sRShoulderHeight.toInt();
+    newChunk.iLength = editVals.sLength.toInt();
+    newChunk.dYaw = editVals.sYaw.toDouble();
+    newChunk.dPitch = editVals.sPitch.toDouble();
+    newChunk.dRoll = editVals.sRoll.toDouble();
+    newChunk.iAILine1 = editVals.sAILine1.toInt();
+    newChunk.iAILine2 = editVals.sAILine2.toInt();
+    newChunk.iAILine3 = editVals.sAILine3.toInt();
+    newChunk.iAILine4 = editVals.sAILine4.toInt();
+    newChunk.iTrackGrip = editVals.sTrackGrip.toInt();
+    newChunk.iLeftShoulderGrip = editVals.sLeftShoulderGrip.toInt();
+    newChunk.iRightShoulderGrip = editVals.sRightShoulderGrip.toInt();
+    newChunk.iUnk04 = editVals.sUnk04.toInt();
+    newChunk.iUnk05 = editVals.sUnk05.toInt();
+    newChunk.iUnk06 = editVals.sUnk06.toInt();
+    newChunk.iUnk07 = editVals.sUnk07.toInt();
+    newChunk.iUnk08 = editVals.sUnk08.toInt();
+    newChunk.iLeftSurfaceType = editVals.sLeftSurfaceType.toInt();
+    newChunk.iCenterSurfaceType = editVals.sCenterSurfaceType.toInt();
+    newChunk.iRightSurfaceType = editVals.sRightSurfaceType.toInt();
+    newChunk.iLeftWallType = editVals.sLWallType.toInt();
+    newChunk.iRightWallType = editVals.sRWallType.toInt();
+    newChunk.iRoofType = editVals.sRoofType.toInt();
+    newChunk.iLUOuterWallType = editVals.sLUOuterWallType.toInt();
+    newChunk.iLLOuterWallType = editVals.sLLOuterWallType.toInt();
+    newChunk.iOuterFloorType = editVals.sOuterFloorType.toInt();
+    newChunk.iRLOuterWallType = editVals.sRLOuterWallType.toInt();
+    newChunk.iRUOuterWallType = editVals.sRUOuterWallType.toInt();
+    newChunk.iEnvironmentFloorType = editVals.sEnvironmentFloorType.toInt();
+    newChunk.iSignType = editVals.sSignType.toInt();
+    newChunk.iSignHorizOffset = editVals.sSignHorizOffset.toInt();
+    newChunk.iSignVertOffset = editVals.sSignVertOffset.toInt();
+    newChunk.dSignYaw = editVals.sSignYaw.toDouble();
+    newChunk.dSignPitch = editVals.sSignPitch.toDouble();
+    newChunk.dSignRoll = editVals.sSignRoll.toDouble();
+    newChunk.iLUOuterWallAngle = editVals.sLUOuterWallAngle.toInt();
+    newChunk.iLLOuterWallAngle = editVals.sLLOuterWallAngle.toInt();
+    newChunk.iUnk23 = editVals.sUnk23.toInt();
+    newChunk.iUnk24 = editVals.sUnk24.toInt();
+    newChunk.iRLOuterWallAngle = editVals.sRLOuterWallAngle.toInt();
+    newChunk.iRUOuterWallAngle = editVals.sRUOuterWallAngle.toInt();
+    newChunk.iLUOuterWallHeight = editVals.sLUOuterWallHeight.toInt();
+    newChunk.iLLOuterWallHeight = editVals.sLLOuterWallHeight.toInt();
+    newChunk.iUnk29 = editVals.sUnk29.toInt();
+    newChunk.iUnk30 = editVals.sUnk30.toInt();
+    newChunk.iRLOuterWallHeight = editVals.sRLOuterWallHeight.toInt();
+    newChunk.iRUOuterWallHeight = editVals.sRUOuterWallHeight.toInt();
+    newChunk.iRoofHeight = editVals.sRoofHeight.toInt();
+    newChunk.iDrawOrder1 = editVals.sDrawOrder1.toInt();
+    newChunk.iDrawOrder2 = editVals.sDrawOrder2.toInt();
+    newChunk.iDrawOrder3 = editVals.sDrawOrder3.toInt();
+    newChunk.iUnk37 = editVals.sUnk37.toInt();
+    newChunk.iUnk38 = editVals.sUnk38.toInt();
+    newChunk.iUnk39 = editVals.sUnk39.toInt();
+    newChunk.iUnk40 = editVals.sUnk40.toInt();
+    newChunk.iUnk41 = editVals.sUnk41.toInt();
+    newChunk.iUnk42 = editVals.sUnk42.toInt();
+    newChunk.iUnk43 = editVals.sUnk43.toInt();
+    newChunk.iUnk44 = editVals.sUnk44.toInt();
+    newChunk.iUnk45 = editVals.sUnk45.toInt();
+    newChunk.iUnk46 = editVals.sUnk46.toInt();
+    newChunk.iUnk47 = editVals.sUnk47.toInt();
+    newChunk.iUnk48 = editVals.sUnk48.toInt();
+    newChunk.iUnk49 = editVals.sUnk49.toInt();
+    newChunk.iUnk50 = editVals.sUnk50.toInt();
+    newChunk.iSignTexture = editVals.sSignTexture.toInt();
+    newChunk.iBackTexture = editVals.sBackTexture.toInt();
+    newChunk.stunt.iScaleFactor = editVals.sStuntScaleFactor.toInt();
+    newChunk.stunt.iAngle = editVals.sStuntAngle.toInt();
+    newChunk.stunt.iUnknown = editVals.sStuntUnknown.toInt();
+    newChunk.stunt.iTimingGroup = editVals.sStuntTimingGroup.toInt();
+    newChunk.stunt.iHeight = editVals.sStuntHeight.toInt();
+    newChunk.stunt.iTimeBulging = editVals.sStuntTimeBulging.toInt();
+    newChunk.stunt.iTimeFlat = editVals.sStuntTimeFlat.toInt();
+    newChunk.stunt.iSmallerExpandsLargerContracts = editVals.sStuntExpandsContracts.toInt();
+    newChunk.stunt.iBulge = editVals.sStuntBulge.toInt();
     if (m_chunkAy.empty())
       m_chunkAy.push_back(newChunk);
     else

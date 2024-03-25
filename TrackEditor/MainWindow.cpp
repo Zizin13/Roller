@@ -10,6 +10,7 @@
 #include "Texture.h"
 #include "TilePicker.h"
 #include "EditSurfaceDialog.h"
+#include "ChunkEditValues.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
 #endif
@@ -37,33 +38,7 @@ public:
   CLogDialog m_logDialog;
 
   //selected geometry values
-  QString sLeftShoulderWidth, sLeftLaneWidth, sRightLaneWidth, sRightShoulderWidth
-    , sLShoulderHeight, sRShoulderHeight, sLength
-    , sYaw, sPitch, sRoll
-    , sAILine1, sAILine2, sAILine3, sAILine4
-    , sTrackGrip, sLeftShoulderGrip, sRightShoulderGrip
-    , sUnk04, sUnk05, sUnk06, sUnk07, sUnk08
-    , sLeftSurfaceType, sCenterSurfaceType, sRightSurfaceType
-    , sLWallType, sRWallType, sRoofType, sLUOuterWallType, sLLOuterWallType, sOuterFloorType
-    , sRLOuterWallType, sRUOuterWallType, sEnvironmentFloorType, sSignType, sSignHorizOffset, sSignVertOffset
-    , sSignYaw, sSignPitch, sSignRoll
-    , sLUOuterWallAngle, sLLOuterWallAngle, sUnk23, sUnk24, sRLOuterWallAngle, sRUOuterWallAngle
-    , sLUOuterWallHeight, sLLOuterWallHeight, sUnk29, sUnk30, sRLOuterWallHeight, sRUOuterWallHeight
-    , sRoofHeight, sDrawOrder1, sDrawOrder2, sDrawOrder3, sUnk37, sUnk38
-    , sUnk39, sUnk40, sUnk41, sUnk42, sUnk43, sUnk44
-    , sUnk45, sUnk46, sUnk47, sUnk48, sUnk49, sUnk50
-    , sSignTexture, sBackTexture;
-
-  //selected stunt values
-  QString sStuntScaleFactor;
-  QString sStuntAngle;
-  QString sStuntUnknown;
-  QString sStuntTimingGroup;
-  QString sStuntHeight;
-  QString sStuntTimeBulging;
-  QString sStuntTimeFlat;
-  QString sStuntExpandsContracts;
-  QString sStuntBulge;
+  CChunkEditValues editVals;
 
   //selected texture values
   QString sTex;
@@ -456,8 +431,7 @@ void CMainWindow::OnEditTabChanged(int iIndex)
 
 void CMainWindow::OnInsertBeforeClicked()
 {
-  p->m_track.InsertGeometryChunk(sbSelChunksFrom->value(), sbInsert->value()
-    , leLShoulderWidth->text(), leLLaneWidth->text(), leRLaneWidth->text(), leRShoulderWidth->text()
+  CChunkEditValues editVals(leLShoulderWidth->text(), leLLaneWidth->text(), leRLaneWidth->text(), leRShoulderWidth->text()
     , leLShoulderHeight->text(), leRShoulderHeight->text(), leLength->text()
     , leYaw->text(), lePitch->text(), leRoll->text()
     , leAILine1->text(), leAILine2->text(), leAILine3->text(), leAILine4->text()
@@ -475,6 +449,8 @@ void CMainWindow::OnInsertBeforeClicked()
     , pbSign->property("value").toString(), pbBack->property("value").toString()
     , leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
     , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntBulge->text());
+
+  p->m_track.InsertGeometryChunk(sbSelChunksFrom->value(), sbInsert->value(), editVals);
 
   m_bUnsavedChanges = true;
   sbSelChunksFrom->blockSignals(true);
@@ -494,8 +470,7 @@ void CMainWindow::OnInsertBeforeClicked()
 
 void CMainWindow::OnInsertAfterClicked()
 {
-  p->m_track.InsertGeometryChunk(sbSelChunksTo->value() + 1, sbInsert->value()
-    , leLShoulderWidth->text(), leLLaneWidth->text(), leRLaneWidth->text(), leRShoulderWidth->text()
+  CChunkEditValues editVals(leLShoulderWidth->text(), leLLaneWidth->text(), leRLaneWidth->text(), leRShoulderWidth->text()
     , leLShoulderHeight->text(), leRShoulderHeight->text(), leLength->text()
     , leYaw->text(), lePitch->text(), leRoll->text()
     , leAILine1->text(), leAILine2->text(), leAILine3->text(), leAILine4->text()
@@ -513,6 +488,8 @@ void CMainWindow::OnInsertAfterClicked()
     , pbSign->property("value").toString(), pbBack->property("value").toString()
     , leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
     , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntBulge->text());
+
+  p->m_track.InsertGeometryChunk(sbSelChunksTo->value() + 1, sbInsert->value(), editVals);
 
   m_bUnsavedChanges = true;
   sbSelChunksFrom->blockSignals(true);
@@ -574,8 +551,7 @@ void CMainWindow::OnToChecked(bool bChecked)
 
 void CMainWindow::OnApplyClicked()
 {
-  p->m_track.ApplyGeometrySettings(sbSelChunksFrom->value(), sbSelChunksTo->value()
-    , leLShoulderWidth->text(), leLLaneWidth->text(), leRLaneWidth->text(), leRShoulderWidth->text()
+  CChunkEditValues editVals(leLShoulderWidth->text(), leLLaneWidth->text(), leRLaneWidth->text(), leRShoulderWidth->text()
     , leLShoulderHeight->text(), leRShoulderHeight->text(), leLength->text()
     , leYaw->text(), lePitch->text(), leRoll->text()
     , leAILine1->text(), leAILine2->text(), leAILine3->text(), leAILine4->text()
@@ -593,6 +569,8 @@ void CMainWindow::OnApplyClicked()
     , pbSign->property("value").toString(), pbBack->property("value").toString()
     , leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
     , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntBulge->text());
+
+  p->m_track.ApplyGeometrySettings(sbSelChunksFrom->value(), sbSelChunksTo->value(), editVals);
   m_bUnsavedChanges = true;
   UpdateWindow();
 }
@@ -878,88 +856,88 @@ void CMainWindow::UpdateGeometryEditMode()
 {
   bool bEditMode = false;
   bool bMixedData = false;
-  UpdateLEEditMode(bEditMode, bMixedData, leLShoulderWidth, p->sLeftShoulderWidth);
-  UpdateLEEditMode(bEditMode, bMixedData, leLLaneWidth, p->sLeftLaneWidth);
-  UpdateLEEditMode(bEditMode, bMixedData, leRLaneWidth, p->sRightLaneWidth);
-  UpdateLEEditMode(bEditMode, bMixedData, leRShoulderWidth, p->sRightShoulderWidth);
-  UpdateLEEditMode(bEditMode, bMixedData, leLShoulderHeight, p->sLShoulderHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leRShoulderHeight, p->sRShoulderHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leLength, p->sLength);
-  UpdateLEEditMode(bEditMode, bMixedData, leYaw, p->sYaw);
-  UpdateLEEditMode(bEditMode, bMixedData, lePitch, p->sPitch);
-  UpdateLEEditMode(bEditMode, bMixedData, leRoll, p->sRoll);
-  UpdateLEEditMode(bEditMode, bMixedData, leAILine1, p->sAILine1);
-  UpdateLEEditMode(bEditMode, bMixedData, leAILine2, p->sAILine2);
-  UpdateLEEditMode(bEditMode, bMixedData, leAILine3, p->sAILine3);
-  UpdateLEEditMode(bEditMode, bMixedData, leAILine4, p->sAILine4);
-  UpdateLEEditMode(bEditMode, bMixedData, leTrackGrip, p->sTrackGrip);
-  UpdateLEEditMode(bEditMode, bMixedData, leLeftShoulderGrip, p->sLeftShoulderGrip);
-  UpdateLEEditMode(bEditMode, bMixedData, leRShoulderGrip, p->sRightShoulderGrip);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk04, p->sUnk04);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk05, p->sUnk05);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk06, p->sUnk06);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk07, p->sUnk07);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk08, p->sUnk08);
-  UpdateLEEditMode(bEditMode, bMixedData, leLeftSurfaceType, p->sLeftSurfaceType);
-  UpdateLEEditMode(bEditMode, bMixedData, leCenterSurfaceType, p->sCenterSurfaceType);
-  UpdateLEEditMode(bEditMode, bMixedData, leRightSurfaceType, p->sRightSurfaceType);
-  UpdateLEEditMode(bEditMode, bMixedData, leLWallType, p->sLWallType);
-  UpdateLEEditMode(bEditMode, bMixedData, leRWallType, p->sRWallType);
-  UpdateLEEditMode(bEditMode, bMixedData, leRoofType, p->sRoofType);
-  UpdateLEEditMode(bEditMode, bMixedData, leLUOuterWallType, p->sLUOuterWallType);
-  UpdateLEEditMode(bEditMode, bMixedData, leLLOuterWallType, p->sLLOuterWallType);
-  UpdateLEEditMode(bEditMode, bMixedData, leOuterFloorType, p->sOuterFloorType);
-  UpdateLEEditMode(bEditMode, bMixedData, leRLOuterWallType, p->sRLOuterWallType);
-  UpdateLEEditMode(bEditMode, bMixedData, leRUOuterWallType, p->sRUOuterWallType);
-  UpdateLEEditMode(bEditMode, bMixedData, leEnvironmentFloorType, p->sEnvironmentFloorType);
-  UpdateLEEditMode(bEditMode, bMixedData, leSignType, p->sSignType);
-  UpdateCBEditMode(bEditMode, bMixedData, cbSignType, p->sSignType);
-  UpdateLEEditMode(bEditMode, bMixedData, leSignHorizOffset, p->sSignHorizOffset);
-  UpdateLEEditMode(bEditMode, bMixedData, leSignVertOffset, p->sSignVertOffset);
-  UpdateLEEditMode(bEditMode, bMixedData, leSignYaw, p->sSignYaw);
-  UpdateLEEditMode(bEditMode, bMixedData, leSignPitch, p->sSignPitch);
-  UpdateLEEditMode(bEditMode, bMixedData, leSignRoll, p->sSignRoll);
-  UpdateLEEditMode(bEditMode, bMixedData, leLUOuterWallAngle, p->sLUOuterWallAngle);
-  UpdateLEEditMode(bEditMode, bMixedData, leLLOuterWallAngle, p->sLLOuterWallAngle);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk23, p->sUnk23);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk24, p->sUnk24);
-  UpdateLEEditMode(bEditMode, bMixedData, leRLOuterWallAngle, p->sRLOuterWallAngle);
-  UpdateLEEditMode(bEditMode, bMixedData, leRUOuterWallAngle, p->sRUOuterWallAngle);
-  UpdateLEEditMode(bEditMode, bMixedData, leLUOuterWallHeight, p->sLUOuterWallHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leLLOuterWallHeight, p->sLLOuterWallHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk29, p->sUnk29);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk30, p->sUnk30);
-  UpdateLEEditMode(bEditMode, bMixedData, leRLOuterWallHeight, p->sRLOuterWallHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leRUOuterWallHeight, p->sRUOuterWallHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leRoofHeight, p->sRoofHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leDrawOrder1, p->sDrawOrder1);
-  UpdateLEEditMode(bEditMode, bMixedData, leDrawOrder2, p->sDrawOrder2);
-  UpdateLEEditMode(bEditMode, bMixedData, leDrawOrder3, p->sDrawOrder3);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk37, p->sUnk37);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk38, p->sUnk38);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk39, p->sUnk39);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk40, p->sUnk40);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk41, p->sUnk41);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk42, p->sUnk42);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk43, p->sUnk43);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk44, p->sUnk44);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk45, p->sUnk45);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk46, p->sUnk46);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk47, p->sUnk47);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk48, p->sUnk48);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk49, p->sUnk49);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk50, p->sUnk50);
-  UpdateSignEditMode(bEditMode, bMixedData, leSign, widgetSign, p->sSignTexture);
-  UpdateSignEditMode(bEditMode, bMixedData, leBack, widgetBack, p->sBackTexture);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntScaleFact, p->sStuntScaleFactor);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntAngle, p->sStuntAngle);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntUnk, p->sStuntUnknown);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntTimingGroup, p->sStuntTimingGroup);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntHeight, p->sStuntHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntTimeBulging, p->sStuntTimeBulging);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntTimeFlat, p->sStuntTimeFlat);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntExpandContract, p->sStuntExpandsContracts);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntBulge, p->sStuntBulge);
+  UpdateLEEditMode(bEditMode, bMixedData, leLShoulderWidth, p->editVals.sLeftShoulderWidth);
+  UpdateLEEditMode(bEditMode, bMixedData, leLLaneWidth, p->editVals.sLeftLaneWidth);
+  UpdateLEEditMode(bEditMode, bMixedData, leRLaneWidth, p->editVals.sRightLaneWidth);
+  UpdateLEEditMode(bEditMode, bMixedData, leRShoulderWidth, p->editVals.sRightShoulderWidth);
+  UpdateLEEditMode(bEditMode, bMixedData, leLShoulderHeight, p->editVals.sLShoulderHeight);
+  UpdateLEEditMode(bEditMode, bMixedData, leRShoulderHeight, p->editVals.sRShoulderHeight);
+  UpdateLEEditMode(bEditMode, bMixedData, leLength, p->editVals.sLength);
+  UpdateLEEditMode(bEditMode, bMixedData, leYaw, p->editVals.sYaw);
+  UpdateLEEditMode(bEditMode, bMixedData, lePitch, p->editVals.sPitch);
+  UpdateLEEditMode(bEditMode, bMixedData, leRoll, p->editVals.sRoll);
+  UpdateLEEditMode(bEditMode, bMixedData, leAILine1, p->editVals.sAILine1);
+  UpdateLEEditMode(bEditMode, bMixedData, leAILine2, p->editVals.sAILine2);
+  UpdateLEEditMode(bEditMode, bMixedData, leAILine3, p->editVals.sAILine3);
+  UpdateLEEditMode(bEditMode, bMixedData, leAILine4, p->editVals.sAILine4);
+  UpdateLEEditMode(bEditMode, bMixedData, leTrackGrip, p->editVals.sTrackGrip);
+  UpdateLEEditMode(bEditMode, bMixedData, leLeftShoulderGrip, p->editVals.sLeftShoulderGrip);
+  UpdateLEEditMode(bEditMode, bMixedData, leRShoulderGrip, p->editVals.sRightShoulderGrip);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk04, p->editVals.sUnk04);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk05, p->editVals.sUnk05);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk06, p->editVals.sUnk06);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk07, p->editVals.sUnk07);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk08, p->editVals.sUnk08);
+  UpdateLEEditMode(bEditMode, bMixedData, leLeftSurfaceType, p->editVals.sLeftSurfaceType);
+  UpdateLEEditMode(bEditMode, bMixedData, leCenterSurfaceType, p->editVals.sCenterSurfaceType);
+  UpdateLEEditMode(bEditMode, bMixedData, leRightSurfaceType, p->editVals.sRightSurfaceType);
+  UpdateLEEditMode(bEditMode, bMixedData, leLWallType, p->editVals.sLWallType);
+  UpdateLEEditMode(bEditMode, bMixedData, leRWallType, p->editVals.sRWallType);
+  UpdateLEEditMode(bEditMode, bMixedData, leRoofType, p->editVals.sRoofType);
+  UpdateLEEditMode(bEditMode, bMixedData, leLUOuterWallType, p->editVals.sLUOuterWallType);
+  UpdateLEEditMode(bEditMode, bMixedData, leLLOuterWallType, p->editVals.sLLOuterWallType);
+  UpdateLEEditMode(bEditMode, bMixedData, leOuterFloorType, p->editVals.sOuterFloorType);
+  UpdateLEEditMode(bEditMode, bMixedData, leRLOuterWallType, p->editVals.sRLOuterWallType);
+  UpdateLEEditMode(bEditMode, bMixedData, leRUOuterWallType, p->editVals.sRUOuterWallType);
+  UpdateLEEditMode(bEditMode, bMixedData, leEnvironmentFloorType, p->editVals.sEnvironmentFloorType);
+  UpdateLEEditMode(bEditMode, bMixedData, leSignType, p->editVals.sSignType);
+  UpdateCBEditMode(bEditMode, bMixedData, cbSignType, p->editVals.sSignType);
+  UpdateLEEditMode(bEditMode, bMixedData, leSignHorizOffset, p->editVals.sSignHorizOffset);
+  UpdateLEEditMode(bEditMode, bMixedData, leSignVertOffset, p->editVals.sSignVertOffset);
+  UpdateLEEditMode(bEditMode, bMixedData, leSignYaw, p->editVals.sSignYaw);
+  UpdateLEEditMode(bEditMode, bMixedData, leSignPitch, p->editVals.sSignPitch);
+  UpdateLEEditMode(bEditMode, bMixedData, leSignRoll, p->editVals.sSignRoll);
+  UpdateLEEditMode(bEditMode, bMixedData, leLUOuterWallAngle, p->editVals.sLUOuterWallAngle);
+  UpdateLEEditMode(bEditMode, bMixedData, leLLOuterWallAngle, p->editVals.sLLOuterWallAngle);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk23, p->editVals.sUnk23);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk24, p->editVals.sUnk24);
+  UpdateLEEditMode(bEditMode, bMixedData, leRLOuterWallAngle, p->editVals.sRLOuterWallAngle);
+  UpdateLEEditMode(bEditMode, bMixedData, leRUOuterWallAngle, p->editVals.sRUOuterWallAngle);
+  UpdateLEEditMode(bEditMode, bMixedData, leLUOuterWallHeight, p->editVals.sLUOuterWallHeight);
+  UpdateLEEditMode(bEditMode, bMixedData, leLLOuterWallHeight, p->editVals.sLLOuterWallHeight);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk29, p->editVals.sUnk29);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk30, p->editVals.sUnk30);
+  UpdateLEEditMode(bEditMode, bMixedData, leRLOuterWallHeight, p->editVals.sRLOuterWallHeight);
+  UpdateLEEditMode(bEditMode, bMixedData, leRUOuterWallHeight, p->editVals.sRUOuterWallHeight);
+  UpdateLEEditMode(bEditMode, bMixedData, leRoofHeight, p->editVals.sRoofHeight);
+  UpdateLEEditMode(bEditMode, bMixedData, leDrawOrder1, p->editVals.sDrawOrder1);
+  UpdateLEEditMode(bEditMode, bMixedData, leDrawOrder2, p->editVals.sDrawOrder2);
+  UpdateLEEditMode(bEditMode, bMixedData, leDrawOrder3, p->editVals.sDrawOrder3);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk37, p->editVals.sUnk37);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk38, p->editVals.sUnk38);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk39, p->editVals.sUnk39);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk40, p->editVals.sUnk40);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk41, p->editVals.sUnk41);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk42, p->editVals.sUnk42);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk43, p->editVals.sUnk43);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk44, p->editVals.sUnk44);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk45, p->editVals.sUnk45);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk46, p->editVals.sUnk46);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk47, p->editVals.sUnk47);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk48, p->editVals.sUnk48);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk49, p->editVals.sUnk49);
+  UpdateLEEditMode(bEditMode, bMixedData, leUnk50, p->editVals.sUnk50);
+  UpdateSignEditMode(bEditMode, bMixedData, leSign, widgetSign, p->editVals.sSignTexture);
+  UpdateSignEditMode(bEditMode, bMixedData, leBack, widgetBack, p->editVals.sBackTexture);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntScaleFact, p->editVals.sStuntScaleFactor);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntAngle, p->editVals.sStuntAngle);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntUnk, p->editVals.sStuntUnknown);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntTimingGroup, p->editVals.sStuntTimingGroup);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntHeight, p->editVals.sStuntHeight);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntTimeBulging, p->editVals.sStuntTimeBulging);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntTimeFlat, p->editVals.sStuntTimeFlat);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntExpandContract, p->editVals.sStuntExpandsContracts);
+  UpdateLEEditMode(bEditMode, bMixedData, leStuntBulge, p->editVals.sStuntBulge);
 
   pbApply->setEnabled(bEditMode);
   pbCancel->setEnabled(bEditMode);
@@ -1521,25 +1499,7 @@ void CMainWindow::UpdateGeometrySelection()
   txData->setTextCursor(c);
 
   //update values in edit window
-  p->m_track.GetGeometryValuesFromSelection(sbSelChunksFrom->value(), sbSelChunksTo->value()
-    , p->sLeftShoulderWidth, p->sLeftLaneWidth, p->sRightLaneWidth, p->sRightShoulderWidth
-    , p->sLShoulderHeight, p->sRShoulderHeight, p->sLength
-    , p->sYaw, p->sPitch, p->sRoll
-    , p->sAILine1, p->sAILine2, p->sAILine3, p->sAILine4
-    , p->sTrackGrip, p->sLeftShoulderGrip, p->sRightShoulderGrip
-    , p->sUnk04, p->sUnk05, p->sUnk06, p->sUnk07, p->sUnk08
-    , p->sLeftSurfaceType, p->sCenterSurfaceType, p->sRightSurfaceType
-    , p->sLWallType, p->sRWallType, p->sRoofType, p->sLUOuterWallType, p->sLLOuterWallType, p->sOuterFloorType
-    , p->sRLOuterWallType, p->sRUOuterWallType, p->sEnvironmentFloorType, p->sSignType, p->sSignHorizOffset, p->sSignVertOffset
-    , p->sSignYaw, p->sSignPitch, p->sSignRoll
-    , p->sLUOuterWallAngle, p->sLLOuterWallAngle, p->sUnk23, p->sUnk24, p->sRLOuterWallAngle, p->sRUOuterWallAngle
-    , p->sLUOuterWallHeight, p->sLLOuterWallHeight, p->sUnk29, p->sUnk30, p->sRLOuterWallHeight, p->sRUOuterWallHeight
-    , p->sRoofHeight, p->sDrawOrder1, p->sDrawOrder2, p->sDrawOrder3, p->sUnk37, p->sUnk38
-    , p->sUnk39, p->sUnk40, p->sUnk41, p->sUnk42, p->sUnk43, p->sUnk44
-    , p->sUnk45, p->sUnk46, p->sUnk47, p->sUnk48, p->sUnk49, p->sUnk50
-    , p->sSignTexture, p->sBackTexture
-    , p->sStuntScaleFactor, p->sStuntAngle, p->sStuntUnknown, p->sStuntTimingGroup, p->sStuntHeight, p->sStuntTimeBulging
-    , p->sStuntTimeFlat, p->sStuntExpandsContracts, p->sStuntBulge);
+  p->m_track.GetGeometryValuesFromSelection(sbSelChunksFrom->value(), sbSelChunksTo->value(), p->editVals);
 
   RevertGeometry();
 }
@@ -1716,88 +1676,88 @@ void CMainWindow::RevertGeometry()
   pbDelete->setEnabled(!p->m_track.m_chunkAy.empty());
 
   bool bMixedData = false;
-  bMixedData |= UpdateLEWithSelectionValue(leLShoulderWidth, p->sLeftShoulderWidth);
-  bMixedData |= UpdateLEWithSelectionValue(leLLaneWidth, p->sLeftLaneWidth);
-  bMixedData |= UpdateLEWithSelectionValue(leRLaneWidth, p->sRightLaneWidth);
-  bMixedData |= UpdateLEWithSelectionValue(leRShoulderWidth, p->sRightShoulderWidth);
-  bMixedData |= UpdateLEWithSelectionValue(leLShoulderHeight, p->sLShoulderHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leRShoulderHeight, p->sRShoulderHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leLength, p->sLength);
-  bMixedData |= UpdateLEWithSelectionValue(leYaw, p->sYaw);
-  bMixedData |= UpdateLEWithSelectionValue(lePitch, p->sPitch);
-  bMixedData |= UpdateLEWithSelectionValue(leRoll, p->sRoll);
-  bMixedData |= UpdateLEWithSelectionValue(leAILine1, p->sAILine1);
-  bMixedData |= UpdateLEWithSelectionValue(leAILine2, p->sAILine2);
-  bMixedData |= UpdateLEWithSelectionValue(leAILine3, p->sAILine3);
-  bMixedData |= UpdateLEWithSelectionValue(leAILine4, p->sAILine4);
-  bMixedData |= UpdateLEWithSelectionValue(leTrackGrip, p->sTrackGrip);
-  bMixedData |= UpdateLEWithSelectionValue(leLeftShoulderGrip, p->sLeftShoulderGrip);
-  bMixedData |= UpdateLEWithSelectionValue(leRShoulderGrip, p->sRightShoulderGrip);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk04, p->sUnk04);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk05, p->sUnk05);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk06, p->sUnk06);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk07, p->sUnk07);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk08, p->sUnk08);
-  bMixedData |= UpdateLEWithSelectionValue(leLeftSurfaceType, p->sLeftSurfaceType);
-  bMixedData |= UpdateLEWithSelectionValue(leCenterSurfaceType, p->sCenterSurfaceType);
-  bMixedData |= UpdateLEWithSelectionValue(leRightSurfaceType, p->sRightSurfaceType);
-  bMixedData |= UpdateLEWithSelectionValue(leLWallType, p->sLWallType);
-  bMixedData |= UpdateLEWithSelectionValue(leRWallType, p->sRWallType);
-  bMixedData |= UpdateLEWithSelectionValue(leRoofType, p->sRoofType);
-  bMixedData |= UpdateLEWithSelectionValue(leLUOuterWallType, p->sLUOuterWallType);
-  bMixedData |= UpdateLEWithSelectionValue(leLLOuterWallType, p->sLLOuterWallType);
-  bMixedData |= UpdateLEWithSelectionValue(leOuterFloorType, p->sOuterFloorType);
-  bMixedData |= UpdateLEWithSelectionValue(leRLOuterWallType, p->sRLOuterWallType);
-  bMixedData |= UpdateLEWithSelectionValue(leRUOuterWallType, p->sRUOuterWallType);
-  bMixedData |= UpdateLEWithSelectionValue(leEnvironmentFloorType, p->sEnvironmentFloorType);
-  bMixedData |= UpdateLEWithSelectionValue(leSignType, p->sSignType);
-  bMixedData |= UpdateCBWithSelectionValue(cbSignType, p->sSignType);
-  bMixedData |= UpdateLEWithSelectionValue(leSignHorizOffset, p->sSignHorizOffset);
-  bMixedData |= UpdateLEWithSelectionValue(leSignVertOffset, p->sSignVertOffset);
-  bMixedData |= UpdateLEWithSelectionValue(leSignYaw, p->sSignYaw);
-  bMixedData |= UpdateLEWithSelectionValue(leSignPitch, p->sSignPitch);
-  bMixedData |= UpdateLEWithSelectionValue(leSignRoll, p->sSignRoll);
-  bMixedData |= UpdateLEWithSelectionValue(leLUOuterWallAngle, p->sLUOuterWallAngle);
-  bMixedData |= UpdateLEWithSelectionValue(leLLOuterWallAngle, p->sLLOuterWallAngle);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk23, p->sUnk23);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk24, p->sUnk24);
-  bMixedData |= UpdateLEWithSelectionValue(leRLOuterWallAngle, p->sRLOuterWallAngle);
-  bMixedData |= UpdateLEWithSelectionValue(leRUOuterWallAngle, p->sRUOuterWallAngle);
-  bMixedData |= UpdateLEWithSelectionValue(leLUOuterWallHeight, p->sLUOuterWallHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leLLOuterWallHeight, p->sLLOuterWallHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk29, p->sUnk29);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk30, p->sUnk30);
-  bMixedData |= UpdateLEWithSelectionValue(leRLOuterWallHeight, p->sRLOuterWallHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leRUOuterWallHeight, p->sRUOuterWallHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leRoofHeight, p->sRoofHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leDrawOrder1, p->sDrawOrder1);
-  bMixedData |= UpdateLEWithSelectionValue(leDrawOrder2, p->sDrawOrder2);
-  bMixedData |= UpdateLEWithSelectionValue(leDrawOrder3, p->sDrawOrder3);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk37, p->sUnk37);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk38, p->sUnk38);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk39, p->sUnk39);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk40, p->sUnk40);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk41, p->sUnk41);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk42, p->sUnk42);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk43, p->sUnk43);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk44, p->sUnk44);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk45, p->sUnk45);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk46, p->sUnk46);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk47, p->sUnk47);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk48, p->sUnk48);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk49, p->sUnk49);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk50, p->sUnk50);
-  bMixedData |= UpdateSignWithSelectionValue(pbSign, ckApplySign, leSign, p->sSignTexture);
-  bMixedData |= UpdateSignWithSelectionValue(pbBack, ckApplyBack, leBack, p->sBackTexture);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntScaleFact, p->sStuntScaleFactor);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntAngle, p->sStuntAngle);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntUnk, p->sStuntUnknown);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntTimingGroup, p->sStuntTimingGroup);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntHeight, p->sStuntHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntTimeBulging, p->sStuntTimeBulging);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntTimeFlat, p->sStuntTimeFlat);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntExpandContract, p->sStuntExpandsContracts);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntBulge, p->sStuntBulge);
+  bMixedData |= UpdateLEWithSelectionValue(leLShoulderWidth, p->editVals.sLeftShoulderWidth);
+  bMixedData |= UpdateLEWithSelectionValue(leLLaneWidth, p->editVals.sLeftLaneWidth);
+  bMixedData |= UpdateLEWithSelectionValue(leRLaneWidth, p->editVals.sRightLaneWidth);
+  bMixedData |= UpdateLEWithSelectionValue(leRShoulderWidth, p->editVals.sRightShoulderWidth);
+  bMixedData |= UpdateLEWithSelectionValue(leLShoulderHeight, p->editVals.sLShoulderHeight);
+  bMixedData |= UpdateLEWithSelectionValue(leRShoulderHeight, p->editVals.sRShoulderHeight);
+  bMixedData |= UpdateLEWithSelectionValue(leLength, p->editVals.sLength);
+  bMixedData |= UpdateLEWithSelectionValue(leYaw, p->editVals.sYaw);
+  bMixedData |= UpdateLEWithSelectionValue(lePitch, p->editVals.sPitch);
+  bMixedData |= UpdateLEWithSelectionValue(leRoll, p->editVals.sRoll);
+  bMixedData |= UpdateLEWithSelectionValue(leAILine1, p->editVals.sAILine1);
+  bMixedData |= UpdateLEWithSelectionValue(leAILine2, p->editVals.sAILine2);
+  bMixedData |= UpdateLEWithSelectionValue(leAILine3, p->editVals.sAILine3);
+  bMixedData |= UpdateLEWithSelectionValue(leAILine4, p->editVals.sAILine4);
+  bMixedData |= UpdateLEWithSelectionValue(leTrackGrip, p->editVals.sTrackGrip);
+  bMixedData |= UpdateLEWithSelectionValue(leLeftShoulderGrip, p->editVals.sLeftShoulderGrip);
+  bMixedData |= UpdateLEWithSelectionValue(leRShoulderGrip, p->editVals.sRightShoulderGrip);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk04, p->editVals.sUnk04);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk05, p->editVals.sUnk05);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk06, p->editVals.sUnk06);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk07, p->editVals.sUnk07);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk08, p->editVals.sUnk08);
+  bMixedData |= UpdateLEWithSelectionValue(leLeftSurfaceType, p->editVals.sLeftSurfaceType);
+  bMixedData |= UpdateLEWithSelectionValue(leCenterSurfaceType, p->editVals.sCenterSurfaceType);
+  bMixedData |= UpdateLEWithSelectionValue(leRightSurfaceType, p->editVals.sRightSurfaceType);
+  bMixedData |= UpdateLEWithSelectionValue(leLWallType, p->editVals.sLWallType);
+  bMixedData |= UpdateLEWithSelectionValue(leRWallType, p->editVals.sRWallType);
+  bMixedData |= UpdateLEWithSelectionValue(leRoofType, p->editVals.sRoofType);
+  bMixedData |= UpdateLEWithSelectionValue(leLUOuterWallType, p->editVals.sLUOuterWallType);
+  bMixedData |= UpdateLEWithSelectionValue(leLLOuterWallType, p->editVals.sLLOuterWallType);
+  bMixedData |= UpdateLEWithSelectionValue(leOuterFloorType, p->editVals.sOuterFloorType);
+  bMixedData |= UpdateLEWithSelectionValue(leRLOuterWallType, p->editVals.sRLOuterWallType);
+  bMixedData |= UpdateLEWithSelectionValue(leRUOuterWallType, p->editVals.sRUOuterWallType);
+  bMixedData |= UpdateLEWithSelectionValue(leEnvironmentFloorType, p->editVals.sEnvironmentFloorType);
+  bMixedData |= UpdateLEWithSelectionValue(leSignType, p->editVals.sSignType);
+  bMixedData |= UpdateCBWithSelectionValue(cbSignType, p->editVals.sSignType);
+  bMixedData |= UpdateLEWithSelectionValue(leSignHorizOffset, p->editVals.sSignHorizOffset);
+  bMixedData |= UpdateLEWithSelectionValue(leSignVertOffset, p->editVals.sSignVertOffset);
+  bMixedData |= UpdateLEWithSelectionValue(leSignYaw, p->editVals.sSignYaw);
+  bMixedData |= UpdateLEWithSelectionValue(leSignPitch, p->editVals.sSignPitch);
+  bMixedData |= UpdateLEWithSelectionValue(leSignRoll, p->editVals.sSignRoll);
+  bMixedData |= UpdateLEWithSelectionValue(leLUOuterWallAngle, p->editVals.sLUOuterWallAngle);
+  bMixedData |= UpdateLEWithSelectionValue(leLLOuterWallAngle, p->editVals.sLLOuterWallAngle);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk23, p->editVals.sUnk23);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk24, p->editVals.sUnk24);
+  bMixedData |= UpdateLEWithSelectionValue(leRLOuterWallAngle, p->editVals.sRLOuterWallAngle);
+  bMixedData |= UpdateLEWithSelectionValue(leRUOuterWallAngle, p->editVals.sRUOuterWallAngle);
+  bMixedData |= UpdateLEWithSelectionValue(leLUOuterWallHeight, p->editVals.sLUOuterWallHeight);
+  bMixedData |= UpdateLEWithSelectionValue(leLLOuterWallHeight, p->editVals.sLLOuterWallHeight);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk29, p->editVals.sUnk29);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk30, p->editVals.sUnk30);
+  bMixedData |= UpdateLEWithSelectionValue(leRLOuterWallHeight, p->editVals.sRLOuterWallHeight);
+  bMixedData |= UpdateLEWithSelectionValue(leRUOuterWallHeight, p->editVals.sRUOuterWallHeight);
+  bMixedData |= UpdateLEWithSelectionValue(leRoofHeight, p->editVals.sRoofHeight);
+  bMixedData |= UpdateLEWithSelectionValue(leDrawOrder1, p->editVals.sDrawOrder1);
+  bMixedData |= UpdateLEWithSelectionValue(leDrawOrder2, p->editVals.sDrawOrder2);
+  bMixedData |= UpdateLEWithSelectionValue(leDrawOrder3, p->editVals.sDrawOrder3);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk37, p->editVals.sUnk37);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk38, p->editVals.sUnk38);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk39, p->editVals.sUnk39);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk40, p->editVals.sUnk40);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk41, p->editVals.sUnk41);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk42, p->editVals.sUnk42);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk43, p->editVals.sUnk43);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk44, p->editVals.sUnk44);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk45, p->editVals.sUnk45);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk46, p->editVals.sUnk46);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk47, p->editVals.sUnk47);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk48, p->editVals.sUnk48);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk49, p->editVals.sUnk49);
+  bMixedData |= UpdateLEWithSelectionValue(leUnk50, p->editVals.sUnk50);
+  bMixedData |= UpdateSignWithSelectionValue(pbSign, ckApplySign, leSign, p->editVals.sSignTexture);
+  bMixedData |= UpdateSignWithSelectionValue(pbBack, ckApplyBack, leBack, p->editVals.sBackTexture);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntScaleFact, p->editVals.sStuntScaleFactor);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntAngle, p->editVals.sStuntAngle);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntUnk, p->editVals.sStuntUnknown);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntTimingGroup, p->editVals.sStuntTimingGroup);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntHeight, p->editVals.sStuntHeight);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntTimeBulging, p->editVals.sStuntTimeBulging);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntTimeFlat, p->editVals.sStuntTimeFlat);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntExpandContract, p->editVals.sStuntExpandsContracts);
+  bMixedData |= UpdateLEWithSelectionValue(leStuntBulge, p->editVals.sStuntBulge);
 
   UpdateTextures(leLeftSurfaceType, lblLSurfaceTex1, lblLSurfaceTex2);
   UpdateTextures(leCenterSurfaceType, lblCSurfaceTex1, lblCSurfaceTex2);

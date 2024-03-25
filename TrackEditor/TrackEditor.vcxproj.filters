@@ -40,6 +40,9 @@
     <ClCompile Include="moc\moc_EditSurfaceDialog.cpp">
       <Filter>Qt Generated Files\Moc Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ChunkEditValues.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Track.h">
@@ -68,6 +71,9 @@
     </ClInclude>
     <ClInclude Include="ui\ui_EditSurfaceDialog.h">
       <Filter>Qt Generated Files\Ui Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChunkEditValues.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

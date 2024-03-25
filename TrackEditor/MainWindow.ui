@@ -194,9 +194,9 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>0</y>
-              <width>449</width>
-              <height>2000</height>
+              <y>-700</y>
+              <width>466</width>
+              <height>2141</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -490,7 +490,7 @@
              <item>
               <layout class="QGridLayout" name="gridLayout_2">
                <item row="8" column="1">
-                <widget class="QLineEdit" name="leLOuterExtraWallType"/>
+                <widget class="QLineEdit" name="leLLOuterWallType"/>
                </item>
                <item row="2" column="2">
                 <layout class="QHBoxLayout" name="horizontalLayout_9">
@@ -537,20 +537,19 @@
                <item row="18" column="1">
                 <widget class="QLabel" name="label_44">
                  <property name="text">
-                  <string>unknown float 2</string>
+                  <string>Sign pitch</string>
                  </property>
                 </widget>
                </item>
                <item row="8" column="0">
                 <widget class="QLabel" name="label_48">
                  <property name="text">
-                  <string>L outer extra
-wall type</string>
+                  <string>L lower outer wall type</string>
                  </property>
                 </widget>
                </item>
                <item row="10" column="1">
-                <widget class="QLineEdit" name="leROuterExtraWallType"/>
+                <widget class="QLineEdit" name="leRLOuterWallType"/>
                </item>
                <item row="3" column="1">
                 <widget class="QLineEdit" name="leLWallType"/>
@@ -612,10 +611,10 @@ wall type</string>
                 </layout>
                </item>
                <item row="9" column="1">
-                <widget class="QLineEdit" name="leUnk14"/>
+                <widget class="QLineEdit" name="leOuterFloorType"/>
                </item>
                <item row="19" column="2">
-                <widget class="QLineEdit" name="leFloatUnk3"/>
+                <widget class="QLineEdit" name="leSignRoll"/>
                </item>
                <item row="5" column="0">
                 <widget class="QLabel" name="label_46">
@@ -634,24 +633,24 @@ wall type</string>
                <item row="6" column="0">
                 <widget class="QLabel" name="label_40">
                  <property name="text">
-                  <string>unknown 12</string>
+                  <string>L upper outer wall type</string>
                  </property>
                 </widget>
                </item>
                <item row="19" column="1">
-                <widget class="QLineEdit" name="leFloatUnk2"/>
+                <widget class="QLineEdit" name="leSignPitch"/>
                </item>
                <item row="18" column="2">
                 <widget class="QLabel" name="label_37">
                  <property name="text">
-                  <string>unknown float 3</string>
+                  <string>Sign roll</string>
                  </property>
                 </widget>
                </item>
                <item row="11" column="0">
                 <widget class="QLabel" name="label_33">
                  <property name="text">
-                  <string>unknown 16</string>
+                  <string>R upper outer wall type</string>
                  </property>
                 </widget>
                </item>
@@ -673,7 +672,7 @@ wall type</string>
                 </widget>
                </item>
                <item row="11" column="1">
-                <widget class="QLineEdit" name="leUnk16"/>
+                <widget class="QLineEdit" name="leRUOuterWallType"/>
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="lblCenterSurfaceType">
@@ -759,7 +758,7 @@ type</string>
                 <widget class="QLineEdit" name="leRWallType"/>
                </item>
                <item row="6" column="1">
-                <widget class="QLineEdit" name="leUnk12"/>
+                <widget class="QLineEdit" name="leLUOuterWallType"/>
                </item>
                <item row="3" column="0">
                 <widget class="QLabel" name="label_35">
@@ -771,15 +770,14 @@ type</string>
                <item row="18" column="0">
                 <widget class="QLabel" name="label_34">
                  <property name="text">
-                  <string>unknown float 1</string>
+                  <string>Sign yaw</string>
                  </property>
                 </widget>
                </item>
                <item row="10" column="0">
                 <widget class="QLabel" name="label_42">
                  <property name="text">
-                  <string>R outer extra
-wall type</string>
+                  <string>R lower outer wall type</string>
                  </property>
                 </widget>
                </item>
@@ -798,12 +796,12 @@ wall type</string>
                 </widget>
                </item>
                <item row="19" column="0">
-                <widget class="QLineEdit" name="leFloatUnk1"/>
+                <widget class="QLineEdit" name="leSignYaw"/>
                </item>
                <item row="9" column="0">
                 <widget class="QLabel" name="label_45">
                  <property name="text">
-                  <string>unknown 14</string>
+                  <string>Outer wall floor type</string>
                  </property>
                 </widget>
                </item>
@@ -830,25 +828,18 @@ wall type</string>
                  </property>
                 </widget>
                </item>
-               <item row="14" column="1">
-                <widget class="QLabel" name="label_49">
-                 <property name="text">
-                  <string>unknown 19</string>
-                 </property>
-                </widget>
-               </item>
                <item row="15" column="1">
-                <widget class="QLineEdit" name="leUnk19"/>
+                <widget class="QLineEdit" name="leSignHorizOffset"/>
                </item>
                <item row="14" column="2">
                 <widget class="QLabel" name="label_32">
                  <property name="text">
-                  <string>unknown 20</string>
+                  <string>Sign vertical offset</string>
                  </property>
                 </widget>
                </item>
                <item row="15" column="2">
-                <widget class="QLineEdit" name="leUnk20"/>
+                <widget class="QLineEdit" name="leSignVertOffset"/>
                </item>
                <item row="12" column="1">
                 <widget class="QLineEdit" name="leEnvironmentFloorType"/>
@@ -875,14 +866,14 @@ wall type</string>
                 </widget>
                </item>
                <item row="8" column="3">
-                <widget class="QPushButton" name="pbEditLOuterExtraWall">
+                <widget class="QPushButton" name="pbEditLLOuterWall">
                  <property name="text">
                   <string>Edit Bits</string>
                  </property>
                 </widget>
                </item>
                <item row="10" column="3">
-                <widget class="QPushButton" name="pbEditROuterExtraWall">
+                <widget class="QPushButton" name="pbEditRLOuterWall">
                  <property name="text">
                   <string>Edit Bits</string>
                  </property>
@@ -1024,7 +1015,7 @@ wall type</string>
                <item row="8" column="2">
                 <layout class="QHBoxLayout" name="horizontalLayout_15">
                  <item>
-                  <widget class="QLabel" name="lblLOuterExtraWallTex1">
+                  <widget class="QLabel" name="lblLLOuterWallTex1">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -1043,7 +1034,7 @@ wall type</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="lblLOuterExtraWallTex2">
+                  <widget class="QLabel" name="lblLLOuterWallTex2">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -1066,7 +1057,7 @@ wall type</string>
                <item row="10" column="2">
                 <layout class="QHBoxLayout" name="horizontalLayout_16">
                  <item>
-                  <widget class="QLabel" name="lblROuterExtraWallTex1">
+                  <widget class="QLabel" name="lblRLOuterWallTex1">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -1085,7 +1076,7 @@ wall type</string>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="lblROuterExtraWallTex2">
+                  <widget class="QLabel" name="lblRLOuterWallTex2">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                      <horstretch>0</horstretch>
@@ -1147,6 +1138,160 @@ wall type</string>
                  </item>
                 </layout>
                </item>
+               <item row="14" column="1">
+                <widget class="QLabel" name="label_49">
+                 <property name="text">
+                  <string>Sign horizontal offset</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_18">
+                 <item>
+                  <widget class="QLabel" name="lblLUOuterWallTex1">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>64</width>
+                     <height>64</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblLUOuterWallTex2">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>64</width>
+                     <height>64</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="6" column="3">
+                <widget class="QPushButton" name="pbEditLUOuterWall">
+                 <property name="text">
+                  <string>Edit Bits</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="9" column="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_19">
+                 <item>
+                  <widget class="QLabel" name="lblOuterFloorTex1">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>64</width>
+                     <height>64</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblOuterFloorTex2">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>64</width>
+                     <height>64</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="9" column="3">
+                <widget class="QPushButton" name="pbEditOuterFloor">
+                 <property name="text">
+                  <string>Edit Bits</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_20">
+                 <item>
+                  <widget class="QLabel" name="lblRUOuterWallTex1">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>64</width>
+                     <height>64</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="lblRUOuterWallTex2">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>64</width>
+                     <height>64</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="11" column="3">
+                <widget class="QPushButton" name="pbEditRUOuterWall">
+                 <property name="text">
+                  <string>Edit Bits</string>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </item>
              <item>
@@ -1161,15 +1306,15 @@ wall type</string>
                <item row="3" column="1">
                 <widget class="QLabel" name="label_76">
                  <property name="text">
-                  <string>Right outer upper
-extra wall angle</string>
+                  <string>Right upper outer
+wall angle</string>
                  </property>
                 </widget>
                </item>
                <item row="7" column="0">
                 <widget class="QLabel" name="label_69">
                  <property name="text">
-                  <string>unknown 33</string>
+                  <string>Wall/roof height</string>
                  </property>
                 </widget>
                </item>
@@ -1181,7 +1326,7 @@ extra wall angle</string>
                 </widget>
                </item>
                <item row="6" column="3">
-                <widget class="QLineEdit" name="leROuterUpperExtraWallHeight"/>
+                <widget class="QLineEdit" name="leRUOuterWallHeight"/>
                </item>
                <item row="11" column="1">
                 <widget class="QLabel" name="label_61">
@@ -1196,7 +1341,7 @@ extra wall angle</string>
                <item row="7" column="3">
                 <widget class="QLabel" name="label_79">
                  <property name="text">
-                  <string>unknown 36</string>
+                  <string>Draw Order 3</string>
                  </property>
                 </widget>
                </item>
@@ -1210,16 +1355,16 @@ extra wall angle</string>
                <item row="5" column="2">
                 <widget class="QLabel" name="label_63">
                  <property name="text">
-                  <string>Right outer lower
-extra wall height</string>
+                  <string>Right lower outer
+wall height</string>
                  </property>
                 </widget>
                </item>
                <item row="5" column="3">
                 <widget class="QLabel" name="label_55">
                  <property name="text">
-                  <string>Right outer upper
-extra wall height</string>
+                  <string>Right upper outer
+wall height</string>
                  </property>
                 </widget>
                </item>
@@ -1243,8 +1388,8 @@ extra wall height</string>
                <item row="0" column="0">
                 <widget class="QLabel" name="label_54">
                  <property name="text">
-                  <string>Left outer upper
-extra wall angle</string>
+                  <string>Left upper outer
+wall angle</string>
                  </property>
                 </widget>
                </item>
@@ -1256,13 +1401,13 @@ extra wall angle</string>
                 </widget>
                </item>
                <item row="8" column="2">
-                <widget class="QLineEdit" name="leUnk35"/>
+                <widget class="QLineEdit" name="leDrawOrder2"/>
                </item>
                <item row="3" column="0">
                 <widget class="QLabel" name="label_52">
                  <property name="text">
-                  <string>Right outer lower
-extra wall angle</string>
+                  <string>Right lower outer
+wall angle</string>
                  </property>
                 </widget>
                </item>
@@ -1276,16 +1421,16 @@ extra wall angle</string>
                 <widget class="QLineEdit" name="leUnk29"/>
                </item>
                <item row="8" column="0">
-                <widget class="QLineEdit" name="leUnk33"/>
+                <widget class="QLineEdit" name="leRoofHeight"/>
                </item>
                <item row="8" column="3">
-                <widget class="QLineEdit" name="leUnk36"/>
+                <widget class="QLineEdit" name="leDrawOrder3"/>
                </item>
                <item row="14" column="1">
                 <widget class="QLineEdit" name="leUnk46"/>
                </item>
                <item row="4" column="1">
-                <widget class="QLineEdit" name="leROuterUpperExtraWallAngle"/>
+                <widget class="QLineEdit" name="leRUOuterWallAngle"/>
                </item>
                <item row="9" column="1">
                 <widget class="QLabel" name="label_81">
@@ -1295,16 +1440,16 @@ extra wall angle</string>
                 </widget>
                </item>
                <item row="1" column="0">
-                <widget class="QLineEdit" name="leLOuterUpperExtraWallAngle"/>
+                <widget class="QLineEdit" name="leLUOuterWallAngle"/>
                </item>
                <item row="10" column="2">
                 <widget class="QLineEdit" name="leUnk39"/>
                </item>
                <item row="4" column="3">
-                <widget class="QLineEdit" name="leLOuterLowerExtraWallHeight"/>
+                <widget class="QLineEdit" name="leLLOuterWallHeight"/>
                </item>
                <item row="8" column="1">
-                <widget class="QLineEdit" name="leUnk34"/>
+                <widget class="QLineEdit" name="leDrawOrder1"/>
                </item>
                <item row="9" column="3">
                 <widget class="QLabel" name="label_77">
@@ -1314,7 +1459,7 @@ extra wall angle</string>
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QLineEdit" name="leLOuterLowerExtraWallAngle">
+                <widget class="QLineEdit" name="leLLOuterWallAngle">
                  <property name="styleSheet">
                   <string notr="true"/>
                  </property>
@@ -1323,8 +1468,8 @@ extra wall angle</string>
                <item row="0" column="1">
                 <widget class="QLabel" name="label_72">
                  <property name="text">
-                  <string>Left outer lower
-extra wall angle</string>
+                  <string>Left lower outer
+wall angle</string>
                  </property>
                 </widget>
                </item>
@@ -1337,7 +1482,7 @@ extra wall angle</string>
                <item row="7" column="1">
                 <widget class="QLabel" name="label_56">
                  <property name="text">
-                  <string>unknown 34</string>
+                  <string>Draw Order 1</string>
                  </property>
                 </widget>
                </item>
@@ -1364,7 +1509,7 @@ extra wall angle</string>
                 <widget class="QLineEdit" name="leUnk48"/>
                </item>
                <item row="6" column="2">
-                <widget class="QLineEdit" name="leROuterLowerExtraWallHeight"/>
+                <widget class="QLineEdit" name="leRLOuterWallHeight"/>
                </item>
                <item row="13" column="2">
                 <widget class="QLabel" name="label_71">
@@ -1376,8 +1521,8 @@ extra wall angle</string>
                <item row="3" column="2">
                 <widget class="QLabel" name="label_58">
                  <property name="text">
-                  <string>Left outer upper
-extra wall height</string>
+                  <string>Left upper outer
+wall height</string>
                  </property>
                 </widget>
                </item>
@@ -1405,15 +1550,15 @@ extra wall height</string>
                <item row="3" column="3">
                 <widget class="QLabel" name="label_59">
                  <property name="text">
-                  <string>Left outer lower
-extra wall height</string>
+                  <string>Left lower outer
+wall height</string>
                  </property>
                 </widget>
                </item>
                <item row="7" column="2">
                 <widget class="QLabel" name="label_70">
                  <property name="text">
-                  <string>unknown 35</string>
+                  <string>Draw Order 2</string>
                  </property>
                 </widget>
                </item>
@@ -1442,10 +1587,10 @@ extra wall height</string>
                 </widget>
                </item>
                <item row="4" column="2">
-                <widget class="QLineEdit" name="leLOuterUpperExtraWallHeight"/>
+                <widget class="QLineEdit" name="leLUOuterWallHeight"/>
                </item>
                <item row="4" column="0">
-                <widget class="QLineEdit" name="leROuterLowerExtraWallAngle"/>
+                <widget class="QLineEdit" name="leRLOuterWallAngle"/>
                </item>
                <item row="12" column="1">
                 <widget class="QLineEdit" name="leUnk42"/>
@@ -2129,8 +2274,8 @@ extra wall height</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>158</width>
-              <height>530</height>
+              <width>133</width>
+              <height>118</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_12">

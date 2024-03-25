@@ -44,8 +44,11 @@ protected slots:
   void OnEditLWall();
   void OnEditRWall();
   void OnEditRoof();
-  void OnEditLOuterExtraWall();
-  void OnEditROuterExtraWall();
+  void OnEditLUOuterWall();
+  void OnEditLLOuterWall();
+  void OnEditOuterFloor();
+  void OnEditRLOuterWall();
+  void OnEditRUOuterWall();
   void OnEditEnvirFloor();
   void UpdateGeometryEditMode();
   void UpdateTexturesEditMode();
@@ -65,8 +68,11 @@ protected slots:
   void OnLWallLEChanged();
   void OnRWallLEChanged();
   void OnRoofLEChanged();
-  void OnLOuterExtraWallLEChanged();
-  void OnROuterExtraWallLEChanged();
+  void OnLUOuterWallChanged();
+  void OnLLOuterWallChanged();
+  void OnOuterFloorChanged();
+  void OnRLOuterWallChanged();
+  void OnRUOuterWallChanged();
   void OnEnvirFloorChanged();
   void OnUnmangleTexturesToggled(bool bChecked);
 

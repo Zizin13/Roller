@@ -354,11 +354,9 @@ void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
 void CEditSurfaceDialog::OnTextureClicked()
 {
   int iIndex = m_iValue & SURFACE_TEXTURE_INDEX;
-  iIndex = iIndex >> 1;
   CTilePicker dlg(this, m_pTexture, iIndex, false);
   if (dlg.exec()) {
-    int iIndex = dlg.GetSelected();
-    iIndex = iIndex << 1;
+    iIndex = dlg.GetSelected();
     m_iValue &= ~SURFACE_TEXTURE_INDEX;
     m_iValue |= iIndex;
   }
@@ -379,7 +377,6 @@ void CEditSurfaceDialog::UpdateDialog()
 
   //textures
   int iIndex = m_iValue & SURFACE_TEXTURE_INDEX;
-  //iIndex = iIndex >> 1;
   if (iIndex < m_pTexture->m_tileAy.size()) {
     QPixmap pixmap;
     pixmap.convertFromImage(m_pTexture->m_tileAy[iIndex]);

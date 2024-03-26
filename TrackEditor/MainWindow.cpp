@@ -990,14 +990,13 @@ void CMainWindow::OnSignClicked()
   QString sValue = leSign->text();
   int iValue = sValue.toInt();
   int iBldIndex = iValue & SURFACE_TEXTURE_INDEX;
-  //iBldIndex = iBldIndex >> 1;
 
   CTilePicker dlg(this, &p->m_bld, iBldIndex, true);
   if (dlg.exec()) {
     int iIndex = dlg.GetSelected();
     if (iIndex >= 0) {
       iBldIndex = iIndex;
-      iValue = iBldIndex;// << 1;
+      iValue = iBldIndex;
       if (ckApplySign->isChecked()) {
         iValue |= SURFACE_FLAG_APPLY_TEXTURE;
       } else {
@@ -1019,14 +1018,13 @@ void CMainWindow::OnBackClicked()
   QString sValue = leBack->text();
   int iValue = sValue.toInt();
   int iBldIndex = iValue & SURFACE_TEXTURE_INDEX;
-  //iBldIndex = iBldIndex >> 1;
 
   CTilePicker dlg(this, &p->m_tex, iBldIndex, true);
   if (dlg.exec()) {
     int iIndex = dlg.GetSelected();
     if (iIndex >= 0) {
       iBldIndex = iIndex;
-      iValue = iBldIndex;// << 1;
+      iValue = iBldIndex;
       if (ckApplyBack->isChecked()) {
         iValue |= SURFACE_FLAG_APPLY_TEXTURE;
       } else {
@@ -1596,7 +1594,6 @@ void CMainWindow::UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *p
     int iValue = pLineEdit->text().toInt();
     bool bChecked = iValue & SURFACE_FLAG_APPLY_TEXTURE;
     int iBldIndex = iValue & SURFACE_TEXTURE_INDEX;
-    //iBldIndex = iBldIndex >> 1;
     if (iBldIndex < pTex->m_tileAy.size()) {
       QPixmap pixmap;
       pixmap.convertFromImage(pTex->m_tileAy[iBldIndex]);
@@ -1813,7 +1810,6 @@ void CMainWindow::UpdateTextures(QLineEdit *pLineEdit, QLabel *pTex1, QLabel *pT
   } else if (!pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) != 0) {
     int iLSurfaceType = pLineEdit->text().toInt();
     iIndex = iLSurfaceType & SURFACE_TEXTURE_INDEX;
-    //iIndex = iIndex >> 1;
     if (iIndex < p->m_tex.m_tileAy.size()) {
       pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex]);
       pTex1->setPixmap(pixmap);

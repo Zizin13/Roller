@@ -4,6 +4,7 @@
 #include "ui_MainWindow.h"
 //-------------------------------------------------------------------------------------------------
 class CMainWindowPrivate;
+class CTexture;
 //-------------------------------------------------------------------------------------------------
 
 class CMainWindow : public QMainWindow, private Ui::MainWindow
@@ -86,8 +87,8 @@ private:
   void UpdateInfoSelection();
   bool UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue);
   bool UpdateCBWithSelectionValue(QComboBox *pComboBox, const QString &sValue);
-  bool UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit, const QString &sValue);
-  void UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit);
+  bool UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit, const QString &sValue, CTexture *pTex);
+  void UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit, CTexture *pTex);
   void UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, const QString &sValue);
   void UpdateCBEditMode(bool &bEdited, bool &bMixedData, QComboBox *pComboBox, const QString &sValue);
   void UpdateSignEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, QWidget *pWidget, const QString &sValue);

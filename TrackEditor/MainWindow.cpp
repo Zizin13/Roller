@@ -485,7 +485,7 @@ void CMainWindow::OnInsertAfterClicked()
     , leRoofHeight->text(), leDrawOrder1->text(), leDrawOrder2->text(), leDrawOrder3->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
-    , pbSign->property("value").toString(), pbBack->property("value").toString()
+    , leSign->text(), leBack->text()
     , leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
     , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntBulge->text());
 
@@ -566,7 +566,7 @@ void CMainWindow::OnApplyClicked()
     , leRoofHeight->text(), leDrawOrder1->text(), leDrawOrder2->text(), leDrawOrder3->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
-    , pbSign->property("value").toString(), pbBack->property("value").toString()
+    , leSign->text(), leBack->text()
     , leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
     , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntBulge->text());
 
@@ -997,7 +997,7 @@ void CMainWindow::OnSignClicked()
     int iIndex = dlg.GetSelected();
     if (iIndex >= 0) {
       iBldIndex = iIndex;
-      //iValue = iBldIndex << 1;
+      iValue = iBldIndex;// << 1;
       if (ckApplySign->isChecked()) {
         iValue |= SURFACE_FLAG_APPLY_TEXTURE;
       } else {
@@ -1008,7 +1008,7 @@ void CMainWindow::OnSignClicked()
   }
 
   leSign->setText(sValue);
-  UpdateSignButtonDisplay(pbSign, ckApplySign, leSign);
+  UpdateSignButtonDisplay(pbSign, ckApplySign, leSign, &p->m_bld);
   UpdateGeometryEditMode();
 }
 
@@ -1021,12 +1021,12 @@ void CMainWindow::OnBackClicked()
   int iBldIndex = iValue & SURFACE_TEXTURE_INDEX;
   //iBldIndex = iBldIndex >> 1;
 
-  CTilePicker dlg(this, &p->m_bld, iBldIndex, true);
+  CTilePicker dlg(this, &p->m_tex, iBldIndex, true);
   if (dlg.exec()) {
     int iIndex = dlg.GetSelected();
     if (iIndex >= 0) {
       iBldIndex = iIndex;
-      //iValue = iBldIndex << 1;
+      iValue = iBldIndex;// << 1;
       if (ckApplyBack->isChecked()) {
         iValue |= SURFACE_FLAG_APPLY_TEXTURE;
       } else {
@@ -1037,7 +1037,7 @@ void CMainWindow::OnBackClicked()
   }
 
   leBack->setText(sValue);
-  UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack);
+  UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack, &p->m_tex);
   UpdateGeometryEditMode();
 }
 
@@ -1053,7 +1053,7 @@ void CMainWindow::OnApplySignToggled(bool bChecked)
   }
   QString sNewValue = QString::number(iValue);
   leSign->setText(sNewValue);
-  UpdateSignButtonDisplay(pbSign, ckApplySign, leSign);
+  UpdateSignButtonDisplay(pbSign, ckApplySign, leSign, &p->m_bld);
   UpdateGeometryEditMode();
 }
 
@@ -1069,7 +1069,7 @@ void CMainWindow::OnApplyBackToggled(bool bChecked)
   }
   QString sNewValue = QString::number(iValue);
   leBack->setText(sNewValue);
-  UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack);
+  UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack, &p->m_tex);
   UpdateGeometryEditMode();
 }
 
@@ -1137,7 +1137,7 @@ void CMainWindow::OnSignTypeLEChanged()
 
 void CMainWindow::OnSignLEChanged()
 {
-  UpdateSignButtonDisplay(pbSign, ckApplySign, leSign);
+  UpdateSignButtonDisplay(pbSign, ckApplySign, leSign, &p->m_bld);
   UpdateGeometryEditMode();
 }
 
@@ -1145,7 +1145,7 @@ void CMainWindow::OnSignLEChanged()
 
 void CMainWindow::OnBackLEChanged()
 {
-  UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack);
+  UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack, &p->m_tex);
   UpdateGeometryEditMode();
 }
 
@@ -1560,7 +1560,7 @@ bool CMainWindow::UpdateCBWithSelectionValue(QComboBox *pComboBox, const QString
 
 //-------------------------------------------------------------------------------------------------
 
-bool CMainWindow::UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit, const QString &sValue)
+bool CMainWindow::UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit, const QString &sValue, CTexture *pTex)
 {
   pLineEdit->blockSignals(true);
   if (sValue.compare(MIXED_DATA) == 0) {
@@ -1573,13 +1573,13 @@ bool CMainWindow::UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckB
     pLineEdit->setStyleSheet("");
   }
   pLineEdit->blockSignals(false);
-  UpdateSignButtonDisplay(pPushButton, pCheckbox, pLineEdit);
+  UpdateSignButtonDisplay(pPushButton, pCheckbox, pLineEdit, pTex);
   return (sValue.compare(MIXED_DATA) == 0) && pLineEdit->text().isEmpty();
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit)
+void CMainWindow::UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit, CTexture *pTex)
 {
   pCheckbox->blockSignals(true);
   if (pLineEdit->text().compare("-1") == 0) {
@@ -1597,9 +1597,9 @@ void CMainWindow::UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *p
     bool bChecked = iValue & SURFACE_FLAG_APPLY_TEXTURE;
     int iBldIndex = iValue & SURFACE_TEXTURE_INDEX;
     //iBldIndex = iBldIndex >> 1;
-    if (iBldIndex < p->m_bld.m_tileAy.size()) {
+    if (iBldIndex < pTex->m_tileAy.size()) {
       QPixmap pixmap;
-      pixmap.convertFromImage(p->m_bld.m_tileAy[iBldIndex]);
+      pixmap.convertFromImage(pTex->m_tileAy[iBldIndex]);
       pPushButton->setIcon(pixmap);
       pPushButton->setText("");
     }
@@ -1747,8 +1747,8 @@ void CMainWindow::RevertGeometry()
   bMixedData |= UpdateLEWithSelectionValue(leUnk48, p->editVals.sUnk48);
   bMixedData |= UpdateLEWithSelectionValue(leUnk49, p->editVals.sUnk49);
   bMixedData |= UpdateLEWithSelectionValue(leUnk50, p->editVals.sUnk50);
-  bMixedData |= UpdateSignWithSelectionValue(pbSign, ckApplySign, leSign, p->editVals.sSignTexture);
-  bMixedData |= UpdateSignWithSelectionValue(pbBack, ckApplyBack, leBack, p->editVals.sBackTexture);
+  bMixedData |= UpdateSignWithSelectionValue(pbSign, ckApplySign, leSign, p->editVals.sSignTexture, &p->m_bld);
+  bMixedData |= UpdateSignWithSelectionValue(pbBack, ckApplyBack, leBack, p->editVals.sBackTexture, &p->m_tex);
   bMixedData |= UpdateLEWithSelectionValue(leStuntScaleFact, p->editVals.sStuntScaleFactor);
   bMixedData |= UpdateLEWithSelectionValue(leStuntAngle, p->editVals.sStuntAngle);
   bMixedData |= UpdateLEWithSelectionValue(leStuntUnk, p->editVals.sStuntUnknown);

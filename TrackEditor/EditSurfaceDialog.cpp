@@ -16,26 +16,56 @@ CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, int
   setupUi(this);
 
   UpdateDialog();
-  ckPit->setChecked(iValue & SURFACE_FLAG_PIT);
-  ckWall->setChecked(iValue & SURFACE_FLAG_WALL);
-  ckTransparent->setChecked(iValue & SURFACE_FLAG_TRANSPARENT);
-  ckNonMagnetic->setChecked(iValue & SURFACE_FLAG_NON_MAGNETIC);
-  ckFlipVertically->setChecked(iValue & SURFACE_FLAG_FLIP_VERT);
-  ckcNonSolid->setChecked(iValue & SURFACE_FLAG_NON_SOLID);
-  ckTexturePair->setChecked(iValue & SURFACE_FLAG_TEXTURE_PAIR);
-  ckFlipHorizontally->setChecked(iValue & SURFACE_FLAG_FLIP_HORIZ);
-  ckApplyTexture->setChecked(iValue & SURFACE_FLAG_APPLY_TEXTURE);
+  ck31Wall->setChecked(iValue & SURFACE_FLAG_WALL_31);
+  ck30Bounce->setChecked(iValue & SURFACE_FLAG_BOUNCE_30);
+  ck29Echo->setChecked(iValue & SURFACE_FLAG_ECHO);
+  ck28->setChecked(iValue & SURFACE_FLAG_28);
+  ck27->setChecked(iValue & SURFACE_FLAG_27);
+  ck26->setChecked(iValue & SURFACE_FLAG_26);
+  ck25Pit->setChecked(iValue & SURFACE_FLAG_PIT);
+  ck24Yellow->setChecked(iValue & SURFACE_FLAG_YELLOW_MAP);
+  ck23->setChecked(iValue & SURFACE_FLAG_23);
+  ck22Wall->setChecked(iValue & SURFACE_FLAG_WALL_22);
+  ck21Transparent->setChecked(iValue & SURFACE_FLAG_TRANSPARENT);
+  ck20Bounce->setChecked(iValue & SURFACE_FLAG_BOUNCE_20);
+  ck19NonMagnetic->setChecked(iValue & SURFACE_FLAG_NON_MAGNETIC);
+  ck18FlipVertically->setChecked(iValue & SURFACE_FLAG_FLIP_VERT);
+  ck17NonSolid->setChecked(iValue & SURFACE_FLAG_NON_SOLID);
+  ck16TexturePair->setChecked(iValue & SURFACE_FLAG_TEXTURE_PAIR);
+  ck15->setChecked(iValue & SURFACE_FLAG_15);
+  ck14->setChecked(iValue & SURFACE_FLAG_14);
+  ck13->setChecked(iValue & SURFACE_FLAG_13);
+  ck12FlipHorizontally->setChecked(iValue & SURFACE_FLAG_FLIP_HORIZ);
+  ck11->setChecked(iValue & SURFACE_FLAG_11);
+  ck10->setChecked(iValue & SURFACE_FLAG_10);
+  ck9->setChecked(iValue & SURFACE_FLAG_9);
+  ck8ApplyTexture->setChecked(iValue & SURFACE_FLAG_APPLY_TEXTURE);
 
-  connect(ckPit,              &QCheckBox::toggled, this, &CEditSurfaceDialog::OnPitChecked);
-  connect(ckWall,             &QCheckBox::toggled, this, &CEditSurfaceDialog::OnWallChecked);
-  connect(ckTransparent,      &QCheckBox::toggled, this, &CEditSurfaceDialog::OnTransparentChecked);
-  connect(ckNonMagnetic,      &QCheckBox::toggled, this, &CEditSurfaceDialog::OnNonMagneticChecked);
-  connect(ckFlipVertically,   &QCheckBox::toggled, this, &CEditSurfaceDialog::OnFlipVertChecked);
-  connect(ckcNonSolid,        &QCheckBox::toggled, this, &CEditSurfaceDialog::OnNonSolidChecked);
-  connect(ckTexturePair,      &QCheckBox::toggled, this, &CEditSurfaceDialog::OnTexturePairChecked);
-  connect(ckFlipHorizontally, &QCheckBox::toggled, this, &CEditSurfaceDialog::OnFlipHorizChecked);
-  connect(ckApplyTexture,     &QCheckBox::toggled, this, &CEditSurfaceDialog::OnApplyTextureChecked);
-  connect(pbTexture1,         &QPushButton::clicked, this, &CEditSurfaceDialog::OnTextureClicked);
+  connect(ck31Wall,             &QCheckBox::toggled, this, &CEditSurfaceDialog::On31WallChecked);
+  connect(ck30Bounce,           &QCheckBox::toggled, this, &CEditSurfaceDialog::On30BounceChecked);
+  connect(ck29Echo,             &QCheckBox::toggled, this, &CEditSurfaceDialog::On29EchoChecked);
+  connect(ck28,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On28Checked);
+  connect(ck27,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On27Checked);
+  connect(ck26,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On26Checked);
+  connect(ck25Pit,              &QCheckBox::toggled, this, &CEditSurfaceDialog::On25PitChecked);
+  connect(ck24Yellow,           &QCheckBox::toggled, this, &CEditSurfaceDialog::On24YellowMapChecked);
+  connect(ck23,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On23Checked);
+  connect(ck22Wall,             &QCheckBox::toggled, this, &CEditSurfaceDialog::On22WallChecked);
+  connect(ck21Transparent,      &QCheckBox::toggled, this, &CEditSurfaceDialog::On21TransparentChecked);
+  connect(ck20Bounce,           &QCheckBox::toggled, this, &CEditSurfaceDialog::On20BounceChecked);
+  connect(ck19NonMagnetic,      &QCheckBox::toggled, this, &CEditSurfaceDialog::On19NonMagneticChecked);
+  connect(ck18FlipVertically,   &QCheckBox::toggled, this, &CEditSurfaceDialog::On18FlipVertChecked);
+  connect(ck17NonSolid,         &QCheckBox::toggled, this, &CEditSurfaceDialog::On17NonSolidChecked);
+  connect(ck16TexturePair,      &QCheckBox::toggled, this, &CEditSurfaceDialog::On16TexturePairChecked);
+  connect(ck15,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On15Checked);
+  connect(ck14,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On14Checked);
+  connect(ck13,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On13Checked);
+  connect(ck12FlipHorizontally, &QCheckBox::toggled, this, &CEditSurfaceDialog::On12FlipHorizChecked);
+  connect(ck11,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On11Checked);
+  connect(ck10,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On10Checked);
+  connect(ck9,                  &QCheckBox::toggled, this, &CEditSurfaceDialog::On9Checked);
+  connect(ck8ApplyTexture,      &QCheckBox::toggled, this, &CEditSurfaceDialog::On8ApplyTextureChecked);
+  connect(pbTexture1, &QPushButton::clicked, this, &CEditSurfaceDialog::OnTextureClicked);
 
   connect(pbCancel, &QPushButton::clicked, this, &CEditSurfaceDialog::reject);
   connect(pbApply, &QPushButton::clicked, this, &CEditSurfaceDialog::accept);
@@ -57,7 +87,73 @@ int CEditSurfaceDialog::GetValue()
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditSurfaceDialog::OnPitChecked(bool bChecked)
+void CEditSurfaceDialog::On31WallChecked(bool bChecked)
+{
+  if (bChecked)
+    m_iValue |= SURFACE_FLAG_WALL_31;
+  else
+    m_iValue &= ~SURFACE_FLAG_WALL_31;
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::On30BounceChecked(bool bChecked)
+{
+  if (bChecked)
+    m_iValue |= SURFACE_FLAG_BOUNCE_30;
+  else
+    m_iValue &= ~SURFACE_FLAG_BOUNCE_30;
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::On29EchoChecked(bool bChecked)
+{
+  if (bChecked)
+    m_iValue |= SURFACE_FLAG_ECHO;
+  else
+    m_iValue &= ~SURFACE_FLAG_ECHO;
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::On28Checked(bool bChecked)
+{
+  if (bChecked)
+    m_iValue |= SURFACE_FLAG_28;
+  else
+    m_iValue &= ~SURFACE_FLAG_28;
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::On27Checked(bool bChecked)
+{
+  if (bChecked)
+    m_iValue |= SURFACE_FLAG_27;
+  else
+    m_iValue &= ~SURFACE_FLAG_27;
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::On26Checked(bool bChecked)
+{
+  if (bChecked)
+    m_iValue |= SURFACE_FLAG_26;
+  else
+    m_iValue &= ~SURFACE_FLAG_26;
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::On25PitChecked(bool bChecked)
 {
   if (bChecked)
     m_iValue |= SURFACE_FLAG_PIT;
@@ -68,18 +164,40 @@ void CEditSurfaceDialog::OnPitChecked(bool bChecked)
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditSurfaceDialog::OnWallChecked(bool bChecked)
+void CEditSurfaceDialog::On24YellowMapChecked(bool bChecked)
 {
   if (bChecked)
-    m_iValue |= SURFACE_FLAG_WALL;
+    m_iValue |= SURFACE_FLAG_YELLOW_MAP;
   else
-    m_iValue &= ~SURFACE_FLAG_WALL;
+    m_iValue &= ~SURFACE_FLAG_YELLOW_MAP;
   UpdateDialog();
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditSurfaceDialog::OnTransparentChecked(bool bChecked)
+void CEditSurfaceDialog::On23Checked(bool bChecked)
+{
+  if (bChecked)
+    m_iValue |= SURFACE_FLAG_23;
+  else
+    m_iValue &= ~SURFACE_FLAG_23;
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::On22WallChecked(bool bChecked)
+{
+  if (bChecked)
+    m_iValue |= SURFACE_FLAG_WALL_22;
+  else
+    m_iValue &= ~SURFACE_FLAG_WALL_22;
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::On21TransparentChecked(bool bChecked)
 {
   if (bChecked)
     m_iValue |= SURFACE_FLAG_TRANSPARENT;
@@ -90,7 +208,18 @@ void CEditSurfaceDialog::OnTransparentChecked(bool bChecked)
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditSurfaceDialog::OnNonMagneticChecked(bool bChecked)
+void CEditSurfaceDialog::On20BounceChecked(bool bChecked)
+{
+  if (bChecked)
+    m_iValue |= SURFACE_FLAG_BOUNCE_20;
+  else
+    m_iValue &= ~SURFACE_FLAG_BOUNCE_20;
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::On19NonMagneticChecked(bool bChecked)
 {
   if (bChecked)
     m_iValue |= SURFACE_FLAG_NON_MAGNETIC;
@@ -101,7 +230,7 @@ void CEditSurfaceDialog::OnNonMagneticChecked(bool bChecked)
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditSurfaceDialog::OnFlipVertChecked(bool bChecked)
+void CEditSurfaceDialog::On18FlipVertChecked(bool bChecked)
 {
   if (bChecked)
     m_iValue |= SURFACE_FLAG_FLIP_VERT;
@@ -112,7 +241,7 @@ void CEditSurfaceDialog::OnFlipVertChecked(bool bChecked)
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditSurfaceDialog::OnNonSolidChecked(bool bChecked)
+void CEditSurfaceDialog::On17NonSolidChecked(bool bChecked)
 {
   if (bChecked)
     m_iValue |= SURFACE_FLAG_NON_SOLID;
@@ -123,7 +252,7 @@ void CEditSurfaceDialog::OnNonSolidChecked(bool bChecked)
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditSurfaceDialog::OnTexturePairChecked(bool bChecked)
+void CEditSurfaceDialog::On16TexturePairChecked(bool bChecked)
 {
   if (bChecked)
     m_iValue |= SURFACE_FLAG_TEXTURE_PAIR;
@@ -134,7 +263,40 @@ void CEditSurfaceDialog::OnTexturePairChecked(bool bChecked)
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditSurfaceDialog::OnFlipHorizChecked(bool bChecked)
+void CEditSurfaceDialog::On15Checked(bool bChecked)
+{
+  if (bChecked)
+    m_iValue |= SURFACE_FLAG_15;
+  else
+    m_iValue &= ~SURFACE_FLAG_15;
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::On14Checked(bool bChecked)
+{
+  if (bChecked)
+    m_iValue |= SURFACE_FLAG_14;
+  else
+    m_iValue &= ~SURFACE_FLAG_14;
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::On13Checked(bool bChecked)
+{
+  if (bChecked)
+    m_iValue |= SURFACE_FLAG_13;
+  else
+    m_iValue &= ~SURFACE_FLAG_13;
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::On12FlipHorizChecked(bool bChecked)
 {
   if (bChecked)
     m_iValue |= SURFACE_FLAG_FLIP_HORIZ;
@@ -145,7 +307,40 @@ void CEditSurfaceDialog::OnFlipHorizChecked(bool bChecked)
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditSurfaceDialog::OnApplyTextureChecked(bool bChecked)
+void CEditSurfaceDialog::On11Checked(bool bChecked)
+{
+  if (bChecked)
+    m_iValue |= SURFACE_FLAG_11;
+  else
+    m_iValue &= ~SURFACE_FLAG_11;
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::On10Checked(bool bChecked)
+{
+  if (bChecked)
+    m_iValue |= SURFACE_FLAG_10;
+  else
+    m_iValue &= ~SURFACE_FLAG_10;
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::On9Checked(bool bChecked)
+{
+  if (bChecked)
+    m_iValue |= SURFACE_FLAG_9;
+  else
+    m_iValue &= ~SURFACE_FLAG_9;
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
 {
   if (bChecked)
     m_iValue |= SURFACE_FLAG_APPLY_TEXTURE;

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>538</width>
-    <height>255</height>
+    <height>468</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -40,28 +40,204 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="5" column="0">
-      <widget class="QCheckBox" name="ckcNonSolid">
+     <item row="0" column="0">
+      <widget class="QCheckBox" name="ck31Wall">
        <property name="text">
-        <string>Non-solid</string>
+        <string>Wall (cannot be driven on)</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
-      <widget class="QCheckBox" name="ckNonMagnetic">
+     <item row="13" column="0">
+      <widget class="QCheckBox" name="ck19NonMagnetic">
        <property name="text">
         <string>Non-magnetic</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QCheckBox" name="ckPit">
+     <item row="6" column="1">
+      <widget class="QCheckBox" name="ck10">
+       <property name="text">
+        <string>Bit 10</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QCheckBox" name="ck8ApplyTexture">
+       <property name="text">
+        <string>Apply Texture</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0">
+      <widget class="QCheckBox" name="ck24Yellow">
+       <property name="text">
+        <string>Yellow on track map</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QCheckBox" name="ck14">
+       <property name="text">
+        <string>Bit 14</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QCheckBox" name="ck29Echo">
+       <property name="text">
+        <string>Echo</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QCheckBox" name="ck15">
+       <property name="text">
+        <string>Bit 15</string>
+       </property>
+      </widget>
+     </item>
+     <item row="16" column="0">
+      <widget class="QCheckBox" name="ck16TexturePair">
+       <property name="text">
+        <string>Texture pair</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QCheckBox" name="ck26">
+       <property name="text">
+        <string>Bit 26</string>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="0">
+      <widget class="QCheckBox" name="ck18FlipVertically">
+       <property name="text">
+        <string>Flip vertically</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QCheckBox" name="ck28">
+       <property name="text">
+        <string>Bit 28</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QCheckBox" name="ck9">
+       <property name="text">
+        <string>Bit 9</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="0">
+      <widget class="QCheckBox" name="ck20Bounce">
+       <property name="text">
+        <string>Bounce off walls</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0">
+      <widget class="QCheckBox" name="ck21Transparent">
+       <property name="text">
+        <string>Transparent (requires no texture)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QCheckBox" name="ck12FlipHorizontally">
+       <property name="text">
+        <string>Flip horizontally</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QCheckBox" name="ck30Bounce">
+       <property name="text">
+        <string>Bounce off walls</string>
+       </property>
+      </widget>
+     </item>
+     <item row="17" column="0">
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Minimum</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>0</width>
+         <height>0</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="10" column="0">
+      <widget class="QCheckBox" name="ck22Wall">
+       <property name="text">
+        <string>Wall (cannot be driven on)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QCheckBox" name="ck11">
+       <property name="text">
+        <string>Bit 11</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QCheckBox" name="ck27">
+       <property name="text">
+        <string>Bit 27</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QCheckBox" name="ck25Pit">
        <property name="text">
         <string>Pit</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="1" rowspan="5">
+     <item row="19" column="1">
+      <spacer name="verticalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="15" column="0">
+      <widget class="QCheckBox" name="ck17NonSolid">
+       <property name="text">
+        <string>Non-solid</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0">
+      <widget class="QCheckBox" name="ck23">
+       <property name="text">
+        <string>Bit 23</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QCheckBox" name="ck13">
+       <property name="text">
+        <string>Bit 13</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1" rowspan="8">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="QPushButton" name="pbTexture1">
@@ -99,77 +275,6 @@
         </widget>
        </item>
       </layout>
-     </item>
-     <item row="2" column="1">
-      <widget class="QCheckBox" name="ckApplyTexture">
-       <property name="text">
-        <string>Apply Texture</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="QCheckBox" name="ckFlipVertically">
-       <property name="text">
-        <string>Flip vertically</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QCheckBox" name="ckFlipHorizontally">
-       <property name="text">
-        <string>Flip horizontally</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QCheckBox" name="ckTexturePair">
-       <property name="text">
-        <string>Texture pair</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QCheckBox" name="ckWall">
-       <property name="text">
-        <string>Has wall between track and shoulder</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QCheckBox" name="ckTransparent">
-       <property name="text">
-        <string>Transparent (requires no texture)</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="1">
-      <spacer name="verticalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="6" column="0">
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Minimum</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>0</width>
-         <height>0</height>
-        </size>
-       </property>
-      </spacer>
      </item>
     </layout>
    </item>

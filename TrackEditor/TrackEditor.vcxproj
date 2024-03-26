@@ -57,14 +57,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>IS_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Utils;..\..\external\Qt5\vc143-x64-md-lib\include;..\..\external\Qt5\vc143-x64-md-lib\include\QtCore;..\..\external\Qt5\vc143-x64-md-lib\include\QtWidgets;..\..\external\Qt5\vc143-x64-md-lib\include\QtGui;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Utils;..\..\external\Qt5\vc143-x64-md-lib\include;..\..\external\Qt5\vc143-x64-md-lib\include\QtCore;..\..\external\Qt5\vc143-x64-md-lib\include\QtWidgets;..\..\external\Qt5\vc143-x64-md-lib\include\QtOpenGL;..\..\external\Qt5\vc143-x64-md-lib\include\QtGui;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
       <AdditionalLibraryDirectories>..\..\external\Qt5\vc143-x64-md-lib\lib;..\lib\x64;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Qt5Cored.lib;Qt5OpenGLd.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Utils_staticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;Qt5Cored.lib;Qt5OpenGLd.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Utils_staticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying QT dlls...
@@ -94,7 +94,7 @@ exit 1
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>IS_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Utils;..\..\external\Qt5\vc143-x64-md-lib\include;..\..\external\Qt5\vc143-x64-md-lib\include\QtCore;..\..\external\Qt5\vc143-x64-md-lib\include\QtWidgets;..\..\external\Qt5\vc143-x64-md-lib\include\QtGui;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Utils;..\..\external\Qt5\vc143-x64-md-lib\include;..\..\external\Qt5\vc143-x64-md-lib\include\QtCore;..\..\external\Qt5\vc143-x64-md-lib\include\QtWidgets;..\..\external\Qt5\vc143-x64-md-lib\include\QtOpenGL;..\..\external\Qt5\vc143-x64-md-lib\include\QtGui;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -103,7 +103,7 @@ exit 1
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
       <AdditionalLibraryDirectories>..\..\external\Qt5\vc143-x64-md-lib\lib;..\lib\x64;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Qt5Core.lib;Qt5OpenGL.lib;Qt5Gui.lib;Qt5Widgets.lib;Utils_static.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;Qt5Core.lib;Qt5OpenGL.lib;Qt5Gui.lib;Qt5Widgets.lib;Utils_static.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying QT dlls...
@@ -128,6 +128,8 @@ exit 1
   <ItemGroup>
     <ClCompile Include="ChunkEditValues.cpp" />
     <ClCompile Include="EditSurfaceDialog.cpp" />
+    <ClCompile Include="moc\moc_TrackPreview.cpp" />
+    <ClCompile Include="TrackPreview.cpp" />
     <ClCompile Include="LogDialog.cpp" />
     <ClCompile Include="MainWindow.cpp" />
     <ClCompile Include="moc\moc_EditSurfaceDialog.cpp" />
@@ -178,6 +180,16 @@ exit 1
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
     <ClInclude Include="ChunkEditValues.h" />
+    <CustomBuild Include="TrackPreview.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC'ing %(Filename).h...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC'ing %(Filename).h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
     <ClInclude Include="ui\ui_EditSurfaceDialog.h" />
     <ClInclude Include="ui\ui_TilePicker.h" />
     <CustomBuild Include="LogDialog.h">

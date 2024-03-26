@@ -11,6 +11,7 @@
 #include "TilePicker.h"
 #include "EditSurfaceDialog.h"
 #include "ChunkEditValues.h"
+#include "TrackPreview.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
 #endif

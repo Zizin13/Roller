@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>699</width>
+    <width>869</width>
     <height>637</height>
    </rect>
   </property>
@@ -194,8 +194,8 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-700</y>
-              <width>466</width>
+              <y>0</y>
+              <width>496</width>
               <height>2141</height>
              </rect>
             </property>
@@ -2194,42 +2194,9 @@ wall height</string>
         <attribute name="title">
          <string>Preview</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_3">
+        <layout class="QVBoxLayout" name="previewLayout">
          <item>
-          <widget class="QScrollArea" name="scrollArea">
-           <property name="widgetResizable">
-            <bool>true</bool>
-           </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>120</width>
-              <height>51</height>
-             </rect>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_2">
-             <item>
-              <widget class="QLabel" name="label">
-               <property name="text">
-                <string>Not implemented yet</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLabel" name="label_2">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="pixmap">
-                <pixmap resource="resource.qrc">:/images/crab.png</pixmap>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </widget>
+          <widget class="CTrackPreview" name="openGLWidget"/>
          </item>
         </layout>
        </widget>
@@ -2274,8 +2241,8 @@ wall height</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>133</width>
-              <height>118</height>
+              <width>281</width>
+              <height>530</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_12">
@@ -2384,7 +2351,7 @@ wall height</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>699</width>
+     <width>869</width>
      <height>22</height>
     </rect>
    </property>
@@ -2482,6 +2449,13 @@ wall height</string>
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>CTrackPreview</class>
+   <extends>QOpenGLWidget</extends>
+   <header>TrackPreview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="resource.qrc"/>
  </resources>

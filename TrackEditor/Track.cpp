@@ -395,6 +395,8 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex, CChu
     return;
   }
 
+  editVals.Clear();
+
   QString sVal;
   for (int i = iStartIndex; i <= iEndIndex; ++i) {
     sVal = QString::number(m_chunkAy[i].iLeftShoulderWidth);

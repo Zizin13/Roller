@@ -990,14 +990,14 @@ void CMainWindow::OnSignClicked()
   QString sValue = leSign->text();
   int iValue = sValue.toInt();
   int iBldIndex = iValue & SURFACE_TEXTURE_INDEX;
-  iBldIndex = iBldIndex >> 1;
+  //iBldIndex = iBldIndex >> 1;
 
   CTilePicker dlg(this, &p->m_bld, iBldIndex, true);
   if (dlg.exec()) {
     int iIndex = dlg.GetSelected();
     if (iIndex >= 0) {
       iBldIndex = iIndex;
-      iValue = iBldIndex << 1;
+      //iValue = iBldIndex << 1;
       if (ckApplySign->isChecked()) {
         iValue |= SURFACE_FLAG_APPLY_TEXTURE;
       } else {
@@ -1019,14 +1019,14 @@ void CMainWindow::OnBackClicked()
   QString sValue = leBack->text();
   int iValue = sValue.toInt();
   int iBldIndex = iValue & SURFACE_TEXTURE_INDEX;
-  iBldIndex = iBldIndex >> 1;
+  //iBldIndex = iBldIndex >> 1;
 
   CTilePicker dlg(this, &p->m_bld, iBldIndex, true);
   if (dlg.exec()) {
     int iIndex = dlg.GetSelected();
     if (iIndex >= 0) {
       iBldIndex = iIndex;
-      iValue = iBldIndex << 1;
+      //iValue = iBldIndex << 1;
       if (ckApplyBack->isChecked()) {
         iValue |= SURFACE_FLAG_APPLY_TEXTURE;
       } else {
@@ -1596,7 +1596,7 @@ void CMainWindow::UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *p
     int iValue = pLineEdit->text().toInt();
     bool bChecked = iValue & SURFACE_FLAG_APPLY_TEXTURE;
     int iBldIndex = iValue & SURFACE_TEXTURE_INDEX;
-    iBldIndex = iBldIndex >> 1;
+    //iBldIndex = iBldIndex >> 1;
     if (iBldIndex < p->m_bld.m_tileAy.size()) {
       QPixmap pixmap;
       pixmap.convertFromImage(p->m_bld.m_tileAy[iBldIndex]);

@@ -1813,13 +1813,13 @@ void CMainWindow::UpdateTextures(QLineEdit *pLineEdit, QLabel *pTex1, QLabel *pT
   } else if (!pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) != 0) {
     int iLSurfaceType = pLineEdit->text().toInt();
     iIndex = iLSurfaceType & SURFACE_TEXTURE_INDEX;
-    iIndex = iIndex >> 1;
+    //iIndex = iIndex >> 1;
     if (iIndex < p->m_tex.m_tileAy.size()) {
       pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex]);
       pTex1->setPixmap(pixmap);
 
       if (iLSurfaceType & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
-        pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex - 1]);
+        pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex + 1]);
         pTex2->setPixmap(pixmap);
       } else {
         pTex2->setPixmap(QPixmap());

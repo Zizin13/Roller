@@ -48,7 +48,7 @@ void CTrack::ClearData()
 bool CTrack::LoadTrack(const QString &sFilename, bool bIsMangled)
 {
   ClearData();
-  m_bIsMangled = true;
+  m_bIsMangled = bIsMangled;
 
   if (sFilename.isEmpty()) {
     g_pMainWindow->LogMessage("Track filename empty: " + sFilename);

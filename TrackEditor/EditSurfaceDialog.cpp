@@ -379,7 +379,7 @@ void CEditSurfaceDialog::UpdateDialog()
 
   //textures
   int iIndex = m_iValue & SURFACE_TEXTURE_INDEX;
-  iIndex = iIndex >> 1;
+  //iIndex = iIndex >> 1;
   if (iIndex < m_pTexture->m_tileAy.size()) {
     QPixmap pixmap;
     pixmap.convertFromImage(m_pTexture->m_tileAy[iIndex]);
@@ -387,7 +387,7 @@ void CEditSurfaceDialog::UpdateDialog()
 
     if (m_iValue & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
       QPixmap pixmap2;
-      pixmap2.convertFromImage(m_pTexture->m_tileAy[iIndex - 1]);
+      pixmap2.convertFromImage(m_pTexture->m_tileAy[iIndex + 1]);
       lblTexture2->setPixmap(pixmap2);
     } else {
       lblTexture2->setPixmap(QPixmap());

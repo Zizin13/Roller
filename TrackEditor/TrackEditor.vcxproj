@@ -55,26 +55,22 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>IS_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>QT_NO_PDF;QT_SHARED;QT_BUILD_GUI_LIB;QT_BUILD_WIDGETS_LIB;QT_BUILD_CORE_LIB;QT_BUILD_OPENGL_LIB;IS_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Utils;..\..\external\Qt5\vc143-x64-md-lib\include;..\..\external\Qt5\vc143-x64-md-lib\include\QtCore;..\..\external\Qt5\vc143-x64-md-lib\include\QtWidgets;..\..\external\Qt5\vc143-x64-md-lib\include\QtOpenGL;..\..\external\Qt5\vc143-x64-md-lib\include\QtGui;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Utils;..\external\Qt5\include;..\external\Qt5\include\QtCore;..\external\Qt5\include\QtWidgets;..\external\Qt5\include\QtOpenGL;..\external\Qt5\include\QtGui;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
-      <AdditionalLibraryDirectories>..\..\external\Qt5\vc143-x64-md-lib\lib;..\lib\x64;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;Qt5Cored.lib;Qt5OpenGLd.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Utils_staticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\external\Qt5\plugins\imageformats;..\external\Qt5\plugins\platforms;..\external\Qt5\lib;..\lib\x64;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Mpr.lib;Shlwapi.lib;Shell32.lib;Gdi32.lib;d3d9.lib;dxguid.lib;Iphlpapi.lib;ws2_32.lib;imm32.lib;Version.lib;winmm.lib;userenv.lib;dwmapi.lib;Netapi32.lib;wtsapi32.lib;uxtheme.lib;opengl32.lib;qtmaind.lib;Qt5OpenGLd.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Qt5PlatformCompositorSupportd.lib;Qt5FontDatabaseSupportd.lib;Qt5EventDispatcherSupportd.lib;Qt5ThemeSupportd.lib;Qt5WindowsUIAutomationSupportd.lib;qwindowsd.lib;qtlibpngd.lib;qtpcre2d.lib;qicod.lib;qtfreetyped.lib;Utils_staticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying QT dlls...
-xcopy ..\..\external\Qt5\vc143-x64-md-lib\bin\Qt5Cored.dll .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\..\external\Qt5\vc143-x64-md-lib\bin\Qt5Guid.dll .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\..\external\Qt5\vc143-x64-md-lib\bin\Qt5OpenGLd.dll .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\..\external\Qt5\vc143-x64-md-lib\bin\Qt5Widgetsd.dll .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\..\external\Qt5\vc143-x64-md-lib\bin\libEGLd.dll .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\..\external\Qt5\vc143-x64-md-lib\bin\libGLESv2d.dll .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\..\external\Qt5\vc143-x64-md-lib\plugins\platforms\qwindowsd.dll .\$(OutDir)platforms\ /R /Y /d /i &gt; null
+xcopy ..\external\Qt5\bin\libEGLd.dll .\$(OutDir) /R /Y /d /i &gt; null
+xcopy ..\external\Qt5\bin\libGLESv2d.dll .\$(OutDir) /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
 echo Post-Build Step for $(ProjectName) completed successfully
@@ -82,8 +78,7 @@ exit 0
 
 :Failed
 echo Post-Build Step for $(ProjectName) FAILED!
-exit 1
-</Command>
+exit 1</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -92,9 +87,10 @@ exit 1
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>IS_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>QT_NO_PDF;QT_SHARED;QT_BUILD_GUI_LIB;QT_BUILD_WIDGETS_LIB;QT_BUILD_CORE_LIB;QT_BUILD_OPENGL_LIB;IS_WINDOWS;_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WIN32;WIN32_LEAN_AND_MEAN;_WIN32_WINNT=0x601;WINVER=0x601;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Utils;..\..\external\Qt5\vc143-x64-md-lib\include;..\..\external\Qt5\vc143-x64-md-lib\include\QtCore;..\..\external\Qt5\vc143-x64-md-lib\include\QtWidgets;..\..\external\Qt5\vc143-x64-md-lib\include\QtOpenGL;..\..\external\Qt5\vc143-x64-md-lib\include\QtGui;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Utils;..\external\Qt5\include;..\external\Qt5\include\QtCore;..\external\Qt5\include\QtWidgets;..\external\Qt5\include\QtOpenGL;..\external\Qt5\include\QtGui;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -102,18 +98,13 @@ exit 1
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
-      <AdditionalLibraryDirectories>..\..\external\Qt5\vc143-x64-md-lib\lib;..\lib\x64;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;Qt5Core.lib;Qt5OpenGL.lib;Qt5Gui.lib;Qt5Widgets.lib;Utils_static.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\external\Qt5\plugins\imageformats;..\external\Qt5\plugins\platforms;..\external\Qt5\lib;..\lib\x64;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Mpr.lib;Shlwapi.lib;Shell32.lib;Gdi32.lib;d3d9.lib;dxguid.lib;Iphlpapi.lib;ws2_32.lib;imm32.lib;Version.lib;winmm.lib;userenv.lib;dwmapi.lib;Netapi32.lib;wtsapi32.lib;uxtheme.lib;opengl32.lib;qtmain.lib;Qt5OpenGL.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5PlatformCompositorSupport.lib;Qt5FontDatabaseSupport.lib;Qt5EventDispatcherSupport.lib;Qt5ThemeSupport.lib;Qt5WindowsUIAutomationSupport.lib;qwindows.lib;qtlibpng.lib;qtpcre2.lib;qico.lib;qtfreetype.lib;Utils_static.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying QT dlls...
-xcopy ..\..\external\Qt5\vc143-x64-md-lib\bin\Qt5Core.dll .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\..\external\Qt5\vc143-x64-md-lib\bin\Qt5Gui.dll .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\..\external\Qt5\vc143-x64-md-lib\bin\Qt5OpenGL.dll .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\..\external\Qt5\vc143-x64-md-lib\bin\Qt5Widgets.dll .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\..\external\Qt5\vc143-x64-md-lib\bin\libEGL.dll .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\..\external\Qt5\vc143-x64-md-lib\bin\libGLESv2.dll .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\..\external\Qt5\vc143-x64-md-lib\plugins\platforms\qwindows.dll .\$(OutDir)platforms\ /R /Y /d /i &gt; null
+xcopy ..\external\Qt5\bin\libEGL.dll .\$(OutDir) /R /Y /d /i &gt; null
+xcopy ..\external\Qt5\bin\libGLESv2.dll .\$(OutDir) /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
 echo Post-Build Step for $(ProjectName) completed successfully
@@ -121,8 +112,7 @@ exit 0
 
 :Failed
 echo Post-Build Step for $(ProjectName) FAILED!
-exit 1
-</Command>
+exit 1</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -145,24 +135,24 @@ exit 1
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC'ing %(Filename).h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC'ing %(Filename).h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MainWindow.ui">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UIC'ing %(Filename).ui...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)ui\ui_%(Filename).h;%(Outputs)</Outputs>
       <BuildInParallel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</BuildInParallel>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UIC'ing %(Filename).ui...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)ui\ui_%(Filename).h;%(Outputs)</Outputs>
       <BuildInParallel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</BuildInParallel>
@@ -170,50 +160,50 @@ exit 1
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="EditSurfaceDialog.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC'ing %(Filename).h...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC'ing %(Filename).h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
     <ClInclude Include="ChunkEditValues.h" />
     <CustomBuild Include="TrackPreview.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC'ing %(Filename).h...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC'ing %(Filename).h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
     <ClInclude Include="ui\ui_EditSurfaceDialog.h" />
     <ClInclude Include="ui\ui_TilePicker.h" />
     <CustomBuild Include="LogDialog.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC'ing %(Filename).h...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC'ing %(Filename).h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
     <ClInclude Include="Palette.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Texture.h" />
     <CustomBuild Include="TilePicker.h">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC'ing %(Filename).h...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC'ing %(Filename).h...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
     <ClInclude Include="Track.h" />
     <ClInclude Include="TrackEditor.h" />
@@ -223,8 +213,8 @@ exit 1
   <ItemGroup>
     <CustomBuild Include="resource.qrc">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\rcc.exe -name TrackEditorImages -o "%(RootDir)%(Directory)%(Filename).cpp" "%(RootDir)%(Directory)%(Filename).qrc"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\rcc.exe -name TrackEditorImages -o "%(RootDir)%(Directory)%(Filename).cpp" "%(RootDir)%(Directory)%(Filename).qrc"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\rcc.exe -name TrackEditorImages -o "%(RootDir)%(Directory)%(Filename).cpp" "%(RootDir)%(Directory)%(Filename).qrc"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\rcc.exe -name TrackEditorImages -o "%(RootDir)%(Directory)%(Filename).cpp" "%(RootDir)%(Directory)%(Filename).qrc"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Creating %(ProjectName) Resource Collection %(Filename)...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)%(Filename).cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Creating %(ProjectName) Resource Collection %(Filename)...</Message>
@@ -240,8 +230,8 @@ exit 1
   <ItemGroup>
     <CustomBuild Include="LogDialog.ui">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UIC'ing %(Filename).ui...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UIC'ing %(Filename).ui...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)ui\ui_%(Filename).h;%(Outputs)</Outputs>
@@ -251,8 +241,8 @@ exit 1
   <ItemGroup>
     <CustomBuild Include="TilePicker.ui">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UIC'ing %(Filename).ui...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UIC'ing %(Filename).ui...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)ui\ui_%(Filename).h;%(Outputs)</Outputs>
@@ -262,8 +252,8 @@ exit 1
   <ItemGroup>
     <CustomBuild Include="EditSurfaceDialog.ui">
       <FileType>Document</FileType>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\..\external\Qt5\vc143-x64-md-lib\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UIC'ing %(Filename).ui...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UIC'ing %(Filename).ui...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)ui\ui_%(Filename).h;%(Outputs)</Outputs>

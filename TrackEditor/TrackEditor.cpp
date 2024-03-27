@@ -8,6 +8,13 @@
   #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
 //-------------------------------------------------------------------------------------------------
+#if defined(IS_WINDOWS)
+  #ifndef QT_DLL
+    Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin)
+    Q_IMPORT_PLUGIN(QICOPlugin)
+  #endif
+#endif
+//-------------------------------------------------------------------------------------------------
 
 int main(int argc, char* argv[])
 {

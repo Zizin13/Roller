@@ -7,6 +7,10 @@
 #include "ChunkEditValues.h"
 #include <assert.h>
 //-------------------------------------------------------------------------------------------------
+#if defined(_DEBUG) && defined(IS_WINDOWS)
+#define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
+#endif
+//-------------------------------------------------------------------------------------------------
 #define HEADER_ELEMENT_COUNT 4
 #define CHUNK_LINE_0_COUNT 22
 #define CHUNK_LINE_1_COUNT 18

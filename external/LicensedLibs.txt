@@ -1,1 +1,2 @@
+3rd Party License Attributions
 Qt - LGPLv3 (See QT_LICENSE.txt)

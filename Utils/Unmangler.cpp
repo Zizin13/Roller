@@ -37,6 +37,7 @@ bool UnmangleFile(const uint8_t *pSource, int iSourceLen, uint8_t *pDestination,
       memcpy(&pDestination[iOutputPos], pTempArray, iValue);
       iInputPos += iValue + 1;
       iOutputPos += iValue;
+      delete[] pTempArray;
     } else if (iValue <= 0x4F) // 0x40 to 0x4F: generate ascending bytes based on last 2 bytes
     {
       int iDelta = pDestination[iOutputPos - 1] - pDestination[iOutputPos - 2];

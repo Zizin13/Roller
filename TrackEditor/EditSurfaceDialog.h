@@ -24,7 +24,7 @@
 #define SURFACE_FLAG_13            0x00002000 //todo
 #define SURFACE_FLAG_FLIP_HORIZ    0x00001000
 #define SURFACE_FLAG_11            0x00000800 //todo
-#define SURFACE_FLAG_10            0x00000400 //todo
+#define SURFACE_FLAG_PARTIAL_TRANS 0x00000400
 #define SURFACE_FLAG_9             0x00000200 //todo
 #define SURFACE_FLAG_APPLY_TEXTURE 0x00000100
 #define SURFACE_TEXTURE_INDEX      0x000000FF
@@ -63,7 +63,7 @@ protected slots:
   void On13Checked(bool bChecked);
   void On12FlipHorizChecked(bool bChecked);
   void On11Checked(bool bChecked);
-  void On10Checked(bool bChecked);
+  void On10PartialTransChecked(bool bChecked);
   void On9Checked(bool bChecked);
   void On8ApplyTextureChecked(bool bChecked);
   void OnTextureClicked();

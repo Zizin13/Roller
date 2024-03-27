@@ -38,7 +38,7 @@ CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, int
   ck13->setChecked(m_uiSignedBitValue & SURFACE_FLAG_13);
   ck12FlipHorizontally->setChecked(m_uiSignedBitValue & SURFACE_FLAG_FLIP_HORIZ);
   ck11->setChecked(m_uiSignedBitValue & SURFACE_FLAG_11);
-  ck10->setChecked(m_uiSignedBitValue & SURFACE_FLAG_10);
+  ck10PartialTrans->setChecked(m_uiSignedBitValue & SURFACE_FLAG_PARTIAL_TRANS);
   ck9->setChecked(m_uiSignedBitValue & SURFACE_FLAG_9);
   ck8ApplyTexture->setChecked(m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE);
 
@@ -63,7 +63,7 @@ CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, int
   connect(ck13,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On13Checked);
   connect(ck12FlipHorizontally, &QCheckBox::toggled, this, &CEditSurfaceDialog::On12FlipHorizChecked);
   connect(ck11,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On11Checked);
-  connect(ck10,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On10Checked);
+  connect(ck10PartialTrans,     &QCheckBox::toggled, this, &CEditSurfaceDialog::On10PartialTransChecked);
   connect(ck9,                  &QCheckBox::toggled, this, &CEditSurfaceDialog::On9Checked);
   connect(ck8ApplyTexture,      &QCheckBox::toggled, this, &CEditSurfaceDialog::On8ApplyTextureChecked);
   connect(pbTexture1, &QPushButton::clicked, this, &CEditSurfaceDialog::OnTextureClicked);
@@ -319,12 +319,12 @@ void CEditSurfaceDialog::On11Checked(bool bChecked)
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditSurfaceDialog::On10Checked(bool bChecked)
+void CEditSurfaceDialog::On10PartialTransChecked(bool bChecked)
 {
   if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_10;
+    m_uiSignedBitValue |= SURFACE_FLAG_PARTIAL_TRANS;
   else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_10;
+    m_uiSignedBitValue &= ~SURFACE_FLAG_PARTIAL_TRANS;
   UpdateDialog();
 }
 

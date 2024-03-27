@@ -1,2 +1,3 @@
 3rd Party License Attributions
 Qt - LGPLv3 (See QT_LICENSE.txt)
+GLEW - BSD-3 Clause (See GLEW_LICENSE.txt)

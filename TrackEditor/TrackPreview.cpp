@@ -1,3 +1,4 @@
+#include "glew.h"
 #include "TrackPreview.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -34,6 +35,9 @@ static void NormalizeAngle(int &iAngle)
 
 void CTrackPreview::initializeGL()
 {
+  if (glewInit() != GLEW_OK)
+    assert(0);
+
   qglClearColor(Qt::black);
 
   glEnable(GL_DEPTH_TEST);
@@ -148,28 +152,28 @@ void CTrackPreview::Draw()
 
   glEnd();
   glBegin(GL_TRIANGLES);
-  glNormal3f(0, -1, 0.707);
+  glNormal3f(0, -1, 0.707f);
   glVertex3f(-1, -1, 0);
   glVertex3f(1, -1, 0);
-  glVertex3f(0, 0, 1.2);
+  glVertex3f(0, 0, 1.2f);
   glEnd();
   glBegin(GL_TRIANGLES);
-  glNormal3f(1, 0, 0.707);
+  glNormal3f(1, 0, 0.707f);
   glVertex3f(1, -1, 0);
   glVertex3f(1, 1, 0);
-  glVertex3f(0, 0, 1.2);
+  glVertex3f(0, 0, 1.2f);
   glEnd();
   glBegin(GL_TRIANGLES);
-  glNormal3f(0, 1, 0.707);
+  glNormal3f(0, 1, 0.707f);
   glVertex3f(1, 1, 0);
   glVertex3f(-1, 1, 0);
-  glVertex3f(0, 0, 1.2);
+  glVertex3f(0, 0, 1.2f);
   glEnd();
   glBegin(GL_TRIANGLES);
-  glNormal3f(-1, 0, 0.707);
+  glNormal3f(-1, 0, 0.707f);
   glVertex3f(-1, 1, 0);
   glVertex3f(-1, -1, 0);
-  glVertex3f(0, 0, 1.2);
+  glVertex3f(0, 0, 1.2f);
   glEnd();
 }
 

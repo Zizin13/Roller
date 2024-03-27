@@ -57,9 +57,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>QT_NO_PDF;IS_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;QT_NO_PDF;IS_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Utils;..\external\Qt5\include;..\external\Qt5\include\QtCore;..\external\Qt5\include\QtWidgets;..\external\Qt5\include\QtOpenGL;..\external\Qt5\include\QtGui;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Utils;..\external\Qt5\include;..\external\Qt5\include\QtCore;..\external\Qt5\include\QtWidgets;..\external\Qt5\include\QtOpenGL;..\external\Qt5\include\QtGui;..\external\glew\include\GL;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -68,8 +68,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
-      <AdditionalLibraryDirectories>..\external\Qt5\plugins\imageformats;..\external\Qt5\plugins\platforms;..\external\Qt5\lib;..\lib\x64;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Mpr.lib;Shlwapi.lib;Shell32.lib;Gdi32.lib;d3d9.lib;dxguid.lib;Iphlpapi.lib;ws2_32.lib;imm32.lib;Version.lib;winmm.lib;userenv.lib;dwmapi.lib;Netapi32.lib;wtsapi32.lib;uxtheme.lib;opengl32.lib;qtmaind.lib;Qt5OpenGLd.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Qt5PlatformCompositorSupportd.lib;Qt5FontDatabaseSupportd.lib;Qt5EventDispatcherSupportd.lib;Qt5ThemeSupportd.lib;Qt5WindowsUIAutomationSupportd.lib;qwindowsd.lib;qtlibpngd.lib;qtpcre2d.lib;qicod.lib;qtfreetyped.lib;Utils_staticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\external\Qt5\plugins\imageformats;..\external\Qt5\plugins\platforms;..\external\Qt5\lib;..\lib\x64;..\external\glew\lib\Debug\x64;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Mpr.lib;Shlwapi.lib;Shell32.lib;Gdi32.lib;d3d9.lib;dxguid.lib;Iphlpapi.lib;ws2_32.lib;imm32.lib;Version.lib;winmm.lib;userenv.lib;dwmapi.lib;Netapi32.lib;wtsapi32.lib;uxtheme.lib;opengl32.lib;qtmaind.lib;Qt5OpenGLd.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Qt5PlatformCompositorSupportd.lib;Qt5FontDatabaseSupportd.lib;Qt5EventDispatcherSupportd.lib;Qt5ThemeSupportd.lib;Qt5WindowsUIAutomationSupportd.lib;qwindowsd.lib;qtlibpngd.lib;qtpcre2d.lib;qicod.lib;qtfreetyped.lib;glew32sd.lib;Utils_staticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
     </Link>
@@ -81,6 +81,7 @@ if %errorlevel% NEQ 0 goto Failed
 
 echo Copying License Files...
 xcopy ..\external\Qt5\QT_License.txt .\$(OutDir) /R /Y /d /i &gt; null
+xcopy ..\external\glew\GLEW_License.txt .\$(OutDir) /R /Y /d /i &gt; null
 xcopy ..\external\LicensedLibs.txt .\$(OutDir) /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
@@ -99,9 +100,9 @@ exit 1</Command>
       </FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>QT_NO_PDF;IS_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;QT_NO_PDF;IS_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Utils;..\external\Qt5\include;..\external\Qt5\include\QtCore;..\external\Qt5\include\QtWidgets;..\external\Qt5\include\QtOpenGL;..\external\Qt5\include\QtGui;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Utils;..\external\Qt5\include;..\external\Qt5\include\QtCore;..\external\Qt5\include\QtWidgets;..\external\Qt5\include\QtOpenGL;..\external\Qt5\include\QtGui;..\external\glew\include\GL;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -111,8 +112,8 @@ exit 1</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
-      <AdditionalLibraryDirectories>..\external\Qt5\plugins\imageformats;..\external\Qt5\plugins\platforms;..\external\Qt5\lib;..\lib\x64;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Mpr.lib;Shlwapi.lib;Shell32.lib;Gdi32.lib;d3d9.lib;dxguid.lib;Iphlpapi.lib;ws2_32.lib;imm32.lib;Version.lib;winmm.lib;userenv.lib;dwmapi.lib;Netapi32.lib;wtsapi32.lib;uxtheme.lib;opengl32.lib;qtmain.lib;Qt5OpenGL.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5PlatformCompositorSupport.lib;Qt5FontDatabaseSupport.lib;Qt5EventDispatcherSupport.lib;Qt5ThemeSupport.lib;Qt5WindowsUIAutomationSupport.lib;qwindows.lib;qtlibpng.lib;qtpcre2.lib;qico.lib;qtfreetype.lib;Utils_static.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\external\Qt5\plugins\imageformats;..\external\Qt5\plugins\platforms;..\external\Qt5\lib;..\lib\x64;..\external\glew\lib\Release\x64;%(AdditionalIncludeDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Mpr.lib;Shlwapi.lib;Shell32.lib;Gdi32.lib;d3d9.lib;dxguid.lib;Iphlpapi.lib;ws2_32.lib;imm32.lib;Version.lib;winmm.lib;userenv.lib;dwmapi.lib;Netapi32.lib;wtsapi32.lib;uxtheme.lib;opengl32.lib;qtmain.lib;Qt5OpenGL.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5PlatformCompositorSupport.lib;Qt5FontDatabaseSupport.lib;Qt5EventDispatcherSupport.lib;Qt5ThemeSupport.lib;Qt5WindowsUIAutomationSupport.lib;qwindows.lib;qtlibpng.lib;qtpcre2.lib;qico.lib;qtfreetype.lib;glew32s.lib;Utils_static.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
     </Link>
@@ -124,6 +125,7 @@ if %errorlevel% NEQ 0 goto Failed
 
 echo Copying License Files...
 xcopy ..\external\Qt5\QT_License.txt .\$(OutDir) /R /Y /d /i &gt; null
+xcopy ..\external\glew\GLEW_License.txt .\$(OutDir) /R /Y /d /i &gt; null
 xcopy ..\external\LicensedLibs.txt .\$(OutDir) /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 

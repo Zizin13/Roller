@@ -34,6 +34,8 @@ struct tStunt
 //-------------------------------------------------------------------------------------------------
 struct tGeometryChunk
 {
+  void Clear();
+
   std::string sString;
   //line 1
   int iLeftShoulderWidth;

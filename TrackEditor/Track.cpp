@@ -22,6 +22,93 @@
 #define MAP_COUNT 3
 //-------------------------------------------------------------------------------------------------
 
+void tGeometryChunk::Clear()
+{
+  sString = "";
+  //line 1
+  iLeftShoulderWidth = 0;
+  iLeftLaneWidth = 0;
+  iRightLaneWidth = 0;
+  iRightShoulderWidth = 0;
+  iLeftShoulderHeight = 0;
+  iRightShoulderHeight = 0;
+  iLength = 0;
+  dYaw = 0.0;
+  dPitch = 0.0;
+  dRoll = 0.0;
+  iAILine1 = 0;
+  iAILine2 = 0;
+  iAILine3 = 0;
+  iAILine4 = 0;
+  iTrackGrip = 0;
+  iLeftShoulderGrip = 0;
+  iRightShoulderGrip = 0;
+  iUnk04 = 0;
+  iUnk05 = 0;
+  iUnk06 = 0;
+  iUnk07 = 0;
+  iUnk08 = 0;
+  //line 2
+  iLeftSurfaceType = 0;
+  iCenterSurfaceType = 0;
+  iRightSurfaceType = 0;
+  iLeftWallType = 0;
+  iRightWallType = 0;
+  iRoofType = 0;
+  iLUOuterWallType = 0;
+  iLLOuterWallType = 0;
+  iOuterFloorType = 0;
+  iRLOuterWallType = 0;
+  iRUOuterWallType = 0;
+  iEnvironmentFloorType = 0;
+  iSignType = 0;
+  iSignHorizOffset = 0;
+  iSignVertOffset = 0;
+  dSignYaw = 0.0;
+  dSignPitch = 0.0;
+  dSignRoll = 0.0;
+  //line 3
+  iLUOuterWallAngle = 0;
+  iLLOuterWallAngle = 0;
+  iUnk23 = 0;
+  iUnk24 = 0;
+  iRLOuterWallAngle = 0;
+  iRUOuterWallAngle = 0;
+  iLUOuterWallHeight = 0;
+  iLLOuterWallHeight = 0;
+  iUnk29 = 0;
+  iUnk30 = 0;
+  iRLOuterWallHeight = 0;
+  iRUOuterWallHeight = 0;
+  iRoofHeight = 0;
+  iDrawOrder1 = 0;
+  iDrawOrder2 = 0;
+  iDrawOrder3 = 0;
+  iUnk37 = 0;
+  iUnk38 = 0;
+  iUnk39 = 0;
+  iUnk40 = 0;
+  iUnk41 = 0;
+  iUnk42 = 0;
+  iUnk43 = 0;
+  iUnk44 = 0;
+  iUnk45 = 0;
+  iUnk46 = 0;
+  iUnk47 = 0;
+  iUnk48 = 0;
+  iUnk49 = 0;
+  iUnk50 = 0;
+
+  //additional data
+  iSignTexture = 0;
+  iBackTexture = 0;
+
+  //stunt
+  memset(&stunt, 0, sizeof(stunt));
+}
+
+//-------------------------------------------------------------------------------------------------
+
 CTrack::CTrack()
 {
   ClearData();
@@ -133,7 +220,7 @@ bool CTrack::ProcessTrackData(const QByteArray &baData)
             ProcessSign(slLine, section);
           } else if (slLine.count() == CHUNK_LINE_0_COUNT) {
             //start new chunk
-            memset(&currChunk, 0, sizeof(currChunk));
+            currChunk.Clear();
             currChunk.iBackTexture = -1;
             currChunk.iSignTexture = -1;
             //process line 1

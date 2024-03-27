@@ -163,6 +163,9 @@ public:
   void InsertGeometryChunk(int iIndex, int iCount, const CChunkEditValues &editVals);
   void UpdateChunkStrings();
 
+  static unsigned int GetSignedBitValueFromInt(int iValue);
+  static int GetIntValueFromSignedBit(unsigned int uiValue);
+
   tTrackHeader m_header;
   CChunkAy m_chunkAy;
   QString m_sTextureFile;

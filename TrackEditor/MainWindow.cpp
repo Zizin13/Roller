@@ -990,19 +990,21 @@ void CMainWindow::OnSignClicked()
 {
   QString sValue = leSign->text();
   int iValue = sValue.toInt();
-  int iBldIndex = iValue & SURFACE_TEXTURE_INDEX;
+  unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
+  int iBldIndex = uiSignedBitVal & SURFACE_TEXTURE_INDEX;
 
   CTilePicker dlg(this, &p->m_bld, iBldIndex, true);
   if (dlg.exec()) {
     int iIndex = dlg.GetSelected();
     if (iIndex >= 0) {
       iBldIndex = iIndex;
-      iValue = iBldIndex;
+      uiSignedBitVal = iBldIndex;
       if (ckApplySign->isChecked()) {
-        iValue |= SURFACE_FLAG_APPLY_TEXTURE;
+        uiSignedBitVal |= SURFACE_FLAG_APPLY_TEXTURE;
       } else {
-        iValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
+        uiSignedBitVal &= ~SURFACE_FLAG_APPLY_TEXTURE;
       }
+      iValue = CTrack::GetIntValueFromSignedBit(uiSignedBitVal);
       sValue = QString::number(iValue);
     }
   }
@@ -1018,20 +1020,22 @@ void CMainWindow::OnBackClicked()
 {
   QString sValue = leBack->text();
   int iValue = sValue.toInt();
-  int iBldIndex = iValue & SURFACE_TEXTURE_INDEX;
+  unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
+  int iBldIndex = uiSignedBitVal & SURFACE_TEXTURE_INDEX;
 
   CTilePicker dlg(this, &p->m_tex, iBldIndex, true);
   if (dlg.exec()) {
     int iIndex = dlg.GetSelected();
     if (iIndex >= 0) {
       iBldIndex = iIndex;
-      iValue = iBldIndex;
+      uiSignedBitVal = iBldIndex;
       if (ckApplyBack->isChecked()) {
-        iValue |= SURFACE_FLAG_APPLY_TEXTURE;
+        uiSignedBitVal |= SURFACE_FLAG_APPLY_TEXTURE;
       } else {
-        iValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
+        uiSignedBitVal &= ~SURFACE_FLAG_APPLY_TEXTURE;
       }
     }
+    iValue = CTrack::GetIntValueFromSignedBit(uiSignedBitVal);
     sValue = QString::number(iValue);
   }
 
@@ -1045,11 +1049,13 @@ void CMainWindow::OnBackClicked()
 void CMainWindow::OnApplySignToggled(bool bChecked)
 {
   int iValue = leSign->text().toInt();
+  unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
   if (bChecked) {
-    iValue |= SURFACE_FLAG_APPLY_TEXTURE;
+    uiSignedBitVal |= SURFACE_FLAG_APPLY_TEXTURE;
   } else {
-    iValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
+    uiSignedBitVal &= ~SURFACE_FLAG_APPLY_TEXTURE;
   }
+  iValue = CTrack::GetIntValueFromSignedBit(uiSignedBitVal);
   QString sNewValue = QString::number(iValue);
   leSign->setText(sNewValue);
   UpdateSignButtonDisplay(pbSign, ckApplySign, leSign, &p->m_bld);
@@ -1061,11 +1067,13 @@ void CMainWindow::OnApplySignToggled(bool bChecked)
 void CMainWindow::OnApplyBackToggled(bool bChecked)
 {
   int iValue = leBack->text().toInt();
+  unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
   if (bChecked) {
-    iValue |= SURFACE_FLAG_APPLY_TEXTURE;
+    uiSignedBitVal |= SURFACE_FLAG_APPLY_TEXTURE;
   } else {
-    iValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
+    uiSignedBitVal &= ~SURFACE_FLAG_APPLY_TEXTURE;
   }
+  iValue = CTrack::GetIntValueFromSignedBit(uiSignedBitVal);
   QString sNewValue = QString::number(iValue);
   leBack->setText(sNewValue);
   UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack, &p->m_tex);
@@ -1593,8 +1601,9 @@ void CMainWindow::UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *p
     pCheckbox->setChecked(false);
   } else {
     int iValue = pLineEdit->text().toInt();
-    bool bChecked = iValue & SURFACE_FLAG_APPLY_TEXTURE;
-    int iBldIndex = iValue & SURFACE_TEXTURE_INDEX;
+    unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
+    bool bChecked = uiSignedBitVal & SURFACE_FLAG_APPLY_TEXTURE;
+    int iBldIndex = CTrack::GetIntValueFromSignedBit(uiSignedBitVal & SURFACE_TEXTURE_INDEX);
     if (iBldIndex < pTex->m_tileAy.size()) {
       QPixmap pixmap;
       pixmap.convertFromImage(pTex->m_tileAy[iBldIndex]);
@@ -1809,13 +1818,14 @@ void CMainWindow::UpdateTextures(QLineEdit *pLineEdit, QLabel *pTex1, QLabel *pT
     pTex1->setPixmap(QPixmap());
     pTex2->setPixmap(QPixmap());
   } else if (!pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) != 0) {
-    int iLSurfaceType = pLineEdit->text().toInt();
-    iIndex = iLSurfaceType & SURFACE_TEXTURE_INDEX;
+    int iValue = pLineEdit->text().toInt();
+    unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
+    iIndex = CTrack::GetIntValueFromSignedBit(uiSignedBitVal & SURFACE_TEXTURE_INDEX);
     if (iIndex < p->m_tex.m_tileAy.size()) {
       pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex]);
       pTex1->setPixmap(pixmap);
 
-      if (iLSurfaceType & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
+      if (uiSignedBitVal & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
         pixmap.convertFromImage(p->m_tex.m_tileAy[iIndex + 1]);
         pTex2->setPixmap(pixmap);
       } else {

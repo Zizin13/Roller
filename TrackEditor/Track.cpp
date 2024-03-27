@@ -855,6 +855,29 @@ void CTrack::UpdateChunkStrings()
 
 //-------------------------------------------------------------------------------------------------
 
+unsigned int CTrack::GetSignedBitValueFromInt(int iValue)
+{
+  bool bNegative = iValue < 0;
+  unsigned int uiRetVal = (unsigned int)abs(iValue);
+  if (bNegative)
+    uiRetVal |= 0x80000000;
+  return uiRetVal;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+int CTrack::GetIntValueFromSignedBit(unsigned int uiValue)
+{
+  bool bNegative = uiValue & 0x80000000;
+  uiValue &= ~0x80000000;
+  int iRetVal = (int)uiValue;
+  if (bNegative)
+    iRetVal = iRetVal * -1;
+  return iRetVal;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CTrack::GenerateChunkString(tGeometryChunk &chunk)
 {
   char szGenerate[1024];

@@ -72,7 +72,7 @@ private:
   void UpdateDialog();
 
   CTexture *m_pTexture;
-  int m_iValue;
+  unsigned int m_uiSignedBitValue;
 };
 
 //-------------------------------------------------------------------------------------------------

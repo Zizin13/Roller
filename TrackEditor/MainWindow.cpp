@@ -32,6 +32,7 @@ public:
   ~CMainWindowPrivate() 
   {};
 
+  std::vector<QLabel *> m_lblAy;
   CTrack m_track;
   CPalette m_palette;
   CTexture m_tex;
@@ -1437,6 +1438,12 @@ void CMainWindow::LoadTextures()
   bool bMangled = ckUnmangleTextures->isChecked();
 
   //avoid memory leak
+  while (!p->m_lblAy.empty()) {
+    std::vector<QLabel *>::iterator it = p->m_lblAy.begin();
+    QLabel *pLabel = *it;
+    delete pLabel;
+    p->m_lblAy.erase(it);
+  }
   QLayoutItem *pItem;
   QLayout *pSublayout;
   QWidget *pWidget;
@@ -1483,6 +1490,7 @@ void CMainWindow::LoadTextures()
     pixmap.convertFromImage(p->m_tex.m_tileAy[i]);
     pImageLabel->setPixmap(pixmap);
     texLayout->addWidget(pImageLabel, i / iTilesPerLine, i % iTilesPerLine);
+    p->m_lblAy.push_back(pImageLabel);
   }
   for (int i = 0; i < p->m_bld.m_tileAy.size(); ++i) {
     QLabel *pImageLabel = new QLabel();
@@ -1490,6 +1498,7 @@ void CMainWindow::LoadTextures()
     pixmap.convertFromImage(p->m_bld.m_tileAy[i]);
     pImageLabel->setPixmap(pixmap);
     bldLayout->addWidget(pImageLabel, i / iTilesPerLine, i % iTilesPerLine);
+    p->m_lblAy.push_back(pImageLabel);
   }
 }
 

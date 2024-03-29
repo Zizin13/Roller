@@ -1780,7 +1780,7 @@ void CMainWindow::RevertGeometry()
   UpdateTextures(leRightSurfaceType, lblRSurfaceTex1, lblRSurfaceTex2);
   UpdateTextures(leLWallType, lblLWallTex1, lblLWallTex2);
   UpdateTextures(leRWallType, lblRWallTex1, lblRWallTex2);
-  UpdateTextures(leRoofType, lblRWallTex1, lblRWallTex2);
+  UpdateTextures(leRoofType, lblRoofTex1, lblRoofTex2);
   UpdateTextures(leLUOuterWallType, lblLUOuterWallTex1, lblLUOuterWallTex2);
   UpdateTextures(leLLOuterWallType, lblLLOuterWallTex1, lblLLOuterWallTex2);
   UpdateTextures(leOuterFloorType, lblOuterFloorTex1, lblOuterFloorTex2);

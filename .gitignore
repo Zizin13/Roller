@@ -367,7 +367,7 @@ FodyWeavers.xsd
 /TrackEditor/null
 /TrackEditor/ui
 /TrackEditor/moc
-/bin64
+/bin/TrackEditor
 !/external
 !/external/glew
 !/external/glew/lib

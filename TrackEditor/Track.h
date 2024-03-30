@@ -57,9 +57,9 @@ struct tGeometryChunk
   int iRightShoulderGrip;
   int iUnk04; //todo
   int iUnk05; //todo
-  int iUnk06; //todo
-  int iUnk07; //todo
-  int iUnk08; //todo
+  int iAudioAboveTrigger;
+  int iAudioTriggerSpeed;
+  int iAudioBelowTrigger;
   //line 2
   int iLeftSurfaceType;
   int iCenterSurfaceType;

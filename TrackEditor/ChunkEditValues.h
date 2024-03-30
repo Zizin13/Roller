@@ -27,9 +27,9 @@ public:
                   , const QString &sCopyRightShoulderGrip
                   , const QString &sCopyUnk04
                   , const QString &sCopyUnk05
-                  , const QString &sCopyUnk06
-                  , const QString &sCopyUnk07
-                  , const QString &sCopyUnk08
+                  , const QString &sCopyAudioAboveTrigger
+                  , const QString &sCopyAudioTriggerSpeed
+                  , const QString &sCopyAudioBelowTrigger
                   , const QString &sCopyLeftSurfaceType
                   , const QString &sCopyCenterSurfaceType
                   , const QString &sCopyRightSurfaceType
@@ -112,9 +112,9 @@ public:
   QString sRightShoulderGrip;
   QString sUnk04;
   QString sUnk05;
-  QString sUnk06;
-  QString sUnk07;
-  QString sUnk08;
+  QString sAudioAboveTrigger;
+  QString sAudioTriggerSpeed;
+  QString sAudioBelowTrigger;
   QString sLeftSurfaceType;
   QString sCenterSurfaceType;
   QString sRightSurfaceType;

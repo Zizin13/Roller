@@ -31,9 +31,9 @@ CChunkEditValues::CChunkEditValues(const QString &sCopyLeftShoulderWidth
                 , const QString &sCopyRightShoulderGrip
                 , const QString &sCopyUnk04
                 , const QString &sCopyUnk05
-                , const QString &sCopyUnk06
-                , const QString &sCopyUnk07
-                , const QString &sCopyUnk08
+                , const QString &sCopyAudioAboveTrigger
+                , const QString &sCopyAudioTriggerSpeed
+                , const QString &sCopyAudioBelowTrigger
                 , const QString &sCopyLeftSurfaceType
                 , const QString &sCopyCenterSurfaceType
                 , const QString &sCopyRightSurfaceType
@@ -113,9 +113,9 @@ CChunkEditValues::CChunkEditValues(const QString &sCopyLeftShoulderWidth
   sRightShoulderGrip = sCopyRightShoulderGrip;
   sUnk04 = sCopyUnk04;
   sUnk05 = sCopyUnk05;
-  sUnk06 = sCopyUnk06;
-  sUnk07 = sCopyUnk07;
-  sUnk08 = sCopyUnk08;
+  sAudioAboveTrigger = sCopyAudioAboveTrigger;
+  sAudioTriggerSpeed = sCopyAudioTriggerSpeed;
+  sAudioBelowTrigger = sCopyAudioBelowTrigger;
   sLeftSurfaceType = sCopyLeftSurfaceType;
   sCenterSurfaceType = sCopyCenterSurfaceType;
   sRightSurfaceType = sCopyRightSurfaceType;
@@ -193,7 +193,7 @@ void CChunkEditValues::Clear()
   sYaw = ""; sPitch = ""; sRoll = "";
   sAILine1 = ""; sAILine2 = ""; sAILine3 = ""; sAILine4 = "";
   sTrackGrip = ""; sLeftShoulderGrip = ""; sRightShoulderGrip = "";
-  sUnk04 = ""; sUnk05 = ""; sUnk06 = ""; sUnk07 = ""; sUnk08 = "";
+  sUnk04 = ""; sUnk05 = ""; sAudioAboveTrigger = ""; sAudioTriggerSpeed = ""; sAudioBelowTrigger = "";
   sLeftSurfaceType = ""; sCenterSurfaceType = ""; sRightSurfaceType = "";
   sLWallType = ""; sRWallType = ""; sRoofType = ""; sLUOuterWallType = ""; sLLOuterWallType = ""; sOuterFloorType = "";
   sRLOuterWallType = ""; sRUOuterWallType = ""; sEnvironmentFloorType = ""; sSignType = ""; sSignHorizOffset = ""; sSignVertOffset = "";

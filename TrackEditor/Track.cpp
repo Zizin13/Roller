@@ -45,9 +45,9 @@ void tGeometryChunk::Clear()
   iRightShoulderGrip = 0;
   iUnk04 = 0;
   iUnk05 = 0;
-  iUnk06 = 0;
-  iUnk07 = 0;
-  iUnk08 = 0;
+  iAudioAboveTrigger = 0;
+  iAudioTriggerSpeed = 0;
+  iAudioBelowTrigger = 0;
   //line 2
   iLeftSurfaceType = 0;
   iCenterSurfaceType = 0;
@@ -243,9 +243,9 @@ bool CTrack::ProcessTrackData(const QByteArray &baData)
             currChunk.iRightShoulderGrip = slLine[16].toInt();
             currChunk.iUnk04 = slLine[17].toInt();
             currChunk.iUnk05 = slLine[18].toInt();
-            currChunk.iUnk06 = slLine[19].toInt();
-            currChunk.iUnk07 = slLine[20].toInt();
-            currChunk.iUnk08 = slLine[21].toInt();
+            currChunk.iAudioAboveTrigger = slLine[19].toInt();
+            currChunk.iAudioTriggerSpeed = slLine[20].toInt();
+            currChunk.iAudioBelowTrigger = slLine[21].toInt();
             //inc chunk index
             ++iChunkLine;
           }
@@ -552,15 +552,15 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex, CChu
     sVal = QString::number(m_chunkAy[i].iUnk05);
     if (editVals.sUnk05.isEmpty()) editVals.sUnk05 = sVal;
     else if (editVals.sUnk05.compare(sVal) != 0) editVals.sUnk05 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].iUnk06);
-    if (editVals.sUnk06.isEmpty()) editVals.sUnk06 = sVal;
-    else if (editVals.sUnk06.compare(sVal) != 0) editVals.sUnk06 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].iUnk07);
-    if (editVals.sUnk07.isEmpty()) editVals.sUnk07 = sVal;
-    else if (editVals.sUnk07.compare(sVal) != 0) editVals.sUnk07 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].iUnk08);
-    if (editVals.sUnk08.isEmpty()) editVals.sUnk08 = sVal;
-    else if (editVals.sUnk08.compare(sVal) != 0) editVals.sUnk08 = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].iAudioAboveTrigger);
+    if (editVals.sAudioAboveTrigger.isEmpty()) editVals.sAudioAboveTrigger = sVal;
+    else if (editVals.sAudioAboveTrigger.compare(sVal) != 0) editVals.sAudioAboveTrigger = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].iAudioTriggerSpeed);
+    if (editVals.sAudioTriggerSpeed.isEmpty()) editVals.sAudioTriggerSpeed = sVal;
+    else if (editVals.sAudioTriggerSpeed.compare(sVal) != 0) editVals.sAudioTriggerSpeed = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].iAudioBelowTrigger);
+    if (editVals.sAudioBelowTrigger.isEmpty()) editVals.sAudioBelowTrigger = sVal;
+    else if (editVals.sAudioBelowTrigger.compare(sVal) != 0) editVals.sAudioBelowTrigger = MIXED_DATA;
 
     sVal = QString::number(m_chunkAy[i].iLeftSurfaceType);
     if (editVals.sLeftSurfaceType.isEmpty()) editVals.sLeftSurfaceType = sVal;
@@ -771,9 +771,9 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex, const CChunkE
     if (!editVals.sRightShoulderGrip.isEmpty()) m_chunkAy[i].iRightShoulderGrip = editVals.sRightShoulderGrip.toInt();
     if (!editVals.sUnk04.isEmpty()) m_chunkAy[i].iUnk04 = editVals.sUnk04.toInt();
     if (!editVals.sUnk05.isEmpty()) m_chunkAy[i].iUnk05 = editVals.sUnk05.toInt();
-    if (!editVals.sUnk06.isEmpty()) m_chunkAy[i].iUnk06 = editVals.sUnk06.toInt();
-    if (!editVals.sUnk07.isEmpty()) m_chunkAy[i].iUnk07 = editVals.sUnk07.toInt();
-    if (!editVals.sUnk08.isEmpty()) m_chunkAy[i].iUnk08 = editVals.sUnk08.toInt();
+    if (!editVals.sAudioAboveTrigger.isEmpty()) m_chunkAy[i].iAudioAboveTrigger = editVals.sAudioAboveTrigger.toInt();
+    if (!editVals.sAudioTriggerSpeed.isEmpty()) m_chunkAy[i].iAudioTriggerSpeed = editVals.sAudioTriggerSpeed.toInt();
+    if (!editVals.sAudioBelowTrigger.isEmpty()) m_chunkAy[i].iAudioBelowTrigger = editVals.sAudioBelowTrigger.toInt();
     if (!editVals.sLeftSurfaceType.isEmpty()) m_chunkAy[i].iLeftSurfaceType = editVals.sLeftSurfaceType.toInt();
     if (!editVals.sCenterSurfaceType.isEmpty()) m_chunkAy[i].iCenterSurfaceType = editVals.sCenterSurfaceType.toInt();
     if (!editVals.sRightSurfaceType.isEmpty()) m_chunkAy[i].iRightSurfaceType = editVals.sRightSurfaceType.toInt();
@@ -864,9 +864,9 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount, const CChunkEditValues 
     newChunk.iRightShoulderGrip = editVals.sRightShoulderGrip.toInt();
     newChunk.iUnk04 = editVals.sUnk04.toInt();
     newChunk.iUnk05 = editVals.sUnk05.toInt();
-    newChunk.iUnk06 = editVals.sUnk06.toInt();
-    newChunk.iUnk07 = editVals.sUnk07.toInt();
-    newChunk.iUnk08 = editVals.sUnk08.toInt();
+    newChunk.iAudioAboveTrigger = editVals.sAudioAboveTrigger.toInt();
+    newChunk.iAudioTriggerSpeed = editVals.sAudioTriggerSpeed.toInt();
+    newChunk.iAudioBelowTrigger = editVals.sAudioBelowTrigger.toInt();
     newChunk.iLeftSurfaceType = editVals.sLeftSurfaceType.toInt();
     newChunk.iCenterSurfaceType = editVals.sCenterSurfaceType.toInt();
     newChunk.iRightSurfaceType = editVals.sRightSurfaceType.toInt();
@@ -996,9 +996,9 @@ void CTrack::GenerateChunkString(tGeometryChunk &chunk)
            , chunk.iRightShoulderGrip
            , chunk.iUnk04
            , chunk.iUnk05
-           , chunk.iUnk06
-           , chunk.iUnk07
-           , chunk.iUnk08
+           , chunk.iAudioAboveTrigger
+           , chunk.iAudioTriggerSpeed
+           , chunk.iAudioBelowTrigger
            , chunk.iLeftSurfaceType
            , chunk.iCenterSurfaceType
            , chunk.iRightSurfaceType

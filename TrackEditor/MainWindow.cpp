@@ -163,9 +163,9 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leRShoulderGrip, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk04, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leUnk05, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leUnk06, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leUnk07, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leUnk08, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leAudioAboveTrigger, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leAudioTriggerSpeed, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leAudioBelowTrigger, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leLeftSurfaceType, &QLineEdit::textChanged, this, &CMainWindow::OnLSurfaceLEChanged);
   connect(leCenterSurfaceType, &QLineEdit::textChanged, this, &CMainWindow::OnCSurfaceLEChanged);
   connect(leRightSurfaceType, &QLineEdit::textChanged, this, &CMainWindow::OnRSurfaceLEChanged);
@@ -438,7 +438,7 @@ void CMainWindow::OnInsertBeforeClicked()
     , leYaw->text(), lePitch->text(), leRoll->text()
     , leAILine1->text(), leAILine2->text(), leAILine3->text(), leAILine4->text()
     , leTrackGrip->text(), leLeftShoulderGrip->text(), leRShoulderGrip->text()
-    , leUnk04->text(), leUnk05->text(), leUnk06->text(), leUnk07->text(), leUnk08->text()
+    , leUnk04->text(), leUnk05->text(), leAudioAboveTrigger->text(), leAudioTriggerSpeed->text(), leAudioBelowTrigger->text()
     , leLeftSurfaceType->text(), leCenterSurfaceType->text(), leRightSurfaceType->text()
     , leLWallType->text(), leRWallType->text(), leRoofType->text(), leLUOuterWallType->text(), leLLOuterWallType->text(), leOuterFloorType->text()
     , leRLOuterWallType->text(), leRUOuterWallType->text(), leEnvironmentFloorType->text(), leSignType->text(), leSignHorizOffset->text(), leSignVertOffset->text()
@@ -477,7 +477,7 @@ void CMainWindow::OnInsertAfterClicked()
     , leYaw->text(), lePitch->text(), leRoll->text()
     , leAILine1->text(), leAILine2->text(), leAILine3->text(), leAILine4->text()
     , leTrackGrip->text(), leLeftShoulderGrip->text(), leRShoulderGrip->text()
-    , leUnk04->text(), leUnk05->text(), leUnk06->text(), leUnk07->text(), leUnk08->text()
+    , leUnk04->text(), leUnk05->text(), leAudioAboveTrigger->text(), leAudioTriggerSpeed->text(), leAudioBelowTrigger->text()
     , leLeftSurfaceType->text(), leCenterSurfaceType->text(), leRightSurfaceType->text()
     , leLWallType->text(), leRWallType->text(), leRoofType->text(), leLUOuterWallType->text(), leLLOuterWallType->text(), leOuterFloorType->text()
     , leRLOuterWallType->text(), leRUOuterWallType->text(), leEnvironmentFloorType->text(), leSignType->text(), leSignHorizOffset->text(), leSignVertOffset->text()
@@ -558,7 +558,7 @@ void CMainWindow::OnApplyClicked()
     , leYaw->text(), lePitch->text(), leRoll->text()
     , leAILine1->text(), leAILine2->text(), leAILine3->text(), leAILine4->text()
     , leTrackGrip->text(), leLeftShoulderGrip->text(), leRShoulderGrip->text()
-    , leUnk04->text(), leUnk05->text(), leUnk06->text(), leUnk07->text(), leUnk08->text()
+    , leUnk04->text(), leUnk05->text(), leAudioAboveTrigger->text(), leAudioTriggerSpeed->text(), leAudioBelowTrigger->text()
     , leLeftSurfaceType->text(), leCenterSurfaceType->text(), leRightSurfaceType->text()
     , leLWallType->text(), leRWallType->text(), leRoofType->text(), leLUOuterWallType->text(), leLLOuterWallType->text(), leOuterFloorType->text()
     , leRLOuterWallType->text(), leRUOuterWallType->text(), leEnvironmentFloorType->text(), leSignType->text(), leSignHorizOffset->text(), leSignVertOffset->text()
@@ -877,9 +877,9 @@ void CMainWindow::UpdateGeometryEditMode()
   UpdateLEEditMode(bEditMode, bMixedData, leRShoulderGrip, p->editVals.sRightShoulderGrip);
   UpdateLEEditMode(bEditMode, bMixedData, leUnk04, p->editVals.sUnk04);
   UpdateLEEditMode(bEditMode, bMixedData, leUnk05, p->editVals.sUnk05);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk06, p->editVals.sUnk06);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk07, p->editVals.sUnk07);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk08, p->editVals.sUnk08);
+  UpdateLEEditMode(bEditMode, bMixedData, leAudioAboveTrigger, p->editVals.sAudioAboveTrigger);
+  UpdateLEEditMode(bEditMode, bMixedData, leAudioTriggerSpeed, p->editVals.sAudioTriggerSpeed);
+  UpdateLEEditMode(bEditMode, bMixedData, leAudioBelowTrigger, p->editVals.sAudioBelowTrigger);
   UpdateLEEditMode(bEditMode, bMixedData, leLeftSurfaceType, p->editVals.sLeftSurfaceType);
   UpdateLEEditMode(bEditMode, bMixedData, leCenterSurfaceType, p->editVals.sCenterSurfaceType);
   UpdateLEEditMode(bEditMode, bMixedData, leRightSurfaceType, p->editVals.sRightSurfaceType);
@@ -1283,7 +1283,8 @@ void CMainWindow::LoadSettings()
     splitter->restoreGeometry(splitterGeometry);
     splitter->restoreState(splitterState);
   } else {
-    resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
+    move(10, 10);
+    resize(QDesktopWidget().availableGeometry(this).size() * 0.8);
   }
 
   show();
@@ -1711,9 +1712,9 @@ void CMainWindow::RevertGeometry()
   bMixedData |= UpdateLEWithSelectionValue(leRShoulderGrip, p->editVals.sRightShoulderGrip);
   bMixedData |= UpdateLEWithSelectionValue(leUnk04, p->editVals.sUnk04);
   bMixedData |= UpdateLEWithSelectionValue(leUnk05, p->editVals.sUnk05);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk06, p->editVals.sUnk06);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk07, p->editVals.sUnk07);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk08, p->editVals.sUnk08);
+  bMixedData |= UpdateLEWithSelectionValue(leAudioAboveTrigger, p->editVals.sAudioAboveTrigger);
+  bMixedData |= UpdateLEWithSelectionValue(leAudioTriggerSpeed, p->editVals.sAudioTriggerSpeed);
+  bMixedData |= UpdateLEWithSelectionValue(leAudioBelowTrigger, p->editVals.sAudioBelowTrigger);
   bMixedData |= UpdateLEWithSelectionValue(leLeftSurfaceType, p->editVals.sLeftSurfaceType);
   bMixedData |= UpdateLEWithSelectionValue(leCenterSurfaceType, p->editVals.sCenterSurfaceType);
   bMixedData |= UpdateLEWithSelectionValue(leRightSurfaceType, p->editVals.sRightSurfaceType);

@@ -249,13 +249,6 @@
                <item row="3" column="0">
                 <widget class="QLineEdit" name="leLShoulderHeight"/>
                </item>
-               <item row="12" column="0">
-                <widget class="QLabel" name="label_28">
-                 <property name="text">
-                  <string>unknown 5</string>
-                 </property>
-                </widget>
-               </item>
                <item row="5" column="0">
                 <widget class="QLineEdit" name="leYaw"/>
                </item>
@@ -286,9 +279,6 @@
                <item row="1" column="2">
                 <widget class="QLineEdit" name="leRLaneWidth"/>
                </item>
-               <item row="13" column="1">
-                <widget class="QLineEdit" name="leUnk06"/>
-               </item>
                <item row="1" column="1">
                 <widget class="QLineEdit" name="leLLaneWidth"/>
                </item>
@@ -302,13 +292,6 @@
                  </property>
                 </widget>
                </item>
-               <item row="12" column="2">
-                <widget class="QLabel" name="label_30">
-                 <property name="text">
-                  <string>unknown 7</string>
-                 </property>
-                </widget>
-               </item>
                <item row="1" column="3">
                 <widget class="QLineEdit" name="leRShoulderWidth"/>
                </item>
@@ -318,9 +301,6 @@
                   <string>Yaw</string>
                  </property>
                 </widget>
-               </item>
-               <item row="13" column="2">
-                <widget class="QLineEdit" name="leUnk07"/>
                </item>
                <item row="7" column="2">
                 <widget class="QLineEdit" name="leAILine3">
@@ -343,16 +323,6 @@
                  </property>
                  <property name="text">
                   <string>AI line 4</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="13" column="0">
-                <widget class="QLineEdit" name="leUnk05"/>
-               </item>
-               <item row="12" column="1">
-                <widget class="QLabel" name="label_29">
-                 <property name="text">
-                  <string>unknown 6</string>
                  </property>
                 </widget>
                </item>
@@ -455,13 +425,6 @@
                  </property>
                 </widget>
                </item>
-               <item row="12" column="3">
-                <widget class="QLabel" name="label_31">
-                 <property name="text">
-                  <string>unknown 8</string>
-                 </property>
-                </widget>
-               </item>
                <item row="8" column="1">
                 <widget class="QLabel" name="label_25">
                  <property name="toolTip">
@@ -472,11 +435,48 @@
                  </property>
                 </widget>
                </item>
-               <item row="13" column="3">
-                <widget class="QLineEdit" name="leUnk08"/>
-               </item>
                <item row="11" column="0">
                 <widget class="QLineEdit" name="leUnk04"/>
+               </item>
+               <item row="10" column="1">
+                <widget class="QLabel" name="label_28">
+                 <property name="text">
+                  <string>unknown 5</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="11" column="1">
+                <widget class="QLineEdit" name="leUnk05"/>
+               </item>
+               <item row="12" column="0">
+                <widget class="QLabel" name="label_29">
+                 <property name="text">
+                  <string>Audio (above trigger)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="0">
+                <widget class="QLineEdit" name="leAudioAboveTrigger"/>
+               </item>
+               <item row="12" column="1">
+                <widget class="QLabel" name="label_30">
+                 <property name="text">
+                  <string>Audio trigger speed</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="1">
+                <widget class="QLineEdit" name="leAudioTriggerSpeed"/>
+               </item>
+               <item row="12" column="2">
+                <widget class="QLabel" name="label_31">
+                 <property name="text">
+                  <string>Audio (below trigger)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="2">
+                <widget class="QLineEdit" name="leAudioBelowTrigger"/>
                </item>
               </layout>
              </item>
@@ -2241,8 +2241,8 @@ wall height</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>281</width>
-              <height>530</height>
+              <width>133</width>
+              <height>118</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_12">

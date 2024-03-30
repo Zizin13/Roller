@@ -1,7 +1,7 @@
 #ifndef _TRACKEDITOR_TRACKPREVIEW_H
 #define _TRACKEDITOR_TRACKPREVIEW_H
 //-------------------------------------------------------------------------------------------------
-#include <QtOpenGL>
+#include "QtOpenGL/qgl.h"
 //-------------------------------------------------------------------------------------------------
 class CTrackPreview : public QGLWidget
 {
@@ -30,6 +30,11 @@ private:
   int zRot;
 
   QPoint lastPos;
+
+  unsigned int m_uiShader;
+  unsigned int m_uiVertAyObj;
+  unsigned int m_uiBo;
+  float fRed;
 };
 
 //-------------------------------------------------------------------------------------------------

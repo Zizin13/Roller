@@ -108,6 +108,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   }
 
   //signals
+  connect(this, &CMainWindow::LogMsgSig, this, &CMainWindow::OnLogMsg, Qt::QueuedConnection);
   connect(actNew, &QAction::triggered, this, &CMainWindow::OnNewTrack);
   connect(actLoad, &QAction::triggered, this, &CMainWindow::OnLoadTrack);
   connect(actSave, &QAction::triggered, this, &CMainWindow::OnSaveTrack);
@@ -269,6 +270,13 @@ CMainWindow::~CMainWindow()
 //-------------------------------------------------------------------------------------------------
 
 void CMainWindow::LogMessage(const QString &sMsg)
+{
+  emit LogMsgSig(sMsg);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnLogMsg(QString sMsg)
 {
   p->m_logDialog.LogMessage(sMsg);
 }
@@ -1283,7 +1291,8 @@ void CMainWindow::LoadSettings()
     splitter->restoreGeometry(splitterGeometry);
     splitter->restoreState(splitterState);
   } else {
-    resize(QDesktopWidget().availableGeometry(this).size() * 0.7);
+    resize(QDesktopWidget().availableGeometry(this).size() * 0.8);
+    move(10, 10);
   }
 
   show();

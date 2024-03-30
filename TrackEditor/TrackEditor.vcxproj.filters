@@ -133,6 +133,9 @@
     <Filter Include="Qt Generated Files\Ui Header Files">
       <UniqueIdentifier>{4be68ce6-135e-43f6-a554-a92c9e7fe9b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources\Shaders">
+      <UniqueIdentifier>{7592e29b-e1e0-4824-922e-2b5cc2ceda73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="images\stunt.ico">
@@ -143,5 +146,10 @@
     <ResourceCompile Include="TrackEditor.rc">
       <Filter>Resources</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\Basic.shader">
+      <Filter>Resources\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -75,14 +75,14 @@
     </Link>
     <PostBuildEvent>
       <Command>echo Copying QT dlls...
-xcopy ..\external\Qt5\bin\libEGLd.dll .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\external\Qt5\bin\libGLESv2d.dll .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\external\Qt5\bin\libEGLd.dll .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\external\Qt5\bin\libGLESv2d.dll .\$(OutDir) /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
 echo Copying License Files...
-xcopy ..\external\Qt5\QT_License.txt .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\external\glew\GLEW_License.txt .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\external\LicensedLibs.txt .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\external\Qt5\QT_License.txt .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\external\glew\GLEW_License.txt .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\external\TrackEditor_LicensedLibs.txt .\$(OutDir)LicensedLibs.txt /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
 echo Post-Build Step for $(ProjectName) completed successfully
@@ -119,14 +119,14 @@ exit 1</Command>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying QT dlls...
-xcopy ..\external\Qt5\bin\libEGL.dll .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\external\Qt5\bin\libGLESv2.dll .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\external\Qt5\bin\libEGL.dll .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\external\Qt5\bin\libGLESv2.dll .\$(OutDir) /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
 echo Copying License Files...
-xcopy ..\external\Qt5\QT_License.txt .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\external\glew\GLEW_License.txt .\$(OutDir) /R /Y /d /i &gt; null
-xcopy ..\external\LicensedLibs.txt .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\external\Qt5\QT_License.txt .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\external\glew\GLEW_License.txt .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\external\TrackEditor_LicensedLibs.txt .\$(OutDir)LicensedLibs.txt /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
 echo Post-Build Step for $(ProjectName) completed successfully

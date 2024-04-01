@@ -2367,6 +2367,12 @@ wall height</string>
     <addaction name="actImportMangled"/>
     <addaction name="actExportMangled"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actEditSeries"/>
+   </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
      <string>Help</string>
@@ -2380,6 +2386,7 @@ wall height</string>
     <addaction name="actDebug"/>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -2414,6 +2421,11 @@ wall height</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actEditSeries">
+   <property name="text">
+    <string>Edit series</string>
    </property>
   </action>
   <action name="actAbout">

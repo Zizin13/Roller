@@ -25,6 +25,7 @@ protected slots:
   void OnSaveTrackAs();
   void OnImportMangled();
   void OnExportMangled();
+  void OnEditSeries();
   void OnDebug();
   void OnAbout();
   void OnEditTabChanged(int iIndex);

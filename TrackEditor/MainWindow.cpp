@@ -10,6 +10,7 @@
 #include "Texture.h"
 #include "TilePicker.h"
 #include "EditSurfaceDialog.h"
+#include "EditSeriesDialog.h"
 #include "ChunkEditValues.h"
 #include "TrackPreview.h"
 #if defined (IS_WINDOWS)
@@ -115,6 +116,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(actSaveAs, &QAction::triggered, this, &CMainWindow::OnSaveTrackAs);
   connect(actImportMangled, &QAction::triggered, this, &CMainWindow::OnImportMangled);
   connect(actExportMangled, &QAction::triggered, this, &CMainWindow::OnExportMangled);
+  connect(actEditSeries, &QAction::triggered, this, &CMainWindow::OnEditSeries);
   connect(actDebug, &QAction::triggered, this, &CMainWindow::OnDebug);
   connect(actAbout, &QAction::triggered, this, &CMainWindow::OnAbout);
 
@@ -419,6 +421,28 @@ void CMainWindow::OnExportMangled()
   m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
   UpdateWindow();
 #endif
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnEditSeries()
+{
+  CEditSeriesDialog dlg(this, (int)p->m_track.m_chunkAy.size());
+  if (dlg.exec()) {
+    int iValue = dlg.GetValue();
+    for (int i = dlg.GetStartChunk(); i < dlg.GetEndChunk(); i += dlg.GetInterval()) {
+      CChunkEditValues values;
+      switch (dlg.GetField()) {
+        case 0:
+          values.sLeftShoulderWidth = QString::number(iValue);
+          break;
+      }
+      p->m_track.ApplyGeometrySettings(i, i, values);
+      iValue += dlg.GetIncrement();
+    }
+    m_bUnsavedChanges = true;
+    UpdateWindow();
+  }
 }
 
 //-------------------------------------------------------------------------------------------------

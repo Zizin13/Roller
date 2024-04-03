@@ -59,7 +59,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;QT_NO_PDF;IS_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Utils;..\external\Qt5\include;..\external\Qt5\include\QtCore;..\external\Qt5\include\QtWidgets;..\external\Qt5\include\QtOpenGL;..\external\Qt5\include\QtGui;..\external\glew\include\GL;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Utils;..\external\Qt5\include;..\external\Qt5\include\QtCore;..\external\Qt5\include\QtWidgets;..\external\Qt5\include\QtOpenGL;..\external\Qt5\include\QtGui;..\external\glew\include\GL;..\external\glm;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -82,6 +82,7 @@ if %errorlevel% NEQ 0 goto Failed
 echo Copying License Files...
 echo f | xcopy ..\external\Qt5\QT_License.txt .\$(OutDir) /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glew\GLEW_License.txt .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\external\glm\copying.txt .\$(OutDir)GLM_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\TrackEditor_LicensedLibs.txt .\$(OutDir)LicensedLibs.txt /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
@@ -102,7 +103,7 @@ exit 1</Command>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;QT_NO_PDF;IS_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\Utils;..\external\Qt5\include;..\external\Qt5\include\QtCore;..\external\Qt5\include\QtWidgets;..\external\Qt5\include\QtOpenGL;..\external\Qt5\include\QtGui;..\external\glew\include\GL;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Utils;..\external\Qt5\include;..\external\Qt5\include\QtCore;..\external\Qt5\include\QtWidgets;..\external\Qt5\include\QtOpenGL;..\external\Qt5\include\QtGui;..\external\glew\include\GL;..\external\glm;.\ui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -126,6 +127,7 @@ if %errorlevel% NEQ 0 goto Failed
 echo Copying License Files...
 echo f | xcopy ..\external\Qt5\QT_License.txt .\$(OutDir) /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glew\GLEW_License.txt .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\external\glm\copying.txt .\$(OutDir)GLM_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\TrackEditor_LicensedLibs.txt .\$(OutDir)LicensedLibs.txt /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 

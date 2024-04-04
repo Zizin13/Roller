@@ -1,7 +1,7 @@
 #ifndef _TRACKEDITOR_TRACKPREVIEW_H
 #define _TRACKEDITOR_TRACKPREVIEW_H
 //-------------------------------------------------------------------------------------------------
-#include <QtOpenGL>
+#include <QtOpenGL\qgl.h>
 //-------------------------------------------------------------------------------------------------
 class CTrackPreview : public QGLWidget
 {
@@ -15,21 +15,20 @@ protected:
   void initializeGL();
   void paintGL();
   void resizeGL(int iWidth, int iHeight);
-
   void mousePressEvent(QMouseEvent *pEvent);
   void mouseMoveEvent(QMouseEvent *pEvent);
+  void keyPressEvent(QKeyEvent *pEvent);
 
 private:
-  void SetXRotation(int iAngle);
-  void SetYRotation(int iAngle);
-  void SetZRotation(int iAngle);
-  void Draw();
-
-  int xRot;
-  int yRot;
-  int zRot;
-
-  QPoint lastPos;
+  void SendDataToOpenGL();
+  bool CheckStatus(GLuint objectId,
+                   PFNGLGETSHADERIVPROC objectPropertyGetter,
+                   PFNGLGETSHADERINFOLOGPROC getInfoLogFunc,
+                   GLenum statusType);
+  bool CheckShaderStatus(GLuint shaderId);
+  bool CheckProgramStatus(GLuint programId);
+  std::string ReadShaderCode(const char *filename);
+  void InstallShaders();
 };
 
 //-------------------------------------------------------------------------------------------------

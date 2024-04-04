@@ -108,6 +108,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   }
 
   //signals
+  connect(this, &CMainWindow::LogMsgSig, this, &CMainWindow::OnLogMsg, Qt::QueuedConnection);
   connect(actNew, &QAction::triggered, this, &CMainWindow::OnNewTrack);
   connect(actLoad, &QAction::triggered, this, &CMainWindow::OnLoadTrack);
   connect(actSave, &QAction::triggered, this, &CMainWindow::OnSaveTrack);
@@ -269,6 +270,15 @@ CMainWindow::~CMainWindow()
 //-------------------------------------------------------------------------------------------------
 
 void CMainWindow::LogMessage(const QString &sMsg)
+{
+  //log messages can come from anywhere like OpenGL
+  //so we need to put this onto the GUI thread
+  emit LogMsgSig(sMsg);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnLogMsg(QString sMsg)
 {
   p->m_logDialog.LogMessage(sMsg);
 }

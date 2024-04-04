@@ -61,7 +61,7 @@ Camera camera;
 CTrackPreview::CTrackPreview(QWidget *pParent)
   : QGLWidget(QGLFormat(QGL::SampleBuffers), pParent)
 {
-  grabKeyboard();
+  //grabKeyboard();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -230,6 +230,14 @@ void CTrackPreview::paintGL()
 void CTrackPreview::resizeGL(int iWidth, int iHeight)
 {
   //GLCALL(glViewport(0, 0, width(), height()));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::mousePressEvent(QMouseEvent *pEvent)
+{
+  setFocus();
+  //lastPos = pEvent->pos();
 }
 
 //-------------------------------------------------------------------------------------------------

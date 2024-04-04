@@ -86,6 +86,11 @@ echo f | xcopy ..\external\glm\copying.txt .\$(OutDir)GLM_License.txt /R /Y /d /
 echo f | xcopy ..\external\TrackEditor_LicensedLibs.txt .\$(OutDir)LicensedLibs.txt /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
+echo Copying Shaders...
+echo f | xcopy .\FragmentShaderCode.glsl .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy .\VertexShaderCode.glsl .\$(OutDir) /R /Y /d /i &gt; null
+if %errorlevel% NEQ 0 goto Failed
+
 echo Post-Build Step for $(ProjectName) completed successfully
 exit 0
 
@@ -129,6 +134,11 @@ echo f | xcopy ..\external\Qt5\QT_License.txt .\$(OutDir) /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glew\GLEW_License.txt .\$(OutDir) /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glm\copying.txt .\$(OutDir)GLM_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\TrackEditor_LicensedLibs.txt .\$(OutDir)LicensedLibs.txt /R /Y /d /i &gt; null
+if %errorlevel% NEQ 0 goto Failed
+
+echo Copying Shaders...
+echo f | xcopy .\FragmentShaderCode.glsl .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy .\VertexShaderCode.glsl .\$(OutDir) /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
 echo Post-Build Step for $(ProjectName) completed successfully

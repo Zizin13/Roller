@@ -207,7 +207,7 @@ void CTrackPreview::initializeGL()
 
 void CTrackPreview::paintGL()
 {
-  glm::mat4 projectionMatrix = glm::perspective(20.0f,
+  glm::mat4 projectionMatrix = glm::perspective(30.0f,
                                                 ((float)width()) / height(),
                                                 0.1f, 10.0f);
 

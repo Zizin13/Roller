@@ -38,6 +38,7 @@ CTrackPreview::~CTrackPreview()
 const uint NUM_VERTICES_PER_TRI = 3;
 const uint NUM_FLOATS_PER_VERTICE = 6;
 const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
+GLuint programId;
 
 void sendDataToOpenGL()
 {
@@ -123,7 +124,7 @@ void installShaders()
   if (!checkShaderStatus(vertexShaderId) || !checkShaderStatus(fragmentShaderId))
     return;
 
-  GLuint programId = glCreateProgram();
+  programId = glCreateProgram();
   glAttachShader(programId, vertexShaderId);
   glAttachShader(programId, fragmentShaderId);
   glLinkProgram(programId);
@@ -154,6 +155,11 @@ void CTrackPreview::paintGL()
 {
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
   glViewport(0, 0, width(), height());
+
+  glm::vec3 dominatingColor(0.0f, 1.0f, 0.5f);
+  GLint dominatingColorUniformLocation = glGetUniformLocation(programId, "dominatingColor");
+  glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
+
   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
 }
 

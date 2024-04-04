@@ -49,6 +49,9 @@
     <ClCompile Include="moc\moc_TrackPreview.cpp">
       <Filter>Qt Generated Files\Moc Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ShapeGenerator.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Track.h">
@@ -79,6 +82,15 @@
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ChunkEditValues.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeData.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ShapeGenerator.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -143,5 +155,9 @@
     <ResourceCompile Include="TrackEditor.rc">
       <Filter>Resources</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="VertexShaderCode.glsl" />
+    <None Include="FragmentShaderCode.glsl" />
   </ItemGroup>
 </Project>

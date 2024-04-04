@@ -1,17 +1,31 @@
 #include "glew.h"
 #include "TrackPreview.h"
+#include "MainWindow.h"
+#include <fstream>
+#include "ShapeGenerator.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
 //-------------------------------------------------------------------------------------------------
 
+static void GLErrorCb(GLenum source,
+                      GLenum type,
+                      GLuint id,
+                      GLenum severity,
+                      GLsizei length,
+                      const GLchar *message,
+                      const void *userParam)
+{
+  (void)(source); (void)(type); (void)(id); (void)(severity); (void)(length); (void)(userParam);
+  g_pMainWindow->LogMessage("OpenGL Debug: " + QString(message));
+}
+
+//-------------------------------------------------------------------------------------------------
+
 CTrackPreview::CTrackPreview(QWidget *pParent)
   : QGLWidget(QGLFormat(QGL::SampleBuffers), pParent)
 {
-  xRot = 0;
-  yRot = 0;
-  zRot = 0;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -21,15 +35,104 @@ CTrackPreview::~CTrackPreview()
 
 }
 
-//-------------------------------------------------------------------------------------------------
+const uint NUM_VERTICES_PER_TRI = 3;
+const uint NUM_FLOATS_PER_VERTICE = 6;
+const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 
-static void NormalizeAngle(int &iAngle)
+void sendDataToOpenGL()
 {
-  while (iAngle < 0)
-    iAngle += 360 * 16;
-  while (iAngle > 360)
-    iAngle -= 360 * 16;
-};
+  ShapeData tri = ShapeGenerator::makeTriangle();
+
+  GLuint vertexBufId;
+  glGenBuffers(1, &vertexBufId);
+  glBindBuffer(GL_ARRAY_BUFFER, vertexBufId);
+  glBufferData(GL_ARRAY_BUFFER, tri.vertexBufSize(), tri.vertices, GL_STATIC_DRAW);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0);
+  glEnableVertexAttribArray(1);
+  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 3));
+
+  GLuint indexBufId;
+  glGenBuffers(1, &indexBufId);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufId);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, tri.indexBufSize(), tri.indices, GL_STATIC_DRAW);
+
+  tri.cleanup();
+}
+
+bool checkStatus(GLuint objectId,
+                 PFNGLGETSHADERIVPROC objectPropertyGetter,
+                 PFNGLGETSHADERINFOLOGPROC getInfoLogFunc,
+                 GLenum statusType)
+{
+  GLint status;
+  objectPropertyGetter(objectId, statusType, &status);
+  if (status != GL_TRUE) {
+    GLint infoLogLength;
+    objectPropertyGetter(objectId, GL_INFO_LOG_LENGTH, &infoLogLength);
+    GLchar *buffer = new GLchar[infoLogLength];
+    GLsizei bufferSize;
+    getInfoLogFunc(objectId, infoLogLength, &bufferSize, buffer);
+
+    g_pMainWindow->LogMessage(buffer);
+
+    delete[] buffer;
+    return false;
+  }
+  return true;
+
+}
+
+bool checkShaderStatus(GLuint shaderId)
+{
+  return checkStatus(shaderId, glGetShaderiv, glGetShaderInfoLog, GL_COMPILE_STATUS);
+}
+
+bool checkProgramStatus(GLuint programId)
+{
+  return checkStatus(programId, glGetProgramiv, glGetProgramInfoLog, GL_LINK_STATUS);
+}
+
+std::string readShaderCode(const char *filename)
+{
+  std::ifstream stream(filename);
+  if (!stream.good()) {
+    assert(0);
+  }
+  return std::string(
+    std::istreambuf_iterator<char>(stream),
+    std::istreambuf_iterator<char>());
+}
+
+void installShaders()
+{
+  GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+  GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+
+  const char *adapter[1];
+  std::string sTemp = readShaderCode("VertexShaderCode.glsl");
+  adapter[0] = sTemp.c_str();
+  glShaderSource(vertexShaderId, 1, adapter, 0);
+  sTemp = readShaderCode("FragmentShaderCode.glsl");
+  adapter[0] = sTemp.c_str();
+  glShaderSource(fragmentShaderId, 1, adapter, 0);
+
+  glCompileShader(vertexShaderId);
+  glCompileShader(fragmentShaderId);
+
+  if (!checkShaderStatus(vertexShaderId) || !checkShaderStatus(fragmentShaderId))
+    return;
+
+  GLuint programId = glCreateProgram();
+  glAttachShader(programId, vertexShaderId);
+  glAttachShader(programId, fragmentShaderId);
+  glLinkProgram(programId);
+
+  if (!checkProgramStatus(programId))
+    return;
+
+  glUseProgram(programId);
+}
 
 //-------------------------------------------------------------------------------------------------
 
@@ -38,143 +141,26 @@ void CTrackPreview::initializeGL()
   if (glewInit() != GLEW_OK)
     assert(0);
 
-  qglClearColor(Qt::black);
-
+  glEnable(GL_DEBUG_OUTPUT);
+  glDebugMessageCallback(GLErrorCb, 0);
   glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
-  glShadeModel(GL_SMOOTH);
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-
-  static GLfloat lightPosition[4] = { 0, 0, 10, 1.0 };
-  glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+  sendDataToOpenGL();
+  installShaders();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CTrackPreview::paintGL()
 {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glLoadIdentity();
-  glTranslatef(0.0, 0.0, -10.0);
-  glRotatef(xRot / 16.0, 1.0, 0.0, 0.0);
-  glRotatef(yRot / 16.0, 0.0, 1.0, 0.0);
-  glRotatef(zRot / 16.0, 0.0, 0.0, 1.0);
-  Draw();
+  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+  glViewport(0, 0, width(), height());
+  glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CTrackPreview::resizeGL(int iWidth, int iHeight)
 {
-  int iSide = qMin(iWidth, iHeight);
-  glViewport((iWidth - iSide) / 2, (iHeight - iSide) / 2, iSide, iSide);
-
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-#ifdef QT_OPENGL_ES_1
-  glOrthof(-2, +2, -2, +2, 1.0, 15.0);
-#else
-  glOrtho(-2, +2, -2, +2, 1.0, 15.0);
-#endif
-  glMatrixMode(GL_MODELVIEW);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrackPreview::mousePressEvent(QMouseEvent *pEvent)
-{
-  lastPos = pEvent->pos();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrackPreview::mouseMoveEvent(QMouseEvent *pEvent)
-{
-  int dx = pEvent->x() - lastPos.x();
-  int dy = pEvent->y() - lastPos.y();
-
-  if (pEvent->buttons() & Qt::LeftButton) {
-    SetXRotation(xRot + 8 * dy);
-    SetYRotation(yRot + 8 * dx);
-  } else if (pEvent->buttons() & Qt::RightButton) {
-    SetXRotation(xRot + 8 * dy);
-    SetZRotation(zRot + 8 * dx);
-  }
-
-  lastPos = pEvent->pos();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrackPreview::SetXRotation(int iAngle)
-{
-  NormalizeAngle(iAngle);
-  if (iAngle != xRot) {
-    xRot = iAngle;
-    updateGL();
-  }
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrackPreview::SetYRotation(int iAngle)
-{
-  NormalizeAngle(iAngle);
-  if (iAngle != yRot) {
-    yRot = iAngle;
-    updateGL();
-  }
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrackPreview::SetZRotation(int iAngle)
-{
-  NormalizeAngle(iAngle);
-  if (iAngle != zRot) {
-    zRot = iAngle;
-    updateGL();
-  }
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrackPreview::Draw()
-{
-  qglColor(Qt::red);
-  glBegin(GL_QUADS);
-  glNormal3f(0, 0, -1);
-  glVertex3f(-1, -1, 0);
-  glVertex3f(-1, 1, 0);
-  glVertex3f(1, 1, 0);
-  glVertex3f(1, -1, 0);
-
-  glEnd();
-  glBegin(GL_TRIANGLES);
-  glNormal3f(0, -1, 0.707f);
-  glVertex3f(-1, -1, 0);
-  glVertex3f(1, -1, 0);
-  glVertex3f(0, 0, 1.2f);
-  glEnd();
-  glBegin(GL_TRIANGLES);
-  glNormal3f(1, 0, 0.707f);
-  glVertex3f(1, -1, 0);
-  glVertex3f(1, 1, 0);
-  glVertex3f(0, 0, 1.2f);
-  glEnd();
-  glBegin(GL_TRIANGLES);
-  glNormal3f(0, 1, 0.707f);
-  glVertex3f(1, 1, 0);
-  glVertex3f(-1, 1, 0);
-  glVertex3f(0, 0, 1.2f);
-  glEnd();
-  glBegin(GL_TRIANGLES);
-  glNormal3f(-1, 0, 0.707f);
-  glVertex3f(-1, 1, 0);
-  glVertex3f(-1, -1, 0);
-  glVertex3f(0, 0, 1.2f);
-  glEnd();
 }
 
 //-------------------------------------------------------------------------------------------------

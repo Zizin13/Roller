@@ -3,6 +3,7 @@
 #include "qapplication.h"
 #include <qstring.h>
 #include "qdir.h"
+#include <QtCore>
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
   #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)

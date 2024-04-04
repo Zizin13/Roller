@@ -18,6 +18,7 @@ public:
   void LogMessage(const QString &sMsg);
 
 protected slots:
+  void OnLogMsg(QString sMsg);
   void OnNewTrack();
   void OnLoadTrack();
   void OnSaveTrack();
@@ -76,6 +77,9 @@ protected slots:
   void OnRUOuterWallChanged();
   void OnEnvirFloorChanged();
   void OnUnmangleTexturesToggled(bool bChecked);
+
+signals:
+  void LogMsgSig(QString sMsg);
 
 private:
   void LoadSettings();

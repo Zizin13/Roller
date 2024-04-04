@@ -15,6 +15,17 @@ protected:
   void initializeGL();
   void paintGL();
   void resizeGL(int iWidth, int iHeight);
+
+private:
+  void sendDataToOpenGL();
+  bool checkStatus(GLuint objectId,
+                   PFNGLGETSHADERIVPROC objectPropertyGetter,
+                   PFNGLGETSHADERINFOLOGPROC getInfoLogFunc,
+                   GLenum statusType);
+  bool checkShaderStatus(GLuint shaderId);
+  bool checkProgramStatus(GLuint programId);
+  std::string readShaderCode(const char *filename);
+  void installShaders();
 };
 
 //-------------------------------------------------------------------------------------------------

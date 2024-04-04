@@ -69,7 +69,7 @@ CTrackPreview::~CTrackPreview()
   glDeleteProgram(programId);
 }
 
-void sendDataToOpenGL()
+void CTrackPreview::sendDataToOpenGL()
 {
   ShapeData shape = ShapeGenerator::makeCube();
 
@@ -88,9 +88,36 @@ void sendDataToOpenGL()
   GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.indexBufSize(), shape.indices, GL_STATIC_DRAW));
   numIndices = shape.numIndices;
   shape.cleanup();
+
+  GLuint transformationMatrixBufferId;
+  glGenBuffers(1, &transformationMatrixBufferId);
+  glBindBuffer(GL_ARRAY_BUFFER, transformationMatrixBufferId);
+
+
+  glm::mat4 projectionMatrix = glm::perspective(60.0f,
+                                                ((float)width()) / height(),
+                                                0.1f, 10.0f);
+  glm::mat4 fullTransforms[] =
+  {
+    projectionMatrix * glm::translate(glm::vec3(-1.0f, 0.0f, -3.0f)) * glm::rotate(36.0f, glm::vec3(1.0f, 0.0f, 0.0f)),
+    projectionMatrix * glm::translate(glm::vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(126.0f, glm::vec3(0.0f, 1.0f, 0.0f))
+  };
+  glBufferData(GL_ARRAY_BUFFER, sizeof(fullTransforms), fullTransforms, GL_STATIC_DRAW);
+  glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(float) * 0));
+  glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(float) * 4));
+  glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(float) * 8));
+  glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(float) * 12));
+  glEnableVertexAttribArray(2);
+  glEnableVertexAttribArray(3);
+  glEnableVertexAttribArray(4);
+  glEnableVertexAttribArray(5);
+  glVertexAttribDivisor(2, 1);
+  glVertexAttribDivisor(3, 1);
+  glVertexAttribDivisor(4, 1);
+  glVertexAttribDivisor(5, 1);
 }
 
-bool checkStatus(GLuint objectId,
+bool CTrackPreview::checkStatus(GLuint objectId,
                  PFNGLGETSHADERIVPROC objectPropertyGetter,
                  PFNGLGETSHADERINFOLOGPROC getInfoLogFunc,
                  GLenum statusType)
@@ -113,17 +140,17 @@ bool checkStatus(GLuint objectId,
 
 }
 
-bool checkShaderStatus(GLuint shaderId)
+bool CTrackPreview::checkShaderStatus(GLuint shaderId)
 {
   return checkStatus(shaderId, glGetShaderiv, glGetShaderInfoLog, GL_COMPILE_STATUS);
 }
 
-bool checkProgramStatus(GLuint programId)
+bool CTrackPreview::checkProgramStatus(GLuint programId)
 {
   return checkStatus(programId, glGetProgramiv, glGetProgramInfoLog, GL_LINK_STATUS);
 }
 
-std::string readShaderCode(const char *filename)
+std::string CTrackPreview::readShaderCode(const char *filename)
 {
   std::ifstream stream(filename);
   if (!stream.good()) {
@@ -134,7 +161,7 @@ std::string readShaderCode(const char *filename)
     std::istreambuf_iterator<char>());
 }
 
-void installShaders()
+void CTrackPreview::installShaders()
 {
   GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
   GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
@@ -188,30 +215,7 @@ void CTrackPreview::paintGL()
   GLCALL(glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
   GLCALL(glViewport(0, 0, width(), height()));
 
-
-  GLCALL(GLint fullTransformMatrixUniformLocation =
-    glGetUniformLocation(programId, "fullTransformMatrix"));
-
-  glm::mat4 fullTransformMatrix;
-  glm::mat4 projectionMatrix = glm::perspective(60.0f,
-                                                ((float)width()) / height(),
-                                                0.1f, 10.0f);
-
-  //cube1
-  glm::mat4 translationMatrix = glm::translate(glm::vec3(-1.0f, 0.0f, -3.0f));
-  glm::mat4 rotationMatrix = glm::rotate(36.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-  fullTransformMatrix = projectionMatrix * translationMatrix * rotationMatrix;
-  GLCALL(glUniformMatrix4fv(fullTransformMatrixUniformLocation, 1,
-                     GL_FALSE, &fullTransformMatrix[0][0]));
-  GLCALL(glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0));
-
-  //cube2
-  translationMatrix = glm::translate(glm::vec3(1.0f, 0.0f, -3.75f));
-  rotationMatrix = glm::rotate(126.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-  fullTransformMatrix = projectionMatrix * translationMatrix * rotationMatrix;
-  GLCALL(glUniformMatrix4fv(fullTransformMatrixUniformLocation, 1,
-                            GL_FALSE, &fullTransformMatrix[0][0]));
-  GLCALL(glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0));
+  GLCALL(glDrawElementsInstanced(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0, 2));
 }
 
 //-------------------------------------------------------------------------------------------------

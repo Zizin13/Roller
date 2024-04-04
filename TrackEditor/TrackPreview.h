@@ -15,6 +15,7 @@ protected:
   void initializeGL();
   void paintGL();
   void resizeGL(int iWidth, int iHeight);
+  void mouseMoveEvent(QMouseEvent *pEvent);
 
 private:
   void sendDataToOpenGL();

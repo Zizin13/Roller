@@ -5,6 +5,7 @@
 #include "ShapeGenerator.h"
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
+#include "Camera.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -55,6 +56,7 @@ const uint NUM_FLOATS_PER_VERTICE = 6;
 const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 GLuint programId;
 GLuint numIndices;
+Camera camera;
 
 CTrackPreview::CTrackPreview(QWidget *pParent)
   : QGLWidget(QGLFormat(QGL::SampleBuffers), pParent)
@@ -94,15 +96,7 @@ void CTrackPreview::sendDataToOpenGL()
   glBindBuffer(GL_ARRAY_BUFFER, transformationMatrixBufferId);
 
 
-  glm::mat4 projectionMatrix = glm::perspective(60.0f,
-                                                ((float)width()) / height(),
-                                                0.1f, 10.0f);
-  glm::mat4 fullTransforms[] =
-  {
-    projectionMatrix * glm::translate(glm::vec3(-1.0f, 0.0f, -3.0f)) * glm::rotate(36.0f, glm::vec3(1.0f, 0.0f, 0.0f)),
-    projectionMatrix * glm::translate(glm::vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(126.0f, glm::vec3(0.0f, 1.0f, 0.0f))
-  };
-  glBufferData(GL_ARRAY_BUFFER, sizeof(fullTransforms), fullTransforms, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * 2, 0, GL_DYNAMIC_DRAW);
   glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(float) * 0));
   glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(float) * 4));
   glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(float) * 8));
@@ -198,6 +192,7 @@ void CTrackPreview::installShaders()
 
 void CTrackPreview::initializeGL()
 {
+  setMouseTracking(true);
   if (glewInit() != GLEW_OK)
     assert(0);
 
@@ -212,6 +207,17 @@ void CTrackPreview::initializeGL()
 
 void CTrackPreview::paintGL()
 {
+  glm::mat4 projectionMatrix = glm::perspective(60.0f,
+                                                ((float)width()) / height(),
+                                                0.1f, 10.0f);
+
+  glm::mat4 fullTransforms[] =
+  {
+    projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(glm::vec3(-1.0f, 0.0f, -3.0f)) * glm::rotate(36.0f, glm::vec3(1.0f, 0.0f, 0.0f)),
+    projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(glm::vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(126.0f, glm::vec3(0.0f, 1.0f, 0.0f))
+  };
+  glBufferData(GL_ARRAY_BUFFER, sizeof(fullTransforms), fullTransforms, GL_DYNAMIC_DRAW);
+
   GLCALL(glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
   GLCALL(glViewport(0, 0, width(), height()));
 
@@ -223,6 +229,14 @@ void CTrackPreview::paintGL()
 void CTrackPreview::resizeGL(int iWidth, int iHeight)
 {
   //GLCALL(glViewport(0, 0, width(), height()));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::mouseMoveEvent(QMouseEvent *pEvent)
+{
+  camera.mouseUpdate(glm::vec2(pEvent->x(), pEvent->y()));
+  repaint();
 }
 
 //-------------------------------------------------------------------------------------------------

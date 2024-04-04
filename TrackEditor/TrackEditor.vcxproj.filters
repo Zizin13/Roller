@@ -52,6 +52,9 @@
     <ClCompile Include="ShapeGenerator.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Track.h">
@@ -91,6 +94,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="Vertex.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -58,6 +58,8 @@ GLuint programId;
 GLuint numIndices;
 Camera camera;
 
+//-------------------------------------------------------------------------------------------------
+
 CTrackPreview::CTrackPreview(QWidget *pParent)
   : QGLWidget(QGLFormat(QGL::SampleBuffers), pParent)
 {
@@ -72,14 +74,16 @@ CTrackPreview::~CTrackPreview()
   glDeleteProgram(programId);
 }
 
-void CTrackPreview::sendDataToOpenGL()
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::SendDataToOpenGL()
 {
-  ShapeData shape = ShapeGenerator::makeCube();
+  tShapeData shape = ShapeGenerator::MakeCube();
 
   GLuint vertexBufId;
   GLCALL(glGenBuffers(1, &vertexBufId));
   GLCALL(glBindBuffer(GL_ARRAY_BUFFER, vertexBufId));
-  GLCALL(glBufferData(GL_ARRAY_BUFFER, shape.vertexBufSize(), shape.vertices, GL_STATIC_DRAW));
+  GLCALL(glBufferData(GL_ARRAY_BUFFER, shape.VertexBufSize(), shape.vertices, GL_STATIC_DRAW));
   GLCALL(glEnableVertexAttribArray(0));
   GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0));
   GLCALL(glEnableVertexAttribArray(1));
@@ -88,9 +92,9 @@ void CTrackPreview::sendDataToOpenGL()
   GLuint indexBufId;
   GLCALL(glGenBuffers(1, &indexBufId));
   GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufId));
-  GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.indexBufSize(), shape.indices, GL_STATIC_DRAW));
+  GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.IndexBufSize(), shape.indices, GL_STATIC_DRAW));
   numIndices = shape.numIndices;
-  shape.cleanup();
+  shape.Cleanup();
 
   GLuint transformationMatrixBufferId;
   glGenBuffers(1, &transformationMatrixBufferId);
@@ -112,7 +116,9 @@ void CTrackPreview::sendDataToOpenGL()
   glVertexAttribDivisor(5, 1);
 }
 
-bool CTrackPreview::checkStatus(GLuint objectId,
+//-------------------------------------------------------------------------------------------------
+
+bool CTrackPreview::CheckStatus(GLuint objectId,
                  PFNGLGETSHADERIVPROC objectPropertyGetter,
                  PFNGLGETSHADERINFOLOGPROC getInfoLogFunc,
                  GLenum statusType)
@@ -135,17 +141,23 @@ bool CTrackPreview::checkStatus(GLuint objectId,
 
 }
 
-bool CTrackPreview::checkShaderStatus(GLuint shaderId)
+//-------------------------------------------------------------------------------------------------
+
+bool CTrackPreview::CheckShaderStatus(GLuint shaderId)
 {
-  return checkStatus(shaderId, glGetShaderiv, glGetShaderInfoLog, GL_COMPILE_STATUS);
+  return CheckStatus(shaderId, glGetShaderiv, glGetShaderInfoLog, GL_COMPILE_STATUS);
 }
 
-bool CTrackPreview::checkProgramStatus(GLuint programId)
+//-------------------------------------------------------------------------------------------------
+
+bool CTrackPreview::CheckProgramStatus(GLuint programId)
 {
-  return checkStatus(programId, glGetProgramiv, glGetProgramInfoLog, GL_LINK_STATUS);
+  return CheckStatus(programId, glGetProgramiv, glGetProgramInfoLog, GL_LINK_STATUS);
 }
 
-std::string CTrackPreview::readShaderCode(const char *filename)
+//-------------------------------------------------------------------------------------------------
+
+std::string CTrackPreview::ReadShaderCode(const char *filename)
 {
   std::ifstream stream(filename);
   if (!stream.good()) {
@@ -156,23 +168,25 @@ std::string CTrackPreview::readShaderCode(const char *filename)
     std::istreambuf_iterator<char>());
 }
 
-void CTrackPreview::installShaders()
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::InstallShaders()
 {
   GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
   GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
 
   const char *adapter[1];
-  std::string sTemp = readShaderCode("VertexShaderCode.glsl");
+  std::string sTemp = ReadShaderCode("VertexShaderCode.glsl");
   adapter[0] = sTemp.c_str();
   glShaderSource(vertexShaderId, 1, adapter, 0);
-  sTemp = readShaderCode("FragmentShaderCode.glsl");
+  sTemp = ReadShaderCode("FragmentShaderCode.glsl");
   adapter[0] = sTemp.c_str();
   glShaderSource(fragmentShaderId, 1, adapter, 0);
 
   glCompileShader(vertexShaderId);
   glCompileShader(fragmentShaderId);
 
-  if (!checkShaderStatus(vertexShaderId) || !checkShaderStatus(fragmentShaderId))
+  if (!CheckShaderStatus(vertexShaderId) || !CheckShaderStatus(fragmentShaderId))
     return;
 
   programId = glCreateProgram();
@@ -180,7 +194,7 @@ void CTrackPreview::installShaders()
   glAttachShader(programId, fragmentShaderId);
   glLinkProgram(programId);
 
-  if (!checkProgramStatus(programId))
+  if (!CheckProgramStatus(programId))
     return;
 
   glDeleteShader(vertexShaderId);
@@ -200,8 +214,8 @@ void CTrackPreview::initializeGL()
   glEnable(GL_DEBUG_OUTPUT);
   glDebugMessageCallback(GLErrorCb, 0);
   glEnable(GL_DEPTH_TEST);
-  sendDataToOpenGL();
-  installShaders();
+  SendDataToOpenGL();
+  InstallShaders();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -214,8 +228,8 @@ void CTrackPreview::paintGL()
 
   glm::mat4 fullTransforms[] =
   {
-    projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(glm::vec3(-1.0f, 0.0f, -3.0f)) * glm::rotate(glm::radians(36.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
-    projectionMatrix * camera.getWorldToViewMatrix() * glm::translate(glm::vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(glm::radians(126.0f), glm::vec3(0.0f, 1.0f, 0.0f))
+    projectionMatrix * camera.GetWorldToViewMatrix() * glm::translate(glm::vec3(-1.0f, 0.0f, -3.0f)) * glm::rotate(glm::radians(36.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
+    projectionMatrix * camera.GetWorldToViewMatrix() * glm::translate(glm::vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(glm::radians(126.0f), glm::vec3(0.0f, 1.0f, 0.0f))
   };
   glBufferData(GL_ARRAY_BUFFER, sizeof(fullTransforms), fullTransforms, GL_DYNAMIC_DRAW);
 
@@ -244,7 +258,7 @@ void CTrackPreview::mousePressEvent(QMouseEvent *pEvent)
 
 void CTrackPreview::mouseMoveEvent(QMouseEvent *pEvent)
 {
-  camera.mouseUpdate(glm::vec2(pEvent->x(), pEvent->y()));
+  camera.MouseUpdate(glm::vec2(pEvent->x(), pEvent->y()));
   repaint();
 }
 
@@ -254,22 +268,22 @@ void CTrackPreview::keyPressEvent(QKeyEvent *pEvent)
 {
   switch (pEvent->key()) {
     case Qt::Key::Key_W:
-      camera.moveForward();
+      camera.MoveForward();
       break;
     case Qt::Key::Key_S:
-      camera.moveBackward();
+      camera.MoveBackward();
       break;
     case Qt::Key::Key_A:
-      camera.strafeLeft();
+      camera.StrafeLeft();
       break;
     case Qt::Key::Key_D:
-      camera.strafeRight();
+      camera.StrafeRight();
       break;
     case Qt::Key::Key_R:
-      camera.moveUp();
+      camera.MoveUp();
       break;
     case Qt::Key::Key_F:
-      camera.moveDown();
+      camera.MoveDown();
       break;
   }
   repaint();

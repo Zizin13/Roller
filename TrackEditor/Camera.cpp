@@ -1,60 +1,83 @@
 #include "Camera.h"
 #include "gtx\transform.hpp"
+//-------------------------------------------------------------------------------------------------
+const float MOVEMENT_SPEED = 0.3f;
+//-------------------------------------------------------------------------------------------------
 
 Camera::Camera()
-  : viewDirection(0.0f, 0.0f, -1.0f)
-  , UP(0.0f, 1.0f, 0.0f)
+  : m_viewDirection(0.0f, 0.0f, -1.0f)
+  , m_UP(0.0f, 1.0f, 0.0f)
 {
 
 }
 
-void Camera::mouseUpdate(const glm::vec2 &newMousePos)
+//-------------------------------------------------------------------------------------------------
+
+void Camera::MouseUpdate(const glm::vec2 &newMousePos)
 {
-  glm::vec2 mouseDelta = newMousePos - oldMousePos;
+  glm::vec2 mouseDelta = newMousePos - m_oldMousePos;
   if (glm::length(mouseDelta) > 50.0f) {
-    oldMousePos = newMousePos;
+    m_oldMousePos = newMousePos;
     return;
   }
   const float ROTATIONAL_SPEED = 0.5f;
-  glm::vec3 toRotateAround = glm::cross(viewDirection, UP);
-  glm::mat4 rotator = glm::rotate(glm::radians(mouseDelta.x * ROTATIONAL_SPEED), UP) *
+  glm::vec3 toRotateAround = glm::cross(m_viewDirection, m_UP);
+  glm::mat4 rotator = glm::rotate(glm::radians(mouseDelta.x * ROTATIONAL_SPEED), m_UP) *
     glm::rotate(glm::radians(mouseDelta.y * ROTATIONAL_SPEED), toRotateAround);
-  viewDirection = glm::mat3(rotator) * viewDirection;
+  m_viewDirection = glm::mat3(rotator) * m_viewDirection;
 
-  oldMousePos = newMousePos;
-}
-
-glm::mat4 Camera::getWorldToViewMatrix() const
-{
-  return glm::lookAt(position, position + viewDirection, UP);
+  m_oldMousePos = newMousePos;
 }
 
-const float MOVEMENT_SPEED = 0.3f;
+//-------------------------------------------------------------------------------------------------
 
-void Camera::moveForward()
+glm::mat4 Camera::GetWorldToViewMatrix() const
 {
-  position += MOVEMENT_SPEED * viewDirection;
+  return glm::lookAt(m_position, m_position + m_viewDirection, m_UP);
 }
 
-void Camera::moveBackward()
+//-------------------------------------------------------------------------------------------------
+
+void Camera::MoveForward()
 {
-  position -= MOVEMENT_SPEED * viewDirection;
+  m_position += MOVEMENT_SPEED * m_viewDirection;
 }
-void Camera::strafeLeft()
+
+//-------------------------------------------------------------------------------------------------
+
+void Camera::MoveBackward()
 {
-  glm::vec3 strafeDirection = glm::cross(viewDirection, UP);
-  position += MOVEMENT_SPEED * strafeDirection;
+  m_position -= MOVEMENT_SPEED * m_viewDirection;
 }
-void Camera::strafeRight()
+
+//-------------------------------------------------------------------------------------------------
+
+void Camera::StrafeLeft()
 {
-  glm::vec3 strafeDirection = glm::cross(viewDirection, UP);
-  position -= MOVEMENT_SPEED * strafeDirection;
+  glm::vec3 strafeDirection = glm::cross(m_viewDirection, m_UP);
+  m_position += MOVEMENT_SPEED * strafeDirection;
 }
-void Camera::moveUp()
+
+//-------------------------------------------------------------------------------------------------
+
+void Camera::StrafeRight()
 {
-  position -= MOVEMENT_SPEED * UP;
+  glm::vec3 strafeDirection = glm::cross(m_viewDirection, m_UP);
+  m_position -= MOVEMENT_SPEED * strafeDirection;
 }
-void Camera::moveDown()
+
+//-------------------------------------------------------------------------------------------------
+
+void Camera::MoveUp()
 {
-  position += MOVEMENT_SPEED * UP;
+  m_position -= MOVEMENT_SPEED * m_UP;
 }
+
+//-------------------------------------------------------------------------------------------------
+
+void Camera::MoveDown()
+{
+  m_position += MOVEMENT_SPEED * m_UP;
+}
+
+//-------------------------------------------------------------------------------------------------

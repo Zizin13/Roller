@@ -20,15 +20,15 @@ protected:
   void keyPressEvent(QKeyEvent *pEvent);
 
 private:
-  void sendDataToOpenGL();
-  bool checkStatus(GLuint objectId,
+  void SendDataToOpenGL();
+  bool CheckStatus(GLuint objectId,
                    PFNGLGETSHADERIVPROC objectPropertyGetter,
                    PFNGLGETSHADERINFOLOGPROC getInfoLogFunc,
                    GLenum statusType);
-  bool checkShaderStatus(GLuint shaderId);
-  bool checkProgramStatus(GLuint programId);
-  std::string readShaderCode(const char *filename);
-  void installShaders();
+  bool CheckShaderStatus(GLuint shaderId);
+  bool CheckProgramStatus(GLuint programId);
+  std::string ReadShaderCode(const char *filename);
+  void InstallShaders();
 };
 
 //-------------------------------------------------------------------------------------------------

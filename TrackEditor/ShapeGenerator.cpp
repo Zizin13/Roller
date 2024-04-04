@@ -1,12 +1,14 @@
 #include "glm.hpp"
 #include "ShapeGenerator.h"
 #include "Vertex.h"
+//-------------------------------------------------------------------------------------------------
 #define NUM_ARRAY_ELEMENTS(a) sizeof(a) / sizeof(*a)
+//-------------------------------------------------------------------------------------------------
 
-ShapeData ShapeGenerator::makeTriangle()
+tShapeData ShapeGenerator::MakeTriangle()
 {
-  ShapeData ret;
-  Vertex myTri[] = {
+  tShapeData ret;
+  tVertex myTri[] = {
     glm::vec3(+0.0f, +1.0f, +0.0f),
     glm::vec3(+1.0f, +0.0f, +0.0f),
     glm::vec3(-1.0f, -1.0f, +0.0f),
@@ -15,7 +17,7 @@ ShapeData ShapeGenerator::makeTriangle()
     glm::vec3(+0.0f, +0.0f, +1.0f),
   };
   ret.numVertices = NUM_ARRAY_ELEMENTS(myTri);
-  ret.vertices = new Vertex[ret.numVertices];
+  ret.vertices = new tVertex[ret.numVertices];
   memcpy(ret.vertices, myTri, sizeof(myTri));
 
   GLushort indices[] = { 0, 1, 2 };
@@ -26,10 +28,12 @@ ShapeData ShapeGenerator::makeTriangle()
   return ret;
 }
 
-ShapeData ShapeGenerator::makeCube()
+//-------------------------------------------------------------------------------------------------
+
+tShapeData ShapeGenerator::MakeCube()
 {
-  ShapeData ret;
-  Vertex stackVerts[] = {
+  tShapeData ret;
+  tVertex stackVerts[] = {
     glm::vec3(-1.0f, +1.0f, +1.0f), //0
     glm::vec3(+1.0f, +0.0f, +0.0f), //color
     glm::vec3(+1.0f, +1.0f, +1.0f), //1
@@ -85,7 +89,7 @@ ShapeData ShapeGenerator::makeCube()
     glm::vec3(+0.9f, +1.0f, +0.2f), //color
   };
   ret.numVertices = NUM_ARRAY_ELEMENTS(stackVerts);
-  ret.vertices = new Vertex[ret.numVertices];
+  ret.vertices = new tVertex[ret.numVertices];
   memcpy(ret.vertices, stackVerts, sizeof(stackVerts));
 
   GLushort indices[] = { 
@@ -102,3 +106,5 @@ ShapeData ShapeGenerator::makeCube()
 
   return ret;
 }
+
+//-------------------------------------------------------------------------------------------------

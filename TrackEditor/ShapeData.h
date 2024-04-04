@@ -1,25 +1,30 @@
-#pragma once
+#ifndef _TRACKEDITOR_SHAPEDATA_H
+#define _TRACKEDITOR_SHAPEDATA_H
+//-------------------------------------------------------------------------------------------------
 #include <glew.h>
 #include "Vertex.h"
-
-struct ShapeData
+//-------------------------------------------------------------------------------------------------
+struct tShapeData
 {
-  ShapeData() : vertices(0), numVertices(0), indices(0), numIndices(0) {};
-  Vertex *vertices;
+  tShapeData() : vertices(0), numVertices(0), indices(0), numIndices(0) {};
+  tVertex *vertices;
   GLuint numVertices;
   GLushort *indices;
   GLuint numIndices;
-  GLsizeiptr vertexBufSize() const
+
+  GLsizeiptr VertexBufSize() const
   {
-    return numVertices * sizeof(Vertex);
+    return numVertices * sizeof(tVertex);
   }
-  GLsizeiptr indexBufSize() const
+  GLsizeiptr IndexBufSize() const
   {
     return numIndices * sizeof(GLushort);
   }
-  void cleanup()
+  void Cleanup()
   {
     delete[] vertices;
     delete[] indices;
   }
 };
+//-------------------------------------------------------------------------------------------------
+#endif

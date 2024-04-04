@@ -156,10 +156,18 @@ void CTrackPreview::paintGL()
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
   glViewport(0, 0, width(), height());
 
-  glm::vec3 dominatingColor(0.0f, 1.0f, 0.5f);
   GLint dominatingColorUniformLocation = glGetUniformLocation(programId, "dominatingColor");
-  glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
+  GLint yFlipUniformLocation = glGetUniformLocation(programId, "yFlip");
+  glm::vec3 dominatingColor(1.0f, 0.0f, 0.0f);
 
+  glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
+  glUniform1f(yFlipUniformLocation, 1.0f);
+  glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
+
+  dominatingColor.r = 0;
+  dominatingColor.b = 1;
+  glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
+  glUniform1f(yFlipUniformLocation, -1.0f);
   glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
 }
 

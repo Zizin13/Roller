@@ -3,10 +3,16 @@
 #include "MainWindow.h"
 #include <fstream>
 #include "ShapeGenerator.h"
+#include "gtc/matrix_transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
+//-------------------------------------------------------------------------------------------------
+#define ASSERT(x) if (!(x)) __debugbreak();
+#define GLCALL(x) GLClearError();\
+  x;\
+  ASSERT(GLLogCall(#x,__FILE__,__LINE__))
 //-------------------------------------------------------------------------------------------------
 
 static void GLErrorCb(GLenum source,
@@ -19,6 +25,26 @@ static void GLErrorCb(GLenum source,
 {
   (void)(source); (void)(type); (void)(id); (void)(severity); (void)(length); (void)(userParam);
   g_pMainWindow->LogMessage("OpenGL Debug: " + QString(message));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+static void GLClearError()
+{
+  while (glGetError());
+}
+
+//-------------------------------------------------------------------------------------------------
+
+static bool GLLogCall(const char *szFunction, const char *szFile, int iLine)
+{
+  while (GLenum error = glGetError()) {
+    char szOut[100];
+    snprintf(szOut, sizeof(szOut), "OpenGL Error (%d): %s %s %d", (int)error, szFunction, szFile, iLine);
+    OutputDebugString(szOut);
+    return false;
+  }
+  return true;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -39,26 +65,27 @@ const uint NUM_VERTICES_PER_TRI = 3;
 const uint NUM_FLOATS_PER_VERTICE = 6;
 const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 GLuint programId;
+GLuint numIndices;
 
 void sendDataToOpenGL()
 {
-  ShapeData tri = ShapeGenerator::makeTriangle();
+  ShapeData shape = ShapeGenerator::makeCube();
 
   GLuint vertexBufId;
-  glGenBuffers(1, &vertexBufId);
-  glBindBuffer(GL_ARRAY_BUFFER, vertexBufId);
-  glBufferData(GL_ARRAY_BUFFER, tri.vertexBufSize(), tri.vertices, GL_STATIC_DRAW);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0);
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 3));
+  GLCALL(glGenBuffers(1, &vertexBufId));
+  GLCALL(glBindBuffer(GL_ARRAY_BUFFER, vertexBufId));
+  GLCALL(glBufferData(GL_ARRAY_BUFFER, shape.vertexBufSize(), shape.vertices, GL_STATIC_DRAW));
+  GLCALL(glEnableVertexAttribArray(0));
+  GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0));
+  GLCALL(glEnableVertexAttribArray(1));
+  GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 3)));
 
   GLuint indexBufId;
-  glGenBuffers(1, &indexBufId);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufId);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, tri.indexBufSize(), tri.indices, GL_STATIC_DRAW);
-
-  tri.cleanup();
+  GLCALL(glGenBuffers(1, &indexBufId));
+  GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufId));
+  GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.indexBufSize(), shape.indices, GL_STATIC_DRAW));
+  numIndices = shape.numIndices;
+  shape.cleanup();
 }
 
 bool checkStatus(GLuint objectId,
@@ -153,22 +180,22 @@ void CTrackPreview::initializeGL()
 
 void CTrackPreview::paintGL()
 {
-  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-  glViewport(0, 0, width(), height());
+  GLCALL(glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
+  GLCALL(glViewport(0, 0, width(), height()));
 
-  GLint dominatingColorUniformLocation = glGetUniformLocation(programId, "dominatingColor");
-  GLint yFlipUniformLocation = glGetUniformLocation(programId, "yFlip");
-  glm::vec3 dominatingColor(1.0f, 0.0f, 0.0f);
+  glm::mat4 projectionMatrix = glm::perspective(60.0f,
+                                                ((float)width()) / ((float)height()),
+                                                0.1f, 10.0f);
+  glm::mat4 projectionTranslationMatrix = glm::translate(projectionMatrix, glm::vec3(0.0f, 0.0f, -3.0f));
+  glm::mat4 fullTransformMatrix = glm::rotate(projectionTranslationMatrix, 54.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
-  glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
-  glUniform1f(yFlipUniformLocation, 1.0f);
-  glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
+  GLCALL(GLint fullTransformMatrixUniformLocation =
+    glGetUniformLocation(programId, "fullTransformMatrix"));
 
-  dominatingColor.r = 0;
-  dominatingColor.b = 1;
-  glUniform3fv(dominatingColorUniformLocation, 1, &dominatingColor[0]);
-  glUniform1f(yFlipUniformLocation, -1.0f);
-  glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
+  GLCALL(glUniformMatrix4fv(fullTransformMatrixUniformLocation, 1,
+                     GL_FALSE, &fullTransformMatrix[0][0]));
+
+  GLCALL(glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0));
 }
 
 //-------------------------------------------------------------------------------------------------

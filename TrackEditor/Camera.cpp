@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include "gtx\transform.hpp"
 //-------------------------------------------------------------------------------------------------
-const float MOVEMENT_SPEED = 0.3f;
+const float Camera::MOVEMENT_SPEED = 0.2f;
 //-------------------------------------------------------------------------------------------------
 
 Camera::Camera()
@@ -20,10 +20,10 @@ void Camera::MouseUpdate(const glm::vec2 &newMousePos)
     m_oldMousePos = newMousePos;
     return;
   }
-  const float ROTATIONAL_SPEED = 0.5f;
-  glm::vec3 toRotateAround = glm::cross(m_viewDirection, m_UP);
+  const float ROTATIONAL_SPEED = 0.3f;
+  m_strafeDirection = glm::cross(m_viewDirection, m_UP);
   glm::mat4 rotator = glm::rotate(glm::radians(mouseDelta.x * ROTATIONAL_SPEED), m_UP) *
-    glm::rotate(glm::radians(mouseDelta.y * ROTATIONAL_SPEED), toRotateAround);
+    glm::rotate(glm::radians(mouseDelta.y * ROTATIONAL_SPEED), m_strafeDirection);
   m_viewDirection = glm::mat3(rotator) * m_viewDirection;
 
   m_oldMousePos = newMousePos;
@@ -54,16 +54,14 @@ void Camera::MoveBackward()
 
 void Camera::StrafeLeft()
 {
-  glm::vec3 strafeDirection = glm::cross(m_viewDirection, m_UP);
-  m_position += MOVEMENT_SPEED * strafeDirection;
+  m_position += MOVEMENT_SPEED * m_strafeDirection;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void Camera::StrafeRight()
 {
-  glm::vec3 strafeDirection = glm::cross(m_viewDirection, m_UP);
-  m_position -= MOVEMENT_SPEED * strafeDirection;
+  m_position -= MOVEMENT_SPEED * m_strafeDirection;
 }
 
 //-------------------------------------------------------------------------------------------------

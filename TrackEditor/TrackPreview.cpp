@@ -61,6 +61,7 @@ Camera camera;
 CTrackPreview::CTrackPreview(QWidget *pParent)
   : QGLWidget(QGLFormat(QGL::SampleBuffers), pParent)
 {
+  grabKeyboard();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -236,6 +237,33 @@ void CTrackPreview::resizeGL(int iWidth, int iHeight)
 void CTrackPreview::mouseMoveEvent(QMouseEvent *pEvent)
 {
   camera.mouseUpdate(glm::vec2(pEvent->x(), pEvent->y()));
+  repaint();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::keyPressEvent(QKeyEvent *pEvent)
+{
+  switch (pEvent->key()) {
+    case Qt::Key::Key_W:
+      camera.moveForward();
+      break;
+    case Qt::Key::Key_S:
+      camera.moveBackward();
+      break;
+    case Qt::Key::Key_A:
+      camera.strafeLeft();
+      break;
+    case Qt::Key::Key_D:
+      camera.strafeRight();
+      break;
+    case Qt::Key::Key_R:
+      camera.moveUp();
+      break;
+    case Qt::Key::Key_F:
+      camera.moveDown();
+      break;
+  }
   repaint();
 }
 

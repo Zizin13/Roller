@@ -41,13 +41,19 @@ static bool GLLogCall(const char *szFunction, const char *szFile, int iLine)
   while (GLenum error = glGetError()) {
     char szOut[100];
     snprintf(szOut, sizeof(szOut), "OpenGL Error (%d): %s %s %d", (int)error, szFunction, szFile, iLine);
-    OutputDebugString(szOut);
+    g_pMainWindow->LogMessage(szOut);
     return false;
   }
   return true;
 }
 
 //-------------------------------------------------------------------------------------------------
+
+const uint NUM_VERTICES_PER_TRI = 3;
+const uint NUM_FLOATS_PER_VERTICE = 6;
+const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
+GLuint programId;
+GLuint numIndices;
 
 CTrackPreview::CTrackPreview(QWidget *pParent)
   : QGLWidget(QGLFormat(QGL::SampleBuffers), pParent)
@@ -58,14 +64,9 @@ CTrackPreview::CTrackPreview(QWidget *pParent)
 
 CTrackPreview::~CTrackPreview()
 {
-
+  glUseProgram(0);
+  glDeleteProgram(programId);
 }
-
-const uint NUM_VERTICES_PER_TRI = 3;
-const uint NUM_FLOATS_PER_VERTICE = 6;
-const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
-GLuint programId;
-GLuint numIndices;
 
 void sendDataToOpenGL()
 {
@@ -159,6 +160,9 @@ void installShaders()
   if (!checkProgramStatus(programId))
     return;
 
+  glDeleteShader(vertexShaderId);
+  glDeleteShader(fragmentShaderId);
+
   glUseProgram(programId);
 }
 
@@ -183,6 +187,7 @@ void CTrackPreview::paintGL()
   GLCALL(glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
   GLCALL(glViewport(0, 0, width(), height()));
 
+  //projection * translation * rotation
   glm::mat4 projectionMatrix = glm::perspective(60.0f,
                                                 ((float)width()) / ((float)height()),
                                                 0.1f, 10.0f);
@@ -202,6 +207,7 @@ void CTrackPreview::paintGL()
 
 void CTrackPreview::resizeGL(int iWidth, int iHeight)
 {
+  //GLCALL(glViewport(0, 0, width(), height()));
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -4,6 +4,7 @@
 #include <fstream>
 #include "ShapeGenerator.h"
 #include "gtc/matrix_transform.hpp"
+#include "gtx/transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -187,19 +188,29 @@ void CTrackPreview::paintGL()
   GLCALL(glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
   GLCALL(glViewport(0, 0, width(), height()));
 
-  //projection * translation * rotation
-  glm::mat4 projectionMatrix = glm::perspective(60.0f,
-                                                ((float)width()) / ((float)height()),
-                                                0.1f, 10.0f);
-  glm::mat4 projectionTranslationMatrix = glm::translate(projectionMatrix, glm::vec3(0.0f, 0.0f, -3.0f));
-  glm::mat4 fullTransformMatrix = glm::rotate(projectionTranslationMatrix, 54.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
   GLCALL(GLint fullTransformMatrixUniformLocation =
     glGetUniformLocation(programId, "fullTransformMatrix"));
 
+  glm::mat4 fullTransformMatrix;
+  glm::mat4 projectionMatrix = glm::perspective(60.0f,
+                                                ((float)width()) / height(),
+                                                0.1f, 10.0f);
+
+  //cube1
+  glm::mat4 translationMatrix = glm::translate(glm::vec3(-1.0f, 0.0f, -3.0f));
+  glm::mat4 rotationMatrix = glm::rotate(36.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+  fullTransformMatrix = projectionMatrix * translationMatrix * rotationMatrix;
   GLCALL(glUniformMatrix4fv(fullTransformMatrixUniformLocation, 1,
                      GL_FALSE, &fullTransformMatrix[0][0]));
+  GLCALL(glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0));
 
+  //cube2
+  translationMatrix = glm::translate(glm::vec3(1.0f, 0.0f, -3.75f));
+  rotationMatrix = glm::rotate(126.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+  fullTransformMatrix = projectionMatrix * translationMatrix * rotationMatrix;
+  GLCALL(glUniformMatrix4fv(fullTransformMatrixUniformLocation, 1,
+                            GL_FALSE, &fullTransformMatrix[0][0]));
   GLCALL(glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0));
 }
 

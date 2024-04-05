@@ -8,6 +8,7 @@ class ShapeGenerator
 public:
   static tShapeData MakeTriangle();
   static tShapeData MakeCube();
+  static tShapeData MakeArrow();
 };
 //-------------------------------------------------------------------------------------------------
 #endif

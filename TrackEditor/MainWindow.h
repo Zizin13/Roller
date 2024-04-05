@@ -100,6 +100,7 @@ private:
   void RevertGeometry();
   void RevertInfo();
   void UpdateTextures(QLineEdit *pLineEdit, QLabel *pTex1, QLabel *pTex2);
+  template <typename T> void ApplySeriesToGeometry(int iStartChunk, int iEndChunk, int iInterval, int iField, T tStartValue, T tEndValue, T tIncrement);
 
   CMainWindowPrivate *p;
   bool m_bUnsavedChanges;

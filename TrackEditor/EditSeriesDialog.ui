@@ -82,23 +82,33 @@
       </widget>
      </item>
      <item row="0" column="4">
-      <widget class="QLabel" name="lblValue">
+      <widget class="QLabel" name="lblStartValue">
        <property name="text">
-       <string>Value</string>
+       <string>Start value</string>
        </property>
       </widget>
      </item>
      <item row="1" column="4">
-      <widget class="QLineEdit" name="leValue"/>
+      <widget class="QLineEdit" name="leStartValue"/>
      </item>
      <item row="0" column="5">
+      <widget class="QLabel" name="lblEndValue">
+       <property name="text">
+       <string>End value</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="5">
+      <widget class="QLineEdit" name="leEndValue"/>
+     </item>
+     <item row="0" column="6">
       <widget class="QLabel" name="lblIncrement">
        <property name="text">
        <string>Increment</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="5">
+     <item row="1" column="6">
       <widget class="QLineEdit" name="leIncrement"/>
      </item>
     </layout>

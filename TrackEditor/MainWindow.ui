@@ -2425,7 +2425,7 @@ wall height</string>
   </action>
   <action name="actEditSeries">
    <property name="text">
-    <string>Edit series</string>
+    <string>Edit series...</string>
    </property>
   </action>
   <action name="actAbout">

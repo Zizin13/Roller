@@ -19,8 +19,9 @@ public:
   int GetEndChunk();
   int GetInterval();
   int GetField();
-  int GetValue();
-  int GetIncrement();
+  QString GetStartValue();
+  QString GetEndValue();
+  QString GetIncrement();
 
 private:
   void Validate();
@@ -31,9 +32,10 @@ private:
   int m_iEndChunk;
   int m_iInterval;
   int m_iField;
-  int m_iValue;
-  int m_iIncrement;
-  QString chunkFields[70] = {
+  QString m_sStartValue;
+  QString m_sEndValue;
+  QString m_sIncrement;
+  QString chunkFields[81] = {
     "Row 0 Col 00",
     "Row 0 Col 01",
     "Row 0 Col 02",
@@ -43,7 +45,7 @@ private:
     "Row 0 Col 06",
     "Row 0 Col 07",
     "Row 0 Col 08",
-    "Row 0 Col 19",
+    "Row 0 Col 09",
     "Row 0 Col 10",
     "Row 0 Col 11",
     "Row 0 Col 12",
@@ -104,6 +106,17 @@ private:
     "Row 2 Col 27",
     "Row 2 Col 28",
     "Row 2 Col 29",
+    "Sign",
+    "Back",
+    "Stunt 0",
+    "Stunt 1",
+    "Stunt 2",
+    "Stunt 3",
+    "Stunt 4",
+    "Stunt 5",
+    "Stunt 6",
+    "Stunt 7",
+    "Stunt 8"
   };
   size_t chunkFieldsSize = sizeof(CEditSeriesDialog::chunkFields) / sizeof(CEditSeriesDialog::chunkFields[0]);
 };

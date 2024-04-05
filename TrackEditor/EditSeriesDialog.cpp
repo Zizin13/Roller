@@ -65,16 +65,23 @@ int CEditSeriesDialog::GetField()
 
 //-------------------------------------------------------------------------------------------------
 
-int CEditSeriesDialog::GetValue()
+QString CEditSeriesDialog::GetStartValue()
 {
-  return m_iValue;
+  return m_sStartValue;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-int CEditSeriesDialog::GetIncrement()
+QString CEditSeriesDialog::GetEndValue()
 {
-  return m_iIncrement;
+  return m_sEndValue;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+QString CEditSeriesDialog::GetIncrement()
+{
+  return m_sIncrement;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -85,8 +92,9 @@ void CEditSeriesDialog::Validate()
   m_iEndChunk = ToInt(sbEndChunk->text());
   m_iInterval = ToInt(sbInterval->text());
   m_iField = cbField->currentIndex();
-  m_iValue = ToInt(leValue->text());
-  m_iIncrement = ToInt(leIncrement->text());
+  m_sStartValue = leStartValue->text();
+  m_sEndValue = leEndValue->text();
+  m_sIncrement = leIncrement->text();
 
   if (m_iEndChunk >= m_iStartChunk)
     accept();

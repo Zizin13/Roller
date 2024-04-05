@@ -186,6 +186,7 @@ exit 1</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="TeapotData.h" />
     <ClInclude Include="Vertex.h" />
     <CustomBuild Include="EditSurfaceDialog.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>

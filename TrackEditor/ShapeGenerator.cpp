@@ -1,8 +1,14 @@
 #include "glm.hpp"
 #include "ShapeGenerator.h"
 #include "Vertex.h"
+#include "TeapotData.h"
+//-------------------------------------------------------------------------------------------------
+#pragma warning(disable:4018)
+#pragma warning(disable:4244)
 //-------------------------------------------------------------------------------------------------
 #define NUM_ARRAY_ELEMENTS(a) sizeof(a) / sizeof(*a)
+//-------------------------------------------------------------------------------------------------
+typedef unsigned int uint;
 //-------------------------------------------------------------------------------------------------
 
 glm::vec3 RandomColor()
@@ -315,5 +321,350 @@ tShapeData ShapeGenerator::MakePlaneIndices(unsigned int uiDimensions)
   assert(runner == ret.numIndices);
   return ret;
 }
+
+//-------------------------------------------------------------------------------------------------
+
+tShapeData ShapeGenerator::MakeTeapot(unsigned int uiTesselation, const glm::mat4 &lidTransform)
+{
+  tShapeData ret;
+
+  ret.numVertices = 32 * (uiTesselation + 1) * (uiTesselation + 1);
+  uint faces = uiTesselation * uiTesselation * 32;
+  float *vertices = new float[ret.numVertices * 3];
+  float *normals = new float[ret.numVertices * 3];
+  float *textureCoordinates = new float[ret.numVertices * 2];
+  ret.numIndices = faces * 6;
+  ret.indices = new unsigned short[ret.numIndices];
+
+  generatePatches(vertices, normals, textureCoordinates, ret.indices, uiTesselation);
+  moveLid(uiTesselation, vertices, lidTransform);
+
+  // Adapt/convert their data format to mine
+  ret.vertices = new tVertex[ret.numVertices];
+  for (uint i = 0; i < ret.numVertices; i++) {
+    tVertex &v = ret.vertices[i];
+    v.position.x = vertices[i * 3 + 0];
+    v.position.y = vertices[i * 3 + 1];
+    v.position.z = vertices[i * 3 + 2];
+    //v.normal.x = normals[i * 3 + 0];
+    //v.normal.y = normals[i * 3 + 1];
+    //v.normal.z = normals[i * 3 + 2];
+    v.color = RandomColor();
+  }
+  return ret;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void ShapeGenerator::generatePatches(float *v, float *n, float *tc, unsigned short *el, int grid)
+{
+  float *B = new float[4 * (grid + 1)];  // Pre-computed Bernstein basis functions
+  float *dB = new float[4 * (grid + 1)]; // Pre-computed derivitives of basis functions
+
+  int idx = 0, elIndex = 0, tcIndex = 0;
+
+  // Pre-compute the basis functions  (Bernstein polynomials)
+  // and their derivatives
+  computeBasisFunctions(B, dB, grid);
+
+  // Build each patch
+  // The rim
+  buildPatchReflect(0, B, dB, v, n, tc, el, idx, elIndex, tcIndex, grid, true, true);
+  // The body
+  buildPatchReflect(1, B, dB, v, n, tc, el, idx, elIndex, tcIndex, grid, true, true);
+  buildPatchReflect(2, B, dB, v, n, tc, el, idx, elIndex, tcIndex, grid, true, true);
+  // The lid
+  buildPatchReflect(3, B, dB, v, n, tc, el, idx, elIndex, tcIndex, grid, true, true);
+  buildPatchReflect(4, B, dB, v, n, tc, el, idx, elIndex, tcIndex, grid, true, true);
+  // The bottom
+  buildPatchReflect(5, B, dB, v, n, tc, el, idx, elIndex, tcIndex, grid, true, true);
+  // The handle
+  buildPatchReflect(6, B, dB, v, n, tc, el, idx, elIndex, tcIndex, grid, false, true);
+  buildPatchReflect(7, B, dB, v, n, tc, el, idx, elIndex, tcIndex, grid, false, true);
+  // The spout
+  buildPatchReflect(8, B, dB, v, n, tc, el, idx, elIndex, tcIndex, grid, false, true);
+  buildPatchReflect(9, B, dB, v, n, tc, el, idx, elIndex, tcIndex, grid, false, true);
+
+  delete[] B;
+  delete[] dB;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void ShapeGenerator::moveLid(int grid, float *v, glm::mat4 lidTransform)
+{
+
+  int start = 3 * 12 * (grid + 1) * (grid + 1);
+  int end = 3 * 20 * (grid + 1) * (grid + 1);
+
+  for (int i = start; i < end; i += 3) {
+    glm::vec4 vert = glm::vec4(v[i], v[i + 1], v[i + 2], 1.0f);
+    vert = lidTransform * vert;
+    v[i] = vert.x;
+    v[i + 1] = vert.y;
+    v[i + 2] = vert.z;
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void ShapeGenerator::buildPatchReflect(int patchNum,
+        float *B, float *dB,
+        float *v, float *n,
+        float *tc, unsigned short *el,
+        int &index, int &elIndex, int &tcIndex, int grid,
+        bool reflectX, bool reflectY)
+{
+  glm::vec3 patch[4][4];
+  glm::vec3 patchRevV[4][4];
+  getPatch(patchNum, patch, false);
+  getPatch(patchNum, patchRevV, true);
+
+  // Patch without modification
+  buildPatch(patch, B, dB, v, n, tc, el,
+          index, elIndex, tcIndex, grid, glm::mat3(1.0f), true);
+
+  // Patch reflected in x
+  if (reflectX) {
+    buildPatch(patchRevV, B, dB, v, n, tc, el,
+            index, elIndex, tcIndex, grid, glm::mat3(glm::vec3(-1.0f, 0.0f, 0.0f),
+                                                     glm::vec3(0.0f, 1.0f, 0.0f),
+                                                     glm::vec3(0.0f, 0.0f, 1.0f)), false);
+  }
+
+  // Patch reflected in y
+  if (reflectY) {
+    buildPatch(patchRevV, B, dB, v, n, tc, el,
+            index, elIndex, tcIndex, grid, glm::mat3(glm::vec3(1.0f, 0.0f, 0.0f),
+                                                     glm::vec3(0.0f, -1.0f, 0.0f),
+                                                     glm::vec3(0.0f, 0.0f, 1.0f)), false);
+  }
+
+  // Patch reflected in x and y
+  if (reflectX && reflectY) {
+    buildPatch(patch, B, dB, v, n, tc, el,
+            index, elIndex, tcIndex, grid, glm::mat3(glm::vec3(-1.0f, 0.0f, 0.0f),
+                                                     glm::vec3(0.0f, -1.0f, 0.0f),
+                                                     glm::vec3(0.0f, 0.0f, 1.0f)), true);
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void ShapeGenerator::buildPatch(glm::vec3 patch[][4],
+        float *B, float *dB,
+        float *v, float *n, float *tc,
+        unsigned short *el,
+        int &index, int &elIndex, int &tcIndex, int grid, glm::mat3 reflect,
+        bool invertNormal)
+{
+  int startIndex = index / 3;
+  float tcFactor = 1.0f / grid;
+
+  for (int i = 0; i <= grid; i++) {
+    for (int j = 0; j <= grid; j++) {
+      glm::vec3 pt = reflect * evaluate(i, j, B, patch);
+      glm::vec3 norm = reflect * evaluateNormal(i, j, B, dB, patch);
+      if (invertNormal)
+        norm = -norm;
+
+      v[index] = pt.x;
+      v[index + 1] = pt.y;
+      v[index + 2] = pt.z;
+
+      n[index] = norm.x;
+      n[index + 1] = norm.y;
+      n[index + 2] = norm.z;
+
+      tc[tcIndex] = i * tcFactor;
+      tc[tcIndex + 1] = j * tcFactor;
+
+      index += 3;
+      tcIndex += 2;
+    }
+  }
+
+  for (int i = 0; i < grid; i++) {
+    int iStart = i * (grid + 1) + startIndex;
+    int nextiStart = (i + 1) * (grid + 1) + startIndex;
+    for (int j = 0; j < grid; j++) {
+      el[elIndex] = iStart + j;
+      el[elIndex + 1] = nextiStart + j + 1;
+      el[elIndex + 2] = nextiStart + j;
+
+      el[elIndex + 3] = iStart + j;
+      el[elIndex + 4] = iStart + j + 1;
+      el[elIndex + 5] = nextiStart + j + 1;
+
+      elIndex += 6;
+    }
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void ShapeGenerator::getPatch(int patchNum, glm::vec3 patch[][4], bool reverseV)
+{
+  for (int u = 0; u < 4; u++) {          // Loop in u direction
+    for (int v = 0; v < 4; v++) {     // Loop in v direction
+      if (reverseV) {
+        patch[u][v] = glm::vec3(
+                Teapot::cpdata[Teapot::patchdata[patchNum][u * 4 + (3 - v)]][0],
+                Teapot::cpdata[Teapot::patchdata[patchNum][u * 4 + (3 - v)]][1],
+                Teapot::cpdata[Teapot::patchdata[patchNum][u * 4 + (3 - v)]][2]
+        );
+      } else {
+        patch[u][v] = glm::vec3(
+                Teapot::cpdata[Teapot::patchdata[patchNum][u * 4 + v]][0],
+                Teapot::cpdata[Teapot::patchdata[patchNum][u * 4 + v]][1],
+                Teapot::cpdata[Teapot::patchdata[patchNum][u * 4 + v]][2]
+        );
+      }
+    }
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void ShapeGenerator::computeBasisFunctions(float *B, float *dB, int grid)
+{
+  float inc = 1.0f / grid;
+  for (int i = 0; i <= grid; i++) {
+    float t = i * inc;
+    float tSqr = t * t;
+    float oneMinusT = (1.0f - t);
+    float oneMinusT2 = oneMinusT * oneMinusT;
+
+    B[i * 4 + 0] = oneMinusT * oneMinusT2;
+    B[i * 4 + 1] = 3.0f * oneMinusT2 * t;
+    B[i * 4 + 2] = 3.0f * oneMinusT * tSqr;
+    B[i * 4 + 3] = t * tSqr;
+
+    dB[i * 4 + 0] = -3.0f * oneMinusT2;
+    dB[i * 4 + 1] = -6.0f * t * oneMinusT + 3.0f * oneMinusT2;
+    dB[i * 4 + 2] = -3.0f * tSqr + 6.0f * t * oneMinusT;
+    dB[i * 4 + 3] = 3.0f * tSqr;
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+glm::vec3 ShapeGenerator::evaluate(int gridU, int gridV, float *B, glm::vec3 patch[][4])
+{
+  glm::vec3 p(0.0f, 0.0f, 0.0f);
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      p += patch[i][j] * B[gridU * 4 + i] * B[gridV * 4 + j];
+    }
+  }
+  return p;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+glm::vec3 ShapeGenerator::evaluateNormal(int gridU, int gridV, float *B, float *dB, glm::vec3 patch[][4])
+{
+  glm::vec3 du(0.0f, 0.0f, 0.0f);
+  glm::vec3 dv(0.0f, 0.0f, 0.0f);
+
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      du += patch[i][j] * dB[gridU * 4 + i] * B[gridV * 4 + j];
+      dv += patch[i][j] * B[gridU * 4 + i] * dB[gridV * 4 + j];
+    }
+  }
+  return glm::normalize(glm::cross(du, dv));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+//tShapeData ShapeGenerator::MakeTorus(uint tesselation)
+//{
+//  tShapeData ret;
+//  uint dimensions = tesselation * tesselation;
+//  ret.numVertices = dimensions;
+//  ret.vertices = new Vertex[ret.numVertices];
+//  float sliceAngle = 360 / tesselation;
+//  const float torusRadius = 1.0f;
+//  const float pipeRadius = 0.5f;
+//  for (uint round1 = 0; round1 < tesselation; round1++) {
+//          // Generate a circle on the xy plane, then
+//          // translate then rotate it into position
+//    glm::mat4 transform =
+//      glm::rotate(glm::mat4(), round1 * sliceAngle, glm::vec3(0.0f, 1.0f, 0.0f)) *
+//      glm::translate(glm::mat4(), glm::vec3(torusRadius, 0.0f, 0.0f));
+//    glm::mat3 normalTransform = (glm::mat3)transform;
+//    for (uint round2 = 0; round2 < tesselation; round2++) {
+//      Vertex &v = ret.vertices[round1 * tesselation + round2];
+//      glm::vec4 glmVert(
+//              pipeRadius * cos(glm::radians(sliceAngle * round2)),
+//              pipeRadius * sin(glm::radians(sliceAngle * round2)),
+//              0,
+//              1.0f);
+//      glm::vec4 glmVertPrime = transform * glmVert;
+//      v.position = (glm::vec3)glmVertPrime;
+//      v.normal = glm::normalize(normalTransform * (glm::vec3)glmVert);
+//      v.color = randomColor();
+//    }
+//  }
+//
+//  ShapeData ret2 = makePlaneUnseamedIndices(tesselation);
+//  ret.numIndices = ret2.numIndices;
+//  ret.indices = ret2.indices;
+//  return ret;
+//}
+
+//-------------------------------------------------------------------------------------------------
+
+//ShapeData ShapeGenerator::makeSphere(uint tesselation)
+//{
+//  ShapeData ret = makePlaneVerts(tesselation);
+//  ShapeData ret2 = makePlaneIndices(tesselation);
+//  ret.indices = ret2.indices;
+//  ret.numIndices = ret2.numIndices;
+//
+//  uint dimensions = tesselation;
+//  const float RADIUS = 1.0f;
+//  const double CIRCLE = PI * 2;
+//  const double SLICE_ANGLE = CIRCLE / (dimensions - 1);
+//  for (size_t col = 0; col < dimensions; col++) {
+//    double phi = -SLICE_ANGLE * col;
+//    for (size_t row = 0; row < dimensions; row++) {
+//      double theta = -(SLICE_ANGLE / 2.0) * row;
+//      size_t vertIndex = col * dimensions + row;
+//      Vertex &v = ret.vertices[vertIndex];
+//      v.position.x = RADIUS * cos(phi) * sin(theta);
+//      v.position.y = RADIUS * sin(phi) * sin(theta);
+//      v.position.z = RADIUS * cos(theta);
+//      v.normal = glm::normalize(v.position);
+//    }
+//  }
+//  return ret;
+//}
+
+//-------------------------------------------------------------------------------------------------
+
+//ShapeData ShapeGenerator::GenerateNormals(const ShapeData &data)
+//{
+//  ShapeData ret;
+//  ret.numVertices = data.numVertices * 2;
+//  ret.vertices = new Vertex[ret.numVertices];
+//  glm::vec3 white(1.0f, 1.0f, 1.0f);
+//  for (int i = 0; i < data.numVertices; i++) {
+//    uint vertIndex = i * 2;
+//    Vertex &v1 = ret.vertices[vertIndex];
+//    Vertex &v2 = ret.vertices[vertIndex + 1];
+//    const Vertex &sourceVertex = data.vertices[i];
+//    v1.position = sourceVertex.position;
+//    v2.position = sourceVertex.position + sourceVertex.normal;
+//    v1.color = v2.color = white;
+//  }
+//
+//  ret.numIndices = ret.numVertices;
+//  ret.indices = new GLushort[ret.numIndices];
+//  for (int i = 0; i < ret.numIndices; i++)
+//    ret.indices[i] = i;
+//  return ret;
+//}
 
 //-------------------------------------------------------------------------------------------------

@@ -87,7 +87,7 @@ CTrackPreview::~CTrackPreview()
 
 void CTrackPreview::SendDataToOpenGL()
 {
-  tShapeData cube = ShapeGenerator::MakePlane();
+  tShapeData cube = ShapeGenerator::MakeTeapot(10);
   tShapeData arrow = ShapeGenerator::MakeArrow();
 
   glGenBuffers(1, &theBufferID);

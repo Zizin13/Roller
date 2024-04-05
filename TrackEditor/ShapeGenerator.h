@@ -9,6 +9,11 @@ public:
   static tShapeData MakeTriangle();
   static tShapeData MakeCube();
   static tShapeData MakeArrow();
+  static tShapeData MakePlane(unsigned int uiDimensions = 10);
+
+private:
+  static tShapeData MakePlaneVerts(unsigned int uiDimensions);
+  static tShapeData MakePlaneIndices(unsigned int uiDimensions);
 };
 //-------------------------------------------------------------------------------------------------
 #endif

@@ -5,6 +5,17 @@
 #define NUM_ARRAY_ELEMENTS(a) sizeof(a) / sizeof(*a)
 //-------------------------------------------------------------------------------------------------
 
+glm::vec3 RandomColor()
+{
+  glm::vec3 ret;
+  ret.x = rand() / (float)RAND_MAX;
+  ret.y = rand() / (float)RAND_MAX;
+  ret.z = rand() / (float)RAND_MAX;
+  return ret;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 tShapeData ShapeGenerator::MakeTriangle()
 {
   tShapeData ret;
@@ -248,6 +259,60 @@ tShapeData ShapeGenerator::MakeArrow()
   ret.indices = new GLushort[ret.numIndices];
   memcpy(ret.indices, indices, sizeof(indices));
 
+  return ret;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+tShapeData ShapeGenerator::MakePlane(unsigned int uiDimensions)
+{
+  tShapeData ret = MakePlaneVerts(uiDimensions);
+  tShapeData ret2 = MakePlaneIndices(uiDimensions);
+  ret.numIndices = ret2.numIndices;
+  ret.indices = ret2.indices;
+  return ret;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+tShapeData ShapeGenerator::MakePlaneVerts(unsigned int uiDimensions)
+{
+  tShapeData ret;
+  ret.numVertices = uiDimensions * uiDimensions;
+  int half = uiDimensions / 2;
+  ret.vertices = new tVertex[ret.numVertices];
+  for (int i = 0; i < uiDimensions; i++) {
+    for (int j = 0; j < uiDimensions; j++) {
+      tVertex &thisVert = ret.vertices[i * uiDimensions + j];
+      thisVert.position.x = j - half;
+      thisVert.position.z = i - half;
+      thisVert.position.y = 0;
+      thisVert.color = RandomColor();
+    }
+  }
+  return ret;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+tShapeData ShapeGenerator::MakePlaneIndices(unsigned int uiDimensions)
+{
+  tShapeData ret;
+  ret.numIndices = (uiDimensions - 1) * (uiDimensions - 1) * 2 * 3; // 2 triangles per square, 3 indices per triangle
+  ret.indices = new unsigned short[ret.numIndices];
+  int runner = 0;
+  for (int row = 0; row < uiDimensions - 1; row++) {
+    for (int col = 0; col < uiDimensions - 1; col++) {
+      ret.indices[runner++] = uiDimensions * row + col;
+      ret.indices[runner++] = uiDimensions * row + col + uiDimensions;
+      ret.indices[runner++] = uiDimensions * row + col + uiDimensions + 1;
+
+      ret.indices[runner++] = uiDimensions * row + col;
+      ret.indices[runner++] = uiDimensions * row + col + uiDimensions + 1;
+      ret.indices[runner++] = uiDimensions * row + col + 1;
+    }
+  }
+  assert(runner == ret.numIndices);
   return ret;
 }
 

@@ -87,7 +87,7 @@ CTrackPreview::~CTrackPreview()
 
 void CTrackPreview::SendDataToOpenGL()
 {
-  tShapeData cube = ShapeGenerator::MakeCube();
+  tShapeData cube = ShapeGenerator::MakePlane();
   tShapeData arrow = ShapeGenerator::MakeArrow();
 
   glGenBuffers(1, &theBufferID);
@@ -142,7 +142,7 @@ void CTrackPreview::paintGL()
   glViewport(0, 0, width(), height());
 
   glm::mat4 fullTransformMatrix;
-  glm::mat4 viewToProjectionMatrix = glm::perspective(30.0f, ((float)width()) / height(), 0.1f, 10.0f);
+  glm::mat4 viewToProjectionMatrix = glm::perspective(30.0f, ((float)width()) / height(), 0.1f, 20.0f);
   glm::mat4 worldToViewMatrix = camera.GetWorldToViewMatrix();
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 

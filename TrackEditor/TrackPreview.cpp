@@ -55,8 +55,13 @@ const uint NUM_VERTICES_PER_TRI = 3;
 const uint NUM_FLOATS_PER_VERTICE = 6;
 const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 GLuint programId;
-GLuint numIndices;
+GLuint cubeNumIndices;
+GLuint arrowNumIndices;
 Camera camera;
+GLuint cubeVertexBufId;
+GLuint cubeIndexBufId;
+GLuint arrowVertexBufId;
+GLuint arrowIndexBufId;
 
 //-------------------------------------------------------------------------------------------------
 
@@ -78,22 +83,30 @@ CTrackPreview::~CTrackPreview()
 
 void CTrackPreview::SendDataToOpenGL()
 {
-  tShapeData shape = ShapeGenerator::MakeArrow();
+  tShapeData shape = ShapeGenerator::MakeCube();
 
-  GLuint vertexBufId;
-  GLCALL(glGenBuffers(1, &vertexBufId));
-  GLCALL(glBindBuffer(GL_ARRAY_BUFFER, vertexBufId));
+  GLCALL(glGenBuffers(1, &cubeVertexBufId));
+  GLCALL(glBindBuffer(GL_ARRAY_BUFFER, cubeVertexBufId));
   GLCALL(glBufferData(GL_ARRAY_BUFFER, shape.VertexBufSize(), shape.vertices, GL_STATIC_DRAW));
   GLCALL(glEnableVertexAttribArray(0));
-  GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0));
   GLCALL(glEnableVertexAttribArray(1));
-  GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 3)));
 
-  GLuint indexBufId;
-  GLCALL(glGenBuffers(1, &indexBufId));
-  GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufId));
+  GLCALL(glGenBuffers(1, &cubeIndexBufId));
+  GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeIndexBufId));
   GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.IndexBufSize(), shape.indices, GL_STATIC_DRAW));
-  numIndices = shape.numIndices;
+  cubeNumIndices = shape.numIndices;
+  shape.Cleanup();
+
+  shape = ShapeGenerator::MakeArrow();
+
+  GLCALL(glGenBuffers(1, &arrowVertexBufId));
+  GLCALL(glBindBuffer(GL_ARRAY_BUFFER, arrowVertexBufId));
+  GLCALL(glBufferData(GL_ARRAY_BUFFER, shape.VertexBufSize(), shape.vertices, GL_STATIC_DRAW));
+
+  GLCALL(glGenBuffers(1, &arrowIndexBufId));
+  GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, arrowIndexBufId));
+  GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.IndexBufSize(), shape.indices, GL_STATIC_DRAW));
+  arrowNumIndices = shape.numIndices;
   shape.Cleanup();
 
   //GLuint transformationMatrixBufferId;
@@ -134,12 +147,17 @@ void CTrackPreview::paintGL()
     glGetUniformLocation(programId, "fullTransformMatrix"));
 
   //cube1
+  GLCALL(glBindBuffer(GL_ARRAY_BUFFER, cubeVertexBufId));
+  GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0));
+  GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 3)));
+  GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeIndexBufId));
+
   glm::mat4 cube1ModelToWorldMatrix =
     glm::translate(glm::vec3(-1.0f, 0.0f, -3.0f)) *
     glm::rotate(glm::radians(36.0f), glm::vec3(1.0f, 0.0f, 0.0f));
   fullTransformMatrix = worldToProjectionMatrix * cube1ModelToWorldMatrix;
   glUniformMatrix4fv(fullTransformUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
-  glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0);
+  glDrawElements(GL_TRIANGLES, cubeNumIndices, GL_UNSIGNED_SHORT, 0);
 
   //cube2
   glm::mat4 cube2ModelToWorldMatrix =
@@ -147,7 +165,18 @@ void CTrackPreview::paintGL()
     glm::rotate(glm::radians(126.0f), glm::vec3(0.0f, 1.0f, 0.0f));
   fullTransformMatrix = worldToProjectionMatrix * cube2ModelToWorldMatrix;
   glUniformMatrix4fv(fullTransformUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
-  glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0);
+  glDrawElements(GL_TRIANGLES, cubeNumIndices, GL_UNSIGNED_SHORT, 0);
+
+  //arrow
+  GLCALL(glBindBuffer(GL_ARRAY_BUFFER, arrowVertexBufId));
+  GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0));
+  GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 3)));
+  GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, arrowIndexBufId));
+
+  glm::mat4 arrowModelToWorldMatrix = glm::translate(glm::vec3(0.0f, 0.0f, -3.0f));
+  fullTransformMatrix = worldToProjectionMatrix * arrowModelToWorldMatrix;
+  glUniformMatrix4fv(fullTransformUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
+  glDrawElements(GL_TRIANGLES, arrowNumIndices, GL_UNSIGNED_SHORT, 0);
 }
 
 //-------------------------------------------------------------------------------------------------

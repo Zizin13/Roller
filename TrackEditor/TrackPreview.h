@@ -29,6 +29,7 @@ private:
   bool CheckProgramStatus(GLuint programId);
   std::string ReadShaderCode(const char *filename);
   void InstallShaders();
+  void SetupVertexArrays();
 };
 
 //-------------------------------------------------------------------------------------------------

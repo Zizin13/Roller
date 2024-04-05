@@ -78,6 +78,7 @@ CTrackPreview::CTrackPreview(QWidget *pParent)
 
 CTrackPreview::~CTrackPreview()
 {
+  glDeleteBuffers(1, &theBufferID);
   glUseProgram(0);
   glDeleteProgram(programId);
 }

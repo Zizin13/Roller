@@ -132,6 +132,7 @@ void CTrackPreview::paintGL()
 
   glm::vec3 lightPositionWorld = glm::vec3(0.0f, -3.0f, 0.0f);
 
+  glm::vec3 eyePositionWorld = camera.GetPosition();
 
   for (CShapeAy::iterator it = p->m_shapeAy.begin(); it != p->m_shapeAy.end(); ++it) {
     GLCALL(glUseProgram((*it).shaderProgramId));
@@ -142,6 +143,8 @@ void CTrackPreview::paintGL()
       glUniform4fv(ambientLightUniformLocation, 1, &ambientLight[0]);
       GLint lightPositionUniformLocation = glGetUniformLocation(g_programId, "lightPositionWorld");
       glUniform3fv(lightPositionUniformLocation, 1, &lightPositionWorld[0]);
+      GLint eyePositionUniformLocation = glGetUniformLocation(g_programId, "eyePositionWorld");
+      glUniform3fv(eyePositionUniformLocation, 1, &eyePositionWorld[0]);
       GLCALL(glUniformMatrix4fv(modelToProjectionMatrixUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]));
       GLint modelToWorldMatUniformLocation = glGetUniformLocation(g_programId, "modelToWorldMatrix");
       GLCALL(glUniformMatrix4fv(modelToWorldMatUniformLocation, 1, GL_FALSE, &(*it).modelToWorldMatrix[0][0]));
@@ -187,6 +190,7 @@ bool CTrackPreview::CheckStatus(GLuint objectId,
     getInfoLogFunc(objectId, infoLogLength, &bufferSize, buffer);
 
     g_pMainWindow->LogMessage(buffer);
+    assert(0);
 
     delete[] buffer;
     return false;
@@ -238,18 +242,14 @@ void CTrackPreview::InstallShaders(GLuint &programId, const char *szVertexShader
   glShaderSource(fragmentShaderId, 1, adapter, 0);
   glCompileShader(vertexShaderId);
   glCompileShader(fragmentShaderId);
-  if (!CheckShaderStatus(vertexShaderId) || !CheckShaderStatus(fragmentShaderId)) {
-    assert(0);
+  if (!CheckShaderStatus(vertexShaderId) || !CheckShaderStatus(fragmentShaderId))
     return;
-  }
   programId = glCreateProgram();
   glAttachShader(programId, vertexShaderId);
   glAttachShader(programId, fragmentShaderId);
   glLinkProgram(programId);
-  if (!CheckProgramStatus(programId)) {
-    assert(0);
+  if (!CheckProgramStatus(programId))
     return;
-  }
   glDeleteShader(vertexShaderId);
   glDeleteShader(fragmentShaderId);
 }

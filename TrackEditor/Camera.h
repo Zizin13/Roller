@@ -16,6 +16,7 @@ public:
   void StrafeRight();
   void MoveUp();
   void MoveDown();
+  glm::vec3 GetPosition() { return m_position; };
 
 private:
   static const float MOVEMENT_SPEED;

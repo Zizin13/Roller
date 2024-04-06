@@ -92,6 +92,7 @@ public:
   ~CChunkEditValues();
 
   void Clear();
+  void Set(int index, QString value);
 
   QString sLeftShoulderWidth;
   QString sLeftLaneWidth;

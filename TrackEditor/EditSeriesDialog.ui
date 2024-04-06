@@ -125,7 +125,7 @@
         <string>Increment</string>
        </property>
        <property name="toolTip">
-        <string>Amount to alter field value each iteration (default 0)</string>
+        <string>Amount to alter field value each iteration (optional)</string>
        </property>
       </widget>
      </item>

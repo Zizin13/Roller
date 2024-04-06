@@ -434,11 +434,15 @@ void CMainWindow::OnEditSeries()
       double dStartValue = dlg.GetStartValue().toDouble();
       double dIncrement = dlg.GetIncrement().toDouble();
       double dEndValue = dlg.GetEndValue().length() != 0 ? dlg.GetEndValue().toDouble() : dIncrement == 0.0 ? dStartValue : dIncrement > 0.0 ? DBL_MAX : DBL_MIN;
+      if (dlg.GetIncrement().length() == 0 && dlg.GetEndValue().length() != 0)
+        dIncrement = (dEndValue - dStartValue) / (dlg.GetEndChunk() - dlg.GetStartChunk());
       ApplySeriesToGeometry(dlg.GetStartChunk(), dlg.GetEndChunk(), dlg.GetInterval(), dlg.GetField(), dStartValue, dEndValue, dIncrement);
     } else {
       int iStartValue = dlg.GetStartValue().toInt();
       int iIncrement = dlg.GetIncrement().toInt();
       int iEndValue = dlg.GetEndValue().length() != 0 ? dlg.GetEndValue().toInt() : iIncrement == 0 ? iStartValue : iIncrement > 0 ? INT_MAX : INT_MIN;
+      if (dlg.GetIncrement().length() == 0 && dlg.GetEndValue().length() != 0)
+        iIncrement = (iEndValue - iStartValue) / (dlg.GetEndChunk() - dlg.GetStartChunk());
       ApplySeriesToGeometry(dlg.GetStartChunk(), dlg.GetEndChunk(), dlg.GetInterval(), dlg.GetField(), iStartValue, iEndValue, iIncrement);
     }
     m_bUnsavedChanges = true;

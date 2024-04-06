@@ -97,7 +97,7 @@ void CEditSeriesDialog::Validate()
 
   if (m_iEndChunk < m_iStartChunk)
     QMessageBox::warning(this, "You need more practice!", "End chunk must not be before start chunk");
-  else if (m_sEndValue.length() > 0 && IsDirectionValid(m_sEndValue.toDouble(), m_sStartValue.toDouble(), m_sIncrement.toDouble()))
+  else if (m_sEndValue.length() > 0 && m_sIncrement.length() > 0 && IsDirectionValid(m_sEndValue.toDouble(), m_sStartValue.toDouble(), m_sIncrement.toDouble()))
     QMessageBox::warning(this, "You need more practice!", "Start value does not approach end value");
   else
     accept();

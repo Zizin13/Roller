@@ -325,9 +325,6 @@ exit 1</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <None Include="images\ui1.bin" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="FragmentShaderCode.glsl" />
     <None Include="VertexShaderCode.glsl" />
   </ItemGroup>

@@ -52,24 +52,47 @@ static bool GLLogCall(const char *szFunction, const char *szFile, int iLine)
 //-------------------------------------------------------------------------------------------------
 
 const uint NUM_VERTICES_PER_TRI = 3;
-const uint NUM_FLOATS_PER_VERTICE = 6;
+const uint NUM_FLOATS_PER_VERTICE = 9;
 const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 GLuint programId;
-GLuint numIndices;
 Camera camera;
+GLint modelToProjectionMatrixUniformLocation;
+//-------------------------------------------------------------------------------------------------
+typedef std::vector<tShapeData> CShapeAy;
+//-------------------------------------------------------------------------------------------------
+
+class CTrackPreviewPrivate
+{
+public:
+  CTrackPreviewPrivate() {};
+  ~CTrackPreviewPrivate()
+  {
+    for (CShapeAy::iterator it = m_shapeAy.begin(); it != m_shapeAy.end(); ++it) {
+      glDeleteBuffers(1, &(*it).vertexBufId);
+      glDeleteBuffers(1, &(*it).indexBufId);
+      (*it).Cleanup();
+    }
+  };
+
+  CShapeAy m_shapeAy;
+};
 
 //-------------------------------------------------------------------------------------------------
 
 CTrackPreview::CTrackPreview(QWidget *pParent)
   : QGLWidget(QGLFormat(QGL::SampleBuffers), pParent)
 {
-  //grabKeyboard();
+  p = new CTrackPreviewPrivate;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 CTrackPreview::~CTrackPreview()
 {
+  if (p) {
+    delete p;
+    p = NULL;
+  }
   glUseProgram(0);
   glDeleteProgram(programId);
 }
@@ -78,42 +101,65 @@ CTrackPreview::~CTrackPreview()
 
 void CTrackPreview::SendDataToOpenGL()
 {
-  tShapeData shape = ShapeGenerator::MakeCube();
+  for (CShapeAy::iterator it = p->m_shapeAy.begin(); it != p->m_shapeAy.end(); ++it) {
+    GLCALL(glGenBuffers(1, &(*it).vertexBufId));
+    GLCALL(glBindBuffer(GL_ARRAY_BUFFER, (*it).vertexBufId));
+    GLCALL(glBufferData(GL_ARRAY_BUFFER, (*it).VertexBufSize(), (*it).vertices, GL_STATIC_DRAW));
 
-  GLuint vertexBufId;
-  GLCALL(glGenBuffers(1, &vertexBufId));
-  GLCALL(glBindBuffer(GL_ARRAY_BUFFER, vertexBufId));
-  GLCALL(glBufferData(GL_ARRAY_BUFFER, shape.VertexBufSize(), shape.vertices, GL_STATIC_DRAW));
-  GLCALL(glEnableVertexAttribArray(0));
-  GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0));
-  GLCALL(glEnableVertexAttribArray(1));
-  GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 3)));
+    GLCALL(glGenBuffers(1, &(*it).indexBufId));
+    GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*it).indexBufId));
+    GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, (*it).IndexBufSize(), (*it).indices, GL_STATIC_DRAW));
+  }
+}
 
-  GLuint indexBufId;
-  GLCALL(glGenBuffers(1, &indexBufId));
-  GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufId));
-  GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, shape.IndexBufSize(), shape.indices, GL_STATIC_DRAW));
-  numIndices = shape.numIndices;
-  shape.Cleanup();
+//-------------------------------------------------------------------------------------------------
 
-  GLuint transformationMatrixBufferId;
-  glGenBuffers(1, &transformationMatrixBufferId);
-  glBindBuffer(GL_ARRAY_BUFFER, transformationMatrixBufferId);
+void CTrackPreview::paintGL()
+{
+  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+  glViewport(0, 0, width(), height());
 
+  glm::mat4 fullTransformMatrix;
+  glm::mat4 viewToProjectionMatrix = glm::perspective(30.0f, ((float)width()) / height(), 0.1f, 20.0f);
+  glm::mat4 worldToViewMatrix = camera.GetWorldToViewMatrix();
+  glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
-  glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * 2, 0, GL_DYNAMIC_DRAW);
-  glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(float) * 0));
-  glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(float) * 4));
-  glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(float) * 8));
-  glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(float) * 12));
-  glEnableVertexAttribArray(2);
-  glEnableVertexAttribArray(3);
-  glEnableVertexAttribArray(4);
-  glEnableVertexAttribArray(5);
-  glVertexAttribDivisor(2, 1);
-  glVertexAttribDivisor(3, 1);
-  glVertexAttribDivisor(4, 1);
-  glVertexAttribDivisor(5, 1);
+  GLint ambientLightUniformLocation = glGetUniformLocation(programId, "ambientLight");
+  glm::vec4 ambientLight(0.1f, 0.1f, 0.1f, 1.0f);
+  glUniform4fv(ambientLightUniformLocation, 1, &ambientLight[0]);
+
+  GLint lightPositionUniformLocation = glGetUniformLocation(programId, "lightPositionWorld");
+  glm::vec3 lightPositionWorld = glm::vec3(0.0f, 3.0f, 0.0f);
+  glUniform3fv(lightPositionUniformLocation, 1, &lightPositionWorld[0]);
+
+  GLint modelToWorldMatUniformLocation = glGetUniformLocation(programId, "modelToWorldMatrix");
+
+  for (CShapeAy::iterator it = p->m_shapeAy.begin(); it != p->m_shapeAy.end(); ++it) {
+    glBindVertexArray((*it).vertexArrayObjId);
+    fullTransformMatrix = worldToProjectionMatrix * (*it).modelToWorldMatrix;
+    glUniformMatrix4fv(modelToProjectionMatrixUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
+    glUniformMatrix4fv(modelToWorldMatUniformLocation, 1, GL_FALSE, &(*it).modelToWorldMatrix[0][0]);
+    glDrawElements(GL_TRIANGLES, (*it).numIndices, GL_UNSIGNED_SHORT, 0);
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::SetupVertexArrays()
+{
+  for (CShapeAy::iterator it = p->m_shapeAy.begin(); it != p->m_shapeAy.end(); ++it) {
+    glGenVertexArrays(1, &(*it).vertexArrayObjId);
+
+    glBindVertexArray((*it).vertexArrayObjId);
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, (*it).vertexBufId);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 3));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 6));
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*it).indexBufId);
+  }
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -214,29 +260,29 @@ void CTrackPreview::initializeGL()
   glEnable(GL_DEBUG_OUTPUT);
   glDebugMessageCallback(GLErrorCb, 0);
   glEnable(GL_DEPTH_TEST);
+  //glEnable(GL_CULL_FACE);
+
+  tShapeData teapot = ShapeGenerator::MakeTeapot(20);
+  teapot.modelToWorldMatrix =
+    glm::translate(glm::vec3(-3.0f, 1.0f, -6.0f)) * 
+    glm::rotate(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+  tShapeData arrow = ShapeGenerator::MakeArrow();
+  arrow.modelToWorldMatrix = 
+    glm::translate(glm::vec3(0.0f, -2.0f, -8.0f)) *
+    glm::rotate(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+  tShapeData plane = ShapeGenerator::MakePlane(20);
+  plane.modelToWorldMatrix =
+    glm::translate(glm::vec3(0.0f, 1.0f, 0.0f));
+
+  p->m_shapeAy.push_back(teapot);
+  p->m_shapeAy.push_back(arrow);
+  p->m_shapeAy.push_back(plane);
+
   SendDataToOpenGL();
+  SetupVertexArrays();
   InstallShaders();
-}
 
-//-------------------------------------------------------------------------------------------------
-
-void CTrackPreview::paintGL()
-{
-  glm::mat4 projectionMatrix = glm::perspective(30.0f,
-                                                ((float)width()) / height(),
-                                                0.1f, 10.0f);
-
-  glm::mat4 fullTransforms[] =
-  {
-    projectionMatrix * camera.GetWorldToViewMatrix() * glm::translate(glm::vec3(-1.0f, 0.0f, -3.0f)) * glm::rotate(glm::radians(36.0f), glm::vec3(1.0f, 0.0f, 0.0f)),
-    projectionMatrix * camera.GetWorldToViewMatrix() * glm::translate(glm::vec3(1.0f, 0.0f, -3.75f)) * glm::rotate(glm::radians(126.0f), glm::vec3(0.0f, 1.0f, 0.0f))
-  };
-  glBufferData(GL_ARRAY_BUFFER, sizeof(fullTransforms), fullTransforms, GL_DYNAMIC_DRAW);
-
-  GLCALL(glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
-  GLCALL(glViewport(0, 0, width(), height()));
-
-  GLCALL(glDrawElementsInstanced(GL_TRIANGLES, numIndices, GL_UNSIGNED_SHORT, 0, 2));
+  modelToProjectionMatrixUniformLocation = glGetUniformLocation(programId, "modelToProjectionMatrix");
 }
 
 //-------------------------------------------------------------------------------------------------

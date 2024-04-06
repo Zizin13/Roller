@@ -108,6 +108,9 @@
     <ClInclude Include="Camera.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="TeapotData.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="LogDialog.h">

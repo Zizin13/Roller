@@ -3,6 +3,7 @@
 //-------------------------------------------------------------------------------------------------
 #include <glew.h>
 #include "Vertex.h"
+#include "glm.hpp"
 //-------------------------------------------------------------------------------------------------
 struct tShapeData
 {
@@ -11,6 +12,12 @@ struct tShapeData
   GLuint numVertices;
   GLushort *indices;
   GLuint numIndices;
+
+  GLuint vertexBufId;
+  GLuint indexBufId;
+  GLuint vertexArrayObjId;
+
+  glm::mat4 modelToWorldMatrix;
 
   GLsizeiptr VertexBufSize() const
   {

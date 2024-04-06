@@ -15,5 +15,6 @@ void main()
   vec4 v = vec4(position, 1.0);
   gl_Position = fullTransformMatrix * v;
   vec3 lightVector = normalize(lightPosition - position);
-  theColor = vertexColor * dot(lightVector, normal);
+  float brightness = dot(lightVector, normal);
+  theColor = vec3(brightness, brightness, brightness);
 }

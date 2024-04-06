@@ -2,6 +2,7 @@
 #include "EditSeriesDialog.h"
 #include "Texture.h"
 #include "Track.h"
+#include <qmessagebox.h>
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -21,8 +22,6 @@ CEditSeriesDialog::CEditSeriesDialog(QWidget *pParent, int iTrackSize)
   sbStartChunk->setRange(0, iTrackSize - 1);
   sbEndChunk->setRange(0, iTrackSize - 1);
   sbInterval->setRange(1, iTrackSize - 1);
-
-  UpdateDialog();
 
   connect(pbCancel, &QPushButton::clicked, this, &CEditSeriesDialog::reject);
   connect(pbApply, &QPushButton::clicked, this, &CEditSeriesDialog::Validate);
@@ -96,8 +95,19 @@ void CEditSeriesDialog::Validate()
   m_sEndValue = leEndValue->text();
   m_sIncrement = leIncrement->text();
 
-  if (m_iEndChunk >= m_iStartChunk)
+  if (m_iEndChunk < m_iStartChunk)
+    QMessageBox::warning(this, "You need more practice!", "End chunk must not be before start chunk");
+  else if (m_sEndValue.length() > 0 && IsDirectionValid(m_sEndValue.toDouble(), m_sStartValue.toDouble(), m_sIncrement.toDouble()))
+    QMessageBox::warning(this, "You need more practice!", "Start value does not approach end value");
+  else
     accept();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CEditSeriesDialog::IsDirectionValid(double dStart, double dEnd, double dIncrement)
+{
+  return (dIncrement == 0.0 && dStart != dEnd) || (dIncrement != 0.0 && (dEnd-dStart > 0.0) == (dIncrement > 0.0));
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -105,12 +115,6 @@ void CEditSeriesDialog::Validate()
 int CEditSeriesDialog::ToInt(QString sText)
 {
   return sText.isEmpty() ? 0 : sText.toInt();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CEditSeriesDialog::UpdateDialog()
-{
 }
 
 //-------------------------------------------------------------------------------------------------

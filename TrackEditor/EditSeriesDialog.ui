@@ -21,6 +21,9 @@
        <property name="text">
         <string>Start chunk</string>
        </property>
+       <property name="toolTip">
+        <string>Index of start geometry chunk</string>
+       </property>
       </widget>
      </item>
      <item row="1" column="0">
@@ -38,6 +41,9 @@
        <property name="text">
         <string>End chunk</string>
        </property>
+       <property name="toolTip">
+        <string>Index of end geometry chunk</string>
+       </property>
       </widget>
      </item>
      <item row="1" column="1">
@@ -53,7 +59,10 @@
      <item row="0" column="2">
       <widget class="QLabel" name="lblInterval">
        <property name="text">
-       <string>Interval</string>
+        <string>Interval</string>
+       </property>
+       <property name="toolTip">
+        <string>Distance between geometry chunks included in this series</string>
        </property>
       </widget>
      </item>
@@ -70,7 +79,10 @@
      <item row="0" column="3">
       <widget class="QLabel" name="lblField">
        <property name="text">
-       <string>Field</string>
+        <string>Field</string>
+       </property>
+       <property name="toolTip">
+        <string>Field of geometry chunks to modify</string>
        </property>
       </widget>
      </item>
@@ -84,7 +96,10 @@
      <item row="0" column="4">
       <widget class="QLabel" name="lblStartValue">
        <property name="text">
-       <string>Start value</string>
+        <string>Start value</string>
+       </property>
+       <property name="toolTip">
+        <string>Initial field value (default 0)</string>
        </property>
       </widget>
      </item>
@@ -94,7 +109,10 @@
      <item row="0" column="5">
       <widget class="QLabel" name="lblEndValue">
        <property name="text">
-       <string>End value</string>
+        <string>End value</string>
+       </property>
+       <property name="toolTip">
+        <string>Field value to approach (optional)</string>
        </property>
       </widget>
      </item>
@@ -104,7 +122,10 @@
      <item row="0" column="6">
       <widget class="QLabel" name="lblIncrement">
        <property name="text">
-       <string>Increment</string>
+        <string>Increment</string>
+       </property>
+       <property name="toolTip">
+        <string>Amount to alter field value each iteration (default 0)</string>
        </property>
       </widget>
      </item>

@@ -25,8 +25,8 @@ public:
 
 private:
   void Validate();
+  bool IsDirectionValid(double dStart, double dEnd, double dIncrement);
   int ToInt(QString sText);
-  void UpdateDialog();
 
   int m_iStartChunk;
   int m_iEndChunk;

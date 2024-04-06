@@ -1889,7 +1889,7 @@ template <typename T> void CMainWindow::ApplySeriesToGeometry(int iStartChunk, i
 {
   T tValue = tStartValue;
   bool bDirection = tIncrement >= 0;
-  for (int i = iStartChunk; i < iEndChunk && (bDirection ? tValue <= tEndValue : tValue >= tEndValue); i += iInterval) {
+  for (int i = iStartChunk; i <= iEndChunk && (bDirection ? tValue <= tEndValue : tValue >= tEndValue); i += iInterval) {
     CChunkEditValues values;
     values.Set(iField, QString::number(tValue));
     p->m_track.ApplyGeometrySettings(i, i, values);

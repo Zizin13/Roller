@@ -267,7 +267,9 @@ void CTrackPreview::initializeGL()
     glm::translate(glm::vec3(-3.0f, 1.0f, -6.0f)) * 
     glm::rotate(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
   tShapeData arrow = ShapeGenerator::MakeArrow();
-  arrow.modelToWorldMatrix = glm::translate(glm::vec3(0.0f, 0.0f, -3.0f));
+  arrow.modelToWorldMatrix = 
+    glm::translate(glm::vec3(0.0f, -2.0f, -8.0f)) *
+    glm::rotate(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
   tShapeData plane = ShapeGenerator::MakePlane(20);
   plane.modelToWorldMatrix =
     glm::translate(glm::vec3(0.0f, 1.0f, 0.0f));

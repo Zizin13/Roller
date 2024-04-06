@@ -261,7 +261,7 @@ void CTrackPreview::initializeGL()
 
   tShapeData teapot = ShapeGenerator::MakeTeapot(20);
   teapot.modelToWorldMatrix =
-    glm::translate(glm::vec3(-3.0f, 0.0f, -6.0f)) * 
+    glm::translate(glm::vec3(-3.0f, 1.0f, -6.0f)) * 
     glm::rotate(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
   tShapeData arrow = ShapeGenerator::MakeArrow();
   arrow.modelToWorldMatrix = glm::translate(glm::vec3(0.0f, 0.0f, -3.0f));

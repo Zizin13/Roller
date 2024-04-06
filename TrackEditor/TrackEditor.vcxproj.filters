@@ -154,6 +154,9 @@
     <Filter Include="Qt Generated Files\Ui Header Files">
       <UniqueIdentifier>{4be68ce6-135e-43f6-a554-a92c9e7fe9b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resources\Shaders">
+      <UniqueIdentifier>{d51ef159-6dfa-42ff-90aa-474ab2d0d56c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="images\stunt.ico">
@@ -166,7 +169,11 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="VertexShaderCode.glsl" />
-    <None Include="FragmentShaderCode.glsl" />
+    <None Include="FragmentShaderCode.glsl">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="VertexShaderCode.glsl">
+      <Filter>Resources\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

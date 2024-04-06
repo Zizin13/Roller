@@ -56,7 +56,7 @@ const uint NUM_FLOATS_PER_VERTICE = 9;
 const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 GLuint programId;
 Camera camera;
-GLint fullTransformUniformLocation;
+GLint modelToProjectionMatrixUniformLocation;
 //-------------------------------------------------------------------------------------------------
 typedef std::vector<tShapeData> CShapeAy;
 //-------------------------------------------------------------------------------------------------
@@ -125,19 +125,19 @@ void CTrackPreview::paintGL()
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
   GLint ambientLightUniformLocation = glGetUniformLocation(programId, "ambientLight");
-  glm::vec3 ambientLight(0.3f, 0.3f, 0.3f);
-  glUniform3fv(ambientLightUniformLocation, 1, &ambientLight[0]);
+  glm::vec4 ambientLight(0.1f, 0.1f, 0.1f, 1.0f);
+  glUniform4fv(ambientLightUniformLocation, 1, &ambientLight[0]);
 
-  GLint lightPositionUniformLocation = glGetUniformLocation(programId, "lightPosition");
-  glm::vec3 lightPosition = glm::vec3(0.0f, 3.0f, 0.0f);
-  glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
+  GLint lightPositionUniformLocation = glGetUniformLocation(programId, "lightPositionWorld");
+  glm::vec3 lightPositionWorld = glm::vec3(0.0f, 3.0f, 0.0f);
+  glUniform3fv(lightPositionUniformLocation, 1, &lightPositionWorld[0]);
 
-  GLint modelToWorldMatUniformLocation = glGetUniformLocation(programId, "modelToWorldTransformMatrix");
+  GLint modelToWorldMatUniformLocation = glGetUniformLocation(programId, "modelToWorldMatrix");
 
   for (CShapeAy::iterator it = p->m_shapeAy.begin(); it != p->m_shapeAy.end(); ++it) {
     glBindVertexArray((*it).vertexArrayObjId);
     fullTransformMatrix = worldToProjectionMatrix * (*it).modelToWorldMatrix;
-    glUniformMatrix4fv(fullTransformUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
+    glUniformMatrix4fv(modelToProjectionMatrixUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
     glUniformMatrix4fv(modelToWorldMatUniformLocation, 1, GL_FALSE, &(*it).modelToWorldMatrix[0][0]);
     glDrawElements(GL_TRIANGLES, (*it).numIndices, GL_UNSIGNED_SHORT, 0);
   }
@@ -282,7 +282,7 @@ void CTrackPreview::initializeGL()
   SetupVertexArrays();
   InstallShaders();
 
-  fullTransformUniformLocation = glGetUniformLocation(programId, "fullTransformMatrix");
+  modelToProjectionMatrixUniformLocation = glGetUniformLocation(programId, "modelToProjectionMatrix");
 }
 
 //-------------------------------------------------------------------------------------------------

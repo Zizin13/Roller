@@ -49,6 +49,12 @@
     <ClCompile Include="moc\moc_TrackPreview.cpp">
       <Filter>Qt Generated Files\Moc Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EditSeriesDialog.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="moc\moc_EditSeriesDialog.cpp">
+      <Filter>Qt Generated Files\Moc Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="ShapeGenerator.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -86,6 +92,9 @@
     </ClInclude>
     <ClInclude Include="ChunkEditValues.h">
       <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_EditSeriesDialog.h">
+      <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ShapeData.h">
       <Filter>Headers</Filter>
@@ -134,6 +143,12 @@
     <CustomBuild Include="TrackPreview.h">
       <Filter>Headers</Filter>
     </CustomBuild>
+    <CustomBuild Include="EditSeriesDialog.ui">
+      <Filter>Resources</Filter>
+    </CustomBuild>
+    <CustomBuild Include="EditSeriesDialog.h">
+      <Filter>Headers</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -155,7 +170,7 @@
       <UniqueIdentifier>{4be68ce6-135e-43f6-a554-a92c9e7fe9b5}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resources\Shaders">
-      <UniqueIdentifier>{d51ef159-6dfa-42ff-90aa-474ab2d0d56c}</UniqueIdentifier>
+      <UniqueIdentifier>{5da65773-df50-4ee8-98f6-73176e059329}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

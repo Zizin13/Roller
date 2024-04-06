@@ -209,3 +209,92 @@ void CChunkEditValues::Clear()
 }
 
 //-------------------------------------------------------------------------------------------------
+
+void CChunkEditValues::Set(int index, QString value)
+{
+  switch (index) {
+    case 0: sLeftShoulderWidth = value; break;
+    case 1: sLeftLaneWidth = value; break;
+    case 2: sRightLaneWidth = value; break;
+    case 3: sRightShoulderWidth = value; break;
+    case 4: sLShoulderHeight = value; break;
+    case 5: sRShoulderHeight = value; break;
+    case 6: sLength = value; break;
+    case 7: sYaw = value; break;
+    case 8: sPitch = value; break;
+    case 9: sRoll = value; break;
+    case 10: sAILine1 = value; break;
+    case 11: sAILine2 = value; break;
+    case 12: sAILine3 = value; break;
+    case 13: sAILine4 = value; break;
+    case 14: sTrackGrip = value; break;
+    case 15: sLeftShoulderGrip = value; break;
+    case 16: sRightShoulderGrip = value; break;
+    case 17: sUnk04 = value; break;
+    case 18: sUnk05 = value; break;
+    case 19: sAudioAboveTrigger = value; break;
+    case 20: sAudioTriggerSpeed = value; break;
+    case 21: sAudioBelowTrigger = value; break;
+    case 22: sLeftSurfaceType = value; break;
+    case 23: sCenterSurfaceType = value; break;
+    case 24: sRightSurfaceType = value; break;
+    case 25: sLWallType = value; break;
+    case 26: sRWallType = value; break;
+    case 27: sRoofType = value; break;
+    case 28: sLUOuterWallType = value; break;
+    case 29: sLLOuterWallType = value; break;
+    case 30: sOuterFloorType = value; break;
+    case 31: sRLOuterWallType = value; break;
+    case 32: sRUOuterWallType = value; break;
+    case 33: sEnvironmentFloorType = value; break;
+    case 34: sSignType = value; break;
+    case 35: sSignHorizOffset = value; break;
+    case 36: sSignVertOffset = value; break;
+    case 37: sSignYaw = value; break;
+    case 38: sSignPitch = value; break;
+    case 39: sSignRoll = value; break;
+    case 40: sLUOuterWallAngle = value; break;
+    case 41: sLLOuterWallAngle = value; break;
+    case 42: sUnk23 = value; break;
+    case 43: sUnk24 = value; break;
+    case 44: sRLOuterWallAngle = value; break;
+    case 45: sRUOuterWallAngle = value; break;
+    case 46: sLUOuterWallHeight = value; break;
+    case 47: sLLOuterWallHeight = value; break;
+    case 48: sUnk29 = value; break;
+    case 49: sUnk30 = value; break;
+    case 50: sRLOuterWallHeight = value; break;
+    case 51: sRUOuterWallHeight = value; break;
+    case 52: sRoofHeight = value; break;
+    case 53: sDrawOrder1 = value; break;
+    case 54: sDrawOrder2 = value; break;
+    case 55: sDrawOrder3 = value; break;
+    case 56: sUnk37 = value; break;
+    case 57: sUnk38 = value; break;
+    case 58: sUnk39 = value; break;
+    case 59: sUnk40 = value; break;
+    case 60: sUnk41 = value; break;
+    case 61: sUnk42 = value; break;
+    case 62: sUnk43 = value; break;
+    case 63: sUnk44 = value; break;
+    case 64: sUnk45 = value; break;
+    case 65: sUnk46 = value; break;
+    case 66: sUnk47 = value; break;
+    case 67: sUnk48 = value; break;
+    case 68: sUnk49 = value; break;
+    case 69: sUnk50 = value; break;
+    case 70: sSignTexture = value; break;
+    case 71: sBackTexture = value; break;
+    case 72: sStuntScaleFactor = value; break;
+    case 73: sStuntAngle = value; break;
+    case 74: sStuntUnknown = value; break;
+    case 75: sStuntTimingGroup = value; break;
+    case 76: sStuntHeight = value; break;
+    case 77: sStuntTimeBulging = value; break;
+    case 78: sStuntTimeFlat = value; break;
+    case 79: sStuntExpandsContracts = value; break;
+    case 80: sStuntBulge = value; break;
+  }
+}
+
+//-------------------------------------------------------------------------------------------------

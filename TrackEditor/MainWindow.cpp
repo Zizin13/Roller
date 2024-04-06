@@ -10,6 +10,7 @@
 #include "Texture.h"
 #include "TilePicker.h"
 #include "EditSurfaceDialog.h"
+#include "EditSeriesDialog.h"
 #include "ChunkEditValues.h"
 #include "TrackPreview.h"
 #if defined (IS_WINDOWS)
@@ -115,6 +116,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(actSaveAs, &QAction::triggered, this, &CMainWindow::OnSaveTrackAs);
   connect(actImportMangled, &QAction::triggered, this, &CMainWindow::OnImportMangled);
   connect(actExportMangled, &QAction::triggered, this, &CMainWindow::OnExportMangled);
+  connect(actEditSeries, &QAction::triggered, this, &CMainWindow::OnEditSeries);
   connect(actDebug, &QAction::triggered, this, &CMainWindow::OnDebug);
   connect(actAbout, &QAction::triggered, this, &CMainWindow::OnAbout);
 
@@ -419,6 +421,33 @@ void CMainWindow::OnExportMangled()
   m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
   UpdateWindow();
 #endif
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnEditSeries()
+{
+  CEditSeriesDialog dlg(this, (int)p->m_track.m_chunkAy.size());
+  if (dlg.exec()) {
+    int iField = dlg.GetField();
+    if ((iField >= 7 && iField <= 9) || (iField >= 37 && iField <= 39)) {
+      double dStartValue = dlg.GetStartValue().toDouble();
+      double dIncrement = dlg.GetIncrement().toDouble();
+      double dEndValue = dlg.GetEndValue().length() != 0 ? dlg.GetEndValue().toDouble() : dIncrement == 0.0 ? dStartValue : dIncrement > 0.0 ? DBL_MAX : DBL_MIN;
+      if (dlg.GetIncrement().length() == 0 && dlg.GetEndValue().length() != 0)
+        dIncrement = (dEndValue - dStartValue) / (dlg.GetEndChunk() - dlg.GetStartChunk());
+      ApplySeriesToGeometry(dlg.GetStartChunk(), dlg.GetEndChunk(), dlg.GetInterval(), dlg.GetField(), dStartValue, dEndValue, dIncrement);
+    } else {
+      int iStartValue = dlg.GetStartValue().toInt();
+      int iIncrement = dlg.GetIncrement().toInt();
+      int iEndValue = dlg.GetEndValue().length() != 0 ? dlg.GetEndValue().toInt() : iIncrement == 0 ? iStartValue : iIncrement > 0 ? INT_MAX : INT_MIN;
+      if (dlg.GetIncrement().length() == 0 && dlg.GetEndValue().length() != 0)
+        iIncrement = (iEndValue - iStartValue) / (dlg.GetEndChunk() - dlg.GetStartChunk());
+      ApplySeriesToGeometry(dlg.GetStartChunk(), dlg.GetEndChunk(), dlg.GetInterval(), dlg.GetField(), iStartValue, iEndValue, iIncrement);
+    }
+    m_bUnsavedChanges = true;
+    UpdateWindow();
+  }
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1855,6 +1884,20 @@ void CMainWindow::UpdateTextures(QLineEdit *pLineEdit, QLabel *pTex1, QLabel *pT
   } else {
     pTex1->setPixmap(QPixmap());
     pTex2->setPixmap(QPixmap());
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+template <typename T> void CMainWindow::ApplySeriesToGeometry(int iStartChunk, int iEndChunk, int iInterval, int iField, T tStartValue, T tEndValue, T tIncrement)
+{
+  T tValue = tStartValue;
+  bool bDirection = tIncrement >= 0;
+  for (int i = iStartChunk; i <= iEndChunk && (bDirection ? tValue <= tEndValue : tValue >= tEndValue); i += iInterval) {
+    CChunkEditValues values;
+    values.Set(iField, QString::number(tValue));
+    p->m_track.ApplyGeometrySettings(i, i, values);
+    tValue += tIncrement;
   }
 }
 

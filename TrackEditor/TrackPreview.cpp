@@ -52,7 +52,7 @@ static bool GLLogCall(const char *szFunction, const char *szFile, int iLine)
 //-------------------------------------------------------------------------------------------------
 
 const uint NUM_VERTICES_PER_TRI = 3;
-const uint NUM_FLOATS_PER_VERTICE = 6;
+const uint NUM_FLOATS_PER_VERTICE = 9;
 const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 GLuint programId;
 Camera camera;
@@ -125,7 +125,7 @@ void CTrackPreview::paintGL()
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
   GLint ambientLightUniformLocation = glGetUniformLocation(programId, "ambientLight");
-  glm::vec3 ambientLight(1.0f, 1.0f, 1.0f);
+  glm::vec3 ambientLight(0.3f, 0.3f, 0.3f);
   glUniform3fv(ambientLightUniformLocation, 1, &ambientLight[0]);
 
   for (CShapeAy::iterator it = p->m_shapeAy.begin(); it != p->m_shapeAy.end(); ++it) {

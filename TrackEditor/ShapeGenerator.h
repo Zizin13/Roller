@@ -11,6 +11,7 @@ public:
   static tShapeData MakeArrow();
   static tShapeData MakePlane(unsigned int uiDimensions = 10);
   static tShapeData MakeTeapot(unsigned int uiTesselation = 10, const glm::mat4 &lidTransform = glm::mat4());
+  static tShapeData GenerateNormals(const tShapeData &data);
 
 private:
   static tShapeData MakePlaneVerts(unsigned int uiDimensions);

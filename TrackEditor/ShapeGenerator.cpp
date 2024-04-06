@@ -165,29 +165,29 @@ tShapeData ShapeGenerator::MakeArrow()
     // Top side of arrow head
     glm::vec3(+0.00f, +0.25f, -0.25f),         // 0
     glm::vec3(+1.00f, +0.00f, +0.00f),		  // Color
-    glm::vec3(+0.00f, +1.00f, +0.00f),         // Normal
+    glm::vec3(+0.00f, -1.00f, +0.00f),         // Normal
     glm::vec3(+0.50f, +0.25f, -0.25f),         // 1
     glm::vec3(+1.00f, +0.00f, +0.00f),		  // Color
-    glm::vec3(+0.00f, +1.00f, +0.00f),         // Normal
+    glm::vec3(+0.00f, -1.00f, +0.00f),         // Normal
     glm::vec3(+0.00f, +0.25f, -1.00f),         // 2
     glm::vec3(+1.00f, +0.00f, +0.00f),		  // Color
-    glm::vec3(+0.00f, +1.00f, +0.00f),         // Normal
+    glm::vec3(+0.00f, -1.00f, +0.00f),         // Normal
     glm::vec3(-0.50f, +0.25f, -0.25f),         // 3
     glm::vec3(+1.00f, +0.00f, +0.00f),		  // Color
-    glm::vec3(+0.00f, +1.00f, +0.00f),         // Normal
+    glm::vec3(+0.00f, -1.00f, +0.00f),         // Normal
     // Bottom side of arrow head
     glm::vec3(+0.00f, -0.25f, -0.25f),         // 4
     glm::vec3(+0.00f, +0.00f, +1.00f),		  // Color
-    glm::vec3(+0.00f, -1.00f, +0.00f),         // Normal
+    glm::vec3(+0.00f, +1.00f, +0.00f),         // Normal
     glm::vec3(+0.50f, -0.25f, -0.25f),         // 5
     glm::vec3(+0.00f, +0.00f, +1.00f),		  // Color
-    glm::vec3(+0.00f, -1.00f, +0.00f),         // Normal
+    glm::vec3(+0.00f, +1.00f, +0.00f),         // Normal
     glm::vec3(+0.00f, -0.25f, -1.00f),         // 6
     glm::vec3(+0.00f, +0.00f, +1.00f),		  // Color
-    glm::vec3(+0.00f, -1.00f, +0.00f),         // Normal
+    glm::vec3(+0.00f, +1.00f, +0.00f),         // Normal
     glm::vec3(-0.50f, -0.25f, -0.25f),         // 7
     glm::vec3(+0.00f, +0.00f, +1.00f),		  // Color
-    glm::vec3(+0.00f, -1.00f, +0.00f),         // Normal
+    glm::vec3(+0.00f, +1.00f, +0.00f),         // Normal
     // Right side of arrow tip
     glm::vec3(+0.50f, +0.25f, -0.25f),         // 8
     glm::vec3(+0.60f, +1.00f, +0.00f),		  // Color
@@ -230,29 +230,29 @@ tShapeData ShapeGenerator::MakeArrow()
     // Top side of back of arrow
     glm::vec3(+0.25f, +0.25f, -0.25f),         // 20
     glm::vec3(+1.00f, +0.00f, +0.00f),		  // Color
-    glm::vec3(+0.00f, +1.00f, +0.00f),         // Normal
+    glm::vec3(+0.00f, -1.00f, +0.00f),         // Normal
     glm::vec3(+0.25f, +0.25f, +1.00f),         // 21
     glm::vec3(+1.00f, +0.00f, +0.00f),		  // Color
-    glm::vec3(+0.00f, +1.00f, +0.00f),         // Normal
+    glm::vec3(+0.00f, -1.00f, +0.00f),         // Normal
     glm::vec3(-0.25f, +0.25f, +1.00f),         // 22
     glm::vec3(+1.00f, +0.00f, +0.00f),		  // Color
-    glm::vec3(+0.00f, +1.00f, +0.00f),         // Normal
+    glm::vec3(+0.00f, -1.00f, +0.00f),         // Normal
     glm::vec3(-0.25f, +0.25f, -0.25f),         // 23
     glm::vec3(+1.00f, +0.00f, +0.00f),		  // Color
-    glm::vec3(+0.00f, +1.00f, +0.00f),         // Normal
+    glm::vec3(+0.00f, -1.00f, +0.00f),         // Normal
     // Bottom side of back of arrow
     glm::vec3(+0.25f, -0.25f, -0.25f),         // 24
     glm::vec3(+0.00f, +0.00f, +1.00f),		  // Color
-    glm::vec3(+0.00f, -1.00f, +0.00f),         // Normal
+    glm::vec3(+0.00f, +1.00f, +0.00f),         // Normal
     glm::vec3(+0.25f, -0.25f, +1.00f),         // 25
     glm::vec3(+0.00f, +0.00f, +1.00f),		  // Color
-    glm::vec3(+0.00f, -1.00f, +0.00f),         // Normal
+    glm::vec3(+0.00f, +1.00f, +0.00f),         // Normal
     glm::vec3(-0.25f, -0.25f, +1.00f),         // 26
     glm::vec3(+0.00f, +0.00f, +1.00f),		  // Color
-    glm::vec3(+0.00f, -1.00f, +0.00f),         // Normal
+    glm::vec3(+0.00f, +1.00f, +0.00f),         // Normal
     glm::vec3(-0.25f, -0.25f, -0.25f),         // 27
     glm::vec3(+0.00f, +0.00f, +1.00f),		  // Color
-    glm::vec3(+0.00f, -1.00f, +0.00f),         // Normal
+    glm::vec3(+0.00f, +1.00f, +0.00f),         // Normal
     // Right side of back of arrow
     glm::vec3(+0.25f, +0.25f, -0.25f),         // 28
     glm::vec3(+0.60f, +1.00f, +0.00f),		  // Color

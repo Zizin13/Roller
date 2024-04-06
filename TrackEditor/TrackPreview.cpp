@@ -132,10 +132,13 @@ void CTrackPreview::paintGL()
   glm::vec3 lightPosition = glm::vec3(0.0f, 3.0f, 0.0f);
   glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
 
+  GLint modelToWorldMatUniformLocation = glGetUniformLocation(programId, "modelToWorldTransformMatrix");
+
   for (CShapeAy::iterator it = p->m_shapeAy.begin(); it != p->m_shapeAy.end(); ++it) {
     glBindVertexArray((*it).vertexArrayObjId);
     fullTransformMatrix = worldToProjectionMatrix * (*it).modelToWorldMatrix;
     glUniformMatrix4fv(fullTransformUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
+    glUniformMatrix4fv(modelToWorldMatUniformLocation, 1, GL_FALSE, &(*it).modelToWorldMatrix[0][0]);
     glDrawElements(GL_TRIANGLES, (*it).numIndices, GL_UNSIGNED_SHORT, 0);
   }
 }

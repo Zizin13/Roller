@@ -89,6 +89,8 @@ if %errorlevel% NEQ 0 goto Failed
 echo Copying Shaders...
 echo f | xcopy .\FragmentShaderCode.glsl .\$(OutDir) /R /Y /d /i &gt; null
 echo f | xcopy .\VertexShaderCode.glsl .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy .\FragmentShaderPassThroughCode.glsl .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy .\VertexShaderPassThroughCode.glsl .\$(OutDir) /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
 echo Post-Build Step for $(ProjectName) completed successfully
@@ -139,6 +141,8 @@ if %errorlevel% NEQ 0 goto Failed
 echo Copying Shaders...
 echo f | xcopy .\FragmentShaderCode.glsl .\$(OutDir) /R /Y /d /i &gt; null
 echo f | xcopy .\VertexShaderCode.glsl .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy .\FragmentShaderPassThroughCode.glsl .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy .\VertexShaderPassThroughCode.glsl .\$(OutDir) /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
 echo Post-Build Step for $(ProjectName) completed successfully
@@ -327,7 +331,9 @@ exit 1</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="FragmentShaderCode.glsl" />
+    <None Include="FragmentShaderPassThroughCode.glsl" />
     <None Include="VertexShaderCode.glsl" />
+    <None Include="VertexShaderPassThroughCode.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

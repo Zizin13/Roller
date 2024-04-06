@@ -190,5 +190,11 @@
     <None Include="VertexShaderCode.glsl">
       <Filter>Resources\Shaders</Filter>
     </None>
+    <None Include="FragmentShaderPassThroughCode.glsl">
+      <Filter>Resources\Shaders</Filter>
+    </None>
+    <None Include="VertexShaderPassThroughCode.glsl">
+      <Filter>Resources\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

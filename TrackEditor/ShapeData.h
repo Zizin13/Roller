@@ -16,6 +16,7 @@ struct tShapeData
   GLuint vertexBufId;
   GLuint indexBufId;
   GLuint vertexArrayObjId;
+  GLuint shaderProgramId;
 
   glm::mat4 modelToWorldMatrix;
 

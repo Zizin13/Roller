@@ -30,7 +30,7 @@ private:
   bool CheckShaderStatus(GLuint shaderId);
   bool CheckProgramStatus(GLuint programId);
   std::string ReadShaderCode(const char *filename);
-  void InstallShaders();
+  void InstallShaders(GLuint &programId, const char *szVertexShader, const char *szFragmentShader);
   void SetupVertexArrays();
 
   CTrackPreviewPrivate *p;

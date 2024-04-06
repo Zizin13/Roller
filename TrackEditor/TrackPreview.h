@@ -3,6 +3,8 @@
 //-------------------------------------------------------------------------------------------------
 #include <QtOpenGL\qgl.h>
 //-------------------------------------------------------------------------------------------------
+class CTrackPreviewPrivate;
+//-------------------------------------------------------------------------------------------------
 class CTrackPreview : public QGLWidget
 {
   Q_OBJECT
@@ -29,6 +31,9 @@ private:
   bool CheckProgramStatus(GLuint programId);
   std::string ReadShaderCode(const char *filename);
   void InstallShaders();
+  void SetupVertexArrays();
+
+  CTrackPreviewPrivate *p;
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -128,6 +128,10 @@ void CTrackPreview::paintGL()
   glm::vec3 ambientLight(0.3f, 0.3f, 0.3f);
   glUniform3fv(ambientLightUniformLocation, 1, &ambientLight[0]);
 
+  GLint lightPositionUniformLocation = glGetUniformLocation(programId, "lightPosition");
+  glm::vec3 lightPosition = glm::vec3(0.0f, 3.0f, 0.0f);
+  glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
+
   for (CShapeAy::iterator it = p->m_shapeAy.begin(); it != p->m_shapeAy.end(); ++it) {
     glBindVertexArray((*it).vertexArrayObjId);
     fullTransformMatrix = worldToProjectionMatrix * (*it).modelToWorldMatrix;
@@ -146,9 +150,11 @@ void CTrackPreview::SetupVertexArrays()
     glBindVertexArray((*it).vertexArrayObjId);
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
     glBindBuffer(GL_ARRAY_BUFFER, (*it).vertexBufId);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 3));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 6));
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*it).indexBufId);
   }
 }

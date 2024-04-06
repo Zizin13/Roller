@@ -337,7 +337,7 @@ tShapeData ShapeGenerator::MakeTeapot(unsigned int uiTesselation, const glm::mat
   ret.indices = new unsigned short[ret.numIndices];
 
   generatePatches(vertices, normals, textureCoordinates, ret.indices, uiTesselation);
-  moveLid(uiTesselation, vertices, lidTransform);
+  //moveLid(uiTesselation, vertices, lidTransform);
 
   // Adapt/convert their data format to mine
   ret.vertices = new tVertex[ret.numVertices];

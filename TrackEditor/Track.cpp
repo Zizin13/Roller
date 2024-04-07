@@ -329,7 +329,9 @@ bool CTrack::ProcessTrackData(const QByteArray &baData)
         }
         break;
       case STUNTS:
-        if (slLine.count() == 1) {
+        if (slLine.count() == 0) {
+            //do nothing
+        } else if (slLine.count() == 1) {
           if (!slLine[0].simplified().isEmpty() && slLine[0].toInt() == -1) {
             //stunts section always ends with a single -1 value
             section = TEXTURE;
@@ -358,10 +360,12 @@ bool CTrack::ProcessTrackData(const QByteArray &baData)
         }
         break;
       case TEXTURE:
-        if (slLine.count() == 1) {
+        if (slLine.count() == 0) {
+            //do nothing
+        } else if (slLine.count() == 1) {
           if (slLine[0].simplified().isEmpty()) {
             //do nothing
-          } if (slLine[0].toInt() == -1) {
+          } else if (slLine[0].toInt() == -1) {
             //texture section always ends with a single -1 value
             section = TRACK_NUM;
           } else {

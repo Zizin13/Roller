@@ -293,10 +293,20 @@ void CTrackPreview::initializeGL()
     glm::translate(glm::vec3(0.0f, -3.0f, 0.0f)) *
     glm::scale(glm::vec3(0.1f, 0.1f, 0.1f));
   cube.shaderProgramId = g_passThroughProgramId;
+  tShapeData torus = ShapeGenerator::MakeTorus();
+  torus.modelToWorldMatrix =
+    glm::translate(glm::vec3(3.0f, -2.0f, -5.0f));
+  torus.shaderProgramId = g_programId;
+  tShapeData sphere = ShapeGenerator::MakeSphere();
+  sphere.modelToWorldMatrix =
+    glm::translate(glm::vec3(4.0f, -1.0f, -1.0f));
+  sphere.shaderProgramId = g_programId;
 
   p->m_shapeAy.push_back(teapot);
   p->m_shapeAy.push_back(arrow);
   p->m_shapeAy.push_back(plane);
+  p->m_shapeAy.push_back(torus);
+  p->m_shapeAy.push_back(sphere);
   p->m_shapeAy.push_back(cube);
 
   SendDataToOpenGL();

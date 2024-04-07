@@ -10,12 +10,15 @@ public:
   static tShapeData MakeCube();
   static tShapeData MakeArrow();
   static tShapeData MakePlane(unsigned int uiDimensions = 10);
+  static tShapeData MakeSphere(unsigned int uiTesselation = 20);
+  static tShapeData MakeTorus(unsigned int uiTesselation = 20);
   static tShapeData MakeTeapot(unsigned int uiTesselation = 10, const glm::mat4 &lidTransform = glm::mat4());
   static tShapeData GenerateNormals(const tShapeData &data);
 
 private:
   static tShapeData MakePlaneVerts(unsigned int uiDimensions);
   static tShapeData MakePlaneIndices(unsigned int uiDimensions);
+  static tShapeData MakePlaneUnseamedIndices(unsigned int uiTesselation);
 
         // Teapot helpers
   static void generatePatches(float *v, float *n, float *tc, unsigned short *el, int grid);

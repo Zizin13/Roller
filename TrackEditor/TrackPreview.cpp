@@ -71,8 +71,6 @@ public:
   ~CTrackPreviewPrivate()
   {
     for (CShapeAy::iterator it = m_shapeAy.begin(); it != m_shapeAy.end(); ++it) {
-      glDeleteBuffers(1, &(*it).vertexBufId);
-      glDeleteBuffers(1, &(*it).indexBufId);
       (*it).Cleanup();
     }
   };
@@ -111,21 +109,6 @@ void CTrackPreview::SetModel(tTestModel *pModel)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackPreview::SendDataToOpenGL()
-{
-  for (CShapeAy::iterator it = p->m_shapeAy.begin(); it != p->m_shapeAy.end(); ++it) {
-    GLCALL(glGenBuffers(1, &(*it).vertexBufId));
-    GLCALL(glBindBuffer(GL_ARRAY_BUFFER, (*it).vertexBufId));
-    GLCALL(glBufferData(GL_ARRAY_BUFFER, (*it).VertexBufSize(), (*it).vertices, GL_STATIC_DRAW));
-
-    GLCALL(glGenBuffers(1, &(*it).indexBufId));
-    GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*it).indexBufId));
-    GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, (*it).IndexBufSize(), (*it).indices, GL_STATIC_DRAW));
-  }
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CTrackPreview::paintGL()
 {
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -141,7 +124,7 @@ void CTrackPreview::paintGL()
   glm::vec3 lightPositionWorld = glm::vec3(0.0f, -3.0f, 0.0f);
   if (m_pModel) {
     lightPositionWorld = m_pModel->lightPosition;
-    p->m_shapeAy[5].modelToWorldMatrix =
+    p->m_shapeAy[4].modelToWorldMatrix =
       glm::translate(lightPositionWorld) *
       glm::scale(glm::vec3(0.1f, 0.1f, 0.1f));
   }
@@ -165,7 +148,7 @@ void CTrackPreview::paintGL()
     } else {
       GLCALL(glUniformMatrix4fv(passThroughModelToProjectionMatrixUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]));
     }
-    GLCALL(glDrawElements(GL_TRIANGLES, (*it).numIndices, GL_UNSIGNED_SHORT, 0));
+    GLCALL(glDrawElements(GL_TRIANGLES, (*it).pIndexBuf->GetCount(), GL_UNSIGNED_INT, 0));
   }
 }
 
@@ -179,11 +162,13 @@ void CTrackPreview::SetupVertexArrays()
     GLCALL(glEnableVertexAttribArray(0));
     GLCALL(glEnableVertexAttribArray(1));
     GLCALL(glEnableVertexAttribArray(2));
-    GLCALL(glBindBuffer(GL_ARRAY_BUFFER, (*it).vertexBufId));
+    (*it).pVertexBuf->Bind();
+    //GLCALL(glBindBuffer(GL_ARRAY_BUFFER, (*it).vertexBufId));
     GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0));
     GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 3)));
     GLCALL(glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 6)));
-    GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*it).indexBufId));
+    (*it).pIndexBuf->Bind();
+    //GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*it).indexBufId));
   }
 }
 
@@ -311,19 +296,19 @@ void CTrackPreview::initializeGL()
   torus.modelToWorldMatrix =
     glm::translate(glm::vec3(3.0f, -2.0f, -5.0f));
   torus.shaderProgramId = g_programId;
-  tShapeData sphere = ShapeGenerator::MakeSphere();
-  sphere.modelToWorldMatrix =
-    glm::translate(glm::vec3(4.0f, -1.0f, -1.0f));
-  sphere.shaderProgramId = g_programId;
+  //tShapeData sphere = ShapeGenerator::MakeSphere();
+  //sphere.modelToWorldMatrix =
+  //  glm::translate(glm::vec3(4.0f, -1.0f, -1.0f));
+  //sphere.shaderProgramId = g_programId;
 
   p->m_shapeAy.push_back(teapot);
   p->m_shapeAy.push_back(arrow);
   p->m_shapeAy.push_back(plane);
   p->m_shapeAy.push_back(torus);
-  p->m_shapeAy.push_back(sphere);
+  //p->m_shapeAy.push_back(sphere);
   p->m_shapeAy.push_back(cube);
 
-  SendDataToOpenGL();
+  //SendDataToOpenGL();
   SetupVertexArrays();
 
   glUseProgram(g_passThroughProgramId);

@@ -2,36 +2,33 @@
 #define _TRACKEDITOR_SHAPEDATA_H
 //-------------------------------------------------------------------------------------------------
 #include <glew.h>
-#include "Vertex.h"
 #include "glm.hpp"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 //-------------------------------------------------------------------------------------------------
 struct tShapeData
 {
-  tShapeData() : vertices(0), numVertices(0), indices(0), numIndices(0) {};
-  tVertex *vertices;
-  GLuint numVertices;
-  GLushort *indices;
-  GLuint numIndices;
-
-  GLuint vertexBufId;
-  GLuint indexBufId;
+  tShapeData() 
+    : pVertexBuf(NULL)
+    , pIndexBuf(NULL)
+  {};
   GLuint vertexArrayObjId;
   GLuint shaderProgramId;
-
   glm::mat4 modelToWorldMatrix;
 
-  GLsizeiptr VertexBufSize() const
-  {
-    return numVertices * sizeof(tVertex);
-  }
-  GLsizeiptr IndexBufSize() const
-  {
-    return numIndices * sizeof(GLushort);
-  }
+  CVertexBuffer *pVertexBuf;
+  CIndexBuffer *pIndexBuf;
+
   void Cleanup()
   {
-    delete[] vertices;
-    delete[] indices;
+    if (pVertexBuf) {
+      delete pVertexBuf;
+      pVertexBuf = NULL;
+    }
+    if (pIndexBuf) {
+      delete pIndexBuf;
+      pIndexBuf = NULL;
+    }
   }
 };
 //-------------------------------------------------------------------------------------------------

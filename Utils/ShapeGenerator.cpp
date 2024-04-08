@@ -39,14 +39,10 @@ tShapeData ShapeGenerator::MakeTriangle()
     glm::vec3(+0.0f, +0.0f, +1.0f),
     glm::vec3(+0.0f, +0.0f, +1.0f),
   };
-  ret.numVertices = NUM_ARRAY_ELEMENTS(myTri);
-  ret.vertices = new tVertex[ret.numVertices];
-  memcpy(ret.vertices, myTri, sizeof(myTri));
+  ret.pVertexBuf = new CVertexBuffer(myTri, NUM_ARRAY_ELEMENTS(myTri));
 
-  GLushort indices[] = { 0, 1, 2 };
-  ret.numIndices = NUM_ARRAY_ELEMENTS(indices);
-  ret.indices = new GLushort[ret.numIndices];
-  memcpy(ret.indices, indices, sizeof(indices));
+  GLuint indices[] = { 0, 1, 2 };
+  ret.pIndexBuf = new CIndexBuffer(indices, NUM_ARRAY_ELEMENTS(indices));
 
   return ret;
 }
@@ -135,11 +131,9 @@ tShapeData ShapeGenerator::MakeCube()
     glm::vec3(+0.9f, +1.0f, +0.2f),  // Color
     glm::vec3(+0.0f, -1.0f, +0.0f),  // Normal
   };
-  ret.numVertices = NUM_ARRAY_ELEMENTS(stackVerts);
-  ret.vertices = new tVertex[ret.numVertices];
-  memcpy(ret.vertices, stackVerts, sizeof(stackVerts));
+  ret.pVertexBuf = new CVertexBuffer(stackVerts, NUM_ARRAY_ELEMENTS(stackVerts));
 
-  GLushort indices[] = { 
+  GLuint indices[] = { 
      0,  1,  2,  0,  2,  3, //top
      4,  5,  6,  4,  6,  7, //front
      8,  9, 10,  8, 10, 11, //right
@@ -147,9 +141,7 @@ tShapeData ShapeGenerator::MakeCube()
     16, 17, 18, 16, 18, 19, //back
     20, 22, 21, 20, 23, 22, //bottom
   };
-  ret.numIndices = NUM_ARRAY_ELEMENTS(indices);
-  ret.indices = new GLushort[ret.numIndices];
-  memcpy(ret.indices, indices, sizeof(indices));
+  ret.pIndexBuf = new CIndexBuffer(indices, NUM_ARRAY_ELEMENTS(indices));
 
   return ret;
 }
@@ -295,11 +287,9 @@ tShapeData ShapeGenerator::MakeArrow()
     glm::vec3(+0.00f, +0.00f, +1.00f),         // Normal
   };
 
-  ret.numVertices = NUM_ARRAY_ELEMENTS(verts);
-  ret.vertices = new tVertex[ret.numVertices];
-  memcpy(ret.vertices, verts, sizeof(verts));
+  ret.pVertexBuf = new CVertexBuffer(verts, NUM_ARRAY_ELEMENTS(verts));
 
-  GLushort indices[] = {
+  GLuint indices[] = {
     0, 1, 2, // Top
     0, 2, 3,
     4, 6, 5, // Bottom
@@ -322,9 +312,7 @@ tShapeData ShapeGenerator::MakeArrow()
     36, 38, 39,
   };
 
-  ret.numIndices = NUM_ARRAY_ELEMENTS(indices);
-  ret.indices = new GLushort[ret.numIndices];
-  memcpy(ret.indices, indices, sizeof(indices));
+  ret.pIndexBuf = new CIndexBuffer(indices, NUM_ARRAY_ELEMENTS(indices));
 
   return ret;
 }
@@ -333,24 +321,22 @@ tShapeData ShapeGenerator::MakeArrow()
 
 tShapeData ShapeGenerator::MakePlane(unsigned int uiDimensions)
 {
-  tShapeData ret = MakePlaneVerts(uiDimensions);
-  tShapeData ret2 = MakePlaneIndices(uiDimensions);
-  ret.numIndices = ret2.numIndices;
-  ret.indices = ret2.indices;
+  tShapeData ret;
+  ret.pVertexBuf = MakePlaneVerts(uiDimensions);
+  ret.pIndexBuf = MakePlaneIndices(uiDimensions);
   return ret;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-tShapeData ShapeGenerator::MakePlaneVerts(unsigned int uiDimensions)
+CVertexBuffer *ShapeGenerator::MakePlaneVerts(unsigned int uiDimensions)
 {
-  tShapeData ret;
-  ret.numVertices = uiDimensions * uiDimensions;
+  uint32 numVertices = uiDimensions * uiDimensions;
   int half = uiDimensions / 2;
-  ret.vertices = new tVertex[ret.numVertices];
+  tVertex *vertices = new tVertex[numVertices];
   for (int i = 0; i < uiDimensions; i++) {
     for (int j = 0; j < uiDimensions; j++) {
-      tVertex &thisVert = ret.vertices[i * uiDimensions + j];
+      tVertex &thisVert = vertices[i * uiDimensions + j];
       thisVert.position.x = j - half;
       thisVert.position.z = i - half;
       thisVert.position.y = 0;
@@ -358,102 +344,105 @@ tShapeData ShapeGenerator::MakePlaneVerts(unsigned int uiDimensions)
       thisVert.color = RandomColor();
     }
   }
-  return ret;
+
+  CVertexBuffer *pRetBuf = new CVertexBuffer(vertices, numVertices);
+  delete[] vertices;
+  return pRetBuf;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-tShapeData ShapeGenerator::MakePlaneIndices(unsigned int uiDimensions)
+CIndexBuffer *ShapeGenerator::MakePlaneIndices(unsigned int uiDimensions)
 {
-  tShapeData ret;
-  ret.numIndices = (uiDimensions - 1) * (uiDimensions - 1) * 2 * 3; // 2 triangles per square, 3 indices per triangle
-  ret.indices = new unsigned short[ret.numIndices];
+  uint32 numIndices = (uiDimensions - 1) * (uiDimensions - 1) * 2 * 3; // 2 triangles per square, 3 indices per triangle
+  uint32 *indices = new uint32[numIndices];
   int runner = 0;
   for (int row = 0; row < uiDimensions - 1; row++) {
     for (int col = 0; col < uiDimensions - 1; col++) {
-      ret.indices[runner++] = uiDimensions * row + col;
-      ret.indices[runner++] = uiDimensions * row + col + uiDimensions;
-      ret.indices[runner++] = uiDimensions * row + col + uiDimensions + 1;
+      indices[runner++] = uiDimensions * row + col;
+      indices[runner++] = uiDimensions * row + col + uiDimensions;
+      indices[runner++] = uiDimensions * row + col + uiDimensions + 1;
 
-      ret.indices[runner++] = uiDimensions * row + col;
-      ret.indices[runner++] = uiDimensions * row + col + uiDimensions + 1;
-      ret.indices[runner++] = uiDimensions * row + col + 1;
+      indices[runner++] = uiDimensions * row + col;
+      indices[runner++] = uiDimensions * row + col + uiDimensions + 1;
+      indices[runner++] = uiDimensions * row + col + 1;
     }
   }
-  assert(runner == ret.numIndices);
-  return ret;
+  assert(runner == numIndices);
+  CIndexBuffer *pRetBuf = new CIndexBuffer(indices, numIndices);
+  delete[] indices;
+  return pRetBuf;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-tShapeData ShapeGenerator::MakePlaneUnseamedIndices(GLuint tesselation)
+CIndexBuffer *ShapeGenerator::MakePlaneUnseamedIndices(GLuint tesselation)
 {
-  tShapeData ret;
   GLuint dimensions = tesselation * tesselation;
-  ret.numIndices = dimensions * 2 * 3; // 2 triangles per square, 3 indices per triangle
-  ret.indices = new unsigned short[ret.numIndices];
+  uint32 numIndices = dimensions * 2 * 3; // 2 triangles per square, 3 indices per triangle
+  uint32 *indices = new uint32[numIndices];
   int runner = 0;
   for (int row = 0; row < tesselation; row++) {
           // This code is crap but works, and I'm not in the mood right now to clean it up
     for (int col = 0; col < tesselation; col++) {
             // Bottom left triangle
-      ret.indices[runner++] = tesselation * row + col;
+      indices[runner++] = tesselation * row + col;
       // One row down unless it's the bottom row, 
-      ret.indices[runner++] = (row + 1 == tesselation ? 0 : tesselation * row + tesselation) + col;
+      indices[runner++] = (row + 1 == tesselation ? 0 : tesselation * row + tesselation) + col;
       // Move to vert right of this one unless it's the last vert,
       // which we connect to the first vert in the row
       // the % dimensions at the end accounts for the last row hooking to the first row
-      ret.indices[runner++] = (tesselation * row + col + tesselation + (col + 1 == tesselation ? (tesselation * -1) + 1 : 1)) % dimensions;
+      indices[runner++] = (tesselation * row + col + tesselation + (col + 1 == tesselation ? (tesselation * -1) + 1 : 1)) % dimensions;
 
       // Upper right triangle
-      ret.indices[runner++] = tesselation * row + col;
+      indices[runner++] = tesselation * row + col;
       if (col + 1 == tesselation && row + 1 == tesselation) {
               // Very last vert
-        ret.indices[runner++] = 0;
+        indices[runner++] = 0;
       } else if (col + 1 == tesselation) {
               // Last vert on this row
               // Check if we need to connect it to zeroeth row or the next row
         if (row + 1 == tesselation) {
                 // Tie to zeroeth row
-          ret.indices[runner++] = col + 1;
+          indices[runner++] = col + 1;
         } else {
                 // Tie to next row
-          ret.indices[runner++] = tesselation * row + col + 1;
+          indices[runner++] = tesselation * row + col + 1;
         }
       } else {
               // Regular interior vert
               // the % dimensions at the end accounts for the last row hooking to the first row
-        ret.indices[runner++] = (tesselation * row + col + tesselation + 1) % dimensions;
+        indices[runner++] = (tesselation * row + col + tesselation + 1) % dimensions;
       }
 
-      ret.indices[runner++] = tesselation * row + col + (col + 1 == tesselation ? -col : 1);
+      indices[runner++] = tesselation * row + col + (col + 1 == tesselation ? -col : 1);
     }
   }
 
-  return ret;
+  CIndexBuffer *pRetBuf = new CIndexBuffer(indices, numIndices);
+  delete[] indices;
+  return pRetBuf;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 tShapeData ShapeGenerator::MakeTeapot(unsigned int uiTesselation, const glm::mat4 &lidTransform)
 {
-  tShapeData ret;
-
-  ret.numVertices = 32 * (uiTesselation + 1) * (uiTesselation + 1);
+  uint32 numVertices = 32 * (uiTesselation + 1) * (uiTesselation + 1);
   GLuint faces = uiTesselation * uiTesselation * 32;
-  float *vertices = new float[ret.numVertices * 3];
-  float *normals = new float[ret.numVertices * 3];
-  float *textureCoordinates = new float[ret.numVertices * 2];
-  ret.numIndices = faces * 6;
-  ret.indices = new unsigned short[ret.numIndices];
+  float *vertices = new float[numVertices * 3];
+  float *normals = new float[numVertices * 3];
+  float *textureCoordinates = new float[numVertices * 2];
+  uint32 numIndices = faces * 6;
+  unsigned short *indices = new unsigned short[numIndices];
 
-  generatePatches(vertices, normals, textureCoordinates, ret.indices, uiTesselation);
+  generatePatches(vertices, normals, textureCoordinates, indices, uiTesselation);
   //moveLid(uiTesselation, vertices, lidTransform);
 
   // Adapt/convert their data format to mine
-  ret.vertices = new tVertex[ret.numVertices];
-  for (GLuint i = 0; i < ret.numVertices; i++) {
-    tVertex &v = ret.vertices[i];
+  tVertex *retVertices = new tVertex[numVertices];
+  for (uint32 i = 0; i < numVertices; i++) {
+    tVertex &v = retVertices[i];
     v.position.x = vertices[i * 3 + 0];
     v.position.y = vertices[i * 3 + 1];
     v.position.z = vertices[i * 3 + 2];
@@ -462,6 +451,14 @@ tShapeData ShapeGenerator::MakeTeapot(unsigned int uiTesselation, const glm::mat
     v.normal.z = normals[i * 3 + 2];
     v.color = RandomColor();
   }
+  uint32 *retIndices = new uint32[numIndices];
+  for (uint32 i = 0; i < numIndices; ++i) {
+    retIndices[i] = indices[i];
+  }
+
+  tShapeData ret;
+  ret.pVertexBuf = new CVertexBuffer(retVertices, numVertices);
+  ret.pIndexBuf = new CIndexBuffer(retIndices, numIndices);
   return ret;
 }
 
@@ -691,10 +688,9 @@ glm::vec3 ShapeGenerator::evaluateNormal(int gridU, int gridV, float *B, float *
 
 tShapeData ShapeGenerator::MakeTorus(GLuint tesselation)
 {
-  tShapeData ret;
   GLuint dimensions = tesselation * tesselation;
-  ret.numVertices = dimensions;
-  ret.vertices = new tVertex[ret.numVertices];
+  uint32 numVertices = dimensions;
+  tVertex *vertices = new tVertex[numVertices];
   float sliceAngle = 360 / tesselation;
   const float torusRadius = 1.0f;
   const float pipeRadius = 0.5f;
@@ -706,7 +702,7 @@ tShapeData ShapeGenerator::MakeTorus(GLuint tesselation)
       glm::translate(glm::mat4(1.f), glm::vec3(torusRadius, 0.0f, 0.0f));
     glm::mat3 normalTransform = (glm::mat3)(transform);
     for (GLuint round2 = 0; round2 < tesselation; round2++) {
-      tVertex &v = ret.vertices[round1 * tesselation + round2];
+      tVertex &v = vertices[round1 * tesselation + round2];
       glm::vec4 glmVert = glm::vec4(
               pipeRadius * cos(glm::radians(sliceAngle * round2)),
               pipeRadius * sin(glm::radians(sliceAngle * round2)),
@@ -719,64 +715,64 @@ tShapeData ShapeGenerator::MakeTorus(GLuint tesselation)
     }
   }
 
-  tShapeData ret2 = MakePlaneUnseamedIndices(tesselation);
-  ret.numIndices = ret2.numIndices;
-  ret.indices = ret2.indices;
-
-  return ret;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-tShapeData ShapeGenerator::MakeSphere(GLuint tesselation)
-{
-  tShapeData ret = MakePlaneVerts(tesselation);
-  tShapeData ret2 = MakePlaneIndices(tesselation);
-  ret.indices = ret2.indices;
-  ret.numIndices = ret2.numIndices;
-
-  GLuint dimensions = tesselation;
-  const float RADIUS = 1.0f;
-  const double CIRCLE = PI * 2;
-  const double SLICE_ANGLE = CIRCLE / (dimensions - 1);
-  for (size_t col = 0; col < dimensions; col++) {
-    double phi = -SLICE_ANGLE * col;
-    for (size_t row = 0; row < dimensions; row++) {
-      double theta = -(SLICE_ANGLE / 2.0) * row;
-      size_t vertIndex = col * dimensions + row;
-      tVertex &v = ret.vertices[vertIndex];
-      v.position.x = RADIUS * cos(phi) * sin(theta);
-      v.position.y = RADIUS * sin(phi) * sin(theta);
-      v.position.z = RADIUS * cos(theta);
-      v.normal = glm::normalize(v.position);
-    }
-  }
-  return ret;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-tShapeData ShapeGenerator::GenerateNormals(const tShapeData &data)
-{
   tShapeData ret;
-  ret.numVertices = data.numVertices * 2;
-  ret.vertices = new tVertex[ret.numVertices];
-  glm::vec3 white(1.0f, 1.0f, 1.0f);
-  for (int i = 0; i < data.numVertices; i++) {
-    GLuint vertIndex = i * 2;
-    tVertex &v1 = ret.vertices[vertIndex];
-    tVertex &v2 = ret.vertices[vertIndex + 1];
-    const tVertex &sourceVertex = data.vertices[i];
-    v1.position = sourceVertex.position;
-    v2.position = sourceVertex.position + sourceVertex.normal;
-    v1.color = v2.color = white;
-  }
+  ret.pVertexBuf = new CVertexBuffer(vertices, numVertices);
+  ret.pIndexBuf = MakePlaneUnseamedIndices(tesselation);
 
-  ret.numIndices = ret.numVertices;
-  ret.indices = new GLushort[ret.numIndices];
-  for (int i = 0; i < ret.numIndices; i++)
-    ret.indices[i] = i;
   return ret;
 }
+
+//-------------------------------------------------------------------------------------------------
+
+//tShapeData ShapeGenerator::MakeSphere(GLuint tesselation)
+//{
+//  tShapeData ret = MakePlaneVerts(tesselation);
+//  tShapeData ret2 = MakePlaneIndices(tesselation);
+//  ret.indices = ret2.indices;
+//  ret.numIndices = ret2.numIndices;
+//
+//  GLuint dimensions = tesselation;
+//  const float RADIUS = 1.0f;
+//  const double CIRCLE = PI * 2;
+//  const double SLICE_ANGLE = CIRCLE / (dimensions - 1);
+//  for (size_t col = 0; col < dimensions; col++) {
+//    double phi = -SLICE_ANGLE * col;
+//    for (size_t row = 0; row < dimensions; row++) {
+//      double theta = -(SLICE_ANGLE / 2.0) * row;
+//      size_t vertIndex = col * dimensions + row;
+//      tVertex &v = ret.vertices[vertIndex];
+//      v.position.x = RADIUS * cos(phi) * sin(theta);
+//      v.position.y = RADIUS * sin(phi) * sin(theta);
+//      v.position.z = RADIUS * cos(theta);
+//      v.normal = glm::normalize(v.position);
+//    }
+//  }
+//  return ret;
+//}
+
+//-------------------------------------------------------------------------------------------------
+
+//tShapeData ShapeGenerator::GenerateNormals(const tShapeData &data)
+//{
+//  tShapeData ret;
+//  ret.numVertices = data.numVertices * 2;
+//  ret.vertices = new tVertex[ret.numVertices];
+//  glm::vec3 white(1.0f, 1.0f, 1.0f);
+//  for (int i = 0; i < data.numVertices; i++) {
+//    GLuint vertIndex = i * 2;
+//    tVertex &v1 = ret.vertices[vertIndex];
+//    tVertex &v2 = ret.vertices[vertIndex + 1];
+//    const tVertex &sourceVertex = data.vertices[i];
+//    v1.position = sourceVertex.position;
+//    v2.position = sourceVertex.position + sourceVertex.normal;
+//    v1.color = v2.color = white;
+//  }
+//
+//  ret.numIndices = ret.numVertices;
+//  ret.indices = new GLushort[ret.numIndices];
+//  for (int i = 0; i < ret.numIndices; i++)
+//    ret.indices[i] = i;
+//  return ret;
+//}
 
 //-------------------------------------------------------------------------------------------------

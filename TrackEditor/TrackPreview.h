@@ -30,7 +30,6 @@ protected:
   void keyPressEvent(QKeyEvent *pEvent);
 
 private:
-  void SendDataToOpenGL();
   bool CheckStatus(GLuint objectId,
                    PFNGLGETSHADERIVPROC objectPropertyGetter,
                    PFNGLGETSHADERINFOLOGPROC getInfoLogFunc,

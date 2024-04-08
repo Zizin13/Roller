@@ -2188,7 +2188,7 @@ wall height</string>
       </widget>
       <widget class="QTabWidget" name="twViewer">
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="tabPreview">
         <attribute name="title">
@@ -2196,7 +2196,17 @@ wall height</string>
         </attribute>
         <layout class="QVBoxLayout" name="previewLayout">
          <item>
-          <widget class="CTrackPreview" name="openGLWidget"/>
+          <layout class="QHBoxLayout" name="debugLayout"/>
+         </item>
+         <item>
+          <widget class="CTrackPreview" name="openGLWidget">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>

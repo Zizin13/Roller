@@ -61,6 +61,12 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="DebugSlider.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="moc\moc_DebugSlider.cpp">
+      <Filter>Qt Generated Files\Moc Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Track.h">
@@ -147,6 +153,9 @@
       <Filter>Resources</Filter>
     </CustomBuild>
     <CustomBuild Include="EditSeriesDialog.h">
+      <Filter>Headers</Filter>
+    </CustomBuild>
+    <CustomBuild Include="DebugSlider.h">
       <Filter>Headers</Filter>
     </CustomBuild>
   </ItemGroup>

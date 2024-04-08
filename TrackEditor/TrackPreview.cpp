@@ -84,6 +84,7 @@ public:
 
 CTrackPreview::CTrackPreview(QWidget *pParent)
   : QGLWidget(QGLFormat(QGL::SampleBuffers), pParent)
+  , m_pModel(NULL)
 {
   p = new CTrackPreviewPrivate;
 }
@@ -99,6 +100,13 @@ CTrackPreview::~CTrackPreview()
   glUseProgram(0);
   glDeleteProgram(g_programId);
   glDeleteProgram(g_passThroughProgramId);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::SetModel(tTestModel *pModel)
+{
+  m_pModel = pModel;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -131,6 +139,12 @@ void CTrackPreview::paintGL()
   glm::vec4 ambientLight(0.1f, 0.1f, 0.1f, 1.0f);
 
   glm::vec3 lightPositionWorld = glm::vec3(0.0f, -3.0f, 0.0f);
+  if (m_pModel) {
+    lightPositionWorld = m_pModel->lightPosition;
+    p->m_shapeAy[5].modelToWorldMatrix =
+      glm::translate(lightPositionWorld) *
+      glm::scale(glm::vec3(0.1f, 0.1f, 0.1f));
+  }
 
   glm::vec3 eyePositionWorld = camera.GetPosition();
 
@@ -258,7 +272,7 @@ void CTrackPreview::InstallShaders(GLuint &programId, const char *szVertexShader
 
 void CTrackPreview::initializeGL()
 {
-  setMouseTracking(true);
+  setMouseTracking(false);
   if (glewInit() != GLEW_OK)
     assert(0);
 

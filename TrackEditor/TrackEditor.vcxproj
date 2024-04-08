@@ -156,8 +156,10 @@ exit 1</Command>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ChunkEditValues.cpp" />
+    <ClCompile Include="DebugSlider.cpp" />
     <ClCompile Include="EditSeriesDialog.cpp" />
     <ClCompile Include="EditSurfaceDialog.cpp" />
+    <ClCompile Include="moc\moc_DebugSlider.cpp" />
     <ClCompile Include="moc\moc_TrackPreview.cpp" />
     <ClCompile Include="ShapeGenerator.cpp" />
     <ClCompile Include="TrackPreview.cpp" />
@@ -202,6 +204,16 @@ exit 1</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <CustomBuild Include="DebugSlider.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC'ing %(Filename).h...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC'ing %(Filename).h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
     <ClInclude Include="TeapotData.h" />
     <ClInclude Include="Vertex.h" />
     <CustomBuild Include="EditSurfaceDialog.h">

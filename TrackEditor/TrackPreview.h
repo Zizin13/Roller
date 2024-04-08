@@ -3,6 +3,12 @@
 //-------------------------------------------------------------------------------------------------
 #include <QtOpenGL\qgl.h>
 //-------------------------------------------------------------------------------------------------
+#include "glm.hpp"
+struct tTestModel
+{
+  glm::vec3 lightPosition;
+};
+//-------------------------------------------------------------------------------------------------
 class CTrackPreviewPrivate;
 //-------------------------------------------------------------------------------------------------
 class CTrackPreview : public QGLWidget
@@ -12,6 +18,8 @@ class CTrackPreview : public QGLWidget
 public:
   CTrackPreview(QWidget *pParent);
   ~CTrackPreview();
+
+  void SetModel(tTestModel *pModel);
 
 protected:
   void initializeGL();
@@ -34,6 +42,7 @@ private:
   void SetupVertexArrays();
 
   CTrackPreviewPrivate *p;
+  tTestModel *m_pModel;
 };
 
 //-------------------------------------------------------------------------------------------------

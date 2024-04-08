@@ -55,12 +55,6 @@
     <ClCompile Include="moc\moc_EditSeriesDialog.cpp">
       <Filter>Qt Generated Files\Moc Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ShapeGenerator.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="DebugSlider.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -101,21 +95,6 @@
     </ClInclude>
     <ClInclude Include="ui\ui_EditSeriesDialog.h">
       <Filter>Qt Generated Files\Ui Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ShapeData.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="ShapeGenerator.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Vertex.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="TeapotData.h">
-      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

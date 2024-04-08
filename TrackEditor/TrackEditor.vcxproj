@@ -154,14 +154,12 @@ exit 1</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ChunkEditValues.cpp" />
     <ClCompile Include="DebugSlider.cpp" />
     <ClCompile Include="EditSeriesDialog.cpp" />
     <ClCompile Include="EditSurfaceDialog.cpp" />
     <ClCompile Include="moc\moc_DebugSlider.cpp" />
     <ClCompile Include="moc\moc_TrackPreview.cpp" />
-    <ClCompile Include="ShapeGenerator.cpp" />
     <ClCompile Include="TrackPreview.cpp" />
     <ClCompile Include="LogDialog.cpp" />
     <ClCompile Include="MainWindow.cpp" />
@@ -203,7 +201,6 @@ exit 1</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
     <CustomBuild Include="DebugSlider.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
@@ -214,8 +211,6 @@ exit 1</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
-    <ClInclude Include="TeapotData.h" />
-    <ClInclude Include="Vertex.h" />
     <CustomBuild Include="EditSurfaceDialog.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
@@ -247,8 +242,6 @@ exit 1</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
-    <ClInclude Include="ShapeData.h" />
-    <ClInclude Include="ShapeGenerator.h" />
     <ClInclude Include="ui\ui_EditSurfaceDialog.h" />
     <ClInclude Include="ui\ui_EditSeriesDialog.h" />
     <ClInclude Include="ui\ui_TilePicker.h" />

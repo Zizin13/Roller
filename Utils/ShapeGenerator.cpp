@@ -11,8 +11,6 @@
 #define NUM_ARRAY_ELEMENTS(a) sizeof(a) / sizeof(*a)
 #define PI 3.14159265359
 //-------------------------------------------------------------------------------------------------
-typedef unsigned int uint;
-//-------------------------------------------------------------------------------------------------
 
 glm::vec3 RandomColor()
 {
@@ -442,7 +440,7 @@ tShapeData ShapeGenerator::MakeTeapot(unsigned int uiTesselation, const glm::mat
   tShapeData ret;
 
   ret.numVertices = 32 * (uiTesselation + 1) * (uiTesselation + 1);
-  uint faces = uiTesselation * uiTesselation * 32;
+  GLuint faces = uiTesselation * uiTesselation * 32;
   float *vertices = new float[ret.numVertices * 3];
   float *normals = new float[ret.numVertices * 3];
   float *textureCoordinates = new float[ret.numVertices * 2];
@@ -454,7 +452,7 @@ tShapeData ShapeGenerator::MakeTeapot(unsigned int uiTesselation, const glm::mat
 
   // Adapt/convert their data format to mine
   ret.vertices = new tVertex[ret.numVertices];
-  for (uint i = 0; i < ret.numVertices; i++) {
+  for (GLuint i = 0; i < ret.numVertices; i++) {
     tVertex &v = ret.vertices[i];
     v.position.x = vertices[i * 3 + 0];
     v.position.y = vertices[i * 3 + 1];
@@ -730,14 +728,14 @@ tShapeData ShapeGenerator::MakeTorus(GLuint tesselation)
 
 //-------------------------------------------------------------------------------------------------
 
-tShapeData ShapeGenerator::MakeSphere(uint tesselation)
+tShapeData ShapeGenerator::MakeSphere(GLuint tesselation)
 {
   tShapeData ret = MakePlaneVerts(tesselation);
   tShapeData ret2 = MakePlaneIndices(tesselation);
   ret.indices = ret2.indices;
   ret.numIndices = ret2.numIndices;
 
-  uint dimensions = tesselation;
+  GLuint dimensions = tesselation;
   const float RADIUS = 1.0f;
   const double CIRCLE = PI * 2;
   const double SLICE_ANGLE = CIRCLE / (dimensions - 1);
@@ -765,7 +763,7 @@ tShapeData ShapeGenerator::GenerateNormals(const tShapeData &data)
   ret.vertices = new tVertex[ret.numVertices];
   glm::vec3 white(1.0f, 1.0f, 1.0f);
   for (int i = 0; i < data.numVertices; i++) {
-    uint vertIndex = i * 2;
+    GLuint vertIndex = i * 2;
     tVertex &v1 = ret.vertices[vertIndex];
     tVertex &v2 = ret.vertices[vertIndex + 1];
     const tVertex &sourceVertex = data.vertices[i];

@@ -121,6 +121,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(p->pLightXSld, &CDebugSlider::valueChanged, this, &CMainWindow::OnDebugSliderChanged);
   connect(p->pLightYSld, &CDebugSlider::valueChanged, this, &CMainWindow::OnDebugSliderChanged);
   connect(p->pLightZSld, &CDebugSlider::valueChanged, this, &CMainWindow::OnDebugSliderChanged);
+  OnDebugSliderChanged();
 
   //signals
   connect(this, &CMainWindow::LogMsgSig, this, &CMainWindow::OnLogMsg, Qt::QueuedConnection);

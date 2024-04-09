@@ -5,6 +5,10 @@
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
 //-------------------------------------------------------------------------------------------------
+#if defined(_DEBUG) && defined(IS_WINDOWS)
+#define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
+#endif
+//-------------------------------------------------------------------------------------------------
 #pragma warning(disable:4018)
 #pragma warning(disable:4244)
 //-------------------------------------------------------------------------------------------------
@@ -726,6 +730,7 @@ tShapeData ShapeGenerator::MakeTorus(GLuint tesselation)
   tShapeData ret;
   ret.pVertexBuf = new CVertexBuffer(vertices, numVertices);
   ret.pIndexBuf = MakePlaneUnseamedIndices(tesselation);
+  delete[] vertices;
 
   return ret;
 }

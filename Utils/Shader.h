@@ -5,6 +5,7 @@
 #include "glew.h"
 #include "glm.hpp"
 #include <string>
+#include <unordered_map>
 //-------------------------------------------------------------------------------------------------
 
 class CShader
@@ -20,6 +21,7 @@ public:
   void SetUniformMat4(const std::string &sName, const glm::mat4 &matrix);
 
 private:
+  int GetUniformLocation(const std::string &sName);
   bool CheckStatus(GLuint objectId,
                    PFNGLGETSHADERIVPROC objectPropertyGetter,
                    PFNGLGETSHADERINFOLOGPROC getInfoLogFunc,
@@ -30,6 +32,7 @@ private:
   void InstallShaders(GLuint &programId, const char *szVertexShader, const char *szFragmentShader);
 
   uint32 m_uiId;
+  std::unordered_map<std::string, int> m_locationCache;
 };
 
 //-------------------------------------------------------------------------------------------------

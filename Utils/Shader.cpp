@@ -38,7 +38,7 @@ void CShader::Unbind() const
 
 void CShader::SetUniformVec3(const std::string &sName, const glm::vec3 &vec)
 {
-  int iUniformLocation = glGetUniformLocation(m_uiId, sName.c_str());
+  int iUniformLocation = GetUniformLocation(sName);
   if (iUniformLocation < 0)
     return;
 
@@ -49,7 +49,7 @@ void CShader::SetUniformVec3(const std::string &sName, const glm::vec3 &vec)
 
 void CShader::SetUniformVec4(const std::string &sName, const glm::vec4 &vec)
 {
-  int iUniformLocation = glGetUniformLocation(m_uiId, sName.c_str());
+  int iUniformLocation = GetUniformLocation(sName);
   if (iUniformLocation < 0)
     return;
 
@@ -60,11 +60,25 @@ void CShader::SetUniformVec4(const std::string &sName, const glm::vec4 &vec)
 
 void CShader::SetUniformMat4(const std::string &sName, const glm::mat4 &matrix)
 {
-  int iUniformLocation = glGetUniformLocation(m_uiId, sName.c_str());
+  int iUniformLocation = GetUniformLocation(sName);
   if (iUniformLocation < 0)
     return;
 
   GLCALL(glUniformMatrix4fv(iUniformLocation, 1, GL_FALSE, &matrix[0][0]));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+int CShader::GetUniformLocation(const std::string &sName)
+{
+  int iUniformLocation = -1;
+  if (m_locationCache.find(sName) != m_locationCache.end())
+    iUniformLocation = m_locationCache[sName];
+  else {
+    iUniformLocation = glGetUniformLocation(m_uiId, sName.c_str());
+    m_locationCache[sName] = iUniformLocation;
+  }
+  return iUniformLocation;
 }
 
 //-------------------------------------------------------------------------------------------------

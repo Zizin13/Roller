@@ -36,35 +36,38 @@ void CShader::Unbind() const
 
 //-------------------------------------------------------------------------------------------------
 
-void CShader::SetUniformVec3(const std::string &sName, const glm::vec3 &vec)
+bool CShader::SetUniformVec3(const std::string &sName, const glm::vec3 &vec)
 {
   int iUniformLocation = GetUniformLocation(sName);
   if (iUniformLocation < 0)
-    return;
+    return false;
 
   GLCALL(glUniform3fv(iUniformLocation, 1, &vec[0]));
+  return true;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CShader::SetUniformVec4(const std::string &sName, const glm::vec4 &vec)
+bool CShader::SetUniformVec4(const std::string &sName, const glm::vec4 &vec)
 {
   int iUniformLocation = GetUniformLocation(sName);
   if (iUniformLocation < 0)
-    return;
+    return false;
 
   GLCALL(glUniform4fv(iUniformLocation, 1, &vec[0]));
+  return true;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CShader::SetUniformMat4(const std::string &sName, const glm::mat4 &matrix)
+bool CShader::SetUniformMat4(const std::string &sName, const glm::mat4 &matrix)
 {
   int iUniformLocation = GetUniformLocation(sName);
   if (iUniformLocation < 0)
-    return;
+    return false;
 
   GLCALL(glUniformMatrix4fv(iUniformLocation, 1, GL_FALSE, &matrix[0][0]));
+  return true;
 }
 
 //-------------------------------------------------------------------------------------------------

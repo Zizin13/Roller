@@ -16,9 +16,9 @@ public:
 
   void Bind() const;
   void Unbind() const;
-  void SetUniformVec3(const std::string &sName, const glm::vec3 &vec);
-  void SetUniformVec4(const std::string &sName, const glm::vec4 &vec);
-  void SetUniformMat4(const std::string &sName, const glm::mat4 &matrix);
+  bool SetUniformVec3(const std::string &sName, const glm::vec3 &vec);
+  bool SetUniformVec4(const std::string &sName, const glm::vec4 &vec);
+  bool SetUniformMat4(const std::string &sName, const glm::mat4 &matrix);
 
 private:
   int GetUniformLocation(const std::string &sName);

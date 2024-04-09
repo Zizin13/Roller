@@ -187,6 +187,15 @@ bool CTrackData::LoadTrack(const std::string &sFilename, bool bIsMangled)
 
 //-------------------------------------------------------------------------------------------------
 
+bool CTrackData::IsNumber(const std::string &str)
+{
+  char *ptr;
+  strtol(str.c_str(), &ptr, 10);
+  return *ptr == '\0';
+}
+
+//-------------------------------------------------------------------------------------------------
+
 bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
 {
   bool bSuccess = true;
@@ -424,7 +433,7 @@ bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
         }
         break;
       case TRACK_NUM:
-        if (lineAy.size() == 1) {
+        if (lineAy.size() == 1 && IsNumber(lineAy[0])) {
           m_raceInfo.iTrackNumber = std::stoi(lineAy[0]);
           section = LAPS;
         }

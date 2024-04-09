@@ -164,6 +164,7 @@ public:
   bool m_bIsMangled;
 
 protected:
+  bool IsNumber(const std::string &str);
   bool ProcessTrackData(const uint8_t *pData, size_t length);
   void ProcessSign(const std::vector<std::string> &lineAy, eFileSection &section);
   void GetTrackData(std::vector<uint8_t> &data);

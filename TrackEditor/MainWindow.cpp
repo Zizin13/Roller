@@ -636,8 +636,8 @@ void CMainWindow::OnApplyClicked()
 void CMainWindow::OnApplyTextureClicked()
 {
   //update value
-  p->m_track.m_sTextureFile = leTex->text();
-  p->m_track.m_sBuildingFile = leBld->text();
+  p->m_track.m_sTextureFile  = leTex->text().toLatin1().constData();
+  p->m_track.m_sBuildingFile = leBld->text().toLatin1().constData();
 
   m_bUnsavedChanges = true;
   g_pMainWindow->LogMessage("Applied changes to texture");
@@ -677,8 +677,8 @@ void CMainWindow::OnCancelClicked()
 
 void CMainWindow::OnCancelTextureClicked()
 {
-  p->sTex = p->m_track.m_sTextureFile;
-  p->sBld = p->m_track.m_sBuildingFile;
+  p->sTex = p->m_track.m_sTextureFile.c_str();
+  p->sBld = p->m_track.m_sBuildingFile.c_str();
   UpdateLEWithSelectionValue(leTex, p->sTex);
   UpdateLEWithSelectionValue(leBld, p->sBld);
 }
@@ -1448,8 +1448,8 @@ void CMainWindow::UpdateWindow()
     case 1: //TEXTURES
     {
       //stuff data
-      txData->appendPlainText("TEX:" + p->m_track.m_sTextureFile);
-      txData->appendPlainText("BLD:" + p->m_track.m_sBuildingFile);
+      txData->appendPlainText("TEX:" + QString(p->m_track.m_sTextureFile.c_str()));
+      txData->appendPlainText("BLD:" + QString(p->m_track.m_sBuildingFile.c_str()));
 
       CSignMap backsMap;
       for (int i = 0; i < p->m_track.m_chunkAy.size(); ++i) {
@@ -1466,8 +1466,8 @@ void CMainWindow::UpdateWindow()
       }
 
       //update selection
-      p->sTex = p->m_track.m_sTextureFile;
-      p->sBld = p->m_track.m_sBuildingFile;
+      p->sTex = p->m_track.m_sTextureFile.c_str();
+      p->sBld = p->m_track.m_sBuildingFile.c_str();
       UpdateLEWithSelectionValue(leTex, p->sTex);
       UpdateLEWithSelectionValue(leBld, p->sBld);
       UpdateTexturesEditMode();
@@ -1539,13 +1539,13 @@ void CMainWindow::LoadTextures()
 
   //load textures
   bool bPalLoaded = p->m_palette.LoadPalette(m_sTrackFilesFolder + QDir::separator() + "PALETTE.PAL");
-  bool bTexLoaded = p->m_tex.LoadTexture(m_sTrackFilesFolder + QDir::separator() + p->m_track.m_sTextureFile, p->m_palette, bMangled);
-  bool bBldLoaded = p->m_bld.LoadTexture(m_sTrackFilesFolder + QDir::separator() + p->m_track.m_sBuildingFile, p->m_palette, bMangled);
+  bool bTexLoaded = p->m_tex.LoadTexture(m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sTextureFile.c_str()), p->m_palette, bMangled);
+  bool bBldLoaded = p->m_bld.LoadTexture(m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sBuildingFile.c_str()), p->m_palette, bMangled);
   lblPalletteLoaded->setVisible(!bPalLoaded);
   frmTex->setVisible(bTexLoaded);
   frmBld->setVisible(bBldLoaded);
-  lblTextureLoaded->setText(bTexLoaded ? p->m_track.m_sTextureFile : "Texture not loaded");
-  lblBuildingsLoaded->setText(bBldLoaded ? p->m_track.m_sBuildingFile : "Buildings not loaded");
+  lblTextureLoaded->setText(bTexLoaded ? p->m_track.m_sTextureFile.c_str() : "Texture not loaded");
+  lblBuildingsLoaded->setText(bBldLoaded ? p->m_track.m_sBuildingFile.c_str() : "Buildings not loaded");
 
   //add tiles to viewer layouts
   int iTilesPerLine = (twViewer->width() - 256) / (TILE_WIDTH + 6);

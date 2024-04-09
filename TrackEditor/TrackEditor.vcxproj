@@ -49,9 +49,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>..\bin\TrackEditor\</OutDir>
     <TargetName>$(ProjectName)d</TargetName>
+    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\bin\TrackEditor\</OutDir>
+    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -72,6 +74,7 @@
       <AdditionalDependencies>Mpr.lib;Shlwapi.lib;Shell32.lib;Gdi32.lib;d3d9.lib;dxguid.lib;Iphlpapi.lib;ws2_32.lib;imm32.lib;Version.lib;winmm.lib;userenv.lib;dwmapi.lib;Netapi32.lib;wtsapi32.lib;uxtheme.lib;opengl32.lib;qtmaind.lib;Qt5OpenGLd.lib;Qt5Cored.lib;Qt5Guid.lib;Qt5Widgetsd.lib;Qt5PlatformCompositorSupportd.lib;Qt5FontDatabaseSupportd.lib;Qt5EventDispatcherSupportd.lib;Qt5ThemeSupportd.lib;Qt5WindowsUIAutomationSupportd.lib;qwindowsd.lib;qtlibpngd.lib;qtpcre2d.lib;qicod.lib;qtfreetyped.lib;glew32sd.lib;Utils_staticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
+      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying QT dlls...
@@ -124,6 +127,7 @@ exit 1</Command>
       <AdditionalDependencies>Mpr.lib;Shlwapi.lib;Shell32.lib;Gdi32.lib;d3d9.lib;dxguid.lib;Iphlpapi.lib;ws2_32.lib;imm32.lib;Version.lib;winmm.lib;userenv.lib;dwmapi.lib;Netapi32.lib;wtsapi32.lib;uxtheme.lib;opengl32.lib;qtmain.lib;Qt5OpenGL.lib;Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5PlatformCompositorSupport.lib;Qt5FontDatabaseSupport.lib;Qt5EventDispatcherSupport.lib;Qt5ThemeSupport.lib;Qt5WindowsUIAutomationSupport.lib;qwindows.lib;qtlibpng.lib;qtpcre2.lib;qico.lib;qtfreetype.lib;glew32s.lib;Utils_static.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
+      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying QT dlls...
@@ -333,6 +337,11 @@ exit 1</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)ui\ui_%(Filename).h;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)ui\ui_%(Filename).h;%(Outputs)</Outputs>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.vcxproj">
+      <Project>{ffe1e8a8-1052-4271-aa18-253855aba0e6}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

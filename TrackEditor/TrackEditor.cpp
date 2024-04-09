@@ -35,6 +35,19 @@ int main(int argc, char* argv[])
   delete pMainWin;
   pMainWin = NULL;
 
+  QObjectList list = QPluginLoader::staticInstances();
+  while (!list.empty()) {
+    QObjectList::iterator it = list.begin();
+    QObject *pPlugin = *it;
+    while (it != list.end()) {
+      if (*it == pPlugin)
+        it = list.erase(it);
+      else
+        ++it;
+    }
+    delete pPlugin;
+  }
+
   return iRetCode;
 }
 

@@ -328,16 +328,25 @@ tShapeData ShapeGenerator::MakeArrow()
 tShapeData ShapeGenerator::MakePlane(unsigned int uiDimensions)
 {
   tShapeData ret;
-  ret.pVertexBuf = MakePlaneVerts(uiDimensions);
-  ret.pIndexBuf = MakePlaneIndices(uiDimensions);
+
+  uint32 uiNumVerts;
+  struct tVertex *vertices = MakePlaneVerts(uiNumVerts, uiDimensions);
+  ret.pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
+  delete[] vertices;
+
+  uint32 uiNumIndices;
+  uint32 *indices = MakePlaneIndices(uiNumIndices, uiDimensions);
+  ret.pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+  delete[] indices;
+
   return ret;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-CVertexBuffer *ShapeGenerator::MakePlaneVerts(unsigned int uiDimensions)
+tVertex *ShapeGenerator::MakePlaneVerts(uint32 &numVertices, uint32 uiDimensions)
 {
-  uint32 numVertices = uiDimensions * uiDimensions;
+  numVertices = uiDimensions * uiDimensions;
   int half = uiDimensions / 2;
   tVertex *vertices = new tVertex[numVertices];
   for (int i = 0; i < uiDimensions; i++) {
@@ -350,17 +359,14 @@ CVertexBuffer *ShapeGenerator::MakePlaneVerts(unsigned int uiDimensions)
       thisVert.color = RandomColor();
     }
   }
-
-  CVertexBuffer *pRetBuf = new CVertexBuffer(vertices, numVertices);
-  delete[] vertices;
-  return pRetBuf;
+  return vertices;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-CIndexBuffer *ShapeGenerator::MakePlaneIndices(unsigned int uiDimensions)
+uint32 *ShapeGenerator::MakePlaneIndices(uint32 &numIndices, uint32 uiDimensions)
 {
-  uint32 numIndices = (uiDimensions - 1) * (uiDimensions - 1) * 2 * 3; // 2 triangles per square, 3 indices per triangle
+  numIndices = (uiDimensions - 1) * (uiDimensions - 1) * 2 * 3; // 2 triangles per square, 3 indices per triangle
   uint32 *indices = new uint32[numIndices];
   int runner = 0;
   for (int row = 0; row < uiDimensions - 1; row++) {
@@ -375,9 +381,7 @@ CIndexBuffer *ShapeGenerator::MakePlaneIndices(unsigned int uiDimensions)
     }
   }
   assert(runner == numIndices);
-  CIndexBuffer *pRetBuf = new CIndexBuffer(indices, numIndices);
-  delete[] indices;
-  return pRetBuf;
+  return indices;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -739,31 +743,37 @@ tShapeData ShapeGenerator::MakeTorus(GLuint tesselation)
 
 //-------------------------------------------------------------------------------------------------
 
-//tShapeData ShapeGenerator::MakeSphere(GLuint tesselation)
-//{
-//  tShapeData ret = MakePlaneVerts(tesselation);
-//  tShapeData ret2 = MakePlaneIndices(tesselation);
-//  ret.indices = ret2.indices;
-//  ret.numIndices = ret2.numIndices;
-//
-//  GLuint dimensions = tesselation;
-//  const float RADIUS = 1.0f;
-//  const double CIRCLE = PI * 2;
-//  const double SLICE_ANGLE = CIRCLE / (dimensions - 1);
-//  for (size_t col = 0; col < dimensions; col++) {
-//    double phi = -SLICE_ANGLE * col;
-//    for (size_t row = 0; row < dimensions; row++) {
-//      double theta = -(SLICE_ANGLE / 2.0) * row;
-//      size_t vertIndex = col * dimensions + row;
-//      tVertex &v = ret.vertices[vertIndex];
-//      v.position.x = RADIUS * cos(phi) * sin(theta);
-//      v.position.y = RADIUS * sin(phi) * sin(theta);
-//      v.position.z = RADIUS * cos(theta);
-//      v.normal = glm::normalize(v.position);
-//    }
-//  }
-//  return ret;
-//}
+tShapeData ShapeGenerator::MakeSphere(GLuint tesselation)
+{
+  uint32 uiNumVerts;
+  struct tVertex *vertices = MakePlaneVerts(uiNumVerts, tesselation);
+  uint32 uiNumIndices;
+  uint32 *indices = MakePlaneIndices(uiNumIndices, tesselation);
+
+  GLuint dimensions = tesselation;
+  const float RADIUS = 1.0f;
+  const double CIRCLE = PI * 2;
+  const double SLICE_ANGLE = CIRCLE / (dimensions - 1);
+  for (size_t col = 0; col < dimensions; col++) {
+    double phi = -SLICE_ANGLE * col;
+    for (size_t row = 0; row < dimensions; row++) {
+      double theta = -(SLICE_ANGLE / 2.0) * row;
+      size_t vertIndex = col * dimensions + row;
+      tVertex &v = vertices[vertIndex];
+      v.position.x = RADIUS * cos(phi) * sin(theta);
+      v.position.y = RADIUS * sin(phi) * sin(theta);
+      v.position.z = RADIUS * cos(theta);
+      v.normal = glm::normalize(v.position);
+    }
+  }
+
+  tShapeData ret;
+  ret.pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
+  ret.pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+  delete[] vertices;
+  delete[] indices;
+  return ret;
+}
 
 //-------------------------------------------------------------------------------------------------
 

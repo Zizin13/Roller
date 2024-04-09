@@ -133,7 +133,7 @@ void CTrackPreview::paintGL()
   glm::vec3 lightPositionWorld = glm::vec3(0.0f, -3.0f, 0.0f);
   if (m_pModel) {
     lightPositionWorld = m_pModel->lightPosition;
-    p->m_shapeAy[4].modelToWorldMatrix =
+    p->m_shapeAy[5].modelToWorldMatrix =
       glm::translate(lightPositionWorld) *
       glm::scale(glm::vec3(0.1f, 0.1f, 0.1f));
   }
@@ -214,16 +214,16 @@ void CTrackPreview::initializeGL()
   torus.modelToWorldMatrix =
     glm::translate(glm::vec3(3.0f, -2.0f, -5.0f));
   torus.pShader = p->m_pLightingShader;
-  //tShapeData sphere = ShapeGenerator::MakeSphere();
-  //sphere.modelToWorldMatrix =
-  //  glm::translate(glm::vec3(4.0f, -1.0f, -1.0f));
-  //sphere.shaderProgramId = g_programId;
+  tShapeData sphere = ShapeGenerator::MakeSphere();
+  sphere.modelToWorldMatrix =
+    glm::translate(glm::vec3(4.0f, -1.0f, -1.0f));
+  sphere.pShader = p->m_pLightingShader;
 
   p->m_shapeAy.push_back(teapot);
   p->m_shapeAy.push_back(arrow);
   p->m_shapeAy.push_back(plane);
   p->m_shapeAy.push_back(torus);
-  //p->m_shapeAy.push_back(sphere);
+  p->m_shapeAy.push_back(sphere);
   p->m_shapeAy.push_back(cube);
 
   //SendDataToOpenGL();

@@ -10,14 +10,14 @@ public:
   static tShapeData MakeCube();
   static tShapeData MakeArrow();
   static tShapeData MakePlane(unsigned int uiDimensions = 10);
-  //static tShapeData MakeSphere(GLuint uiTesselation = 20);
+  static tShapeData MakeSphere(GLuint uiTesselation = 20);
   static tShapeData MakeTorus(GLuint uiTesselation = 20);
   static tShapeData MakeTeapot(unsigned int uiTesselation = 10, const glm::mat4 &lidTransform = glm::mat4());
   //static tShapeData GenerateNormals(const tShapeData &data);
 
 private:
-  static CVertexBuffer *MakePlaneVerts(unsigned int uiDimensions);
-  static CIndexBuffer *MakePlaneIndices(unsigned int uiDimensions);
+  static tVertex *MakePlaneVerts(uint32 &numVertices, uint32 uiDimensions);
+  static uint32 *MakePlaneIndices(uint32 &numIndices, uint32 uiDimensions);
   static CIndexBuffer *MakePlaneUnseamedIndices(GLuint uiTesselation);
 
         // Teapot helpers

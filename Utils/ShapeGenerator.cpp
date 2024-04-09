@@ -4,6 +4,8 @@
 #include "TeapotData.h"
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
+#include "IndexBuffer.h"
+#include "VertexBuffer.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)

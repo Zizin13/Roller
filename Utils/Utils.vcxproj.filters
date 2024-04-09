@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{a17399c9-fc31-4729-87e5-af9c62cb7e33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Unmangler.h">
@@ -38,6 +41,9 @@
     <ClInclude Include="TeapotData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Unmangler.cpp">
@@ -55,5 +61,22 @@
     <ClCompile Include="ShapeGenerator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\FragmentShaderCode.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\FragmentShaderPassThroughCode.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VertexShaderCode.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\VertexShaderPassThroughCode.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

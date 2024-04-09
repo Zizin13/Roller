@@ -87,10 +87,10 @@ echo f | xcopy ..\external\TrackEditor_LicensedLibs.txt .\$(OutDir)LicensedLibs.
 if %errorlevel% NEQ 0 goto Failed
 
 echo Copying Shaders...
-echo f | xcopy .\FragmentShaderCode.glsl .\$(OutDir) /R /Y /d /i &gt; null
-echo f | xcopy .\VertexShaderCode.glsl .\$(OutDir) /R /Y /d /i &gt; null
-echo f | xcopy .\FragmentShaderPassThroughCode.glsl .\$(OutDir) /R /Y /d /i &gt; null
-echo f | xcopy .\VertexShaderPassThroughCode.glsl .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\Utils\Shaders\FragmentShaderCode.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
+echo f | xcopy ..\Utils\Shaders\VertexShaderCode.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
+echo f | xcopy ..\Utils\Shaders\FragmentShaderPassThroughCode.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
+echo f | xcopy ..\Utils\Shaders\VertexShaderPassThroughCode.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
 echo Post-Build Step for $(ProjectName) completed successfully
@@ -333,12 +333,6 @@ exit 1</Command>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)ui\ui_%(Filename).h;%(Outputs)</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)ui\ui_%(Filename).h;%(Outputs)</Outputs>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="FragmentShaderCode.glsl" />
-    <None Include="FragmentShaderPassThroughCode.glsl" />
-    <None Include="VertexShaderCode.glsl" />
-    <None Include="VertexShaderPassThroughCode.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

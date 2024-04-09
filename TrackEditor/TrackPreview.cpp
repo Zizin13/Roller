@@ -1,11 +1,13 @@
 #include "glew.h"
 #include "TrackPreview.h"
 #include "MainWindow.h"
-#include <fstream>
 #include "ShapeGenerator.h"
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
 #include "Camera.h"
+#include "Shader.h"
+#include "IndexBuffer.h"
+#include "VertexBuffer.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -54,11 +56,7 @@ static bool GLLogCall(const char *szFunction, const char *szFile, int iLine)
 const uint NUM_VERTICES_PER_TRI = 3;
 const uint NUM_FLOATS_PER_VERTICE = 9;
 const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
-GLuint g_programId;
-GLuint g_passThroughProgramId;
 Camera camera;
-GLint modelToProjectionMatrixUniformLocation;
-GLint passThroughModelToProjectionMatrixUniformLocation;
 
 //-------------------------------------------------------------------------------------------------
 typedef std::vector<tShapeData> CShapeAy;
@@ -67,15 +65,28 @@ typedef std::vector<tShapeData> CShapeAy;
 class CTrackPreviewPrivate
 {
 public:
-  CTrackPreviewPrivate() {};
+  CTrackPreviewPrivate()
+    : m_pLightingShader(NULL)
+    , m_pPassThroughShader(NULL)
+  {};
   ~CTrackPreviewPrivate()
   {
     for (CShapeAy::iterator it = m_shapeAy.begin(); it != m_shapeAy.end(); ++it) {
       (*it).Cleanup();
     }
+    if (m_pLightingShader) {
+      delete m_pLightingShader;
+      m_pLightingShader = NULL;
+    }
+    if (m_pPassThroughShader) {
+      delete m_pPassThroughShader;
+      m_pPassThroughShader = NULL;
+    }
   };
 
   CShapeAy m_shapeAy;
+  CShader *m_pLightingShader;
+  CShader *m_pPassThroughShader;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -91,13 +102,11 @@ CTrackPreview::CTrackPreview(QWidget *pParent)
 
 CTrackPreview::~CTrackPreview()
 {
+  glUseProgram(0);
   if (p) {
     delete p;
     p = NULL;
   }
-  glUseProgram(0);
-  glDeleteProgram(g_programId);
-  glDeleteProgram(g_passThroughProgramId);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -132,21 +141,15 @@ void CTrackPreview::paintGL()
   glm::vec3 eyePositionWorld = camera.GetPosition();
 
   for (CShapeAy::iterator it = p->m_shapeAy.begin(); it != p->m_shapeAy.end(); ++it) {
-    GLCALL(glUseProgram((*it).shaderProgramId));
+    (*it).pShader->Bind();
     GLCALL(glBindVertexArray((*it).vertexArrayObjId));
     fullTransformMatrix = worldToProjectionMatrix * (*it).modelToWorldMatrix;
-    if ((*it).shaderProgramId == g_programId) {
-      GLint ambientLightUniformLocation = glGetUniformLocation(g_programId, "ambientLight");
-      glUniform4fv(ambientLightUniformLocation, 1, &ambientLight[0]);
-      GLint lightPositionUniformLocation = glGetUniformLocation(g_programId, "lightPositionWorld");
-      glUniform3fv(lightPositionUniformLocation, 1, &lightPositionWorld[0]);
-      GLint eyePositionUniformLocation = glGetUniformLocation(g_programId, "eyePositionWorld");
-      glUniform3fv(eyePositionUniformLocation, 1, &eyePositionWorld[0]);
-      GLCALL(glUniformMatrix4fv(modelToProjectionMatrixUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]));
-      GLint modelToWorldMatUniformLocation = glGetUniformLocation(g_programId, "modelToWorldMatrix");
-      GLCALL(glUniformMatrix4fv(modelToWorldMatUniformLocation, 1, GL_FALSE, &(*it).modelToWorldMatrix[0][0]));
-    } else {
-      GLCALL(glUniformMatrix4fv(passThroughModelToProjectionMatrixUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]));
+    (*it).pShader->SetUniformMat4("modelToProjectionMatrix", fullTransformMatrix);
+    if ((*it).pShader == p->m_pLightingShader) {
+      (*it).pShader->SetUniformVec4("ambientLight", ambientLight);
+      (*it).pShader->SetUniformVec3("lightPositionWorld", lightPositionWorld);
+      (*it).pShader->SetUniformVec3("eyePositionWorld", eyePositionWorld);
+      (*it).pShader->SetUniformMat4("modelToWorldMatrix", (*it).modelToWorldMatrix);
     }
     GLCALL(glDrawElements(GL_TRIANGLES, (*it).pIndexBuf->GetCount(), GL_UNSIGNED_INT, 0));
   }
@@ -163,94 +166,11 @@ void CTrackPreview::SetupVertexArrays()
     GLCALL(glEnableVertexAttribArray(1));
     GLCALL(glEnableVertexAttribArray(2));
     (*it).pVertexBuf->Bind();
-    //GLCALL(glBindBuffer(GL_ARRAY_BUFFER, (*it).vertexBufId));
     GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0));
     GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 3)));
     GLCALL(glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 6)));
     (*it).pIndexBuf->Bind();
-    //GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, (*it).indexBufId));
   }
-}
-
-//-------------------------------------------------------------------------------------------------
-
-bool CTrackPreview::CheckStatus(GLuint objectId,
-                 PFNGLGETSHADERIVPROC objectPropertyGetter,
-                 PFNGLGETSHADERINFOLOGPROC getInfoLogFunc,
-                 GLenum statusType)
-{
-  GLint status;
-  objectPropertyGetter(objectId, statusType, &status);
-  if (status != GL_TRUE) {
-    GLint infoLogLength;
-    objectPropertyGetter(objectId, GL_INFO_LOG_LENGTH, &infoLogLength);
-    GLchar *buffer = new GLchar[infoLogLength];
-    GLsizei bufferSize;
-    getInfoLogFunc(objectId, infoLogLength, &bufferSize, buffer);
-
-    g_pMainWindow->LogMessage(buffer);
-    assert(0);
-
-    delete[] buffer;
-    return false;
-  }
-  return true;
-
-}
-
-//-------------------------------------------------------------------------------------------------
-
-bool CTrackPreview::CheckShaderStatus(GLuint shaderId)
-{
-  return CheckStatus(shaderId, glGetShaderiv, glGetShaderInfoLog, GL_COMPILE_STATUS);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-bool CTrackPreview::CheckProgramStatus(GLuint programId)
-{
-  return CheckStatus(programId, glGetProgramiv, glGetProgramInfoLog, GL_LINK_STATUS);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-std::string CTrackPreview::ReadShaderCode(const char *filename)
-{
-  std::ifstream stream(filename);
-  if (!stream.good()) {
-    assert(0);
-  }
-  return std::string(
-    std::istreambuf_iterator<char>(stream),
-    std::istreambuf_iterator<char>());
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrackPreview::InstallShaders(GLuint &programId, const char *szVertexShader, const char *szFragmentShader)
-{
-  GLuint vertexShaderId = glCreateShader(GL_VERTEX_SHADER);
-  GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-
-  const char *adapter[1];
-  std::string sTemp = ReadShaderCode(szVertexShader);
-  adapter[0] = sTemp.c_str();
-  glShaderSource(vertexShaderId, 1, adapter, 0);
-  sTemp = ReadShaderCode(szFragmentShader);
-  adapter[0] = sTemp.c_str();
-  glShaderSource(fragmentShaderId, 1, adapter, 0);
-  glCompileShader(vertexShaderId);
-  glCompileShader(fragmentShaderId);
-  if (!CheckShaderStatus(vertexShaderId) || !CheckShaderStatus(fragmentShaderId))
-    return;
-  programId = glCreateProgram();
-  glAttachShader(programId, vertexShaderId);
-  glAttachShader(programId, fragmentShaderId);
-  glLinkProgram(programId);
-  if (!CheckProgramStatus(programId))
-    return;
-  glDeleteShader(vertexShaderId);
-  glDeleteShader(fragmentShaderId);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -266,36 +186,34 @@ void CTrackPreview::initializeGL()
   glEnable(GL_DEPTH_TEST);
   //glEnable(GL_CULL_FACE);
 
-  InstallShaders(g_programId,
-                 "VertexShaderCode.glsl",
-                 "FragmentShaderCode.glsl");
-  InstallShaders(g_passThroughProgramId,
-                 "VertexShaderPassthroughCode.glsl",
-                 "FragmentShaderPassthroughCode.glsl");
+  if (!p->m_pLightingShader)
+    p->m_pLightingShader = new CShader("Shaders/VertexShaderCode.glsl", "Shaders/FragmentShaderCode.glsl");
+  if (!p->m_pPassThroughShader)
+    p->m_pPassThroughShader = new CShader("Shaders/VertexShaderPassthroughCode.glsl", "Shaders/FragmentShaderPassthroughCode.glsl");
 
   tShapeData teapot = ShapeGenerator::MakeTeapot(20);
   teapot.modelToWorldMatrix =
     glm::translate(glm::vec3(-3.0f, 1.0f, -6.0f)) * 
     glm::rotate(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-  teapot.shaderProgramId = g_programId;
+  teapot.pShader = p->m_pLightingShader;
   tShapeData arrow = ShapeGenerator::MakeArrow();
   arrow.modelToWorldMatrix = 
     glm::translate(glm::vec3(0.0f, -2.0f, -8.0f)) *
     glm::rotate(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-  arrow.shaderProgramId = g_programId;
+  arrow.pShader = p->m_pLightingShader;
   tShapeData plane = ShapeGenerator::MakePlane(20);
   plane.modelToWorldMatrix =
     glm::translate(glm::vec3(0.0f, 1.0f, 0.0f));
-  plane.shaderProgramId = g_programId;
+  plane.pShader = p->m_pLightingShader;
   tShapeData cube = ShapeGenerator::MakeCube();
   cube.modelToWorldMatrix =
     glm::translate(glm::vec3(0.0f, -3.0f, 0.0f)) *
     glm::scale(glm::vec3(0.1f, 0.1f, 0.1f));
-  cube.shaderProgramId = g_passThroughProgramId;
+  cube.pShader = p->m_pPassThroughShader;
   tShapeData torus = ShapeGenerator::MakeTorus();
   torus.modelToWorldMatrix =
     glm::translate(glm::vec3(3.0f, -2.0f, -5.0f));
-  torus.shaderProgramId = g_programId;
+  torus.pShader = p->m_pLightingShader;
   //tShapeData sphere = ShapeGenerator::MakeSphere();
   //sphere.modelToWorldMatrix =
   //  glm::translate(glm::vec3(4.0f, -1.0f, -1.0f));
@@ -310,18 +228,6 @@ void CTrackPreview::initializeGL()
 
   //SendDataToOpenGL();
   SetupVertexArrays();
-
-  glUseProgram(g_passThroughProgramId);
-  passThroughModelToProjectionMatrixUniformLocation = glGetUniformLocation(g_passThroughProgramId, "modelToProjectionMatrix");
-  glUseProgram(g_programId);
-  modelToProjectionMatrixUniformLocation = glGetUniformLocation(g_programId, "modelToProjectionMatrix");
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrackPreview::resizeGL(int iWidth, int iHeight)
-{
-  //GLCALL(glViewport(0, 0, width(), height()));
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -92,6 +92,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="IndexBuffer.h" />
+    <ClInclude Include="Shader.h" />
     <ClInclude Include="ShapeData.h" />
     <ClInclude Include="ShapeGenerator.h" />
     <ClInclude Include="TeapotData.h" />
@@ -103,9 +104,16 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShapeGenerator.cpp" />
     <ClCompile Include="Unmangler.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\FragmentShaderCode.glsl" />
+    <None Include="Shaders\FragmentShaderPassThroughCode.glsl" />
+    <None Include="Shaders\VertexShaderCode.glsl" />
+    <None Include="Shaders\VertexShaderPassThroughCode.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

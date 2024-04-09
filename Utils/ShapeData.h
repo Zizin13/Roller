@@ -6,18 +6,21 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 //-------------------------------------------------------------------------------------------------
+class CShader;
+//-------------------------------------------------------------------------------------------------
 struct tShapeData
 {
   tShapeData() 
     : pVertexBuf(NULL)
     , pIndexBuf(NULL)
+    , pShader(NULL)
   {};
   GLuint vertexArrayObjId;
-  GLuint shaderProgramId;
   glm::mat4 modelToWorldMatrix;
 
   CVertexBuffer *pVertexBuf;
   CIndexBuffer *pIndexBuf;
+  CShader *pShader; //owned by renderer
 
   void Cleanup()
   {

@@ -218,7 +218,7 @@ bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
       if (pos != std::string::npos)
         sSubStr = sSubStr.substr(0, pos);
 
-      if (!sSubStr.empty() && sSubStr.compare("ýýýý") != 0)
+      if (!sSubStr.empty() && sSubStr.find("ýýýý") == std::string::npos)
         lineAy.push_back(sSubStr);
     }
 

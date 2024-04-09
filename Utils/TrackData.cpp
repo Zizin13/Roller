@@ -187,13 +187,6 @@ bool CTrackData::LoadTrack(const std::string &sFilename, bool bIsMangled)
 
 //-------------------------------------------------------------------------------------------------
 
-bool GetLine(const uint8_t *pData, size_t length, std::string &sLine)
-{
-  return false;
-}
-
-//-------------------------------------------------------------------------------------------------
-
 bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
 {
   bool bSuccess = true;

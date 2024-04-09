@@ -8,49 +8,11 @@
 #include "Shader.h"
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
+#include "OpenGLDebug.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
-//-------------------------------------------------------------------------------------------------
-#define ASSERT(x) if (!(x)) __debugbreak();
-#define GLCALL(x) GLClearError();\
-  x;\
-  ASSERT(GLLogCall(#x,__FILE__,__LINE__))
-//-------------------------------------------------------------------------------------------------
-
-static void GLErrorCb(GLenum source,
-                      GLenum type,
-                      GLuint id,
-                      GLenum severity,
-                      GLsizei length,
-                      const GLchar *message,
-                      const void *userParam)
-{
-  (void)(source); (void)(type); (void)(id); (void)(severity); (void)(length); (void)(userParam);
-  g_pMainWindow->LogMessage("OpenGL Debug: " + QString(message));
-}
-
-//-------------------------------------------------------------------------------------------------
-
-static void GLClearError()
-{
-  while (glGetError());
-}
-
-//-------------------------------------------------------------------------------------------------
-
-static bool GLLogCall(const char *szFunction, const char *szFile, int iLine)
-{
-  while (GLenum error = glGetError()) {
-    char szOut[100];
-    snprintf(szOut, sizeof(szOut), "OpenGL Error (%d): %s %s %d", (int)error, szFunction, szFile, iLine);
-    g_pMainWindow->LogMessage(szOut);
-    return false;
-  }
-  return true;
-}
-
 //-------------------------------------------------------------------------------------------------
 
 Camera camera;

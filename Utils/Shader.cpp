@@ -1,6 +1,11 @@
+#include "OpenGLDebug.h"
 #include "Shader.h"
 #include <fstream>
 #include <assert.h>
+//-------------------------------------------------------------------------------------------------
+#if defined(_DEBUG) && defined(IS_WINDOWS)
+#define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
+#endif
 //-------------------------------------------------------------------------------------------------
 
 CShader::CShader(const std::string &sVertexFile, const std::string &sFragmentFile)
@@ -19,14 +24,14 @@ CShader::~CShader()
 
 void CShader::Bind() const
 {
-  glUseProgram(m_uiId);
+  GLCALL(glUseProgram(m_uiId));
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CShader::Unbind() const
 {
-  glUseProgram(0);
+  GLCALL(glUseProgram(0));
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -34,7 +39,7 @@ void CShader::Unbind() const
 void CShader::SetUniformVec3(const std::string &sName, const glm::vec3 &vec)
 {
   uint32 uiUniformLocation = glGetUniformLocation(m_uiId, sName.c_str());
-  glUniform3fv(uiUniformLocation, 1, &vec[0]);
+  GLCALL(glUniform3fv(uiUniformLocation, 1, &vec[0]));
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -42,7 +47,7 @@ void CShader::SetUniformVec3(const std::string &sName, const glm::vec3 &vec)
 void CShader::SetUniformVec4(const std::string &sName, const glm::vec4 &vec)
 {
   uint32 uiUniformLocation = glGetUniformLocation(m_uiId, sName.c_str());
-  glUniform4fv(uiUniformLocation, 1, &vec[0]);
+  GLCALL(glUniform4fv(uiUniformLocation, 1, &vec[0]));
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -50,7 +55,7 @@ void CShader::SetUniformVec4(const std::string &sName, const glm::vec4 &vec)
 void CShader::SetUniformMat4(const std::string &sName, const glm::mat4 &matrix)
 {
   uint32 uiUniformLocation = glGetUniformLocation(m_uiId, sName.c_str());
-  glUniformMatrix4fv(uiUniformLocation, 1, GL_FALSE, &matrix[0][0]);
+  GLCALL(glUniformMatrix4fv(uiUniformLocation, 1, GL_FALSE, &matrix[0][0]));
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -117,22 +122,22 @@ void CShader::InstallShaders(GLuint &programId, const char *szVertexShader, cons
   const char *adapter[1];
   std::string sTemp = ReadShaderCode(szVertexShader);
   adapter[0] = sTemp.c_str();
-  glShaderSource(vertexShaderId, 1, adapter, 0);
+  GLCALL(glShaderSource(vertexShaderId, 1, adapter, 0));
   sTemp = ReadShaderCode(szFragmentShader);
   adapter[0] = sTemp.c_str();
-  glShaderSource(fragmentShaderId, 1, adapter, 0);
-  glCompileShader(vertexShaderId);
-  glCompileShader(fragmentShaderId);
+  GLCALL(glShaderSource(fragmentShaderId, 1, adapter, 0));
+  GLCALL(glCompileShader(vertexShaderId));
+  GLCALL(glCompileShader(fragmentShaderId));
   if (!CheckShaderStatus(vertexShaderId) || !CheckShaderStatus(fragmentShaderId))
     return;
   programId = glCreateProgram();
-  glAttachShader(programId, vertexShaderId);
-  glAttachShader(programId, fragmentShaderId);
-  glLinkProgram(programId);
+  GLCALL(glAttachShader(programId, vertexShaderId));
+  GLCALL(glAttachShader(programId, fragmentShaderId));
+  GLCALL(glLinkProgram(programId));
   if (!CheckProgramStatus(programId))
     return;
-  glDeleteShader(vertexShaderId);
-  glDeleteShader(fragmentShaderId);
+  GLCALL(glDeleteShader(vertexShaderId));
+  GLCALL(glDeleteShader(fragmentShaderId));
 }
 
 //-------------------------------------------------------------------------------------------------

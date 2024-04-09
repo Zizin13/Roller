@@ -6,6 +6,7 @@
 #include "gtx/transform.hpp"
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
+#include "VertexArray.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -45,10 +46,12 @@ tShapeData ShapeGenerator::MakeTriangle()
     glm::vec3(+0.0f, +0.0f, +1.0f),
     glm::vec3(+0.0f, +0.0f, +1.0f),
   };
-  ret.pVertexBuf = new CVertexBuffer(myTri, NUM_ARRAY_ELEMENTS(myTri));
 
   GLuint indices[] = { 0, 1, 2 };
+
+  ret.pVertexBuf = new CVertexBuffer(myTri, NUM_ARRAY_ELEMENTS(myTri));
   ret.pIndexBuf = new CIndexBuffer(indices, NUM_ARRAY_ELEMENTS(indices));
+  ret.pVertexArray = new CVertexArray(ret.pVertexBuf);
 
   return ret;
 }
@@ -137,7 +140,6 @@ tShapeData ShapeGenerator::MakeCube()
     glm::vec3(+0.9f, +1.0f, +0.2f),  // Color
     glm::vec3(+0.0f, -1.0f, +0.0f),  // Normal
   };
-  ret.pVertexBuf = new CVertexBuffer(stackVerts, NUM_ARRAY_ELEMENTS(stackVerts));
 
   GLuint indices[] = { 
      0,  1,  2,  0,  2,  3, //top
@@ -147,7 +149,10 @@ tShapeData ShapeGenerator::MakeCube()
     16, 17, 18, 16, 18, 19, //back
     20, 22, 21, 20, 23, 22, //bottom
   };
+
+  ret.pVertexBuf = new CVertexBuffer(stackVerts, NUM_ARRAY_ELEMENTS(stackVerts));
   ret.pIndexBuf = new CIndexBuffer(indices, NUM_ARRAY_ELEMENTS(indices));
+  ret.pVertexArray = new CVertexArray(ret.pVertexBuf);
 
   return ret;
 }
@@ -293,8 +298,6 @@ tShapeData ShapeGenerator::MakeArrow()
     glm::vec3(+0.00f, +0.00f, +1.00f),         // Normal
   };
 
-  ret.pVertexBuf = new CVertexBuffer(verts, NUM_ARRAY_ELEMENTS(verts));
-
   GLuint indices[] = {
     0, 1, 2, // Top
     0, 2, 3,
@@ -318,7 +321,9 @@ tShapeData ShapeGenerator::MakeArrow()
     36, 38, 39,
   };
 
+  ret.pVertexBuf = new CVertexBuffer(verts, NUM_ARRAY_ELEMENTS(verts));
   ret.pIndexBuf = new CIndexBuffer(indices, NUM_ARRAY_ELEMENTS(indices));
+  ret.pVertexArray = new CVertexArray(ret.pVertexBuf);
 
   return ret;
 }
@@ -331,12 +336,14 @@ tShapeData ShapeGenerator::MakePlane(unsigned int uiDimensions)
 
   uint32 uiNumVerts;
   struct tVertex *vertices = MakePlaneVerts(uiNumVerts, uiDimensions);
-  ret.pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
-  delete[] vertices;
-
   uint32 uiNumIndices;
   uint32 *indices = MakePlaneIndices(uiNumIndices, uiDimensions);
+
+  ret.pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
   ret.pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+  ret.pVertexArray = new CVertexArray(ret.pVertexBuf);
+
+  delete[] vertices;
   delete[] indices;
 
   return ret;
@@ -469,6 +476,7 @@ tShapeData ShapeGenerator::MakeTeapot(unsigned int uiTesselation, const glm::mat
   tShapeData ret;
   ret.pVertexBuf = new CVertexBuffer(retVertices, numVertices);
   ret.pIndexBuf = new CIndexBuffer(retIndices, numIndices);
+  ret.pVertexArray = new CVertexArray(ret.pVertexBuf);
 
   delete[] vertices;
   delete[] normals;
@@ -736,6 +744,7 @@ tShapeData ShapeGenerator::MakeTorus(GLuint tesselation)
   tShapeData ret;
   ret.pVertexBuf = new CVertexBuffer(vertices, numVertices);
   ret.pIndexBuf = MakePlaneUnseamedIndices(tesselation);
+  ret.pVertexArray = new CVertexArray(ret.pVertexBuf);
   delete[] vertices;
 
   return ret;
@@ -770,6 +779,7 @@ tShapeData ShapeGenerator::MakeSphere(GLuint tesselation)
   tShapeData ret;
   ret.pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
   ret.pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+  ret.pVertexArray = new CVertexArray(ret.pVertexBuf);
   delete[] vertices;
   delete[] indices;
   return ret;

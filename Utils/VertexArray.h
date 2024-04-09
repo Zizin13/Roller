@@ -1,17 +1,23 @@
-#ifndef _UTILS_VERTEX_H
-#define _UTILS_VERTEX_H
+#ifndef _UTILS_VERTEXARRAY_H
+#define _UTILS_VERTEXARRAY_H
 //-------------------------------------------------------------------------------------------------
-#include "glm.hpp"
 #include "Types.h"
 //-------------------------------------------------------------------------------------------------
-static const uint32 NUM_FLOATS_PER_VERTICE = 9;
-static const uint32 VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
+class CVertexBuffer;
 //-------------------------------------------------------------------------------------------------
-struct tVertex
+
+class CVertexArray
 {
-  glm::vec3 position;
-  glm::vec3 color;
-  glm::vec3 normal;
+public:
+  CVertexArray(CVertexBuffer *pVertexBuf);
+  ~CVertexArray();
+
+  void Bind() const;
+  void Unbind() const;
+
+private:
+  uint32 m_uiId;
 };
+
 //-------------------------------------------------------------------------------------------------
 #endif

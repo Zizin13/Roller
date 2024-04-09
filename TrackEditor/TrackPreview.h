@@ -24,13 +24,10 @@ public:
 protected:
   void initializeGL();
   void paintGL();
-  void mousePressEvent(QMouseEvent *pEvent);
   void mouseMoveEvent(QMouseEvent *pEvent);
   void keyPressEvent(QKeyEvent *pEvent);
 
 private:
-  void SetupVertexArrays();
-
   CTrackPreviewPrivate *p;
   tTestModel *m_pModel;
 };

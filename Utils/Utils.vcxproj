@@ -99,6 +99,7 @@
     <ClInclude Include="Types.h" />
     <ClInclude Include="Unmangler.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="VertexArray.h" />
     <ClInclude Include="VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -107,6 +108,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShapeGenerator.cpp" />
     <ClCompile Include="Unmangler.cpp" />
+    <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -53,13 +53,9 @@ static bool GLLogCall(const char *szFunction, const char *szFile, int iLine)
 
 //-------------------------------------------------------------------------------------------------
 
-const uint NUM_VERTICES_PER_TRI = 3;
-const uint NUM_FLOATS_PER_VERTICE = 9;
-const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 Camera camera;
-
-//-------------------------------------------------------------------------------------------------
 typedef std::vector<tShapeData> CShapeAy;
+
 //-------------------------------------------------------------------------------------------------
 
 class CTrackPreviewPrivate
@@ -142,7 +138,8 @@ void CTrackPreview::paintGL()
 
   for (CShapeAy::iterator it = p->m_shapeAy.begin(); it != p->m_shapeAy.end(); ++it) {
     (*it).pShader->Bind();
-    GLCALL(glBindVertexArray((*it).vertexArrayObjId));
+    (*it).pVertexArray->Bind();
+    (*it).pIndexBuf->Bind();
     fullTransformMatrix = worldToProjectionMatrix * (*it).modelToWorldMatrix;
     (*it).pShader->SetUniformMat4("modelToProjectionMatrix", fullTransformMatrix);
     if ((*it).pShader == p->m_pLightingShader) {
@@ -152,24 +149,6 @@ void CTrackPreview::paintGL()
       (*it).pShader->SetUniformMat4("modelToWorldMatrix", (*it).modelToWorldMatrix);
     }
     GLCALL(glDrawElements(GL_TRIANGLES, (*it).pIndexBuf->GetCount(), GL_UNSIGNED_INT, 0));
-  }
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrackPreview::SetupVertexArrays()
-{
-  for (CShapeAy::iterator it = p->m_shapeAy.begin(); it != p->m_shapeAy.end(); ++it) {
-    GLCALL(glGenVertexArrays(1, &(*it).vertexArrayObjId));
-    GLCALL(glBindVertexArray((*it).vertexArrayObjId));
-    GLCALL(glEnableVertexAttribArray(0));
-    GLCALL(glEnableVertexAttribArray(1));
-    GLCALL(glEnableVertexAttribArray(2));
-    (*it).pVertexBuf->Bind();
-    GLCALL(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, 0));
-    GLCALL(glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 3)));
-    GLCALL(glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 6)));
-    (*it).pIndexBuf->Bind();
   }
 }
 
@@ -225,23 +204,13 @@ void CTrackPreview::initializeGL()
   p->m_shapeAy.push_back(torus);
   p->m_shapeAy.push_back(sphere);
   p->m_shapeAy.push_back(cube);
-
-  //SendDataToOpenGL();
-  SetupVertexArrays();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrackPreview::mousePressEvent(QMouseEvent *pEvent)
-{
-  setFocus();
-  //lastPos = pEvent->pos();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CTrackPreview::mouseMoveEvent(QMouseEvent *pEvent)
 {
+  setFocus();
   camera.MouseUpdate(glm::vec2(pEvent->x(), pEvent->y()));
   repaint();
 }

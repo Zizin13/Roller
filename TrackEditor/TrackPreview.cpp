@@ -104,12 +104,10 @@ void CTrackPreview::paintGL()
     (*it).pIndexBuf->Bind();
     fullTransformMatrix = worldToProjectionMatrix * (*it).modelToWorldMatrix;
     (*it).pShader->SetUniformMat4("modelToProjectionMatrix", fullTransformMatrix);
-    if ((*it).pShader == p->m_pLightingShader) {
-      (*it).pShader->SetUniformVec4("ambientLight", ambientLight);
-      (*it).pShader->SetUniformVec3("lightPositionWorld", lightPositionWorld);
-      (*it).pShader->SetUniformVec3("eyePositionWorld", eyePositionWorld);
-      (*it).pShader->SetUniformMat4("modelToWorldMatrix", (*it).modelToWorldMatrix);
-    }
+    (*it).pShader->SetUniformVec4("ambientLight", ambientLight);
+    (*it).pShader->SetUniformVec3("lightPositionWorld", lightPositionWorld);
+    (*it).pShader->SetUniformVec3("eyePositionWorld", eyePositionWorld);
+    (*it).pShader->SetUniformMat4("modelToWorldMatrix", (*it).modelToWorldMatrix);
     GLCALL(glDrawElements(GL_TRIANGLES, (*it).pIndexBuf->GetCount(), GL_UNSIGNED_INT, 0));
   }
 }

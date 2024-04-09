@@ -38,24 +38,33 @@ void CShader::Unbind() const
 
 void CShader::SetUniformVec3(const std::string &sName, const glm::vec3 &vec)
 {
-  uint32 uiUniformLocation = glGetUniformLocation(m_uiId, sName.c_str());
-  GLCALL(glUniform3fv(uiUniformLocation, 1, &vec[0]));
+  int iUniformLocation = glGetUniformLocation(m_uiId, sName.c_str());
+  if (iUniformLocation < 0)
+    return;
+
+  GLCALL(glUniform3fv(iUniformLocation, 1, &vec[0]));
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CShader::SetUniformVec4(const std::string &sName, const glm::vec4 &vec)
 {
-  uint32 uiUniformLocation = glGetUniformLocation(m_uiId, sName.c_str());
-  GLCALL(glUniform4fv(uiUniformLocation, 1, &vec[0]));
+  int iUniformLocation = glGetUniformLocation(m_uiId, sName.c_str());
+  if (iUniformLocation < 0)
+    return;
+
+  GLCALL(glUniform4fv(iUniformLocation, 1, &vec[0]));
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CShader::SetUniformMat4(const std::string &sName, const glm::mat4 &matrix)
 {
-  uint32 uiUniformLocation = glGetUniformLocation(m_uiId, sName.c_str());
-  GLCALL(glUniformMatrix4fv(uiUniformLocation, 1, GL_FALSE, &matrix[0][0]));
+  int iUniformLocation = glGetUniformLocation(m_uiId, sName.c_str());
+  if (iUniformLocation < 0)
+    return;
+
+  GLCALL(glUniformMatrix4fv(iUniformLocation, 1, GL_FALSE, &matrix[0][0]));
 }
 
 //-------------------------------------------------------------------------------------------------

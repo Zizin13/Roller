@@ -459,6 +459,14 @@ tShapeData ShapeGenerator::MakeTeapot(unsigned int uiTesselation, const glm::mat
   tShapeData ret;
   ret.pVertexBuf = new CVertexBuffer(retVertices, numVertices);
   ret.pIndexBuf = new CIndexBuffer(retIndices, numIndices);
+
+  delete[] vertices;
+  delete[] normals;
+  delete[] textureCoordinates;
+  delete[] indices;
+  delete[] retVertices;
+  delete[] retIndices;
+
   return ret;
 }
 

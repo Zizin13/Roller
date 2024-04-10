@@ -69,6 +69,7 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
   p->m_trackModel = p->m_pTrack->MakeTrackSurface();
   p->m_trackModel.modelToWorldMatrix = glm::mat4(1.0);
   p->m_trackModel.pShader = p->m_pPassThroughShader;
+  repaint();
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -513,7 +513,7 @@ tShapeData CTrackData::MakeTrack()
 
 tVertex *CTrackData::MakeVerts(uint32 &numVertices)
 {
-  numVertices = m_chunkAy.size();
+  numVertices = (uint32)m_chunkAy.size();
   tVertex *vertices = new tVertex[numVertices];
   vertices[0].position = glm::vec3();
   vertices[0].color = ShapeGenerator::RandomColor();
@@ -535,10 +535,10 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices)
 
 uint32 *CTrackData::MakeIndices(uint32 &numIndices)
 {
-  numIndices = m_chunkAy.size() * 2;
+  numIndices = (uint32)m_chunkAy.size() * 2;
   uint32 *indices = new uint32[numIndices];
   
-  for (int i = 1; i < numIndices + 1; i++) {
+  for (uint32 i = 1; i < numIndices + 1; i++) {
     indices[i - 1] = i / 2;
   }
   

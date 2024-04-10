@@ -15,6 +15,8 @@ public:
   static tShapeData MakeTeapot(unsigned int uiTesselation = 10, const glm::mat4 &lidTransform = glm::mat4());
   //static tShapeData GenerateNormals(const tShapeData &data);
 
+  static glm::vec3 RandomColor();
+
 private:
   static tVertex *MakePlaneVerts(uint32 &numVertices, uint32 uiDimensions);
   static uint32 *MakePlaneIndices(uint32 &numIndices, uint32 uiDimensions);

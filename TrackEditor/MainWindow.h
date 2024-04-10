@@ -78,7 +78,6 @@ protected slots:
   void OnRUOuterWallChanged();
   void OnEnvirFloorChanged();
   void OnUnmangleTexturesToggled(bool bChecked);
-  void OnDebugSliderChanged();
 
 signals:
   void LogMsgSig(QString sMsg);

@@ -1,3 +1,4 @@
+#include <glew.h>
 #include "TrackEditor.h"
 #include "MainWindow.h"
 #include "qmessagebox.h"
@@ -13,7 +14,6 @@
 #include "EditSeriesDialog.h"
 #include "ChunkEditValues.h"
 #include "TrackPreview.h"
-#include "DebugSlider.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
 #endif
@@ -79,11 +79,6 @@ public:
                        , "BIG BALL"
                        , "BIG AD" };
   size_t signAySize = sizeof(signAy) / sizeof(signAy[0]);
-
-  CDebugSlider *pLightXSld;
-  CDebugSlider *pLightYSld;
-  CDebugSlider *pLightZSld;
-  tTestModel testModel;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -113,15 +108,6 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   for (int i = 0; i < p->signAySize; ++i) {
     cbSignType->addItem(p->signAy[i], i);
   }
-
-  openGLWidget->SetModel(&p->testModel);
-  debugLayout->addWidget(p->pLightXSld = new CDebugSlider);
-  debugLayout->addWidget(p->pLightYSld = new CDebugSlider);
-  debugLayout->addWidget(p->pLightZSld = new CDebugSlider);
-  connect(p->pLightXSld, &CDebugSlider::valueChanged, this, &CMainWindow::OnDebugSliderChanged);
-  connect(p->pLightYSld, &CDebugSlider::valueChanged, this, &CMainWindow::OnDebugSliderChanged);
-  connect(p->pLightZSld, &CDebugSlider::valueChanged, this, &CMainWindow::OnDebugSliderChanged);
-  OnDebugSliderChanged();
 
   //signals
   connect(this, &CMainWindow::LogMsgSig, this, &CMainWindow::OnLogMsg, Qt::QueuedConnection);
@@ -1318,16 +1304,6 @@ void CMainWindow::OnUnmangleTexturesToggled(bool bChecked)
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::OnDebugSliderChanged()
-{
-  p->testModel.lightPosition.x = p->pLightXSld->value();
-  p->testModel.lightPosition.y = p->pLightYSld->value();
-  p->testModel.lightPosition.z = p->pLightZSld->value();
-  openGLWidget->repaint();
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CMainWindow::LoadSettings()
 {
   QSettings settings(m_sSettingsFile, QSettings::IniFormat);
@@ -1494,6 +1470,8 @@ void CMainWindow::UpdateWindow()
     }
       break;
   }
+
+  openGLWidget->SetTrack(&p->m_track);
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -3,6 +3,9 @@
 #include <assert.h>
 #include <fstream>
 #include <sstream>
+#include "ShapeGenerator.h"
+#include "gtc/matrix_transform.hpp"
+#include "gtx/transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -483,6 +486,62 @@ int CTrackData::GetIntValueFromSignedBit(unsigned int uiValue)
   if (bNegative)
     iRetVal = iRetVal * -1;
   return iRetVal;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+tShapeData CTrackData::MakeTrack()
+{
+  tShapeData ret;
+
+  uint32 uiNumVerts;
+  struct tVertex *vertices = MakeVerts(uiNumVerts);
+  uint32 uiNumIndices;
+  uint32 *indices = MakeIndices(uiNumIndices);
+
+  ret.pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
+  ret.pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+  ret.pVertexArray = new CVertexArray(ret.pVertexBuf);
+
+  delete[] vertices;
+  delete[] indices;
+
+  return ret;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+tVertex *CTrackData::MakeVerts(uint32 &numVertices)
+{
+  numVertices = m_chunkAy.size();
+  tVertex *vertices = new tVertex[numVertices];
+  vertices[0].position = glm::vec3();
+  vertices[0].color = ShapeGenerator::RandomColor();
+  for (uint32 i = 1; i < m_chunkAy.size(); ++i) {
+    glm::vec3 nextChunk = glm::vec3((float)m_chunkAy[i].iLength / 10000.0f, 0, 0);
+    glm::mat4 rotationMat = glm::rotate(glm::radians((float)m_chunkAy[i].dRoll), glm::vec3(0.0f, 0.0f, 1.0f)) *
+      glm::rotate(glm::radians((float)m_chunkAy[i].dPitch), glm::vec3(1.0f, 0.0f, 0.0f)) *
+      glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, 1.0f, 0.0f));
+    nextChunk = glm::vec3(rotationMat * glm::vec4(nextChunk, 1.0f));
+    vertices[i].position = vertices[i - 1].position + nextChunk;
+    vertices[i].color = ShapeGenerator::RandomColor();
+  }
+
+  return vertices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+uint32 *CTrackData::MakeIndices(uint32 &numIndices)
+{
+  numIndices = m_chunkAy.size() * 2;
+  uint32 *indices = new uint32[numIndices];
+  
+  for (int i = 1; i < numIndices + 1; i++) {
+    indices[i - 1] = i / 2;
+  }
+  
+  return indices;
 }
 
 //-------------------------------------------------------------------------------------------------

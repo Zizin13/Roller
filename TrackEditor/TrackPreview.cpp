@@ -9,6 +9,7 @@
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
 #include "OpenGLDebug.h"
+#include "Track.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -26,6 +27,7 @@ public:
   CTrackPreviewPrivate()
     : m_pLightingShader(NULL)
     , m_pPassThroughShader(NULL)
+    , m_pTrack(NULL)
   {};
   ~CTrackPreviewPrivate()
   {
@@ -45,13 +47,13 @@ public:
   CShapeAy m_shapeAy;
   CShader *m_pLightingShader;
   CShader *m_pPassThroughShader;
+  CTrack *m_pTrack;
 };
 
 //-------------------------------------------------------------------------------------------------
 
 CTrackPreview::CTrackPreview(QWidget *pParent)
   : QGLWidget(QGLFormat(QGL::SampleBuffers), pParent)
-  , m_pModel(NULL)
 {
   p = new CTrackPreviewPrivate;
 }
@@ -69,9 +71,49 @@ CTrackPreview::~CTrackPreview()
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackPreview::SetModel(tTestModel *pModel)
+void CTrackPreview::SetTrack(CTrack *pTrack)
 {
-  m_pModel = pModel;
+  for (CShapeAy::iterator it = p->m_shapeAy.begin(); it != p->m_shapeAy.end(); ++it) {
+    (*it).Cleanup();
+  }
+
+  p->m_pTrack = pTrack;
+
+
+  //tShapeData teapot = ShapeGenerator::MakeTeapot(20);
+  //teapot.modelToWorldMatrix =
+  //  glm::translate(glm::vec3(-3.0f, 1.0f, -6.0f)) *
+  //  glm::rotate(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+  //teapot.pShader = p->m_pLightingShader;
+  //tShapeData arrow = ShapeGenerator::MakeArrow();
+  //arrow.modelToWorldMatrix =
+  //  glm::translate(glm::vec3(0.0f, -2.0f, -8.0f)) *
+  //  glm::rotate(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+  //arrow.pShader = p->m_pLightingShader;
+  //tShapeData plane = ShapeGenerator::MakePlane(20);
+  //plane.modelToWorldMatrix =
+  //  glm::translate(glm::vec3(0.0f, 1.0f, 0.0f));
+  //plane.pShader = p->m_pLightingShader;
+  //tShapeData cube = ShapeGenerator::MakeCube();
+  //cube.modelToWorldMatrix =
+  //  glm::translate(glm::vec3(0.0f, -3.0f, 0.0f)) *
+  //  glm::scale(glm::vec3(0.1f, 0.1f, 0.1f));
+  //cube.pShader = p->m_pPassThroughShader;
+  //tShapeData torus = ShapeGenerator::MakeTorus();
+  //torus.modelToWorldMatrix =
+  //  glm::translate(glm::vec3(3.0f, -2.0f, -5.0f));
+  //torus.pShader = p->m_pLightingShader;
+  tShapeData track = p->m_pTrack->MakeTrack();
+  track.modelToWorldMatrix =
+    glm::translate(glm::vec3(4.0f, -1.0f, -1.0f));
+  track.pShader = p->m_pPassThroughShader;
+
+  //p->m_shapeAy.push_back(teapot);
+  //p->m_shapeAy.push_back(arrow);
+  //p->m_shapeAy.push_back(plane);
+  //p->m_shapeAy.push_back(torus);
+  p->m_shapeAy.push_back(track);
+  //p->m_shapeAy.push_back(cube);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -82,23 +124,27 @@ void CTrackPreview::paintGL()
   glViewport(0, 0, width(), height());
 
   glm::mat4 fullTransformMatrix;
-  glm::mat4 viewToProjectionMatrix = glm::perspective(30.0f, ((float)width()) / height(), 0.1f, 20.0f);
+  glm::mat4 viewToProjectionMatrix = glm::perspective(30.0f, ((float)width()) / height(), 0.1f, 100.0f);
   glm::mat4 worldToViewMatrix = camera.GetWorldToViewMatrix();
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
   glm::vec4 ambientLight(0.1f, 0.1f, 0.1f, 1.0f);
 
   glm::vec3 lightPositionWorld = glm::vec3(0.0f, -3.0f, 0.0f);
-  if (m_pModel) {
-    lightPositionWorld = m_pModel->lightPosition;
-    p->m_shapeAy[5].modelToWorldMatrix =
-      glm::translate(lightPositionWorld) *
-      glm::scale(glm::vec3(0.1f, 0.1f, 0.1f));
-  }
+  //if (m_pModel) {
+  //  lightPositionWorld = m_pModel->lightPosition;
+  //  if (p->m_shapeAy.size() == 6)
+  //    p->m_shapeAy[5].modelToWorldMatrix =
+  //      glm::translate(lightPositionWorld) *
+  //      glm::scale(glm::vec3(0.1f, 0.1f, 0.1f));
+  //}
 
   glm::vec3 eyePositionWorld = camera.GetPosition();
 
   for (CShapeAy::iterator it = p->m_shapeAy.begin(); it != p->m_shapeAy.end(); ++it) {
+    if (!(*it).pShader || !(*it).pVertexArray || !(*it).pIndexBuf)
+      continue;
+
     (*it).pShader->Bind();
     (*it).pVertexArray->Bind();
     (*it).pIndexBuf->Bind();
@@ -108,7 +154,7 @@ void CTrackPreview::paintGL()
     (*it).pShader->SetUniformVec3("lightPositionWorld", lightPositionWorld);
     (*it).pShader->SetUniformVec3("eyePositionWorld", eyePositionWorld);
     (*it).pShader->SetUniformMat4("modelToWorldMatrix", (*it).modelToWorldMatrix);
-    GLCALL(glDrawElements(GL_TRIANGLES, (*it).pIndexBuf->GetCount(), GL_UNSIGNED_INT, 0));
+    GLCALL(glDrawElements(GL_LINES, (*it).pIndexBuf->GetCount(), GL_UNSIGNED_INT, 0));
   }
 }
 
@@ -129,41 +175,6 @@ void CTrackPreview::initializeGL()
     p->m_pLightingShader = new CShader("Shaders/VertexShaderCode.glsl", "Shaders/FragmentShaderCode.glsl");
   if (!p->m_pPassThroughShader)
     p->m_pPassThroughShader = new CShader("Shaders/VertexShaderPassthroughCode.glsl", "Shaders/FragmentShaderPassthroughCode.glsl");
-
-  tShapeData teapot = ShapeGenerator::MakeTeapot(20);
-  teapot.modelToWorldMatrix =
-    glm::translate(glm::vec3(-3.0f, 1.0f, -6.0f)) * 
-    glm::rotate(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-  teapot.pShader = p->m_pLightingShader;
-  tShapeData arrow = ShapeGenerator::MakeArrow();
-  arrow.modelToWorldMatrix = 
-    glm::translate(glm::vec3(0.0f, -2.0f, -8.0f)) *
-    glm::rotate(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-  arrow.pShader = p->m_pLightingShader;
-  tShapeData plane = ShapeGenerator::MakePlane(20);
-  plane.modelToWorldMatrix =
-    glm::translate(glm::vec3(0.0f, 1.0f, 0.0f));
-  plane.pShader = p->m_pLightingShader;
-  tShapeData cube = ShapeGenerator::MakeCube();
-  cube.modelToWorldMatrix =
-    glm::translate(glm::vec3(0.0f, -3.0f, 0.0f)) *
-    glm::scale(glm::vec3(0.1f, 0.1f, 0.1f));
-  cube.pShader = p->m_pPassThroughShader;
-  tShapeData torus = ShapeGenerator::MakeTorus();
-  torus.modelToWorldMatrix =
-    glm::translate(glm::vec3(3.0f, -2.0f, -5.0f));
-  torus.pShader = p->m_pLightingShader;
-  tShapeData sphere = ShapeGenerator::MakeSphere();
-  sphere.modelToWorldMatrix =
-    glm::translate(glm::vec3(4.0f, -1.0f, -1.0f));
-  sphere.pShader = p->m_pLightingShader;
-
-  p->m_shapeAy.push_back(teapot);
-  p->m_shapeAy.push_back(arrow);
-  p->m_shapeAy.push_back(plane);
-  p->m_shapeAy.push_back(torus);
-  p->m_shapeAy.push_back(sphere);
-  p->m_shapeAy.push_back(cube);
 }
 
 //-------------------------------------------------------------------------------------------------

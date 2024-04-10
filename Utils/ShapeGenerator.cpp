@@ -19,7 +19,7 @@
 #define PI 3.14159265359
 //-------------------------------------------------------------------------------------------------
 
-glm::vec3 RandomColor()
+glm::vec3 ShapeGenerator::RandomColor()
 {
   glm::vec3 ret;
   ret.x = rand() / (float)RAND_MAX;

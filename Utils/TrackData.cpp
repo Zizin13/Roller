@@ -522,8 +522,9 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices)
     glm::mat4 rotationMat = glm::rotate(glm::radians((float)m_chunkAy[i].dRoll), glm::vec3(0.0f, 0.0f, 1.0f)) *
       glm::rotate(glm::radians((float)m_chunkAy[i].dPitch), glm::vec3(1.0f, 0.0f, 0.0f)) *
       glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, 1.0f, 0.0f));
-    nextChunk = glm::vec3(rotationMat * glm::vec4(nextChunk, 1.0f));
-    vertices[i].position = vertices[i - 1].position + nextChunk;
+    glm::mat4 translateMat = glm::translate(vertices[i - 1].position);
+    nextChunk = glm::vec3(translateMat * rotationMat * glm::vec4(nextChunk, 1.0f));
+    vertices[i].position = nextChunk;
     vertices[i].color = ShapeGenerator::RandomColor();
   }
 

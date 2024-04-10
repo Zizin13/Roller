@@ -640,25 +640,26 @@ uint32 *CTrackData::MakeIndicesSurface(uint32 &numIndices)
     numIndices = 0;
     return NULL;
   }
-
-  uint32 uiNumIndicesPerChunk = 4 * 3;
+  
+  uint32 uiNumVertsPerChunk = 3;
+  uint32 uiNumIndicesPerChunk = 4 * uiNumVertsPerChunk;
   numIndices = (uint32)m_chunkAy.size() * uiNumIndicesPerChunk;
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
   for (uint32 i = 0; i < m_chunkAy.size() - 1; i++) {
-    indices[i * uiNumIndicesPerChunk + 0]  = (i * uiNumIndicesPerChunk) + 1;
-    indices[i * uiNumIndicesPerChunk + 1]  = (i * uiNumIndicesPerChunk) + 0;
-    indices[i * uiNumIndicesPerChunk + 2]  = (i * uiNumIndicesPerChunk) + 3;
-    indices[i * uiNumIndicesPerChunk + 3]  = (i * uiNumIndicesPerChunk) + 1;
-    indices[i * uiNumIndicesPerChunk + 4]  = (i * uiNumIndicesPerChunk) + 3;
-    indices[i * uiNumIndicesPerChunk + 5]  = (i * uiNumIndicesPerChunk) + 4;
-    indices[i * uiNumIndicesPerChunk + 6]  = (i * uiNumIndicesPerChunk) + 0;
-    indices[i * uiNumIndicesPerChunk + 7]  = (i * uiNumIndicesPerChunk) + 2;
-    indices[i * uiNumIndicesPerChunk + 8]  = (i * uiNumIndicesPerChunk) + 5;
-    indices[i * uiNumIndicesPerChunk + 9]  = (i * uiNumIndicesPerChunk) + 0;
-    indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumIndicesPerChunk) + 5;
-    indices[i * uiNumIndicesPerChunk + 11] = (i * uiNumIndicesPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 0]  = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 1]  = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 2]  = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 3]  = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 4]  = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 5]  = (i * uiNumVertsPerChunk) + 4;
+    indices[i * uiNumIndicesPerChunk + 6]  = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 7]  = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 8]  = (i * uiNumVertsPerChunk) + 5;
+    indices[i * uiNumIndicesPerChunk + 9]  = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumVertsPerChunk) + 5;
+    indices[i * uiNumIndicesPerChunk + 11] = (i * uiNumVertsPerChunk) + 3;
   }
 
   return indices;

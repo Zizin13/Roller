@@ -619,12 +619,12 @@ tVertex *CTrackData::MakeVertsSurface(uint32 &numVertices)
     //left
     translateMat = glm::translate(vertices[i * 3 + 0].position);
     glm::mat4 rollMat = glm::rotate(glm::radians((float)m_chunkAy[i].dRoll * -1.0f), vertices[i * 3 + 0].position);
-    float fLLen = (float)m_chunkAy[i].iLeftLaneWidth / 10000.0f;
+    float fLLen = (float)(m_chunkAy[i].iLeftLaneWidth + m_chunkAy[i].iLeftShoulderWidth) / 10000.0f * -1.0f;
     glm::mat4 scaleMatLeft = glm::scale(glm::vec3(fLLen, fLLen, fLLen));
     vertices[i * 3 + 1].position = glm::vec3(translateMat * scaleMatLeft * rollMat * glm::vec4(pitchAxis, 1.0f));
     vertices[i * 3 + 1].color = ShapeGenerator::RandomColor();
     //right
-    float fRLen = (float)m_chunkAy[i].iRightLaneWidth / 10000.0f * -1.0f;
+    float fRLen = (float)(m_chunkAy[i].iRightLaneWidth + m_chunkAy[i].iRightShoulderWidth) / 10000.0f;
     glm::mat4 scaleMatRight = glm::scale(glm::vec3(fRLen, fRLen, fRLen));
     vertices[i * 3 + 2].position = glm::vec3(translateMat * scaleMatRight * rollMat * glm::vec4(pitchAxis, 1.0f));
     vertices[i * 3 + 2].color = ShapeGenerator::RandomColor();

@@ -647,7 +647,8 @@ uint32 *CTrackData::MakeIndicesSurface(uint32 &numIndices)
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
-  for (uint32 i = 0; i < m_chunkAy.size() - 1; i++) {
+  uint32 i = 0;
+  for (; i < m_chunkAy.size() - 1; i++) {
     indices[i * uiNumIndicesPerChunk + 0]  = (i * uiNumVertsPerChunk) + 1;
     indices[i * uiNumIndicesPerChunk + 1]  = (i * uiNumVertsPerChunk) + 0;
     indices[i * uiNumIndicesPerChunk + 2]  = (i * uiNumVertsPerChunk) + 3;
@@ -661,6 +662,19 @@ uint32 *CTrackData::MakeIndicesSurface(uint32 &numIndices)
     indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumVertsPerChunk) + 5;
     indices[i * uiNumIndicesPerChunk + 11] = (i * uiNumVertsPerChunk) + 3;
   }
+  //final chunk must be tied to first
+  indices[i * uiNumIndicesPerChunk + 0]  = (i * uiNumVertsPerChunk) + 1;
+  indices[i * uiNumIndicesPerChunk + 1]  = (i * uiNumVertsPerChunk) + 0;
+  indices[i * uiNumIndicesPerChunk + 2]  = 0;
+  indices[i * uiNumIndicesPerChunk + 3]  = (i * uiNumVertsPerChunk) + 1;
+  indices[i * uiNumIndicesPerChunk + 4]  = 0;
+  indices[i * uiNumIndicesPerChunk + 5]  = 1;
+  indices[i * uiNumIndicesPerChunk + 6]  = (i * uiNumVertsPerChunk) + 0;
+  indices[i * uiNumIndicesPerChunk + 7]  = (i * uiNumVertsPerChunk) + 2;
+  indices[i * uiNumIndicesPerChunk + 8]  = 2;
+  indices[i * uiNumIndicesPerChunk + 9]  = (i * uiNumVertsPerChunk) + 0;
+  indices[i * uiNumIndicesPerChunk + 10] = 2;
+  indices[i * uiNumIndicesPerChunk + 11] = 0;
 
   return indices;
 }

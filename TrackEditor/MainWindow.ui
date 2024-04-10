@@ -2199,6 +2199,13 @@ wall height</string>
           <layout class="QHBoxLayout" name="debugLayout"/>
          </item>
          <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Click to pan. WASD to move. R/F up/down.</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="CTrackPreview" name="openGLWidget">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">

@@ -515,8 +515,10 @@ tShapeData CTrackData::MakeTrackCenterline()
 
 tVertex *CTrackData::MakeVertsCenterline(uint32 &numVertices)
 {
-  if (m_chunkAy.empty())
+  if (m_chunkAy.empty()) {
+    numVertices = 0;
     return NULL;
+  }
 
   numVertices = (uint32)m_chunkAy.size();
   tVertex *vertices = new tVertex[numVertices];
@@ -547,8 +549,10 @@ tVertex *CTrackData::MakeVertsCenterline(uint32 &numVertices)
 
 uint32 *CTrackData::MakeIndicesCenterline(uint32 &numIndices)
 {
-  if (m_chunkAy.empty())
+  if (m_chunkAy.empty()) {
+    numIndices = 0;
     return NULL;
+  }
 
   numIndices = (uint32)m_chunkAy.size() * 2;
   uint32 *indices = new uint32[numIndices];

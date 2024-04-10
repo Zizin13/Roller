@@ -67,8 +67,7 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
   p->m_trackModel.Cleanup();
   p->m_pTrack = pTrack;
   p->m_trackModel = p->m_pTrack->MakeTrackCenterline();
-  p->m_trackModel.modelToWorldMatrix =
-    glm::translate(glm::vec3(4.0f, -1.0f, -1.0f));
+  p->m_trackModel.modelToWorldMatrix = glm::mat4(1.0);
   p->m_trackModel.pShader = p->m_pPassThroughShader;
 }
 

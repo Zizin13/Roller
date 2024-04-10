@@ -17,7 +17,6 @@
 //-------------------------------------------------------------------------------------------------
 
 Camera camera;
-typedef std::vector<tShapeData> CShapeAy;
 
 //-------------------------------------------------------------------------------------------------
 
@@ -25,27 +24,19 @@ class CTrackPreviewPrivate
 {
 public:
   CTrackPreviewPrivate()
-    : m_pLightingShader(NULL)
-    , m_pPassThroughShader(NULL)
+    : m_pPassThroughShader(NULL)
     , m_pTrack(NULL)
   {};
   ~CTrackPreviewPrivate()
   {
-    for (CShapeAy::iterator it = m_shapeAy.begin(); it != m_shapeAy.end(); ++it) {
-      (*it).Cleanup();
-    }
-    if (m_pLightingShader) {
-      delete m_pLightingShader;
-      m_pLightingShader = NULL;
-    }
+    m_trackModel.Cleanup();
     if (m_pPassThroughShader) {
       delete m_pPassThroughShader;
       m_pPassThroughShader = NULL;
     }
   };
 
-  CShapeAy m_shapeAy;
-  CShader *m_pLightingShader;
+  tShapeData m_trackModel;
   CShader *m_pPassThroughShader;
   CTrack *m_pTrack;
 };
@@ -73,47 +64,12 @@ CTrackPreview::~CTrackPreview()
 
 void CTrackPreview::SetTrack(CTrack *pTrack)
 {
-  for (CShapeAy::iterator it = p->m_shapeAy.begin(); it != p->m_shapeAy.end(); ++it) {
-    (*it).Cleanup();
-  }
-
+  p->m_trackModel.Cleanup();
   p->m_pTrack = pTrack;
-
-
-  //tShapeData teapot = ShapeGenerator::MakeTeapot(20);
-  //teapot.modelToWorldMatrix =
-  //  glm::translate(glm::vec3(-3.0f, 1.0f, -6.0f)) *
-  //  glm::rotate(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-  //teapot.pShader = p->m_pLightingShader;
-  //tShapeData arrow = ShapeGenerator::MakeArrow();
-  //arrow.modelToWorldMatrix =
-  //  glm::translate(glm::vec3(0.0f, -2.0f, -8.0f)) *
-  //  glm::rotate(glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-  //arrow.pShader = p->m_pLightingShader;
-  //tShapeData plane = ShapeGenerator::MakePlane(20);
-  //plane.modelToWorldMatrix =
-  //  glm::translate(glm::vec3(0.0f, 1.0f, 0.0f));
-  //plane.pShader = p->m_pLightingShader;
-  //tShapeData cube = ShapeGenerator::MakeCube();
-  //cube.modelToWorldMatrix =
-  //  glm::translate(glm::vec3(0.0f, -3.0f, 0.0f)) *
-  //  glm::scale(glm::vec3(0.1f, 0.1f, 0.1f));
-  //cube.pShader = p->m_pPassThroughShader;
-  //tShapeData torus = ShapeGenerator::MakeTorus();
-  //torus.modelToWorldMatrix =
-  //  glm::translate(glm::vec3(3.0f, -2.0f, -5.0f));
-  //torus.pShader = p->m_pLightingShader;
-  tShapeData track = p->m_pTrack->MakeTrack();
-  track.modelToWorldMatrix =
+  p->m_trackModel = p->m_pTrack->MakeTrackCenterline();
+  p->m_trackModel.modelToWorldMatrix =
     glm::translate(glm::vec3(4.0f, -1.0f, -1.0f));
-  track.pShader = p->m_pPassThroughShader;
-
-  //p->m_shapeAy.push_back(teapot);
-  //p->m_shapeAy.push_back(arrow);
-  //p->m_shapeAy.push_back(plane);
-  //p->m_shapeAy.push_back(torus);
-  p->m_shapeAy.push_back(track);
-  //p->m_shapeAy.push_back(cube);
+  p->m_trackModel.pShader = p->m_pPassThroughShader;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -128,34 +84,15 @@ void CTrackPreview::paintGL()
   glm::mat4 worldToViewMatrix = camera.GetWorldToViewMatrix();
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
-  glm::vec4 ambientLight(0.1f, 0.1f, 0.1f, 1.0f);
+  if (!p->m_trackModel.pShader || !p->m_trackModel.pVertexArray || !p->m_trackModel.pIndexBuf)
+    return;
 
-  glm::vec3 lightPositionWorld = glm::vec3(0.0f, -3.0f, 0.0f);
-  //if (m_pModel) {
-  //  lightPositionWorld = m_pModel->lightPosition;
-  //  if (p->m_shapeAy.size() == 6)
-  //    p->m_shapeAy[5].modelToWorldMatrix =
-  //      glm::translate(lightPositionWorld) *
-  //      glm::scale(glm::vec3(0.1f, 0.1f, 0.1f));
-  //}
-
-  glm::vec3 eyePositionWorld = camera.GetPosition();
-
-  for (CShapeAy::iterator it = p->m_shapeAy.begin(); it != p->m_shapeAy.end(); ++it) {
-    if (!(*it).pShader || !(*it).pVertexArray || !(*it).pIndexBuf)
-      continue;
-
-    (*it).pShader->Bind();
-    (*it).pVertexArray->Bind();
-    (*it).pIndexBuf->Bind();
-    fullTransformMatrix = worldToProjectionMatrix * (*it).modelToWorldMatrix;
-    (*it).pShader->SetUniformMat4("modelToProjectionMatrix", fullTransformMatrix);
-    (*it).pShader->SetUniformVec4("ambientLight", ambientLight);
-    (*it).pShader->SetUniformVec3("lightPositionWorld", lightPositionWorld);
-    (*it).pShader->SetUniformVec3("eyePositionWorld", eyePositionWorld);
-    (*it).pShader->SetUniformMat4("modelToWorldMatrix", (*it).modelToWorldMatrix);
-    GLCALL(glDrawElements(GL_LINES, (*it).pIndexBuf->GetCount(), GL_UNSIGNED_INT, 0));
-  }
+  p->m_trackModel.pShader->Bind();
+  p->m_trackModel.pVertexArray->Bind();
+  p->m_trackModel.pIndexBuf->Bind();
+  fullTransformMatrix = worldToProjectionMatrix * p->m_trackModel.modelToWorldMatrix;
+  p->m_trackModel.pShader->SetUniformMat4("modelToProjectionMatrix", fullTransformMatrix);
+  GLCALL(glDrawElements(GL_LINES, p->m_trackModel.pIndexBuf->GetCount(), GL_UNSIGNED_INT, 0));
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -171,8 +108,6 @@ void CTrackPreview::initializeGL()
   glEnable(GL_DEPTH_TEST);
   //glEnable(GL_CULL_FACE);
 
-  if (!p->m_pLightingShader)
-    p->m_pLightingShader = new CShader("Shaders/VertexShaderCode.glsl", "Shaders/FragmentShaderCode.glsl");
   if (!p->m_pPassThroughShader)
     p->m_pPassThroughShader = new CShader("Shaders/VertexShaderPassthroughCode.glsl", "Shaders/FragmentShaderPassthroughCode.glsl");
 }

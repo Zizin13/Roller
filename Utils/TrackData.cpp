@@ -490,29 +490,34 @@ int CTrackData::GetIntValueFromSignedBit(unsigned int uiValue)
 
 //-------------------------------------------------------------------------------------------------
 
-tShapeData CTrackData::MakeTrack()
+tShapeData CTrackData::MakeTrackCenterline()
 {
   tShapeData ret;
 
   uint32 uiNumVerts;
-  struct tVertex *vertices = MakeVerts(uiNumVerts);
+  struct tVertex *vertices = MakeVertsCenterline(uiNumVerts);
   uint32 uiNumIndices;
-  uint32 *indices = MakeIndices(uiNumIndices);
+  uint32 *indices = MakeIndicesCenterline(uiNumIndices);
 
   ret.pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
   ret.pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
   ret.pVertexArray = new CVertexArray(ret.pVertexBuf);
 
-  delete[] vertices;
-  delete[] indices;
+  if (vertices)
+    delete[] vertices;
+  if (indices)
+    delete[] indices;
 
   return ret;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-tVertex *CTrackData::MakeVerts(uint32 &numVertices)
+tVertex *CTrackData::MakeVertsCenterline(uint32 &numVertices)
 {
+  if (m_chunkAy.empty())
+    return NULL;
+
   numVertices = (uint32)m_chunkAy.size();
   tVertex *vertices = new tVertex[numVertices];
   vertices[0].position = glm::vec3();
@@ -543,8 +548,11 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices)
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 *CTrackData::MakeIndices(uint32 &numIndices)
+uint32 *CTrackData::MakeIndicesCenterline(uint32 &numIndices)
 {
+  if (m_chunkAy.empty())
+    return NULL;
+
   numIndices = (uint32)m_chunkAy.size() * 2;
   uint32 *indices = new uint32[numIndices];
   

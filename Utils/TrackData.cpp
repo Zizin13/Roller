@@ -518,12 +518,22 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices)
   vertices[0].position = glm::vec3();
   vertices[0].color = ShapeGenerator::RandomColor();
   for (uint32 i = 1; i < m_chunkAy.size(); ++i) {
-    glm::vec3 nextChunk = glm::vec3((float)m_chunkAy[i].iLength / 10000.0f, 0, 0);
-    glm::mat4 rotationMat = glm::rotate(glm::radians((float)m_chunkAy[i].dRoll), glm::vec3(0.0f, 0.0f, 1.0f)) *
-      glm::rotate(glm::radians((float)m_chunkAy[i].dPitch), glm::vec3(1.0f, 0.0f, 0.0f)) *
-      glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, 1.0f, 0.0f));
+    //glm::vec3 nextChunk = glm::vec3((float)m_chunkAy[i].iLength / 10000.0f, 0, 0);
+    float fLen = (float)m_chunkAy[i].iLength / 10000.0f;
+    glm::vec3 nextChunkBase = glm::vec3(1, 0, 0);
+    //glm::mat4 rotationMat = glm::rotate(glm::radians((float)m_chunkAy[i].dRoll), glm::vec3(0.0f, 0.0f, 1.0f)) *
+    //  glm::rotate(glm::radians((float)m_chunkAy[i].dPitch), glm::vec3(1.0f, 0.0f, 0.0f)) *
+    //  glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::vec3 nextChunkYawed = glm::vec3(yawMat * glm::vec4(nextChunkBase, 1.0f));
+    glm::vec3 pitchDirecton = glm::cross(nextChunkYawed, glm::vec3(0.0f, -1.0f, 0.0f));
+
+    glm::mat4 pitchMat = glm::rotate(glm::radians((float)m_chunkAy[i].dPitch), pitchDirecton);
+    glm::vec3 nextChunkPitched = glm::vec3(pitchMat * glm::vec4(nextChunkYawed, 1.0f));
+
     glm::mat4 translateMat = glm::translate(vertices[i - 1].position);
-    nextChunk = glm::vec3(translateMat * rotationMat * glm::vec4(nextChunk, 1.0f));
+    glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
+    glm::vec3 nextChunk = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
     vertices[i].position = nextChunk;
     vertices[i].color = ShapeGenerator::RandomColor();
   }

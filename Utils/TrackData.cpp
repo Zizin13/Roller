@@ -522,9 +522,7 @@ tVertex *CTrackData::MakeVertsCenterline(uint32 &numVertices)
 
   numVertices = (uint32)m_chunkAy.size();
   tVertex *vertices = new tVertex[numVertices];
-  vertices[0].position = glm::vec3();
-  vertices[0].color = ShapeGenerator::RandomColor();
-  for (uint32 i = 1; i < m_chunkAy.size(); ++i) {
+  for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
     float fLen = (float)m_chunkAy[i].iLength / 10000.0f;
     glm::vec3 nextChunkBase = glm::vec3(1, 0, 0);
 
@@ -535,7 +533,9 @@ tVertex *CTrackData::MakeVertsCenterline(uint32 &numVertices)
     glm::mat4 pitchMat = glm::rotate(glm::radians((float)m_chunkAy[i].dPitch), pitchAxis);
     glm::vec3 nextChunkPitched = glm::vec3(pitchMat * glm::vec4(nextChunkYawed, 1.0f));
 
-    glm::mat4 translateMat = glm::translate(vertices[i - 1].position);
+    glm::mat4 translateMat = glm::mat4(1);
+    if (i > 0)
+      translateMat = glm::translate(vertices[i - 1].position);
     glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
     glm::vec3 nextChunk = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
     vertices[i].position = nextChunk;
@@ -561,6 +561,105 @@ uint32 *CTrackData::MakeIndicesCenterline(uint32 &numIndices)
     indices[i - 1] = i / 2;
   }
   
+  return indices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+tShapeData CTrackData::MakeTrackSurface()
+{
+  tShapeData ret;
+
+  uint32 uiNumVerts;
+  struct tVertex *vertices = MakeVertsSurface(uiNumVerts);
+  uint32 uiNumIndices;
+  uint32 *indices = MakeIndicesSurface(uiNumIndices);
+
+  ret.pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
+  ret.pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+  ret.pVertexArray = new CVertexArray(ret.pVertexBuf);
+
+  if (vertices)
+    delete[] vertices;
+  if (indices)
+    delete[] indices;
+
+  return ret;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+tVertex *CTrackData::MakeVertsSurface(uint32 &numVertices)
+{
+  if (m_chunkAy.empty()) {
+    numVertices = 0;
+    return NULL;
+  }
+
+  numVertices = (uint32)m_chunkAy.size() * 3;
+  tVertex *vertices = new tVertex[numVertices];
+  for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
+    glm::vec3 nextChunkBase = glm::vec3(1, 0, 0);
+
+    glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, -1.0f, 0.0f));
+    glm::vec3 nextChunkYawed = glm::vec3(yawMat * glm::vec4(nextChunkBase, 1.0f));
+    glm::vec3 pitchAxis = glm::cross(nextChunkYawed, glm::vec3(0.0f, -1.0f, 0.0f));
+
+    glm::mat4 pitchMat = glm::rotate(glm::radians((float)m_chunkAy[i].dPitch), pitchAxis);
+    glm::vec3 nextChunkPitched = glm::vec3(pitchMat * glm::vec4(nextChunkYawed, 1.0f));
+
+    glm::mat4 translateMat = glm::mat4(1);
+    if (i > 0)
+      translateMat = glm::translate(vertices[(i - 1) * 3].position);
+    //center
+    float fLen = (float)m_chunkAy[i].iLength / 10000.0f;
+    glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
+    vertices[i * 3 + 0].position = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
+    vertices[i * 3 + 0].color = ShapeGenerator::RandomColor();
+    //left
+    float fLLen = (float)m_chunkAy[i].iLeftLaneWidth / 10000.0f;
+    glm::mat4 scaleMatLeft = glm::scale(glm::vec3(fLLen, fLLen, fLLen));
+    vertices[i * 3 + 1].position = glm::vec3(translateMat * scaleMatLeft * glm::vec4(pitchAxis, 1.0f));
+    vertices[i * 3 + 1].color = ShapeGenerator::RandomColor();
+    //right
+    float fRLen = (float)m_chunkAy[i].iRightLaneWidth / 10000.0f * -1.0f;
+    glm::mat4 scaleMatRight = glm::scale(glm::vec3(fRLen, fRLen, fRLen));
+    vertices[i * 3 + 2].position = glm::vec3(translateMat * scaleMatRight * glm::vec4(pitchAxis, 1.0f));
+    vertices[i * 3 + 2].color = ShapeGenerator::RandomColor();
+  }
+
+  return vertices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+uint32 *CTrackData::MakeIndicesSurface(uint32 &numIndices)
+{
+  if (m_chunkAy.empty()) {
+    numIndices = 0;
+    return NULL;
+  }
+
+  uint32 uiNumIndicesPerChunk = 4 * 3;
+  numIndices = (uint32)m_chunkAy.size() * uiNumIndicesPerChunk;
+  uint32 *indices = new uint32[numIndices];
+  memset(indices, 0, numIndices * sizeof(uint32));
+
+  for (uint32 i = 0; i < m_chunkAy.size() - 1; i++) {
+    indices[i * uiNumIndicesPerChunk + 0]  = (i * uiNumIndicesPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 1]  = (i * uiNumIndicesPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 2]  = (i * uiNumIndicesPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 3]  = (i * uiNumIndicesPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 4]  = (i * uiNumIndicesPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 5]  = (i * uiNumIndicesPerChunk) + 4;
+    indices[i * uiNumIndicesPerChunk + 6]  = (i * uiNumIndicesPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 7]  = (i * uiNumIndicesPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 8]  = (i * uiNumIndicesPerChunk) + 5;
+    indices[i * uiNumIndicesPerChunk + 9]  = (i * uiNumIndicesPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumIndicesPerChunk) + 5;
+    indices[i * uiNumIndicesPerChunk + 11] = (i * uiNumIndicesPerChunk) + 3;
+  }
+
   return indices;
 }
 

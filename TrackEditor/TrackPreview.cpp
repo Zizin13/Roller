@@ -66,7 +66,7 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
 {
   p->m_trackModel.Cleanup();
   p->m_pTrack = pTrack;
-  p->m_trackModel = p->m_pTrack->MakeTrackCenterline();
+  p->m_trackModel = p->m_pTrack->MakeTrackSurface();
   p->m_trackModel.modelToWorldMatrix = glm::mat4(1.0);
   p->m_trackModel.pShader = p->m_pPassThroughShader;
 }
@@ -91,7 +91,7 @@ void CTrackPreview::paintGL()
   p->m_trackModel.pIndexBuf->Bind();
   fullTransformMatrix = worldToProjectionMatrix * p->m_trackModel.modelToWorldMatrix;
   p->m_trackModel.pShader->SetUniformMat4("modelToProjectionMatrix", fullTransformMatrix);
-  GLCALL(glDrawElements(GL_LINES, p->m_trackModel.pIndexBuf->GetCount(), GL_UNSIGNED_INT, 0));
+  GLCALL(glDrawElements(GL_TRIANGLES, p->m_trackModel.pIndexBuf->GetCount(), GL_UNSIGNED_INT, 0));
 }
 
 //-------------------------------------------------------------------------------------------------

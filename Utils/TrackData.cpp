@@ -638,20 +638,22 @@ tVertex *CTrackData::MakeVertsSurface(uint32 &numVertices)
     float fLShoulderHeight = (float)m_chunkAy[i].iLeftShoulderHeight / fScale * -1.0f;
     glm::mat4 scaleMatLeftShoulderWidth = glm::scale(glm::vec3(fLShoulderLen, fLShoulderLen, fLShoulderLen));
     glm::mat4 scaleMatLeftShoulderHeight = glm::scale(glm::vec3(fLShoulderHeight, fLShoulderHeight, fLShoulderHeight));
-    glm::vec3 lShoulderWidthVec = glm::vec3(translateMat * scaleMatLeftShoulderWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
+    glm::vec3 lShoulderWidthVec = glm::vec3(scaleMatLeftShoulderWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
     glm::vec3 normal = glm::normalize(glm::cross(nextChunkPitched, pitchAxis));
-    glm::vec3 lShoulderHeightVec = glm::vec3(translateMat * scaleMatLeftShoulderHeight * rollMat * glm::vec4(normal, 1.0f));
-    vertices[i * uiNumVertsPerChunk + 3].position = lShoulderWidthVec;
+    glm::vec3 lShoulderHeightVec = glm::vec3(scaleMatLeftShoulderHeight * rollMat * glm::vec4(normal, 1.0f));
+    glm::vec3 lShoulderVec = lShoulderWidthVec + lShoulderHeightVec;
+    vertices[i * uiNumVertsPerChunk + 3].position = glm::vec3(translateMat * glm::vec4(lShoulderVec, 1.0f));
     vertices[i * uiNumVertsPerChunk + 3].color = ShapeGenerator::RandomColor();
     //right shoulder
     translateMat = glm::translate(vertices[i * uiNumVertsPerChunk + 2].position); //translate to end of right lane
     float fRShoulderLen = (float)m_chunkAy[i].iRightShoulderWidth / fScale;
-    float fRShoulderHeight = (float)m_chunkAy[i].iRightShoulderHeight / fScale;
+    float fRShoulderHeight = (float)m_chunkAy[i].iRightShoulderHeight / fScale * -1.0f;
     glm::mat4 scaleMatRightShoulderWidth = glm::scale(glm::vec3(fRShoulderLen, fRShoulderLen, fRShoulderLen));
     glm::mat4 scaleMatRightShoulderHeight = glm::scale(glm::vec3(fRShoulderHeight, fRShoulderHeight, fRShoulderHeight));
-    glm::vec3 rShoulderWidthVec = glm::vec3(translateMat * scaleMatRightShoulderWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
-    glm::vec3 rShoulderHeightVec = glm::vec3(translateMat * scaleMatRightShoulderHeight * rollMat * glm::vec4(normal, 1.0f));
-    vertices[i * uiNumVertsPerChunk + 4].position = rShoulderWidthVec;
+    glm::vec3 rShoulderWidthVec = glm::vec3(scaleMatRightShoulderWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
+    glm::vec3 rShoulderHeightVec = glm::vec3(scaleMatRightShoulderHeight * rollMat * glm::vec4(normal, 1.0f));
+    glm::vec3 rShoulderVec = rShoulderWidthVec + rShoulderHeightVec;
+    vertices[i * uiNumVertsPerChunk + 4].position = glm::vec3(translateMat * glm::vec4(rShoulderVec, 1.0f));
     vertices[i * uiNumVertsPerChunk + 4].color = ShapeGenerator::RandomColor();
 
   }

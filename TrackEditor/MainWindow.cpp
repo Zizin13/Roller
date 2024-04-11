@@ -132,10 +132,8 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(sbSelChunksTo, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksToChanged(int)));
   connect(ckTo, &QCheckBox::toggled, this, &CMainWindow::OnToChecked);
   connect(pbApply, &QPushButton::clicked, this, &CMainWindow::OnApplyClicked);
-  connect(pbApplyTexture, &QPushButton::clicked, this, &CMainWindow::OnApplyTextureClicked);
   connect(pbApplyInfo, &QPushButton::clicked, this, &CMainWindow::OnApplyInfoClicked);
   connect(pbCancel, &QPushButton::clicked, this, &CMainWindow::OnCancelClicked);
-  connect(pbRevertTexture, &QPushButton::clicked, this, &CMainWindow::OnCancelTextureClicked);
   connect(pbRevertInfo, &QPushButton::clicked, this, &CMainWindow::OnCancelInfoClicked);
   connect(pbDelete, &QPushButton::clicked, this, &CMainWindow::OnDeleteChunkClicked);
   connect(pbEditLSurface, &QPushButton::clicked, this, &CMainWindow::OnEditLSurface);
@@ -240,9 +238,8 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leStuntBulge, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(pbDeleteStunt, &QPushButton::clicked, this, &CMainWindow::OnDeleteStuntClicked);
 
-  connect(leTex, &QLineEdit::textChanged, this, &CMainWindow::UpdateTexturesEditMode);
-  connect(leBld, &QLineEdit::textChanged, this, &CMainWindow::UpdateTexturesEditMode);
-
+  connect(leTex, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
+  connect(leBld, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
   connect(leTrackNum, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
   connect(leImpossibleLaps, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
   connect(leHardLaps, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
@@ -623,20 +620,6 @@ void CMainWindow::OnApplyClicked()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::OnApplyTextureClicked()
-{
-  //update value
-  p->m_track.m_sTextureFile  = leTex->text().toLatin1().constData();
-  p->m_track.m_sBuildingFile = leBld->text().toLatin1().constData();
-
-  m_bUnsavedChanges = true;
-  g_pMainWindow->LogMessage("Applied changes to texture");
-  LoadTextures();
-  UpdateWindow();
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CMainWindow::OnApplyInfoClicked()
 {
   p->m_track.m_raceInfo.iTrackNumber = leTrackNum->text().toInt();
@@ -649,9 +632,12 @@ void CMainWindow::OnApplyInfoClicked()
   p->m_track.m_raceInfo.dTrackMapSize = leMapSize->text().toDouble();
   p->m_track.m_raceInfo.iTrackMapFidelity = leMapFidelity->text().toInt();
   p->m_track.m_raceInfo.dUnknown = leInfoUnknown->text().toDouble();
+  p->m_track.m_sTextureFile = leTex->text().toLatin1().constData();
+  p->m_track.m_sBuildingFile = leBld->text().toLatin1().constData();
 
   m_bUnsavedChanges = true;
-  g_pMainWindow->LogMessage("Applied changes to track info");
+  g_pMainWindow->LogMessage("Applied global track settings");
+  LoadTextures();
   UpdateWindow();
 }
 
@@ -661,16 +647,6 @@ void CMainWindow::OnCancelClicked()
 {
   RevertGeometry();
   UpdateGeometryEditMode();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnCancelTextureClicked()
-{
-  p->sTex = p->m_track.m_sTextureFile.c_str();
-  p->sBld = p->m_track.m_sBuildingFile.c_str();
-  UpdateLEWithSelectionValue(leTex, p->sTex);
-  UpdateLEWithSelectionValue(leBld, p->sBld);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -996,24 +972,12 @@ void CMainWindow::UpdateGeometryEditMode()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::UpdateTexturesEditMode()
-{
-  bool bLValEdited = false;
-  bool bMixedData = false;
-  UpdateLEEditMode(bLValEdited, bMixedData, leTex, p->sTex);
-  UpdateLEEditMode(bLValEdited, bMixedData, leBld, p->sBld);
-
-  bool bEditMode = bLValEdited;
-  pbApplyTexture->setEnabled(bEditMode);
-  pbRevertTexture->setEnabled(bLValEdited);
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CMainWindow::UpdateInfoEditMode()
 {
   bool bEditMode = false;
   bool bMixedData = false;
+  UpdateLEEditMode(bEditMode, bMixedData, leTex, p->sTex);
+  UpdateLEEditMode(bEditMode, bMixedData, leBld, p->sBld);
   UpdateLEEditMode(bEditMode, bMixedData, leTrackNum, p->sTrackNumber);
   UpdateLEEditMode(bEditMode, bMixedData, leImpossibleLaps, p->sImpossibleLaps);
   UpdateLEEditMode(bEditMode, bMixedData, leHardLaps, p->sHardLaps);
@@ -1432,11 +1396,24 @@ void CMainWindow::UpdateWindow()
       UpdateGeometryEditMode();
     }
       break;
-    case 1: //TEXTURES
+    case 1: //GLOBAL SETTINGS
     {
       //stuff data
       txData->appendPlainText("TEX:" + QString(p->m_track.m_sTextureFile.c_str()));
       txData->appendPlainText("BLD:" + QString(p->m_track.m_sBuildingFile.c_str()));
+      txData->appendPlainText("\n");
+
+      txData->appendPlainText(QString::number(p->m_track.m_raceInfo.iTrackNumber));
+      char szLine[50];
+      memset(szLine, 0, sizeof(szLine));
+      snprintf(szLine, sizeof(szLine), "%4d %4d %4d %4d %4d %4d",
+               p->m_track.m_raceInfo.iImpossibleLaps, p->m_track.m_raceInfo.iHardLaps, p->m_track.m_raceInfo.iTrickyLaps,
+               p->m_track.m_raceInfo.iMediumLaps, p->m_track.m_raceInfo.iEasyLaps, p->m_track.m_raceInfo.iGirlieLaps);
+      txData->appendPlainText(szLine);
+      memset(szLine, 0, sizeof(szLine));
+      snprintf(szLine, sizeof(szLine), "%.2lf %4d %.2lf",
+               p->m_track.m_raceInfo.dTrackMapSize, p->m_track.m_raceInfo.iTrackMapFidelity, p->m_track.m_raceInfo.dUnknown);
+      txData->appendPlainText(szLine);
 
       CSignMap backsMap;
       for (int i = 0; i < p->m_track.m_chunkAy.size(); ++i) {
@@ -1453,31 +1430,15 @@ void CMainWindow::UpdateWindow()
       }
 
       //update selection
-      p->sTex = p->m_track.m_sTextureFile.c_str();
-      p->sBld = p->m_track.m_sBuildingFile.c_str();
-      UpdateLEWithSelectionValue(leTex, p->sTex);
-      UpdateLEWithSelectionValue(leBld, p->sBld);
-      UpdateTexturesEditMode();
+      UpdateInfoSelection();
+      UpdateInfoEditMode();
     }
       break;
     case 2: //INFO
     {
       //stuff data
-      txData->appendPlainText(QString::number(p->m_track.m_raceInfo.iTrackNumber));
-      char szLine[50];
-      memset(szLine, 0, sizeof(szLine));
-      snprintf(szLine, sizeof(szLine), "%4d %4d %4d %4d %4d %4d",
-               p->m_track.m_raceInfo.iImpossibleLaps, p->m_track.m_raceInfo.iHardLaps, p->m_track.m_raceInfo.iTrickyLaps,
-               p->m_track.m_raceInfo.iMediumLaps, p->m_track.m_raceInfo.iEasyLaps, p->m_track.m_raceInfo.iGirlieLaps);
-      txData->appendPlainText(szLine);
-      memset(szLine, 0, sizeof(szLine));
-      snprintf(szLine, sizeof(szLine), "%.2lf %4d %.2lf",
-               p->m_track.m_raceInfo.dTrackMapSize, p->m_track.m_raceInfo.iTrackMapFidelity, p->m_track.m_raceInfo.dUnknown);
-      txData->appendPlainText(szLine);
 
       //update selection
-      UpdateInfoSelection();
-      UpdateInfoEditMode();
     }
       break;
   }
@@ -1578,6 +1539,8 @@ void CMainWindow::UpdateGeometrySelection()
 
 void CMainWindow::UpdateInfoSelection()
 {
+  p->sTex = p->m_track.m_sTextureFile.c_str();
+  p->sBld = p->m_track.m_sBuildingFile.c_str();
   p->sTrackNumber = QString::number(p->m_track.m_raceInfo.iTrackNumber);
   p->sImpossibleLaps = QString::number(p->m_track.m_raceInfo.iImpossibleLaps);
   p->sHardLaps = QString::number(p->m_track.m_raceInfo.iHardLaps);
@@ -1855,6 +1818,8 @@ void CMainWindow::RevertGeometry()
 
 void CMainWindow::RevertInfo()
 {
+  UpdateLEWithSelectionValue(leTex, p->sTex);
+  UpdateLEWithSelectionValue(leBld, p->sBld);
   UpdateLEWithSelectionValue(leTrackNum, p->sTrackNumber);
   UpdateLEWithSelectionValue(leImpossibleLaps, p->sImpossibleLaps);
   UpdateLEWithSelectionValue(leHardLaps, p->sHardLaps);

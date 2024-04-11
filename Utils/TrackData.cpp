@@ -131,7 +131,7 @@ CTrackData::~CTrackData()
 void CTrackData::ClearData()
 {
   memset(&m_header, 0, sizeof(m_header));
-  m_header.iHeaderUnk3 = 2048;
+  m_header.iFloorDepth = 2048;
   m_chunkAy.clear();
   m_sTextureFile = "";
   m_sBuildingFile = "";
@@ -240,7 +240,7 @@ bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
           m_header.iNumChunks  = std::stoi(lineAy[0]);
           m_header.iHeaderUnk1 = std::stoi(lineAy[1]);
           m_header.iHeaderUnk2 = std::stoi(lineAy[2]);
-          m_header.iHeaderUnk3 = std::stoi(lineAy[3]);
+          m_header.iFloorDepth = std::stoi(lineAy[3]);
           section = GEOMETRY;
         }
         break;
@@ -819,7 +819,7 @@ void CTrackData::GetTrackData(std::vector<uint8_t> &data)
 {
   //write header
   char szBuf[1024];
-  snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d\r\n\r\n\r\n", (int)m_chunkAy.size(), m_header.iHeaderUnk1, m_header.iHeaderUnk2, m_header.iHeaderUnk3);
+  snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d\r\n\r\n\r\n", (int)m_chunkAy.size(), m_header.iHeaderUnk1, m_header.iHeaderUnk2, m_header.iFloorDepth);
   WriteToVector(data, szBuf);
 
   //write chunks

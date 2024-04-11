@@ -35,10 +35,8 @@ protected slots:
   void OnSelChunksToChanged(int iValue);
   void OnToChecked(bool bChecked);
   void OnApplyClicked();
-  void OnApplyTextureClicked();
   void OnApplyInfoClicked();
   void OnCancelClicked();
-  void OnCancelTextureClicked();
   void OnCancelInfoClicked();
   void OnDeleteChunkClicked();
   void OnEditLSurface();
@@ -54,7 +52,6 @@ protected slots:
   void OnEditRUOuterWall();
   void OnEditEnvirFloor();
   void UpdateGeometryEditMode();
-  void UpdateTexturesEditMode();
   void UpdateInfoEditMode();
   void OnSignClicked();
   void OnBackClicked();

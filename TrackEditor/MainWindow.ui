@@ -194,7 +194,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-1236</y>
+              <y>0</y>
               <width>496</width>
               <height>2141</height>
              </rect>
@@ -1952,84 +1952,9 @@ height</string>
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="tabTextures">
-        <attribute name="title">
-         <string>Textures</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_6">
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_11">
-           <item>
-            <widget class="QPushButton" name="pbApplyTexture">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string>Apply</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pbRevertTexture">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="text">
-              <string>Revert</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QGridLayout" name="gridLayout_7">
-           <item row="0" column="0">
-            <widget class="QLabel" name="lblTex">
-             <property name="text">
-              <string>Texture File</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="lblBld">
-             <property name="text">
-              <string>Building File</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QLineEdit" name="leTex"/>
-           </item>
-           <item row="1" column="2">
-            <widget class="QLineEdit" name="leBld"/>
-           </item>
-          </layout>
-         </item>
-         <item>
-          <widget class="Line" name="line_3">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="verticalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </widget>
        <widget class="QWidget" name="tabInfo">
         <attribute name="title">
-         <string>Info</string>
+         <string>Global Track Settings</string>
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_7">
          <item>
@@ -2057,55 +1982,61 @@ height</string>
           </layout>
          </item>
          <item>
-          <layout class="QGridLayout" name="gridLayout_5">
+          <layout class="QHBoxLayout" name="horizontalLayout_21">
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Floor Depth</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="leFloorDepth"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="Line" name="line_6">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_7">
+           <item row="0" column="0">
+            <widget class="QLabel" name="lblTex">
+             <property name="text">
+              <string>Texture File</string>
+             </property>
+            </widget>
+           </item>
            <item row="1" column="0">
-            <widget class="QLineEdit" name="leTrackNum"/>
-           </item>
-           <item row="5" column="1">
-            <widget class="QLineEdit" name="leEasyLaps"/>
-           </item>
-           <item row="4" column="2">
-            <widget class="QLabel" name="lblGirlieLaps">
+            <widget class="QLabel" name="lblBld">
              <property name="text">
-              <string>Girlie Laps</string>
+              <string>Building File</string>
              </property>
             </widget>
            </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="lblMapSize">
-             <property name="toolTip">
-              <string>smaller is larger</string>
-             </property>
-             <property name="text">
-              <string>Map Size</string>
-             </property>
-            </widget>
+           <item row="0" column="2">
+            <widget class="QLineEdit" name="leTex"/>
            </item>
-           <item row="3" column="1">
-            <widget class="QLineEdit" name="leHardLaps"/>
+           <item row="1" column="2">
+            <widget class="QLineEdit" name="leBld"/>
            </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="Line" name="line_7">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_5">
            <item row="5" column="2">
             <widget class="QLineEdit" name="leGirlieLaps"/>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="lblTrackNum">
-             <property name="text">
-              <string>Track Number</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLineEdit" name="leMediumLaps"/>
-           </item>
-           <item row="2" column="1">
-            <widget class="QLabel" name="lblHardLaps">
-             <property name="text">
-              <string>Hard Laps</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QLineEdit" name="leTrickyLaps"/>
            </item>
            <item row="4" column="1">
             <widget class="QLabel" name="lblEasyLaps">
@@ -2114,23 +2045,6 @@ height</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="lblImpossibleLaps">
-             <property name="text">
-              <string>Impossible Laps</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="lblMediumLaps">
-             <property name="text">
-              <string>Medium Laps</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLineEdit" name="leImpossibleLaps"/>
-           </item>
            <item row="2" column="2">
             <widget class="QLabel" name="lblTrickyLaps">
              <property name="text">
@@ -2138,10 +2052,17 @@ height</string>
              </property>
             </widget>
            </item>
-           <item row="7" column="0">
-            <widget class="QLineEdit" name="leMapSize">
+           <item row="7" column="1">
+            <widget class="QLineEdit" name="leMapFidelity">
              <property name="toolTip">
-              <string>smaller is larger</string>
+              <string>smaller is more accurate</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="lblTrackNum">
+             <property name="text">
+              <string>Track Number</string>
              </property>
             </widget>
            </item>
@@ -2155,12 +2076,65 @@ height</string>
              </property>
             </widget>
            </item>
-           <item row="7" column="1">
-            <widget class="QLineEdit" name="leMapFidelity">
+           <item row="3" column="0">
+            <widget class="QLineEdit" name="leImpossibleLaps"/>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="lblMapSize">
              <property name="toolTip">
-              <string>smaller is more accurate</string>
+              <string>smaller is larger</string>
+             </property>
+             <property name="text">
+              <string>Map Size</string>
              </property>
             </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLineEdit" name="leMapSize">
+             <property name="toolTip">
+              <string>smaller is larger</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLineEdit" name="leMediumLaps"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLineEdit" name="leTrackNum"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="lblImpossibleLaps">
+             <property name="text">
+              <string>Impossible Laps</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QLabel" name="lblGirlieLaps">
+             <property name="text">
+              <string>Girlie Laps</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="lblMediumLaps">
+             <property name="text">
+              <string>Medium Laps</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLabel" name="lblHardLaps">
+             <property name="text">
+              <string>Hard Laps</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLineEdit" name="leEasyLaps"/>
+           </item>
+           <item row="7" column="2">
+            <widget class="QLineEdit" name="leInfoUnknown"/>
            </item>
            <item row="6" column="2">
             <widget class="QLabel" name="lblInfoUnknown">
@@ -2169,8 +2143,11 @@ height</string>
              </property>
             </widget>
            </item>
-           <item row="7" column="2">
-            <widget class="QLineEdit" name="leInfoUnknown"/>
+           <item row="3" column="2">
+            <widget class="QLineEdit" name="leTrickyLaps"/>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="leHardLaps"/>
            </item>
           </layout>
          </item>
@@ -2293,8 +2270,8 @@ height</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>281</width>
-              <height>530</height>
+              <width>133</width>
+              <height>118</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_12">

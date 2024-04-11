@@ -11,7 +11,7 @@ struct tTrackHeader
   int iNumChunks;
   int iHeaderUnk1;
   int iHeaderUnk2;
-  int iHeaderUnk3;
+  int iFloorDepth;
 };
 //-------------------------------------------------------------------------------------------------
 struct tStunt

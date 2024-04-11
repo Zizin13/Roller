@@ -21,7 +21,7 @@ public:
 
   void Draw(const glm::mat4 &worldToProjectionMatrix);
 
-  glm::mat4 modelToWorldMatrix;
+  glm::mat4 m_modelToWorldMatrix;
 
 private:
   CVertexBuffer *m_pVertexBuf;

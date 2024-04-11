@@ -21,7 +21,7 @@ CShapeData::CShapeData(CVertexBuffer *pVertexBuf,
   , m_pVertexArray(pVertexArray)
   , m_pShader(pShader)
   , m_drawType(drawType)
-  , modelToWorldMatrix(glm::mat4(1))
+  , m_modelToWorldMatrix(glm::mat4(1))
 {
 }
 
@@ -54,7 +54,7 @@ void CShapeData::Draw(const glm::mat4 &worldToProjectionMatrix)
   m_pVertexArray->Bind();
   m_pIndexBuf->Bind();
 
-  glm::mat4 fullTransformMatrix = worldToProjectionMatrix * modelToWorldMatrix;
+  glm::mat4 fullTransformMatrix = worldToProjectionMatrix * m_modelToWorldMatrix;
   m_pShader->SetUniformMat4("modelToProjectionMatrix", fullTransformMatrix);
   GLCALL(glDrawElements(m_drawType, m_pIndexBuf->GetCount(), GL_UNSIGNED_INT, 0));
 }

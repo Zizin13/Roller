@@ -44,6 +44,9 @@ public:
   //selected geometry values
   CChunkEditValues editVals;
 
+  //header values
+  QString sFloorDepth;
+
   //selected texture values
   QString sTex;
   QString sBld;
@@ -238,6 +241,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leStuntBulge, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(pbDeleteStunt, &QPushButton::clicked, this, &CMainWindow::OnDeleteStuntClicked);
 
+  connect(leFloorDepth, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
   connect(leTex, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
   connect(leBld, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
   connect(leTrackNum, &QLineEdit::textChanged, this, &CMainWindow::UpdateInfoEditMode);
@@ -634,6 +638,7 @@ void CMainWindow::OnApplyInfoClicked()
   p->m_track.m_raceInfo.dUnknown = leInfoUnknown->text().toDouble();
   p->m_track.m_sTextureFile = leTex->text().toLatin1().constData();
   p->m_track.m_sBuildingFile = leBld->text().toLatin1().constData();
+  p->m_track.m_header.iFloorDepth = leFloorDepth->text().toInt();
 
   m_bUnsavedChanges = true;
   g_pMainWindow->LogMessage("Applied global track settings");
@@ -976,6 +981,7 @@ void CMainWindow::UpdateInfoEditMode()
 {
   bool bEditMode = false;
   bool bMixedData = false;
+  UpdateLEEditMode(bEditMode, bMixedData, leFloorDepth, p->sFloorDepth);
   UpdateLEEditMode(bEditMode, bMixedData, leTex, p->sTex);
   UpdateLEEditMode(bEditMode, bMixedData, leBld, p->sBld);
   UpdateLEEditMode(bEditMode, bMixedData, leTrackNum, p->sTrackNumber);
@@ -1539,6 +1545,7 @@ void CMainWindow::UpdateGeometrySelection()
 
 void CMainWindow::UpdateInfoSelection()
 {
+  p->sFloorDepth = QString::number(p->m_track.m_header.iFloorDepth);
   p->sTex = p->m_track.m_sTextureFile.c_str();
   p->sBld = p->m_track.m_sBuildingFile.c_str();
   p->sTrackNumber = QString::number(p->m_track.m_raceInfo.iTrackNumber);
@@ -1818,6 +1825,7 @@ void CMainWindow::RevertGeometry()
 
 void CMainWindow::RevertInfo()
 {
+  UpdateLEWithSelectionValue(leFloorDepth, p->sFloorDepth);
   UpdateLEWithSelectionValue(leTex, p->sTex);
   UpdateLEWithSelectionValue(leBld, p->sBld);
   UpdateLEWithSelectionValue(leTrackNum, p->sTrackNumber);

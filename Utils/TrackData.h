@@ -75,16 +75,16 @@ struct tGeometryChunk
   double dSignPitch;
   double dSignRoll;
   //line 3
-  int iLUOuterWallAngle;
-  int iLLOuterWallAngle;
-  int iUnk23; //todo
-  int iUnk24; //todo
-  int iRLOuterWallAngle;
-  int iRUOuterWallAngle;
+  int iLUOuterWallHOffset;
+  int iLLOuterWallHOffset;
+  int iLOuterFloorHOffset;
+  int iROuterFloorHOffset;
+  int iRLOuterWallHOffset;
+  int iRUOuterWallHOffset;
   int iLUOuterWallHeight;
   int iLLOuterWallHeight;
-  int iUnk29; //todo
-  int iUnk30; //todo
+  int iLOuterFloorHeight;
+  int iROuterFloorHeight;
   int iRLOuterWallHeight;
   int iRUOuterWallHeight;
   int iRoofHeight;

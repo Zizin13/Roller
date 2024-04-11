@@ -192,16 +192,16 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(leSignYaw, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leSignPitch, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leSignRoll, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leLUOuterWallAngle, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leLLOuterWallAngle, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leUnk23, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leUnk24, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leRLOuterWallAngle, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leRUOuterWallAngle, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leLUOuterWallHOffset, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leLLOuterWallHOffset, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leLOuterFloorHOffset, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leROuterFloorHOffset, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leRLOuterWallHOffset, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leRUOuterWallHOffset, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leLUOuterWallHeight, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leLLOuterWallHeight, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leUnk29, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
-  connect(leUnk30, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leLOuterFloorHeight, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
+  connect(leROuterFloorHeight, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leRLOuterWallHeight, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leRUOuterWallHeight, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
   connect(leRoofHeight, &QLineEdit::textChanged, this, &CMainWindow::UpdateGeometryEditMode);
@@ -487,8 +487,8 @@ void CMainWindow::OnInsertBeforeClicked()
     , leLWallType->text(), leRWallType->text(), leRoofType->text(), leLUOuterWallType->text(), leLLOuterWallType->text(), leOuterFloorType->text()
     , leRLOuterWallType->text(), leRUOuterWallType->text(), leEnvironmentFloorType->text(), leSignType->text(), leSignHorizOffset->text(), leSignVertOffset->text()
     , leSignYaw->text(), leSignPitch->text(), leSignRoll->text()
-    , leLUOuterWallAngle->text(), leLLOuterWallAngle->text(), leUnk23->text(), leUnk24->text(), leRLOuterWallAngle->text(), leRUOuterWallAngle->text()
-    , leLUOuterWallHeight->text(), leLLOuterWallHeight->text(), leUnk29->text(), leUnk30->text(), leRLOuterWallHeight->text(), leRUOuterWallHeight->text()
+    , leLUOuterWallHOffset->text(), leLLOuterWallHOffset->text(), leLOuterFloorHOffset->text(), leROuterFloorHOffset->text(), leRLOuterWallHOffset->text(), leRUOuterWallHOffset->text()
+    , leLUOuterWallHeight->text(), leLLOuterWallHeight->text(), leLOuterFloorHeight->text(), leROuterFloorHeight->text(), leRLOuterWallHeight->text(), leRUOuterWallHeight->text()
     , leRoofHeight->text(), leDrawOrder1->text(), leDrawOrder2->text(), leDrawOrder3->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
@@ -526,8 +526,8 @@ void CMainWindow::OnInsertAfterClicked()
     , leLWallType->text(), leRWallType->text(), leRoofType->text(), leLUOuterWallType->text(), leLLOuterWallType->text(), leOuterFloorType->text()
     , leRLOuterWallType->text(), leRUOuterWallType->text(), leEnvironmentFloorType->text(), leSignType->text(), leSignHorizOffset->text(), leSignVertOffset->text()
     , leSignYaw->text(), leSignPitch->text(), leSignRoll->text()
-    , leLUOuterWallAngle->text(), leLLOuterWallAngle->text(), leUnk23->text(), leUnk24->text(), leRLOuterWallAngle->text(), leRUOuterWallAngle->text()
-    , leLUOuterWallHeight->text(), leLLOuterWallHeight->text(), leUnk29->text(), leUnk30->text(), leRLOuterWallHeight->text(), leRUOuterWallHeight->text()
+    , leLUOuterWallHOffset->text(), leLLOuterWallHOffset->text(), leLOuterFloorHOffset->text(), leROuterFloorHOffset->text(), leRLOuterWallHOffset->text(), leRUOuterWallHOffset->text()
+    , leLUOuterWallHeight->text(), leLLOuterWallHeight->text(), leLOuterFloorHeight->text(), leROuterFloorHeight->text(), leRLOuterWallHeight->text(), leRUOuterWallHeight->text()
     , leRoofHeight->text(), leDrawOrder1->text(), leDrawOrder2->text(), leDrawOrder3->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
@@ -607,8 +607,8 @@ void CMainWindow::OnApplyClicked()
     , leLWallType->text(), leRWallType->text(), leRoofType->text(), leLUOuterWallType->text(), leLLOuterWallType->text(), leOuterFloorType->text()
     , leRLOuterWallType->text(), leRUOuterWallType->text(), leEnvironmentFloorType->text(), leSignType->text(), leSignHorizOffset->text(), leSignVertOffset->text()
     , leSignYaw->text(), leSignPitch->text(), leSignRoll->text()
-    , leLUOuterWallAngle->text(), leLLOuterWallAngle->text(), leUnk23->text(), leUnk24->text(), leRLOuterWallAngle->text(), leRUOuterWallAngle->text()
-    , leLUOuterWallHeight->text(), leLLOuterWallHeight->text(), leUnk29->text(), leUnk30->text(), leRLOuterWallHeight->text(), leRUOuterWallHeight->text()
+    , leLUOuterWallHOffset->text(), leLLOuterWallHOffset->text(), leLOuterFloorHOffset->text(), leROuterFloorHOffset->text(), leRLOuterWallHOffset->text(), leRUOuterWallHOffset->text()
+    , leLUOuterWallHeight->text(), leLLOuterWallHeight->text(), leLOuterFloorHeight->text(), leROuterFloorHeight->text(), leRLOuterWallHeight->text(), leRUOuterWallHeight->text()
     , leRoofHeight->text(), leDrawOrder1->text(), leDrawOrder2->text(), leDrawOrder3->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
@@ -943,16 +943,16 @@ void CMainWindow::UpdateGeometryEditMode()
   UpdateLEEditMode(bEditMode, bMixedData, leSignYaw, p->editVals.sSignYaw);
   UpdateLEEditMode(bEditMode, bMixedData, leSignPitch, p->editVals.sSignPitch);
   UpdateLEEditMode(bEditMode, bMixedData, leSignRoll, p->editVals.sSignRoll);
-  UpdateLEEditMode(bEditMode, bMixedData, leLUOuterWallAngle, p->editVals.sLUOuterWallAngle);
-  UpdateLEEditMode(bEditMode, bMixedData, leLLOuterWallAngle, p->editVals.sLLOuterWallAngle);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk23, p->editVals.sUnk23);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk24, p->editVals.sUnk24);
-  UpdateLEEditMode(bEditMode, bMixedData, leRLOuterWallAngle, p->editVals.sRLOuterWallAngle);
-  UpdateLEEditMode(bEditMode, bMixedData, leRUOuterWallAngle, p->editVals.sRUOuterWallAngle);
+  UpdateLEEditMode(bEditMode, bMixedData, leLUOuterWallHOffset, p->editVals.sLUOuterWallHOffset);
+  UpdateLEEditMode(bEditMode, bMixedData, leLLOuterWallHOffset, p->editVals.sLLOuterWallHOffset);
+  UpdateLEEditMode(bEditMode, bMixedData, leLOuterFloorHOffset, p->editVals.sLOuterFloorHOffset);
+  UpdateLEEditMode(bEditMode, bMixedData, leROuterFloorHOffset, p->editVals.sROuterFloorHOffset);
+  UpdateLEEditMode(bEditMode, bMixedData, leRLOuterWallHOffset, p->editVals.sRLOuterWallHOffset);
+  UpdateLEEditMode(bEditMode, bMixedData, leRUOuterWallHOffset, p->editVals.sRUOuterWallHOffset);
   UpdateLEEditMode(bEditMode, bMixedData, leLUOuterWallHeight, p->editVals.sLUOuterWallHeight);
   UpdateLEEditMode(bEditMode, bMixedData, leLLOuterWallHeight, p->editVals.sLLOuterWallHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk29, p->editVals.sUnk29);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk30, p->editVals.sUnk30);
+  UpdateLEEditMode(bEditMode, bMixedData, leLOuterFloorHeight, p->editVals.sLOuterFloorHeight);
+  UpdateLEEditMode(bEditMode, bMixedData, leROuterFloorHeight, p->editVals.sROuterFloorHeight);
   UpdateLEEditMode(bEditMode, bMixedData, leRLOuterWallHeight, p->editVals.sRLOuterWallHeight);
   UpdateLEEditMode(bEditMode, bMixedData, leRUOuterWallHeight, p->editVals.sRUOuterWallHeight);
   UpdateLEEditMode(bEditMode, bMixedData, leRoofHeight, p->editVals.sRoofHeight);
@@ -1787,16 +1787,16 @@ void CMainWindow::RevertGeometry()
   bMixedData |= UpdateLEWithSelectionValue(leSignYaw, p->editVals.sSignYaw);
   bMixedData |= UpdateLEWithSelectionValue(leSignPitch, p->editVals.sSignPitch);
   bMixedData |= UpdateLEWithSelectionValue(leSignRoll, p->editVals.sSignRoll);
-  bMixedData |= UpdateLEWithSelectionValue(leLUOuterWallAngle, p->editVals.sLUOuterWallAngle);
-  bMixedData |= UpdateLEWithSelectionValue(leLLOuterWallAngle, p->editVals.sLLOuterWallAngle);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk23, p->editVals.sUnk23);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk24, p->editVals.sUnk24);
-  bMixedData |= UpdateLEWithSelectionValue(leRLOuterWallAngle, p->editVals.sRLOuterWallAngle);
-  bMixedData |= UpdateLEWithSelectionValue(leRUOuterWallAngle, p->editVals.sRUOuterWallAngle);
+  bMixedData |= UpdateLEWithSelectionValue(leLUOuterWallHOffset, p->editVals.sLUOuterWallHOffset);
+  bMixedData |= UpdateLEWithSelectionValue(leLLOuterWallHOffset, p->editVals.sLLOuterWallHOffset);
+  bMixedData |= UpdateLEWithSelectionValue(leLOuterFloorHOffset, p->editVals.sLOuterFloorHOffset);
+  bMixedData |= UpdateLEWithSelectionValue(leROuterFloorHOffset, p->editVals.sROuterFloorHOffset);
+  bMixedData |= UpdateLEWithSelectionValue(leRLOuterWallHOffset, p->editVals.sRLOuterWallHOffset);
+  bMixedData |= UpdateLEWithSelectionValue(leRUOuterWallHOffset, p->editVals.sRUOuterWallHOffset);
   bMixedData |= UpdateLEWithSelectionValue(leLUOuterWallHeight, p->editVals.sLUOuterWallHeight);
   bMixedData |= UpdateLEWithSelectionValue(leLLOuterWallHeight, p->editVals.sLLOuterWallHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk29, p->editVals.sUnk29);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk30, p->editVals.sUnk30);
+  bMixedData |= UpdateLEWithSelectionValue(leLOuterFloorHeight, p->editVals.sLOuterFloorHeight);
+  bMixedData |= UpdateLEWithSelectionValue(leROuterFloorHeight, p->editVals.sROuterFloorHeight);
   bMixedData |= UpdateLEWithSelectionValue(leRLOuterWallHeight, p->editVals.sRLOuterWallHeight);
   bMixedData |= UpdateLEWithSelectionValue(leRUOuterWallHeight, p->editVals.sRUOuterWallHeight);
   bMixedData |= UpdateLEWithSelectionValue(leRoofHeight, p->editVals.sRoofHeight);

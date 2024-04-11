@@ -52,16 +52,16 @@ CChunkEditValues::CChunkEditValues(const QString &sCopyLeftShoulderWidth
                 , const QString &sCopySignYaw
                 , const QString &sCopySignPitch
                 , const QString &sCopySignRoll
-                , const QString &sCopyLUOuterWallAngle
-                , const QString &sCopyLLOuterWallAngle
-                , const QString &sCopyUnk23
-                , const QString &sCopyUnk24
-                , const QString &sCopyRLOuterWallAngle
-                , const QString &sCopyRUOuterWallAngle
+                , const QString &sCopyLUOuterWallHOffset
+                , const QString &sCopyLLOuterWallHOffset
+                , const QString &sCopyLOuterFloorHOffset
+                , const QString &sCopyROuterFloorHOffset
+                , const QString &sCopyRLOuterWallHOffset
+                , const QString &sCopyRUOuterWallHOffset
                 , const QString &sCopyLUOuterWallHeight
                 , const QString &sCopyLLOuterWallHeight
-                , const QString &sCopyUnk29
-                , const QString &sCopyUnk30
+                , const QString &sCopyLOuterFloorHeight
+                , const QString &sCopyROuterFloorHeight
                 , const QString &sCopyRLOuterWallHeight
                 , const QString &sCopyRUOuterWallHeight
                 , const QString &sCopyRoofHeight
@@ -134,16 +134,16 @@ CChunkEditValues::CChunkEditValues(const QString &sCopyLeftShoulderWidth
   sSignYaw = sCopySignYaw;
   sSignPitch = sCopySignPitch;
   sSignRoll = sCopySignRoll;
-  sLUOuterWallAngle = sCopyLUOuterWallAngle;
-  sLLOuterWallAngle = sCopyLLOuterWallAngle;
-  sUnk23 = sCopyUnk23;
-  sUnk24 = sCopyUnk24;
-  sRLOuterWallAngle = sCopyRLOuterWallAngle;
-  sRUOuterWallAngle = sCopyRUOuterWallAngle;
+  sLUOuterWallHOffset = sCopyLUOuterWallHOffset;
+  sLLOuterWallHOffset = sCopyLLOuterWallHOffset;
+  sLOuterFloorHOffset = sCopyLOuterFloorHOffset;
+  sROuterFloorHOffset = sCopyROuterFloorHOffset;
+  sRLOuterWallHOffset = sCopyRLOuterWallHOffset;
+  sRUOuterWallHOffset = sCopyRUOuterWallHOffset;
   sLUOuterWallHeight = sCopyLUOuterWallHeight;
   sLLOuterWallHeight = sCopyLLOuterWallHeight;
-  sUnk29 = sCopyUnk29;
-  sUnk30 = sCopyUnk30;
+  sLOuterFloorHeight = sCopyLOuterFloorHeight;
+  sROuterFloorHeight = sCopyROuterFloorHeight;
   sRLOuterWallHeight = sCopyRLOuterWallHeight;
   sRUOuterWallHeight = sCopyRUOuterWallHeight;
   sRoofHeight = sCopyRoofHeight;
@@ -198,8 +198,8 @@ void CChunkEditValues::Clear()
   sLWallType = ""; sRWallType = ""; sRoofType = ""; sLUOuterWallType = ""; sLLOuterWallType = ""; sOuterFloorType = "";
   sRLOuterWallType = ""; sRUOuterWallType = ""; sEnvironmentFloorType = ""; sSignType = ""; sSignHorizOffset = ""; sSignVertOffset = "";
   sSignYaw = ""; sSignPitch = ""; sSignRoll = "";
-  sLUOuterWallAngle = ""; sLLOuterWallAngle = ""; sUnk23 = ""; sUnk24 = ""; sRLOuterWallAngle = ""; sRUOuterWallAngle = "";
-  sLUOuterWallHeight = ""; sLLOuterWallHeight = ""; sUnk29 = ""; sUnk30 = ""; sRLOuterWallHeight = ""; sRUOuterWallHeight = "";
+  sLUOuterWallHOffset = ""; sLLOuterWallHOffset = ""; sLOuterFloorHOffset = ""; sROuterFloorHOffset = ""; sRLOuterWallHOffset = ""; sRUOuterWallHOffset = "";
+  sLUOuterWallHeight = ""; sLLOuterWallHeight = ""; sLOuterFloorHeight = ""; sROuterFloorHeight = ""; sRLOuterWallHeight = ""; sRUOuterWallHeight = "";
   sRoofHeight = ""; sDrawOrder1 = ""; sDrawOrder2 = ""; sDrawOrder3 = ""; sUnk37 = ""; sUnk38 = "";
   sUnk39 = ""; sUnk40 = ""; sUnk41 = ""; sUnk42 = ""; sUnk43 = ""; sUnk44 = "";
   sUnk45 = ""; sUnk46 = ""; sUnk47 = ""; sUnk48 = ""; sUnk49 = ""; sUnk50 = "";
@@ -253,16 +253,16 @@ void CChunkEditValues::Set(int index, QString value)
     case 37: sSignYaw = value; break;
     case 38: sSignPitch = value; break;
     case 39: sSignRoll = value; break;
-    case 40: sLUOuterWallAngle = value; break;
-    case 41: sLLOuterWallAngle = value; break;
-    case 42: sUnk23 = value; break;
-    case 43: sUnk24 = value; break;
-    case 44: sRLOuterWallAngle = value; break;
-    case 45: sRUOuterWallAngle = value; break;
+    case 40: sLUOuterWallHOffset = value; break;
+    case 41: sLLOuterWallHOffset = value; break;
+    case 42: sLOuterFloorHOffset = value; break;
+    case 43: sROuterFloorHOffset = value; break;
+    case 44: sRLOuterWallHOffset = value; break;
+    case 45: sRUOuterWallHOffset = value; break;
     case 46: sLUOuterWallHeight = value; break;
     case 47: sLLOuterWallHeight = value; break;
-    case 48: sUnk29 = value; break;
-    case 49: sUnk30 = value; break;
+    case 48: sLOuterFloorHeight = value; break;
+    case 49: sROuterFloorHeight = value; break;
     case 50: sRLOuterWallHeight = value; break;
     case 51: sRUOuterWallHeight = value; break;
     case 52: sRoofHeight = value; break;

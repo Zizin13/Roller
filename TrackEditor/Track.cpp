@@ -231,36 +231,36 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex, CChu
     if (editVals.sSignRoll.isEmpty()) editVals.sSignRoll = sVal;
     else if (editVals.sSignRoll.compare(sVal) != 0) editVals.sSignRoll = MIXED_DATA;
  
-    sVal = QString::number(m_chunkAy[i].iLUOuterWallAngle);
-    if (editVals.sLUOuterWallAngle.isEmpty()) editVals.sLUOuterWallAngle = sVal;
-    else if (editVals.sLUOuterWallAngle.compare(sVal) != 0) editVals.sLUOuterWallAngle = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].iLLOuterWallAngle);
-    if (editVals.sLLOuterWallAngle.isEmpty()) editVals.sLLOuterWallAngle = sVal;
-    else if (editVals.sLLOuterWallAngle.compare(sVal) != 0) editVals.sLLOuterWallAngle = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].iUnk23);
-    if (editVals.sUnk23.isEmpty()) editVals.sUnk23 = sVal;
-    else if (editVals.sUnk23.compare(sVal) != 0) editVals.sUnk23 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].iUnk24);
-    if (editVals.sUnk24.isEmpty()) editVals.sUnk24 = sVal;
-    else if (editVals.sUnk24.compare(sVal) != 0) editVals.sUnk24 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].iRLOuterWallAngle);
-    if (editVals.sRLOuterWallAngle.isEmpty()) editVals.sRLOuterWallAngle = sVal;
-    else if (editVals.sRLOuterWallAngle.compare(sVal) != 0) editVals.sRLOuterWallAngle = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].iRUOuterWallAngle);
-    if (editVals.sRUOuterWallAngle.isEmpty()) editVals.sRUOuterWallAngle = sVal;
-    else if (editVals.sRUOuterWallAngle.compare(sVal) != 0) editVals.sRUOuterWallAngle = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].iLUOuterWallHOffset);
+    if (editVals.sLUOuterWallHOffset.isEmpty()) editVals.sLUOuterWallHOffset = sVal;
+    else if (editVals.sLUOuterWallHOffset.compare(sVal) != 0) editVals.sLUOuterWallHOffset = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].iLLOuterWallHOffset);
+    if (editVals.sLLOuterWallHOffset.isEmpty()) editVals.sLLOuterWallHOffset = sVal;
+    else if (editVals.sLLOuterWallHOffset.compare(sVal) != 0) editVals.sLLOuterWallHOffset = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].iLOuterFloorHOffset);
+    if (editVals.sLOuterFloorHOffset.isEmpty()) editVals.sLOuterFloorHOffset = sVal;
+    else if (editVals.sLOuterFloorHOffset.compare(sVal) != 0) editVals.sLOuterFloorHOffset = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].iROuterFloorHOffset);
+    if (editVals.sROuterFloorHOffset.isEmpty()) editVals.sROuterFloorHOffset = sVal;
+    else if (editVals.sROuterFloorHOffset.compare(sVal) != 0) editVals.sROuterFloorHOffset = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].iRLOuterWallHOffset);
+    if (editVals.sRLOuterWallHOffset.isEmpty()) editVals.sRLOuterWallHOffset = sVal;
+    else if (editVals.sRLOuterWallHOffset.compare(sVal) != 0) editVals.sRLOuterWallHOffset = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].iRUOuterWallHOffset);
+    if (editVals.sRUOuterWallHOffset.isEmpty()) editVals.sRUOuterWallHOffset = sVal;
+    else if (editVals.sRUOuterWallHOffset.compare(sVal) != 0) editVals.sRUOuterWallHOffset = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iLUOuterWallHeight);
     if (editVals.sLUOuterWallHeight.isEmpty()) editVals.sLUOuterWallHeight = sVal;
     else if (editVals.sLUOuterWallHeight.compare(sVal) != 0) editVals.sLUOuterWallHeight = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iLLOuterWallHeight);
     if (editVals.sLLOuterWallHeight.isEmpty()) editVals.sLLOuterWallHeight = sVal;
     else if (editVals.sLLOuterWallHeight.compare(sVal) != 0) editVals.sLLOuterWallHeight = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].iUnk29);
-    if (editVals.sUnk29.isEmpty()) editVals.sUnk29 = sVal;
-    else if (editVals.sUnk29.compare(sVal) != 0) editVals.sUnk29 = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].iUnk30);
-    if (editVals.sUnk30.isEmpty()) editVals.sUnk30 = sVal;
-    else if (editVals.sUnk30.compare(sVal) != 0) editVals.sUnk30 = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].iLOuterFloorHeight);
+    if (editVals.sLOuterFloorHeight.isEmpty()) editVals.sLOuterFloorHeight = sVal;
+    else if (editVals.sLOuterFloorHeight.compare(sVal) != 0) editVals.sLOuterFloorHeight = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].iROuterFloorHeight);
+    if (editVals.sROuterFloorHeight.isEmpty()) editVals.sROuterFloorHeight = sVal;
+    else if (editVals.sROuterFloorHeight.compare(sVal) != 0) editVals.sROuterFloorHeight = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iRLOuterWallHeight);
     if (editVals.sRLOuterWallHeight.isEmpty()) editVals.sRLOuterWallHeight = sVal;
     else if (editVals.sRLOuterWallHeight.compare(sVal) != 0) editVals.sRLOuterWallHeight = MIXED_DATA;
@@ -404,16 +404,16 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex, const CChunkE
     if (!editVals.sSignYaw.isEmpty()) m_chunkAy[i].dSignYaw = editVals.sSignYaw.toDouble();
     if (!editVals.sSignPitch.isEmpty()) m_chunkAy[i].dSignPitch = editVals.sSignPitch.toDouble();
     if (!editVals.sSignRoll.isEmpty()) m_chunkAy[i].dSignRoll = editVals.sSignRoll.toDouble();
-    if (!editVals.sLUOuterWallAngle.isEmpty()) m_chunkAy[i].iLUOuterWallAngle = editVals.sLUOuterWallAngle.toInt();
-    if (!editVals.sLLOuterWallAngle.isEmpty()) m_chunkAy[i].iLLOuterWallAngle = editVals.sLLOuterWallAngle.toInt();
-    if (!editVals.sUnk23.isEmpty()) m_chunkAy[i].iUnk23 = editVals.sUnk23.toInt();
-    if (!editVals.sUnk24.isEmpty()) m_chunkAy[i].iUnk24 = editVals.sUnk24.toInt();
-    if (!editVals.sRLOuterWallAngle.isEmpty()) m_chunkAy[i].iRLOuterWallAngle = editVals.sRLOuterWallAngle.toInt();
-    if (!editVals.sRUOuterWallAngle.isEmpty()) m_chunkAy[i].iRUOuterWallAngle = editVals.sRUOuterWallAngle.toInt();
+    if (!editVals.sLUOuterWallHOffset.isEmpty()) m_chunkAy[i].iLUOuterWallHOffset = editVals.sLUOuterWallHOffset.toInt();
+    if (!editVals.sLLOuterWallHOffset.isEmpty()) m_chunkAy[i].iLLOuterWallHOffset = editVals.sLLOuterWallHOffset.toInt();
+    if (!editVals.sLOuterFloorHOffset.isEmpty()) m_chunkAy[i].iLOuterFloorHOffset = editVals.sLOuterFloorHOffset.toInt();
+    if (!editVals.sROuterFloorHOffset.isEmpty()) m_chunkAy[i].iROuterFloorHOffset = editVals.sROuterFloorHOffset.toInt();
+    if (!editVals.sRLOuterWallHOffset.isEmpty()) m_chunkAy[i].iRLOuterWallHOffset = editVals.sRLOuterWallHOffset.toInt();
+    if (!editVals.sRUOuterWallHOffset.isEmpty()) m_chunkAy[i].iRUOuterWallHOffset = editVals.sRUOuterWallHOffset.toInt();
     if (!editVals.sLUOuterWallHeight.isEmpty()) m_chunkAy[i].iLUOuterWallHeight = editVals.sLUOuterWallHeight.toInt();
     if (!editVals.sLLOuterWallHeight.isEmpty()) m_chunkAy[i].iLLOuterWallHeight = editVals.sLLOuterWallHeight.toInt();
-    if (!editVals.sUnk29.isEmpty()) m_chunkAy[i].iUnk29 = editVals.sUnk29.toInt();
-    if (!editVals.sUnk30.isEmpty()) m_chunkAy[i].iUnk30 = editVals.sUnk30.toInt();
+    if (!editVals.sLOuterFloorHeight.isEmpty()) m_chunkAy[i].iLOuterFloorHeight = editVals.sLOuterFloorHeight.toInt();
+    if (!editVals.sROuterFloorHeight.isEmpty()) m_chunkAy[i].iROuterFloorHeight = editVals.sROuterFloorHeight.toInt();
     if (!editVals.sRLOuterWallHeight.isEmpty()) m_chunkAy[i].iRLOuterWallHeight = editVals.sRLOuterWallHeight.toInt();
     if (!editVals.sRUOuterWallHeight.isEmpty()) m_chunkAy[i].iRUOuterWallHeight = editVals.sRUOuterWallHeight.toInt();
     if (!editVals.sRoofHeight.isEmpty()) m_chunkAy[i].iRoofHeight = editVals.sRoofHeight.toInt();
@@ -497,16 +497,16 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount, const CChunkEditValues 
     newChunk.dSignYaw = editVals.sSignYaw.toDouble();
     newChunk.dSignPitch = editVals.sSignPitch.toDouble();
     newChunk.dSignRoll = editVals.sSignRoll.toDouble();
-    newChunk.iLUOuterWallAngle = editVals.sLUOuterWallAngle.toInt();
-    newChunk.iLLOuterWallAngle = editVals.sLLOuterWallAngle.toInt();
-    newChunk.iUnk23 = editVals.sUnk23.toInt();
-    newChunk.iUnk24 = editVals.sUnk24.toInt();
-    newChunk.iRLOuterWallAngle = editVals.sRLOuterWallAngle.toInt();
-    newChunk.iRUOuterWallAngle = editVals.sRUOuterWallAngle.toInt();
+    newChunk.iLUOuterWallHOffset = editVals.sLUOuterWallHOffset.toInt();
+    newChunk.iLLOuterWallHOffset = editVals.sLLOuterWallHOffset.toInt();
+    newChunk.iLOuterFloorHOffset = editVals.sLOuterFloorHOffset.toInt();
+    newChunk.iROuterFloorHOffset = editVals.sROuterFloorHOffset.toInt();
+    newChunk.iRLOuterWallHOffset = editVals.sRLOuterWallHOffset.toInt();
+    newChunk.iRUOuterWallHOffset = editVals.sRUOuterWallHOffset.toInt();
     newChunk.iLUOuterWallHeight = editVals.sLUOuterWallHeight.toInt();
     newChunk.iLLOuterWallHeight = editVals.sLLOuterWallHeight.toInt();
-    newChunk.iUnk29 = editVals.sUnk29.toInt();
-    newChunk.iUnk30 = editVals.sUnk30.toInt();
+    newChunk.iLOuterFloorHeight = editVals.sLOuterFloorHeight.toInt();
+    newChunk.iROuterFloorHeight = editVals.sROuterFloorHeight.toInt();
     newChunk.iRLOuterWallHeight = editVals.sRLOuterWallHeight.toInt();
     newChunk.iRUOuterWallHeight = editVals.sRUOuterWallHeight.toInt();
     newChunk.iRoofHeight = editVals.sRoofHeight.toInt();
@@ -606,16 +606,16 @@ void CTrack::GenerateChunkString(tGeometryChunk &chunk)
            , chunk.dSignYaw
            , chunk.dSignPitch
            , chunk.dSignRoll
-           , chunk.iLUOuterWallAngle
-           , chunk.iLLOuterWallAngle
-           , chunk.iUnk23
-           , chunk.iUnk24
-           , chunk.iRLOuterWallAngle
-           , chunk.iRUOuterWallAngle
+           , chunk.iLUOuterWallHOffset
+           , chunk.iLLOuterWallHOffset
+           , chunk.iLOuterFloorHOffset
+           , chunk.iROuterFloorHOffset
+           , chunk.iRLOuterWallHOffset
+           , chunk.iRUOuterWallHOffset
            , chunk.iLUOuterWallHeight
            , chunk.iLLOuterWallHeight
-           , chunk.iUnk29
-           , chunk.iUnk30
+           , chunk.iLOuterFloorHeight
+           , chunk.iROuterFloorHeight
            , chunk.iRLOuterWallHeight
            , chunk.iRUOuterWallHeight
            , chunk.iRoofHeight

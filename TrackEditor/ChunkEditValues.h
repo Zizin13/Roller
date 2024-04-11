@@ -48,16 +48,16 @@ public:
                   , const QString &sCopySignYaw
                   , const QString &sCopySignPitch
                   , const QString &sCopySignRoll
-                  , const QString &sCopyLUOuterWallAngle
-                  , const QString &sCopyLLOuterWallAngle
-                  , const QString &sCopyUnk23
-                  , const QString &sCopyUnk24
-                  , const QString &sCopyRLOuterWallAngle
-                  , const QString &sCopyRUOuterWallAngle
+                  , const QString &sCopyLUOuterWallHOffset
+                  , const QString &sCopyLLOuterWallHOffset
+                  , const QString &sCopyLOuterFloorHOffset
+                  , const QString &sCopyROuterFloorHOffset
+                  , const QString &sCopyRLOuterWallHOffset
+                  , const QString &sCopyRUOuterWallHOffset
                   , const QString &sCopyLUOuterWallHeight
                   , const QString &sCopyLLOuterWallHeight
-                  , const QString &sCopyUnk29
-                  , const QString &sCopyUnk30
+                  , const QString &sCopyLOuterFloorHeight
+                  , const QString &sCopyROuterFloorHeight
                   , const QString &sCopyRLOuterWallHeight
                   , const QString &sCopyRUOuterWallHeight
                   , const QString &sCopyRoofHeight
@@ -134,16 +134,16 @@ public:
   QString sSignYaw;
   QString sSignPitch;
   QString sSignRoll;
-  QString sLUOuterWallAngle;
-  QString sLLOuterWallAngle;
-  QString sUnk23;
-  QString sUnk24;
-  QString sRLOuterWallAngle;
-  QString sRUOuterWallAngle;
+  QString sLUOuterWallHOffset;
+  QString sLLOuterWallHOffset;
+  QString sLOuterFloorHOffset;
+  QString sROuterFloorHOffset;
+  QString sRLOuterWallHOffset;
+  QString sRUOuterWallHOffset;
   QString sLUOuterWallHeight;
   QString sLLOuterWallHeight;
-  QString sUnk29;
-  QString sUnk30;
+  QString sLOuterFloorHeight;
+  QString sROuterFloorHeight;
   QString sRLOuterWallHeight;
   QString sRUOuterWallHeight;
   QString sRoofHeight;

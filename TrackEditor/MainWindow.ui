@@ -194,7 +194,7 @@
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>0</y>
+              <y>-1236</y>
               <width>496</width>
               <height>2141</height>
              </rect>
@@ -1307,7 +1307,7 @@ type</string>
                 <widget class="QLabel" name="label_76">
                  <property name="text">
                   <string>Right upper outer
-wall angle</string>
+wall horiz offset</string>
                  </property>
                 </widget>
                </item>
@@ -1348,7 +1348,8 @@ wall angle</string>
                <item row="0" column="3">
                 <widget class="QLabel" name="label_75">
                  <property name="text">
-                  <string>unknown 24</string>
+                  <string>Right outer floor
+horiz offset</string>
                  </property>
                 </widget>
                </item>
@@ -1389,7 +1390,7 @@ wall height</string>
                 <widget class="QLabel" name="label_54">
                  <property name="text">
                   <string>Left upper outer
-wall angle</string>
+wall horiz offset</string>
                  </property>
                 </widget>
                </item>
@@ -1407,7 +1408,7 @@ wall angle</string>
                 <widget class="QLabel" name="label_52">
                  <property name="text">
                   <string>Right lower outer
-wall angle</string>
+wall horiz offset</string>
                  </property>
                 </widget>
                </item>
@@ -1418,7 +1419,7 @@ wall angle</string>
                 <widget class="QLineEdit" name="leUnk38"/>
                </item>
                <item row="6" column="0">
-                <widget class="QLineEdit" name="leUnk29"/>
+                <widget class="QLineEdit" name="leLOuterFloorHeight"/>
                </item>
                <item row="8" column="0">
                 <widget class="QLineEdit" name="leRoofHeight"/>
@@ -1430,7 +1431,7 @@ wall angle</string>
                 <widget class="QLineEdit" name="leUnk46"/>
                </item>
                <item row="4" column="1">
-                <widget class="QLineEdit" name="leRUOuterWallAngle"/>
+                <widget class="QLineEdit" name="leRUOuterWallHOffset"/>
                </item>
                <item row="9" column="1">
                 <widget class="QLabel" name="label_81">
@@ -1440,7 +1441,7 @@ wall angle</string>
                 </widget>
                </item>
                <item row="1" column="0">
-                <widget class="QLineEdit" name="leLUOuterWallAngle"/>
+                <widget class="QLineEdit" name="leLUOuterWallHOffset"/>
                </item>
                <item row="10" column="2">
                 <widget class="QLineEdit" name="leUnk39"/>
@@ -1459,7 +1460,7 @@ wall angle</string>
                 </widget>
                </item>
                <item row="1" column="1">
-                <widget class="QLineEdit" name="leLLOuterWallAngle">
+                <widget class="QLineEdit" name="leLLOuterWallHOffset">
                  <property name="styleSheet">
                   <string notr="true"/>
                  </property>
@@ -1469,7 +1470,7 @@ wall angle</string>
                 <widget class="QLabel" name="label_72">
                  <property name="text">
                   <string>Left lower outer
-wall angle</string>
+wall horiz offset</string>
                  </property>
                 </widget>
                </item>
@@ -1477,7 +1478,7 @@ wall angle</string>
                 <widget class="QLineEdit" name="leUnk41"/>
                </item>
                <item row="6" column="1">
-                <widget class="QLineEdit" name="leUnk30"/>
+                <widget class="QLineEdit" name="leROuterFloorHeight"/>
                </item>
                <item row="7" column="1">
                 <widget class="QLabel" name="label_56">
@@ -1489,7 +1490,8 @@ wall angle</string>
                <item row="0" column="2">
                 <widget class="QLabel" name="label_62">
                  <property name="text">
-                  <string>unknown 23</string>
+                  <string>Left outer floor
+horiz offset</string>
                  </property>
                 </widget>
                </item>
@@ -1497,7 +1499,7 @@ wall angle</string>
                 <widget class="QLineEdit" name="leUnk44"/>
                </item>
                <item row="1" column="2">
-                <widget class="QLineEdit" name="leUnk23"/>
+                <widget class="QLineEdit" name="leLOuterFloorHOffset"/>
                </item>
                <item row="10" column="3">
                 <widget class="QLineEdit" name="leUnk40"/>
@@ -1543,7 +1545,8 @@ wall height</string>
                <item row="5" column="1">
                 <widget class="QLabel" name="label_68">
                  <property name="text">
-                  <string>unknown 30</string>
+                  <string>Right outer floor
+height</string>
                  </property>
                 </widget>
                </item>
@@ -1577,7 +1580,7 @@ wall height</string>
                 </widget>
                </item>
                <item row="1" column="3">
-                <widget class="QLineEdit" name="leUnk24"/>
+                <widget class="QLineEdit" name="leROuterFloorHOffset"/>
                </item>
                <item row="13" column="1">
                 <widget class="QLabel" name="label_78">
@@ -1590,7 +1593,7 @@ wall height</string>
                 <widget class="QLineEdit" name="leLUOuterWallHeight"/>
                </item>
                <item row="4" column="0">
-                <widget class="QLineEdit" name="leRLOuterWallAngle"/>
+                <widget class="QLineEdit" name="leRLOuterWallHOffset"/>
                </item>
                <item row="12" column="1">
                 <widget class="QLineEdit" name="leUnk42"/>
@@ -1601,7 +1604,8 @@ wall height</string>
                <item row="5" column="0">
                 <widget class="QLabel" name="label_65">
                  <property name="text">
-                  <string>unknown 29</string>
+                  <string>Left outer floor
+height</string>
                  </property>
                 </widget>
                </item>

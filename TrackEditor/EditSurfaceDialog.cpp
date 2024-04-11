@@ -37,7 +37,7 @@ CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, int
   ck14->setChecked(m_uiSignedBitValue & SURFACE_FLAG_14);
   ck13->setChecked(m_uiSignedBitValue & SURFACE_FLAG_13);
   ck12FlipHorizontally->setChecked(m_uiSignedBitValue & SURFACE_FLAG_FLIP_HORIZ);
-  ck11->setChecked(m_uiSignedBitValue & SURFACE_FLAG_11);
+  ck11Back->setChecked(m_uiSignedBitValue & SURFACE_FLAG_BACK);
   ck10PartialTrans->setChecked(m_uiSignedBitValue & SURFACE_FLAG_PARTIAL_TRANS);
   ck9->setChecked(m_uiSignedBitValue & SURFACE_FLAG_9);
   ck8ApplyTexture->setChecked(m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE);
@@ -62,7 +62,7 @@ CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, int
   connect(ck14,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On14Checked);
   connect(ck13,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On13Checked);
   connect(ck12FlipHorizontally, &QCheckBox::toggled, this, &CEditSurfaceDialog::On12FlipHorizChecked);
-  connect(ck11,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On11Checked);
+  connect(ck11Back,             &QCheckBox::toggled, this, &CEditSurfaceDialog::On11BackChecked);
   connect(ck10PartialTrans,     &QCheckBox::toggled, this, &CEditSurfaceDialog::On10PartialTransChecked);
   connect(ck9,                  &QCheckBox::toggled, this, &CEditSurfaceDialog::On9Checked);
   connect(ck8ApplyTexture,      &QCheckBox::toggled, this, &CEditSurfaceDialog::On8ApplyTextureChecked);
@@ -308,12 +308,12 @@ void CEditSurfaceDialog::On12FlipHorizChecked(bool bChecked)
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditSurfaceDialog::On11Checked(bool bChecked)
+void CEditSurfaceDialog::On11BackChecked(bool bChecked)
 {
   if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_11;
+    m_uiSignedBitValue |= SURFACE_FLAG_BACK;
   else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_11;
+    m_uiSignedBitValue &= ~SURFACE_FLAG_BACK;
   UpdateDialog();
 }
 

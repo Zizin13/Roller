@@ -183,9 +183,9 @@
       </widget>
      </item>
      <item row="5" column="1">
-      <widget class="QCheckBox" name="ck11">
+      <widget class="QCheckBox" name="ck11Back">
        <property name="text">
-        <string>Bit 11</string>
+        <string>Display Back Texture</string>
        </property>
       </widget>
      </item>

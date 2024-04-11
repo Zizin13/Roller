@@ -73,16 +73,16 @@ void tGeometryChunk::Clear()
   dSignPitch = 0.0;
   dSignRoll = 0.0;
   //line 3
-  iLUOuterWallAngle = 0;
-  iLLOuterWallAngle = 0;
-  iUnk23 = 0;
-  iUnk24 = 0;
-  iRLOuterWallAngle = 0;
-  iRUOuterWallAngle = 0;
+  iLUOuterWallHOffset = 0;
+  iLLOuterWallHOffset = 0;
+  iLOuterFloorHOffset = 0;
+  iROuterFloorHOffset = 0;
+  iRLOuterWallHOffset = 0;
+  iRUOuterWallHOffset = 0;
   iLUOuterWallHeight = 0;
   iLLOuterWallHeight = 0;
-  iUnk29 = 0;
-  iUnk30 = 0;
+  iLOuterFloorHeight = 0;
+  iROuterFloorHeight = 0;
   iRLOuterWallHeight = 0;
   iRUOuterWallHeight = 0;
   iRoofHeight = 0;
@@ -330,16 +330,16 @@ bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
             bSuccess = false;
           }
           //process line 3
-          currChunk.iLUOuterWallAngle   = std::stoi(lineAy[0]);
-          currChunk.iLLOuterWallAngle   = std::stoi(lineAy[1]);
-          currChunk.iUnk23              = std::stoi(lineAy[2]);
-          currChunk.iUnk24              = std::stoi(lineAy[3]);
-          currChunk.iRLOuterWallAngle   = std::stoi(lineAy[4]);
-          currChunk.iRUOuterWallAngle   = std::stoi(lineAy[5]);
+          currChunk.iLUOuterWallHOffset   = std::stoi(lineAy[0]);
+          currChunk.iLLOuterWallHOffset   = std::stoi(lineAy[1]);
+          currChunk.iLOuterFloorHOffset              = std::stoi(lineAy[2]);
+          currChunk.iROuterFloorHOffset              = std::stoi(lineAy[3]);
+          currChunk.iRLOuterWallHOffset   = std::stoi(lineAy[4]);
+          currChunk.iRUOuterWallHOffset   = std::stoi(lineAy[5]);
           currChunk.iLUOuterWallHeight  = std::stoi(lineAy[6]);
           currChunk.iLLOuterWallHeight  = std::stoi(lineAy[7]);
-          currChunk.iUnk29              = std::stoi(lineAy[8]);
-          currChunk.iUnk30              = std::stoi(lineAy[9]);
+          currChunk.iLOuterFloorHeight              = std::stoi(lineAy[8]);
+          currChunk.iROuterFloorHeight              = std::stoi(lineAy[9]);
           currChunk.iRLOuterWallHeight  = std::stoi(lineAy[10]);
           currChunk.iRUOuterWallHeight  = std::stoi(lineAy[11]);
           currChunk.iRoofHeight         = std::stoi(lineAy[12]);

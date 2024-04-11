@@ -3,42 +3,32 @@
 //-------------------------------------------------------------------------------------------------
 #include <glew.h>
 #include "glm.hpp"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "VertexArray.h"
 //-------------------------------------------------------------------------------------------------
 class CShader;
+class CVertexBuffer;
+class CIndexBuffer;
+class CVertexArray;
 //-------------------------------------------------------------------------------------------------
-struct tShapeData
+class CShapeData
 {
-  tShapeData() 
-    : pVertexBuf(NULL)
-    , pIndexBuf(NULL)
-    , pVertexArray(NULL)
-    , pShader(NULL)
-  {};
+public:
+  CShapeData(CVertexBuffer *pVertexBuf,
+             CIndexBuffer *pIndexBuf,
+             CVertexArray *pVertexArray,
+             CShader *pShader,
+             GLenum drawType = GL_TRIANGLES);
+  ~CShapeData();
+
+  void Draw(const glm::mat4 &worldToProjectionMatrix);
+
   glm::mat4 modelToWorldMatrix;
 
-  CVertexBuffer *pVertexBuf;
-  CIndexBuffer *pIndexBuf;
-  CVertexArray *pVertexArray;
-  CShader *pShader; //owned by renderer
-
-  void Cleanup()
-  {
-    if (pVertexBuf) {
-      delete pVertexBuf;
-      pVertexBuf = NULL;
-    }
-    if (pIndexBuf) {
-      delete pIndexBuf;
-      pIndexBuf = NULL;
-    }
-    if (pVertexArray) {
-      delete pVertexArray;
-      pVertexArray = NULL;
-    }
-  }
+private:
+  CVertexBuffer *m_pVertexBuf;
+  CIndexBuffer *m_pIndexBuf;
+  CVertexArray *m_pVertexArray;
+  GLenum m_drawType;
+  CShader *m_pShader; //owned by renderer
 };
 //-------------------------------------------------------------------------------------------------
 #endif

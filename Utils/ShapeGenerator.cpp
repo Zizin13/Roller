@@ -30,9 +30,9 @@ glm::vec3 ShapeGenerator::RandomColor()
 
 //-------------------------------------------------------------------------------------------------
 
-tShapeData ShapeGenerator::MakeTriangle()
+/*CShapeData ShapeGenerator::MakeTriangle()
 {
-  tShapeData ret;
+  CShapeData ret;
   tVertex myTri[] = {
     glm::vec3(+0.0f, +1.0f, +0.0f),
     glm::vec3(+1.0f, +0.0f, +0.0f),
@@ -58,9 +58,9 @@ tShapeData ShapeGenerator::MakeTriangle()
 
 //-------------------------------------------------------------------------------------------------
 
-tShapeData ShapeGenerator::MakeCube()
+CShapeData ShapeGenerator::MakeCube()
 {
-  tShapeData ret;
+  CShapeData ret;
   tVertex stackVerts[] = {
     glm::vec3(-1.0f, +1.0f, +1.0f),  // 0
     glm::vec3(+1.0f, +0.0f, +0.0f),	// Color
@@ -159,9 +159,9 @@ tShapeData ShapeGenerator::MakeCube()
 
 //-------------------------------------------------------------------------------------------------
 
-tShapeData ShapeGenerator::MakeArrow()
+CShapeData ShapeGenerator::MakeArrow()
 {
-  tShapeData ret;
+  CShapeData ret;
 
   // Vert + Color
   tVertex verts[] =
@@ -330,9 +330,9 @@ tShapeData ShapeGenerator::MakeArrow()
 
 //-------------------------------------------------------------------------------------------------
 
-tShapeData ShapeGenerator::MakePlane(unsigned int uiDimensions)
+CShapeData ShapeGenerator::MakePlane(unsigned int uiDimensions)
 {
-  tShapeData ret;
+  CShapeData ret;
 
   uint32 uiNumVerts;
   struct tVertex *vertices = MakePlaneVerts(uiNumVerts, uiDimensions);
@@ -443,7 +443,7 @@ CIndexBuffer *ShapeGenerator::MakePlaneUnseamedIndices(GLuint tesselation)
 
 //-------------------------------------------------------------------------------------------------
 
-tShapeData ShapeGenerator::MakeTeapot(unsigned int uiTesselation, const glm::mat4 &lidTransform)
+CShapeData ShapeGenerator::MakeTeapot(unsigned int uiTesselation, const glm::mat4 &lidTransform)
 {
   uint32 numVertices = 32 * (uiTesselation + 1) * (uiTesselation + 1);
   GLuint faces = uiTesselation * uiTesselation * 32;
@@ -473,7 +473,7 @@ tShapeData ShapeGenerator::MakeTeapot(unsigned int uiTesselation, const glm::mat
     retIndices[i] = indices[i];
   }
 
-  tShapeData ret;
+  CShapeData ret;
   ret.pVertexBuf = new CVertexBuffer(retVertices, numVertices);
   ret.pIndexBuf = new CIndexBuffer(retIndices, numIndices);
   ret.pVertexArray = new CVertexArray(ret.pVertexBuf);
@@ -712,7 +712,7 @@ glm::vec3 ShapeGenerator::evaluateNormal(int gridU, int gridV, float *B, float *
 
 //-------------------------------------------------------------------------------------------------
 
-tShapeData ShapeGenerator::MakeTorus(GLuint tesselation)
+CShapeData ShapeGenerator::MakeTorus(GLuint tesselation)
 {
   GLuint dimensions = tesselation * tesselation;
   uint32 numVertices = dimensions;
@@ -741,7 +741,7 @@ tShapeData ShapeGenerator::MakeTorus(GLuint tesselation)
     }
   }
 
-  tShapeData ret;
+  CShapeData ret;
   ret.pVertexBuf = new CVertexBuffer(vertices, numVertices);
   ret.pIndexBuf = MakePlaneUnseamedIndices(tesselation);
   ret.pVertexArray = new CVertexArray(ret.pVertexBuf);
@@ -752,7 +752,7 @@ tShapeData ShapeGenerator::MakeTorus(GLuint tesselation)
 
 //-------------------------------------------------------------------------------------------------
 
-tShapeData ShapeGenerator::MakeSphere(GLuint tesselation)
+CShapeData ShapeGenerator::MakeSphere(GLuint tesselation)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = MakePlaneVerts(uiNumVerts, tesselation);
@@ -776,7 +776,7 @@ tShapeData ShapeGenerator::MakeSphere(GLuint tesselation)
     }
   }
 
-  tShapeData ret;
+  CShapeData ret;
   ret.pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
   ret.pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
   ret.pVertexArray = new CVertexArray(ret.pVertexBuf);
@@ -787,9 +787,9 @@ tShapeData ShapeGenerator::MakeSphere(GLuint tesselation)
 
 //-------------------------------------------------------------------------------------------------
 
-//tShapeData ShapeGenerator::GenerateNormals(const tShapeData &data)
+//CShapeData ShapeGenerator::GenerateNormals(const CShapeData &data)
 //{
-//  tShapeData ret;
+//  CShapeData ret;
 //  ret.numVertices = data.numVertices * 2;
 //  ret.vertices = new tVertex[ret.numVertices];
 //  glm::vec3 white(1.0f, 1.0f, 1.0f);
@@ -808,6 +808,6 @@ tShapeData ShapeGenerator::MakeSphere(GLuint tesselation)
 //  for (int i = 0; i < ret.numIndices; i++)
 //    ret.indices[i] = i;
 //  return ret;
-//}
+//}*/
 
 //-------------------------------------------------------------------------------------------------

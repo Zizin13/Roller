@@ -1,10 +1,10 @@
 #ifndef _UTILS_TRACKDATA_H
 #define _UTILS_TRACKDATA_H
 //-------------------------------------------------------------------------------------------------
-#include "ShapeData.h"
 #include <vector>
 #include <map>
 #include <string>
+#include "Vertex.h"
 //-------------------------------------------------------------------------------------------------
 struct tTrackHeader
 {
@@ -144,6 +144,9 @@ enum eFileSection
   MAP
 };
 //-------------------------------------------------------------------------------------------------
+class CShader;
+class CShapeData;
+//-------------------------------------------------------------------------------------------------
 
 class CTrackData
 {
@@ -153,8 +156,8 @@ public:
 
   void ClearData();
   bool LoadTrack(const std::string &sFilename, bool bIsMangled);
-  tShapeData MakeTrackCenterline();
-  tShapeData MakeTrackSurface(bool bWireframe = false);
+  CShapeData *MakeTrackCenterline(CShader *pShader);
+  CShapeData *MakeTrackSurface(CShader *pShader, bool bWireframe = false);
 
   static unsigned int GetSignedBitValueFromInt(int iValue);
   static int GetIntValueFromSignedBit(unsigned int uiValue);

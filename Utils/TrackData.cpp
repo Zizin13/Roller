@@ -6,6 +6,11 @@
 #include "ShapeGenerator.h"
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
+#include "Types.h"
+#include "Vertex.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "VertexArray.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -490,25 +495,25 @@ int CTrackData::GetIntValueFromSignedBit(unsigned int uiValue)
 
 //-------------------------------------------------------------------------------------------------
 
-tShapeData CTrackData::MakeTrackCenterline()
+CShapeData *CTrackData::MakeTrackCenterline(CShader *pShader)
 {
-  tShapeData ret;
-
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVertsCenterline(uiNumVerts);
   uint32 uiNumIndices;
   uint32 *indices = MakeIndicesCenterline(uiNumIndices);
 
-  ret.pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
-  ret.pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
-  ret.pVertexArray = new CVertexArray(ret.pVertexBuf);
+  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
+  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+
+  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, GL_LINES);
 
   if (vertices)
     delete[] vertices;
   if (indices)
     delete[] indices;
 
-  return ret;
+  return pRet;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -567,29 +572,32 @@ uint32 *CTrackData::MakeIndicesCenterline(uint32 &numIndices)
 
 //-------------------------------------------------------------------------------------------------
 
-tShapeData CTrackData::MakeTrackSurface(bool bWireframe)
+CShapeData *CTrackData::MakeTrackSurface(CShader *pShader, bool bWireframe)
 {
-  tShapeData ret;
-
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVertsSurface(uiNumVerts);
   uint32 uiNumIndices;
   uint32 *indices = NULL;
+  GLenum drawType = GL_TRIANGLES;
   if (!bWireframe)
     indices = MakeIndicesSurface(uiNumIndices);
-  else
+  else {
     indices = MakeIndicesSurfaceWireframe(uiNumIndices);
+    drawType = GL_LINES;
+  }
 
-  ret.pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
-  ret.pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
-  ret.pVertexArray = new CVertexArray(ret.pVertexBuf);
+  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
+  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+
+  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, drawType);
 
   if (vertices)
     delete[] vertices;
   if (indices)
     delete[] indices;
 
-  return ret;
+  return pRet;
 }
 
 //-------------------------------------------------------------------------------------------------

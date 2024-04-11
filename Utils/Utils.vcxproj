@@ -120,6 +120,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShapeData.cpp" />
     <ClCompile Include="ShapeGenerator.cpp" />
     <ClCompile Include="TrackData.cpp" />
     <ClCompile Include="Unmangler.cpp" />

@@ -26,19 +26,31 @@ public:
   CTrackPreviewPrivate()
     : m_pPassThroughShader(NULL)
     , m_pTrack(NULL)
+    , m_pTrackSurface(NULL)
+    , m_pTrackWireframe(NULL)
   {};
   ~CTrackPreviewPrivate()
   {
-    m_trackSurface.Cleanup();
-    m_trackWireframe.Cleanup();
+    DeleteModels();
     if (m_pPassThroughShader) {
       delete m_pPassThroughShader;
       m_pPassThroughShader = NULL;
     }
   };
+  void DeleteModels()
+  {
+    if (m_pTrackSurface) {
+      delete m_pTrackSurface;
+      m_pTrackSurface = NULL;
+    }
+    if (m_pTrackWireframe) {
+      delete m_pTrackWireframe;
+      m_pTrackWireframe = NULL;
+    }
+  }
 
-  tShapeData m_trackSurface;
-  tShapeData m_trackWireframe;
+  CShapeData *m_pTrackSurface;
+  CShapeData *m_pTrackWireframe;
   CShader *m_pPassThroughShader;
   CTrack *m_pTrack;
 };
@@ -68,14 +80,12 @@ CTrackPreview::~CTrackPreview()
 
 void CTrackPreview::SetTrack(CTrack *pTrack)
 {
-  p->m_trackSurface.Cleanup();
+  p->DeleteModels();
   p->m_pTrack = pTrack;
-  p->m_trackSurface = p->m_pTrack->MakeTrackSurface();
-  p->m_trackSurface.modelToWorldMatrix = glm::mat4(1.0);
-  p->m_trackSurface.pShader = p->m_pPassThroughShader;
-  p->m_trackWireframe = p->m_pTrack->MakeTrackSurface(true);
-  p->m_trackWireframe.modelToWorldMatrix = glm::mat4(1.0);
-  p->m_trackWireframe.pShader = p->m_pPassThroughShader;
+  if (p->m_pTrack) {
+    p->m_pTrackSurface = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader);
+    p->m_pTrackWireframe = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, true);
+  }
   repaint();
 }
 
@@ -95,33 +105,14 @@ void CTrackPreview::paintGL()
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
   glViewport(0, 0, width(), height());
 
-  glm::mat4 fullTransformMatrix;
   glm::mat4 viewToProjectionMatrix = glm::perspective(30.0f, ((float)width()) / height(), 0.1f, 100.0f);
   glm::mat4 worldToViewMatrix = camera.GetWorldToViewMatrix();
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
-  if (!p->m_trackSurface.pShader || !p->m_trackSurface.pVertexArray || !p->m_trackSurface.pIndexBuf)
-    return;
-  if (!p->m_trackWireframe.pShader || !p->m_trackWireframe.pVertexArray || !p->m_trackWireframe.pIndexBuf)
-    return;
-
-  if (m_bShowSurface) {
-    p->m_trackSurface.pShader->Bind();
-    p->m_trackSurface.pVertexArray->Bind();
-    p->m_trackSurface.pIndexBuf->Bind();
-    fullTransformMatrix = worldToProjectionMatrix * p->m_trackSurface.modelToWorldMatrix;
-    p->m_trackSurface.pShader->SetUniformMat4("modelToProjectionMatrix", fullTransformMatrix);
-    GLCALL(glDrawElements(GL_TRIANGLES, p->m_trackSurface.pIndexBuf->GetCount(), GL_UNSIGNED_INT, 0));
-  }
-
-  if (m_bShowWireframe) {
-    p->m_trackWireframe.pShader->Bind();
-    p->m_trackWireframe.pVertexArray->Bind();
-    p->m_trackWireframe.pIndexBuf->Bind();
-    fullTransformMatrix = worldToProjectionMatrix * p->m_trackWireframe.modelToWorldMatrix;
-    p->m_trackWireframe.pShader->SetUniformMat4("modelToProjectionMatrix", fullTransformMatrix);
-    GLCALL(glDrawElements(GL_LINES, p->m_trackWireframe.pIndexBuf->GetCount(), GL_UNSIGNED_INT, 0));
-  }
+  if (m_bShowSurface && p->m_pTrackSurface)
+    p->m_pTrackSurface->Draw(worldToProjectionMatrix);
+  if (m_bShowWireframe && p->m_pTrackWireframe)
+    p->m_pTrackWireframe->Draw(worldToProjectionMatrix);
 }
 
 //-------------------------------------------------------------------------------------------------

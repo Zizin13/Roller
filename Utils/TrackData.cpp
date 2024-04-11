@@ -521,9 +521,10 @@ tVertex *CTrackData::MakeVertsCenterline(uint32 &numVertices)
   }
 
   numVertices = (uint32)m_chunkAy.size();
+  float fScale = 10000.0f;
   tVertex *vertices = new tVertex[numVertices];
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
-    float fLen = (float)m_chunkAy[i].iLength / 10000.0f;
+    float fLen = (float)m_chunkAy[i].iLength / fScale;
     glm::vec3 nextChunkBase = glm::vec3(1, 0, 0);
 
     glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, -1.0f, 0.0f));
@@ -596,38 +597,63 @@ tVertex *CTrackData::MakeVertsSurface(uint32 &numVertices)
     return NULL;
   }
 
-  numVertices = (uint32)m_chunkAy.size() * 3;
+  uint32 uiNumVertsPerChunk = 5;
+  float fScale = 10000.0f;
+
+  numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
     glm::vec3 nextChunkBase = glm::vec3(1, 0, 0);
 
     glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, -1.0f, 0.0f));
     glm::vec3 nextChunkYawed = glm::vec3(yawMat * glm::vec4(nextChunkBase, 1.0f));
-    glm::vec3 pitchAxis = glm::cross(nextChunkYawed, glm::vec3(0.0f, -1.0f, 0.0f));
+    glm::vec3 pitchAxis = glm::normalize(glm::cross(nextChunkYawed, glm::vec3(0.0f, -1.0f, 0.0f)));
 
     glm::mat4 pitchMat = glm::rotate(glm::radians((float)m_chunkAy[i].dPitch), pitchAxis);
     glm::vec3 nextChunkPitched = glm::vec3(pitchMat * glm::vec4(nextChunkYawed, 1.0f));
 
     glm::mat4 translateMat = glm::mat4(1);
     if (i > 0)
-      translateMat = glm::translate(vertices[(i - 1) * 3].position);
+      translateMat = glm::translate(vertices[(i - 1) * uiNumVertsPerChunk].position);
     //center
-    float fLen = (float)m_chunkAy[i].iLength / 10000.0f;
+    float fLen = (float)m_chunkAy[i].iLength / fScale;
     glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
-    vertices[i * 3 + 0].position = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
-    vertices[i * 3 + 0].color = ShapeGenerator::RandomColor();
-    //left
-    translateMat = glm::translate(vertices[i * 3 + 0].position);
-    glm::mat4 rollMat = glm::rotate(glm::radians((float)m_chunkAy[i].dRoll * -1.0f), vertices[i * 3 + 0].position);
-    float fLLen = (float)(m_chunkAy[i].iLeftLaneWidth + m_chunkAy[i].iLeftShoulderWidth) / 10000.0f * -1.0f;
+    vertices[i * uiNumVertsPerChunk + 0].position = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
+    vertices[i * uiNumVertsPerChunk + 0].color = ShapeGenerator::RandomColor();
+    //left lane
+    translateMat = glm::translate(vertices[i * uiNumVertsPerChunk + 0].position); //translate to centerline
+    glm::mat4 rollMat = glm::rotate(glm::radians((float)m_chunkAy[i].dRoll * -1.0f), vertices[i * uiNumVertsPerChunk + 0].position);
+    float fLLen = (float)(m_chunkAy[i].iLeftLaneWidth) / fScale * -1.0f;
     glm::mat4 scaleMatLeft = glm::scale(glm::vec3(fLLen, fLLen, fLLen));
-    vertices[i * 3 + 1].position = glm::vec3(translateMat * scaleMatLeft * rollMat * glm::vec4(pitchAxis, 1.0f));
-    vertices[i * 3 + 1].color = ShapeGenerator::RandomColor();
-    //right
-    float fRLen = (float)(m_chunkAy[i].iRightLaneWidth + m_chunkAy[i].iRightShoulderWidth) / 10000.0f;
+    vertices[i * uiNumVertsPerChunk + 1].position = glm::vec3(translateMat * scaleMatLeft * rollMat * glm::vec4(pitchAxis, 1.0f));
+    vertices[i * uiNumVertsPerChunk + 1].color = ShapeGenerator::RandomColor();
+    //right lane
+    float fRLen = (float)(m_chunkAy[i].iRightLaneWidth) / fScale;
     glm::mat4 scaleMatRight = glm::scale(glm::vec3(fRLen, fRLen, fRLen));
-    vertices[i * 3 + 2].position = glm::vec3(translateMat * scaleMatRight * rollMat * glm::vec4(pitchAxis, 1.0f));
-    vertices[i * 3 + 2].color = ShapeGenerator::RandomColor();
+    vertices[i * uiNumVertsPerChunk + 2].position = glm::vec3(translateMat * scaleMatRight * rollMat * glm::vec4(pitchAxis, 1.0f));
+    vertices[i * uiNumVertsPerChunk + 2].color = ShapeGenerator::RandomColor();
+    //left shoulder
+    translateMat = glm::translate(vertices[i * uiNumVertsPerChunk + 1].position); //translate to end of left lane
+    float fLShoulderLen = (float)m_chunkAy[i].iLeftShoulderWidth / fScale * -1.0f;
+    float fLShoulderHeight = (float)m_chunkAy[i].iLeftShoulderHeight / fScale * -1.0f;
+    glm::mat4 scaleMatLeftShoulderWidth = glm::scale(glm::vec3(fLShoulderLen, fLShoulderLen, fLShoulderLen));
+    glm::mat4 scaleMatLeftShoulderHeight = glm::scale(glm::vec3(fLShoulderHeight, fLShoulderHeight, fLShoulderHeight));
+    glm::vec3 lShoulderWidthVec = glm::vec3(translateMat * scaleMatLeftShoulderWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
+    glm::vec3 normal = glm::normalize(glm::cross(nextChunkPitched, pitchAxis));
+    glm::vec3 lShoulderHeightVec = glm::vec3(translateMat * scaleMatLeftShoulderHeight * rollMat * glm::vec4(normal, 1.0f));
+    vertices[i * uiNumVertsPerChunk + 3].position = lShoulderWidthVec;
+    vertices[i * uiNumVertsPerChunk + 3].color = ShapeGenerator::RandomColor();
+    //right shoulder
+    translateMat = glm::translate(vertices[i * uiNumVertsPerChunk + 2].position); //translate to end of right lane
+    float fRShoulderLen = (float)m_chunkAy[i].iRightShoulderWidth / fScale;
+    float fRShoulderHeight = (float)m_chunkAy[i].iRightShoulderHeight / fScale;
+    glm::mat4 scaleMatRightShoulderWidth = glm::scale(glm::vec3(fRShoulderLen, fRShoulderLen, fRShoulderLen));
+    glm::mat4 scaleMatRightShoulderHeight = glm::scale(glm::vec3(fRShoulderHeight, fRShoulderHeight, fRShoulderHeight));
+    glm::vec3 rShoulderWidthVec = glm::vec3(translateMat * scaleMatRightShoulderWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
+    glm::vec3 rShoulderHeightVec = glm::vec3(translateMat * scaleMatRightShoulderHeight * rollMat * glm::vec4(normal, 1.0f));
+    vertices[i * uiNumVertsPerChunk + 4].position = rShoulderWidthVec;
+    vertices[i * uiNumVertsPerChunk + 4].color = ShapeGenerator::RandomColor();
+
   }
 
   return vertices;
@@ -642,40 +668,64 @@ uint32 *CTrackData::MakeIndicesSurface(uint32 &numIndices)
     return NULL;
   }
   
-  uint32 uiNumVertsPerChunk = 3;
-  uint32 uiNumIndicesPerChunk = 4 * uiNumVertsPerChunk;
+  uint32 uiNumVertsPerChunk = 5;
+  uint32 uiNumIndicesPerChunk = 24;
   numIndices = (uint32)m_chunkAy.size() * uiNumIndicesPerChunk;
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
   uint32 i = 0;
   for (; i < m_chunkAy.size() - 1; i++) {
-    indices[i * uiNumIndicesPerChunk + 0]  = (i * uiNumVertsPerChunk) + 1;
-    indices[i * uiNumIndicesPerChunk + 1]  = (i * uiNumVertsPerChunk) + 0;
-    indices[i * uiNumIndicesPerChunk + 2]  = (i * uiNumVertsPerChunk) + 3;
-    indices[i * uiNumIndicesPerChunk + 3]  = (i * uiNumVertsPerChunk) + 1;
-    indices[i * uiNumIndicesPerChunk + 4]  = (i * uiNumVertsPerChunk) + 3;
-    indices[i * uiNumIndicesPerChunk + 5]  = (i * uiNumVertsPerChunk) + 4;
-    indices[i * uiNumIndicesPerChunk + 6]  = (i * uiNumVertsPerChunk) + 0;
-    indices[i * uiNumIndicesPerChunk + 7]  = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 0]  = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 1]  = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 2]  = (i * uiNumVertsPerChunk) + 6;
+    indices[i * uiNumIndicesPerChunk + 3]  = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 4]  = (i * uiNumVertsPerChunk) + 6;
+    indices[i * uiNumIndicesPerChunk + 5]  = (i * uiNumVertsPerChunk) + 8;
+    indices[i * uiNumIndicesPerChunk + 6]  = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 7]  = (i * uiNumVertsPerChunk) + 0;
     indices[i * uiNumIndicesPerChunk + 8]  = (i * uiNumVertsPerChunk) + 5;
-    indices[i * uiNumIndicesPerChunk + 9]  = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 9]  = (i * uiNumVertsPerChunk) + 1;
     indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumVertsPerChunk) + 5;
-    indices[i * uiNumIndicesPerChunk + 11] = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 11] = (i * uiNumVertsPerChunk) + 6;
+    indices[i * uiNumIndicesPerChunk + 12] = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 13] = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 14] = (i * uiNumVertsPerChunk) + 7;
+    indices[i * uiNumIndicesPerChunk + 15] = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 16] = (i * uiNumVertsPerChunk) + 7;
+    indices[i * uiNumIndicesPerChunk + 17] = (i * uiNumVertsPerChunk) + 5;
+    indices[i * uiNumIndicesPerChunk + 18] = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 19] = (i * uiNumVertsPerChunk) + 4;
+    indices[i * uiNumIndicesPerChunk + 20] = (i * uiNumVertsPerChunk) + 9;
+    indices[i * uiNumIndicesPerChunk + 21] = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 22] = (i * uiNumVertsPerChunk) + 9;
+    indices[i * uiNumIndicesPerChunk + 23] = (i * uiNumVertsPerChunk) + 7;
   }
   //final chunk must be tied to first
-  indices[i * uiNumIndicesPerChunk + 0]  = (i * uiNumVertsPerChunk) + 1;
-  indices[i * uiNumIndicesPerChunk + 1]  = (i * uiNumVertsPerChunk) + 0;
-  indices[i * uiNumIndicesPerChunk + 2]  = 0;
-  indices[i * uiNumIndicesPerChunk + 3]  = (i * uiNumVertsPerChunk) + 1;
-  indices[i * uiNumIndicesPerChunk + 4]  = 0;
-  indices[i * uiNumIndicesPerChunk + 5]  = 1;
-  indices[i * uiNumIndicesPerChunk + 6]  = (i * uiNumVertsPerChunk) + 0;
-  indices[i * uiNumIndicesPerChunk + 7]  = (i * uiNumVertsPerChunk) + 2;
-  indices[i * uiNumIndicesPerChunk + 8]  = 2;
-  indices[i * uiNumIndicesPerChunk + 9]  = (i * uiNumVertsPerChunk) + 0;
-  indices[i * uiNumIndicesPerChunk + 10] = 2;
-  indices[i * uiNumIndicesPerChunk + 11] = 0;
+  indices[i * uiNumIndicesPerChunk + 0]  = (i * uiNumVertsPerChunk) + 3;
+  indices[i * uiNumIndicesPerChunk + 1]  = (i * uiNumVertsPerChunk) + 1;
+  indices[i * uiNumIndicesPerChunk + 2]  = 6;
+  indices[i * uiNumIndicesPerChunk + 3]  = (i * uiNumVertsPerChunk) + 3;
+  indices[i * uiNumIndicesPerChunk + 4]  = 6;
+  indices[i * uiNumIndicesPerChunk + 5]  = 8;
+  indices[i * uiNumIndicesPerChunk + 6]  = (i * uiNumVertsPerChunk) + 1;
+  indices[i * uiNumIndicesPerChunk + 7]  = (i * uiNumVertsPerChunk) + 0;
+  indices[i * uiNumIndicesPerChunk + 8]  = 5;
+  indices[i * uiNumIndicesPerChunk + 9]  = (i * uiNumVertsPerChunk) + 1;
+  indices[i * uiNumIndicesPerChunk + 10] = 5;
+  indices[i * uiNumIndicesPerChunk + 11] = 6;
+  indices[i * uiNumIndicesPerChunk + 12] = (i * uiNumVertsPerChunk) + 0;
+  indices[i * uiNumIndicesPerChunk + 13] = (i * uiNumVertsPerChunk) + 2;
+  indices[i * uiNumIndicesPerChunk + 14] = 7;
+  indices[i * uiNumIndicesPerChunk + 15] = (i * uiNumVertsPerChunk) + 0;
+  indices[i * uiNumIndicesPerChunk + 16] = 7;
+  indices[i * uiNumIndicesPerChunk + 17] = 5;
+  indices[i * uiNumIndicesPerChunk + 18] = (i * uiNumVertsPerChunk) + 2;
+  indices[i * uiNumIndicesPerChunk + 19] = (i * uiNumVertsPerChunk) + 4;
+  indices[i * uiNumIndicesPerChunk + 20] = 9;
+  indices[i * uiNumIndicesPerChunk + 21] = (i * uiNumVertsPerChunk) + 2;
+  indices[i * uiNumIndicesPerChunk + 22] = 9;
+  indices[i * uiNumIndicesPerChunk + 23] = 7;
 
   return indices;
 }

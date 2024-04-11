@@ -123,6 +123,9 @@ CMainWindow::CMainWindow(const QString &sAppPath)
 
   connect(twEditor, &QTabWidget::currentChanged, this, &CMainWindow::OnEditTabChanged);
 
+  connect(ckShowSurface, &QCheckBox::toggled, this, &CMainWindow::UpdatePreviewSelection);
+  connect(ckShowWireframe, &QCheckBox::toggled, this, &CMainWindow::UpdatePreviewSelection);
+
   connect(pbInsertBefore, &QPushButton::clicked, this, &CMainWindow::OnInsertBeforeClicked);
   connect(pbInsertAfter, &QPushButton::clicked, this, &CMainWindow::OnInsertAfterClicked);
   connect(sbSelChunksFrom, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksFromChanged(int)));
@@ -255,6 +258,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
 
   //open window
   LoadSettings();
+  UpdatePreviewSelection();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1300,6 +1304,13 @@ void CMainWindow::OnUnmangleTexturesToggled(bool bChecked)
   (void)(bChecked);
   LoadTextures();
   UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::UpdatePreviewSelection()
+{
+  openGLWidget->ShowModels(ckShowSurface->isChecked(), ckShowWireframe->isChecked());
 }
 
 //-------------------------------------------------------------------------------------------------

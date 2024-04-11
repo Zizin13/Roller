@@ -2196,14 +2196,45 @@ wall height</string>
         </attribute>
         <layout class="QVBoxLayout" name="previewLayout">
          <item>
-          <layout class="QHBoxLayout" name="debugLayout"/>
-         </item>
-         <item>
           <widget class="QLabel" name="label">
            <property name="text">
             <string>Click to pan. WASD to move. R/F up/down.</string>
            </property>
           </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="debugLayout">
+           <item>
+            <widget class="QCheckBox" name="ckShowSurface">
+             <property name="text">
+              <string>Show Surface</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="ckShowWireframe">
+             <property name="text">
+              <string>Show Wireframe</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
          </item>
          <item>
           <widget class="CTrackPreview" name="openGLWidget">
@@ -2258,8 +2289,8 @@ wall height</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>133</width>
-              <height>118</height>
+              <width>281</width>
+              <height>530</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_12">

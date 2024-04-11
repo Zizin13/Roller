@@ -15,6 +15,7 @@ public:
   ~CTrackPreview();
 
   void SetTrack(CTrack *pTrack);
+  void ShowModels(bool bShowSurface, bool bShowWireframe);
 
 protected:
   void initializeGL();
@@ -24,6 +25,8 @@ protected:
 
 private:
   CTrackPreviewPrivate *p;
+  bool m_bShowSurface;
+  bool m_bShowWireframe;
 };
 
 //-------------------------------------------------------------------------------------------------

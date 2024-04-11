@@ -154,7 +154,7 @@ public:
   void ClearData();
   bool LoadTrack(const std::string &sFilename, bool bIsMangled);
   tShapeData MakeTrackCenterline();
-  tShapeData MakeTrackSurface();
+  tShapeData MakeTrackSurface(bool bWireframe = false);
 
   static unsigned int GetSignedBitValueFromInt(int iValue);
   static int GetIntValueFromSignedBit(unsigned int uiValue);
@@ -171,6 +171,8 @@ protected:
   uint32 *MakeIndicesCenterline(uint32 &numIndices);
   tVertex *MakeVertsSurface(uint32 &numVertices);
   uint32 *MakeIndicesSurface(uint32 &numIndices);
+  uint32 *MakeIndicesSurfaceWireframe(uint32 &numIndices);
+
   bool IsNumber(const std::string &str);
   bool ProcessTrackData(const uint8_t *pData, size_t length);
   void ProcessSign(const std::vector<std::string> &lineAy, eFileSection &section);

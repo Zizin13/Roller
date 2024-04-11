@@ -567,14 +567,18 @@ uint32 *CTrackData::MakeIndicesCenterline(uint32 &numIndices)
 
 //-------------------------------------------------------------------------------------------------
 
-tShapeData CTrackData::MakeTrackSurface()
+tShapeData CTrackData::MakeTrackSurface(bool bWireframe)
 {
   tShapeData ret;
 
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVertsSurface(uiNumVerts);
   uint32 uiNumIndices;
-  uint32 *indices = MakeIndicesSurface(uiNumIndices);
+  uint32 *indices = NULL;
+  if (!bWireframe)
+    indices = MakeIndicesSurface(uiNumIndices);
+  else
+    indices = MakeIndicesSurfaceWireframe(uiNumIndices);
 
   ret.pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
   ret.pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
@@ -655,7 +659,6 @@ tVertex *CTrackData::MakeVertsSurface(uint32 &numVertices)
     glm::vec3 rShoulderVec = rShoulderWidthVec + rShoulderHeightVec;
     vertices[i * uiNumVertsPerChunk + 4].position = glm::vec3(translateMat * glm::vec4(rShoulderVec, 1.0f));
     vertices[i * uiNumVertsPerChunk + 4].color = ShapeGenerator::RandomColor();
-
   }
 
   return vertices;
@@ -706,28 +709,80 @@ uint32 *CTrackData::MakeIndicesSurface(uint32 &numIndices)
   //final chunk must be tied to first
   indices[i * uiNumIndicesPerChunk + 0]  = (i * uiNumVertsPerChunk) + 3;
   indices[i * uiNumIndicesPerChunk + 1]  = (i * uiNumVertsPerChunk) + 1;
-  indices[i * uiNumIndicesPerChunk + 2]  = 6;
+  indices[i * uiNumIndicesPerChunk + 2]  = 1;
   indices[i * uiNumIndicesPerChunk + 3]  = (i * uiNumVertsPerChunk) + 3;
-  indices[i * uiNumIndicesPerChunk + 4]  = 6;
-  indices[i * uiNumIndicesPerChunk + 5]  = 8;
+  indices[i * uiNumIndicesPerChunk + 4]  = 1;
+  indices[i * uiNumIndicesPerChunk + 5]  = 3;
   indices[i * uiNumIndicesPerChunk + 6]  = (i * uiNumVertsPerChunk) + 1;
   indices[i * uiNumIndicesPerChunk + 7]  = (i * uiNumVertsPerChunk) + 0;
-  indices[i * uiNumIndicesPerChunk + 8]  = 5;
+  indices[i * uiNumIndicesPerChunk + 8]  = 0;
   indices[i * uiNumIndicesPerChunk + 9]  = (i * uiNumVertsPerChunk) + 1;
-  indices[i * uiNumIndicesPerChunk + 10] = 5;
-  indices[i * uiNumIndicesPerChunk + 11] = 6;
+  indices[i * uiNumIndicesPerChunk + 10] = 0;
+  indices[i * uiNumIndicesPerChunk + 11] = 1;
   indices[i * uiNumIndicesPerChunk + 12] = (i * uiNumVertsPerChunk) + 0;
   indices[i * uiNumIndicesPerChunk + 13] = (i * uiNumVertsPerChunk) + 2;
-  indices[i * uiNumIndicesPerChunk + 14] = 7;
+  indices[i * uiNumIndicesPerChunk + 14] = 2;
   indices[i * uiNumIndicesPerChunk + 15] = (i * uiNumVertsPerChunk) + 0;
-  indices[i * uiNumIndicesPerChunk + 16] = 7;
-  indices[i * uiNumIndicesPerChunk + 17] = 5;
+  indices[i * uiNumIndicesPerChunk + 16] = 2;
+  indices[i * uiNumIndicesPerChunk + 17] = 0;
   indices[i * uiNumIndicesPerChunk + 18] = (i * uiNumVertsPerChunk) + 2;
   indices[i * uiNumIndicesPerChunk + 19] = (i * uiNumVertsPerChunk) + 4;
-  indices[i * uiNumIndicesPerChunk + 20] = 9;
+  indices[i * uiNumIndicesPerChunk + 20] = 4;
   indices[i * uiNumIndicesPerChunk + 21] = (i * uiNumVertsPerChunk) + 2;
-  indices[i * uiNumIndicesPerChunk + 22] = 9;
-  indices[i * uiNumIndicesPerChunk + 23] = 7;
+  indices[i * uiNumIndicesPerChunk + 22] = 4;
+  indices[i * uiNumIndicesPerChunk + 23] = 2;
+
+  return indices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+uint32 *CTrackData::MakeIndicesSurfaceWireframe(uint32 &numIndices)
+{
+  if (m_chunkAy.empty()) {
+    numIndices = 0;
+    return NULL;
+  }
+
+  uint32 uiNumVertsPerChunk = 5;
+  uint32 uiNumIndicesPerChunk = 18;
+  numIndices = (uint32)m_chunkAy.size() * uiNumIndicesPerChunk;
+  uint32 *indices = new uint32[numIndices];
+  memset(indices, 0, numIndices * sizeof(uint32));
+
+  uint32 i = 0;
+  for (; i < m_chunkAy.size() - 1; i++) {
+    indices[i * uiNumIndicesPerChunk + 0]  = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 1]  = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 2]  = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 3]  = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 4]  = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 5]  = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 6]  = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 7]  = (i * uiNumVertsPerChunk) + 4;
+
+    indices[i * uiNumIndicesPerChunk + 8]  = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 9]  = (i * uiNumVertsPerChunk) + 8;
+    indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 11] = (i * uiNumVertsPerChunk) + 6;
+    indices[i * uiNumIndicesPerChunk + 12] = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 13] = (i * uiNumVertsPerChunk) + 5;
+    indices[i * uiNumIndicesPerChunk + 14] = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 15] = (i * uiNumVertsPerChunk) + 7;
+    indices[i * uiNumIndicesPerChunk + 16] = (i * uiNumVertsPerChunk) + 4;
+    indices[i * uiNumIndicesPerChunk + 17] = (i * uiNumVertsPerChunk) + 9;
+  }
+  //final chunk must be tied to first
+  indices[i * uiNumIndicesPerChunk + 8]  = (i * uiNumVertsPerChunk) + 3;
+  indices[i * uiNumIndicesPerChunk + 9]  = 3;
+  indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumVertsPerChunk) + 1;
+  indices[i * uiNumIndicesPerChunk + 11] = 1;
+  indices[i * uiNumIndicesPerChunk + 12] = (i * uiNumVertsPerChunk) + 0;
+  indices[i * uiNumIndicesPerChunk + 13] = 0;
+  indices[i * uiNumIndicesPerChunk + 14] = (i * uiNumVertsPerChunk) + 2;
+  indices[i * uiNumIndicesPerChunk + 15] = 2;
+  indices[i * uiNumIndicesPerChunk + 16] = (i * uiNumVertsPerChunk) + 4;
+  indices[i * uiNumIndicesPerChunk + 17] = 4;
 
   return indices;
 }

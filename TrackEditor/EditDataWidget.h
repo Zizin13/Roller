@@ -63,13 +63,6 @@ protected slots:
 
 private:
   void UpdateGeometrySelection();
-  bool UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue);
-  bool UpdateCBWithSelectionValue(QComboBox *pComboBox, const QString &sValue);
-  bool UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit, const QString &sValue, CTexture *pTex);
-  void UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit, CTexture *pTex);
-  void UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, const QString &sValue);
-  void UpdateCBEditMode(bool &bEdited, bool &bMixedData, QComboBox *pComboBox, const QString &sValue);
-  void UpdateSignEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, QWidget *pWidget, const QString &sValue);
   void RevertGeometry();
   void UpdateTextures(QLineEdit *pLineEdit, QLabel *pTex1, QLabel *pTex2);
 

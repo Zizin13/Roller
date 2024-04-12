@@ -73,6 +73,9 @@
     <ClCompile Include="moc\moc_GlobalTrackSettings.cpp">
       <Filter>Qt Generated Files\Moc Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QtHelpers.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Track.h">
@@ -113,6 +116,9 @@
     </ClInclude>
     <ClInclude Include="ui\ui_GlobalTrackSettings.h">
       <Filter>Qt Generated Files\Ui Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QtHelpers.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

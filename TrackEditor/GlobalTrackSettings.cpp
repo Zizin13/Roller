@@ -1,6 +1,7 @@
 #include "GlobalTrackSettings.h"
 #include "Track.h"
 #include "MainWindow.h"
+#include "QtHelpers.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -129,19 +130,19 @@ void CGlobalTrackSettings::UpdateInfoEditMode()
 {
   bool bEditMode = false;
   bool bMixedData = false;
-  UpdateLEEditMode(bEditMode, bMixedData, leFloorDepth, p->sFloorDepth);
-  UpdateLEEditMode(bEditMode, bMixedData, leTex, p->sTex);
-  UpdateLEEditMode(bEditMode, bMixedData, leBld, p->sBld);
-  UpdateLEEditMode(bEditMode, bMixedData, leTrackNum, p->sTrackNumber);
-  UpdateLEEditMode(bEditMode, bMixedData, leImpossibleLaps, p->sImpossibleLaps);
-  UpdateLEEditMode(bEditMode, bMixedData, leHardLaps, p->sHardLaps);
-  UpdateLEEditMode(bEditMode, bMixedData, leTrickyLaps, p->sTrickyLaps);
-  UpdateLEEditMode(bEditMode, bMixedData, leMediumLaps, p->sMediumLaps);
-  UpdateLEEditMode(bEditMode, bMixedData, leEasyLaps, p->sEasyLaps);
-  UpdateLEEditMode(bEditMode, bMixedData, leGirlieLaps, p->sGirlieLaps);
-  UpdateLEEditMode(bEditMode, bMixedData, leMapFidelity, p->sTrackMapFidelity);
-  UpdateLEEditMode(bEditMode, bMixedData, leMapSize, p->sTrackMapSize);
-  UpdateLEEditMode(bEditMode, bMixedData, leInfoUnknown, p->sInfoUnknown);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leFloorDepth, p->sFloorDepth);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leTex, p->sTex);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leBld, p->sBld);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leTrackNum, p->sTrackNumber);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leImpossibleLaps, p->sImpossibleLaps);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leHardLaps, p->sHardLaps);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leTrickyLaps, p->sTrickyLaps);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leMediumLaps, p->sMediumLaps);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leEasyLaps, p->sEasyLaps);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leGirlieLaps, p->sGirlieLaps);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leMapFidelity, p->sTrackMapFidelity);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leMapSize, p->sTrackMapSize);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leInfoUnknown, p->sInfoUnknown);
 
   pbApplyInfo->setEnabled(bEditMode);
   pbRevertInfo->setEnabled(bEditMode);
@@ -170,60 +171,21 @@ void CGlobalTrackSettings::UpdateInfoSelection()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CGlobalTrackSettings::UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue)
-{
-  pLineEdit->blockSignals(true);
-  if (sValue.compare(MIXED_DATA) == 0) {
-    pLineEdit->setText("");
-    pLineEdit->setPlaceholderText(sValue);
-    //pLineEdit->setStyleSheet("background-color: rgb(255,0,0)");
-  } else {
-    pLineEdit->setPlaceholderText("");
-    pLineEdit->setText(sValue);
-    pLineEdit->setStyleSheet("");
-  }
-  pLineEdit->blockSignals(false);
-  return (sValue.compare(MIXED_DATA) == 0) && pLineEdit->text().isEmpty();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CGlobalTrackSettings::UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, const QString &sValue)
-{
-  QString sLineEditVal = pLineEdit->text();
-  if (sLineEditVal.isEmpty())
-    sLineEditVal = "0";
-
-  if (sLineEditVal.compare(sValue) != 0) {
-    if (pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) == 0) {
-      bMixedData = true;
-      pLineEdit->setStyleSheet("");
-    } else {
-      bEdited = true;
-      pLineEdit->setStyleSheet("background-color: rgb(255,255,0)");
-    }
-  } else {
-    pLineEdit->setStyleSheet("");
-  }
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CGlobalTrackSettings::RevertInfo()
 {
-  UpdateLEWithSelectionValue(leFloorDepth, p->sFloorDepth);
-  UpdateLEWithSelectionValue(leTex, p->sTex);
-  UpdateLEWithSelectionValue(leBld, p->sBld);
-  UpdateLEWithSelectionValue(leTrackNum, p->sTrackNumber);
-  UpdateLEWithSelectionValue(leImpossibleLaps, p->sImpossibleLaps);
-  UpdateLEWithSelectionValue(leHardLaps, p->sHardLaps);
-  UpdateLEWithSelectionValue(leTrickyLaps, p->sTrickyLaps);
-  UpdateLEWithSelectionValue(leMediumLaps, p->sMediumLaps);
-  UpdateLEWithSelectionValue(leEasyLaps, p->sEasyLaps);
-  UpdateLEWithSelectionValue(leGirlieLaps, p->sGirlieLaps);
-  UpdateLEWithSelectionValue(leMapSize, p->sTrackMapSize);
-  UpdateLEWithSelectionValue(leMapFidelity, p->sTrackMapFidelity);
-  UpdateLEWithSelectionValue(leInfoUnknown, p->sInfoUnknown);
+  QtHelpers::UpdateLEWithSelectionValue(leFloorDepth, p->sFloorDepth);
+  QtHelpers::UpdateLEWithSelectionValue(leTex, p->sTex);
+  QtHelpers::UpdateLEWithSelectionValue(leBld, p->sBld);
+  QtHelpers::UpdateLEWithSelectionValue(leTrackNum, p->sTrackNumber);
+  QtHelpers::UpdateLEWithSelectionValue(leImpossibleLaps, p->sImpossibleLaps);
+  QtHelpers::UpdateLEWithSelectionValue(leHardLaps, p->sHardLaps);
+  QtHelpers::UpdateLEWithSelectionValue(leTrickyLaps, p->sTrickyLaps);
+  QtHelpers::UpdateLEWithSelectionValue(leMediumLaps, p->sMediumLaps);
+  QtHelpers::UpdateLEWithSelectionValue(leEasyLaps, p->sEasyLaps);
+  QtHelpers::UpdateLEWithSelectionValue(leGirlieLaps, p->sGirlieLaps);
+  QtHelpers::UpdateLEWithSelectionValue(leMapSize, p->sTrackMapSize);
+  QtHelpers::UpdateLEWithSelectionValue(leMapFidelity, p->sTrackMapFidelity);
+  QtHelpers::UpdateLEWithSelectionValue(leInfoUnknown, p->sInfoUnknown);
 
   pbApplyInfo->setEnabled(false);
   pbRevertInfo->setEnabled(false);

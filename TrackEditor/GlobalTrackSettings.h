@@ -23,8 +23,6 @@ protected slots:
 
 private:
   void UpdateInfoSelection();
-  bool UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue);
-  void UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, const QString &sValue);
   void RevertInfo();
 
   CGlobalTrackSettingsPrivate *p;

@@ -164,6 +164,7 @@ exit 1</Command>
     <ClCompile Include="moc\moc_EditDataWidget.cpp" />
     <ClCompile Include="moc\moc_GlobalTrackSettings.cpp" />
     <ClCompile Include="moc\moc_TrackPreview.cpp" />
+    <ClCompile Include="QtHelpers.cpp" />
     <ClCompile Include="TrackPreview.cpp" />
     <ClCompile Include="LogDialog.cpp" />
     <ClCompile Include="MainWindow.cpp" />
@@ -266,6 +267,7 @@ exit 1</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
+    <ClInclude Include="QtHelpers.h" />
     <ClInclude Include="ui\ui_EditDataWidget.h" />
     <ClInclude Include="ui\ui_EditSurfaceDialog.h" />
     <ClInclude Include="ui\ui_EditSeriesDialog.h" />

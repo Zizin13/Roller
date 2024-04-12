@@ -5,6 +5,7 @@
 #include "EditSurfaceDialog.h"
 #include "TilePicker.h"
 #include "Texture.h"
+#include "QtHelpers.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -600,88 +601,88 @@ void CEditDataWidget::UpdateGeometryEditMode()
 {
   bool bEditMode = false;
   bool bMixedData = false;
-  UpdateLEEditMode(bEditMode, bMixedData, leLShoulderWidth, p->editVals.sLeftShoulderWidth);
-  UpdateLEEditMode(bEditMode, bMixedData, leLLaneWidth, p->editVals.sLeftLaneWidth);
-  UpdateLEEditMode(bEditMode, bMixedData, leRLaneWidth, p->editVals.sRightLaneWidth);
-  UpdateLEEditMode(bEditMode, bMixedData, leRShoulderWidth, p->editVals.sRightShoulderWidth);
-  UpdateLEEditMode(bEditMode, bMixedData, leLShoulderHeight, p->editVals.sLShoulderHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leRShoulderHeight, p->editVals.sRShoulderHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leLength, p->editVals.sLength);
-  UpdateLEEditMode(bEditMode, bMixedData, leYaw, p->editVals.sYaw);
-  UpdateLEEditMode(bEditMode, bMixedData, lePitch, p->editVals.sPitch);
-  UpdateLEEditMode(bEditMode, bMixedData, leRoll, p->editVals.sRoll);
-  UpdateLEEditMode(bEditMode, bMixedData, leAILine1, p->editVals.sAILine1);
-  UpdateLEEditMode(bEditMode, bMixedData, leAILine2, p->editVals.sAILine2);
-  UpdateLEEditMode(bEditMode, bMixedData, leAILine3, p->editVals.sAILine3);
-  UpdateLEEditMode(bEditMode, bMixedData, leAILine4, p->editVals.sAILine4);
-  UpdateLEEditMode(bEditMode, bMixedData, leTrackGrip, p->editVals.sTrackGrip);
-  UpdateLEEditMode(bEditMode, bMixedData, leLeftShoulderGrip, p->editVals.sLeftShoulderGrip);
-  UpdateLEEditMode(bEditMode, bMixedData, leRShoulderGrip, p->editVals.sRightShoulderGrip);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk04, p->editVals.sUnk04);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk05, p->editVals.sUnk05);
-  UpdateLEEditMode(bEditMode, bMixedData, leAudioAboveTrigger, p->editVals.sAudioAboveTrigger);
-  UpdateLEEditMode(bEditMode, bMixedData, leAudioTriggerSpeed, p->editVals.sAudioTriggerSpeed);
-  UpdateLEEditMode(bEditMode, bMixedData, leAudioBelowTrigger, p->editVals.sAudioBelowTrigger);
-  UpdateLEEditMode(bEditMode, bMixedData, leLeftSurfaceType, p->editVals.sLeftSurfaceType);
-  UpdateLEEditMode(bEditMode, bMixedData, leCenterSurfaceType, p->editVals.sCenterSurfaceType);
-  UpdateLEEditMode(bEditMode, bMixedData, leRightSurfaceType, p->editVals.sRightSurfaceType);
-  UpdateLEEditMode(bEditMode, bMixedData, leLWallType, p->editVals.sLWallType);
-  UpdateLEEditMode(bEditMode, bMixedData, leRWallType, p->editVals.sRWallType);
-  UpdateLEEditMode(bEditMode, bMixedData, leRoofType, p->editVals.sRoofType);
-  UpdateLEEditMode(bEditMode, bMixedData, leLUOuterWallType, p->editVals.sLUOuterWallType);
-  UpdateLEEditMode(bEditMode, bMixedData, leLLOuterWallType, p->editVals.sLLOuterWallType);
-  UpdateLEEditMode(bEditMode, bMixedData, leOuterFloorType, p->editVals.sOuterFloorType);
-  UpdateLEEditMode(bEditMode, bMixedData, leRLOuterWallType, p->editVals.sRLOuterWallType);
-  UpdateLEEditMode(bEditMode, bMixedData, leRUOuterWallType, p->editVals.sRUOuterWallType);
-  UpdateLEEditMode(bEditMode, bMixedData, leEnvironmentFloorType, p->editVals.sEnvironmentFloorType);
-  UpdateLEEditMode(bEditMode, bMixedData, leSignType, p->editVals.sSignType);
-  UpdateCBEditMode(bEditMode, bMixedData, cbSignType, p->editVals.sSignType);
-  UpdateLEEditMode(bEditMode, bMixedData, leSignHorizOffset, p->editVals.sSignHorizOffset);
-  UpdateLEEditMode(bEditMode, bMixedData, leSignVertOffset, p->editVals.sSignVertOffset);
-  UpdateLEEditMode(bEditMode, bMixedData, leSignYaw, p->editVals.sSignYaw);
-  UpdateLEEditMode(bEditMode, bMixedData, leSignPitch, p->editVals.sSignPitch);
-  UpdateLEEditMode(bEditMode, bMixedData, leSignRoll, p->editVals.sSignRoll);
-  UpdateLEEditMode(bEditMode, bMixedData, leLUOuterWallHOffset, p->editVals.sLUOuterWallHOffset);
-  UpdateLEEditMode(bEditMode, bMixedData, leLLOuterWallHOffset, p->editVals.sLLOuterWallHOffset);
-  UpdateLEEditMode(bEditMode, bMixedData, leLOuterFloorHOffset, p->editVals.sLOuterFloorHOffset);
-  UpdateLEEditMode(bEditMode, bMixedData, leROuterFloorHOffset, p->editVals.sROuterFloorHOffset);
-  UpdateLEEditMode(bEditMode, bMixedData, leRLOuterWallHOffset, p->editVals.sRLOuterWallHOffset);
-  UpdateLEEditMode(bEditMode, bMixedData, leRUOuterWallHOffset, p->editVals.sRUOuterWallHOffset);
-  UpdateLEEditMode(bEditMode, bMixedData, leLUOuterWallHeight, p->editVals.sLUOuterWallHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leLLOuterWallHeight, p->editVals.sLLOuterWallHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leLOuterFloorHeight, p->editVals.sLOuterFloorHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leROuterFloorHeight, p->editVals.sROuterFloorHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leRLOuterWallHeight, p->editVals.sRLOuterWallHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leRUOuterWallHeight, p->editVals.sRUOuterWallHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leRoofHeight, p->editVals.sRoofHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leDrawOrder1, p->editVals.sDrawOrder1);
-  UpdateLEEditMode(bEditMode, bMixedData, leDrawOrder2, p->editVals.sDrawOrder2);
-  UpdateLEEditMode(bEditMode, bMixedData, leDrawOrder3, p->editVals.sDrawOrder3);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk37, p->editVals.sUnk37);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk38, p->editVals.sUnk38);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk39, p->editVals.sUnk39);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk40, p->editVals.sUnk40);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk41, p->editVals.sUnk41);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk42, p->editVals.sUnk42);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk43, p->editVals.sUnk43);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk44, p->editVals.sUnk44);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk45, p->editVals.sUnk45);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk46, p->editVals.sUnk46);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk47, p->editVals.sUnk47);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk48, p->editVals.sUnk48);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk49, p->editVals.sUnk49);
-  UpdateLEEditMode(bEditMode, bMixedData, leUnk50, p->editVals.sUnk50);
-  UpdateSignEditMode(bEditMode, bMixedData, leSign, widgetSign, p->editVals.sSignTexture);
-  UpdateSignEditMode(bEditMode, bMixedData, leBack, widgetBack, p->editVals.sBackTexture);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntScaleFact, p->editVals.sStuntScaleFactor);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntAngle, p->editVals.sStuntAngle);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntUnk, p->editVals.sStuntUnknown);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntTimingGroup, p->editVals.sStuntTimingGroup);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntHeight, p->editVals.sStuntHeight);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntTimeBulging, p->editVals.sStuntTimeBulging);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntTimeFlat, p->editVals.sStuntTimeFlat);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntExpandContract, p->editVals.sStuntExpandsContracts);
-  UpdateLEEditMode(bEditMode, bMixedData, leStuntBulge, p->editVals.sStuntBulge);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leLShoulderWidth, p->editVals.sLeftShoulderWidth);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leLLaneWidth, p->editVals.sLeftLaneWidth);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leRLaneWidth, p->editVals.sRightLaneWidth);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leRShoulderWidth, p->editVals.sRightShoulderWidth);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leLShoulderHeight, p->editVals.sLShoulderHeight);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leRShoulderHeight, p->editVals.sRShoulderHeight);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leLength, p->editVals.sLength);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leYaw, p->editVals.sYaw);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, lePitch, p->editVals.sPitch);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leRoll, p->editVals.sRoll);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leAILine1, p->editVals.sAILine1);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leAILine2, p->editVals.sAILine2);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leAILine3, p->editVals.sAILine3);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leAILine4, p->editVals.sAILine4);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leTrackGrip, p->editVals.sTrackGrip);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leLeftShoulderGrip, p->editVals.sLeftShoulderGrip);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leRShoulderGrip, p->editVals.sRightShoulderGrip);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk04, p->editVals.sUnk04);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk05, p->editVals.sUnk05);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leAudioAboveTrigger, p->editVals.sAudioAboveTrigger);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leAudioTriggerSpeed, p->editVals.sAudioTriggerSpeed);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leAudioBelowTrigger, p->editVals.sAudioBelowTrigger);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leLeftSurfaceType, p->editVals.sLeftSurfaceType);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leCenterSurfaceType, p->editVals.sCenterSurfaceType);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leRightSurfaceType, p->editVals.sRightSurfaceType);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leLWallType, p->editVals.sLWallType);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leRWallType, p->editVals.sRWallType);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leRoofType, p->editVals.sRoofType);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leLUOuterWallType, p->editVals.sLUOuterWallType);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leLLOuterWallType, p->editVals.sLLOuterWallType);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leOuterFloorType, p->editVals.sOuterFloorType);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leRLOuterWallType, p->editVals.sRLOuterWallType);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leRUOuterWallType, p->editVals.sRUOuterWallType);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leEnvironmentFloorType, p->editVals.sEnvironmentFloorType);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leSignType, p->editVals.sSignType);
+  QtHelpers::UpdateCBEditMode(bEditMode, bMixedData, cbSignType, p->editVals.sSignType);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leSignHorizOffset, p->editVals.sSignHorizOffset);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leSignVertOffset, p->editVals.sSignVertOffset);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leSignYaw, p->editVals.sSignYaw);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leSignPitch, p->editVals.sSignPitch);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leSignRoll, p->editVals.sSignRoll);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leLUOuterWallHOffset, p->editVals.sLUOuterWallHOffset);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leLLOuterWallHOffset, p->editVals.sLLOuterWallHOffset);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leLOuterFloorHOffset, p->editVals.sLOuterFloorHOffset);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leROuterFloorHOffset, p->editVals.sROuterFloorHOffset);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leRLOuterWallHOffset, p->editVals.sRLOuterWallHOffset);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leRUOuterWallHOffset, p->editVals.sRUOuterWallHOffset);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leLUOuterWallHeight, p->editVals.sLUOuterWallHeight);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leLLOuterWallHeight, p->editVals.sLLOuterWallHeight);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leLOuterFloorHeight, p->editVals.sLOuterFloorHeight);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leROuterFloorHeight, p->editVals.sROuterFloorHeight);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leRLOuterWallHeight, p->editVals.sRLOuterWallHeight);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leRUOuterWallHeight, p->editVals.sRUOuterWallHeight);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leRoofHeight, p->editVals.sRoofHeight);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leDrawOrder1, p->editVals.sDrawOrder1);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leDrawOrder2, p->editVals.sDrawOrder2);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leDrawOrder3, p->editVals.sDrawOrder3);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk37, p->editVals.sUnk37);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk38, p->editVals.sUnk38);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk39, p->editVals.sUnk39);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk40, p->editVals.sUnk40);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk41, p->editVals.sUnk41);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk42, p->editVals.sUnk42);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk43, p->editVals.sUnk43);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk44, p->editVals.sUnk44);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk45, p->editVals.sUnk45);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk46, p->editVals.sUnk46);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk47, p->editVals.sUnk47);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk48, p->editVals.sUnk48);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk49, p->editVals.sUnk49);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk50, p->editVals.sUnk50);
+  QtHelpers::UpdateSignEditMode(bEditMode, bMixedData, leSign, widgetSign, p->editVals.sSignTexture);
+  QtHelpers::UpdateSignEditMode(bEditMode, bMixedData, leBack, widgetBack, p->editVals.sBackTexture);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntScaleFact, p->editVals.sStuntScaleFactor);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntAngle, p->editVals.sStuntAngle);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntUnk, p->editVals.sStuntUnknown);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntTimingGroup, p->editVals.sStuntTimingGroup);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntHeight, p->editVals.sStuntHeight);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntTimeBulging, p->editVals.sStuntTimeBulging);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntTimeFlat, p->editVals.sStuntTimeFlat);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntExpandContract, p->editVals.sStuntExpandsContracts);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntBulge, p->editVals.sStuntBulge);
 
   pbApply->setEnabled(bEditMode);
   pbCancel->setEnabled(bEditMode);
@@ -718,7 +719,7 @@ void CEditDataWidget::OnSignClicked()
   }
 
   leSign->setText(sValue);
-  UpdateSignButtonDisplay(pbSign, ckApplySign, leSign, p->m_pBld);
+  QtHelpers::UpdateSignButtonDisplay(pbSign, ckApplySign, leSign, p->m_pBld);
   UpdateGeometryEditMode();
 }
 
@@ -748,7 +749,7 @@ void CEditDataWidget::OnBackClicked()
   }
 
   leBack->setText(sValue);
-  UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack, p->m_pTex);
+  QtHelpers::UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack, p->m_pTex);
   UpdateGeometryEditMode();
 }
 
@@ -766,7 +767,7 @@ void CEditDataWidget::OnApplySignToggled(bool bChecked)
   iValue = CTrack::GetIntValueFromSignedBit(uiSignedBitVal);
   QString sNewValue = QString::number(iValue);
   leSign->setText(sNewValue);
-  UpdateSignButtonDisplay(pbSign, ckApplySign, leSign, p->m_pBld);
+  QtHelpers::UpdateSignButtonDisplay(pbSign, ckApplySign, leSign, p->m_pBld);
   UpdateGeometryEditMode();
 }
 
@@ -784,7 +785,7 @@ void CEditDataWidget::OnApplyBackToggled(bool bChecked)
   iValue = CTrack::GetIntValueFromSignedBit(uiSignedBitVal);
   QString sNewValue = QString::number(iValue);
   leBack->setText(sNewValue);
-  UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack, p->m_pTex);
+  QtHelpers::UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack, p->m_pTex);
   UpdateGeometryEditMode();
 }
 
@@ -852,7 +853,7 @@ void CEditDataWidget::OnSignTypeLEChanged()
 
 void CEditDataWidget::OnSignLEChanged()
 {
-  UpdateSignButtonDisplay(pbSign, ckApplySign, leSign, p->m_pBld);
+  QtHelpers::UpdateSignButtonDisplay(pbSign, ckApplySign, leSign, p->m_pBld);
   UpdateGeometryEditMode();
 }
 
@@ -860,7 +861,7 @@ void CEditDataWidget::OnSignLEChanged()
 
 void CEditDataWidget::OnBackLEChanged()
 {
-  UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack, p->m_pTex);
+  QtHelpers::UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack, p->m_pTex);
   UpdateGeometryEditMode();
 }
 
@@ -973,152 +974,6 @@ void CEditDataWidget::UpdateGeometrySelection()
   RevertGeometry();
 }
 
-//-------------------------------------------------------------------------------------------------
-
-bool CEditDataWidget::UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue)
-{
-  pLineEdit->blockSignals(true);
-  if (sValue.compare(MIXED_DATA) == 0) {
-    pLineEdit->setText("");
-    pLineEdit->setPlaceholderText(sValue);
-    //pLineEdit->setStyleSheet("background-color: rgb(255,0,0)");
-  } else {
-    pLineEdit->setPlaceholderText("");
-    pLineEdit->setText(sValue);
-    pLineEdit->setStyleSheet("");
-  }
-  pLineEdit->blockSignals(false);
-  return (sValue.compare(MIXED_DATA) == 0) && pLineEdit->text().isEmpty();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-bool CEditDataWidget::UpdateCBWithSelectionValue(QComboBox *pComboBox, const QString &sValue)
-{
-  std::string sVal = sValue.toLatin1().constData();
-  pComboBox->blockSignals(true);
-  if (sValue.compare(MIXED_DATA) == 0) {
-    if (pComboBox->findData(MIXED_DATA) == -1)
-      pComboBox->addItem(MIXED_DATA, MIXED_DATA);
-    pComboBox->setCurrentIndex(pComboBox->findData(MIXED_DATA));
-  } else {
-    pComboBox->removeItem(pComboBox->findData(MIXED_DATA));
-    pComboBox->setCurrentIndex(pComboBox->findData(sValue.toInt()));
-  }
-  pComboBox->blockSignals(false);
-  return (sValue.compare(MIXED_DATA) == 0);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-bool CEditDataWidget::UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit, const QString &sValue, CTexture *pTex)
-{
-  pLineEdit->blockSignals(true);
-  if (sValue.compare(MIXED_DATA) == 0) {
-    pLineEdit->setText("");
-    pLineEdit->setPlaceholderText(sValue);
-    //pLineEdit->setStyleSheet("background-color: rgb(255,0,0)");
-  } else {
-    pLineEdit->setPlaceholderText("");
-    pLineEdit->setText(sValue);
-    pLineEdit->setStyleSheet("");
-  }
-  pLineEdit->blockSignals(false);
-  UpdateSignButtonDisplay(pPushButton, pCheckbox, pLineEdit, pTex);
-  return (sValue.compare(MIXED_DATA) == 0) && pLineEdit->text().isEmpty();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CEditDataWidget::UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit, CTexture *pTex)
-{
-  pCheckbox->blockSignals(true);
-  if (pLineEdit->text().compare("-1") == 0) {
-    pPushButton->setIcon(QIcon());
-    pPushButton->setText("<none>");
-    pCheckbox->setEnabled(false);
-    pCheckbox->setChecked(false);
-  } else if (pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) == 0) {
-    pPushButton->setIcon(QIcon());
-    pPushButton->setText(MIXED_DATA);
-    pCheckbox->setEnabled(false);
-    pCheckbox->setChecked(false);
-  } else {
-    int iValue = pLineEdit->text().toInt();
-    unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
-    bool bChecked = uiSignedBitVal & SURFACE_FLAG_APPLY_TEXTURE;
-    int iBldIndex = CTrack::GetIntValueFromSignedBit(uiSignedBitVal & SURFACE_TEXTURE_INDEX);
-    if (iBldIndex < pTex->m_tileAy.size()) {
-      QPixmap pixmap;
-      pixmap.convertFromImage(pTex->m_tileAy[iBldIndex]);
-      pPushButton->setIcon(pixmap);
-      pPushButton->setText("");
-    }
-    pCheckbox->setEnabled(true);
-    pCheckbox->setChecked(bChecked);
-  }
-  pCheckbox->blockSignals(false);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CEditDataWidget::UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, const QString &sValue)
-{
-  QString sLineEditVal = pLineEdit->text();
-  if (sLineEditVal.isEmpty())
-    sLineEditVal = "0";
-
-  if (sLineEditVal.compare(sValue) != 0) {
-    if (pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) == 0) {
-      bMixedData = true;
-      pLineEdit->setStyleSheet("");
-    } else {
-      bEdited = true;
-      pLineEdit->setStyleSheet("background-color: rgb(255,255,0)");
-    }
-  } else {
-    pLineEdit->setStyleSheet("");
-  }
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CEditDataWidget::UpdateCBEditMode(bool &bEdited, bool &bMixedData, QComboBox *pComboBox, const QString &sValue)
-{
-  QString sCbxVal = pComboBox->currentData().toString();
-  if (sCbxVal.compare(sValue) != 0 && pComboBox->currentIndex() != -1) {
-    if (sCbxVal.compare(MIXED_DATA) == 0) {
-      bMixedData = true;
-      pComboBox->setStyleSheet("");
-    } else {
-      bEdited = true;
-      pComboBox->setStyleSheet("background-color: rgb(255,255,0)");
-    }
-  } else {
-    pComboBox->setStyleSheet("");
-  }
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CEditDataWidget::UpdateSignEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, QWidget *pWidget, const QString &sValue)
-{
-  QString sLineEditVal = pLineEdit->text();
-  if (sLineEditVal.isEmpty())
-    sLineEditVal = "0";
-
-  if (sLineEditVal.compare(sValue) != 0) {
-    if (pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) == 0) {
-      bMixedData = true;
-      pWidget->setStyleSheet("");
-    } else {
-      bEdited = true;
-      pWidget->setStyleSheet("background-color: rgb(255,255,0)");
-    }
-  } else {
-    pWidget->setStyleSheet("");
-  }
-}
 
 //-------------------------------------------------------------------------------------------------
 
@@ -1127,88 +982,88 @@ void CEditDataWidget::RevertGeometry()
   pbDelete->setEnabled(!p->m_pTrack->m_chunkAy.empty());
 
   bool bMixedData = false;
-  bMixedData |= UpdateLEWithSelectionValue(leLShoulderWidth, p->editVals.sLeftShoulderWidth);
-  bMixedData |= UpdateLEWithSelectionValue(leLLaneWidth, p->editVals.sLeftLaneWidth);
-  bMixedData |= UpdateLEWithSelectionValue(leRLaneWidth, p->editVals.sRightLaneWidth);
-  bMixedData |= UpdateLEWithSelectionValue(leRShoulderWidth, p->editVals.sRightShoulderWidth);
-  bMixedData |= UpdateLEWithSelectionValue(leLShoulderHeight, p->editVals.sLShoulderHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leRShoulderHeight, p->editVals.sRShoulderHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leLength, p->editVals.sLength);
-  bMixedData |= UpdateLEWithSelectionValue(leYaw, p->editVals.sYaw);
-  bMixedData |= UpdateLEWithSelectionValue(lePitch, p->editVals.sPitch);
-  bMixedData |= UpdateLEWithSelectionValue(leRoll, p->editVals.sRoll);
-  bMixedData |= UpdateLEWithSelectionValue(leAILine1, p->editVals.sAILine1);
-  bMixedData |= UpdateLEWithSelectionValue(leAILine2, p->editVals.sAILine2);
-  bMixedData |= UpdateLEWithSelectionValue(leAILine3, p->editVals.sAILine3);
-  bMixedData |= UpdateLEWithSelectionValue(leAILine4, p->editVals.sAILine4);
-  bMixedData |= UpdateLEWithSelectionValue(leTrackGrip, p->editVals.sTrackGrip);
-  bMixedData |= UpdateLEWithSelectionValue(leLeftShoulderGrip, p->editVals.sLeftShoulderGrip);
-  bMixedData |= UpdateLEWithSelectionValue(leRShoulderGrip, p->editVals.sRightShoulderGrip);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk04, p->editVals.sUnk04);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk05, p->editVals.sUnk05);
-  bMixedData |= UpdateLEWithSelectionValue(leAudioAboveTrigger, p->editVals.sAudioAboveTrigger);
-  bMixedData |= UpdateLEWithSelectionValue(leAudioTriggerSpeed, p->editVals.sAudioTriggerSpeed);
-  bMixedData |= UpdateLEWithSelectionValue(leAudioBelowTrigger, p->editVals.sAudioBelowTrigger);
-  bMixedData |= UpdateLEWithSelectionValue(leLeftSurfaceType, p->editVals.sLeftSurfaceType);
-  bMixedData |= UpdateLEWithSelectionValue(leCenterSurfaceType, p->editVals.sCenterSurfaceType);
-  bMixedData |= UpdateLEWithSelectionValue(leRightSurfaceType, p->editVals.sRightSurfaceType);
-  bMixedData |= UpdateLEWithSelectionValue(leLWallType, p->editVals.sLWallType);
-  bMixedData |= UpdateLEWithSelectionValue(leRWallType, p->editVals.sRWallType);
-  bMixedData |= UpdateLEWithSelectionValue(leRoofType, p->editVals.sRoofType);
-  bMixedData |= UpdateLEWithSelectionValue(leLUOuterWallType, p->editVals.sLUOuterWallType);
-  bMixedData |= UpdateLEWithSelectionValue(leLLOuterWallType, p->editVals.sLLOuterWallType);
-  bMixedData |= UpdateLEWithSelectionValue(leOuterFloorType, p->editVals.sOuterFloorType);
-  bMixedData |= UpdateLEWithSelectionValue(leRLOuterWallType, p->editVals.sRLOuterWallType);
-  bMixedData |= UpdateLEWithSelectionValue(leRUOuterWallType, p->editVals.sRUOuterWallType);
-  bMixedData |= UpdateLEWithSelectionValue(leEnvironmentFloorType, p->editVals.sEnvironmentFloorType);
-  bMixedData |= UpdateLEWithSelectionValue(leSignType, p->editVals.sSignType);
-  bMixedData |= UpdateCBWithSelectionValue(cbSignType, p->editVals.sSignType);
-  bMixedData |= UpdateLEWithSelectionValue(leSignHorizOffset, p->editVals.sSignHorizOffset);
-  bMixedData |= UpdateLEWithSelectionValue(leSignVertOffset, p->editVals.sSignVertOffset);
-  bMixedData |= UpdateLEWithSelectionValue(leSignYaw, p->editVals.sSignYaw);
-  bMixedData |= UpdateLEWithSelectionValue(leSignPitch, p->editVals.sSignPitch);
-  bMixedData |= UpdateLEWithSelectionValue(leSignRoll, p->editVals.sSignRoll);
-  bMixedData |= UpdateLEWithSelectionValue(leLUOuterWallHOffset, p->editVals.sLUOuterWallHOffset);
-  bMixedData |= UpdateLEWithSelectionValue(leLLOuterWallHOffset, p->editVals.sLLOuterWallHOffset);
-  bMixedData |= UpdateLEWithSelectionValue(leLOuterFloorHOffset, p->editVals.sLOuterFloorHOffset);
-  bMixedData |= UpdateLEWithSelectionValue(leROuterFloorHOffset, p->editVals.sROuterFloorHOffset);
-  bMixedData |= UpdateLEWithSelectionValue(leRLOuterWallHOffset, p->editVals.sRLOuterWallHOffset);
-  bMixedData |= UpdateLEWithSelectionValue(leRUOuterWallHOffset, p->editVals.sRUOuterWallHOffset);
-  bMixedData |= UpdateLEWithSelectionValue(leLUOuterWallHeight, p->editVals.sLUOuterWallHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leLLOuterWallHeight, p->editVals.sLLOuterWallHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leLOuterFloorHeight, p->editVals.sLOuterFloorHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leROuterFloorHeight, p->editVals.sROuterFloorHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leRLOuterWallHeight, p->editVals.sRLOuterWallHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leRUOuterWallHeight, p->editVals.sRUOuterWallHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leRoofHeight, p->editVals.sRoofHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leDrawOrder1, p->editVals.sDrawOrder1);
-  bMixedData |= UpdateLEWithSelectionValue(leDrawOrder2, p->editVals.sDrawOrder2);
-  bMixedData |= UpdateLEWithSelectionValue(leDrawOrder3, p->editVals.sDrawOrder3);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk37, p->editVals.sUnk37);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk38, p->editVals.sUnk38);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk39, p->editVals.sUnk39);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk40, p->editVals.sUnk40);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk41, p->editVals.sUnk41);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk42, p->editVals.sUnk42);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk43, p->editVals.sUnk43);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk44, p->editVals.sUnk44);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk45, p->editVals.sUnk45);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk46, p->editVals.sUnk46);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk47, p->editVals.sUnk47);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk48, p->editVals.sUnk48);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk49, p->editVals.sUnk49);
-  bMixedData |= UpdateLEWithSelectionValue(leUnk50, p->editVals.sUnk50);
-  bMixedData |= UpdateSignWithSelectionValue(pbSign, ckApplySign, leSign, p->editVals.sSignTexture, p->m_pBld);
-  bMixedData |= UpdateSignWithSelectionValue(pbBack, ckApplyBack, leBack, p->editVals.sBackTexture, p->m_pTex);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntScaleFact, p->editVals.sStuntScaleFactor);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntAngle, p->editVals.sStuntAngle);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntUnk, p->editVals.sStuntUnknown);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntTimingGroup, p->editVals.sStuntTimingGroup);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntHeight, p->editVals.sStuntHeight);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntTimeBulging, p->editVals.sStuntTimeBulging);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntTimeFlat, p->editVals.sStuntTimeFlat);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntExpandContract, p->editVals.sStuntExpandsContracts);
-  bMixedData |= UpdateLEWithSelectionValue(leStuntBulge, p->editVals.sStuntBulge);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLShoulderWidth, p->editVals.sLeftShoulderWidth);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLLaneWidth, p->editVals.sLeftLaneWidth);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leRLaneWidth, p->editVals.sRightLaneWidth);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leRShoulderWidth, p->editVals.sRightShoulderWidth);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLShoulderHeight, p->editVals.sLShoulderHeight);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leRShoulderHeight, p->editVals.sRShoulderHeight);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLength, p->editVals.sLength);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leYaw, p->editVals.sYaw);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(lePitch, p->editVals.sPitch);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leRoll, p->editVals.sRoll);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leAILine1, p->editVals.sAILine1);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leAILine2, p->editVals.sAILine2);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leAILine3, p->editVals.sAILine3);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leAILine4, p->editVals.sAILine4);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leTrackGrip, p->editVals.sTrackGrip);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLeftShoulderGrip, p->editVals.sLeftShoulderGrip);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leRShoulderGrip, p->editVals.sRightShoulderGrip);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk04, p->editVals.sUnk04);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk05, p->editVals.sUnk05);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leAudioAboveTrigger, p->editVals.sAudioAboveTrigger);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leAudioTriggerSpeed, p->editVals.sAudioTriggerSpeed);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leAudioBelowTrigger, p->editVals.sAudioBelowTrigger);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLeftSurfaceType, p->editVals.sLeftSurfaceType);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leCenterSurfaceType, p->editVals.sCenterSurfaceType);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leRightSurfaceType, p->editVals.sRightSurfaceType);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLWallType, p->editVals.sLWallType);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leRWallType, p->editVals.sRWallType);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leRoofType, p->editVals.sRoofType);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLUOuterWallType, p->editVals.sLUOuterWallType);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLLOuterWallType, p->editVals.sLLOuterWallType);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leOuterFloorType, p->editVals.sOuterFloorType);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leRLOuterWallType, p->editVals.sRLOuterWallType);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leRUOuterWallType, p->editVals.sRUOuterWallType);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leEnvironmentFloorType, p->editVals.sEnvironmentFloorType);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leSignType, p->editVals.sSignType);
+  bMixedData |= QtHelpers::UpdateCBWithSelectionValue(cbSignType, p->editVals.sSignType);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leSignHorizOffset, p->editVals.sSignHorizOffset);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leSignVertOffset, p->editVals.sSignVertOffset);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leSignYaw, p->editVals.sSignYaw);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leSignPitch, p->editVals.sSignPitch);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leSignRoll, p->editVals.sSignRoll);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLUOuterWallHOffset, p->editVals.sLUOuterWallHOffset);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLLOuterWallHOffset, p->editVals.sLLOuterWallHOffset);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLOuterFloorHOffset, p->editVals.sLOuterFloorHOffset);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leROuterFloorHOffset, p->editVals.sROuterFloorHOffset);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leRLOuterWallHOffset, p->editVals.sRLOuterWallHOffset);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leRUOuterWallHOffset, p->editVals.sRUOuterWallHOffset);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLUOuterWallHeight, p->editVals.sLUOuterWallHeight);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLLOuterWallHeight, p->editVals.sLLOuterWallHeight);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLOuterFloorHeight, p->editVals.sLOuterFloorHeight);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leROuterFloorHeight, p->editVals.sROuterFloorHeight);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leRLOuterWallHeight, p->editVals.sRLOuterWallHeight);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leRUOuterWallHeight, p->editVals.sRUOuterWallHeight);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leRoofHeight, p->editVals.sRoofHeight);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leDrawOrder1, p->editVals.sDrawOrder1);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leDrawOrder2, p->editVals.sDrawOrder2);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leDrawOrder3, p->editVals.sDrawOrder3);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk37, p->editVals.sUnk37);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk38, p->editVals.sUnk38);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk39, p->editVals.sUnk39);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk40, p->editVals.sUnk40);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk41, p->editVals.sUnk41);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk42, p->editVals.sUnk42);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk43, p->editVals.sUnk43);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk44, p->editVals.sUnk44);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk45, p->editVals.sUnk45);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk46, p->editVals.sUnk46);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk47, p->editVals.sUnk47);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk48, p->editVals.sUnk48);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk49, p->editVals.sUnk49);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk50, p->editVals.sUnk50);
+  bMixedData |= QtHelpers::UpdateSignWithSelectionValue(pbSign, ckApplySign, leSign, p->editVals.sSignTexture, p->m_pBld);
+  bMixedData |= QtHelpers::UpdateSignWithSelectionValue(pbBack, ckApplyBack, leBack, p->editVals.sBackTexture, p->m_pTex);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntScaleFact, p->editVals.sStuntScaleFactor);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntAngle, p->editVals.sStuntAngle);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntUnk, p->editVals.sStuntUnknown);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntTimingGroup, p->editVals.sStuntTimingGroup);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntHeight, p->editVals.sStuntHeight);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntTimeBulging, p->editVals.sStuntTimeBulging);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntTimeFlat, p->editVals.sStuntTimeFlat);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntExpandContract, p->editVals.sStuntExpandsContracts);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntBulge, p->editVals.sStuntBulge);
 
   UpdateTextures(leLeftSurfaceType, lblLSurfaceTex1, lblLSurfaceTex2);
   UpdateTextures(leCenterSurfaceType, lblCSurfaceTex1, lblCSurfaceTex2);

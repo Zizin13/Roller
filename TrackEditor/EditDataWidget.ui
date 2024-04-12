@@ -1,0 +1,2163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>EditDataWidget</class>
+ <widget class="QWidget" name="EditDataWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>510</width>
+    <height>637</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout_11">
+   <item>
+    <widget class="QTabWidget" name="twEditor">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tabGeometry">
+      <attribute name="title">
+       <string>Geometry</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_9">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QPushButton" name="pbApply">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Apply to Selected</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pbCancel">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Revert</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QLabel" name="lblInsert">
+           <property name="text">
+            <string>Insert</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="sbInsert">
+           <property name="minimum">
+            <number>1</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pbInsertBefore">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="toolTip">
+            <string>must set all values marked as &lt;mixed&gt;</string>
+           </property>
+           <property name="text">
+            <string>Before</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pbInsertAfter">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="toolTip">
+            <string>must set all values marked as &lt;mixed&gt;</string>
+           </property>
+           <property name="text">
+            <string>After</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QLabel" name="lblChunkCount">
+           <property name="text">
+            <string>Chunk Count</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="leChunkCount">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QLabel" name="lblSelChunks">
+           <property name="text">
+            <string>Selected Chunks</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="sbSelChunksFrom">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="ckTo">
+           <property name="text">
+            <string>to</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QSpinBox" name="sbSelChunksTo">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pbDelete">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Delete</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QScrollArea" name="scrollAreaChunkEdit">
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarAlwaysOff</enum>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_2">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>466</width>
+            <height>2141</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_8">
+           <item>
+            <layout class="QGridLayout" name="gridLayout_4">
+             <item row="4" column="1">
+              <widget class="QLabel" name="lblPitch">
+               <property name="text">
+                <string>Pitch</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="lblRLW">
+               <property name="text">
+                <string>R lane width</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="2">
+              <widget class="QLineEdit" name="leRoll"/>
+             </item>
+             <item row="8" column="2">
+              <widget class="QLabel" name="lblRSHoulderGrip">
+               <property name="toolTip">
+                <string>0 = full grip, 12 = ice</string>
+               </property>
+               <property name="text">
+                <string>Right shoulder grip</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="0">
+              <widget class="QLineEdit" name="leTrackGrip">
+               <property name="toolTip">
+                <string>0 = full grip, 12 = ice</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QLineEdit" name="lePitch"/>
+             </item>
+             <item row="4" column="2">
+              <widget class="QLabel" name="lblRoll">
+               <property name="text">
+                <string>Roll</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLineEdit" name="leLShoulderHeight"/>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLineEdit" name="leYaw"/>
+             </item>
+             <item row="6" column="2">
+              <widget class="QLabel" name="lblAILine3">
+               <property name="toolTip">
+                <string>&gt;0 = left, 0 = center, &lt;0 = right</string>
+               </property>
+               <property name="text">
+                <string>AI line 3</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="1">
+              <widget class="QLineEdit" name="leAILine2">
+               <property name="toolTip">
+                <string>&gt;0 = left, 0 = center, &lt;0 = right</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="1">
+              <widget class="QLineEdit" name="leLeftShoulderGrip">
+               <property name="toolTip">
+                <string>0 = full grip, 12 = ice</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QLineEdit" name="leRLaneWidth"/>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="leLLaneWidth"/>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="lblAILine1">
+               <property name="toolTip">
+                <string>&gt;0 = left, 0 = center, &lt;0 = right</string>
+               </property>
+               <property name="text">
+                <string>AI line 1</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="QLineEdit" name="leRShoulderWidth"/>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="lblYaw">
+               <property name="text">
+                <string>Yaw</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="2">
+              <widget class="QLineEdit" name="leAILine3">
+               <property name="toolTip">
+                <string>&gt;0 = left, 0 = center, &lt;0 = right</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0">
+              <widget class="QLineEdit" name="leAILine1">
+               <property name="toolTip">
+                <string>&gt;0 = left, 0 = center, &lt;0 = right</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="3">
+              <widget class="QLabel" name="lblAILine4">
+               <property name="toolTip">
+                <string>&gt;0 = left, 0 = center, &lt;0 = right</string>
+               </property>
+               <property name="text">
+                <string>AI line 4</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLineEdit" name="leLShoulderWidth">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_14">
+               <property name="text">
+                <string>L shoulder height</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="3">
+              <widget class="QLineEdit" name="leAILine4">
+               <property name="toolTip">
+                <string>&gt;0 = left, 0 = center, &lt;0 = right</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="2">
+              <widget class="QLineEdit" name="leRShoulderGrip">
+               <property name="toolTip">
+                <string>0 = full grip, 12 = ice</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QLabel" name="lblRShW">
+               <property name="text">
+                <string>R shoulder width</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="lblLLW">
+               <property name="text">
+                <string>L lane width</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QLineEdit" name="leRShoulderHeight"/>
+             </item>
+             <item row="6" column="1">
+              <widget class="QLabel" name="lblAILine2">
+               <property name="toolTip">
+                <string>&gt;0 = left, 0 = center, &lt;0 = right</string>
+               </property>
+               <property name="text">
+                <string>AI line 2</string>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="0">
+              <widget class="QLabel" name="label_27">
+               <property name="text">
+                <string>unknown 4</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="lblLShW">
+               <property name="text">
+                <string>L shoulder width</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QLineEdit" name="leLength"/>
+             </item>
+             <item row="2" column="2">
+              <widget class="QLabel" name="label_16">
+               <property name="text">
+                <string>Length</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="0">
+              <widget class="QLabel" name="lblTrackGrip">
+               <property name="toolTip">
+                <string>0 = full grip, 12 = ice</string>
+               </property>
+               <property name="text">
+                <string>Track grip</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLabel" name="label_15">
+               <property name="text">
+                <string>R shoulder height</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="1">
+              <widget class="QLabel" name="label_25">
+               <property name="toolTip">
+                <string>0 = full grip, 12 = ice</string>
+               </property>
+               <property name="text">
+                <string>Left shoulder grip</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="0">
+              <widget class="QLineEdit" name="leUnk04"/>
+             </item>
+             <item row="10" column="1">
+              <widget class="QLabel" name="label_28">
+               <property name="text">
+                <string>unknown 5</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="1">
+              <widget class="QLineEdit" name="leUnk05"/>
+             </item>
+             <item row="12" column="0">
+              <widget class="QLabel" name="label_29">
+               <property name="text">
+                <string>Audio (above trigger)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="13" column="0">
+              <widget class="QLineEdit" name="leAudioAboveTrigger"/>
+             </item>
+             <item row="12" column="1">
+              <widget class="QLabel" name="label_30">
+               <property name="text">
+                <string>Audio trigger speed</string>
+               </property>
+              </widget>
+             </item>
+             <item row="13" column="1">
+              <widget class="QLineEdit" name="leAudioTriggerSpeed"/>
+             </item>
+             <item row="12" column="2">
+              <widget class="QLabel" name="label_31">
+               <property name="text">
+                <string>Audio (below trigger)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="13" column="2">
+              <widget class="QLineEdit" name="leAudioBelowTrigger"/>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="Line" name="line_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QGridLayout" name="gridLayout_2">
+             <item row="8" column="1">
+              <widget class="QLineEdit" name="leLLOuterWallType"/>
+             </item>
+             <item row="2" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_9">
+               <item>
+                <widget class="QLabel" name="lblRSurfaceTex1">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblRSurfaceTex2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="18" column="1">
+              <widget class="QLabel" name="label_44">
+               <property name="text">
+                <string>Sign pitch</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="0">
+              <widget class="QLabel" name="label_48">
+               <property name="text">
+                <string>L lower outer wall type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="1">
+              <widget class="QLineEdit" name="leRLOuterWallType"/>
+             </item>
+             <item row="3" column="1">
+              <widget class="QLineEdit" name="leLWallType"/>
+             </item>
+             <item row="1" column="3">
+              <widget class="QPushButton" name="pbEditCSurface">
+               <property name="text">
+                <string>Edit Bits</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLineEdit" name="leRightSurfaceType">
+               <property name="toolTip">
+                <string>524703 590082 590082 appears to define a moving ramp or at least a surface the car can fly off of vertically</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_8">
+               <item>
+                <widget class="QLabel" name="lblCSurfaceTex1">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblCSurfaceTex2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="9" column="1">
+              <widget class="QLineEdit" name="leOuterFloorType"/>
+             </item>
+             <item row="19" column="2">
+              <widget class="QLineEdit" name="leSignRoll"/>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="label_46">
+               <property name="text">
+                <string>Roof type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="leCenterSurfaceType">
+               <property name="toolTip">
+                <string>524703 590082 590082 appears to define a moving ramp or at least a surface the car can fly off of vertically</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="label_40">
+               <property name="text">
+                <string>L upper outer wall type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="19" column="1">
+              <widget class="QLineEdit" name="leSignPitch"/>
+             </item>
+             <item row="18" column="2">
+              <widget class="QLabel" name="label_37">
+               <property name="text">
+                <string>Sign roll</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="0">
+              <widget class="QLabel" name="label_33">
+               <property name="text">
+                <string>R upper outer wall type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="lblRightSurfaceType">
+               <property name="toolTip">
+                <string>524703 590082 590082 appears to define a moving ramp or at least a surface the car can fly off of vertically</string>
+               </property>
+               <property name="text">
+                <string>Right Surface Type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="3">
+              <widget class="QPushButton" name="pbEditRSurface">
+               <property name="text">
+                <string>Edit Bits</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="1">
+              <widget class="QLineEdit" name="leRUOuterWallType"/>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="lblCenterSurfaceType">
+               <property name="toolTip">
+                <string>524703 590082 590082 appears to define a moving ramp or at least a surface the car can fly off of vertically</string>
+               </property>
+               <property name="text">
+                <string>Center Surface Type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QLineEdit" name="leRoofType"/>
+             </item>
+             <item row="0" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout">
+               <item>
+                <widget class="QLabel" name="lblLSurfaceTex1">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblLSurfaceTex2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_47">
+               <property name="text">
+                <string>Right wall type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="0">
+              <widget class="QLabel" name="label_36">
+               <property name="text">
+                <string>Environment floor
+type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="lblLeftSurfaceType">
+               <property name="toolTip">
+                <string>524703 590082 590082 appears to define a moving ramp or at least a surface the car can fly off of vertically</string>
+               </property>
+               <property name="text">
+                <string>Left Surface Type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QLineEdit" name="leRWallType"/>
+             </item>
+             <item row="6" column="1">
+              <widget class="QLineEdit" name="leLUOuterWallType"/>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_35">
+               <property name="text">
+                <string>Left wall type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="18" column="0">
+              <widget class="QLabel" name="label_34">
+               <property name="text">
+                <string>Sign yaw</string>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="0">
+              <widget class="QLabel" name="label_42">
+               <property name="text">
+                <string>R lower outer wall type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QPushButton" name="pbEditLSurface">
+               <property name="text">
+                <string>Edit Bits</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="leLeftSurfaceType">
+               <property name="toolTip">
+                <string>524703 590082 590082 appears to define a moving ramp or at least a surface the car can fly off of vertically</string>
+               </property>
+              </widget>
+             </item>
+             <item row="19" column="0">
+              <widget class="QLineEdit" name="leSignYaw"/>
+             </item>
+             <item row="9" column="0">
+              <widget class="QLabel" name="label_45">
+               <property name="text">
+                <string>Outer wall floor type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="14" column="0">
+              <widget class="QLabel" name="label_41">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="toolTip">
+                <string>sign type setting below</string>
+               </property>
+               <property name="text">
+                <string>Sign type</string>
+               </property>
+              </widget>
+             </item>
+             <item row="15" column="0">
+              <widget class="QLineEdit" name="leSignType">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="toolTip">
+                <string>sign type setting below</string>
+               </property>
+              </widget>
+             </item>
+             <item row="15" column="1">
+              <widget class="QLineEdit" name="leSignHorizOffset"/>
+             </item>
+             <item row="14" column="2">
+              <widget class="QLabel" name="label_32">
+               <property name="text">
+                <string>Sign vertical offset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="15" column="2">
+              <widget class="QLineEdit" name="leSignVertOffset"/>
+             </item>
+             <item row="12" column="1">
+              <widget class="QLineEdit" name="leEnvironmentFloorType"/>
+             </item>
+             <item row="3" column="3">
+              <widget class="QPushButton" name="pbEditLWall">
+               <property name="text">
+                <string>Edit Bits</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="3">
+              <widget class="QPushButton" name="pbEditRWall">
+               <property name="text">
+                <string>Edit Bits</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="3">
+              <widget class="QPushButton" name="pbEditRoof">
+               <property name="text">
+                <string>Edit Bits</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="3">
+              <widget class="QPushButton" name="pbEditLLOuterWall">
+               <property name="text">
+                <string>Edit Bits</string>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="3">
+              <widget class="QPushButton" name="pbEditRLOuterWall">
+               <property name="text">
+                <string>Edit Bits</string>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="3">
+              <widget class="QPushButton" name="pbEditEnvirFloor">
+               <property name="text">
+                <string>Edit Bits</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_10">
+               <item>
+                <widget class="QLabel" name="lblLWallTex1">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblLWallTex2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="4" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_12">
+               <item>
+                <widget class="QLabel" name="lblRWallTex1">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblRWallTex2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="5" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_13">
+               <item>
+                <widget class="QLabel" name="lblRoofTex1">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblRoofTex2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="8" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_15">
+               <item>
+                <widget class="QLabel" name="lblLLOuterWallTex1">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblLLOuterWallTex2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="10" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_16">
+               <item>
+                <widget class="QLabel" name="lblRLOuterWallTex1">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblRLOuterWallTex2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="12" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_17">
+               <item>
+                <widget class="QLabel" name="lblEnvirFloorTex1">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblEnvirFloorTex2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="14" column="1">
+              <widget class="QLabel" name="label_49">
+               <property name="text">
+                <string>Sign horizontal offset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_18">
+               <item>
+                <widget class="QLabel" name="lblLUOuterWallTex1">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblLUOuterWallTex2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="6" column="3">
+              <widget class="QPushButton" name="pbEditLUOuterWall">
+               <property name="text">
+                <string>Edit Bits</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_19">
+               <item>
+                <widget class="QLabel" name="lblOuterFloorTex1">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblOuterFloorTex2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="9" column="3">
+              <widget class="QPushButton" name="pbEditOuterFloor">
+               <property name="text">
+                <string>Edit Bits</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="2">
+              <layout class="QHBoxLayout" name="horizontalLayout_20">
+               <item>
+                <widget class="QLabel" name="lblRUOuterWallTex1">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblRUOuterWallTex2">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>64</width>
+                   <height>64</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item row="11" column="3">
+              <widget class="QPushButton" name="pbEditRUOuterWall">
+               <property name="text">
+                <string>Edit Bits</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="Line" name="line">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QGridLayout" name="gridLayout_3">
+             <item row="3" column="1">
+              <widget class="QLabel" name="label_76">
+               <property name="text">
+                <string>Right upper outer
+wall horiz offset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="0">
+              <widget class="QLabel" name="label_69">
+               <property name="text">
+                <string>Wall/roof height</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="2">
+              <widget class="QLabel" name="label_74">
+               <property name="text">
+                <string>unknown 39</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="3">
+              <widget class="QLineEdit" name="leRUOuterWallHeight"/>
+             </item>
+             <item row="11" column="1">
+              <widget class="QLabel" name="label_61">
+               <property name="text">
+                <string>unknown 42</string>
+               </property>
+              </widget>
+             </item>
+             <item row="14" column="2">
+              <widget class="QLineEdit" name="leUnk47"/>
+             </item>
+             <item row="7" column="3">
+              <widget class="QLabel" name="label_79">
+               <property name="text">
+                <string>Draw Order 3</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QLabel" name="label_75">
+               <property name="text">
+                <string>Right outer floor
+horiz offset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="2">
+              <widget class="QLabel" name="label_63">
+               <property name="text">
+                <string>Right lower outer
+wall height</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="3">
+              <widget class="QLabel" name="label_55">
+               <property name="text">
+                <string>Right upper outer
+wall height</string>
+               </property>
+              </widget>
+             </item>
+             <item row="15" column="1">
+              <widget class="QLabel" name="label_80">
+               <property name="text">
+                <string>unknown 50</string>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="2">
+              <widget class="QLineEdit" name="leUnk43"/>
+             </item>
+             <item row="13" column="0">
+              <widget class="QLabel" name="label_67">
+               <property name="text">
+                <string>unknown 45</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_54">
+               <property name="text">
+                <string>Left upper outer
+wall horiz offset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="15" column="0">
+              <widget class="QLabel" name="label_57">
+               <property name="text">
+                <string>unknown 49</string>
+               </property>
+              </widget>
+             </item>
+             <item row="8" column="2">
+              <widget class="QLineEdit" name="leDrawOrder2"/>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_52">
+               <property name="text">
+                <string>Right lower outer
+wall horiz offset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="16" column="1">
+              <widget class="QLineEdit" name="leUnk50"/>
+             </item>
+             <item row="10" column="1">
+              <widget class="QLineEdit" name="leUnk38"/>
+             </item>
+             <item row="6" column="0">
+              <widget class="QLineEdit" name="leLOuterFloorHeight"/>
+             </item>
+             <item row="8" column="0">
+              <widget class="QLineEdit" name="leRoofHeight"/>
+             </item>
+             <item row="8" column="3">
+              <widget class="QLineEdit" name="leDrawOrder3"/>
+             </item>
+             <item row="14" column="1">
+              <widget class="QLineEdit" name="leUnk46"/>
+             </item>
+             <item row="4" column="1">
+              <widget class="QLineEdit" name="leRUOuterWallHOffset"/>
+             </item>
+             <item row="9" column="1">
+              <widget class="QLabel" name="label_81">
+               <property name="text">
+                <string>unknown 38</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLineEdit" name="leLUOuterWallHOffset"/>
+             </item>
+             <item row="10" column="2">
+              <widget class="QLineEdit" name="leUnk39"/>
+             </item>
+             <item row="4" column="3">
+              <widget class="QLineEdit" name="leLLOuterWallHeight"/>
+             </item>
+             <item row="8" column="1">
+              <widget class="QLineEdit" name="leDrawOrder1"/>
+             </item>
+             <item row="9" column="3">
+              <widget class="QLabel" name="label_77">
+               <property name="text">
+                <string>unknown 40</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="leLLOuterWallHOffset">
+               <property name="styleSheet">
+                <string notr="true"/>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="label_72">
+               <property name="text">
+                <string>Left lower outer
+wall horiz offset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="0">
+              <widget class="QLineEdit" name="leUnk41"/>
+             </item>
+             <item row="6" column="1">
+              <widget class="QLineEdit" name="leROuterFloorHeight"/>
+             </item>
+             <item row="7" column="1">
+              <widget class="QLabel" name="label_56">
+               <property name="text">
+                <string>Draw Order 1</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="label_62">
+               <property name="text">
+                <string>Left outer floor
+horiz offset</string>
+               </property>
+              </widget>
+             </item>
+             <item row="12" column="3">
+              <widget class="QLineEdit" name="leUnk44"/>
+             </item>
+             <item row="1" column="2">
+              <widget class="QLineEdit" name="leLOuterFloorHOffset"/>
+             </item>
+             <item row="10" column="3">
+              <widget class="QLineEdit" name="leUnk40"/>
+             </item>
+             <item row="14" column="0">
+              <widget class="QLineEdit" name="leUnk45"/>
+             </item>
+             <item row="14" column="3">
+              <widget class="QLineEdit" name="leUnk48"/>
+             </item>
+             <item row="6" column="2">
+              <widget class="QLineEdit" name="leRLOuterWallHeight"/>
+             </item>
+             <item row="13" column="2">
+              <widget class="QLabel" name="label_71">
+               <property name="text">
+                <string>unknown 47</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="2">
+              <widget class="QLabel" name="label_58">
+               <property name="text">
+                <string>Left upper outer
+wall height</string>
+               </property>
+              </widget>
+             </item>
+             <item row="9" column="0">
+              <widget class="QLabel" name="label_73">
+               <property name="text">
+                <string>unknown 37</string>
+               </property>
+              </widget>
+             </item>
+             <item row="13" column="3">
+              <widget class="QLabel" name="label_64">
+               <property name="text">
+                <string>unknown 48</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QLabel" name="label_68">
+               <property name="text">
+                <string>Right outer floor
+height</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="3">
+              <widget class="QLabel" name="label_59">
+               <property name="text">
+                <string>Left lower outer
+wall height</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="2">
+              <widget class="QLabel" name="label_70">
+               <property name="text">
+                <string>Draw Order 2</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="0">
+              <widget class="QLabel" name="label_66">
+               <property name="text">
+                <string>unknown 41</string>
+               </property>
+              </widget>
+             </item>
+             <item row="11" column="2">
+              <widget class="QLabel" name="label_60">
+               <property name="text">
+                <string>unknown 43</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="QLineEdit" name="leROuterFloorHOffset"/>
+             </item>
+             <item row="13" column="1">
+              <widget class="QLabel" name="label_78">
+               <property name="text">
+                <string>unknown 46</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="2">
+              <widget class="QLineEdit" name="leLUOuterWallHeight"/>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLineEdit" name="leRLOuterWallHOffset"/>
+             </item>
+             <item row="12" column="1">
+              <widget class="QLineEdit" name="leUnk42"/>
+             </item>
+             <item row="16" column="0">
+              <widget class="QLineEdit" name="leUnk49"/>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLabel" name="label_65">
+               <property name="text">
+                <string>Left outer floor
+height</string>
+               </property>
+              </widget>
+             </item>
+             <item row="10" column="0">
+              <widget class="QLineEdit" name="leUnk37"/>
+             </item>
+             <item row="11" column="3">
+              <widget class="QLabel" name="label_53">
+               <property name="text">
+                <string>unknown 44</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="Line" name="line_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QGridLayout" name="layoutSigns">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Sign</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <layout class="QVBoxLayout" name="verticalLayout_5">
+               <item>
+                <spacer name="verticalSpacer_6">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblSignType">
+                 <property name="text">
+                  <string>Type</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="cbSignType">
+                 <property name="editable">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="verticalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item row="0" column="1">
+              <widget class="QWidget" name="widgetSign" native="true">
+               <layout class="QHBoxLayout" name="horizontalLayout_4">
+                <item>
+                 <widget class="QLineEdit" name="leSign"/>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pbSign">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>90</horstretch>
+                    <verstretch>90</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>90</width>
+                    <height>90</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>90</width>
+                    <height>90</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>&lt;none&gt;</string>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>64</width>
+                    <height>64</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="ckApplySign">
+                  <property name="text">
+                   <string>Apply Texture</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_5">
+               <property name="text">
+                <string>Back</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QWidget" name="widgetBack" native="true">
+               <layout class="QHBoxLayout" name="horizontalLayout_7">
+                <item>
+                 <widget class="QLineEdit" name="leBack"/>
+                </item>
+                <item>
+                 <widget class="QPushButton" name="pbBack">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>90</horstretch>
+                    <verstretch>90</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>90</width>
+                    <height>90</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>90</width>
+                    <height>90</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>&lt;none&gt;</string>
+                  </property>
+                  <property name="iconSize">
+                   <size>
+                    <width>64</width>
+                    <height>64</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="ckApplyBack">
+                  <property name="text">
+                   <string>Apply Texture</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <widget class="Line" name="line_5">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Stunt</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QGridLayout" name="gridLayout_6">
+             <item row="3" column="2">
+              <widget class="QLineEdit" name="leStuntTimeBulging"/>
+             </item>
+             <item row="5" column="2">
+              <widget class="QLineEdit" name="leStuntBulge"/>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="lblStuntScaleFact">
+               <property name="toolTip">
+                <string>Increases the length and height of the &quot;ramp&quot;. 1 is a bump, 4 starts breaking textures, 6 is huge vertical wall</string>
+               </property>
+               <property name="text">
+                <string>Scale Factor</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <widget class="QLabel" name="lblStuntTimeFlat">
+               <property name="text">
+                <string>Time Flat</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QLineEdit" name="leStuntHeight"/>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLineEdit" name="leStuntScaleFact">
+               <property name="toolTip">
+                <string>Increases the length and height of the &quot;ramp&quot;. 1 is a bump, 4 starts breaking textures, 6 is huge vertical wall</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="lblStuntAngle">
+               <property name="toolTip">
+                <string>Lower is flatter, higher becomes trapezoid with longer top</string>
+               </property>
+               <property name="text">
+                <string>Angle</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="lblStuntTimingGroup">
+               <property name="toolTip">
+                <string>With otherwise identical config, two bumps with same number move together, with 1 and 2 move oppositely</string>
+               </property>
+               <property name="text">
+                <string>Timing Group</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1">
+              <widget class="QLabel" name="lblStuntExpandContract">
+               <property name="text">
+                <string>Smaller Expands Larger Contracts</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="1">
+              <widget class="QLineEdit" name="leStuntExpandContract"/>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLineEdit" name="leStuntTimingGroup">
+               <property name="toolTip">
+                <string>With otherwise identical config, two bumps with same number move together, with 1 and 2 move oppositely</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="2">
+              <widget class="QLabel" name="lblStuntBulge">
+               <property name="text">
+                <string>Bulge</string>
+               </property>
+              </widget>
+             </item>
+             <item row="5" column="0">
+              <widget class="QLineEdit" name="leStuntTimeFlat"/>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLabel" name="lblStuntHeight">
+               <property name="text">
+                <string>Height</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLabel" name="lblStuntUnk">
+               <property name="text">
+                <string>Unknown</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="leStuntAngle">
+               <property name="toolTip">
+                <string>Lower is flatter, higher becomes trapezoid with longer top</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QLineEdit" name="leStuntUnk"/>
+             </item>
+             <item row="2" column="2">
+              <widget class="QLabel" name="lblStuntTimeBulging">
+               <property name="text">
+                <string>Time Bulging</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1">
+              <spacer name="verticalSpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="6" column="2">
+              <widget class="QPushButton" name="pbDeleteStunt">
+               <property name="text">
+                <string>Delete</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabInfo">
+      <attribute name="title">
+       <string>Global Track Settings</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_14">
+         <item>
+          <widget class="QPushButton" name="pbApplyInfo">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Apply</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pbRevertInfo">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="text">
+            <string>Revert</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_21">
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Floor Depth</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="leFloorDepth"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="Line" name="line_6">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout_7">
+         <item row="0" column="0">
+          <widget class="QLabel" name="lblTex">
+           <property name="text">
+            <string>Texture File</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLabel" name="lblBld">
+           <property name="text">
+            <string>Building File</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLineEdit" name="leTex"/>
+         </item>
+         <item row="1" column="2">
+          <widget class="QLineEdit" name="leBld"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="Line" name="line_7">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="gridLayout_5">
+         <item row="5" column="2">
+          <widget class="QLineEdit" name="leGirlieLaps"/>
+         </item>
+         <item row="4" column="1">
+          <widget class="QLabel" name="lblEasyLaps">
+           <property name="text">
+            <string>Easy Laps</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="QLabel" name="lblTrickyLaps">
+           <property name="text">
+            <string>Tricky Laps</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <widget class="QLineEdit" name="leMapFidelity">
+           <property name="toolTip">
+            <string>smaller is more accurate</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="lblTrackNum">
+           <property name="text">
+            <string>Track Number</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLabel" name="lblMapFidelity">
+           <property name="toolTip">
+            <string>smaller is more accurate</string>
+           </property>
+           <property name="text">
+            <string>Map Fidelity</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLineEdit" name="leImpossibleLaps"/>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="lblMapSize">
+           <property name="toolTip">
+            <string>smaller is larger</string>
+           </property>
+           <property name="text">
+            <string>Map Size</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="QLineEdit" name="leMapSize">
+           <property name="toolTip">
+            <string>smaller is larger</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLineEdit" name="leMediumLaps"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QLineEdit" name="leTrackNum"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="lblImpossibleLaps">
+           <property name="text">
+            <string>Impossible Laps</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="2">
+          <widget class="QLabel" name="lblGirlieLaps">
+           <property name="text">
+            <string>Girlie Laps</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0">
+          <widget class="QLabel" name="lblMediumLaps">
+           <property name="text">
+            <string>Medium Laps</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <widget class="QLabel" name="lblHardLaps">
+           <property name="text">
+            <string>Hard Laps</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLineEdit" name="leEasyLaps"/>
+         </item>
+         <item row="7" column="2">
+          <widget class="QLineEdit" name="leInfoUnknown"/>
+         </item>
+         <item row="6" column="2">
+          <widget class="QLabel" name="lblInfoUnknown">
+           <property name="text">
+            <string>Unknown</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QLineEdit" name="leTrickyLaps"/>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="leHardLaps"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>316</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

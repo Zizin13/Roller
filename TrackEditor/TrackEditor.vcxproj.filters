@@ -61,6 +61,12 @@
     <ClCompile Include="moc\moc_DebugSlider.cpp">
       <Filter>Qt Generated Files\Moc Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EditDataWidget.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="moc\moc_EditDataWidget.cpp">
+      <Filter>Qt Generated Files\Moc Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Track.h">
@@ -94,6 +100,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_EditSeriesDialog.h">
+      <Filter>Qt Generated Files\Ui Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_EditDataWidget.h">
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -135,6 +144,12 @@
       <Filter>Headers</Filter>
     </CustomBuild>
     <CustomBuild Include="DebugSlider.h">
+      <Filter>Headers</Filter>
+    </CustomBuild>
+    <CustomBuild Include="EditDataWidget.ui">
+      <Filter>Resources</Filter>
+    </CustomBuild>
+    <CustomBuild Include="EditDataWidget.h">
       <Filter>Headers</Filter>
     </CustomBuild>
   </ItemGroup>

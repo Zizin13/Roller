@@ -265,6 +265,7 @@
      <string>View</string>
     </property>
     <addaction name="actEditData"/>
+    <addaction name="actGlobalSettings"/>
     <addaction name="separator"/>
     <addaction name="actDebug"/>
    </widget>
@@ -349,6 +350,14 @@
    </property>
    <property name="text">
     <string>Edit Chunk Data</string>
+   </property>
+  </action>
+  <action name="actGlobalSettings">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Global Track Settings</string>
    </property>
   </action>
  </widget>

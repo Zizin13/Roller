@@ -67,6 +67,12 @@
     <ClCompile Include="moc\moc_EditDataWidget.cpp">
       <Filter>Qt Generated Files\Moc Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GlobalTrackSettings.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="moc\moc_GlobalTrackSettings.cpp">
+      <Filter>Qt Generated Files\Moc Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Track.h">
@@ -103,6 +109,9 @@
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_EditDataWidget.h">
+      <Filter>Qt Generated Files\Ui Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_GlobalTrackSettings.h">
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -150,6 +159,12 @@
       <Filter>Resources</Filter>
     </CustomBuild>
     <CustomBuild Include="EditDataWidget.h">
+      <Filter>Headers</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GlobalTrackSettings.ui">
+      <Filter>Resources</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GlobalTrackSettings.h">
       <Filter>Headers</Filter>
     </CustomBuild>
   </ItemGroup>

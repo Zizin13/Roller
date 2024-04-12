@@ -31,11 +31,13 @@ protected slots:
   void OnExportMangled();
   void OnEditSeries();
   void OnEditData();
+  void OnGlobalSettings();
   void OnDebug();
   void OnAbout();
   void OnUnmangleTexturesToggled(bool bChecked);
   void UpdatePreviewSelection();
   void OnEditDataVisibilityChanged(bool bVisible);
+  void OnGlobalSettingsVisibilityChanged(bool bVisible);
 
 signals:
   void LogMsgSig(QString sMsg);

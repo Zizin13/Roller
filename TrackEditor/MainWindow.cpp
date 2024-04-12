@@ -15,6 +15,7 @@
 #include "ChunkEditValues.h"
 #include "TrackPreview.h"
 #include "EditDataWidget.h"
+#include "GlobalTrackSettings.h"
 #include "qdockwidget.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
@@ -44,6 +45,7 @@ public:
   CLogDialog m_logDialog;
 
   QDockWidget *m_pEditDataDockWidget;
+  QDockWidget *m_pGlobalSettingsDockWidget;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -73,6 +75,12 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditDataDockWidget);
   p->m_pEditDataDockWidget->hide();
 
+  p->m_pGlobalSettingsDockWidget = new QDockWidget("Global Track Settings", this);
+  p->m_pGlobalSettingsDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+  p->m_pGlobalSettingsDockWidget->setWidget(new CGlobalTrackSettings(p->m_pGlobalSettingsDockWidget, &p->m_track));
+  addDockWidget(Qt::LeftDockWidgetArea, p->m_pGlobalSettingsDockWidget);
+  p->m_pGlobalSettingsDockWidget->hide();
+
   //signals
   connect(this, &CMainWindow::LogMsgSig, this, &CMainWindow::OnLogMsg, Qt::QueuedConnection);
   connect(actNew, &QAction::triggered, this, &CMainWindow::OnNewTrack);
@@ -83,6 +91,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(actExportMangled, &QAction::triggered, this, &CMainWindow::OnExportMangled);
   connect(actEditSeries, &QAction::triggered, this, &CMainWindow::OnEditSeries);
   connect(actEditData, &QAction::triggered, this, &CMainWindow::OnEditData);
+  connect(actGlobalSettings, &QAction::triggered, this, &CMainWindow::OnGlobalSettings);
   connect(actDebug, &QAction::triggered, this, &CMainWindow::OnDebug);
   connect(actAbout, &QAction::triggered, this, &CMainWindow::OnAbout);
 
@@ -91,6 +100,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(ckUnmangleTextures, &QCheckBox::toggled, this, &CMainWindow::OnUnmangleTexturesToggled);
 
   connect(p->m_pEditDataDockWidget, &QDockWidget::visibilityChanged, this, &CMainWindow::OnEditDataVisibilityChanged);
+  connect(p->m_pGlobalSettingsDockWidget, &QDockWidget::visibilityChanged, this, &CMainWindow::OnGlobalSettingsVisibilityChanged);
 
   //open window
   LoadSettings();
@@ -308,6 +318,17 @@ void CMainWindow::OnEditData()
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::OnGlobalSettings()
+{
+  if (!p->m_pGlobalSettingsDockWidget->isVisible()) {
+    p->m_pGlobalSettingsDockWidget->show();
+  } else {
+    p->m_pGlobalSettingsDockWidget->hide();
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CMainWindow::OnDebug()
 {
   p->m_logDialog.raise();
@@ -344,6 +365,13 @@ void CMainWindow::UpdatePreviewSelection()
 void CMainWindow::OnEditDataVisibilityChanged(bool bVisible)
 {
   actEditData->setChecked(bVisible);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnGlobalSettingsVisibilityChanged(bool bVisible)
+{
+  actGlobalSettings->setChecked(bVisible);
 }
 
 //-------------------------------------------------------------------------------------------------

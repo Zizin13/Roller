@@ -30,26 +30,6 @@ public:
   //selected geometry values
   CChunkEditValues editVals;
 
-  //header values
-  QString sFloorDepth;
-
-  //selected texture values
-  QString sTex;
-  QString sBld;
-  QString sBackVal;
-
-  //selected info values
-  QString sTrackNumber;
-  QString sImpossibleLaps;
-  QString sHardLaps;
-  QString sTrickyLaps;
-  QString sMediumLaps;
-  QString sEasyLaps;
-  QString sGirlieLaps;
-  QString sTrackMapSize;
-  QString sTrackMapFidelity;
-  QString sInfoUnknown;
-
   QString signAy[17] = { "TOWER"
                        , "TOWER 2"
                        , "SIGN 1"
@@ -95,9 +75,7 @@ CEditDataWidget::CEditDataWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTe
   connect(sbSelChunksTo, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksToChanged(int)));
   connect(ckTo, &QCheckBox::toggled, this, &CEditDataWidget::OnToChecked);
   connect(pbApply, &QPushButton::clicked, this, &CEditDataWidget::OnApplyClicked);
-  connect(pbApplyInfo, &QPushButton::clicked, this, &CEditDataWidget::OnApplyInfoClicked);
   connect(pbCancel, &QPushButton::clicked, this, &CEditDataWidget::OnCancelClicked);
-  connect(pbRevertInfo, &QPushButton::clicked, this, &CEditDataWidget::OnCancelInfoClicked);
   connect(pbDelete, &QPushButton::clicked, this, &CEditDataWidget::OnDeleteChunkClicked);
   connect(pbEditLSurface, &QPushButton::clicked, this, &CEditDataWidget::OnEditLSurface);
   connect(pbEditCSurface, &QPushButton::clicked, this, &CEditDataWidget::OnEditCSurface);
@@ -200,20 +178,6 @@ CEditDataWidget::CEditDataWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTe
   connect(leStuntExpandContract, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
   connect(leStuntBulge, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
   connect(pbDeleteStunt, &QPushButton::clicked, this, &CEditDataWidget::OnDeleteStuntClicked);
-
-  connect(leFloorDepth, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateInfoEditMode);
-  connect(leTex, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateInfoEditMode);
-  connect(leBld, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateInfoEditMode);
-  connect(leTrackNum, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateInfoEditMode);
-  connect(leImpossibleLaps, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateInfoEditMode);
-  connect(leHardLaps, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateInfoEditMode);
-  connect(leTrickyLaps, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateInfoEditMode);
-  connect(leMediumLaps, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateInfoEditMode);
-  connect(leEasyLaps, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateInfoEditMode);
-  connect(leGirlieLaps, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateInfoEditMode);
-  connect(leMapSize, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateInfoEditMode);
-  connect(leMapFidelity, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateInfoEditMode);
-  connect(leInfoUnknown, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateInfoEditMode);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -251,8 +215,6 @@ void CEditDataWidget::OnUpdateWindow()
   sbSelChunksTo->blockSignals(false);
   UpdateGeometrySelection();
   UpdateGeometryEditMode();
-  UpdateInfoSelection();
-  UpdateInfoEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -407,43 +369,10 @@ void CEditDataWidget::OnApplyClicked()
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditDataWidget::OnApplyInfoClicked()
-{
-  if (!p->m_pTrack)
-    return;
-
-  p->m_pTrack->m_raceInfo.iTrackNumber = leTrackNum->text().toInt();
-  p->m_pTrack->m_raceInfo.iImpossibleLaps = leImpossibleLaps->text().toInt();
-  p->m_pTrack->m_raceInfo.iHardLaps = leHardLaps->text().toInt();
-  p->m_pTrack->m_raceInfo.iTrickyLaps = leTrickyLaps->text().toInt();
-  p->m_pTrack->m_raceInfo.iMediumLaps = leMediumLaps->text().toInt();
-  p->m_pTrack->m_raceInfo.iEasyLaps = leEasyLaps->text().toInt();
-  p->m_pTrack->m_raceInfo.iGirlieLaps = leGirlieLaps->text().toInt();
-  p->m_pTrack->m_raceInfo.dTrackMapSize = leMapSize->text().toDouble();
-  p->m_pTrack->m_raceInfo.iTrackMapFidelity = leMapFidelity->text().toInt();
-  p->m_pTrack->m_raceInfo.dUnknown = leInfoUnknown->text().toDouble();
-  p->m_pTrack->m_sTextureFile = leTex->text().toLatin1().constData();
-  p->m_pTrack->m_sBuildingFile = leBld->text().toLatin1().constData();
-  p->m_pTrack->m_header.iFloorDepth = leFloorDepth->text().toInt();
-
-  g_pMainWindow->SetUnsavedChanges(true);
-  g_pMainWindow->LogMessage("Applied global track settings");
-  g_pMainWindow->LoadTextures();
-  g_pMainWindow->UpdateWindow();
-}
-//-------------------------------------------------------------------------------------------------
-
 void CEditDataWidget::OnCancelClicked()
 {
   RevertGeometry();
   UpdateGeometryEditMode();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CEditDataWidget::OnCancelInfoClicked()
-{
-  RevertInfo();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -765,30 +694,6 @@ void CEditDataWidget::UpdateGeometryEditMode()
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditDataWidget::UpdateInfoEditMode()
-{
-  bool bEditMode = false;
-  bool bMixedData = false;
-  UpdateLEEditMode(bEditMode, bMixedData, leFloorDepth, p->sFloorDepth);
-  UpdateLEEditMode(bEditMode, bMixedData, leTex, p->sTex);
-  UpdateLEEditMode(bEditMode, bMixedData, leBld, p->sBld);
-  UpdateLEEditMode(bEditMode, bMixedData, leTrackNum, p->sTrackNumber);
-  UpdateLEEditMode(bEditMode, bMixedData, leImpossibleLaps, p->sImpossibleLaps);
-  UpdateLEEditMode(bEditMode, bMixedData, leHardLaps, p->sHardLaps);
-  UpdateLEEditMode(bEditMode, bMixedData, leTrickyLaps, p->sTrickyLaps);
-  UpdateLEEditMode(bEditMode, bMixedData, leMediumLaps, p->sMediumLaps);
-  UpdateLEEditMode(bEditMode, bMixedData, leEasyLaps, p->sEasyLaps);
-  UpdateLEEditMode(bEditMode, bMixedData, leGirlieLaps, p->sGirlieLaps);
-  UpdateLEEditMode(bEditMode, bMixedData, leMapFidelity, p->sTrackMapFidelity);
-  UpdateLEEditMode(bEditMode, bMixedData, leMapSize, p->sTrackMapSize);
-  UpdateLEEditMode(bEditMode, bMixedData, leInfoUnknown, p->sInfoUnknown);
-
-  pbApplyInfo->setEnabled(bEditMode);
-  pbRevertInfo->setEnabled(bEditMode);
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CEditDataWidget::OnSignClicked()
 {
   QString sValue = leSign->text();
@@ -1070,27 +975,6 @@ void CEditDataWidget::UpdateGeometrySelection()
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditDataWidget::UpdateInfoSelection()
-{
-  p->sFloorDepth = QString::number(p->m_pTrack->m_header.iFloorDepth);
-  p->sTex = p->m_pTrack->m_sTextureFile.c_str();
-  p->sBld = p->m_pTrack->m_sBuildingFile.c_str();
-  p->sTrackNumber = QString::number(p->m_pTrack->m_raceInfo.iTrackNumber);
-  p->sImpossibleLaps = QString::number(p->m_pTrack->m_raceInfo.iImpossibleLaps);
-  p->sHardLaps = QString::number(p->m_pTrack->m_raceInfo.iHardLaps);
-  p->sTrickyLaps = QString::number(p->m_pTrack->m_raceInfo.iTrickyLaps);
-  p->sMediumLaps = QString::number(p->m_pTrack->m_raceInfo.iMediumLaps);
-  p->sEasyLaps = QString::number(p->m_pTrack->m_raceInfo.iEasyLaps);
-  p->sGirlieLaps = QString::number(p->m_pTrack->m_raceInfo.iGirlieLaps);
-  p->sTrackMapSize = QString::number(p->m_pTrack->m_raceInfo.dTrackMapSize, 'f', 2);
-  p->sTrackMapFidelity = QString::number(p->m_pTrack->m_raceInfo.iTrackMapFidelity);
-  p->sInfoUnknown = QString::number(p->m_pTrack->m_raceInfo.dUnknown, 'f', 2);
-
-  RevertInfo();
-}
-
-//-------------------------------------------------------------------------------------------------
-
 bool CEditDataWidget::UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue)
 {
   pLineEdit->blockSignals(true);
@@ -1346,28 +1230,6 @@ void CEditDataWidget::RevertGeometry()
   sbSelChunksFrom->setEnabled(true);
   ckTo->setEnabled(true);
   sbSelChunksTo->setEnabled(ckTo->isChecked());
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CEditDataWidget::RevertInfo()
-{
-  UpdateLEWithSelectionValue(leFloorDepth, p->sFloorDepth);
-  UpdateLEWithSelectionValue(leTex, p->sTex);
-  UpdateLEWithSelectionValue(leBld, p->sBld);
-  UpdateLEWithSelectionValue(leTrackNum, p->sTrackNumber);
-  UpdateLEWithSelectionValue(leImpossibleLaps, p->sImpossibleLaps);
-  UpdateLEWithSelectionValue(leHardLaps, p->sHardLaps);
-  UpdateLEWithSelectionValue(leTrickyLaps, p->sTrickyLaps);
-  UpdateLEWithSelectionValue(leMediumLaps, p->sMediumLaps);
-  UpdateLEWithSelectionValue(leEasyLaps, p->sEasyLaps);
-  UpdateLEWithSelectionValue(leGirlieLaps, p->sGirlieLaps);
-  UpdateLEWithSelectionValue(leMapSize, p->sTrackMapSize);
-  UpdateLEWithSelectionValue(leMapFidelity, p->sTrackMapFidelity);
-  UpdateLEWithSelectionValue(leInfoUnknown, p->sInfoUnknown);
-
-  pbApplyInfo->setEnabled(false);
-  pbRevertInfo->setEnabled(false);
 }
 
 //-------------------------------------------------------------------------------------------------

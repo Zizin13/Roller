@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>GlobalTrackSettings</class>
+ <widget class="QWidget" name="GlobalTrackSettings">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>558</width>
+    <height>581</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_14">
+     <item>
+      <widget class="QPushButton" name="pbApplyInfo">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Apply</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbRevertInfo">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Revert</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_21">
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Floor Depth</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="leFloorDepth"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="Line" name="line_6">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout_7">
+     <item row="0" column="0">
+      <widget class="QLabel" name="lblTex">
+       <property name="text">
+        <string>Texture File</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="lblBld">
+       <property name="text">
+        <string>Building File</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLineEdit" name="leTex"/>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLineEdit" name="leBld"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="Line" name="line_7">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QGridLayout" name="gridLayout_5">
+     <item row="5" column="2">
+      <widget class="QLineEdit" name="leGirlieLaps"/>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLabel" name="lblEasyLaps">
+       <property name="text">
+        <string>Easy Laps</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLabel" name="lblTrickyLaps">
+       <property name="text">
+        <string>Tricky Laps</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLineEdit" name="leMapFidelity">
+       <property name="toolTip">
+        <string>smaller is more accurate</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="lblTrackNum">
+       <property name="text">
+        <string>Track Number</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLabel" name="lblMapFidelity">
+       <property name="toolTip">
+        <string>smaller is more accurate</string>
+       </property>
+       <property name="text">
+        <string>Map Fidelity</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLineEdit" name="leImpossibleLaps"/>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="lblMapSize">
+       <property name="toolTip">
+        <string>smaller is larger</string>
+       </property>
+       <property name="text">
+        <string>Map Size</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLineEdit" name="leMapSize">
+       <property name="toolTip">
+        <string>smaller is larger</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLineEdit" name="leMediumLaps"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLineEdit" name="leTrackNum"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="lblImpossibleLaps">
+       <property name="text">
+        <string>Impossible Laps</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="QLabel" name="lblGirlieLaps">
+       <property name="text">
+        <string>Girlie Laps</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="lblMediumLaps">
+       <property name="text">
+        <string>Medium Laps</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="lblHardLaps">
+       <property name="text">
+        <string>Hard Laps</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QLineEdit" name="leEasyLaps"/>
+     </item>
+     <item row="7" column="2">
+      <widget class="QLineEdit" name="leInfoUnknown"/>
+     </item>
+     <item row="6" column="2">
+      <widget class="QLabel" name="lblInfoUnknown">
+       <property name="text">
+        <string>Unknown</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QLineEdit" name="leTrickyLaps"/>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="leHardLaps"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_4">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>316</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

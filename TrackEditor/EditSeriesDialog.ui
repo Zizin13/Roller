@@ -1,28 +1,52 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>EditSeriesDialog</class>
- <widget class="QDialog" name="EditSeriesDialog">
+ <widget class="QWidget" name="EditSeriesDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>100</height>
+    <width>266</width>
+    <height>269</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Edit series</string>
+   <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QPushButton" name="pbApply">
+       <property name="text">
+        <string>Apply</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
    <item>
     <layout class="QGridLayout" name="gridLayout1">
      <item row="0" column="0">
       <widget class="QLabel" name="lblStartChunk">
-       <property name="text">
-        <string>Start chunk</string>
-       </property>
        <property name="toolTip">
         <string>Index of start geometry chunk</string>
+       </property>
+       <property name="text">
+        <string>Start chunk</string>
        </property>
       </widget>
      </item>
@@ -38,11 +62,11 @@
      </item>
      <item row="0" column="1">
       <widget class="QLabel" name="lblEndChunk">
-       <property name="text">
-        <string>End chunk</string>
-       </property>
        <property name="toolTip">
         <string>Index of end geometry chunk</string>
+       </property>
+       <property name="text">
+        <string>End chunk</string>
        </property>
       </widget>
      </item>
@@ -58,11 +82,11 @@
      </item>
      <item row="0" column="2">
       <widget class="QLabel" name="lblInterval">
-       <property name="text">
-        <string>Interval</string>
-       </property>
        <property name="toolTip">
         <string>Distance between geometry chunks included in this series</string>
+       </property>
+       <property name="text">
+        <string>Interval</string>
        </property>
       </widget>
      </item>
@@ -82,11 +106,11 @@
     <layout class="QGridLayout" name="gridLayout2">
      <item row="0" column="0">
       <widget class="QLabel" name="lblField">
-       <property name="text">
-        <string>Field</string>
-       </property>
        <property name="toolTip">
         <string>Field of geometry chunks to modify</string>
+       </property>
+       <property name="text">
+        <string>Field</string>
        </property>
       </widget>
      </item>
@@ -103,11 +127,11 @@
     <layout class="QGridLayout" name="gridLayout3">
      <item row="0" column="4">
       <widget class="QLabel" name="lblStartValue">
-       <property name="text">
-        <string>Start value</string>
-       </property>
        <property name="toolTip">
         <string>Initial field value (default 0)</string>
+       </property>
+       <property name="text">
+        <string>Start value</string>
        </property>
       </widget>
      </item>
@@ -116,11 +140,11 @@
      </item>
      <item row="0" column="5">
       <widget class="QLabel" name="lblEndValue">
-       <property name="text">
-        <string>End value</string>
-       </property>
        <property name="toolTip">
         <string>Field value to approach (optional)</string>
+       </property>
+       <property name="text">
+        <string>End value</string>
        </property>
       </widget>
      </item>
@@ -129,11 +153,11 @@
      </item>
      <item row="0" column="6">
       <widget class="QLabel" name="lblIncrement">
-       <property name="text">
-        <string>Increment</string>
-       </property>
        <property name="toolTip">
         <string>Amount to alter field value each iteration (optional)</string>
+       </property>
+       <property name="text">
+        <string>Increment</string>
        </property>
       </widget>
      </item>
@@ -143,35 +167,17 @@
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pbApply">
-       <property name="text">
-        <string>Apply</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pbCancel">
-       <property name="text">
-        <string>Cancel</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
   </layout>
  </widget>

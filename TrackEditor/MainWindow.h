@@ -38,6 +38,7 @@ protected slots:
   void UpdatePreviewSelection();
   void OnEditDataVisibilityChanged(bool bVisible);
   void OnGlobalSettingsVisibilityChanged(bool bVisible);
+  void OnEditSeriesVisibilityChanged(bool bVisible);
 
 signals:
   void LogMsgSig(QString sMsg);
@@ -48,7 +49,6 @@ private:
   void LoadSettings();
   void SaveSettings();
   bool SaveChangesAndContinue();
-  template <typename T> void ApplySeriesToGeometry(int iStartChunk, int iEndChunk, int iInterval, int iField, T tStartValue, T tEndValue, T tIncrement);
 
   CMainWindowPrivate *p;
   bool m_bUnsavedChanges;

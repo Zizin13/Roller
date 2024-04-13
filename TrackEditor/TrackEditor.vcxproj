@@ -156,11 +156,13 @@ exit 1</Command>
   <ItemGroup>
     <ClCompile Include="ChunkEditValues.cpp" />
     <ClCompile Include="DebugSlider.cpp" />
+    <ClCompile Include="DisplaySettings.cpp" />
     <ClCompile Include="EditDataWidget.cpp" />
     <ClCompile Include="EditSeriesDialog.cpp" />
     <ClCompile Include="EditSurfaceDialog.cpp" />
     <ClCompile Include="GlobalTrackSettings.cpp" />
     <ClCompile Include="moc\moc_DebugSlider.cpp" />
+    <ClCompile Include="moc\moc_DisplaySettings.cpp" />
     <ClCompile Include="moc\moc_EditDataWidget.cpp" />
     <ClCompile Include="moc\moc_GlobalTrackSettings.cpp" />
     <ClCompile Include="moc\moc_TrackPreview.cpp" />
@@ -267,7 +269,18 @@ exit 1</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
+    <CustomBuild Include="DisplaySettings.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC'ing %(Filename).h...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MOC'ing %(Filename).h...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">moc\moc_%(Filename).cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
     <ClInclude Include="QtHelpers.h" />
+    <ClInclude Include="ui\ui_DisplaySettings.h" />
     <ClInclude Include="ui\ui_EditDataWidget.h" />
     <ClInclude Include="ui\ui_EditSurfaceDialog.h" />
     <ClInclude Include="ui\ui_EditSeriesDialog.h" />
@@ -380,6 +393,17 @@ exit 1</Command>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="GlobalTrackSettings.ui">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UIC'ing %(Filename).ui...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UIC'ing %(Filename).ui...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RootDir)%(Directory)ui\ui_%(Filename).h;%(Outputs)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(RootDir)%(Directory)ui\ui_%(Filename).h;%(Outputs)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="DisplaySettings.ui">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>

@@ -17,6 +17,7 @@
 #include "EditDataWidget.h"
 #include "GlobalTrackSettings.h"
 #include "qdockwidget.h"
+#include "DisplaySettings.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
 #endif
@@ -47,6 +48,7 @@ public:
   QDockWidget *m_pEditDataDockWidget;
   QDockWidget *m_pGlobalSettingsDockWidget;
   QDockWidget *m_pEditSeriesDockWidget;
+  QDockWidget *m_pDisplaySettingsDockWidget;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -88,6 +90,12 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditSeriesDockWidget);
   p->m_pEditSeriesDockWidget->hide();
 
+  p->m_pDisplaySettingsDockWidget = new QDockWidget("Display Settings", this);
+  p->m_pDisplaySettingsDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+  p->m_pDisplaySettingsDockWidget->setWidget(new CDisplaySettings(p->m_pDisplaySettingsDockWidget, openGLWidget));
+  addDockWidget(Qt::RightDockWidgetArea, p->m_pDisplaySettingsDockWidget);
+  p->m_pDisplaySettingsDockWidget->hide();
+
   //signals
   connect(this, &CMainWindow::LogMsgSig, this, &CMainWindow::OnLogMsg, Qt::QueuedConnection);
   connect(actNew, &QAction::triggered, this, &CMainWindow::OnNewTrack);
@@ -99,20 +107,19 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(actEditSeries, &QAction::triggered, this, &CMainWindow::OnEditSeries);
   connect(actEditData, &QAction::triggered, this, &CMainWindow::OnEditData);
   connect(actGlobalSettings, &QAction::triggered, this, &CMainWindow::OnGlobalSettings);
+  connect(actDisplaySettings, &QAction::triggered, this, &CMainWindow::OnDisplaySettings);
   connect(actDebug, &QAction::triggered, this, &CMainWindow::OnDebug);
   connect(actAbout, &QAction::triggered, this, &CMainWindow::OnAbout);
 
-  connect(ckShowSurface, &QCheckBox::toggled, this, &CMainWindow::UpdatePreviewSelection);
-  connect(ckShowWireframe, &QCheckBox::toggled, this, &CMainWindow::UpdatePreviewSelection);
   connect(ckUnmangleTextures, &QCheckBox::toggled, this, &CMainWindow::OnUnmangleTexturesToggled);
 
   connect(p->m_pEditDataDockWidget, &QDockWidget::visibilityChanged, this, &CMainWindow::OnEditDataVisibilityChanged);
   connect(p->m_pGlobalSettingsDockWidget, &QDockWidget::visibilityChanged, this, &CMainWindow::OnGlobalSettingsVisibilityChanged);
   connect(p->m_pEditSeriesDockWidget, &QDockWidget::visibilityChanged, this, &CMainWindow::OnEditSeriesVisibilityChanged);
+  connect(p->m_pDisplaySettingsDockWidget, &QDockWidget::visibilityChanged, this, &CMainWindow::OnDisplaySettingsVisibilityChanged);
 
   //open window
   LoadSettings();
-  UpdatePreviewSelection();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -299,6 +306,17 @@ void CMainWindow::OnEditSeries()
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::OnDisplaySettings()
+{
+  if (!p->m_pDisplaySettingsDockWidget->isVisible()) {
+    p->m_pDisplaySettingsDockWidget->show();
+  } else {
+    p->m_pDisplaySettingsDockWidget->hide();
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CMainWindow::OnEditData()
 {
   if (!p->m_pEditDataDockWidget->isVisible()) {
@@ -347,13 +365,6 @@ void CMainWindow::OnUnmangleTexturesToggled(bool bChecked)
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::UpdatePreviewSelection()
-{
-  openGLWidget->ShowModels(ckShowSurface->isChecked(), ckShowWireframe->isChecked());
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CMainWindow::OnEditDataVisibilityChanged(bool bVisible)
 {
   actEditData->setChecked(bVisible);
@@ -371,6 +382,13 @@ void CMainWindow::OnGlobalSettingsVisibilityChanged(bool bVisible)
 void CMainWindow::OnEditSeriesVisibilityChanged(bool bVisible)
 {
   actEditSeries->setChecked(bVisible);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnDisplaySettingsVisibilityChanged(bool bVisible)
+{
+  actDisplaySettings->setChecked(bVisible);
 }
 
 //-------------------------------------------------------------------------------------------------

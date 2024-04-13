@@ -14,7 +14,7 @@ Camera::Camera()
 {
   m_position.x = 4.0f;
   m_position.z = 4.0f;
-  m_position.y = -3.0f;
+  m_position.y = 3.0f;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -26,7 +26,7 @@ void Camera::MouseUpdate(const glm::vec2 &newMousePos)
     m_oldMousePos = newMousePos;
     return;
   }
-  const float ROTATIONAL_SPEED = 0.3f;
+  const float ROTATIONAL_SPEED = -0.3f;
   m_strafeDirection = glm::cross(m_viewDirection, m_UP);
   glm::mat4 rotator = glm::rotate(glm::radians(mouseDelta.x * ROTATIONAL_SPEED), m_UP) *
     glm::rotate(glm::radians(mouseDelta.y * ROTATIONAL_SPEED), m_strafeDirection);
@@ -60,28 +60,28 @@ void Camera::MoveBackward()
 
 void Camera::StrafeLeft()
 {
-  m_position += MOVEMENT_SPEED * m_strafeDirection;
+  m_position -= MOVEMENT_SPEED * m_strafeDirection;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void Camera::StrafeRight()
 {
-  m_position -= MOVEMENT_SPEED * m_strafeDirection;
+  m_position += MOVEMENT_SPEED * m_strafeDirection;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void Camera::MoveUp()
 {
-  m_position -= MOVEMENT_SPEED * m_UP;
+  m_position += MOVEMENT_SPEED * m_UP;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void Camera::MoveDown()
 {
-  m_position += MOVEMENT_SPEED * m_UP;
+  m_position -= MOVEMENT_SPEED * m_UP;
 }
 
 //-------------------------------------------------------------------------------------------------

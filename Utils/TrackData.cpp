@@ -532,9 +532,9 @@ tVertex *CTrackData::MakeVertsCenterline(uint32 &numVertices)
     float fLen = (float)m_chunkAy[i].iLength / fScale;
     glm::vec3 nextChunkBase = glm::vec3(1, 0, 0);
 
-    glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, -1.0f, 0.0f));
+    glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::vec3 nextChunkYawed = glm::vec3(yawMat * glm::vec4(nextChunkBase, 1.0f));
-    glm::vec3 pitchAxis = glm::cross(nextChunkYawed, glm::vec3(0.0f, -1.0f, 0.0f));
+    glm::vec3 pitchAxis = glm::cross(nextChunkYawed, glm::vec3(0.0f, 1.0f, 0.0f));
 
     glm::mat4 pitchMat = glm::rotate(glm::radians((float)m_chunkAy[i].dPitch), pitchAxis);
     glm::vec3 nextChunkPitched = glm::vec3(pitchMat * glm::vec4(nextChunkYawed, 1.0f));
@@ -617,9 +617,9 @@ tVertex *CTrackData::MakeVertsSurface(uint32 &numVertices)
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
     glm::vec3 nextChunkBase = glm::vec3(1, 0, 0);
 
-    glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, -1.0f, 0.0f));
+    glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::vec3 nextChunkYawed = glm::vec3(yawMat * glm::vec4(nextChunkBase, 1.0f));
-    glm::vec3 pitchAxis = glm::normalize(glm::cross(nextChunkYawed, glm::vec3(0.0f, -1.0f, 0.0f)));
+    glm::vec3 pitchAxis = glm::normalize(glm::cross(nextChunkYawed, glm::vec3(0.0f, 1.0f, 0.0f)));
 
     glm::mat4 pitchMat = glm::rotate(glm::radians((float)m_chunkAy[i].dPitch), pitchAxis);
     glm::vec3 nextChunkPitched = glm::vec3(pitchMat * glm::vec4(nextChunkYawed, 1.0f));

@@ -636,8 +636,8 @@ tVertex *CTrackData::MakeVertsSurface(uint32 &numVertices)
     glm::mat4 rollMat;
     GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
 
-    vertices[i * uiNumVertsPerChunk + 1].position = center;
-    vertices[i * uiNumVertsPerChunk + 1].color = ShapeGenerator::RandomColor();
+    vertices[i * uiNumVertsPerChunk + 0].position = center;
+    vertices[i * uiNumVertsPerChunk + 0].color = ShapeGenerator::RandomColor();
     //left lane
     glm::vec3 lLane;
     GetLLane(i, center, fScale, pitchAxis, rollMat, lLane);

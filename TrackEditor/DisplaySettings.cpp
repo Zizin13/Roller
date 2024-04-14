@@ -17,14 +17,6 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
 
   ckHighlightSelection->setEnabled(false);
 
-  ckLLaneSurface->setEnabled(false);
-  ckLLaneWireframe->setEnabled(false);
-  ckRLaneSurface->setEnabled(false);
-  ckRLaneWireframe->setEnabled(false);
-  ckLShoulderSurface->setEnabled(false);
-  ckLShoulderWireframe->setEnabled(false);
-  ckRShoulderSurface->setEnabled(false);
-  ckRShoulderWireframe->setEnabled(false);
   ckLWallSurface->setEnabled(false);
   ckLWallWireframe->setEnabled(false);
   ckRWallSurface->setEnabled(false);
@@ -167,7 +159,7 @@ void CDisplaySettings::UpdateAll()
   ckEnvirFloorSurface->blockSignals(false);
   ckEnvirFloorWireframe->blockSignals(false);
 
-  m_pTrackPreview->ShowModels(ckAllSurface->isChecked(), ckAllWireframe->isChecked());
+  UpdatePreview();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -212,7 +204,23 @@ void CDisplaySettings::UpdatePreviewSelection()
   ckAllSurface->blockSignals(false);
   ckAllWireframe->blockSignals(false);
 
-  m_pTrackPreview->ShowModels(ckAllSurface->isChecked(), ckAllWireframe->isChecked());
+  UpdatePreview();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CDisplaySettings::UpdatePreview()
+{
+  uint32 uiShowModels = 0;
+  if (ckLLaneSurface->isChecked())        uiShowModels |= SHOW_LLANE_SURF_MODEL;
+  if (ckLLaneWireframe->isChecked())      uiShowModels |= SHOW_LLANE_WIRE_MODEL;
+  if (ckRLaneSurface->isChecked())        uiShowModels |= SHOW_RLANE_SURF_MODEL;
+  if (ckRLaneWireframe->isChecked())      uiShowModels |= SHOW_RLANE_WIRE_MODEL;
+  if (ckLShoulderSurface->isChecked())    uiShowModels |= SHOW_LSHOULDER_SURF_MODEL;
+  if (ckLShoulderWireframe->isChecked())  uiShowModels |= SHOW_LSHOULDER_WIRE_MODEL;
+  if (ckRShoulderSurface->isChecked())    uiShowModels |= SHOW_RSHOULDER_SURF_MODEL;
+  if (ckRShoulderWireframe->isChecked())  uiShowModels |= SHOW_RSHOULDER_WIRE_MODEL;
+  m_pTrackPreview->ShowModels(uiShowModels);
 }
 
 //-------------------------------------------------------------------------------------------------

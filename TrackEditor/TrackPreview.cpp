@@ -10,6 +10,7 @@
 #include "VertexBuffer.h"
 #include "OpenGLDebug.h"
 #include "Track.h"
+#include "DisplaySettings.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -95,8 +96,7 @@ public:
 
 CTrackPreview::CTrackPreview(QWidget *pParent)
   : QGLWidget(QGLFormat(QGL::SampleBuffers), pParent)
-  , m_bShowSurface(true)
-  , m_bShowWireframe(false)
+  , m_uiShowModels(0)
 {
   p = new CTrackPreviewPrivate;
 }
@@ -133,10 +133,9 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackPreview::ShowModels(bool bShowSurface, bool bShowWireframe)
+void CTrackPreview::ShowModels(uint32 uiShowModels)
 {
-  m_bShowSurface = bShowSurface;
-  m_bShowWireframe = bShowWireframe;
+  m_uiShowModels = uiShowModels;
   repaint();
 }
 
@@ -151,26 +150,22 @@ void CTrackPreview::paintGL()
   glm::mat4 worldToViewMatrix = camera.GetWorldToViewMatrix();
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
-  if (m_bShowSurface 
-      && p->m_pLLane 
-      && p->m_pRLane
-      && p->m_pLShoulder
-      && p->m_pRShoulder) {
+  if (m_uiShowModels & SHOW_LLANE_SURF_MODEL && p->m_pLLane)
     p->m_pLLane->Draw(worldToProjectionMatrix);
-    p->m_pRLane->Draw(worldToProjectionMatrix);
-    p->m_pLShoulder->Draw(worldToProjectionMatrix);
-    p->m_pRShoulder->Draw(worldToProjectionMatrix);
-  }
-  if (m_bShowWireframe 
-      && p->m_pLLaneWireframe 
-      && p->m_pRLaneWireframe
-      && p->m_pLShoulderWireframe
-      && p->m_pRShoulderWireframe) {
+  if (m_uiShowModels & SHOW_LLANE_WIRE_MODEL && p->m_pLLaneWireframe)
     p->m_pLLaneWireframe->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_RLANE_SURF_MODEL && p->m_pRLane)
+    p->m_pRLane->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_RLANE_WIRE_MODEL && p->m_pRLaneWireframe)
     p->m_pRLaneWireframe->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_LSHOULDER_SURF_MODEL && p->m_pLShoulder)
+    p->m_pLShoulder->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_LSHOULDER_WIRE_MODEL && p->m_pLShoulderWireframe)
     p->m_pLShoulderWireframe->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_RSHOULDER_SURF_MODEL && p->m_pRShoulder)
+    p->m_pRShoulder->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_RSHOULDER_WIRE_MODEL && p->m_pRShoulderWireframe)
     p->m_pRShoulderWireframe->Draw(worldToProjectionMatrix);
-  }
 }
 
 //-------------------------------------------------------------------------------------------------

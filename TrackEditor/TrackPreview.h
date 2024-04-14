@@ -2,6 +2,7 @@
 #define _TRACKEDITOR_TRACKPREVIEW_H
 //-------------------------------------------------------------------------------------------------
 #include <QtOpenGL\qgl.h>
+#include "Types.h"
 //-------------------------------------------------------------------------------------------------
 class CTrackPreviewPrivate;
 class CTrack;
@@ -15,7 +16,7 @@ public:
   ~CTrackPreview();
 
   void SetTrack(CTrack *pTrack);
-  void ShowModels(bool bShowSurface, bool bShowWireframe);
+  void ShowModels(uint32 uiShowModels);
 
 protected:
   void initializeGL();
@@ -25,8 +26,7 @@ protected:
 
 private:
   CTrackPreviewPrivate *p;
-  bool m_bShowSurface;
-  bool m_bShowWireframe;
+  uint32 m_uiShowModels;
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -144,6 +144,15 @@ enum eFileSection
   MAP
 };
 //-------------------------------------------------------------------------------------------------
+enum eShapeSection
+{
+  DRIVING_SURFACE = 0,
+  LLANE,
+  RLANE,
+  LSHOULDER,
+  RSHOULDER
+};
+//-------------------------------------------------------------------------------------------------
 class CShader;
 class CShapeData;
 //-------------------------------------------------------------------------------------------------
@@ -157,7 +166,7 @@ public:
   void ClearData();
   bool LoadTrack(const std::string &sFilename, bool bIsMangled);
   CShapeData *MakeTrackCenterline(CShader *pShader);
-  CShapeData *MakeTrackSurface(CShader *pShader, bool bWireframe = false);
+  CShapeData *MakeTrackSurface(CShader *pShader, eShapeSection section, bool bWireframe = false);
 
   static unsigned int GetSignedBitValueFromInt(int iValue);
   static int GetIntValueFromSignedBit(unsigned int uiValue);
@@ -175,6 +184,25 @@ protected:
   tVertex *MakeVertsSurface(uint32 &numVertices);
   uint32 *MakeIndicesSurface(uint32 &numIndices);
   uint32 *MakeIndicesSurfaceWireframe(uint32 &numIndices);
+
+  tVertex *MakeVertsLLane(uint32 &numVertices);
+  tVertex *MakeVertsRLane(uint32 &numVertices);
+  tVertex *MakeVertsLShoulder(uint32 &numVertices);
+  tVertex *MakeVertsRShoulder(uint32 &numVertices);
+
+  uint32 *MakeIndicesSingleSection(uint32 &numIndices);
+  uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices);
+
+  void GetCenter(int i, glm::vec3 prevCenter, float fScale, 
+                 glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched, glm::mat4 &rollMat);
+  void GetLLane(int i, glm::vec3 center, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat,
+                glm::vec3 &lLane);
+  void GetRLane(int i, glm::vec3 center, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat,
+                glm::vec3 &rLane);
+  void GetLShoulder(int i, glm::vec3 lLane, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched, 
+                    glm::vec3 &lShoulder);
+  void GetRShoulder(int i, glm::vec3 rLane, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+                    glm::vec3 &rShoulder);
 
   bool IsNumber(const std::string &str);
   bool ProcessTrackData(const uint8_t *pData, size_t length);

@@ -528,24 +528,18 @@ tVertex *CTrackData::MakeVertsCenterline(uint32 &numVertices)
   numVertices = (uint32)m_chunkAy.size();
   float fScale = 10000.0f;
   tVertex *vertices = new tVertex[numVertices];
+  glm::vec3 prevCenter = glm::vec3(0, 0, 1);
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
     float fLen = (float)m_chunkAy[i].iLength / fScale;
-    glm::vec3 nextChunkBase = glm::vec3(1, 0, 0);
-
-    glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::vec3 nextChunkYawed = glm::vec3(yawMat * glm::vec4(nextChunkBase, 1.0f));
-    glm::vec3 pitchAxis = glm::cross(nextChunkYawed, glm::vec3(0.0f, 1.0f, 0.0f));
-
-    glm::mat4 pitchMat = glm::rotate(glm::radians((float)m_chunkAy[i].dPitch), pitchAxis);
-    glm::vec3 nextChunkPitched = glm::vec3(pitchMat * glm::vec4(nextChunkYawed, 1.0f));
-
-    glm::mat4 translateMat = glm::mat4(1);
-    if (i > 0)
-      translateMat = glm::translate(vertices[i - 1].position);
-    glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
-    glm::vec3 nextChunk = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
-    vertices[i].position = nextChunk;
+    glm::vec3 center;
+    glm::vec3 pitchAxis;
+    glm::vec3 nextChunkPitched;
+    glm::mat4 rollMat;
+    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+    vertices[i].position = center;
     vertices[i].color = ShapeGenerator::RandomColor();
+
+    prevCenter = center;
   }
 
   return vertices;
@@ -572,17 +566,37 @@ uint32 *CTrackData::MakeIndicesCenterline(uint32 &numIndices)
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CTrackData::MakeTrackSurface(CShader *pShader, bool bWireframe)
+CShapeData *CTrackData::MakeTrackSurface(CShader *pShader, eShapeSection section, bool bWireframe)
 {
   uint32 uiNumVerts;
-  struct tVertex *vertices = MakeVertsSurface(uiNumVerts);
+  struct tVertex *vertices = NULL;
+  switch (section) {
+    case DRIVING_SURFACE:
+      vertices = MakeVertsSurface(uiNumVerts);
+      break;
+    case LLANE:
+      vertices = MakeVertsLLane(uiNumVerts);
+      break;
+    case RLANE:
+      vertices = MakeVertsRLane(uiNumVerts);
+      break;
+    case LSHOULDER:
+      vertices = MakeVertsLShoulder(uiNumVerts);
+      break;
+    case RSHOULDER:
+      vertices = MakeVertsRShoulder(uiNumVerts);
+      break;
+  }
   uint32 uiNumIndices;
   uint32 *indices = NULL;
   GLenum drawType = GL_TRIANGLES;
-  if (!bWireframe)
-    indices = MakeIndicesSurface(uiNumIndices);
-  else {
-    indices = MakeIndicesSurfaceWireframe(uiNumIndices);
+  if (!bWireframe) {
+    if (section == DRIVING_SURFACE)
+      indices = MakeIndicesSurface(uiNumIndices);
+    else
+      indices = MakeIndicesSingleSection(uiNumIndices);
+  } else {
+    indices = MakeIndicesSingleSectionWireframe(uiNumIndices);
     drawType = GL_LINES;
   }
 
@@ -614,59 +628,38 @@ tVertex *CTrackData::MakeVertsSurface(uint32 &numVertices)
 
   numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
+  glm::vec3 prevCenter = glm::vec3(0, 0, 1);
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
-    glm::vec3 nextChunkBase = glm::vec3(1, 0, 0);
+    glm::vec3 center;
+    glm::vec3 pitchAxis;
+    glm::vec3 nextChunkPitched;
+    glm::mat4 rollMat;
+    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
 
-    glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::vec3 nextChunkYawed = glm::vec3(yawMat * glm::vec4(nextChunkBase, 1.0f));
-    glm::vec3 pitchAxis = glm::normalize(glm::cross(nextChunkYawed, glm::vec3(0.0f, 1.0f, 0.0f)));
-
-    glm::mat4 pitchMat = glm::rotate(glm::radians((float)m_chunkAy[i].dPitch), pitchAxis);
-    glm::vec3 nextChunkPitched = glm::vec3(pitchMat * glm::vec4(nextChunkYawed, 1.0f));
-
-    glm::mat4 translateMat = glm::mat4(1);
-    if (i > 0)
-      translateMat = glm::translate(vertices[(i - 1) * uiNumVertsPerChunk].position);
-    //center
-    float fLen = (float)m_chunkAy[i].iLength / fScale;
-    glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
-    vertices[i * uiNumVertsPerChunk + 0].position = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
-    vertices[i * uiNumVertsPerChunk + 0].color = ShapeGenerator::RandomColor();
+    vertices[i * uiNumVertsPerChunk + 1].position = center;
+    vertices[i * uiNumVertsPerChunk + 1].color = ShapeGenerator::RandomColor();
     //left lane
-    translateMat = glm::translate(vertices[i * uiNumVertsPerChunk + 0].position); //translate to centerline
-    glm::mat4 rollMat = glm::rotate(glm::radians((float)m_chunkAy[i].dRoll * -1.0f), vertices[i * uiNumVertsPerChunk + 0].position);
-    float fLLen = (float)(m_chunkAy[i].iLeftLaneWidth) / fScale * -1.0f;
-    glm::mat4 scaleMatLeft = glm::scale(glm::vec3(fLLen, fLLen, fLLen));
-    vertices[i * uiNumVertsPerChunk + 1].position = glm::vec3(translateMat * scaleMatLeft * rollMat * glm::vec4(pitchAxis, 1.0f));
+    glm::vec3 lLane;
+    GetLLane(i, center, fScale, pitchAxis, rollMat, lLane);
+    vertices[i * uiNumVertsPerChunk + 1].position = lLane;
     vertices[i * uiNumVertsPerChunk + 1].color = ShapeGenerator::RandomColor();
     //right lane
-    float fRLen = (float)(m_chunkAy[i].iRightLaneWidth) / fScale;
-    glm::mat4 scaleMatRight = glm::scale(glm::vec3(fRLen, fRLen, fRLen));
-    vertices[i * uiNumVertsPerChunk + 2].position = glm::vec3(translateMat * scaleMatRight * rollMat * glm::vec4(pitchAxis, 1.0f));
+    glm::vec3 rLane;
+    GetRLane(i, center, fScale, pitchAxis, rollMat, rLane);
+    vertices[i * uiNumVertsPerChunk + 2].position = rLane;
     vertices[i * uiNumVertsPerChunk + 2].color = ShapeGenerator::RandomColor();
     //left shoulder
-    translateMat = glm::translate(vertices[i * uiNumVertsPerChunk + 1].position); //translate to end of left lane
-    float fLShoulderLen = (float)m_chunkAy[i].iLeftShoulderWidth / fScale * -1.0f;
-    float fLShoulderHeight = (float)m_chunkAy[i].iLeftShoulderHeight / fScale * -1.0f;
-    glm::mat4 scaleMatLeftShoulderWidth = glm::scale(glm::vec3(fLShoulderLen, fLShoulderLen, fLShoulderLen));
-    glm::mat4 scaleMatLeftShoulderHeight = glm::scale(glm::vec3(fLShoulderHeight, fLShoulderHeight, fLShoulderHeight));
-    glm::vec3 lShoulderWidthVec = glm::vec3(scaleMatLeftShoulderWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
-    glm::vec3 normal = glm::normalize(glm::cross(nextChunkPitched, pitchAxis));
-    glm::vec3 lShoulderHeightVec = glm::vec3(scaleMatLeftShoulderHeight * rollMat * glm::vec4(normal, 1.0f));
-    glm::vec3 lShoulderVec = lShoulderWidthVec + lShoulderHeightVec;
-    vertices[i * uiNumVertsPerChunk + 3].position = glm::vec3(translateMat * glm::vec4(lShoulderVec, 1.0f));
+    glm::vec3 lShoulder;
+    GetLShoulder(i, lLane, fScale, pitchAxis, rollMat, nextChunkPitched, lShoulder);
+    vertices[i * uiNumVertsPerChunk + 3].position = lShoulder;
     vertices[i * uiNumVertsPerChunk + 3].color = ShapeGenerator::RandomColor();
     //right shoulder
-    translateMat = glm::translate(vertices[i * uiNumVertsPerChunk + 2].position); //translate to end of right lane
-    float fRShoulderLen = (float)m_chunkAy[i].iRightShoulderWidth / fScale;
-    float fRShoulderHeight = (float)m_chunkAy[i].iRightShoulderHeight / fScale * -1.0f;
-    glm::mat4 scaleMatRightShoulderWidth = glm::scale(glm::vec3(fRShoulderLen, fRShoulderLen, fRShoulderLen));
-    glm::mat4 scaleMatRightShoulderHeight = glm::scale(glm::vec3(fRShoulderHeight, fRShoulderHeight, fRShoulderHeight));
-    glm::vec3 rShoulderWidthVec = glm::vec3(scaleMatRightShoulderWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
-    glm::vec3 rShoulderHeightVec = glm::vec3(scaleMatRightShoulderHeight * rollMat * glm::vec4(normal, 1.0f));
-    glm::vec3 rShoulderVec = rShoulderWidthVec + rShoulderHeightVec;
-    vertices[i * uiNumVertsPerChunk + 4].position = glm::vec3(translateMat * glm::vec4(rShoulderVec, 1.0f));
+    glm::vec3 rShoulder;
+    GetRShoulder(i, rLane, fScale, pitchAxis, rollMat, nextChunkPitched, rShoulder);
+    vertices[i * uiNumVertsPerChunk + 4].position = rShoulder;
     vertices[i * uiNumVertsPerChunk + 4].color = ShapeGenerator::RandomColor();
+
+    prevCenter = center;
   }
 
   return vertices;
@@ -793,6 +786,304 @@ uint32 *CTrackData::MakeIndicesSurfaceWireframe(uint32 &numIndices)
   indices[i * uiNumIndicesPerChunk + 17] = 4;
 
   return indices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+tVertex *CTrackData::MakeVertsLLane(uint32 &numVertices)
+{
+  if (m_chunkAy.empty()) {
+    numVertices = 0;
+    return NULL;
+  }
+
+  uint32 uiNumVertsPerChunk = 2;
+  float fScale = 10000.0f;
+
+  numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
+  tVertex *vertices = new tVertex[numVertices];
+  glm::vec3 prevCenter = glm::vec3(0, 0, 1);
+  for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
+    glm::vec3 center;
+    glm::vec3 pitchAxis;
+    glm::vec3 nextChunkPitched;
+    glm::mat4 rollMat;
+    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+
+    vertices[i * uiNumVertsPerChunk + 1].position = center;
+    vertices[i * uiNumVertsPerChunk + 1].color = ShapeGenerator::RandomColor();
+    //left lane
+    glm::vec3 lLane;
+    GetLLane(i, center, fScale, pitchAxis, rollMat, lLane);
+    vertices[i * uiNumVertsPerChunk + 0].position = lLane;
+    vertices[i * uiNumVertsPerChunk + 0].color = ShapeGenerator::RandomColor();
+
+    prevCenter = center;
+  }
+
+  return vertices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+tVertex *CTrackData::MakeVertsRLane(uint32 &numVertices)
+{
+  if (m_chunkAy.empty()) {
+    numVertices = 0;
+    return NULL;
+  }
+
+  uint32 uiNumVertsPerChunk = 2;
+  float fScale = 10000.0f;
+
+  numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
+  tVertex *vertices = new tVertex[numVertices];
+  glm::vec3 prevCenter = glm::vec3(0, 0, 1);
+  for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
+    glm::vec3 center;
+    glm::vec3 pitchAxis;
+    glm::vec3 nextChunkPitched;
+    glm::mat4 rollMat;
+    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+
+    vertices[i * uiNumVertsPerChunk + 0].position = center;
+    vertices[i * uiNumVertsPerChunk + 0].color = ShapeGenerator::RandomColor();
+
+    //right lane
+    glm::vec3 rLane;
+    GetRLane(i, center, fScale, pitchAxis, rollMat, rLane);
+    vertices[i * uiNumVertsPerChunk + 1].position = rLane;
+    vertices[i * uiNumVertsPerChunk + 1].color = ShapeGenerator::RandomColor();
+
+    prevCenter = center;
+  }
+
+  return vertices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+tVertex *CTrackData::MakeVertsLShoulder(uint32 &numVertices)
+{
+  if (m_chunkAy.empty()) {
+    numVertices = 0;
+    return NULL;
+  }
+
+  uint32 uiNumVertsPerChunk = 2;
+  float fScale = 10000.0f;
+
+  numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
+  tVertex *vertices = new tVertex[numVertices];
+  glm::vec3 prevCenter = glm::vec3(0, 0, 1);
+  for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
+    glm::vec3 center;
+    glm::vec3 pitchAxis;
+    glm::vec3 nextChunkPitched;
+    glm::mat4 rollMat;
+    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+    //left lane
+    glm::vec3 lLane;
+    GetLLane(i, center, fScale, pitchAxis, rollMat, lLane);
+    vertices[i * uiNumVertsPerChunk + 1].position = lLane;
+    vertices[i * uiNumVertsPerChunk + 1].color = ShapeGenerator::RandomColor();
+    //left shoulder
+    glm::vec3 lShoulder;
+    GetLShoulder(i, lLane, fScale, pitchAxis, rollMat, nextChunkPitched, lShoulder);
+    vertices[i * uiNumVertsPerChunk + 0].position = lShoulder;
+    vertices[i * uiNumVertsPerChunk + 0].color = ShapeGenerator::RandomColor();
+
+    prevCenter = center;
+  }
+
+  return vertices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+tVertex *CTrackData::MakeVertsRShoulder(uint32 &numVertices)
+{
+  if (m_chunkAy.empty()) {
+    numVertices = 0;
+    return NULL;
+  }
+
+  uint32 uiNumVertsPerChunk = 2;
+  float fScale = 10000.0f;
+
+  numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
+  tVertex *vertices = new tVertex[numVertices];
+  glm::vec3 prevCenter = glm::vec3(0, 0, 1);
+  for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
+    glm::vec3 center;
+    glm::vec3 pitchAxis;
+    glm::vec3 nextChunkPitched;
+    glm::mat4 rollMat;
+    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+
+    //right lane
+    glm::vec3 rLane;
+    GetRLane(i, center, fScale, pitchAxis, rollMat, rLane);
+    vertices[i * uiNumVertsPerChunk + 0].position = rLane;
+    vertices[i * uiNumVertsPerChunk + 0].color = ShapeGenerator::RandomColor();
+    //right shoulder
+    glm::vec3 rShoulder;
+    GetRShoulder(i, rLane, fScale, pitchAxis, rollMat, nextChunkPitched, rShoulder);
+    vertices[i * uiNumVertsPerChunk + 1].position = rShoulder;
+    vertices[i * uiNumVertsPerChunk + 1].color = ShapeGenerator::RandomColor();
+
+    prevCenter = center;
+  }
+
+  return vertices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+uint32 *CTrackData::MakeIndicesSingleSection(uint32 &numIndices)
+{
+  if (m_chunkAy.empty()) {
+    numIndices = 0;
+    return NULL;
+  }
+
+  uint32 uiNumVertsPerChunk = 2;
+  uint32 uiNumIndicesPerChunk = 6;
+  numIndices = (uint32)m_chunkAy.size() * uiNumIndicesPerChunk;
+  uint32 *indices = new uint32[numIndices];
+  memset(indices, 0, numIndices * sizeof(uint32));
+
+  uint32 i = 0;
+  for (; i < m_chunkAy.size() - 1; i++) {
+    indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 3] = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 4] = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 5] = (i * uiNumVertsPerChunk) + 2;
+  }
+  //final chunk must be tied to first
+  indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 0;
+  indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 1;
+  indices[i * uiNumIndicesPerChunk + 2] = 1;
+  indices[i * uiNumIndicesPerChunk + 3] = (i * uiNumVertsPerChunk) + 0;
+  indices[i * uiNumIndicesPerChunk + 4] = 1;
+  indices[i * uiNumIndicesPerChunk + 5] = 0;
+
+  return indices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+uint32 *CTrackData::MakeIndicesSingleSectionWireframe(uint32 &numIndices)
+{
+  if (m_chunkAy.empty()) {
+    numIndices = 0;
+    return NULL;
+  }
+
+  uint32 uiNumVertsPerChunk = 2;
+  uint32 uiNumIndicesPerChunk = 6;
+  numIndices = (uint32)m_chunkAy.size() * uiNumIndicesPerChunk;
+  uint32 *indices = new uint32[numIndices];
+  memset(indices, 0, numIndices * sizeof(uint32));
+
+  uint32 i = 0;
+  for (; i < m_chunkAy.size() - 1; i++) {
+    indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 3] = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 4] = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 5] = (i * uiNumVertsPerChunk) + 2;
+  }
+  //final chunk must be tied to first
+  indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 1;
+  indices[i * uiNumIndicesPerChunk + 3] = 1;
+  indices[i * uiNumIndicesPerChunk + 4] = (i * uiNumVertsPerChunk) + 0;
+  indices[i * uiNumIndicesPerChunk + 5] = 0;
+
+  return indices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GetCenter(int i, glm::vec3 prevCenter, float fScale, 
+                           glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched, glm::mat4 &rollMat)
+{
+  glm::vec3 nextChunkBase = glm::vec3(0, 0, 1);
+
+  glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, 1.0f, 0.0f));
+  glm::vec3 nextChunkYawed = glm::vec3(yawMat * glm::vec4(nextChunkBase, 1.0f));
+  pitchAxis = glm::normalize(glm::cross(nextChunkYawed, glm::vec3(0.0f, 1.0f, 0.0f)));
+
+  glm::mat4 pitchMat = glm::rotate(glm::radians((float)m_chunkAy[i].dPitch), pitchAxis);
+  nextChunkPitched = glm::vec3(pitchMat * glm::vec4(nextChunkYawed, 1.0f));
+
+  glm::mat4 translateMat = glm::mat4(1);
+  if (i > 0)
+    translateMat = glm::translate(prevCenter);
+  //center
+  float fLen = (float)m_chunkAy[i].iLength / fScale;
+  glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
+  center = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
+  rollMat = glm::rotate(glm::radians((float)m_chunkAy[i].dRoll * -1.0f), center);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GetLLane(int i, glm::vec3 center, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, 
+                          glm::vec3 &lLane)
+{
+  glm::mat4 translateMat = glm::translate(center); //translate to centerline
+  float fLLen = (float)(m_chunkAy[i].iLeftLaneWidth) / fScale * -1.0f;
+  glm::mat4 scaleMatLeft = glm::scale(glm::vec3(fLLen, fLLen, fLLen));
+  lLane = glm::vec3(translateMat * scaleMatLeft * rollMat * glm::vec4(pitchAxis, 1.0f));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GetRLane(int i, glm::vec3 center, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, 
+                          glm::vec3 &rLane)
+{
+  glm::mat4 translateMat = glm::translate(center); //translate to centerline
+  float fRLen = (float)(m_chunkAy[i].iRightLaneWidth) / fScale;
+  glm::mat4 scaleMatRight = glm::scale(glm::vec3(fRLen, fRLen, fRLen));
+  rLane = glm::vec3(translateMat * scaleMatRight * rollMat * glm::vec4(pitchAxis, 1.0f));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GetLShoulder(int i, glm::vec3 lLane, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched, 
+                              glm::vec3 &lShoulder)
+{
+  glm::mat4 translateMat = glm::translate(lLane); //translate to end of left lane
+  float fLShoulderLen = (float)m_chunkAy[i].iLeftShoulderWidth / fScale * -1.0f;
+  float fLShoulderHeight = (float)m_chunkAy[i].iLeftShoulderHeight / fScale * -1.0f;
+  glm::mat4 scaleMatLeftShoulderWidth = glm::scale(glm::vec3(fLShoulderLen, fLShoulderLen, fLShoulderLen));
+  glm::mat4 scaleMatLeftShoulderHeight = glm::scale(glm::vec3(fLShoulderHeight, fLShoulderHeight, fLShoulderHeight));
+  glm::vec3 lShoulderWidthVec = glm::vec3(scaleMatLeftShoulderWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
+  glm::vec3 normal = glm::normalize(glm::cross(nextChunkPitched, pitchAxis));
+  glm::vec3 lShoulderHeightVec = glm::vec3(scaleMatLeftShoulderHeight * rollMat * glm::vec4(normal, 1.0f));
+  glm::vec3 lShoulderVec = lShoulderWidthVec + lShoulderHeightVec;
+  lShoulder = glm::vec3(translateMat * glm::vec4(lShoulderVec, 1.0f));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GetRShoulder(int i, glm::vec3 rLane, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+                              glm::vec3 &rShoulder)
+{
+  glm::mat4 translateMat = glm::translate(rLane); //translate to end of right lane
+  float fRShoulderLen = (float)m_chunkAy[i].iRightShoulderWidth / fScale;
+  float fRShoulderHeight = (float)m_chunkAy[i].iRightShoulderHeight / fScale * -1.0f;
+  glm::mat4 scaleMatRightShoulderWidth = glm::scale(glm::vec3(fRShoulderLen, fRShoulderLen, fRShoulderLen));
+  glm::mat4 scaleMatRightShoulderHeight = glm::scale(glm::vec3(fRShoulderHeight, fRShoulderHeight, fRShoulderHeight));
+  glm::vec3 rShoulderWidthVec = glm::vec3(scaleMatRightShoulderWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
+  glm::vec3 normal = glm::normalize(glm::cross(nextChunkPitched, pitchAxis));
+  glm::vec3 rShoulderHeightVec = glm::vec3(scaleMatRightShoulderHeight * rollMat * glm::vec4(normal, 1.0f));
+  glm::vec3 rShoulderVec = rShoulderWidthVec + rShoulderHeightVec;
+  rShoulder = glm::vec3(translateMat * glm::vec4(rShoulderVec, 1.0f));
 }
 
 //-------------------------------------------------------------------------------------------------

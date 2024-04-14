@@ -1027,7 +1027,7 @@ void CTrackData::GetCenter(int i, glm::vec3 prevCenter, float fScale,
   float fLen = (float)m_chunkAy[i].iLength / fScale;
   glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
   center = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
-  rollMat = glm::rotate(glm::radians((float)m_chunkAy[i].dRoll * -1.0f), center);
+  rollMat = glm::rotate(glm::radians((float)m_chunkAy[i].dRoll * -1.0f), glm::normalize(nextChunkYawed));
 }
 
 //-------------------------------------------------------------------------------------------------

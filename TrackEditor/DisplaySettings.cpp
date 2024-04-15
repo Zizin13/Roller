@@ -15,26 +15,35 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
 
   ckAllSurface->setChecked(true);
 
-  ckHighlightSelection->setEnabled(false);
-
-  ckLWallSurface->setEnabled(false);
-  ckLWallWireframe->setEnabled(false);
-  ckRWallSurface->setEnabled(false);
-  ckRWallWireframe->setEnabled(false);
-  ckRoofSurface->setEnabled(false);
-  ckRoofWireframe->setEnabled(false);
-  ckLUOWallSurface->setEnabled(false);
-  ckLUOWallWireframe->setEnabled(false);
-  ckLLOWallSurface->setEnabled(false);
-  ckLLOWallWireframe->setEnabled(false);
-  ckRUOWallSurface->setEnabled(false);
-  ckRUOWallWireframe->setEnabled(false);
-  ckRLOWallSurface->setEnabled(false);
-  ckRLOWallWireframe->setEnabled(false);
-  ckOWallFloorSurface->setEnabled(false);
-  ckOWallFloorWireframe->setEnabled(false);
-  ckEnvirFloorSurface->setEnabled(false);
-  ckEnvirFloorWireframe->setEnabled(false);
+  ckHighlightSelection->hide();
+  line->hide();
+  lblLWall->hide();
+  ckLWallSurface->hide();
+  ckLWallWireframe->hide();
+  lblRWall->hide();
+  ckRWallSurface->hide();
+  ckRWallWireframe->hide();
+  lblRoof->hide();
+  ckRoofSurface->hide();
+  ckRoofWireframe->hide();
+  lblLUOWall->hide();
+  ckLUOWallSurface->hide();
+  ckLUOWallWireframe->hide();
+  lblLLOWall->hide();
+  ckLLOWallSurface->hide();
+  ckLLOWallWireframe->hide();
+  lblRUOWall->hide();
+  ckRUOWallSurface->hide();
+  ckRUOWallWireframe->hide();
+  lblRLOWall->hide();
+  ckRLOWallSurface->hide();
+  ckRLOWallWireframe->hide();
+  lblOWallFloor->hide();
+  ckOWallFloorSurface->hide();
+  ckOWallFloorWireframe->hide();
+  lblEnvirFloor->hide();
+  ckEnvirFloorSurface->hide();
+  ckEnvirFloorWireframe->hide();
 
   connect(ckAllSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAll);
   connect(ckAllWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAll);

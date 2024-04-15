@@ -175,7 +175,6 @@ exit 1</Command>
     <ClCompile Include="moc\moc_LogDialog.cpp" />
     <ClCompile Include="moc\moc_MainWindow.cpp" />
     <ClCompile Include="moc\moc_TilePicker.cpp" />
-    <ClCompile Include="Palette.cpp" />
     <ClCompile Include="resource.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TilePicker.cpp" />
@@ -296,7 +295,6 @@ exit 1</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
-    <ClInclude Include="Palette.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Texture.h" />
     <CustomBuild Include="TilePicker.h">

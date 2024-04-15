@@ -513,7 +513,8 @@ void CMainWindow::LoadTextures()
   assert(bldLayout->isEmpty());
 
   //load textures
-  bool bPalLoaded = p->m_palette.LoadPalette(m_sTrackFilesFolder + QDir::separator() + "PALETTE.PAL");
+  QString sPal = m_sTrackFilesFolder + QDir::separator() + "PALETTE.PAL";
+  bool bPalLoaded = p->m_palette.LoadPalette(sPal.toLatin1().constData());
   bool bTexLoaded = p->m_tex.LoadTexture(m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sTextureFile.c_str()), p->m_palette, bMangled);
   bool bBldLoaded = p->m_bld.LoadTexture(m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sBuildingFile.c_str()), p->m_palette, bMangled);
   lblPalletteLoaded->setVisible(!bPalLoaded);

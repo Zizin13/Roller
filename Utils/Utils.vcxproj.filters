@@ -53,6 +53,9 @@
     <ClInclude Include="TrackData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Palette.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Unmangler.cpp">
@@ -80,6 +83,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ShapeData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Palette.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

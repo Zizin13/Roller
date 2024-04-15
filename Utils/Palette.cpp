@@ -1,0 +1,77 @@
+#include "Palette.h"
+#include <fstream>
+#include <sstream>
+#include "Unmangler.h"
+//-------------------------------------------------------------------------------------------------
+#if defined(_DEBUG) && defined(IS_WINDOWS)
+  #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
+#endif
+//-------------------------------------------------------------------------------------------------
+CPalette::CPalette()
+{
+
+}
+
+//-------------------------------------------------------------------------------------------------
+
+CPalette::~CPalette()
+{
+
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CPalette::ClearData()
+{
+  m_paletteAy.clear();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CPalette::LoadPalette(const std::string &sFilename)
+{
+  ClearData();
+
+  //TODO logging
+  //if (sFilename.empty()) {
+  //  g_pMainWindow->LogMessage("Palette filename empty: " + sFilename);
+  //  return false;
+  //}
+  //
+  //QFile file(sFilename);
+  //if (!file.open(QIODevice::ReadOnly)) {
+  //  g_pMainWindow->LogMessage("Failed to open palette: " + sFilename);
+  //  return false;
+  //}
+
+  //open file
+  std::ifstream file(sFilename.c_str(), std::ios::binary);
+  file.seekg(0, file.end);
+  size_t length = file.tellg();
+  file.seekg(0, file.beg);
+  if (length <= 0) {
+    //todo logging
+    return false;
+  }
+
+  //read file
+  char *szBuf = new char[length];
+  memset(szBuf, 0, length);
+  file.read(szBuf, length);
+
+  int iLength = (int)length / 3;
+  for (int i = 0; i < iLength; ++i) {
+    int iR = szBuf[i * 3] << 2;
+    int iG = szBuf[i * 3 + 1] << 2;
+    int iB = szBuf[i * 3 + 2] << 2;
+    m_paletteAy.push_back(glm::vec3(iR, iG, iB));
+  }
+
+  file.close();
+
+  //TODO: logging
+  //g_pMainWindow->LogMessage("Loaded palette: " + sFilename);
+  return true;
+}
+
+//-------------------------------------------------------------------------------------------------

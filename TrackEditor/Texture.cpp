@@ -67,9 +67,9 @@ bool CTexture::LoadTexture(const QString &sFilename, const CPalette &palette, bo
     for (int j = 0; j < iPixelsPerTile; ++j) {
       unsigned char byPaletteIndex = baData.constData()[i * iPixelsPerTile + j];
       if (palette.m_paletteAy.size() > byPaletteIndex) {
-        tile.setPixelColor(j % TILE_WIDTH, j / TILE_WIDTH, QColor(palette.m_paletteAy[byPaletteIndex].red(),
-                                                                  palette.m_paletteAy[byPaletteIndex].green(),
-                                                                  palette.m_paletteAy[byPaletteIndex].blue()));
+        tile.setPixelColor(j % TILE_WIDTH, j / TILE_WIDTH, QColor(palette.m_paletteAy[byPaletteIndex].r,
+                                                                  palette.m_paletteAy[byPaletteIndex].g,
+                                                                  palette.m_paletteAy[byPaletteIndex].b));
       } else {
         assert(0);
         g_pMainWindow->LogMessage("Error loading texture " + sFilename + ": palette index out of bounds");

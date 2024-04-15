@@ -50,6 +50,7 @@ public:
   QDockWidget *m_pGlobalSettingsDockWidget;
   QDockWidget *m_pEditSeriesDockWidget;
   QDockWidget *m_pDisplaySettingsDockWidget;
+  CDisplaySettings *m_pDisplaySettings;
   QAction *m_pDebugAction;
 };
 
@@ -93,7 +94,8 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   p->m_pDisplaySettingsDockWidget = new QDockWidget("Display Settings", this);
   p->m_pDisplaySettingsDockWidget->setObjectName("DisplaySettings");
   p->m_pDisplaySettingsDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pDisplaySettingsDockWidget->setWidget(new CDisplaySettings(p->m_pDisplaySettingsDockWidget, openGLWidget));
+  p->m_pDisplaySettings = new CDisplaySettings(p->m_pDisplaySettingsDockWidget, openGLWidget);
+  p->m_pDisplaySettingsDockWidget->setWidget(p->m_pDisplaySettings);
 
   //setup view menu
   menuView->addAction(p->m_pEditDataDockWidget->toggleViewAction());
@@ -375,6 +377,11 @@ void CMainWindow::LoadSettings()
     p->m_pEditSeriesDockWidget->setVisible(false);
     p->m_pDisplaySettingsDockWidget->setVisible(false);
   }
+  if (settings.contains("show_models")) {
+    uint32 uiShowModels = p->m_pDisplaySettings->GetDisplaySettings();
+    uiShowModels = settings.value("show_models", uiShowModels).toUInt();
+    p->m_pDisplaySettings->SetDisplaySettings(uiShowModels);
+  }
 
   show();
 }
@@ -394,6 +401,7 @@ void CMainWindow::SaveSettings()
   settings.setValue("show_global_settings", p->m_pGlobalSettingsDockWidget->isVisible());
   settings.setValue("show_edit_series", p->m_pEditSeriesDockWidget->isVisible());
   settings.setValue("show_display_settings", p->m_pDisplaySettingsDockWidget->isVisible());
+  settings.setValue("show_models", p->m_pDisplaySettings->GetDisplaySettings());
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -2,6 +2,7 @@
 #define _TRACKEDITOR_DISPLAYSETTINGS_H
 //-------------------------------------------------------------------------------------------------
 #include "ui_DisplaySettings.h"
+#include "Types.h"
 //-------------------------------------------------------------------------------------------------
 class CTrackPreview;
 //-------------------------------------------------------------------------------------------------
@@ -22,6 +23,9 @@ class CDisplaySettings : public QWidget, private Ui::DisplaySettings
 public:
   CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPreview);
   ~CDisplaySettings();
+
+  uint32 GetDisplaySettings();
+  void SetDisplaySettings(uint32 uiShowModels);
 
 protected slots:
   void UpdateAll();

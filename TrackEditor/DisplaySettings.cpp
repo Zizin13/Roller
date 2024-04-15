@@ -76,6 +76,92 @@ CDisplaySettings::~CDisplaySettings()
 
 //-------------------------------------------------------------------------------------------------
 
+uint32 CDisplaySettings::GetDisplaySettings()
+{
+  uint32 uiShowModels = 0;
+  if (ckLLaneSurface->isChecked())        uiShowModels |= SHOW_LLANE_SURF_MODEL;
+  if (ckLLaneWireframe->isChecked())      uiShowModels |= SHOW_LLANE_WIRE_MODEL;
+  if (ckRLaneSurface->isChecked())        uiShowModels |= SHOW_RLANE_SURF_MODEL;
+  if (ckRLaneWireframe->isChecked())      uiShowModels |= SHOW_RLANE_WIRE_MODEL;
+  if (ckLShoulderSurface->isChecked())    uiShowModels |= SHOW_LSHOULDER_SURF_MODEL;
+  if (ckLShoulderWireframe->isChecked())  uiShowModels |= SHOW_LSHOULDER_WIRE_MODEL;
+  if (ckRShoulderSurface->isChecked())    uiShowModels |= SHOW_RSHOULDER_SURF_MODEL;
+  if (ckRShoulderWireframe->isChecked())  uiShowModels |= SHOW_RSHOULDER_WIRE_MODEL;
+  return uiShowModels;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels)
+{
+  ckLLaneSurface->blockSignals(true);
+  ckLLaneWireframe->blockSignals(true);
+  ckRLaneSurface->blockSignals(true);
+  ckRLaneWireframe->blockSignals(true);
+  ckLShoulderSurface->blockSignals(true);
+  ckLShoulderWireframe->blockSignals(true);
+  ckRShoulderSurface->blockSignals(true);
+  ckRShoulderWireframe->blockSignals(true);
+  ckLWallSurface->blockSignals(true);
+  ckLWallWireframe->blockSignals(true);
+  ckRWallSurface->blockSignals(true);
+  ckRWallWireframe->blockSignals(true);
+  ckRoofSurface->blockSignals(true);
+  ckRoofWireframe->blockSignals(true);
+  ckLUOWallSurface->blockSignals(true);
+  ckLUOWallWireframe->blockSignals(true);
+  ckLLOWallSurface->blockSignals(true);
+  ckLLOWallWireframe->blockSignals(true);
+  ckRUOWallSurface->blockSignals(true);
+  ckRUOWallWireframe->blockSignals(true);
+  ckRLOWallSurface->blockSignals(true);
+  ckRLOWallWireframe->blockSignals(true);
+  ckOWallFloorSurface->blockSignals(true);
+  ckOWallFloorWireframe->blockSignals(true);
+  ckEnvirFloorSurface->blockSignals(true);
+  ckEnvirFloorWireframe->blockSignals(true);
+
+  ckLLaneSurface->setChecked(       uiShowModels & SHOW_LLANE_SURF_MODEL);
+  ckLLaneWireframe->setChecked(     uiShowModels & SHOW_LLANE_WIRE_MODEL);
+  ckRLaneSurface->setChecked(       uiShowModels & SHOW_RLANE_SURF_MODEL);
+  ckRLaneWireframe->setChecked(     uiShowModels & SHOW_RLANE_WIRE_MODEL);
+  ckLShoulderSurface->setChecked(   uiShowModels & SHOW_LSHOULDER_SURF_MODEL);
+  ckLShoulderWireframe->setChecked( uiShowModels & SHOW_LSHOULDER_WIRE_MODEL);
+  ckRShoulderSurface->setChecked(   uiShowModels & SHOW_RSHOULDER_SURF_MODEL);
+  ckRShoulderWireframe->setChecked( uiShowModels & SHOW_RSHOULDER_WIRE_MODEL);
+
+  ckLLaneSurface->blockSignals(false);
+  ckLLaneWireframe->blockSignals(false);
+  ckRLaneSurface->blockSignals(false);
+  ckRLaneWireframe->blockSignals(false);
+  ckLShoulderSurface->blockSignals(false);
+  ckLShoulderWireframe->blockSignals(false);
+  ckRShoulderSurface->blockSignals(false);
+  ckRShoulderWireframe->blockSignals(false);
+  ckLWallSurface->blockSignals(false);
+  ckLWallWireframe->blockSignals(false);
+  ckRWallSurface->blockSignals(false);
+  ckRWallWireframe->blockSignals(false);
+  ckRoofSurface->blockSignals(false);
+  ckRoofWireframe->blockSignals(false);
+  ckLUOWallSurface->blockSignals(false);
+  ckLUOWallWireframe->blockSignals(false);
+  ckLLOWallSurface->blockSignals(false);
+  ckLLOWallWireframe->blockSignals(false);
+  ckRUOWallSurface->blockSignals(false);
+  ckRUOWallWireframe->blockSignals(false);
+  ckRLOWallSurface->blockSignals(false);
+  ckRLOWallWireframe->blockSignals(false);
+  ckOWallFloorSurface->blockSignals(false);
+  ckOWallFloorWireframe->blockSignals(false);
+  ckEnvirFloorSurface->blockSignals(false);
+  ckEnvirFloorWireframe->blockSignals(false);
+
+  UpdatePreview();
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CDisplaySettings::UpdateAll()
 {
   ckLLaneSurface->blockSignals(true);
@@ -211,15 +297,7 @@ void CDisplaySettings::UpdatePreviewSelection()
 
 void CDisplaySettings::UpdatePreview()
 {
-  uint32 uiShowModels = 0;
-  if (ckLLaneSurface->isChecked())        uiShowModels |= SHOW_LLANE_SURF_MODEL;
-  if (ckLLaneWireframe->isChecked())      uiShowModels |= SHOW_LLANE_WIRE_MODEL;
-  if (ckRLaneSurface->isChecked())        uiShowModels |= SHOW_RLANE_SURF_MODEL;
-  if (ckRLaneWireframe->isChecked())      uiShowModels |= SHOW_RLANE_WIRE_MODEL;
-  if (ckLShoulderSurface->isChecked())    uiShowModels |= SHOW_LSHOULDER_SURF_MODEL;
-  if (ckLShoulderWireframe->isChecked())  uiShowModels |= SHOW_LSHOULDER_WIRE_MODEL;
-  if (ckRShoulderSurface->isChecked())    uiShowModels |= SHOW_RSHOULDER_SURF_MODEL;
-  if (ckRShoulderWireframe->isChecked())  uiShowModels |= SHOW_RSHOULDER_WIRE_MODEL;
+  uint32 uiShowModels = GetDisplaySettings();
   m_pTrackPreview->ShowModels(uiShowModels);
 }
 

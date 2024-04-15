@@ -13,17 +13,16 @@ class QWidget;
 struct tTile;
 //-------------------------------------------------------------------------------------------------
 
-class QtHelpers
+namespace QtHelpers
 {
-public:
-  static bool UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue);
-  static bool UpdateCBWithSelectionValue(QComboBox *pComboBox, const QString &sValue);
-  static bool UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit, const QString &sValue, CTexture *pTex);
-  static void UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit, CTexture *pTex);
-  static void UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, const QString &sValue);
-  static void UpdateCBEditMode(bool &bEdited, bool &bMixedData, QComboBox *pComboBox, const QString &sValue);
-  static void UpdateSignEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, QWidget *pWidget, const QString &sValue);
-  static QImage GetQImageFromTile(const tTile &tile);
+  extern bool UpdateLEWithSelectionValue(QLineEdit *pLineEdit, const QString &sValue);
+  extern bool UpdateCBWithSelectionValue(QComboBox *pComboBox, const QString &sValue);
+  extern bool UpdateSignWithSelectionValue(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit, const QString &sValue, CTexture *pTex);
+  extern void UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCheckbox, QLineEdit *pLineEdit, CTexture *pTex);
+  extern void UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, const QString &sValue);
+  extern void UpdateCBEditMode(bool &bEdited, bool &bMixedData, QComboBox *pComboBox, const QString &sValue);
+  extern void UpdateSignEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, QWidget *pWidget, const QString &sValue);
+  extern QImage GetQImageFromTile(const tTile &tile);
 };
 
 //-------------------------------------------------------------------------------------------------

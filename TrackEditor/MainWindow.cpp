@@ -73,28 +73,24 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   frmBld->hide();
 
   p->m_pEditDataDockWidget = new QDockWidget("Edit Chunk Data", this);
+  p->m_pEditDataDockWidget->setObjectName("EditChunkData");
   p->m_pEditDataDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   p->m_pEditDataDockWidget->setWidget(new CEditDataWidget(p->m_pEditDataDockWidget, &p->m_track, &p->m_tex, &p->m_bld));
-  addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditDataDockWidget);
-  p->m_pEditDataDockWidget->hide();
 
   p->m_pGlobalSettingsDockWidget = new QDockWidget("Global Track Settings", this);
+  p->m_pGlobalSettingsDockWidget->setObjectName("GlobalTrackSettings");
   p->m_pGlobalSettingsDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   p->m_pGlobalSettingsDockWidget->setWidget(new CGlobalTrackSettings(p->m_pGlobalSettingsDockWidget, &p->m_track));
-  addDockWidget(Qt::LeftDockWidgetArea, p->m_pGlobalSettingsDockWidget);
-  p->m_pGlobalSettingsDockWidget->hide();
 
   p->m_pEditSeriesDockWidget = new QDockWidget("Edit Series...", this);
+  p->m_pEditSeriesDockWidget->setObjectName("EditSeries");
   p->m_pEditSeriesDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   p->m_pEditSeriesDockWidget->setWidget(new CEditSeriesDialog(p->m_pEditSeriesDockWidget, &p->m_track));
-  addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditSeriesDockWidget);
-  p->m_pEditSeriesDockWidget->hide();
 
   p->m_pDisplaySettingsDockWidget = new QDockWidget("Display Settings", this);
+  p->m_pDisplaySettingsDockWidget->setObjectName("DisplaySettings");
   p->m_pDisplaySettingsDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   p->m_pDisplaySettingsDockWidget->setWidget(new CDisplaySettings(p->m_pDisplaySettingsDockWidget, openGLWidget));
-  addDockWidget(Qt::RightDockWidgetArea, p->m_pDisplaySettingsDockWidget);
-  p->m_pDisplaySettingsDockWidget->hide();
 
   //signals
   connect(this, &CMainWindow::LogMsgSig, this, &CMainWindow::OnLogMsg, Qt::QueuedConnection);
@@ -126,13 +122,20 @@ CMainWindow::CMainWindow(const QString &sAppPath)
 
 CMainWindow::~CMainWindow()
 {
-  SaveSettings();
-
   //cleanup
   if (p) {
     delete p;
     p = NULL;
   }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::closeEvent(QCloseEvent *pEvent)
+{
+  SaveSettings();
+
+  QMainWindow::closeEvent(pEvent);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -410,6 +413,37 @@ void CMainWindow::LoadSettings()
     resize(QDesktopWidget().availableGeometry(this).size() * 0.8);
   }
 
+  if (settings.contains("show_edit_data")
+      && settings.contains("show_global_settings")
+      && settings.contains("show_edit_series")
+      && settings.contains("show_display_settings")) {
+    bool bShowEditData = false;
+    bool bShowGlobalSettings = false;
+    bool bShowEditSeries = false;
+    bool bShowDisplaySettings = false;
+    bShowEditData = settings.value("show_edit_data", bShowEditData).toBool();
+    bShowGlobalSettings = settings.value("show_global_settings", bShowGlobalSettings).toBool();
+    bShowEditSeries = settings.value("show_edit_series", bShowEditSeries).toBool();
+    bShowDisplaySettings = settings.value("show_display_settings", bShowDisplaySettings).toBool();
+    p->m_pEditDataDockWidget->setVisible(bShowEditData);
+    p->m_pGlobalSettingsDockWidget->setVisible(bShowGlobalSettings);
+    p->m_pEditSeriesDockWidget->setVisible(bShowEditSeries);
+    p->m_pDisplaySettingsDockWidget->setVisible(bShowDisplaySettings);
+    restoreDockWidget(p->m_pEditDataDockWidget);
+    restoreDockWidget(p->m_pGlobalSettingsDockWidget);
+    restoreDockWidget(p->m_pEditSeriesDockWidget);
+    restoreDockWidget(p->m_pDisplaySettingsDockWidget);
+  } else {
+    addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditDataDockWidget);
+    addDockWidget(Qt::LeftDockWidgetArea, p->m_pGlobalSettingsDockWidget);
+    addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditSeriesDockWidget);
+    addDockWidget(Qt::RightDockWidgetArea, p->m_pDisplaySettingsDockWidget);
+    p->m_pEditDataDockWidget->setVisible(false);
+    p->m_pGlobalSettingsDockWidget->setVisible(false);
+    p->m_pEditSeriesDockWidget->setVisible(false);
+    p->m_pDisplaySettingsDockWidget->setVisible(false);
+  }
+
   show();
 }
 
@@ -424,6 +458,10 @@ void CMainWindow::SaveSettings()
   QByteArray state = saveState();
   settings.setValue("window_geometry", geometry);
   settings.setValue("window_state", state);
+  settings.setValue("show_edit_data", p->m_pEditDataDockWidget->isVisible());
+  settings.setValue("show_global_settings", p->m_pGlobalSettingsDockWidget->isVisible());
+  settings.setValue("show_edit_series", p->m_pEditSeriesDockWidget->isVisible());
+  settings.setValue("show_display_settings", p->m_pDisplaySettingsDockWidget->isVisible());
 }
 
 //-------------------------------------------------------------------------------------------------

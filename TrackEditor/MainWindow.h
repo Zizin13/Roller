@@ -21,6 +21,9 @@ public:
   void LoadTextures();
   void UpdateGeometrySelection(int iFrom, int iTo);
 
+protected:
+  void closeEvent(QCloseEvent *pEvent);
+
 protected slots:
   void OnLogMsg(QString sMsg);
   void OnNewTrack();

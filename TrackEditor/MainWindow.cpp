@@ -49,6 +49,7 @@ public:
   QDockWidget *m_pGlobalSettingsDockWidget;
   QDockWidget *m_pEditSeriesDockWidget;
   QDockWidget *m_pDisplaySettingsDockWidget;
+  QAction *m_pDebugAction;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -92,6 +93,15 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   p->m_pDisplaySettingsDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   p->m_pDisplaySettingsDockWidget->setWidget(new CDisplaySettings(p->m_pDisplaySettingsDockWidget, openGLWidget));
 
+  menuView->addAction(p->m_pEditDataDockWidget->toggleViewAction());
+  menuView->addAction(p->m_pEditSeriesDockWidget->toggleViewAction());
+  menuView->addAction(p->m_pGlobalSettingsDockWidget->toggleViewAction());
+  menuView->addAction(p->m_pDisplaySettingsDockWidget->toggleViewAction());
+  menuView->addSeparator();
+  p->m_pDebugAction = new QAction("Debug", menuView);
+  p->m_pDebugAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_G));
+  menuView->addAction(p->m_pDebugAction);
+
   //signals
   connect(this, &CMainWindow::LogMsgSig, this, &CMainWindow::OnLogMsg, Qt::QueuedConnection);
   connect(actNew, &QAction::triggered, this, &CMainWindow::OnNewTrack);
@@ -100,19 +110,10 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(actSaveAs, &QAction::triggered, this, &CMainWindow::OnSaveTrackAs);
   connect(actImportMangled, &QAction::triggered, this, &CMainWindow::OnImportMangled);
   connect(actExportMangled, &QAction::triggered, this, &CMainWindow::OnExportMangled);
-  connect(actEditSeries, &QAction::triggered, this, &CMainWindow::OnEditSeries);
-  connect(actEditData, &QAction::triggered, this, &CMainWindow::OnEditData);
-  connect(actGlobalSettings, &QAction::triggered, this, &CMainWindow::OnGlobalSettings);
-  connect(actDisplaySettings, &QAction::triggered, this, &CMainWindow::OnDisplaySettings);
-  connect(actDebug, &QAction::triggered, this, &CMainWindow::OnDebug);
+  connect(p->m_pDebugAction, &QAction::triggered, this, &CMainWindow::OnDebug);
   connect(actAbout, &QAction::triggered, this, &CMainWindow::OnAbout);
 
   connect(ckUnmangleTextures, &QCheckBox::toggled, this, &CMainWindow::OnUnmangleTexturesToggled);
-
-  connect(p->m_pEditDataDockWidget, &QDockWidget::visibilityChanged, this, &CMainWindow::OnEditDataVisibilityChanged);
-  connect(p->m_pGlobalSettingsDockWidget, &QDockWidget::visibilityChanged, this, &CMainWindow::OnGlobalSettingsVisibilityChanged);
-  connect(p->m_pEditSeriesDockWidget, &QDockWidget::visibilityChanged, this, &CMainWindow::OnEditSeriesVisibilityChanged);
-  connect(p->m_pDisplaySettingsDockWidget, &QDockWidget::visibilityChanged, this, &CMainWindow::OnDisplaySettingsVisibilityChanged);
 
   //open window
   LoadSettings();
@@ -298,50 +299,6 @@ void CMainWindow::OnExportMangled()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::OnEditSeries()
-{
-  if (!p->m_pEditSeriesDockWidget->isVisible()) {
-    p->m_pEditSeriesDockWidget->show();
-  } else {
-    p->m_pEditSeriesDockWidget->hide();
-  }
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnDisplaySettings()
-{
-  if (!p->m_pDisplaySettingsDockWidget->isVisible()) {
-    p->m_pDisplaySettingsDockWidget->show();
-  } else {
-    p->m_pDisplaySettingsDockWidget->hide();
-  }
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnEditData()
-{
-  if (!p->m_pEditDataDockWidget->isVisible()) {
-    p->m_pEditDataDockWidget->show();
-  } else {
-    p->m_pEditDataDockWidget->hide();
-  }
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnGlobalSettings()
-{
-  if (!p->m_pGlobalSettingsDockWidget->isVisible()) {
-    p->m_pGlobalSettingsDockWidget->show();
-  } else {
-    p->m_pGlobalSettingsDockWidget->hide();
-  }
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CMainWindow::OnDebug()
 {
   p->m_logDialog.raise();
@@ -364,34 +321,6 @@ void CMainWindow::OnUnmangleTexturesToggled(bool bChecked)
   (void)(bChecked);
   LoadTextures();
   UpdateWindow();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnEditDataVisibilityChanged(bool bVisible)
-{
-  actEditData->setChecked(bVisible);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnGlobalSettingsVisibilityChanged(bool bVisible)
-{
-  actGlobalSettings->setChecked(bVisible);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnEditSeriesVisibilityChanged(bool bVisible)
-{
-  actEditSeries->setChecked(bVisible);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnDisplaySettingsVisibilityChanged(bool bVisible)
-{
-  actDisplaySettings->setChecked(bVisible);
 }
 
 //-------------------------------------------------------------------------------------------------

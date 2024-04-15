@@ -27,14 +27,14 @@ public:
   CTrackPreviewPrivate()
     : m_pPassThroughShader(NULL)
     , m_pTrack(NULL)
-    , m_pLLane(NULL)
-    , m_pLLaneWireframe(NULL)
-    , m_pRLane(NULL)
-    , m_pRLaneWireframe(NULL)
-    , m_pLShoulder(NULL)
-    , m_pLShoulderWireframe(NULL)
-    , m_pRShoulder(NULL)
-    , m_pRShoulderWireframe(NULL)
+    , m_pLLaneSurf(NULL)
+    , m_pLLaneWire(NULL)
+    , m_pRLaneSurf(NULL)
+    , m_pRLaneWire(NULL)
+    , m_pLShoulderSurf(NULL)
+    , m_pLShoulderWire(NULL)
+    , m_pRShoulderSurf(NULL)
+    , m_pRShoulderWire(NULL)
   {};
   ~CTrackPreviewPrivate()
   {
@@ -46,48 +46,48 @@ public:
   };
   void DeleteModels()
   {
-    if (m_pLLane) {
-      delete m_pLLane;
-      m_pLLane = NULL;
+    if (m_pLLaneSurf) {
+      delete m_pLLaneSurf;
+      m_pLLaneSurf = NULL;
     }
-    if (m_pLLaneWireframe) {
-      delete m_pLLaneWireframe;
-      m_pLLaneWireframe = NULL;
+    if (m_pLLaneWire) {
+      delete m_pLLaneWire;
+      m_pLLaneWire= NULL;
     }
-    if (m_pRLane) {
-      delete m_pRLane;
-      m_pRLane = NULL;
+    if (m_pRLaneSurf) {
+      delete m_pRLaneSurf;
+      m_pRLaneSurf = NULL;
     }
-    if (m_pRLaneWireframe) {
-      delete m_pRLaneWireframe;
-      m_pRLaneWireframe = NULL;
+    if (m_pRLaneWire) {
+      delete m_pRLaneWire;
+      m_pRLaneWire= NULL;
     }
-    if (m_pLShoulder) {
-      delete m_pLShoulder;
-      m_pLShoulder = NULL;
+    if (m_pLShoulderSurf) {
+      delete m_pLShoulderSurf;
+      m_pLShoulderSurf = NULL;
     }
-    if (m_pLShoulderWireframe) {
-      delete m_pLShoulderWireframe;
-      m_pLShoulderWireframe = NULL;
+    if (m_pLShoulderWire) {
+      delete m_pLShoulderWire;
+      m_pLShoulderWire= NULL;
     }
-    if (m_pRShoulder) {
-      delete m_pRShoulder;
-      m_pRShoulder = NULL;
+    if (m_pRShoulderSurf) {
+      delete m_pRShoulderSurf;
+      m_pRShoulderSurf = NULL;
     }
-    if (m_pRShoulderWireframe) {
-      delete m_pRShoulderWireframe;
-      m_pRShoulderWireframe = NULL;
+    if (m_pRShoulderWire) {
+      delete m_pRShoulderWire;
+      m_pRShoulderWire= NULL;
     }
   }
 
-  CShapeData *m_pLLane;
-  CShapeData *m_pLLaneWireframe;
-  CShapeData *m_pRLane;
-  CShapeData *m_pRLaneWireframe;
-  CShapeData *m_pLShoulder;
-  CShapeData *m_pLShoulderWireframe;
-  CShapeData *m_pRShoulder;
-  CShapeData *m_pRShoulderWireframe;
+  CShapeData *m_pLLaneSurf;
+  CShapeData *m_pLLaneWire;
+  CShapeData *m_pRLaneSurf;
+  CShapeData *m_pRLaneWire;
+  CShapeData *m_pLShoulderSurf;
+  CShapeData *m_pLShoulderWire;
+  CShapeData *m_pRShoulderSurf;
+  CShapeData *m_pRShoulderWire;
   CShader *m_pPassThroughShader;
   CTrack *m_pTrack;
 };
@@ -119,14 +119,14 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
   p->DeleteModels();
   p->m_pTrack = pTrack;
   if (p->m_pTrack) {
-    p->m_pLLane = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LLANE);
-    p->m_pLLaneWireframe = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LLANE, true);
-    p->m_pRLane = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RLANE);
-    p->m_pRLaneWireframe = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RLANE, true);
-    p->m_pLShoulder = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LSHOULDER);
-    p->m_pLShoulderWireframe = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LSHOULDER, true);
-    p->m_pRShoulder = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RSHOULDER);
-    p->m_pRShoulderWireframe = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RSHOULDER, true);
+    p->m_pLLaneSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LLANE);
+    p->m_pLLaneWire= p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LLANE, true);
+    p->m_pRLaneSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RLANE);
+    p->m_pRLaneWire = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RLANE, true);
+    p->m_pLShoulderSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LSHOULDER);
+    p->m_pLShoulderWire = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LSHOULDER, true);
+    p->m_pRShoulderSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RSHOULDER);
+    p->m_pRShoulderWire = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RSHOULDER, true);
   }
   repaint();
 }
@@ -150,22 +150,22 @@ void CTrackPreview::paintGL()
   glm::mat4 worldToViewMatrix = camera.GetWorldToViewMatrix();
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
-  if (m_uiShowModels & SHOW_LLANE_SURF_MODEL && p->m_pLLane)
-    p->m_pLLane->Draw(worldToProjectionMatrix);
-  if (m_uiShowModels & SHOW_LLANE_WIRE_MODEL && p->m_pLLaneWireframe)
-    p->m_pLLaneWireframe->Draw(worldToProjectionMatrix);
-  if (m_uiShowModels & SHOW_RLANE_SURF_MODEL && p->m_pRLane)
-    p->m_pRLane->Draw(worldToProjectionMatrix);
-  if (m_uiShowModels & SHOW_RLANE_WIRE_MODEL && p->m_pRLaneWireframe)
-    p->m_pRLaneWireframe->Draw(worldToProjectionMatrix);
-  if (m_uiShowModels & SHOW_LSHOULDER_SURF_MODEL && p->m_pLShoulder)
-    p->m_pLShoulder->Draw(worldToProjectionMatrix);
-  if (m_uiShowModels & SHOW_LSHOULDER_WIRE_MODEL && p->m_pLShoulderWireframe)
-    p->m_pLShoulderWireframe->Draw(worldToProjectionMatrix);
-  if (m_uiShowModels & SHOW_RSHOULDER_SURF_MODEL && p->m_pRShoulder)
-    p->m_pRShoulder->Draw(worldToProjectionMatrix);
-  if (m_uiShowModels & SHOW_RSHOULDER_WIRE_MODEL && p->m_pRShoulderWireframe)
-    p->m_pRShoulderWireframe->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_LLANE_SURF_MODEL && p->m_pLLaneSurf)
+    p->m_pLLaneSurf->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_LLANE_WIRE_MODEL && p->m_pLLaneWire)
+    p->m_pLLaneWire->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_RLANE_SURF_MODEL && p->m_pRLaneSurf)
+    p->m_pRLaneSurf->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_RLANE_WIRE_MODEL && p->m_pRLaneWire)
+    p->m_pRLaneWire->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_LSHOULDER_SURF_MODEL && p->m_pLShoulderSurf)
+    p->m_pLShoulderSurf->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_LSHOULDER_WIRE_MODEL && p->m_pLShoulderWire)
+    p->m_pLShoulderWire->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_RSHOULDER_SURF_MODEL && p->m_pRShoulderSurf)
+    p->m_pRShoulderSurf->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_RSHOULDER_WIRE_MODEL && p->m_pRShoulderWire)
+    p->m_pRShoulderWire->Draw(worldToProjectionMatrix);
 }
 
 //-------------------------------------------------------------------------------------------------

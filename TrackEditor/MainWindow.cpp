@@ -18,6 +18,7 @@
 #include "GlobalTrackSettings.h"
 #include "qdockwidget.h"
 #include "DisplaySettings.h"
+#include "qtextstream.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
 #endif
@@ -73,6 +74,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   frmTex->hide();
   frmBld->hide();
 
+  //setup dock widgets
   p->m_pEditDataDockWidget = new QDockWidget("Edit Chunk Data", this);
   p->m_pEditDataDockWidget->setObjectName("EditChunkData");
   p->m_pEditDataDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
@@ -93,6 +95,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   p->m_pDisplaySettingsDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   p->m_pDisplaySettingsDockWidget->setWidget(new CDisplaySettings(p->m_pDisplaySettingsDockWidget, openGLWidget));
 
+  //setup view menu
   menuView->addAction(p->m_pEditDataDockWidget->toggleViewAction());
   menuView->addAction(p->m_pEditSeriesDockWidget->toggleViewAction());
   menuView->addAction(p->m_pGlobalSettingsDockWidget->toggleViewAction());
@@ -447,40 +450,14 @@ void CMainWindow::UpdateWindow()
   txData->clear();
   
   //stuff data
-  for (int i = 0; i < p->m_track.m_chunkAy.size(); ++i) {
-    txData->appendPlainText(p->m_track.m_chunkAy[i].sString.c_str());
+  std::vector<uint8_t> trackData;
+  p->m_track.GetTrackData(trackData);
+  QString sText;
+  QTextStream stream(&sText);
+  for (int i = 0; i < trackData.size(); ++i) {
+    stream << (char)trackData[i];
   }
-  
-  //stuff data
-  txData->appendPlainText("TEX:" + QString(p->m_track.m_sTextureFile.c_str()));
-  txData->appendPlainText("BLD:" + QString(p->m_track.m_sBuildingFile.c_str()));
-  txData->appendPlainText("\n");
-
-  txData->appendPlainText(QString::number(p->m_track.m_raceInfo.iTrackNumber));
-  char szLine[50];
-  memset(szLine, 0, sizeof(szLine));
-  snprintf(szLine, sizeof(szLine), "%4d %4d %4d %4d %4d %4d",
-           p->m_track.m_raceInfo.iImpossibleLaps, p->m_track.m_raceInfo.iHardLaps, p->m_track.m_raceInfo.iTrickyLaps,
-           p->m_track.m_raceInfo.iMediumLaps, p->m_track.m_raceInfo.iEasyLaps, p->m_track.m_raceInfo.iGirlieLaps);
-  txData->appendPlainText(szLine);
-  memset(szLine, 0, sizeof(szLine));
-  snprintf(szLine, sizeof(szLine), "%.2lf %4d %.2lf",
-           p->m_track.m_raceInfo.dTrackMapSize, p->m_track.m_raceInfo.iTrackMapFidelity, p->m_track.m_raceInfo.dUnknown);
-  txData->appendPlainText(szLine);
-
-  CSignMap backsMap;
-  for (int i = 0; i < p->m_track.m_chunkAy.size(); ++i) {
-    if (p->m_track.m_chunkAy[i].iBackTexture > 0)
-      backsMap[i] = p->m_track.m_chunkAy[i].iBackTexture;
-  }
-  
-  CSignMap::iterator it = backsMap.begin();
-  for (; it != backsMap.end(); ++it) {
-    char szLine[20];
-    memset(szLine, 0, sizeof(szLine));
-    snprintf(szLine, sizeof(szLine), "%d %d", it->first, it->second);
-    txData->appendPlainText(szLine);
-  }
+  txData->insertPlainText(sText);
 
   openGLWidget->SetTrack(&p->m_track);
   emit UpdateWindowSig();

@@ -165,6 +165,7 @@ public:
 
   void ClearData();
   bool LoadTrack(const std::string &sFilename, bool bIsMangled);
+  void GetTrackData(std::vector<uint8_t> &data);
   CShapeData *MakeTrackCenterline(CShader *pShader);
   CShapeData *MakeTrackSurface(CShader *pShader, eShapeSection section, bool bWireframe = false);
 
@@ -207,7 +208,6 @@ protected:
   bool IsNumber(const std::string &str);
   bool ProcessTrackData(const uint8_t *pData, size_t length);
   void ProcessSign(const std::vector<std::string> &lineAy, eFileSection &section);
-  void GetTrackData(std::vector<uint8_t> &data);
   void WriteToVector(std::vector<uint8_t> &data, const char *szText);
 };
 

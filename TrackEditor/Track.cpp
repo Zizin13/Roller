@@ -72,8 +72,12 @@ bool CTrack::SaveTrack(const QString &sFilename, bool bIsMangled)
 
 void CTrack::GetGeometryCursorPos(int iStartIndex, int iEndIndex, int &iStartCursorPos, int &iEndCursorPos)
 {
-  iStartCursorPos = 0;
-  iEndCursorPos = 0;
+  char szBuf[1024];
+  snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d\r\n", (int)m_chunkAy.size(), m_header.iHeaderUnk1, m_header.iHeaderUnk2, m_header.iFloorDepth);
+  QString sHeader = szBuf;
+
+  iStartCursorPos = sHeader.size();
+  iEndCursorPos = sHeader.size();
   if (m_chunkAy.empty()) return;
   if (iEndIndex < iStartIndex || iEndIndex > m_chunkAy.size()) {
     assert(0);

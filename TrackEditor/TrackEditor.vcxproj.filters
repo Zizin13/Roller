@@ -22,9 +22,6 @@
     <ClCompile Include="resource.cpp">
       <Filter>Qt Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="TilePicker.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -95,9 +92,6 @@
     </ClInclude>
     <ClInclude Include="ui\ui_MainWindow.h">
       <Filter>Qt Generated Files\Ui Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_TilePicker.h">
       <Filter>Qt Generated Files\Ui Header Files</Filter>

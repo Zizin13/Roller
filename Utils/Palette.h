@@ -1,5 +1,5 @@
-#ifndef _TRACKEDITOR_PALETTE_H
-#define _TRACKEDITOR_PALETTE_H
+#ifndef _UTILS_PALETTE_H
+#define _UTILS_PALETTE_H
 //-------------------------------------------------------------------------------------------------
 #include <vector>
 #include <string>

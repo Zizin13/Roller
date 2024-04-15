@@ -1102,11 +1102,11 @@ void CEditDataWidget::UpdateTextures(QLineEdit *pLineEdit, QLabel *pTex1, QLabel
     unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
     iIndex = CTrack::GetIntValueFromSignedBit(uiSignedBitVal & SURFACE_TEXTURE_INDEX);
     if (iIndex < p->m_pTex->m_tileAy.size()) {
-      pixmap.convertFromImage(p->m_pTex->m_tileAy[iIndex]);
+      pixmap.convertFromImage(QtHelpers::GetQImageFromTile(p->m_pTex->m_tileAy[iIndex]));
       pTex1->setPixmap(pixmap);
 
       if (uiSignedBitVal & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
-        pixmap.convertFromImage(p->m_pTex->m_tileAy[iIndex + 1]);
+        pixmap.convertFromImage(QtHelpers::GetQImageFromTile(p->m_pTex->m_tileAy[iIndex + 1]));
         pTex2->setPixmap(pixmap);
       } else {
         pTex2->setPixmap(QPixmap());

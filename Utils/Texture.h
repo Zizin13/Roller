@@ -1,13 +1,19 @@
-#ifndef _TRACKEDITOR_TEXTURE_H
-#define _TRACKEDITOR_TEXTURE_H
+#ifndef _UTILS_TEXTURE_H
+#define _UTILS_TEXTURE_H
 //-------------------------------------------------------------------------------------------------
 #include <vector>
-#include "qimage.h"
+#include <string>
+#include "glm.hpp"
 //-------------------------------------------------------------------------------------------------
 class CPalette;
 //-------------------------------------------------------------------------------------------------
 #define TILE_WIDTH 64
 #define TILE_HEIGHT TILE_WIDTH
+//-------------------------------------------------------------------------------------------------
+struct tTile
+{
+  glm::vec3 data[TILE_WIDTH][TILE_HEIGHT];
+};
 //-------------------------------------------------------------------------------------------------
 
 class CTexture
@@ -17,9 +23,12 @@ public:
   ~CTexture();
 
   void ClearData();
-  bool LoadTexture(const QString &sFilename, const CPalette &palette, bool bMangled);
+  bool LoadTexture(const std::string &sFilename, const CPalette &palette, bool bMangled);
 
-  std::vector<QImage> m_tileAy;
+  std::vector<tTile> m_tileAy;
+
+private:
+  bool ProcessTextureData(const uint8_t *pData, size_t length, const CPalette &palette);
 };
 
 //-------------------------------------------------------------------------------------------------

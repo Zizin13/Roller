@@ -110,6 +110,7 @@
     <ClInclude Include="ShapeData.h" />
     <ClInclude Include="ShapeGenerator.h" />
     <ClInclude Include="TeapotData.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="TrackData.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Unmangler.h" />
@@ -124,6 +125,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShapeData.cpp" />
     <ClCompile Include="ShapeGenerator.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TrackData.cpp" />
     <ClCompile Include="Unmangler.cpp" />
     <ClCompile Include="VertexArray.cpp" />

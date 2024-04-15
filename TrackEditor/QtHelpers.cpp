@@ -6,6 +6,7 @@
 #include "Track.h"
 #include "Texture.h"
 #include "EditSurfaceDialog.h"
+#include "Texture.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -87,7 +88,7 @@ void QtHelpers::UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCh
     int iBldIndex = CTrack::GetIntValueFromSignedBit(uiSignedBitVal & SURFACE_TEXTURE_INDEX);
     if (iBldIndex < pTex->m_tileAy.size()) {
       QPixmap pixmap;
-      pixmap.convertFromImage(pTex->m_tileAy[iBldIndex]);
+      pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTex->m_tileAy[iBldIndex]));
       pPushButton->setIcon(pixmap);
       pPushButton->setText("");
     }
@@ -155,6 +156,20 @@ void QtHelpers::UpdateSignEditMode(bool &bEdited, bool &bMixedData, QLineEdit *p
   } else {
     pWidget->setStyleSheet("");
   }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+QImage QtHelpers::GetQImageFromTile(const tTile &tile)
+{
+  QImage image(TILE_WIDTH, TILE_HEIGHT, QImage::Format_RGB32);
+  for (int i = 0; i < TILE_WIDTH; ++i) {
+    for (int j = 0; j < TILE_HEIGHT; ++j)
+      image.setPixelColor(i, j, QColor(tile.data[i][j].r,
+                                       tile.data[i][j].g,
+                                       tile.data[i][j].b));
+  }
+  return image;
 }
 
 //-------------------------------------------------------------------------------------------------

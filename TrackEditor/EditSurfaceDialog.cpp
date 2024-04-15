@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include "TilePicker.h"
 #include "Track.h"
+#include "QtHelpers.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
   #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -381,12 +382,12 @@ void CEditSurfaceDialog::UpdateDialog()
   int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
   if (iIndex < m_pTexture->m_tileAy.size()) {
     QPixmap pixmap;
-    pixmap.convertFromImage(m_pTexture->m_tileAy[iIndex]);
+    pixmap.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_tileAy[iIndex]));
     pbTexture1->setIcon(pixmap);
 
     if (m_uiSignedBitValue & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
       QPixmap pixmap2;
-      pixmap2.convertFromImage(m_pTexture->m_tileAy[iIndex + 1]);
+      pixmap2.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_tileAy[iIndex + 1]));
       lblTexture2->setPixmap(pixmap2);
     } else {
       lblTexture2->setPixmap(QPixmap());

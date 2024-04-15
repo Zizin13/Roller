@@ -1,6 +1,8 @@
 #ifndef _TRACKEDITOR_QTHELPERS_H
 #define _TRACKEDITOR_QTHELPERS_H
 //-------------------------------------------------------------------------------------------------
+#include "QImage.h"
+//-------------------------------------------------------------------------------------------------
 class QLineEdit;
 class QString;
 class QComboBox;
@@ -8,6 +10,7 @@ class QPushButton;
 class QCheckBox;
 class CTexture;
 class QWidget;
+struct tTile;
 //-------------------------------------------------------------------------------------------------
 
 class QtHelpers
@@ -20,6 +23,7 @@ public:
   static void UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, const QString &sValue);
   static void UpdateCBEditMode(bool &bEdited, bool &bMixedData, QComboBox *pComboBox, const QString &sValue);
   static void UpdateSignEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, QWidget *pWidget, const QString &sValue);
+  static QImage GetQImageFromTile(const tTile &tile);
 };
 
 //-------------------------------------------------------------------------------------------------

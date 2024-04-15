@@ -19,6 +19,7 @@
 #include "qdockwidget.h"
 #include "DisplaySettings.h"
 #include "qtextstream.h"
+#include "QtHelpers.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
 #endif
@@ -514,9 +515,11 @@ void CMainWindow::LoadTextures()
 
   //load textures
   QString sPal = m_sTrackFilesFolder + QDir::separator() + "PALETTE.PAL";
+  QString sTex = m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sTextureFile.c_str());
+  QString sBld = m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sBuildingFile.c_str());
   bool bPalLoaded = p->m_palette.LoadPalette(sPal.toLatin1().constData());
-  bool bTexLoaded = p->m_tex.LoadTexture(m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sTextureFile.c_str()), p->m_palette, bMangled);
-  bool bBldLoaded = p->m_bld.LoadTexture(m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sBuildingFile.c_str()), p->m_palette, bMangled);
+  bool bTexLoaded = p->m_tex.LoadTexture(sTex.toLatin1().constData(), p->m_palette, bMangled);
+  bool bBldLoaded = p->m_bld.LoadTexture(sBld.toLatin1().constData(), p->m_palette, bMangled);
   lblPalletteLoaded->setVisible(!bPalLoaded);
   frmTex->setVisible(bTexLoaded);
   frmBld->setVisible(bBldLoaded);
@@ -528,7 +531,7 @@ void CMainWindow::LoadTextures()
   for (int i = 0; i < p->m_tex.m_tileAy.size(); ++i) {
     QLabel *pImageLabel = new QLabel();
     QPixmap pixmap;
-    pixmap.convertFromImage(p->m_tex.m_tileAy[i]);
+    pixmap.convertFromImage(QtHelpers::GetQImageFromTile(p->m_tex.m_tileAy[i]));
     pImageLabel->setPixmap(pixmap);
     texLayout->addWidget(pImageLabel, i / iTilesPerLine, i % iTilesPerLine);
     p->m_lblAy.push_back(pImageLabel);
@@ -536,7 +539,7 @@ void CMainWindow::LoadTextures()
   for (int i = 0; i < p->m_bld.m_tileAy.size(); ++i) {
     QLabel *pImageLabel = new QLabel();
     QPixmap pixmap;
-    pixmap.convertFromImage(p->m_bld.m_tileAy[i]);
+    pixmap.convertFromImage(QtHelpers::GetQImageFromTile(p->m_bld.m_tileAy[i]));
     pImageLabel->setPixmap(pixmap);
     bldLayout->addWidget(pImageLabel, i / iTilesPerLine, i % iTilesPerLine);
     p->m_lblAy.push_back(pImageLabel);

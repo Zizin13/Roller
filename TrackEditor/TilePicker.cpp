@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include "qpushbutton.h"
 #include "qdesktopwidget.h"
+#include "QtHelpers.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
   #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -32,7 +33,7 @@ CTilePicker::CTilePicker(QWidget *pParent, CTexture *pTexture, int iIndex, bool 
     pButton->setChecked(i == m_iIndex);
     pButton->setProperty("index", i);
     QPixmap pixmap;
-    pixmap.convertFromImage(m_pTexture->m_tileAy[i]);
+    pixmap.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_tileAy[i]));
     pButton->setIcon(pixmap);
     connect(pButton, &QPushButton::clicked, this, &CTilePicker::OnButtonClicked);
     layoutTextures->addWidget(pButton, i / iTilesPerLine, i % iTilesPerLine);

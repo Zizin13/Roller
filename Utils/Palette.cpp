@@ -67,6 +67,7 @@ bool CPalette::LoadPalette(const std::string &sFilename)
     m_paletteAy.push_back(glm::vec3(iR, iG, iB));
   }
 
+  delete[] szBuf;
   file.close();
 
   //TODO: logging

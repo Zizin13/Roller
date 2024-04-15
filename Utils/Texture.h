@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "glm.hpp"
+#include "Types.h"
 //-------------------------------------------------------------------------------------------------
 class CPalette;
 //-------------------------------------------------------------------------------------------------
@@ -12,7 +13,7 @@ class CPalette;
 //-------------------------------------------------------------------------------------------------
 struct tTile
 {
-  glm::vec3 data[TILE_WIDTH][TILE_HEIGHT];
+  glm::vec<3, uint8> data[TILE_WIDTH][TILE_HEIGHT];
 };
 //-------------------------------------------------------------------------------------------------
 
@@ -28,7 +29,7 @@ public:
   std::vector<tTile> m_tileAy;
 
 private:
-  bool ProcessTextureData(const uint8_t *pData, size_t length, const CPalette &palette);
+  bool ProcessTextureData(const uint8 *pData, size_t length, const CPalette &palette);
 };
 
 //-------------------------------------------------------------------------------------------------

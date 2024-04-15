@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "glm.hpp"
+#include "Types.h"
 //-------------------------------------------------------------------------------------------------
 
 class CPalette
@@ -15,7 +16,7 @@ public:
   void ClearData();
   bool LoadPalette(const std::string &sFilename);
 
-  std::vector<glm::vec3> m_paletteAy;
+  std::vector<glm::vec<3, uint8>> m_paletteAy;
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -64,13 +64,13 @@ bool CTexture::LoadTexture(const std::string &sFilename, const CPalette &palette
   bool bSuccess = false;
   //unmangle
   if (bMangled) {
-    int iUnmangledLength = GetUnmangledLength((uint8_t *)szBuf, (int)length);
-    uint8_t *szUnmangledData = new uint8_t[iUnmangledLength];
-    UnmangleFile((uint8_t *)szBuf, (int)length, szUnmangledData, iUnmangledLength);
+    int iUnmangledLength = GetUnmangledLength((uint8 *)szBuf, (int)length);
+    uint8 *szUnmangledData = new uint8[iUnmangledLength];
+    UnmangleFile((uint8 *)szBuf, (int)length, szUnmangledData, iUnmangledLength);
     bSuccess = ProcessTextureData(szUnmangledData, (size_t)iUnmangledLength, palette);
     delete[] szUnmangledData;
   } else {
-    bSuccess = ProcessTextureData((uint8_t *)szBuf, length, palette);
+    bSuccess = ProcessTextureData((uint8 *)szBuf, length, palette);
   }
 
   delete[] szBuf;
@@ -83,7 +83,7 @@ bool CTexture::LoadTexture(const std::string &sFilename, const CPalette &palette
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTexture::ProcessTextureData(const uint8_t *pData, size_t length, const CPalette &palette)
+bool CTexture::ProcessTextureData(const uint8 *pData, size_t length, const CPalette &palette)
 {
   int iPixelsPerTile = TILE_WIDTH * TILE_HEIGHT;
   int iNumTiles = (int)length / iPixelsPerTile;
@@ -92,9 +92,9 @@ bool CTexture::ProcessTextureData(const uint8_t *pData, size_t length, const CPa
     for (int j = 0; j < iPixelsPerTile; ++j) {
       unsigned char byPaletteIndex = pData[i * iPixelsPerTile + j];
       if (palette.m_paletteAy.size() > byPaletteIndex) {
-        tile.data[j % TILE_WIDTH][j / TILE_WIDTH] = glm::vec3(palette.m_paletteAy[byPaletteIndex].r,
-                                                              palette.m_paletteAy[byPaletteIndex].g,
-                                                              palette.m_paletteAy[byPaletteIndex].b);
+        tile.data[j % TILE_WIDTH][j / TILE_WIDTH] = glm::vec<3, uint8>(palette.m_paletteAy[byPaletteIndex].r,
+                                                                       palette.m_paletteAy[byPaletteIndex].g,
+                                                                       palette.m_paletteAy[byPaletteIndex].b);
       } else {
         assert(0);
         //TODO g_pMainWindow->LogMessage("Error loading texture " + sFilename + ": palette index out of bounds");

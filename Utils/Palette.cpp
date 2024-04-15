@@ -61,10 +61,10 @@ bool CPalette::LoadPalette(const std::string &sFilename)
 
   int iLength = (int)length / 3;
   for (int i = 0; i < iLength; ++i) {
-    int iR = szBuf[i * 3] << 2;
-    int iG = szBuf[i * 3 + 1] << 2;
-    int iB = szBuf[i * 3 + 2] << 2;
-    m_paletteAy.push_back(glm::vec3(iR, iG, iB));
+    uint8 byR = szBuf[i * 3] << 2;
+    uint8 byG = szBuf[i * 3 + 1] << 2;
+    uint8 byB = szBuf[i * 3 + 2] << 2;
+    m_paletteAy.push_back(glm::vec<3, uint8>(byR, byG, byB));
   }
 
   delete[] szBuf;

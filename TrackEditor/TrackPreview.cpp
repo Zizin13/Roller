@@ -119,14 +119,14 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
   p->DeleteModels();
   p->m_pTrack = pTrack;
   if (p->m_pTrack) {
-    p->m_pLLaneSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LLANE);
-    p->m_pLLaneWire= p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LLANE, true);
+    //p->m_pLLaneSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LLANE);
+    //p->m_pLLaneWire= p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LLANE, true);
     p->m_pRLaneSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RLANE);
-    p->m_pRLaneWire = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RLANE, true);
-    p->m_pLShoulderSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LSHOULDER);
-    p->m_pLShoulderWire = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LSHOULDER, true);
-    p->m_pRShoulderSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RSHOULDER);
-    p->m_pRShoulderWire = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RSHOULDER, true);
+    //p->m_pRLaneWire = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RLANE, true);
+    //p->m_pLShoulderSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LSHOULDER);
+    //p->m_pLShoulderWire = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LSHOULDER, true);
+    //p->m_pRShoulderSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RSHOULDER);
+    //p->m_pRShoulderWire = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RSHOULDER, true);
   }
   repaint();
 }
@@ -180,6 +180,8 @@ void CTrackPreview::initializeGL()
   glDebugMessageCallback(GLErrorCb, 0);
   glEnable(GL_DEPTH_TEST);
   //glEnable(GL_CULL_FACE);
+  //glEnable(GL_BLEND);
+  //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   if (!p->m_pPassThroughShader)
     p->m_pPassThroughShader = new CShader("Shaders/VertexShaderPassthroughCode.glsl", "Shaders/FragmentShaderPassthroughCode.glsl");

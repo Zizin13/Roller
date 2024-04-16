@@ -11,6 +11,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
+#include "Texture.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -833,30 +834,48 @@ tVertex *CTrackData::MakeVertsRLane(uint32 &numVertices)
     return NULL;
   }
 
-  uint32 uiNumVertsPerChunk = 2;
+  uint32 uiNumVertsPerChunk = 4;
   float fScale = 10000.0f;
 
   numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
   glm::vec3 prevCenter = glm::vec3(0, 0, 1);
+  glm::vec3 prevRLane = glm::vec3(0, 0, 1);
+  uint32 uiTexIndex = 0;
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
     glm::vec3 center;
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
+    uiTexIndex = GetSignedBitValueFromInt(m_chunkAy[i].iCenterSurfaceType);
+    uiTexIndex = uiTexIndex & SURFACE_TEXTURE_INDEX;
     GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
 
     vertices[i * uiNumVertsPerChunk + 0].position = center;
-    vertices[i * uiNumVertsPerChunk + 0].color = ShapeGenerator::RandomColor();
+    vertices[i * uiNumVertsPerChunk + 0].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
 
     //right lane
     glm::vec3 rLane;
     GetRLane(i, center, fScale, pitchAxis, rollMat, rLane);
     vertices[i * uiNumVertsPerChunk + 1].position = rLane;
-    vertices[i * uiNumVertsPerChunk + 1].color = ShapeGenerator::RandomColor();
+    vertices[i * uiNumVertsPerChunk + 1].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles);
+
+    if (i > 0) {
+      vertices[i * uiNumVertsPerChunk + 2].position = prevCenter;
+      vertices[i * uiNumVertsPerChunk + 2].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
+      vertices[i * uiNumVertsPerChunk + 3].position = prevRLane;
+      vertices[i * uiNumVertsPerChunk + 3].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles); 
+    }
 
     prevCenter = center;
+    prevRLane = rLane;
   }
+  uiTexIndex = GetSignedBitValueFromInt(m_chunkAy[0].iCenterSurfaceType);
+  uiTexIndex = uiTexIndex & SURFACE_TEXTURE_INDEX;
+  vertices[2].position = prevCenter;
+  vertices[2].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
+  vertices[3].position = prevRLane;
+  vertices[3].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles);
 
   return vertices;
 }
@@ -947,28 +966,28 @@ uint32 *CTrackData::MakeIndicesSingleSection(uint32 &numIndices)
     return NULL;
   }
 
-  uint32 uiNumVertsPerChunk = 2;
+  uint32 uiNumVertsPerChunk = 4;
   uint32 uiNumIndicesPerChunk = 6;
   numIndices = (uint32)m_chunkAy.size() * uiNumIndicesPerChunk;
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
   uint32 i = 0;
-  for (; i < m_chunkAy.size() - 1; i++) {
-    indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 0;
-    indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 1;
-    indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 3;
-    indices[i * uiNumIndicesPerChunk + 3] = (i * uiNumVertsPerChunk) + 0;
-    indices[i * uiNumIndicesPerChunk + 4] = (i * uiNumVertsPerChunk) + 3;
-    indices[i * uiNumIndicesPerChunk + 5] = (i * uiNumVertsPerChunk) + 2;
+  for (; i < m_chunkAy.size(); i++) {
+    indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 3] = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 4] = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 5] = (i * uiNumVertsPerChunk) + 0;
   }
-  //final chunk must be tied to first
-  indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 0;
-  indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 1;
-  indices[i * uiNumIndicesPerChunk + 2] = 1;
-  indices[i * uiNumIndicesPerChunk + 3] = (i * uiNumVertsPerChunk) + 0;
-  indices[i * uiNumIndicesPerChunk + 4] = 1;
-  indices[i * uiNumIndicesPerChunk + 5] = 0;
+  ////final chunk must be tied to first
+  //indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 0;
+  //indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 1;
+  //indices[i * uiNumIndicesPerChunk + 2] = 1;
+  //indices[i * uiNumIndicesPerChunk + 3] = (i * uiNumVertsPerChunk) + 0;
+  //indices[i * uiNumIndicesPerChunk + 4] = 1;
+  //indices[i * uiNumIndicesPerChunk + 5] = 0;
 
   return indices;
 }

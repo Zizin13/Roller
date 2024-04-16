@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include "Vertex.h"
+#include "Texture.h"
 //-------------------------------------------------------------------------------------------------
 struct tTrackHeader
 {
@@ -178,6 +179,8 @@ public:
   std::string m_sBuildingFile;
   tRaceInfo m_raceInfo;
   bool m_bIsMangled;
+  CTexture m_tex;
+  CTexture m_bld;
 
 protected:
   tVertex *MakeVertsCenterline(uint32 &numVertices);

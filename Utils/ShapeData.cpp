@@ -5,6 +5,7 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
+#include "Texture.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -15,11 +16,13 @@ CShapeData::CShapeData(CVertexBuffer *pVertexBuf,
                        CIndexBuffer *pIndexBuf,
                        CVertexArray *pVertexArray,
                        CShader *pShader,
+                       CTexture *pTexture,
                        GLenum drawType)
   : m_pVertexBuf(pVertexBuf)
   , m_pIndexBuf(pIndexBuf)
   , m_pVertexArray(pVertexArray)
   , m_pShader(pShader)
+  , m_pTexture(pTexture)
   , m_drawType(drawType)
   , m_modelToWorldMatrix(glm::mat4(1))
 {
@@ -53,6 +56,10 @@ void CShapeData::Draw(const glm::mat4 &worldToProjectionMatrix)
   m_pShader->Bind();
   m_pVertexArray->Bind();
   m_pIndexBuf->Bind();
+  if (m_pTexture) {
+    m_pTexture->Bind();
+    m_pShader->SetUniform1i("textureSlot", 0);
+  }
 
   glm::mat4 fullTransformMatrix = worldToProjectionMatrix * m_modelToWorldMatrix;
   m_pShader->SetUniformMat4("modelToProjectionMatrix", fullTransformMatrix);

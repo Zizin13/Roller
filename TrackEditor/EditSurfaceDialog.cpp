@@ -380,14 +380,14 @@ void CEditSurfaceDialog::UpdateDialog()
 
   //textures
   int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
-  if (iIndex < m_pTexture->m_tileAy.size()) {
+  if (iIndex < m_pTexture->m_iNumTiles) {
     QPixmap pixmap;
-    pixmap.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_tileAy[iIndex]));
+    pixmap.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_pTileAy[iIndex]));
     pbTexture1->setIcon(pixmap);
 
     if (m_uiSignedBitValue & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
       QPixmap pixmap2;
-      pixmap2.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_tileAy[iIndex + 1]));
+      pixmap2.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_pTileAy[iIndex + 1]));
       lblTexture2->setPixmap(pixmap2);
     } else {
       lblTexture2->setPixmap(QPixmap());

@@ -8,6 +8,7 @@ class CShader;
 class CVertexBuffer;
 class CIndexBuffer;
 class CVertexArray;
+class CTexture;
 //-------------------------------------------------------------------------------------------------
 class CShapeData
 {
@@ -16,6 +17,7 @@ public:
              CIndexBuffer *pIndexBuf,
              CVertexArray *pVertexArray,
              CShader *pShader,
+             CTexture *pTexture = NULL,
              GLenum drawType = GL_TRIANGLES);
   ~CShapeData();
 
@@ -29,6 +31,7 @@ private:
   CVertexArray *m_pVertexArray;
   GLenum m_drawType;
   CShader *m_pShader; //owned by renderer
+  CTexture *m_pTexture; //owned by track
 };
 //-------------------------------------------------------------------------------------------------
 #endif

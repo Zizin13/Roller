@@ -25,11 +25,16 @@ public:
 
   void ClearData();
   bool LoadTexture(const std::string &sFilename, const CPalette &palette, bool bMangled);
+  void Bind(uint32 uiSlot = 0) const;
+  void Unbind() const;
 
-  std::vector<tTile> m_tileAy;
+  tTile *m_pTileAy;
+  int m_iNumTiles;
 
 private:
   bool ProcessTextureData(const uint8 *pData, size_t length, const CPalette &palette);
+
+  uint32 m_uiId;
 };
 
 //-------------------------------------------------------------------------------------------------

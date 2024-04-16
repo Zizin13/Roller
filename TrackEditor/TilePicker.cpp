@@ -17,12 +17,12 @@ CTilePicker::CTilePicker(QWidget *pParent, CTexture *pTexture, int iIndex, bool 
 {
   setupUi(this);
   resize(QDesktopWidget().availableGeometry(this).size() * 0.3);
-  lblNotLoaded->setVisible(pTexture->m_tileAy.empty());
+  lblNotLoaded->setVisible(pTexture->m_iNumTiles > 0);
 
   int iButtonSize = 90;
   int iTilesPerLine = (width() - 256) / (iButtonSize + 6);
   int i = 0;
-  for (; i < m_pTexture->m_tileAy.size(); ++i) {
+  for (; i < m_pTexture->m_iNumTiles; ++i) {
     QPushButton *pButton = new QPushButton(this);
     pButton->setMaximumHeight(iButtonSize);
     pButton->setMaximumWidth(iButtonSize);
@@ -33,7 +33,7 @@ CTilePicker::CTilePicker(QWidget *pParent, CTexture *pTexture, int iIndex, bool 
     pButton->setChecked(i == m_iIndex);
     pButton->setProperty("index", i);
     QPixmap pixmap;
-    pixmap.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_tileAy[i]));
+    pixmap.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_pTileAy[i]));
     pButton->setIcon(pixmap);
     connect(pButton, &QPushButton::clicked, this, &CTilePicker::OnButtonClicked);
     layoutTextures->addWidget(pButton, i / iTilesPerLine, i % iTilesPerLine);

@@ -16,6 +16,7 @@ public:
 
   void Bind() const;
   void Unbind() const;
+  bool SetUniform1i(const std::string &sName, int iValue);
   bool SetUniformVec3(const std::string &sName, const glm::vec3 &vec);
   bool SetUniformVec4(const std::string &sName, const glm::vec4 &vec);
   bool SetUniformMat4(const std::string &sName, const glm::mat4 &matrix);

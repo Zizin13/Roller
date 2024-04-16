@@ -43,8 +43,6 @@ public:
   std::vector<QLabel *> m_lblAy;
   CTrack m_track;
   CPalette m_palette;
-  CTexture m_tex;
-  CTexture m_bld;
   CLogDialog m_logDialog;
 
   QDockWidget *m_pEditDataDockWidget;
@@ -80,7 +78,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   p->m_pEditDataDockWidget = new QDockWidget("Edit Chunk Data", this);
   p->m_pEditDataDockWidget->setObjectName("EditChunkData");
   p->m_pEditDataDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pEditDataDockWidget->setWidget(new CEditDataWidget(p->m_pEditDataDockWidget, &p->m_track, &p->m_tex, &p->m_bld));
+  p->m_pEditDataDockWidget->setWidget(new CEditDataWidget(p->m_pEditDataDockWidget, &p->m_track));
 
   p->m_pGlobalSettingsDockWidget = new QDockWidget("Global Track Settings", this);
   p->m_pGlobalSettingsDockWidget->setObjectName("GlobalTrackSettings");
@@ -129,11 +127,6 @@ CMainWindow::CMainWindow(const QString &sAppPath)
 
 CMainWindow::~CMainWindow()
 {
-  //cleanup
-  if (p) {
-    delete p;
-    p = NULL;
-  }
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -141,6 +134,12 @@ CMainWindow::~CMainWindow()
 void CMainWindow::closeEvent(QCloseEvent *pEvent)
 {
   SaveSettings();
+
+  //cleanup
+  if (p) {
+    delete p;
+    p = NULL;
+  }
 
   QMainWindow::closeEvent(pEvent);
 }
@@ -518,8 +517,8 @@ void CMainWindow::LoadTextures()
   QString sTex = m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sTextureFile.c_str());
   QString sBld = m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sBuildingFile.c_str());
   bool bPalLoaded = p->m_palette.LoadPalette(sPal.toLatin1().constData());
-  bool bTexLoaded = p->m_tex.LoadTexture(sTex.toLatin1().constData(), p->m_palette, bMangled);
-  bool bBldLoaded = p->m_bld.LoadTexture(sBld.toLatin1().constData(), p->m_palette, bMangled);
+  bool bTexLoaded = p->m_track.m_tex.LoadTexture(sTex.toLatin1().constData(), p->m_palette, bMangled);
+  bool bBldLoaded = p->m_track.m_bld.LoadTexture(sBld.toLatin1().constData(), p->m_palette, bMangled);
   lblPalletteLoaded->setVisible(!bPalLoaded);
   frmTex->setVisible(bTexLoaded);
   frmBld->setVisible(bBldLoaded);
@@ -528,18 +527,18 @@ void CMainWindow::LoadTextures()
 
   //add tiles to viewer layouts
   int iTilesPerLine = (twViewer->width() - 256) / (TILE_WIDTH + 6);
-  for (int i = 0; i < p->m_tex.m_tileAy.size(); ++i) {
+  for (int i = 0; i < p->m_track.m_tex.m_iNumTiles; ++i) {
     QLabel *pImageLabel = new QLabel();
     QPixmap pixmap;
-    pixmap.convertFromImage(QtHelpers::GetQImageFromTile(p->m_tex.m_tileAy[i]));
+    pixmap.convertFromImage(QtHelpers::GetQImageFromTile(p->m_track.m_tex.m_pTileAy[i]));
     pImageLabel->setPixmap(pixmap);
     texLayout->addWidget(pImageLabel, i / iTilesPerLine, i % iTilesPerLine);
     p->m_lblAy.push_back(pImageLabel);
   }
-  for (int i = 0; i < p->m_bld.m_tileAy.size(); ++i) {
+  for (int i = 0; i < p->m_track.m_bld.m_iNumTiles; ++i) {
     QLabel *pImageLabel = new QLabel();
     QPixmap pixmap;
-    pixmap.convertFromImage(QtHelpers::GetQImageFromTile(p->m_bld.m_tileAy[i]));
+    pixmap.convertFromImage(QtHelpers::GetQImageFromTile(p->m_track.m_bld.m_pTileAy[i]));
     pImageLabel->setPixmap(pixmap);
     bldLayout->addWidget(pImageLabel, i / iTilesPerLine, i % iTilesPerLine);
     p->m_lblAy.push_back(pImageLabel);

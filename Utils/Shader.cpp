@@ -36,6 +36,18 @@ void CShader::Unbind() const
 
 //-------------------------------------------------------------------------------------------------
 
+bool CShader::SetUniform1i(const std::string &sName, int iValue)
+{
+  int iUniformLocation = GetUniformLocation(sName);
+  if (iUniformLocation < 0)
+    return false;
+
+  GLCALL(glUniform1i(iUniformLocation, iValue));
+  return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 bool CShader::SetUniformVec3(const std::string &sName, const glm::vec3 &vec)
 {
   int iUniformLocation = GetUniformLocation(sName);

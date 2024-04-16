@@ -119,11 +119,11 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
   p->DeleteModels();
   p->m_pTrack = pTrack;
   if (p->m_pTrack) {
-    //p->m_pLLaneSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LLANE);
+    p->m_pLLaneSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LLANE);
     //p->m_pLLaneWire= p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LLANE, true);
     p->m_pRLaneSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RLANE);
     //p->m_pRLaneWire = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RLANE, true);
-    //p->m_pLShoulderSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LSHOULDER);
+    p->m_pLShoulderSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LSHOULDER);
     //p->m_pLShoulderWire = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LSHOULDER, true);
     //p->m_pRShoulderSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RSHOULDER);
     //p->m_pRShoulderWire = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RSHOULDER, true);

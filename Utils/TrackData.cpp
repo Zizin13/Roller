@@ -1017,48 +1017,48 @@ tVertex *CTrackData::MakeVertsLShoulder(uint32 &numVertices)
     GetLLane(i, center, fScale, pitchAxis, rollMat, lLane);
     vertices[i * uiNumVertsPerChunk + 1].position = lLane;
 
-    if (!bFlipVert && !bFlipHoriz)
+    if (!bFlipHoriz && !bFlipVert)
       vertices[i * uiNumVertsPerChunk + 1].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-    else if (bFlipVert && !bFlipHoriz)
+    else if (bFlipHoriz && !bFlipVert)
       vertices[i * uiNumVertsPerChunk + 1].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-    else if (!bFlipVert && bFlipHoriz)
+    else if (!bFlipHoriz && bFlipVert)
       vertices[i * uiNumVertsPerChunk + 1].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-    else if (bFlipVert && bFlipHoriz)
+    else if (bFlipHoriz && bFlipVert)
       vertices[i * uiNumVertsPerChunk + 1].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
     vertices[i * uiNumVertsPerChunk + 1].color = ShapeGenerator::RandomColor();
     //left shoulder
     glm::vec3 lShoulder;
     GetLShoulder(i, lLane, fScale, pitchAxis, rollMat, nextChunkPitched, lShoulder);
     vertices[i * uiNumVertsPerChunk + 0].position = lShoulder;
-    if (!bFlipVert && !bFlipHoriz)
+    if (!bFlipHoriz && !bFlipVert)
       vertices[i * uiNumVertsPerChunk + 0].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-    else if (bFlipVert && !bFlipHoriz)
+    else if (bFlipHoriz && !bFlipVert)
       vertices[i * uiNumVertsPerChunk + 0].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-    else if (!bFlipVert && bFlipHoriz)
+    else if (!bFlipHoriz && bFlipVert)
       vertices[i * uiNumVertsPerChunk + 0].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-    else if (bFlipVert && bFlipHoriz)
+    else if (bFlipHoriz && bFlipVert)
       vertices[i * uiNumVertsPerChunk + 0].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
     vertices[i * uiNumVertsPerChunk + 0].color = ShapeGenerator::RandomColor();
 
     if (i > 0) {
       vertices[i * uiNumVertsPerChunk + 3].position = prevLLane;
-      if (!bFlipVert && !bFlipHoriz)
+      if (!bFlipHoriz && !bFlipVert)
         vertices[i * uiNumVertsPerChunk + 3].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-      else if (bFlipVert && !bFlipHoriz)
+      else if (bFlipHoriz && !bFlipVert)
         vertices[i * uiNumVertsPerChunk + 3].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-      else if (!bFlipVert && bFlipHoriz)
+      else if (!bFlipHoriz && bFlipVert)
         vertices[i * uiNumVertsPerChunk + 3].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-      else if (bFlipVert && bFlipHoriz)
+      else if (bFlipHoriz && bFlipVert)
         vertices[i * uiNumVertsPerChunk + 3].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
       vertices[i * uiNumVertsPerChunk + 3].color = ShapeGenerator::RandomColor();
       vertices[i * uiNumVertsPerChunk + 2].position = prevLShoulder;
-      if (!bFlipVert && !bFlipHoriz)
+      if (!bFlipHoriz && !bFlipVert)
         vertices[i * uiNumVertsPerChunk + 2].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-      else if (bFlipVert && !bFlipHoriz)
+      else if (bFlipHoriz && !bFlipVert)
         vertices[i * uiNumVertsPerChunk + 2].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-      else if (!bFlipVert && bFlipHoriz)
+      else if (!bFlipHoriz && bFlipVert)
         vertices[i * uiNumVertsPerChunk + 2].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-      else if (bFlipVert && bFlipHoriz)
+      else if (bFlipHoriz && bFlipVert)
         vertices[i * uiNumVertsPerChunk + 2].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
       vertices[i * uiNumVertsPerChunk + 2].color = ShapeGenerator::RandomColor();
     }
@@ -1074,23 +1074,23 @@ tVertex *CTrackData::MakeVertsLShoulder(uint32 &numVertices)
   uiTexIndex = uiTexIndex & SURFACE_TEXTURE_INDEX;
   uint32 uiTexIncVal = bPair ? 2 : 1;
   vertices[3].position = prevLLane;
-  if (!bFlipVert && !bFlipHoriz)
+  if (!bFlipHoriz && !bFlipVert)
     vertices[3].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-  else if (bFlipVert && !bFlipHoriz)
+  else if (bFlipHoriz && !bFlipVert)
     vertices[3].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  else if (!bFlipVert && bFlipHoriz)
+  else if (!bFlipHoriz && bFlipVert)
     vertices[3].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-  else if (bFlipVert && bFlipHoriz)
+  else if (bFlipHoriz && bFlipVert)
     vertices[3].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
   vertices[3].color = ShapeGenerator::RandomColor();
   vertices[2].position = prevLShoulder;
-  if (!bFlipVert && !bFlipHoriz)
+  if (!bFlipHoriz && !bFlipVert)
     vertices[2].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  else if (bFlipVert && !bFlipHoriz)
+  else if (bFlipHoriz && !bFlipVert)
     vertices[2].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-  else if (!bFlipVert && bFlipHoriz)
+  else if (!bFlipHoriz && bFlipVert)
     vertices[2].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  else if (bFlipVert && bFlipHoriz)
+  else if (bFlipHoriz && bFlipVert)
     vertices[2].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
   vertices[2].color = ShapeGenerator::RandomColor();
 
@@ -1122,9 +1122,9 @@ tVertex *CTrackData::MakeVertsRShoulder(uint32 &numVertices)
     glm::mat4 rollMat;
     uiTexIndex = GetSignedBitValueFromInt(m_chunkAy[i].iRightSurfaceType);
     bool bPair = uiTexIndex & SURFACE_FLAG_TEXTURE_PAIR;
-    uiTexIndex = uiTexIndex & SURFACE_TEXTURE_INDEX;
     bool bFlipVert = uiTexIndex & SURFACE_FLAG_FLIP_VERT;
     bool bFlipHoriz = uiTexIndex & SURFACE_FLAG_FLIP_HORIZ;
+    uiTexIndex = uiTexIndex & SURFACE_TEXTURE_INDEX;
     uint32 uiTexIncVal = bPair ? 2 : 1;
     GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
 
@@ -1132,48 +1132,48 @@ tVertex *CTrackData::MakeVertsRShoulder(uint32 &numVertices)
     glm::vec3 rLane;
     GetRLane(i, center, fScale, pitchAxis, rollMat, rLane);
     vertices[i * uiNumVertsPerChunk + 0].position = rLane;
-    if (!bFlipVert && !bFlipHoriz)
+    if (!bFlipHoriz && !bFlipVert)
       vertices[i * uiNumVertsPerChunk + 0].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-    else if (bFlipVert && !bFlipHoriz)
+    else if (bFlipHoriz && !bFlipVert)
       vertices[i * uiNumVertsPerChunk + 0].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-    else if (!bFlipVert && bFlipHoriz)
+    else if (!bFlipHoriz && bFlipVert)
       vertices[i * uiNumVertsPerChunk + 0].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-    else if (bFlipVert && bFlipHoriz)
+    else if (bFlipHoriz && bFlipVert)
       vertices[i * uiNumVertsPerChunk + 0].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
     vertices[i * uiNumVertsPerChunk + 0].color = ShapeGenerator::RandomColor();
     //right shoulder
     glm::vec3 rShoulder;
     GetRShoulder(i, rLane, fScale, pitchAxis, rollMat, nextChunkPitched, rShoulder);
     vertices[i * uiNumVertsPerChunk + 1].position = rShoulder;
-    if (!bFlipVert && !bFlipHoriz)
+    if (!bFlipHoriz && !bFlipVert)
       vertices[i * uiNumVertsPerChunk + 1].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-    else if (bFlipVert && !bFlipHoriz)
+    else if (bFlipHoriz && !bFlipVert)
       vertices[i * uiNumVertsPerChunk + 1].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-    else if (!bFlipVert && bFlipHoriz)
+    else if (!bFlipHoriz && bFlipVert)
       vertices[i * uiNumVertsPerChunk + 1].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-    else if (bFlipVert && bFlipHoriz)
+    else if (bFlipHoriz && bFlipVert)
       vertices[i * uiNumVertsPerChunk + 1].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
     vertices[i * uiNumVertsPerChunk + 1].color = ShapeGenerator::RandomColor();
 
     if (i > 0) {
       vertices[i * uiNumVertsPerChunk + 2].position = prevRLane;
-      if (!bFlipVert && !bFlipHoriz)
+      if (!bFlipHoriz && !bFlipVert)
         vertices[i * uiNumVertsPerChunk + 2].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-      else if (bFlipVert && !bFlipHoriz)
+      else if (bFlipHoriz && !bFlipVert)
         vertices[i * uiNumVertsPerChunk + 2].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-      else if (!bFlipVert && bFlipHoriz)
+      else if (!bFlipHoriz && bFlipVert)
         vertices[i * uiNumVertsPerChunk + 2].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-      else if (bFlipVert && bFlipHoriz)
+      else if (bFlipHoriz && bFlipVert)
         vertices[i * uiNumVertsPerChunk + 2].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
       vertices[i * uiNumVertsPerChunk + 2].color = ShapeGenerator::RandomColor();
       vertices[i * uiNumVertsPerChunk + 3].position = prevRShoulder;
-      if (!bFlipVert && !bFlipHoriz)
+      if (!bFlipHoriz && !bFlipVert)
         vertices[i * uiNumVertsPerChunk + 3].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-      else if (bFlipVert && !bFlipHoriz)
+      else if (bFlipHoriz && !bFlipVert)
         vertices[i * uiNumVertsPerChunk + 3].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-      else if (!bFlipVert && bFlipHoriz)
+      else if (!bFlipHoriz && bFlipVert)
         vertices[i * uiNumVertsPerChunk + 3].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-      else if (bFlipVert && bFlipHoriz)
+      else if (bFlipHoriz && bFlipVert)
         vertices[i * uiNumVertsPerChunk + 3].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
       vertices[i * uiNumVertsPerChunk + 3].color = ShapeGenerator::RandomColor();
     }
@@ -1189,23 +1189,23 @@ tVertex *CTrackData::MakeVertsRShoulder(uint32 &numVertices)
   uiTexIndex = uiTexIndex & SURFACE_TEXTURE_INDEX;
   uint32 uiTexIncVal = bPair ? 2 : 1;
   vertices[2].position = prevRLane;
-  if (!bFlipVert && !bFlipHoriz)
+  if (!bFlipHoriz && !bFlipVert)
     vertices[2].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  else if (bFlipVert && !bFlipHoriz)
+  else if (bFlipHoriz && !bFlipVert)
     vertices[2].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-  else if (!bFlipVert && bFlipHoriz)
+  else if (!bFlipHoriz && bFlipVert)
     vertices[2].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  else if (bFlipVert && bFlipHoriz)
+  else if (bFlipHoriz && bFlipVert)
     vertices[2].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
   vertices[2].color = ShapeGenerator::RandomColor();
   vertices[3].position = prevRShoulder;
-  if (!bFlipVert && !bFlipHoriz)
+  if (!bFlipHoriz && !bFlipVert)
     vertices[3].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-  else if (bFlipVert && !bFlipHoriz)
+  else if (bFlipHoriz && !bFlipVert)
     vertices[3].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  else if (!bFlipVert && bFlipHoriz)
+  else if (!bFlipHoriz && bFlipVert)
     vertices[3].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-  else if (bFlipVert && bFlipHoriz)
+  else if (bFlipHoriz && bFlipVert)
     vertices[3].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
   vertices[3].color = ShapeGenerator::RandomColor();
 

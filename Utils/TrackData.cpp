@@ -871,52 +871,43 @@ tVertex *CTrackData::MakeVertsLLane(uint32 &numVertices)
   tVertex *vertices = new tVertex[numVertices];
   glm::vec3 prevCenter = glm::vec3(0, 0, 1);
   glm::vec3 prevLLane = glm::vec3(0, 0, 1);
-  uint32 uiTexIndex = 0;
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
     glm::vec3 center;
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
-    uiTexIndex = GetSignedBitValueFromInt(m_chunkAy[i].iCenterSurfaceType);
-    bool bPair = uiTexIndex & SURFACE_FLAG_TEXTURE_PAIR;
-    uiTexIndex = uiTexIndex & SURFACE_TEXTURE_INDEX;
-    if (bPair)
-      uiTexIndex++;
     GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
 
     vertices[i * uiNumVertsPerChunk + 1].position = center;
-    vertices[i * uiNumVertsPerChunk + 1].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-    vertices[i * uiNumVertsPerChunk + 1].color = ShapeGenerator::RandomColor();
     //left lane
     glm::vec3 lLane;
     GetLLane(i, center, fScale, pitchAxis, rollMat, lLane);
     vertices[i * uiNumVertsPerChunk + 0].position = lLane;
-    vertices[i * uiNumVertsPerChunk + 0].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles);
-    vertices[i * uiNumVertsPerChunk + 0].color = ShapeGenerator::RandomColor();
 
     if (i > 0) {
       vertices[i * uiNumVertsPerChunk + 3].position = prevCenter;
-      vertices[i * uiNumVertsPerChunk + 3].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-      vertices[i * uiNumVertsPerChunk + 3].color = ShapeGenerator::RandomColor();
       vertices[i * uiNumVertsPerChunk + 2].position = prevLLane;
-      vertices[i * uiNumVertsPerChunk + 2].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles);
-      vertices[i * uiNumVertsPerChunk + 2].color = ShapeGenerator::RandomColor();
     }
+
+    uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iCenterSurfaceType);
+    bool bPair = uiSurfaceType & SURFACE_FLAG_TEXTURE_PAIR;
+    uint32 uiTexIndex = uiSurfaceType & SURFACE_TEXTURE_INDEX;
+    if (bPair)
+      uiTexIndex++;
+    vertices[i * uiNumVertsPerChunk + 1].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
+    vertices[i * uiNumVertsPerChunk + 1].color = ShapeGenerator::RandomColor();
+    vertices[i * uiNumVertsPerChunk + 0].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles);
+    vertices[i * uiNumVertsPerChunk + 0].color = ShapeGenerator::RandomColor();
+    vertices[i * uiNumVertsPerChunk + 3].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
+    vertices[i * uiNumVertsPerChunk + 3].color = ShapeGenerator::RandomColor();
+    vertices[i * uiNumVertsPerChunk + 2].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles);
+    vertices[i * uiNumVertsPerChunk + 2].color = ShapeGenerator::RandomColor();
 
     prevCenter = center;
     prevLLane = lLane;
   }
-  uiTexIndex = GetSignedBitValueFromInt(m_chunkAy[0].iCenterSurfaceType);
-  bool bPair = uiTexIndex & SURFACE_FLAG_TEXTURE_PAIR;
-  uiTexIndex = uiTexIndex & SURFACE_TEXTURE_INDEX;
-  if (bPair)
-    uiTexIndex++;
   vertices[3].position = prevCenter;
-  vertices[3].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  vertices[3].color = ShapeGenerator::RandomColor();
   vertices[2].position = prevLLane;
-  vertices[2].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles);
-  vertices[2].color = ShapeGenerator::RandomColor();
 
   return vertices;
 }
@@ -937,47 +928,42 @@ tVertex *CTrackData::MakeVertsRLane(uint32 &numVertices)
   tVertex *vertices = new tVertex[numVertices];
   glm::vec3 prevCenter = glm::vec3(0, 0, 1);
   glm::vec3 prevRLane = glm::vec3(0, 0, 1);
-  uint32 uiTexIndex = 0;
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
     glm::vec3 center;
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
-    uiTexIndex = GetSignedBitValueFromInt(m_chunkAy[i].iCenterSurfaceType);
-    uiTexIndex = uiTexIndex & SURFACE_TEXTURE_INDEX;
     GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
 
     vertices[i * uiNumVertsPerChunk + 0].position = center;
-    vertices[i * uiNumVertsPerChunk + 0].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles);
-    vertices[i * uiNumVertsPerChunk + 0].color = ShapeGenerator::RandomColor();
 
     //right lane
     glm::vec3 rLane;
     GetRLane(i, center, fScale, pitchAxis, rollMat, rLane);
     vertices[i * uiNumVertsPerChunk + 1].position = rLane;
-    vertices[i * uiNumVertsPerChunk + 1].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-    vertices[i * uiNumVertsPerChunk + 1].color = ShapeGenerator::RandomColor();
 
     if (i > 0) {
       vertices[i * uiNumVertsPerChunk + 2].position = prevCenter;
-      vertices[i * uiNumVertsPerChunk + 2].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles);
-      vertices[i * uiNumVertsPerChunk + 2].color = ShapeGenerator::RandomColor();
       vertices[i * uiNumVertsPerChunk + 3].position = prevRLane;
-      vertices[i * uiNumVertsPerChunk + 3].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-      vertices[i * uiNumVertsPerChunk + 3].color = ShapeGenerator::RandomColor();
     }
+
+    //textures
+    uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iCenterSurfaceType);
+    uint32 uiTexIndex = uiSurfaceType & SURFACE_TEXTURE_INDEX;
+    vertices[i * uiNumVertsPerChunk + 0].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles);
+    vertices[i * uiNumVertsPerChunk + 0].color = ShapeGenerator::RandomColor();
+    vertices[i * uiNumVertsPerChunk + 1].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
+    vertices[i * uiNumVertsPerChunk + 1].color = ShapeGenerator::RandomColor();
+    vertices[i * uiNumVertsPerChunk + 2].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles);
+    vertices[i * uiNumVertsPerChunk + 2].color = ShapeGenerator::RandomColor();
+    vertices[i * uiNumVertsPerChunk + 3].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
+    vertices[i * uiNumVertsPerChunk + 3].color = ShapeGenerator::RandomColor();
 
     prevCenter = center;
     prevRLane = rLane;
   }
-  uiTexIndex = GetSignedBitValueFromInt(m_chunkAy[0].iCenterSurfaceType);
-  uiTexIndex = uiTexIndex & SURFACE_TEXTURE_INDEX;
   vertices[2].position = prevCenter;
-  vertices[2].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles);
-  vertices[2].color = ShapeGenerator::RandomColor();
   vertices[3].position = prevRLane;
-  vertices[3].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  vertices[3].color = ShapeGenerator::RandomColor();
 
   return vertices;
 }
@@ -999,7 +985,6 @@ tVertex *CTrackData::MakeVertsLShoulder(uint32 &numVertices)
   glm::vec3 prevCenter = glm::vec3(0, 0, 1);
   glm::vec3 prevLLane = glm::vec3(0, 0, 1);
   glm::vec3 prevLShoulder = glm::vec3(0, 0, 1);
-  uint32 uiTexIndex = 0;
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
     glm::vec3 center;
     glm::vec3 pitchAxis;
@@ -1055,7 +1040,6 @@ tVertex *CTrackData::MakeVertsRShoulder(uint32 &numVertices)
   glm::vec3 prevCenter = glm::vec3(0, 0, 1);
   glm::vec3 prevRLane = glm::vec3(0, 0, 1);
   glm::vec3 prevRShoulder = glm::vec3(0, 0, 1);
-  uint32 uiTexIndex = 0;
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
     glm::vec3 center;
     glm::vec3 pitchAxis;

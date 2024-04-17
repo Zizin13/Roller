@@ -195,6 +195,7 @@ public:
   void GetTrackData(std::vector<uint8_t> &data);
   CShapeData *MakeTrackCenterline(CShader *pShader);
   CShapeData *MakeTrackSurface(CShader *pShader, eShapeSection section, bool bWireframe = false);
+  CShapeData *MakeTextureTester(CShader *pShader);
 
   static unsigned int GetSignedBitValueFromInt(int iValue);
   static int GetIntValueFromSignedBit(unsigned int uiValue);

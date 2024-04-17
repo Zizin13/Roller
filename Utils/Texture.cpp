@@ -136,13 +136,29 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length, const CPale
     }
   }
 
+  tTile *pTilesFlipped = new tTile[m_iNumTiles];
+  FlipTileLines(m_pTileAy, pTilesFlipped, m_iNumTiles);
   int iLength = TILE_WIDTH;// *3;
   int iHeight = TILE_HEIGHT * m_iNumTiles;// (int)length / (TILE_WIDTH * 3);
   GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, 
                       iLength, iHeight, 0,
-                      GL_RGB, GL_UNSIGNED_BYTE, m_pTileAy));
+                      GL_RGB, GL_UNSIGNED_BYTE, pTilesFlipped));
   GLCALL(glBindTexture(GL_TEXTURE_2D, 0));
+  delete[] pTilesFlipped;
   return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTexture::FlipTileLines(tTile *pSource, tTile *pDest, int iNumTiles)
+{
+  for (int i = 0; i < iNumTiles; ++i) {
+    for (int x = 0; x < TILE_WIDTH; ++x) {
+      for (int y = 0; y < TILE_HEIGHT; ++y) {
+        pDest[i].data[x][y] = pSource[i].data[x][TILE_HEIGHT - (y + 1)];
+      }
+    }
+  }
 }
 
 //-------------------------------------------------------------------------------------------------

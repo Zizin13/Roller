@@ -33,6 +33,7 @@ public:
 
 private:
   bool ProcessTextureData(const uint8 *pData, size_t length, const CPalette &palette);
+  void FlipTileLines(tTile *pSource, tTile *pDest, int iNumTiles);
 
   uint32 m_uiId;
 };

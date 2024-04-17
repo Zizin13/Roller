@@ -184,7 +184,7 @@ void CTrackPreview::initializeGL()
   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   if (!p->m_pPassThroughShader)
-    p->m_pPassThroughShader = new CShader("Shaders/VertexShaderPassthroughCode.glsl", "Shaders/FragmentShaderPassthroughCode.glsl");
+    p->m_pPassThroughShader = new CShader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");
 }
 
 //-------------------------------------------------------------------------------------------------

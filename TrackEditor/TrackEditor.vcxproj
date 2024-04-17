@@ -90,8 +90,8 @@ echo f | xcopy ..\external\TrackEditor_LicensedLibs.txt .\$(OutDir)LicensedLibs.
 if %errorlevel% NEQ 0 goto Failed
 
 echo Copying Shaders...
-echo f | xcopy ..\Utils\Shaders\FragmentShaderPassThroughCode.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
-echo f | xcopy ..\Utils\Shaders\VertexShaderPassThroughCode.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
+echo f | xcopy ..\Utils\Shaders\WhiplashFragmentShader.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
+echo f | xcopy ..\Utils\Shaders\WhiplashVertexShader.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
 echo Post-Build Step for $(ProjectName) completed successfully
@@ -141,8 +141,8 @@ echo f | xcopy ..\external\TrackEditor_LicensedLibs.txt .\$(OutDir)LicensedLibs.
 if %errorlevel% NEQ 0 goto Failed
 
 echo Copying Shaders...
-echo f | xcopy ..\Utils\Shaders\FragmentShaderPassThroughCode.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
-echo f | xcopy ..\Utils\Shaders\VertexShaderPassThroughCode.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
+echo f | xcopy ..\Utils\Shaders\WhiplashFragmentShader.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
+echo f | xcopy ..\Utils\Shaders\WhiplashVertexShader.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
 echo Post-Build Step for $(ProjectName) completed successfully

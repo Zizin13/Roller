@@ -133,9 +133,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\FragmentShaderCode.glsl" />
-    <None Include="Shaders\FragmentShaderPassThroughCode.glsl" />
+    <None Include="Shaders\WhiplashFragmentShader.glsl" />
     <None Include="Shaders\VertexShaderCode.glsl" />
-    <None Include="Shaders\VertexShaderPassThroughCode.glsl" />
+    <None Include="Shaders\WhiplashVertexShader.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

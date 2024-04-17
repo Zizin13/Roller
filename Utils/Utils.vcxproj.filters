@@ -99,13 +99,13 @@
     <None Include="Shaders\FragmentShaderCode.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\FragmentShaderPassThroughCode.glsl">
+    <None Include="Shaders\WhiplashFragmentShader.glsl">
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\VertexShaderCode.glsl">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\VertexShaderPassThroughCode.glsl">
+    <None Include="Shaders\WhiplashVertexShader.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

@@ -234,7 +234,9 @@ protected:
                     glm::vec3 &lShoulder);
   void GetRShoulder(int i, glm::vec3 rLane, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                     glm::vec3 &rShoulder);
-  void GetTextureCoordinates(uint32 uiSurfaceType, tVertex& vert0, tVertex& vert1, tVertex& vert2, tVertex& vert3, bool bLeftSide, bool bCenter);
+  void GetTextureCoordinates(uint32 uiSurfaceType,
+                             tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
+                             bool bLeftSide, bool bCenter);
 
   bool IsNumber(const std::string &str);
   bool ProcessTrackData(const uint8_t *pData, size_t length);

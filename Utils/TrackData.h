@@ -236,7 +236,7 @@ protected:
                     glm::vec3 &rShoulder);
   void GetTextureCoordinates(uint32 uiSurfaceType,
                              tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
-                             bool bLeftSide, bool bCenter);
+                             bool bLeftLane = false, bool bRightLane = false);
 
   bool IsNumber(const std::string &str);
   bool ProcessTrackData(const uint8_t *pData, size_t length);

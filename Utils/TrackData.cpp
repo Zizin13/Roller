@@ -899,7 +899,7 @@ tVertex *CTrackData::MakeVertsLLane(uint32 &numVertices)
                           vertices[i * uiNumVertsPerChunk + 0],
                           vertices[i * uiNumVertsPerChunk + 1],
                           vertices[i * uiNumVertsPerChunk + 2],
-                          vertices[i * uiNumVertsPerChunk + 3], true, true);
+                          vertices[i * uiNumVertsPerChunk + 3], true, false);
 
     prevCenter = center;
     prevLLane = lLane;
@@ -1005,7 +1005,7 @@ tVertex *CTrackData::MakeVertsLShoulder(uint32 &numVertices)
                           vertices[i * uiNumVertsPerChunk + 0],
                           vertices[i * uiNumVertsPerChunk + 1],
                           vertices[i * uiNumVertsPerChunk + 2],
-                          vertices[i * uiNumVertsPerChunk + 3], true, false);
+                          vertices[i * uiNumVertsPerChunk + 3]);
 
     prevCenter = center;
     prevLLane = lLane;
@@ -1060,7 +1060,7 @@ tVertex *CTrackData::MakeVertsRShoulder(uint32 &numVertices)
                           vertices[i * uiNumVertsPerChunk + 0],
                           vertices[i * uiNumVertsPerChunk + 1],
                           vertices[i * uiNumVertsPerChunk + 2],
-                          vertices[i * uiNumVertsPerChunk + 3], false, false);
+                          vertices[i * uiNumVertsPerChunk + 3]);
 
     prevCenter = center;
     prevRLane = rLane;
@@ -1214,7 +1214,7 @@ void CTrackData::GetRShoulder(int i, glm::vec3 rLane, float fScale, glm::vec3 pi
 
 void CTrackData::GetTextureCoordinates(uint32 uiSurfaceType,
                                        tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
-                                       bool bLeftSide, bool bCenter)
+                                       bool bLeftLane, bool bRightLane)
 {
     //TEXTURES
   bool bPair = uiSurfaceType & SURFACE_FLAG_TEXTURE_PAIR;
@@ -1224,8 +1224,8 @@ void CTrackData::GetTextureCoordinates(uint32 uiSurfaceType,
 
   //right lane takes the second texture on center surface
   //both center lanes only draw one texture each when paired
-  uint32 uiTexIncVal = (bPair && !bCenter) ? 2 : 1;
-  if (bCenter && !bLeftSide && bPair)
+  uint32 uiTexIncVal = (bPair && !(bLeftLane || bRightLane)) ? 2 : 1;
+  if (bRightLane && bPair)
     uiTexIndex++;
 
   if (!bFlipHoriz && !bFlipVert)

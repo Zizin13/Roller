@@ -166,7 +166,7 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels)
   ckEnvirFloorSurface->blockSignals(false);
   ckEnvirFloorWireframe->blockSignals(false);
 
-  UpdatePreview();
+  UpdatePreviewSelection();
 }
 
 //-------------------------------------------------------------------------------------------------

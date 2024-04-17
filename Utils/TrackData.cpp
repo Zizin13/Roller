@@ -1133,7 +1133,7 @@ tVertex *CTrackData::MakeVertsRShoulder(uint32 &numVertices)
     vertices[2].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
   vertices[2].color = ShapeGenerator::RandomColor();
   vertices[3].position = prevRShoulder;
-  if (!bFlipVert)
+  if (!bFlipVert && !bFlipHoriz)
     vertices[3].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
   else if (bFlipVert && !bFlipHoriz)
     vertices[3].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);

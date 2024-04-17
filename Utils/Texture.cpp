@@ -136,8 +136,8 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length, const CPale
     }
   }
 
-  int iLength = TILE_WIDTH * 3;
-  int iHeight = (int)length / (TILE_WIDTH * 3);
+  int iLength = TILE_WIDTH;// *3;
+  int iHeight = TILE_HEIGHT * m_iNumTiles;// (int)length / (TILE_WIDTH * 3);
   GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, 
                       iLength, iHeight, 0,
                       GL_RGB, GL_UNSIGNED_BYTE, m_pTileAy));

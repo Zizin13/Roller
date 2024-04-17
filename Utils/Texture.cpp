@@ -65,6 +65,11 @@ bool CTexture::LoadTexture(const std::string &sFilename, const CPalette &palette
 
   //open file
   std::ifstream file(sFilename.c_str(), std::ios::binary);
+  if (!file.is_open()) {
+    //todo logging
+    return false;
+  }
+
   file.seekg(0, file.end);
   size_t length = file.tellg();
   file.seekg(0, file.beg);

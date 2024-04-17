@@ -1079,7 +1079,7 @@ tVertex *CTrackData::MakeVertsRShoulder(uint32 &numVertices)
     glm::vec3 rShoulder;
     GetRShoulder(i, rLane, fScale, pitchAxis, rollMat, nextChunkPitched, rShoulder);
     vertices[i * uiNumVertsPerChunk + 1].position = rShoulder;
-    if (!bFlipVert)
+    if (!bFlipVert && !bFlipHoriz)
       vertices[i * uiNumVertsPerChunk + 1].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
     else if (bFlipVert && !bFlipHoriz)
       vertices[i * uiNumVertsPerChunk + 1].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
@@ -1091,7 +1091,7 @@ tVertex *CTrackData::MakeVertsRShoulder(uint32 &numVertices)
 
     if (i > 0) {
       vertices[i * uiNumVertsPerChunk + 2].position = prevRLane;
-      if (!bFlipVert)
+      if (!bFlipVert && !bFlipHoriz)
         vertices[i * uiNumVertsPerChunk + 2].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
       else if (bFlipVert && !bFlipHoriz)
         vertices[i * uiNumVertsPerChunk + 2].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
@@ -1101,7 +1101,7 @@ tVertex *CTrackData::MakeVertsRShoulder(uint32 &numVertices)
         vertices[i * uiNumVertsPerChunk + 2].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
       vertices[i * uiNumVertsPerChunk + 2].color = ShapeGenerator::RandomColor();
       vertices[i * uiNumVertsPerChunk + 3].position = prevRShoulder;
-      if (!bFlipVert)
+      if (!bFlipVert && !bFlipHoriz)
         vertices[i * uiNumVertsPerChunk + 3].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
       else if (bFlipVert && !bFlipHoriz)
         vertices[i * uiNumVertsPerChunk + 3].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
@@ -1123,7 +1123,7 @@ tVertex *CTrackData::MakeVertsRShoulder(uint32 &numVertices)
   uiTexIndex = uiTexIndex & SURFACE_TEXTURE_INDEX;
   uint32 uiTexIncVal = bPair ? 2 : 1;
   vertices[2].position = prevRLane;
-  if (!bFlipVert)
+  if (!bFlipVert && !bFlipHoriz)
     vertices[2].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
   else if (bFlipVert && !bFlipHoriz)
     vertices[2].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);

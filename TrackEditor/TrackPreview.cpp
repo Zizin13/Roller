@@ -49,6 +49,10 @@ public:
     , m_pLLOWallWire(NULL)
     , m_pRLOWallSurf(NULL)
     , m_pRLOWallWire(NULL)
+    , m_pLUOWallSurf(NULL)
+    , m_pLUOWallWire(NULL)
+    , m_pRUOWallSurf(NULL)
+    , m_pRUOWallWire(NULL)
   {};
   ~CTrackPreviewPrivate()
   {
@@ -148,6 +152,22 @@ public:
       delete m_pRLOWallWire;
       m_pRLOWallWire = NULL;
     }
+    if (m_pLUOWallSurf) {
+      delete m_pLUOWallSurf;
+      m_pLUOWallSurf = NULL;
+    }
+    if (m_pLUOWallWire) {
+      delete m_pLUOWallWire;
+      m_pLUOWallWire = NULL;
+    }
+    if (m_pRUOWallSurf) {
+      delete m_pRUOWallSurf;
+      m_pRUOWallSurf = NULL;
+    }
+    if (m_pRUOWallWire) {
+      delete m_pRUOWallWire;
+      m_pRUOWallWire = NULL;
+    }
   }
 
   CShapeData *m_pLLaneSurf;
@@ -172,6 +192,10 @@ public:
   CShapeData *m_pLLOWallWire;
   CShapeData *m_pRLOWallSurf;
   CShapeData *m_pRLOWallWire;
+  CShapeData *m_pLUOWallSurf;
+  CShapeData *m_pLUOWallWire;
+  CShapeData *m_pRUOWallSurf;
+  CShapeData *m_pRUOWallWire;
   CShader *m_pShader;
   CTrack *m_pTrack;
 };
@@ -225,6 +249,10 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
     p->m_pLLOWallWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::LLOWALL, true);
     p->m_pRLOWallSurf = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::RLOWALL);
     p->m_pRLOWallWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::RLOWALL, true);
+    p->m_pLUOWallSurf = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::LUOWALL);
+    p->m_pLUOWallWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::LUOWALL, true);
+    p->m_pRUOWallSurf = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::RUOWALL);
+    p->m_pRUOWallWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::RUOWALL, true);
   }
   repaint();
 }
@@ -292,6 +320,14 @@ void CTrackPreview::paintGL()
     p->m_pRLOWallSurf->Draw(worldToProjectionMatrix);
   if (m_uiShowModels & SHOW_RLOWALL_WIRE_MODEL && p->m_pRLOWallWire)
     p->m_pRLOWallWire->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_LUOWALL_SURF_MODEL && p->m_pLUOWallSurf)
+    p->m_pLUOWallSurf->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_LUOWALL_WIRE_MODEL && p->m_pLUOWallWire)
+    p->m_pLUOWallWire->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_RUOWALL_SURF_MODEL && p->m_pRUOWallSurf)
+    p->m_pRUOWallSurf->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_RUOWALL_WIRE_MODEL && p->m_pRUOWallWire)
+    p->m_pRUOWallWire->Draw(worldToProjectionMatrix);
 }
 
 //-------------------------------------------------------------------------------------------------

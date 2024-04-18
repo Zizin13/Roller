@@ -28,6 +28,10 @@ class CTrackPreview;
 #define SHOW_LLOWALL_WIRE_MODEL    0x00080000
 #define SHOW_RLOWALL_SURF_MODEL    0x00100000
 #define SHOW_RLOWALL_WIRE_MODEL    0x00200000
+#define SHOW_LUOWALL_SURF_MODEL    0x00400000
+#define SHOW_LUOWALL_WIRE_MODEL    0x00800000
+#define SHOW_RUOWALL_SURF_MODEL    0x01000000
+#define SHOW_RUOWALL_WIRE_MODEL    0x02000000
 //-------------------------------------------------------------------------------------------------
 
 class CDisplaySettings : public QWidget, private Ui::DisplaySettings

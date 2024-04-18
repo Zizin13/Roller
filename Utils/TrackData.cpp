@@ -608,7 +608,7 @@ CShapeData *CTrackData::MakeTrackSurface(CShader *pShader, eShapeSection section
     else
       indices = MakeIndicesSingleSection(uiNumIndices, section);
   } else {
-    indices = MakeIndicesSingleSectionWireframe(uiNumIndices, section);
+    indices = MakeIndicesSingleSectionWireframe(uiNumIndices);
     drawType = GL_LINES;
   }
 
@@ -1116,21 +1116,19 @@ tVertex *CTrackData::MakeVertsLWall(uint32 &numVertices)
     glm::vec3 lWall;
     GetWall(i, bottomAttach, fScale, pitchAxis, rollMat, nextChunkPitched, lWall);
 
-    if (m_chunkAy[i].iLeftWallType != -1) {
-      vertices[i * uiNumVertsPerChunk + 1].position = bottomAttach;
-      vertices[i * uiNumVertsPerChunk + 0].position = lWall;
+    vertices[i * uiNumVertsPerChunk + 1].position = bottomAttach;
+    vertices[i * uiNumVertsPerChunk + 0].position = lWall;
 
-      if (i > 0) {
-        vertices[i * uiNumVertsPerChunk + 3].position = prevBottomAttach;
-        vertices[i * uiNumVertsPerChunk + 2].position = prevLWall;
-      }
-
-      GetTextureCoordinates(uiSurfaceType,
-                            vertices[i * uiNumVertsPerChunk + 0],
-                            vertices[i * uiNumVertsPerChunk + 1],
-                            vertices[i * uiNumVertsPerChunk + 2],
-                            vertices[i * uiNumVertsPerChunk + 3]);
+    if (i > 0) {
+      vertices[i * uiNumVertsPerChunk + 3].position = prevBottomAttach;
+      vertices[i * uiNumVertsPerChunk + 2].position = prevLWall;
     }
+
+    GetTextureCoordinates(uiSurfaceType,
+                          vertices[i * uiNumVertsPerChunk + 0],
+                          vertices[i * uiNumVertsPerChunk + 1],
+                          vertices[i * uiNumVertsPerChunk + 2],
+                          vertices[i * uiNumVertsPerChunk + 3]);
 
     prevCenter = center;
     prevBottomAttach = bottomAttach;
@@ -1180,21 +1178,81 @@ tVertex *CTrackData::MakeVertsRWall(uint32 &numVertices)
     glm::vec3 rWall;
     GetWall(i, bottomAttach, fScale, pitchAxis, rollMat, nextChunkPitched, rWall);
 
-    if (m_chunkAy[i].iRightWallType != -1) {
-      vertices[i * uiNumVertsPerChunk + 0].position = bottomAttach;
-      vertices[i * uiNumVertsPerChunk + 1].position = rWall;
+    vertices[i * uiNumVertsPerChunk + 0].position = bottomAttach;
+    vertices[i * uiNumVertsPerChunk + 1].position = rWall;
 
-      if (i > 0) {
-        vertices[i * uiNumVertsPerChunk + 2].position = prevBottomAttach;
-        vertices[i * uiNumVertsPerChunk + 3].position = prevRWall;
-      }
-
-      GetTextureCoordinates(uiSurfaceType,
-                            vertices[i * uiNumVertsPerChunk + 0],
-                            vertices[i * uiNumVertsPerChunk + 1],
-                            vertices[i * uiNumVertsPerChunk + 2],
-                            vertices[i * uiNumVertsPerChunk + 3]);
+    if (i > 0) {
+      vertices[i * uiNumVertsPerChunk + 2].position = prevBottomAttach;
+      vertices[i * uiNumVertsPerChunk + 3].position = prevRWall;
     }
+
+    GetTextureCoordinates(uiSurfaceType,
+                          vertices[i * uiNumVertsPerChunk + 0],
+                          vertices[i * uiNumVertsPerChunk + 1],
+                          vertices[i * uiNumVertsPerChunk + 2],
+                          vertices[i * uiNumVertsPerChunk + 3]);
+
+    prevCenter = center;
+    prevBottomAttach = bottomAttach;
+    prevRWall = rWall;
+  }
+  vertices[2].position = prevBottomAttach;
+  vertices[3].position = prevRWall;
+
+  return vertices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+tVertex *CTrackData::MakeVertsRoof(uint32 &numVertices)
+{
+  if (m_chunkAy.empty()) {
+    numVertices = 0;
+    return NULL;
+  }
+
+  uint32 uiNumVertsPerChunk = 4;
+  float fScale = 10000.0f;
+
+  numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
+  tVertex *vertices = new tVertex[numVertices];
+  glm::vec3 prevCenter = glm::vec3(0, 0, 1);
+  glm::vec3 prevBottomAttach = glm::vec3(0, 0, 1);
+  glm::vec3 prevRWall = glm::vec3(0, 0, 1);
+  for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
+    glm::vec3 center;
+    glm::vec3 pitchAxis;
+    glm::vec3 nextChunkPitched;
+    glm::mat4 rollMat;
+    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+
+    glm::vec3 bottomAttach;
+    uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType);
+    bool bAttachToLane = uiSurfaceType & SURFACE_FLAG_WALL_31;
+    if (bAttachToLane) {
+      GetRLane(i, center, fScale, pitchAxis, rollMat, bottomAttach);
+    } else {
+      glm::vec3 rLane;
+      GetRLane(i, center, fScale, pitchAxis, rollMat, rLane);
+      GetRShoulder(i, rLane, fScale, pitchAxis, rollMat, nextChunkPitched, bottomAttach);
+    }
+    //left wall
+    glm::vec3 rWall;
+    GetWall(i, bottomAttach, fScale, pitchAxis, rollMat, nextChunkPitched, rWall);
+
+    vertices[i * uiNumVertsPerChunk + 0].position = bottomAttach;
+    vertices[i * uiNumVertsPerChunk + 1].position = rWall;
+
+    if (i > 0) {
+      vertices[i * uiNumVertsPerChunk + 2].position = prevBottomAttach;
+      vertices[i * uiNumVertsPerChunk + 3].position = prevRWall;
+    }
+
+    GetTextureCoordinates(uiSurfaceType,
+                          vertices[i * uiNumVertsPerChunk + 0],
+                          vertices[i * uiNumVertsPerChunk + 1],
+                          vertices[i * uiNumVertsPerChunk + 2],
+                          vertices[i * uiNumVertsPerChunk + 3]);
 
     prevCenter = center;
     prevBottomAttach = bottomAttach;
@@ -1227,6 +1285,8 @@ uint32 *CTrackData::MakeIndicesSingleSection(uint32 &numIndices, eShapeSection s
       continue;
     if (section == eShapeSection::RWALL && m_chunkAy[i].iRightWallType == -1)
       continue;
+    if (section == eShapeSection::ROOF && m_chunkAy[i].iRoofType == -1)
+      continue;
     indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 2;
     indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 3;
     indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 1;
@@ -1240,7 +1300,7 @@ uint32 *CTrackData::MakeIndicesSingleSection(uint32 &numIndices, eShapeSection s
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 *CTrackData::MakeIndicesSingleSectionWireframe(uint32 &numIndices, eShapeSection section)
+uint32 *CTrackData::MakeIndicesSingleSectionWireframe(uint32 &numIndices)
 {
   if (m_chunkAy.empty()) {
     numIndices = 0;
@@ -1255,10 +1315,6 @@ uint32 *CTrackData::MakeIndicesSingleSectionWireframe(uint32 &numIndices, eShape
 
   uint32 i = 0;
   for (; i < m_chunkAy.size(); i++) {
-    if (section == eShapeSection::LWALL && m_chunkAy[i].iLeftWallType == -1)
-      continue;
-    if (section == eShapeSection::RWALL && m_chunkAy[i].iRightWallType == -1)
-      continue;
     indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 2;
     indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 3;
     indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 3;

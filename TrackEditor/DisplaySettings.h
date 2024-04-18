@@ -18,6 +18,8 @@ class CTrackPreview;
 #define SHOW_LWALL_WIRE_MODEL     0x00000200
 #define SHOW_RWALL_SURF_MODEL     0x00000400
 #define SHOW_RWALL_WIRE_MODEL     0x00000800
+#define SHOW_ROOF_SURF_MODEL      0x00001000
+#define SHOW_ROOF_WIRE_MODEL      0x00002000
 //-------------------------------------------------------------------------------------------------
 
 class CDisplaySettings : public QWidget, private Ui::DisplaySettings

@@ -1448,7 +1448,7 @@ tVertex *CTrackData::MakeVertsLLOWall(uint32 &numVertices)
     GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
 
     glm::vec3 bottomAttach;
-    if (m_chunkAy[i].iOuterFloorType == -1) {
+    if (m_chunkAy[i].iOuterFloorType < 0) {
       //attach bottom to left shoulder
       glm::vec3 lLane;
       GetLane(i, center, pitchAxis, rollMat, lLane, true);
@@ -1520,7 +1520,7 @@ tVertex *CTrackData::MakeVertsRLOWall(uint32 &numVertices)
     GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
 
     glm::vec3 bottomAttach;
-    if (m_chunkAy[i].iOuterFloorType == -1) {
+    if (m_chunkAy[i].iOuterFloorType < 0) {
       //attach bottom to right shoulder
       glm::vec3 rLane;
       GetLane(i, center, pitchAxis, rollMat, rLane, false);
@@ -1592,7 +1592,7 @@ tVertex *CTrackData::MakeVertsLUOWall(uint32 &numVertices)
     GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
 
     glm::vec3 bottomAttach;
-    if (m_chunkAy[i].iOuterFloorType == -1) {
+    if (m_chunkAy[i].iOuterFloorType < 0) {
       //attach bottom to left shoulder
       glm::vec3 lLane;
       GetLane(i, center, pitchAxis, rollMat, lLane, true);
@@ -1667,7 +1667,7 @@ tVertex *CTrackData::MakeVertsRUOWall(uint32 &numVertices)
     GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
 
     glm::vec3 bottomAttach;
-    if (m_chunkAy[i].iOuterFloorType == -1) {
+    if (m_chunkAy[i].iOuterFloorType < 0) {
       //attach bottom to right shoulder
       glm::vec3 rLane;
       GetLane(i, center, pitchAxis, rollMat, rLane, false);
@@ -1778,7 +1778,7 @@ bool CTrackData::ShouldMakeIndicesForChunk(int i, eShapeSection section)
           || GetSignedBitValueFromInt(m_chunkAy[i].iEnvironmentFloorType) & SURFACE_FLAG_NON_SOLID))
     return false;
   if (section == eShapeSection::OWALLFLOOR
-      && (m_chunkAy[i].iOuterFloorType == -1
+      && (m_chunkAy[i].iOuterFloorType < 0
           || GetSignedBitValueFromInt(m_chunkAy[i].iOuterFloorType) & SURFACE_FLAG_NON_SOLID))
     return false;
   if (section == eShapeSection::LLOWALL
@@ -1788,6 +1788,14 @@ bool CTrackData::ShouldMakeIndicesForChunk(int i, eShapeSection section)
   if (section == eShapeSection::RLOWALL
       && (m_chunkAy[i].iRLOuterWallType == -1
           || GetSignedBitValueFromInt(m_chunkAy[i].iRLOuterWallType) & SURFACE_FLAG_NON_SOLID))
+    return false;
+  if (section == eShapeSection::LUOWALL
+      && (m_chunkAy[i].iLUOuterWallType == -1
+          || GetSignedBitValueFromInt(m_chunkAy[i].iLUOuterWallType) & SURFACE_FLAG_NON_SOLID))
+    return false;
+  if (section == eShapeSection::RUOWALL
+      && (m_chunkAy[i].iRUOuterWallType == -1
+          || GetSignedBitValueFromInt(m_chunkAy[i].iRUOuterWallType) & SURFACE_FLAG_NON_SOLID))
     return false;
   return true;
 }

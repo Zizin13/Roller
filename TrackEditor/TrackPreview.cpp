@@ -195,8 +195,8 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
     p->m_pRoofWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::ROOF, true);
     p->m_pEnvirFloorSurf = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::ENVIRFLOOR);
     p->m_pEnvirFloorWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::ENVIRFLOOR, true);
-    //p->m_pOWallFloorSurf = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::OWALLFLOOR);
-    //p->m_pOWallFloorWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::OWALLFLOOR, true);
+    p->m_pOWallFloorSurf = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::OWALLFLOOR);
+    p->m_pOWallFloorWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::OWALLFLOOR, true);
   }
   repaint();
 }

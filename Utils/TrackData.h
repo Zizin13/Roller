@@ -247,7 +247,7 @@ protected:
                     glm::vec3 &rShoulder);
   void GetWall(int i, glm::vec3 bottomAttach, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                 glm::vec3 &wall);
-  void GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder, float fScale, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
+  void GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder, float fScale,
                      glm::vec3 &lEnvirFloor, glm::vec3 &rEnvirFloor);
   void GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, float fScale, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
                      glm::vec3 &lFloor, glm::vec3 &rFloor);

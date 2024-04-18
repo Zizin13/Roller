@@ -604,6 +604,9 @@ CShapeData *CTrackData::MakeTrackSurface(CShader *pShader, eShapeSection section
     case ENVIRFLOOR:
       vertices = MakeVertsEnvirFloor(uiNumVerts);
       break;
+    case OWALLFLOOR:
+      vertices = MakeVertsOWallFloor(uiNumVerts);
+      break;
   }
   uint32 uiNumIndices;
   uint32 *indices = NULL;
@@ -1326,7 +1329,7 @@ tVertex *CTrackData::MakeVertsEnvirFloor(uint32 &numVertices)
     //floor
     glm::vec3 lFloor;
     glm::vec3 rFloor;
-    GetEnvirFloor(i, lShoulder, rShoulder, fScale, pitchAxis, nextChunkPitched, lFloor, rFloor);
+    GetEnvirFloor(i, lShoulder, rShoulder, fScale, lFloor, rFloor);
 
     //set verts
     vertices[i * uiNumVertsPerChunk + 0].position = lFloor;
@@ -1390,15 +1393,15 @@ tVertex *CTrackData::MakeVertsOWallFloor(uint32 &numVertices)
     //floor
     glm::vec3 lFloor;
     glm::vec3 rFloor;
-    //GetOWallFloor(i, lLane, rLane, fScale, pitchAxis, nextChunkPitched, fEnvirFloorY, lFloor, rFloor);
+    GetOWallFloor(i, lLane, rLane, fScale, pitchAxis, nextChunkPitched, lFloor, rFloor);
 
     //set verts
-    //vertices[i * uiNumVertsPerChunk + 0].position = lFloor;
-    //vertices[i * uiNumVertsPerChunk + 1].position = rFloor;
-    //if (i > 0) {
-    //  vertices[i * uiNumVertsPerChunk + 2].position = prevLFloor;
-    //  vertices[i * uiNumVertsPerChunk + 3].position = prevRFloor;
-    //}
+    vertices[i * uiNumVertsPerChunk + 0].position = lFloor;
+    vertices[i * uiNumVertsPerChunk + 1].position = rFloor;
+    if (i > 0) {
+      vertices[i * uiNumVertsPerChunk + 2].position = prevLFloor;
+      vertices[i * uiNumVertsPerChunk + 3].position = prevRFloor;
+    }
 
     //set tex
     uint32 uiFloorSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iOuterFloorType);
@@ -1409,8 +1412,8 @@ tVertex *CTrackData::MakeVertsOWallFloor(uint32 &numVertices)
                           vertices[i * uiNumVertsPerChunk + 3]);
 
     prevCenter = center;
-    //prevLFloor = lFloor;
-    //prevRFloor = rFloor;
+    prevLFloor = lFloor;
+    prevRFloor = rFloor;
   }
   vertices[2].position = prevLFloor;
   vertices[3].position = prevRFloor;
@@ -1611,19 +1614,14 @@ void CTrackData::GetWall(int i, glm::vec3 bottomAttach, float fScale, glm::vec3 
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder, float fScale, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
+void CTrackData::GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder, float fScale,
                                glm::vec3 &lEnvirFloor, glm::vec3 &rEnvirFloor)
 {
-  glm::mat4 translateMatL = glm::translate(lShoulder);
-  glm::mat4 translateMatR = glm::translate(rShoulder);
-  float fFloorDepth = (float)m_header.iFloorDepth / fScale * 1.0f;
-  glm::mat4 scaleMatFloorDepth = glm::scale(glm::vec3(fFloorDepth, fFloorDepth, fFloorDepth));
-  glm::vec3 normal = glm::normalize(glm::cross(nextChunkPitched, pitchAxis));
-  glm::vec3 floorDepthVec = glm::vec3(scaleMatFloorDepth * glm::vec4(normal, 1.0f));
-  lEnvirFloor = glm::vec3(translateMatL * glm::vec4(floorDepthVec, 1.0f));
-  rEnvirFloor = glm::vec3(translateMatR * glm::vec4(floorDepthVec, 1.0f));
-  lEnvirFloor.y = fFloorDepth;
-  rEnvirFloor.y = fFloorDepth;
+  float fEnvirFloorDepth = (float)m_header.iFloorDepth / fScale * -1.0f;
+  lEnvirFloor = lShoulder;
+  rEnvirFloor = rShoulder;
+  lEnvirFloor.y = fEnvirFloorDepth;
+  rEnvirFloor.y = fEnvirFloorDepth;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1631,7 +1629,23 @@ void CTrackData::GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder, 
 void CTrackData::GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, float fScale, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
                                glm::vec3 &lFloor, glm::vec3 &rFloor)
 {
+  glm::mat4 translateMatL = glm::translate(lLane);
+  glm::mat4 translateMatR = glm::translate(rLane);
+  float fEnvirFloorDepth = (float)m_header.iFloorDepth / fScale * -1.0f;
+  float fLOFloorHeight = (float)m_chunkAy[i].iLOuterFloorHeight / fScale * 1.0f;
+  float fROFloorHeight = (float)m_chunkAy[i].iROuterFloorHeight / fScale * 1.0f;
+  float fROFloorOffset = (float)m_chunkAy[i].iROuterFloorHOffset / fScale * 1.0f;
+  float fLOFloorOffset = (float)m_chunkAy[i].iLOuterFloorHOffset / fScale * -1.0f;
 
+  glm::mat4 scaleMatRWidth = glm::scale(glm::vec3(fROFloorOffset, fROFloorOffset, fROFloorOffset));
+  glm::vec3 rWidthVec = glm::vec3(scaleMatRWidth * glm::vec4(pitchAxis, 1.0f));
+  glm::mat4 scaleMatLWidth = glm::scale(glm::vec3(fLOFloorOffset, fLOFloorOffset, fLOFloorOffset));
+  glm::vec3 lWidthVec = glm::vec3(scaleMatLWidth * glm::vec4(pitchAxis, 1.0f));
+
+  lFloor = glm::vec3(translateMatL * glm::vec4(lWidthVec, 1.0f));;
+  rFloor = glm::vec3(translateMatR * glm::vec4(rWidthVec, 1.0f));;
+  lFloor.y = fEnvirFloorDepth + fLOFloorHeight;
+  rFloor.y = fEnvirFloorDepth + fROFloorHeight;
 }
 
 //-------------------------------------------------------------------------------------------------

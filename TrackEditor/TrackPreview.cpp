@@ -41,6 +41,8 @@ public:
     , m_pRWallWire(NULL)
     , m_pRoofSurf(NULL)
     , m_pRoofWire(NULL)
+    , m_pEnvirFloorSurf(NULL)
+    , m_pEnvirFloorWire(NULL)
   {};
   ~CTrackPreviewPrivate()
   {
@@ -108,6 +110,14 @@ public:
       delete m_pRoofWire;
       m_pRoofWire = NULL;
     }
+    if (m_pEnvirFloorSurf) {
+      delete m_pEnvirFloorSurf;
+      m_pEnvirFloorSurf = NULL;
+    }
+    if (m_pEnvirFloorWire) {
+      delete m_pEnvirFloorWire;
+      m_pEnvirFloorWire = NULL;
+    }
   }
 
   CShapeData *m_pLLaneSurf;
@@ -124,6 +134,8 @@ public:
   CShapeData *m_pRWallWire;
   CShapeData *m_pRoofSurf;
   CShapeData *m_pRoofWire;
+  CShapeData *m_pEnvirFloorSurf;
+  CShapeData *m_pEnvirFloorWire;
   CShader *m_pShader;
   CTrack *m_pTrack;
 };
@@ -169,6 +181,8 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
     p->m_pRWallWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::RWALL, true);
     p->m_pRoofSurf = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::ROOF);
     p->m_pRoofWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::ROOF, true);
+    p->m_pEnvirFloorSurf = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::ENVIRFLOOR);
+    p->m_pEnvirFloorWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::ENVIRFLOOR, true);
   }
   repaint();
 }
@@ -220,6 +234,10 @@ void CTrackPreview::paintGL()
     p->m_pRoofSurf->Draw(worldToProjectionMatrix);
   if (m_uiShowModels & SHOW_ROOF_WIRE_MODEL && p->m_pRoofWire)
     p->m_pRoofWire->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_ENVIRFLOOR_SURF_MODEL && p->m_pEnvirFloorSurf)
+    p->m_pEnvirFloorSurf->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_ENVIRFLOOR_WIRE_MODEL && p->m_pEnvirFloorWire)
+    p->m_pEnvirFloorWire->Draw(worldToProjectionMatrix);
 }
 
 //-------------------------------------------------------------------------------------------------

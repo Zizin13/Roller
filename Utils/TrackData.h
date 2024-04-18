@@ -183,7 +183,8 @@ enum eShapeSection
   ROOF,
   ENVIRFLOOR,
   OWALLFLOOR,
-  LLOWALL
+  LLOWALL,
+  RLOWALL
 };
 //-------------------------------------------------------------------------------------------------
 class CShader;
@@ -233,6 +234,7 @@ protected:
   tVertex *MakeVertsEnvirFloor(uint32 &numVertices);
   tVertex *MakeVertsOWallFloor(uint32 &numVertices);
   tVertex *MakeVertsLLOWall(uint32 &numVertices);
+  tVertex *MakeVertsRLOWall(uint32 &numVertices);
 
   uint32 *MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section);
   bool ShouldMakeIndicesForChunk(int i, eShapeSection section);
@@ -254,8 +256,8 @@ protected:
                      glm::vec3 &lEnvirFloor, glm::vec3 &rEnvirFloor);
   void GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
                      glm::vec3 &lFloor, glm::vec3 &rFloor);
-  void GetLLOWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
-                  glm::vec3 &lloWall);
+  void GetXLOWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+                  glm::vec3 &lloWall, bool bLeft);
   void GetTextureCoordinates(uint32 uiSurfaceType,
                              tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
                              bool bLeftLane = false, bool bRightLane = false);

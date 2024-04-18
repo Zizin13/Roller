@@ -609,6 +609,9 @@ CShapeData *CTrackData::MakeTrackSurface(CShader *pShader, eShapeSection section
     case LLOWALL:
       vertices = MakeVertsLLOWall(uiNumVerts);
       break;
+    case RLOWALL:
+      vertices = MakeVertsRLOWall(uiNumVerts);
+      break;
   }
   uint32 uiNumIndices;
   uint32 *indices = NULL;
@@ -1457,7 +1460,7 @@ tVertex *CTrackData::MakeVertsLLOWall(uint32 &numVertices)
     }
 
     glm::vec3 lloWall;
-    GetLLOWall(i, bottomAttach, pitchAxis, useRollMat, nextChunkPitched, lloWall);
+    GetXLOWall(i, bottomAttach, pitchAxis, useRollMat, nextChunkPitched, lloWall, true);
 
     //set verts
     vertices[i * uiNumVertsPerChunk + 1].position = bottomAttach;
@@ -1481,6 +1484,78 @@ tVertex *CTrackData::MakeVertsLLOWall(uint32 &numVertices)
   }
   vertices[3].position = prevBottomAttach;
   vertices[2].position = prevLLOWall;
+
+  return vertices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+tVertex *CTrackData::MakeVertsRLOWall(uint32 &numVertices)
+{
+  if (m_chunkAy.empty()) {
+    numVertices = 0;
+    return NULL;
+  }
+
+  uint32 uiNumVertsPerChunk = 4;
+
+  numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
+  tVertex *vertices = new tVertex[numVertices];
+  glm::vec3 prevCenter = glm::vec3(0, 0, 1);
+  glm::vec3 prevBottomAttach = glm::vec3(0, 0, 1);
+  glm::vec3 prevRLOWall = glm::vec3(0, 0, 1);
+  for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
+    glm::vec3 center;
+    glm::vec3 pitchAxis;
+    glm::vec3 nextChunkPitched;
+    glm::mat4 rollMat;
+    glm::mat4 rollMatNoRoll = glm::mat4(1);
+    glm::mat4 useRollMat;
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
+
+    glm::vec3 bottomAttach;
+    if (m_chunkAy[i].iOuterFloorType == -1) {
+      //attach bottom to right shoulder
+      glm::vec3 rLane;
+      GetRLane(i, center, pitchAxis, rollMat, rLane);
+      GetRShoulder(i, rLane, pitchAxis, rollMat, nextChunkPitched, bottomAttach);
+      useRollMat = rollMat;
+    } else {
+      //attach bottom to outer floor
+      glm::vec3 lLane;
+      GetLLane(i, center, pitchAxis, rollMatNoRoll, lLane);
+      glm::vec3 rLane;
+      GetRLane(i, center, pitchAxis, rollMatNoRoll, rLane);
+      glm::vec3 lFloor;
+      GetOWallFloor(i, lLane, rLane, pitchAxis, nextChunkPitched, lFloor, bottomAttach);
+      useRollMat = rollMatNoRoll;
+    }
+
+    glm::vec3 rloWall;
+    GetXLOWall(i, bottomAttach, pitchAxis, useRollMat, nextChunkPitched, rloWall, false);
+
+    //set verts
+    vertices[i * uiNumVertsPerChunk + 0].position = bottomAttach;
+    vertices[i * uiNumVertsPerChunk + 1].position = rloWall;
+    if (i > 0) {
+      vertices[i * uiNumVertsPerChunk + 2].position = prevBottomAttach;
+      vertices[i * uiNumVertsPerChunk + 3].position = prevRLOWall;
+    }
+
+    //set tex
+    uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iRLOuterWallType);
+    GetTextureCoordinates(uiSurfaceType,
+                          vertices[i * uiNumVertsPerChunk + 0],
+                          vertices[i * uiNumVertsPerChunk + 1],
+                          vertices[i * uiNumVertsPerChunk + 2],
+                          vertices[i * uiNumVertsPerChunk + 3]);
+
+    prevCenter = center;
+    prevBottomAttach = bottomAttach;
+    prevRLOWall = rloWall;
+  }
+  vertices[2].position = prevBottomAttach;
+  vertices[3].position = prevRLOWall;
 
   return vertices;
 }
@@ -1553,6 +1628,10 @@ bool CTrackData::ShouldMakeIndicesForChunk(int i, eShapeSection section)
   if (section == eShapeSection::LLOWALL
       && (m_chunkAy[i].iLLOuterWallType == -1
           || GetSignedBitValueFromInt(m_chunkAy[i].iLLOuterWallType) & SURFACE_FLAG_NON_SOLID))
+    return false;
+  if (section == eShapeSection::RLOWALL
+      && (m_chunkAy[i].iRLOuterWallType == -1
+          || GetSignedBitValueFromInt(m_chunkAy[i].iRLOuterWallType) & SURFACE_FLAG_NON_SOLID))
     return false;
   return true;
 }
@@ -1718,12 +1797,19 @@ void CTrackData::GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, glm::vec
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetLLOWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
-                            glm::vec3 &lloWall)
+void CTrackData::GetXLOWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+                            glm::vec3 &lloWall, bool bLeft)
 {
   glm::mat4 translateMat = glm::translate(bottomAttach);
-  float fHOffset = (float)m_chunkAy[i].iLLOuterWallHOffset / m_fScale * -1.0f;
-  float fHeight = (float)m_chunkAy[i].iLLOuterWallHeight / m_fScale * -1.0f;
+  float fHOffset;
+  float fHeight;
+  if (bLeft) {
+    fHOffset = (float)m_chunkAy[i].iLLOuterWallHOffset / m_fScale * -1.0f;
+    fHeight = (float)m_chunkAy[i].iLLOuterWallHeight / m_fScale * -1.0f;
+  } else {
+    fHOffset = (float)m_chunkAy[i].iRLOuterWallHOffset / m_fScale;
+    fHeight = (float)m_chunkAy[i].iRLOuterWallHeight / m_fScale * -1.0f;
+  }
   glm::mat4 scaleMatWidth = glm::scale(glm::vec3(fHOffset, fHOffset, fHOffset));
   glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
   glm::vec3 widthVec = glm::vec3(scaleMatWidth * rollMat * glm::vec4(pitchAxis, 1.0f));

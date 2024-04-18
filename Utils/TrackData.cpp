@@ -1309,23 +1309,24 @@ tVertex *CTrackData::MakeVertsEnvirFloor(uint32 &numVertices)
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
     GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+    glm::mat4 rollMatNoRoll = glm::mat4(1);
 
     //left shoulder
     glm::vec3 lLane;
     glm::vec3 lShoulder;
-    GetLLane(i, center, fScale, pitchAxis, rollMat, lLane);
-    GetLShoulder(i, lLane, fScale, pitchAxis, rollMat, nextChunkPitched, lShoulder);
+    GetLLane(i, center, fScale, pitchAxis, rollMatNoRoll, lLane);
+    GetLShoulder(i, lLane, fScale, pitchAxis, rollMatNoRoll, nextChunkPitched, lShoulder);
 
     //right shoulder
     glm::vec3 rLane;
     glm::vec3 rShoulder;
-    GetRLane(i, center, fScale, pitchAxis, rollMat, rLane);
-    GetRShoulder(i, rLane, fScale, pitchAxis, rollMat, nextChunkPitched, rShoulder);
+    GetRLane(i, center, fScale, pitchAxis, rollMatNoRoll, rLane);
+    GetRShoulder(i, rLane, fScale, pitchAxis, rollMatNoRoll, nextChunkPitched, rShoulder);
 
     //floor
     glm::vec3 lFloor;
     glm::vec3 rFloor;
-    GetEnvirFloor(i, lShoulder, rShoulder, fScale, pitchAxis, rollMat, nextChunkPitched, lFloor, rFloor);
+    GetEnvirFloor(i, lShoulder, rShoulder, fScale, pitchAxis, nextChunkPitched, prevLFloor.y, lFloor, rFloor);
 
     //set verts
     vertices[i * uiNumVertsPerChunk + 0].position = lFloor;
@@ -1542,7 +1543,8 @@ void CTrackData::GetWall(int i, glm::vec3 bottomAttach, float fScale, glm::vec3 
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+void CTrackData::GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder, float fScale, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
+                               float fPrevEnvirFLoorY,
                                glm::vec3 &lEnvirFloor, glm::vec3 &rEnvirFloor)
 {
   glm::mat4 translateMatL = glm::translate(lShoulder);
@@ -1550,9 +1552,13 @@ void CTrackData::GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder, 
   float fFloorDepth = (float)m_header.iFloorDepth / fScale * 1.0f;
   glm::mat4 scaleMatFloorDepth = glm::scale(glm::vec3(fFloorDepth, fFloorDepth, fFloorDepth));
   glm::vec3 normal = glm::normalize(glm::cross(nextChunkPitched, pitchAxis));
-  glm::vec3 floorDepthVec = glm::vec3(scaleMatFloorDepth * rollMat * glm::vec4(normal, 1.0f));
+  glm::vec3 floorDepthVec = glm::vec3(scaleMatFloorDepth * glm::vec4(normal, 1.0f));
   lEnvirFloor = glm::vec3(translateMatL * glm::vec4(floorDepthVec, 1.0f));
   rEnvirFloor = glm::vec3(translateMatR * glm::vec4(floorDepthVec, 1.0f));
+  if (i > 0) {
+    lEnvirFloor.y = fPrevEnvirFLoorY;
+    rEnvirFloor.y = fPrevEnvirFLoorY;
+  }
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -245,8 +245,9 @@ protected:
                     glm::vec3 &rShoulder);
   void GetWall(int i, glm::vec3 bottomAttach, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                 glm::vec3 &wall);
-  void GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
-                    glm::vec3 &lEnvirFloor, glm::vec3 &rEnvirFloor);
+  void GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder, float fScale, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
+                     float fPrevEnvirFLoorY,
+                     glm::vec3 &lEnvirFloor, glm::vec3 &rEnvirFloor);
   void GetTextureCoordinates(uint32 uiSurfaceType,
                              tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
                              bool bLeftLane = false, bool bRightLane = false);

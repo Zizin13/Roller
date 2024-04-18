@@ -1139,10 +1139,10 @@ tVertex *CTrackData::MakeVertsLWall(uint32 &numVertices)
     }
 
     GetTextureCoordinates(uiSurfaceType,
-                          vertices[i * uiNumVertsPerChunk + 0],
                           vertices[i * uiNumVertsPerChunk + 1],
-                          vertices[i * uiNumVertsPerChunk + 2],
-                          vertices[i * uiNumVertsPerChunk + 3]);
+                          vertices[i * uiNumVertsPerChunk + 3],
+                          vertices[i * uiNumVertsPerChunk + 0],
+                          vertices[i * uiNumVertsPerChunk + 2]);
 
     prevCenter = center;
     prevBottomAttach = bottomAttach;
@@ -1200,10 +1200,10 @@ tVertex *CTrackData::MakeVertsRWall(uint32 &numVertices)
     }
 
     GetTextureCoordinates(uiSurfaceType,
-                          vertices[i * uiNumVertsPerChunk + 0],
                           vertices[i * uiNumVertsPerChunk + 1],
-                          vertices[i * uiNumVertsPerChunk + 2],
-                          vertices[i * uiNumVertsPerChunk + 3]);
+                          vertices[i * uiNumVertsPerChunk + 3],
+                          vertices[i * uiNumVertsPerChunk + 0],
+                          vertices[i * uiNumVertsPerChunk + 2]);
 
     prevCenter = center;
     prevBottomAttach = bottomAttach;
@@ -1479,10 +1479,10 @@ tVertex *CTrackData::MakeVertsLLOWall(uint32 &numVertices)
     //set tex
     uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iLLOuterWallType);
     GetTextureCoordinates(uiSurfaceType,
-                          vertices[i * uiNumVertsPerChunk + 0],
-                          vertices[i * uiNumVertsPerChunk + 1],
                           vertices[i * uiNumVertsPerChunk + 2],
-                          vertices[i * uiNumVertsPerChunk + 3]);
+                          vertices[i * uiNumVertsPerChunk + 0],
+                          vertices[i * uiNumVertsPerChunk + 3],
+                          vertices[i * uiNumVertsPerChunk + 1]);
 
     prevCenter = center;
     prevBottomAttach = bottomAttach;
@@ -1551,10 +1551,10 @@ tVertex *CTrackData::MakeVertsRLOWall(uint32 &numVertices)
     //set tex
     uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iRLOuterWallType);
     GetTextureCoordinates(uiSurfaceType,
-                          vertices[i * uiNumVertsPerChunk + 0],
-                          vertices[i * uiNumVertsPerChunk + 1],
                           vertices[i * uiNumVertsPerChunk + 2],
-                          vertices[i * uiNumVertsPerChunk + 3]);
+                          vertices[i * uiNumVertsPerChunk + 0],
+                          vertices[i * uiNumVertsPerChunk + 3],
+                          vertices[i * uiNumVertsPerChunk + 1]);
 
     prevCenter = center;
     prevBottomAttach = bottomAttach;
@@ -1626,10 +1626,10 @@ tVertex *CTrackData::MakeVertsLUOWall(uint32 &numVertices)
     //set tex
     uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iLLOuterWallType);
     GetTextureCoordinates(uiSurfaceType,
-                          vertices[i * uiNumVertsPerChunk + 0],
-                          vertices[i * uiNumVertsPerChunk + 1],
                           vertices[i * uiNumVertsPerChunk + 2],
-                          vertices[i * uiNumVertsPerChunk + 3]);
+                          vertices[i * uiNumVertsPerChunk + 0],
+                          vertices[i * uiNumVertsPerChunk + 3],
+                          vertices[i * uiNumVertsPerChunk + 1]);
 
     prevCenter = center;
     prevLLOWall = lloWall;
@@ -1701,10 +1701,10 @@ tVertex *CTrackData::MakeVertsRUOWall(uint32 &numVertices)
     //set tex
     uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iRLOuterWallType);
     GetTextureCoordinates(uiSurfaceType,
-                          vertices[i * uiNumVertsPerChunk + 0],
-                          vertices[i * uiNumVertsPerChunk + 1],
                           vertices[i * uiNumVertsPerChunk + 2],
-                          vertices[i * uiNumVertsPerChunk + 3]);
+                          vertices[i * uiNumVertsPerChunk + 0],
+                          vertices[i * uiNumVertsPerChunk + 3],
+                          vertices[i * uiNumVertsPerChunk + 1]);
 
     prevCenter = center;
     prevRLOWall = rloWall;

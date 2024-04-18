@@ -2037,6 +2037,10 @@ void CTrackData::GetTextureCoordinates(uint32 uiSurfaceType,
   else if (bFlipHoriz && bFlipVert)
     bottomRight.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
 
+  topLeft.flags = glm::vec3(0);
+  topRight.flags = glm::vec3(0);
+  bottomLeft.flags = glm::vec3(0);
+  bottomRight.flags = glm::vec3(0);
   if (bTransparent) {
     ////use color
     //topLeft.flags.x = 1.0f;

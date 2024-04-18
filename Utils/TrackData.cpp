@@ -592,6 +592,9 @@ CShapeData *CTrackData::MakeTrackSurface(CShader *pShader, eShapeSection section
     case RSHOULDER:
       vertices = MakeVertsRShoulder(uiNumVerts);
       break;
+    case LWALL:
+      vertices = MakeVertsLWall(uiNumVerts);
+      break;
   }
   uint32 uiNumIndices;
   uint32 *indices = NULL;
@@ -1074,6 +1077,68 @@ tVertex *CTrackData::MakeVertsRShoulder(uint32 &numVertices)
 
 //-------------------------------------------------------------------------------------------------
 
+tVertex *CTrackData::MakeVertsLWall(uint32 &numVertices)
+{
+  if (m_chunkAy.empty()) {
+    numVertices = 0;
+    return NULL;
+  }
+
+  uint32 uiNumVertsPerChunk = 4;
+  float fScale = 10000.0f;
+
+  numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
+  tVertex *vertices = new tVertex[numVertices];
+  glm::vec3 prevCenter = glm::vec3(0, 0, 1);
+  glm::vec3 prevBottomAttach = glm::vec3(0, 0, 1);
+  glm::vec3 prevLWall = glm::vec3(0, 0, 1);
+  for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
+    glm::vec3 center;
+    glm::vec3 pitchAxis;
+    glm::vec3 nextChunkPitched;
+    glm::mat4 rollMat;
+    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+
+    glm::vec3 bottomAttach;
+    uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType);
+    bool bAttachToLane = uiSurfaceType & SURFACE_FLAG_WALL_31;
+    if (bAttachToLane) {
+      GetLLane(i, center, fScale, pitchAxis, rollMat, bottomAttach);
+    } else {
+      glm::vec3 lLane;
+      GetLLane(i, center, fScale, pitchAxis, rollMat, lLane);
+      GetLShoulder(i, lLane, fScale, pitchAxis, rollMat, nextChunkPitched, bottomAttach);
+    }
+    //left wall
+    glm::vec3 lWall;
+    GetLWall(i, bottomAttach, fScale, pitchAxis, rollMat, nextChunkPitched, lWall);
+
+    vertices[i * uiNumVertsPerChunk + 1].position = bottomAttach;
+    vertices[i * uiNumVertsPerChunk + 0].position = lWall;
+
+    if (i > 0) {
+      vertices[i * uiNumVertsPerChunk + 3].position = prevBottomAttach;
+      vertices[i * uiNumVertsPerChunk + 2].position = prevLWall;
+    }
+
+    GetTextureCoordinates(uiSurfaceType,
+                          vertices[i * uiNumVertsPerChunk + 0],
+                          vertices[i * uiNumVertsPerChunk + 1],
+                          vertices[i * uiNumVertsPerChunk + 2],
+                          vertices[i * uiNumVertsPerChunk + 3]);
+
+    prevCenter = center;
+    prevBottomAttach = bottomAttach;
+    prevLWall = lWall;
+  }
+  vertices[3].position = prevBottomAttach;
+  vertices[2].position = prevLWall;
+
+  return vertices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 uint32 *CTrackData::MakeIndicesSingleSection(uint32 &numIndices)
 {
   if (m_chunkAy.empty()) {
@@ -1208,6 +1273,19 @@ void CTrackData::GetRShoulder(int i, glm::vec3 rLane, float fScale, glm::vec3 pi
   glm::vec3 rShoulderHeightVec = glm::vec3(scaleMatRightShoulderHeight * rollMat * glm::vec4(normal, 1.0f));
   glm::vec3 rShoulderVec = rShoulderWidthVec + rShoulderHeightVec;
   rShoulder = glm::vec3(translateMat * glm::vec4(rShoulderVec, 1.0f));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GetLWall(int i, glm::vec3 bottomAttach, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+              glm::vec3 &lWall)
+{
+  glm::mat4 translateMat = glm::translate(bottomAttach);
+  float fLWallHeight = (float)m_chunkAy[i].iRoofHeight / fScale * -1.0f;
+  glm::mat4 scaleMatLWallHeight = glm::scale(glm::vec3(fLWallHeight, fLWallHeight, fLWallHeight));
+  glm::vec3 normal = glm::normalize(glm::cross(nextChunkPitched, pitchAxis));
+  glm::vec3 lWallHeightVec = glm::vec3(scaleMatLWallHeight * rollMat * glm::vec4(normal, 1.0f));
+  lWall = glm::vec3(translateMat * glm::vec4(lWallHeightVec, 1.0f));
 }
 
 //-------------------------------------------------------------------------------------------------

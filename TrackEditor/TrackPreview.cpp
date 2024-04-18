@@ -35,6 +35,8 @@ public:
     , m_pLShoulderWire(NULL)
     , m_pRShoulderSurf(NULL)
     , m_pRShoulderWire(NULL)
+    , m_pLWallSurf(NULL)
+    , m_pLWallWire(NULL)
   {};
   ~CTrackPreviewPrivate()
   {
@@ -78,6 +80,14 @@ public:
       delete m_pRShoulderWire;
       m_pRShoulderWire= NULL;
     }
+    if (m_pLWallSurf) {
+      delete m_pLWallSurf;
+      m_pLWallSurf = NULL;
+    }
+    if (m_pLWallWire) {
+      delete m_pLWallWire;
+      m_pLWallWire = NULL;
+    }
   }
 
   CShapeData *m_pLLaneSurf;
@@ -88,6 +98,8 @@ public:
   CShapeData *m_pLShoulderWire;
   CShapeData *m_pRShoulderSurf;
   CShapeData *m_pRShoulderWire;
+  CShapeData *m_pLWallSurf;
+  CShapeData *m_pLWallWire;
   CShader *m_pShader;
   CTrack *m_pTrack;
 };
@@ -127,6 +139,8 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
     p->m_pLShoulderWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::LSHOULDER, true);
     p->m_pRShoulderSurf = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::RSHOULDER);
     p->m_pRShoulderWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::RSHOULDER, true);
+    p->m_pLWallSurf = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::LWALL);
+    p->m_pLWallWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::LWALL, true);
   }
   repaint();
 }
@@ -166,6 +180,10 @@ void CTrackPreview::paintGL()
     p->m_pRShoulderSurf->Draw(worldToProjectionMatrix);
   if (m_uiShowModels & SHOW_RSHOULDER_WIRE_MODEL && p->m_pRShoulderWire)
     p->m_pRShoulderWire->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_LWALL_SURF_MODEL && p->m_pLWallSurf)
+    p->m_pLWallSurf->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_LWALL_WIRE_MODEL && p->m_pLWallWire)
+    p->m_pLWallWire->Draw(worldToProjectionMatrix);
 }
 
 //-------------------------------------------------------------------------------------------------

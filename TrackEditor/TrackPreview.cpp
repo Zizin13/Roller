@@ -25,7 +25,7 @@ class CTrackPreviewPrivate
 {
 public:
   CTrackPreviewPrivate()
-    : m_pPassThroughShader(NULL)
+    : m_pShader(NULL)
     , m_pTrack(NULL)
     , m_pLLaneSurf(NULL)
     , m_pLLaneWire(NULL)
@@ -39,9 +39,9 @@ public:
   ~CTrackPreviewPrivate()
   {
     DeleteModels();
-    if (m_pPassThroughShader) {
-      delete m_pPassThroughShader;
-      m_pPassThroughShader = NULL;
+    if (m_pShader) {
+      delete m_pShader;
+      m_pShader = NULL;
     }
   };
   void DeleteModels()
@@ -88,7 +88,7 @@ public:
   CShapeData *m_pLShoulderWire;
   CShapeData *m_pRShoulderSurf;
   CShapeData *m_pRShoulderWire;
-  CShader *m_pPassThroughShader;
+  CShader *m_pShader;
   CTrack *m_pTrack;
 };
 
@@ -119,14 +119,14 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
   p->DeleteModels();
   p->m_pTrack = pTrack;
   if (p->m_pTrack) {
-    p->m_pLLaneSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LLANE);
-    p->m_pLLaneWire= p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LLANE, true);
-    p->m_pRLaneSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RLANE);
-    p->m_pRLaneWire = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RLANE, true);
-    p->m_pLShoulderSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LSHOULDER);
-    p->m_pLShoulderWire = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::LSHOULDER, true);
-    p->m_pRShoulderSurf = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RSHOULDER);
-    p->m_pRShoulderWire = p->m_pTrack->MakeTrackSurface(p->m_pPassThroughShader, eShapeSection::RSHOULDER, true);
+    p->m_pLLaneSurf = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::LLANE);
+    p->m_pLLaneWire= p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::LLANE, true);
+    p->m_pRLaneSurf = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::RLANE);
+    p->m_pRLaneWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::RLANE, true);
+    p->m_pLShoulderSurf = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::LSHOULDER);
+    p->m_pLShoulderWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::LSHOULDER, true);
+    p->m_pRShoulderSurf = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::RSHOULDER);
+    p->m_pRShoulderWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::RSHOULDER, true);
   }
   repaint();
 }
@@ -183,8 +183,8 @@ void CTrackPreview::initializeGL()
   //glEnable(GL_BLEND);
   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  if (!p->m_pPassThroughShader)
-    p->m_pPassThroughShader = new CShader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");
+  if (!p->m_pShader)
+    p->m_pShader = new CShader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");
 }
 
 //-------------------------------------------------------------------------------------------------

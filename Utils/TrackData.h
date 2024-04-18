@@ -225,8 +225,8 @@ protected:
   tVertex *MakeVertsLWall(uint32 &numVertices);
   tVertex *MakeVertsRWall(uint32 &numVertices);
 
-  uint32 *MakeIndicesSingleSection(uint32 &numIndices);
-  uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices);
+  uint32 *MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section);
+  uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices, eShapeSection section);
 
   void GetCenter(int i, glm::vec3 prevCenter, float fScale, 
                  glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched, glm::mat4 &rollMat);

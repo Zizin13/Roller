@@ -1320,17 +1320,25 @@ uint32 *CTrackData::MakeIndicesSingleSection(uint32 &numIndices, eShapeSection s
 bool CTrackData::ShouldMakeIndicesForChunk(int i, eShapeSection section)
 {
   if ((section == eShapeSection::LLANE || section == eShapeSection::RLANE)
-      && (m_chunkAy[i].iCenterSurfaceType & SURFACE_FLAG_NON_SOLID))
+      && (GetSignedBitValueFromInt(m_chunkAy[i].iCenterSurfaceType) & SURFACE_FLAG_NON_SOLID))
     return false;
-  if (section == eShapeSection::LSHOULDER && (m_chunkAy[i].iLeftSurfaceType & SURFACE_FLAG_NON_SOLID))
+  if (section == eShapeSection::LSHOULDER 
+      && (GetSignedBitValueFromInt(m_chunkAy[i].iLeftSurfaceType) & SURFACE_FLAG_NON_SOLID))
     return false;
-  if (section == eShapeSection::RSHOULDER && (m_chunkAy[i].iRightSurfaceType & SURFACE_FLAG_NON_SOLID))
+  if (section == eShapeSection::RSHOULDER 
+      && (GetSignedBitValueFromInt(m_chunkAy[i].iRightSurfaceType) & SURFACE_FLAG_NON_SOLID))
     return false;
-  if (section == eShapeSection::LWALL && m_chunkAy[i].iLeftWallType == -1)
+  if (section == eShapeSection::LWALL 
+      && (m_chunkAy[i].iLeftWallType == -1 
+          || GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_NON_SOLID))
     return false;
-  if (section == eShapeSection::RWALL && m_chunkAy[i].iRightWallType == -1)
+  if (section == eShapeSection::RWALL
+      && (m_chunkAy[i].iRightWallType == -1 
+          || GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType) & SURFACE_FLAG_NON_SOLID))
     return false;
-  if (section == eShapeSection::ROOF && m_chunkAy[i].iRoofType == -1)
+  if (section == eShapeSection::ROOF
+      && (m_chunkAy[i].iRoofType == -1 
+          || GetSignedBitValueFromInt(m_chunkAy[i].iRoofType) & SURFACE_FLAG_NON_SOLID))
     return false;
   return true;
 }

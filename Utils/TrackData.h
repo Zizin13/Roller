@@ -178,7 +178,8 @@ enum eShapeSection
   RLANE,
   LSHOULDER,
   RSHOULDER,
-  LWALL
+  LWALL,
+  RWALL
 };
 //-------------------------------------------------------------------------------------------------
 class CShader;
@@ -222,6 +223,7 @@ protected:
   tVertex *MakeVertsLShoulder(uint32 &numVertices);
   tVertex *MakeVertsRShoulder(uint32 &numVertices);
   tVertex *MakeVertsLWall(uint32 &numVertices);
+  tVertex *MakeVertsRWall(uint32 &numVertices);
 
   uint32 *MakeIndicesSingleSection(uint32 &numIndices);
   uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices);
@@ -236,8 +238,8 @@ protected:
                     glm::vec3 &lShoulder);
   void GetRShoulder(int i, glm::vec3 rLane, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                     glm::vec3 &rShoulder);
-  void GetLWall(int i, glm::vec3 bottomAttach, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
-                glm::vec3 &lWall);
+  void GetWall(int i, glm::vec3 bottomAttach, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+                glm::vec3 &wall);
   void GetTextureCoordinates(uint32 uiSurfaceType,
                              tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
                              bool bLeftLane = false, bool bRightLane = false);

@@ -16,6 +16,8 @@ class CTrackPreview;
 #define SHOW_RSHOULDER_WIRE_MODEL 0x00000080
 #define SHOW_LWALL_SURF_MODEL     0x00000100
 #define SHOW_LWALL_WIRE_MODEL     0x00000200
+#define SHOW_RWALL_SURF_MODEL     0x00000400
+#define SHOW_RWALL_WIRE_MODEL     0x00000800
 //-------------------------------------------------------------------------------------------------
 
 class CDisplaySettings : public QWidget, private Ui::DisplaySettings

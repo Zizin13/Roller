@@ -20,9 +20,6 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
   lblLUOWall->hide();
   ckLUOWallSurface->hide();
   ckLUOWallWireframe->hide();
-  lblLLOWall->hide();
-  ckLLOWallSurface->hide();
-  ckLLOWallWireframe->hide();
   lblRUOWall->hide();
   ckRUOWallSurface->hide();
   ckRUOWallWireframe->hide();
@@ -87,6 +84,8 @@ uint32 CDisplaySettings::GetDisplaySettings()
   if (ckRWallWireframe->isChecked())      uiShowModels |= SHOW_RWALL_WIRE_MODEL;
   if (ckRoofSurface->isChecked())         uiShowModels |= SHOW_ROOF_SURF_MODEL;
   if (ckRoofWireframe->isChecked())       uiShowModels |= SHOW_ROOF_WIRE_MODEL;
+  if (ckLLOWallSurface->isChecked())      uiShowModels |= SHOW_LLOWALL_SURF_MODEL;
+  if (ckLLOWallWireframe->isChecked())    uiShowModels |= SHOW_LLOWALL_WIRE_MODEL;
   if (ckOWallFloorSurface->isChecked())   uiShowModels |= SHOW_OWALLFLOOR_SURF_MODEL;
   if (ckOWallFloorWireframe->isChecked()) uiShowModels |= SHOW_OWALLFLOOR_WIRE_MODEL;
   if (ckEnvirFloorSurface->isChecked())   uiShowModels |= SHOW_ENVIRFLOOR_SURF_MODEL;
@@ -139,6 +138,8 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels)
   ckRWallWireframe->setChecked(     uiShowModels & SHOW_RWALL_WIRE_MODEL);
   ckRoofSurface->setChecked(        uiShowModels & SHOW_ROOF_SURF_MODEL);
   ckRoofWireframe->setChecked(      uiShowModels & SHOW_ROOF_WIRE_MODEL);
+  ckLLOWallSurface->setChecked(     uiShowModels & SHOW_LLOWALL_SURF_MODEL);
+  ckLLOWallWireframe->setChecked(   uiShowModels & SHOW_LLOWALL_WIRE_MODEL);
   ckOWallFloorSurface->setChecked(  uiShowModels & SHOW_OWALLFLOOR_SURF_MODEL);
   ckOWallFloorWireframe->setChecked(uiShowModels & SHOW_OWALLFLOOR_WIRE_MODEL);
   ckEnvirFloorSurface->setChecked(  uiShowModels & SHOW_ENVIRFLOOR_SURF_MODEL);

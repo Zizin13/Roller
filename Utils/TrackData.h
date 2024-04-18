@@ -182,7 +182,8 @@ enum eShapeSection
   RWALL,
   ROOF,
   ENVIRFLOOR,
-  OWALLFLOOR
+  OWALLFLOOR,
+  LLOWALL
 };
 //-------------------------------------------------------------------------------------------------
 class CShader;
@@ -213,6 +214,7 @@ public:
   bool m_bIsMangled;
   CTexture m_tex;
   CTexture m_bld;
+  float m_fScale;
 
 protected:
   tVertex *MakeVertsCenterline(uint32 &numVertices);
@@ -230,27 +232,30 @@ protected:
   tVertex *MakeVertsRoof(uint32 &numVertices);
   tVertex *MakeVertsEnvirFloor(uint32 &numVertices);
   tVertex *MakeVertsOWallFloor(uint32 &numVertices);
+  tVertex *MakeVertsLLOWall(uint32 &numVertices);
 
   uint32 *MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section);
   bool ShouldMakeIndicesForChunk(int i, eShapeSection section);
   uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices);
 
-  void GetCenter(int i, glm::vec3 prevCenter, float fScale, 
+  void GetCenter(int i, glm::vec3 prevCenter,
                  glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched, glm::mat4 &rollMat);
-  void GetLLane(int i, glm::vec3 center, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat,
+  void GetLLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat,
                 glm::vec3 &lLane);
-  void GetRLane(int i, glm::vec3 center, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat,
+  void GetRLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat,
                 glm::vec3 &rLane);
-  void GetLShoulder(int i, glm::vec3 lLane, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched, 
+  void GetLShoulder(int i, glm::vec3 lLane, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched, 
                     glm::vec3 &lShoulder);
-  void GetRShoulder(int i, glm::vec3 rLane, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+  void GetRShoulder(int i, glm::vec3 rLane, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                     glm::vec3 &rShoulder);
-  void GetWall(int i, glm::vec3 bottomAttach, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+  void GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                 glm::vec3 &wall);
-  void GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder, float fScale,
+  void GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder,
                      glm::vec3 &lEnvirFloor, glm::vec3 &rEnvirFloor);
-  void GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, float fScale, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
+  void GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
                      glm::vec3 &lFloor, glm::vec3 &rFloor);
+  void GetLLOWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+                  glm::vec3 &lloWall);
   void GetTextureCoordinates(uint32 uiSurfaceType,
                              tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
                              bool bLeftLane = false, bool bRightLane = false);

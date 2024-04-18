@@ -116,6 +116,7 @@ void tGeometryChunk::Clear()
 //-------------------------------------------------------------------------------------------------
 
 CTrackData::CTrackData()
+  : m_fScale(10000.0f)
 {
   ClearData();
 }
@@ -532,16 +533,14 @@ tVertex *CTrackData::MakeVertsCenterline(uint32 &numVertices)
   }
 
   numVertices = (uint32)m_chunkAy.size();
-  float fScale = 10000.0f;
   tVertex *vertices = new tVertex[numVertices];
   glm::vec3 prevCenter = glm::vec3(0, 0, 1);
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
-    float fLen = (float)m_chunkAy[i].iLength / fScale;
     glm::vec3 center;
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
-    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
     vertices[i].position = center;
     vertices[i].color = ShapeGenerator::RandomColor();
 
@@ -606,6 +605,9 @@ CShapeData *CTrackData::MakeTrackSurface(CShader *pShader, eShapeSection section
       break;
     case OWALLFLOOR:
       vertices = MakeVertsOWallFloor(uiNumVerts);
+      break;
+    case LLOWALL:
+      vertices = MakeVertsLLOWall(uiNumVerts);
       break;
   }
   uint32 uiNumIndices;
@@ -711,7 +713,6 @@ tVertex *CTrackData::MakeVertsSurface(uint32 &numVertices)
   }
 
   uint32 uiNumVertsPerChunk = 5;
-  float fScale = 10000.0f;
 
   numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
@@ -721,28 +722,28 @@ tVertex *CTrackData::MakeVertsSurface(uint32 &numVertices)
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
-    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
 
     vertices[i * uiNumVertsPerChunk + 0].position = center;
     vertices[i * uiNumVertsPerChunk + 0].color = ShapeGenerator::RandomColor();
     //left lane
     glm::vec3 lLane;
-    GetLLane(i, center, fScale, pitchAxis, rollMat, lLane);
+    GetLLane(i, center, pitchAxis, rollMat, lLane);
     vertices[i * uiNumVertsPerChunk + 1].position = lLane;
     vertices[i * uiNumVertsPerChunk + 1].color = ShapeGenerator::RandomColor();
     //right lane
     glm::vec3 rLane;
-    GetRLane(i, center, fScale, pitchAxis, rollMat, rLane);
+    GetRLane(i, center, pitchAxis, rollMat, rLane);
     vertices[i * uiNumVertsPerChunk + 2].position = rLane;
     vertices[i * uiNumVertsPerChunk + 2].color = ShapeGenerator::RandomColor();
     //left shoulder
     glm::vec3 lShoulder;
-    GetLShoulder(i, lLane, fScale, pitchAxis, rollMat, nextChunkPitched, lShoulder);
+    GetLShoulder(i, lLane, pitchAxis, rollMat, nextChunkPitched, lShoulder);
     vertices[i * uiNumVertsPerChunk + 3].position = lShoulder;
     vertices[i * uiNumVertsPerChunk + 3].color = ShapeGenerator::RandomColor();
     //right shoulder
     glm::vec3 rShoulder;
-    GetRShoulder(i, rLane, fScale, pitchAxis, rollMat, nextChunkPitched, rShoulder);
+    GetRShoulder(i, rLane, pitchAxis, rollMat, nextChunkPitched, rShoulder);
     vertices[i * uiNumVertsPerChunk + 4].position = rShoulder;
     vertices[i * uiNumVertsPerChunk + 4].color = ShapeGenerator::RandomColor();
 
@@ -885,7 +886,6 @@ tVertex *CTrackData::MakeVertsLLane(uint32 &numVertices)
   }
 
   uint32 uiNumVertsPerChunk = 4;
-  float fScale = 10000.0f;
 
   numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
@@ -896,12 +896,12 @@ tVertex *CTrackData::MakeVertsLLane(uint32 &numVertices)
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
-    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
 
     vertices[i * uiNumVertsPerChunk + 1].position = center;
     //left lane
     glm::vec3 lLane;
-    GetLLane(i, center, fScale, pitchAxis, rollMat, lLane);
+    GetLLane(i, center, pitchAxis, rollMat, lLane);
     vertices[i * uiNumVertsPerChunk + 0].position = lLane;
 
     if (i > 0) {
@@ -935,7 +935,6 @@ tVertex *CTrackData::MakeVertsRLane(uint32 &numVertices)
   }
 
   uint32 uiNumVertsPerChunk = 4;
-  float fScale = 10000.0f;
 
   numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
@@ -946,13 +945,13 @@ tVertex *CTrackData::MakeVertsRLane(uint32 &numVertices)
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
-    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
 
     vertices[i * uiNumVertsPerChunk + 0].position = center;
 
     //right lane
     glm::vec3 rLane;
-    GetRLane(i, center, fScale, pitchAxis, rollMat, rLane);
+    GetRLane(i, center, pitchAxis, rollMat, rLane);
     vertices[i * uiNumVertsPerChunk + 1].position = rLane;
 
     if (i > 0) {
@@ -987,7 +986,6 @@ tVertex *CTrackData::MakeVertsLShoulder(uint32 &numVertices)
   }
 
   uint32 uiNumVertsPerChunk = 4;
-  float fScale = 10000.0f;
 
   numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
@@ -999,15 +997,15 @@ tVertex *CTrackData::MakeVertsLShoulder(uint32 &numVertices)
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
-    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
     //left lane
     glm::vec3 lLane;
-    GetLLane(i, center, fScale, pitchAxis, rollMat, lLane);
+    GetLLane(i, center, pitchAxis, rollMat, lLane);
     vertices[i * uiNumVertsPerChunk + 1].position = lLane;
 
     //left shoulder
     glm::vec3 lShoulder;
-    GetLShoulder(i, lLane, fScale, pitchAxis, rollMat, nextChunkPitched, lShoulder);
+    GetLShoulder(i, lLane, pitchAxis, rollMat, nextChunkPitched, lShoulder);
     vertices[i * uiNumVertsPerChunk + 0].position = lShoulder;
 
     if (i > 0) {
@@ -1042,7 +1040,6 @@ tVertex *CTrackData::MakeVertsRShoulder(uint32 &numVertices)
   }
 
   uint32 uiNumVertsPerChunk = 4;
-  float fScale = 10000.0f;
 
   numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
@@ -1054,15 +1051,15 @@ tVertex *CTrackData::MakeVertsRShoulder(uint32 &numVertices)
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
-    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
 
     //right lane
     glm::vec3 rLane;
-    GetRLane(i, center, fScale, pitchAxis, rollMat, rLane);
+    GetRLane(i, center, pitchAxis, rollMat, rLane);
     vertices[i * uiNumVertsPerChunk + 0].position = rLane;
     //right shoulder
     glm::vec3 rShoulder;
-    GetRShoulder(i, rLane, fScale, pitchAxis, rollMat, nextChunkPitched, rShoulder);
+    GetRShoulder(i, rLane, pitchAxis, rollMat, nextChunkPitched, rShoulder);
     vertices[i * uiNumVertsPerChunk + 1].position = rShoulder;
 
     if (i > 0) {
@@ -1097,7 +1094,6 @@ tVertex *CTrackData::MakeVertsLWall(uint32 &numVertices)
   }
 
   uint32 uiNumVertsPerChunk = 4;
-  float fScale = 10000.0f;
 
   numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
@@ -1109,21 +1105,21 @@ tVertex *CTrackData::MakeVertsLWall(uint32 &numVertices)
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
-    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
 
     glm::vec3 bottomAttach;
     uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType);
     bool bAttachToLane = uiSurfaceType & SURFACE_FLAG_WALL_31;
     if (bAttachToLane) {
-      GetLLane(i, center, fScale, pitchAxis, rollMat, bottomAttach);
+      GetLLane(i, center, pitchAxis, rollMat, bottomAttach);
     } else {
       glm::vec3 lLane;
-      GetLLane(i, center, fScale, pitchAxis, rollMat, lLane);
-      GetLShoulder(i, lLane, fScale, pitchAxis, rollMat, nextChunkPitched, bottomAttach);
+      GetLLane(i, center, pitchAxis, rollMat, lLane);
+      GetLShoulder(i, lLane, pitchAxis, rollMat, nextChunkPitched, bottomAttach);
     }
     //left wall
     glm::vec3 lWall;
-    GetWall(i, bottomAttach, fScale, pitchAxis, rollMat, nextChunkPitched, lWall);
+    GetWall(i, bottomAttach, pitchAxis, rollMat, nextChunkPitched, lWall);
 
     vertices[i * uiNumVertsPerChunk + 1].position = bottomAttach;
     vertices[i * uiNumVertsPerChunk + 0].position = lWall;
@@ -1159,7 +1155,6 @@ tVertex *CTrackData::MakeVertsRWall(uint32 &numVertices)
   }
 
   uint32 uiNumVertsPerChunk = 4;
-  float fScale = 10000.0f;
 
   numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
@@ -1171,21 +1166,21 @@ tVertex *CTrackData::MakeVertsRWall(uint32 &numVertices)
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
-    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
 
     glm::vec3 bottomAttach;
     uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType);
     bool bAttachToLane = uiSurfaceType & SURFACE_FLAG_WALL_31;
     if (bAttachToLane) {
-      GetRLane(i, center, fScale, pitchAxis, rollMat, bottomAttach);
+      GetRLane(i, center, pitchAxis, rollMat, bottomAttach);
     } else {
       glm::vec3 rLane;
-      GetRLane(i, center, fScale, pitchAxis, rollMat, rLane);
-      GetRShoulder(i, rLane, fScale, pitchAxis, rollMat, nextChunkPitched, bottomAttach);
+      GetRLane(i, center, pitchAxis, rollMat, rLane);
+      GetRShoulder(i, rLane, pitchAxis, rollMat, nextChunkPitched, bottomAttach);
     }
     //right wall
     glm::vec3 rWall;
-    GetWall(i, bottomAttach, fScale, pitchAxis, rollMat, nextChunkPitched, rWall);
+    GetWall(i, bottomAttach, pitchAxis, rollMat, nextChunkPitched, rWall);
 
     vertices[i * uiNumVertsPerChunk + 0].position = bottomAttach;
     vertices[i * uiNumVertsPerChunk + 1].position = rWall;
@@ -1221,7 +1216,6 @@ tVertex *CTrackData::MakeVertsRoof(uint32 &numVertices)
   }
 
   uint32 uiNumVertsPerChunk = 4;
-  float fScale = 10000.0f;
 
   numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
@@ -1233,35 +1227,35 @@ tVertex *CTrackData::MakeVertsRoof(uint32 &numVertices)
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
-    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
 
     //right wall
     glm::vec3 rBottomAttach;
     uint32 uiRightSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType);
     bool bRAttachToLane = uiRightSurfaceType & SURFACE_FLAG_WALL_31;
     if (bRAttachToLane) {
-      GetRLane(i, center, fScale, pitchAxis, rollMat, rBottomAttach);
+      GetRLane(i, center, pitchAxis, rollMat, rBottomAttach);
     } else {
       glm::vec3 rLane;
-      GetRLane(i, center, fScale, pitchAxis, rollMat, rLane);
-      GetRShoulder(i, rLane, fScale, pitchAxis, rollMat, nextChunkPitched, rBottomAttach);
+      GetRLane(i, center, pitchAxis, rollMat, rLane);
+      GetRShoulder(i, rLane, pitchAxis, rollMat, nextChunkPitched, rBottomAttach);
     }
     glm::vec3 rWall;
-    GetWall(i, rBottomAttach, fScale, pitchAxis, rollMat, nextChunkPitched, rWall);
+    GetWall(i, rBottomAttach, pitchAxis, rollMat, nextChunkPitched, rWall);
 
     //left wall
     glm::vec3 lBottomAttach;
     uint32 uiLeftSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iLeftSurfaceType);
     bool bLAttachToLane = uiLeftSurfaceType & SURFACE_FLAG_WALL_31;
     if (bLAttachToLane) {
-      GetLLane(i, center, fScale, pitchAxis, rollMat, lBottomAttach);
+      GetLLane(i, center, pitchAxis, rollMat, lBottomAttach);
     } else {
       glm::vec3 lLane;
-      GetLLane(i, center, fScale, pitchAxis, rollMat, lLane);
-      GetLShoulder(i, lLane, fScale, pitchAxis, rollMat, nextChunkPitched, lBottomAttach);
+      GetLLane(i, center, pitchAxis, rollMat, lLane);
+      GetLShoulder(i, lLane, pitchAxis, rollMat, nextChunkPitched, lBottomAttach);
     }
     glm::vec3 lWall;
-    GetWall(i, lBottomAttach, fScale, pitchAxis, rollMat, nextChunkPitched, lWall);
+    GetWall(i, lBottomAttach, pitchAxis, rollMat, nextChunkPitched, lWall);
 
     //set verts
     vertices[i * uiNumVertsPerChunk + 1].position = lWall;
@@ -1299,7 +1293,6 @@ tVertex *CTrackData::MakeVertsEnvirFloor(uint32 &numVertices)
   }
 
   uint32 uiNumVertsPerChunk = 4;
-  float fScale = 10000.0f;
 
   numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
@@ -1311,25 +1304,25 @@ tVertex *CTrackData::MakeVertsEnvirFloor(uint32 &numVertices)
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
-    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
     glm::mat4 rollMatNoRoll = glm::mat4(1);
 
     //left shoulder
     glm::vec3 lLane;
     glm::vec3 lShoulder;
-    GetLLane(i, center, fScale, pitchAxis, rollMatNoRoll, lLane);
-    GetLShoulder(i, lLane, fScale, pitchAxis, rollMatNoRoll, nextChunkPitched, lShoulder);
+    GetLLane(i, center, pitchAxis, rollMatNoRoll, lLane);
+    GetLShoulder(i, lLane, pitchAxis, rollMatNoRoll, nextChunkPitched, lShoulder);
 
     //right shoulder
     glm::vec3 rLane;
     glm::vec3 rShoulder;
-    GetRLane(i, center, fScale, pitchAxis, rollMatNoRoll, rLane);
-    GetRShoulder(i, rLane, fScale, pitchAxis, rollMatNoRoll, nextChunkPitched, rShoulder);
+    GetRLane(i, center, pitchAxis, rollMatNoRoll, rLane);
+    GetRShoulder(i, rLane, pitchAxis, rollMatNoRoll, nextChunkPitched, rShoulder);
 
     //floor
     glm::vec3 lFloor;
     glm::vec3 rFloor;
-    GetEnvirFloor(i, lShoulder, rShoulder, fScale, lFloor, rFloor);
+    GetEnvirFloor(i, lShoulder, rShoulder, lFloor, rFloor);
 
     //set verts
     vertices[i * uiNumVertsPerChunk + 0].position = lFloor;
@@ -1367,7 +1360,6 @@ tVertex *CTrackData::MakeVertsOWallFloor(uint32 &numVertices)
   }
 
   uint32 uiNumVertsPerChunk = 4;
-  float fScale = 10000.0f;
 
   numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
@@ -1379,21 +1371,21 @@ tVertex *CTrackData::MakeVertsOWallFloor(uint32 &numVertices)
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
-    GetCenter(i, prevCenter, fScale, center, pitchAxis, nextChunkPitched, rollMat);
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
     glm::mat4 rollMatNoRoll = glm::mat4(1);
 
     //left lane
     glm::vec3 lLane;
-    GetLLane(i, center, fScale, pitchAxis, rollMatNoRoll, lLane);
+    GetLLane(i, center, pitchAxis, rollMatNoRoll, lLane);
 
     //right lane
     glm::vec3 rLane;
-    GetRLane(i, center, fScale, pitchAxis, rollMatNoRoll, rLane);
+    GetRLane(i, center, pitchAxis, rollMatNoRoll, rLane);
 
     //floor
     glm::vec3 lFloor;
     glm::vec3 rFloor;
-    GetOWallFloor(i, lLane, rLane, fScale, pitchAxis, nextChunkPitched, lFloor, rFloor);
+    GetOWallFloor(i, lLane, rLane, pitchAxis, nextChunkPitched, lFloor, rFloor);
 
     //set verts
     vertices[i * uiNumVertsPerChunk + 0].position = lFloor;
@@ -1417,6 +1409,75 @@ tVertex *CTrackData::MakeVertsOWallFloor(uint32 &numVertices)
   }
   vertices[2].position = prevLFloor;
   vertices[3].position = prevRFloor;
+
+  return vertices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+tVertex *CTrackData::MakeVertsLLOWall(uint32 &numVertices)
+{
+  if (m_chunkAy.empty()) {
+    numVertices = 0;
+    return NULL;
+  }
+
+  uint32 uiNumVertsPerChunk = 4;
+
+  numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
+  tVertex *vertices = new tVertex[numVertices];
+  glm::vec3 prevCenter = glm::vec3(0, 0, 1);
+  glm::vec3 prevBottomAttach = glm::vec3(0, 0, 1);
+  glm::vec3 prevLLOWall = glm::vec3(0, 0, 1);
+  for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
+    glm::vec3 center;
+    glm::vec3 pitchAxis;
+    glm::vec3 nextChunkPitched;
+    glm::mat4 rollMat;
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
+    glm::mat4 rollMatNoRoll = glm::mat4(1);
+
+    glm::vec3 bottomAttach;
+    if (m_chunkAy[i].iOuterFloorType == -1) {
+      //attach bottom to left shoulder
+      glm::vec3 lLane;
+      GetLLane(i, center, pitchAxis, rollMat, lLane);
+      GetLShoulder(i, lLane, pitchAxis, rollMat, nextChunkPitched, bottomAttach);
+    } else {
+      //attach bottom to outer floor
+      glm::vec3 lLane;
+      GetLLane(i, center, pitchAxis, rollMatNoRoll, lLane);
+      glm::vec3 rLane;
+      GetRLane(i, center, pitchAxis, rollMatNoRoll, rLane);
+      glm::vec3 rFloor;
+      GetOWallFloor(i, lLane, rLane, pitchAxis, nextChunkPitched, bottomAttach, rFloor);
+    }
+
+    glm::vec3 lloWall;
+    GetLLOWall(i, bottomAttach, pitchAxis, rollMat, nextChunkPitched, lloWall);
+
+    //set verts
+    vertices[i * uiNumVertsPerChunk + 1].position = bottomAttach;
+    vertices[i * uiNumVertsPerChunk + 0].position = lloWall;
+    if (i > 0) {
+      vertices[i * uiNumVertsPerChunk + 3].position = prevBottomAttach;
+      vertices[i * uiNumVertsPerChunk + 2].position = prevLLOWall;
+    }
+
+    //set tex
+    uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iLLOuterWallType);
+    GetTextureCoordinates(uiSurfaceType,
+                          vertices[i * uiNumVertsPerChunk + 0],
+                          vertices[i * uiNumVertsPerChunk + 1],
+                          vertices[i * uiNumVertsPerChunk + 2],
+                          vertices[i * uiNumVertsPerChunk + 3]);
+
+    prevCenter = center;
+    prevBottomAttach = bottomAttach;
+    prevLLOWall = lloWall;
+  }
+  vertices[3].position = prevBottomAttach;
+  vertices[2].position = prevLLOWall;
 
   return vertices;
 }
@@ -1486,6 +1547,10 @@ bool CTrackData::ShouldMakeIndicesForChunk(int i, eShapeSection section)
       && (m_chunkAy[i].iOuterFloorType == -1
           || GetSignedBitValueFromInt(m_chunkAy[i].iOuterFloorType) & SURFACE_FLAG_NON_SOLID))
     return false;
+  if (section == eShapeSection::LLOWALL
+      && (m_chunkAy[i].iLLOuterWallType == -1
+          || GetSignedBitValueFromInt(m_chunkAy[i].iLLOuterWallType) & SURFACE_FLAG_NON_SOLID))
+    return false;
   return true;
 }
 
@@ -1521,7 +1586,7 @@ uint32 *CTrackData::MakeIndicesSingleSectionWireframe(uint32 &numIndices)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetCenter(int i, glm::vec3 prevCenter, float fScale, 
+void CTrackData::GetCenter(int i, glm::vec3 prevCenter, 
                            glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched, glm::mat4 &rollMat)
 {
   glm::vec3 nextChunkBase = glm::vec3(0, 0, 1);
@@ -1537,7 +1602,7 @@ void CTrackData::GetCenter(int i, glm::vec3 prevCenter, float fScale,
   if (i > 0)
     translateMat = glm::translate(prevCenter);
   //center
-  float fLen = (float)m_chunkAy[i].iLength / fScale;
+  float fLen = (float)m_chunkAy[i].iLength / m_fScale;
   glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
   center = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
   rollMat = glm::rotate(glm::radians((float)m_chunkAy[i].dRoll * -1.0f), glm::normalize(nextChunkPitched));
@@ -1545,34 +1610,34 @@ void CTrackData::GetCenter(int i, glm::vec3 prevCenter, float fScale,
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetLLane(int i, glm::vec3 center, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, 
+void CTrackData::GetLLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat, 
                           glm::vec3 &lLane)
 {
   glm::mat4 translateMat = glm::translate(center); //translate to centerline
-  float fLLen = (float)(m_chunkAy[i].iLeftLaneWidth) / fScale * -1.0f;
+  float fLLen = (float)(m_chunkAy[i].iLeftLaneWidth) / m_fScale * -1.0f;
   glm::mat4 scaleMatLeft = glm::scale(glm::vec3(fLLen, fLLen, fLLen));
   lLane = glm::vec3(translateMat * scaleMatLeft * rollMat * glm::vec4(pitchAxis, 1.0f));
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetRLane(int i, glm::vec3 center, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, 
+void CTrackData::GetRLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat, 
                           glm::vec3 &rLane)
 {
   glm::mat4 translateMat = glm::translate(center); //translate to centerline
-  float fRLen = (float)(m_chunkAy[i].iRightLaneWidth) / fScale;
+  float fRLen = (float)(m_chunkAy[i].iRightLaneWidth) / m_fScale;
   glm::mat4 scaleMatRight = glm::scale(glm::vec3(fRLen, fRLen, fRLen));
   rLane = glm::vec3(translateMat * scaleMatRight * rollMat * glm::vec4(pitchAxis, 1.0f));
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetLShoulder(int i, glm::vec3 lLane, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched, 
+void CTrackData::GetLShoulder(int i, glm::vec3 lLane, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched, 
                               glm::vec3 &lShoulder)
 {
   glm::mat4 translateMat = glm::translate(lLane); //translate to end of left lane
-  float fLShoulderLen = (float)m_chunkAy[i].iLeftShoulderWidth / fScale * -1.0f;
-  float fLShoulderHeight = (float)m_chunkAy[i].iLeftShoulderHeight / fScale * -1.0f;
+  float fLShoulderLen = (float)m_chunkAy[i].iLeftShoulderWidth / m_fScale * -1.0f;
+  float fLShoulderHeight = (float)m_chunkAy[i].iLeftShoulderHeight / m_fScale * -1.0f;
   glm::mat4 scaleMatLeftShoulderWidth = glm::scale(glm::vec3(fLShoulderLen, fLShoulderLen, fLShoulderLen));
   glm::mat4 scaleMatLeftShoulderHeight = glm::scale(glm::vec3(fLShoulderHeight, fLShoulderHeight, fLShoulderHeight));
   glm::vec3 lShoulderWidthVec = glm::vec3(scaleMatLeftShoulderWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
@@ -1584,12 +1649,12 @@ void CTrackData::GetLShoulder(int i, glm::vec3 lLane, float fScale, glm::vec3 pi
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetRShoulder(int i, glm::vec3 rLane, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+void CTrackData::GetRShoulder(int i, glm::vec3 rLane, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                               glm::vec3 &rShoulder)
 {
   glm::mat4 translateMat = glm::translate(rLane); //translate to end of right lane
-  float fRShoulderLen = (float)m_chunkAy[i].iRightShoulderWidth / fScale;
-  float fRShoulderHeight = (float)m_chunkAy[i].iRightShoulderHeight / fScale * -1.0f;
+  float fRShoulderLen = (float)m_chunkAy[i].iRightShoulderWidth / m_fScale;
+  float fRShoulderHeight = (float)m_chunkAy[i].iRightShoulderHeight / m_fScale * -1.0f;
   glm::mat4 scaleMatRightShoulderWidth = glm::scale(glm::vec3(fRShoulderLen, fRShoulderLen, fRShoulderLen));
   glm::mat4 scaleMatRightShoulderHeight = glm::scale(glm::vec3(fRShoulderHeight, fRShoulderHeight, fRShoulderHeight));
   glm::vec3 rShoulderWidthVec = glm::vec3(scaleMatRightShoulderWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
@@ -1601,11 +1666,11 @@ void CTrackData::GetRShoulder(int i, glm::vec3 rLane, float fScale, glm::vec3 pi
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetWall(int i, glm::vec3 bottomAttach, float fScale, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+void CTrackData::GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                          glm::vec3 &lWall)
 {
   glm::mat4 translateMat = glm::translate(bottomAttach);
-  float fLWallHeight = (float)m_chunkAy[i].iRoofHeight / fScale * -1.0f;
+  float fLWallHeight = (float)m_chunkAy[i].iRoofHeight / m_fScale * -1.0f;
   glm::mat4 scaleMatLWallHeight = glm::scale(glm::vec3(fLWallHeight, fLWallHeight, fLWallHeight));
   glm::vec3 normal = glm::normalize(glm::cross(nextChunkPitched, pitchAxis));
   glm::vec3 lWallHeightVec = glm::vec3(scaleMatLWallHeight * rollMat * glm::vec4(normal, 1.0f));
@@ -1614,10 +1679,10 @@ void CTrackData::GetWall(int i, glm::vec3 bottomAttach, float fScale, glm::vec3 
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder, float fScale,
+void CTrackData::GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder,
                                glm::vec3 &lEnvirFloor, glm::vec3 &rEnvirFloor)
 {
-  float fEnvirFloorDepth = (float)m_header.iFloorDepth / fScale * -1.0f;
+  float fEnvirFloorDepth = (float)m_header.iFloorDepth / m_fScale * -1.0f;
   lEnvirFloor = lShoulder;
   rEnvirFloor = rShoulder;
   lEnvirFloor.y = fEnvirFloorDepth;
@@ -1626,16 +1691,16 @@ void CTrackData::GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder, 
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, float fScale, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
+void CTrackData::GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
                                glm::vec3 &lFloor, glm::vec3 &rFloor)
 {
   glm::mat4 translateMatL = glm::translate(lLane);
   glm::mat4 translateMatR = glm::translate(rLane);
-  float fEnvirFloorDepth = (float)m_header.iFloorDepth / fScale * -1.0f;
-  float fLOFloorHeight = (float)m_chunkAy[i].iLOuterFloorHeight / fScale * 1.0f;
-  float fROFloorHeight = (float)m_chunkAy[i].iROuterFloorHeight / fScale * 1.0f;
-  float fROFloorOffset = (float)m_chunkAy[i].iROuterFloorHOffset / fScale * 1.0f;
-  float fLOFloorOffset = (float)m_chunkAy[i].iLOuterFloorHOffset / fScale * -1.0f;
+  float fEnvirFloorDepth = (float)m_header.iFloorDepth / m_fScale * -1.0f;
+  float fLOFloorHeight = (float)m_chunkAy[i].iLOuterFloorHeight / m_fScale * 1.0f;
+  float fROFloorHeight = (float)m_chunkAy[i].iROuterFloorHeight / m_fScale * 1.0f;
+  float fROFloorOffset = (float)m_chunkAy[i].iROuterFloorHOffset / m_fScale * 1.0f;
+  float fLOFloorOffset = (float)m_chunkAy[i].iLOuterFloorHOffset / m_fScale * -1.0f;
 
   glm::mat4 scaleMatRWidth = glm::scale(glm::vec3(fROFloorOffset, fROFloorOffset, fROFloorOffset));
   glm::vec3 rWidthVec = glm::vec3(scaleMatRWidth * glm::vec4(pitchAxis, 1.0f));
@@ -1646,6 +1711,14 @@ void CTrackData::GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, float fS
   rFloor = glm::vec3(translateMatR * glm::vec4(rWidthVec, 1.0f));;
   lFloor.y = fEnvirFloorDepth + fLOFloorHeight;
   rFloor.y = fEnvirFloorDepth + fROFloorHeight;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GetLLOWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+                            glm::vec3 &lloWall)
+{
+
 }
 
 //-------------------------------------------------------------------------------------------------

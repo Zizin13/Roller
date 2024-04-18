@@ -1624,7 +1624,7 @@ tVertex *CTrackData::MakeVertsLUOWall(uint32 &numVertices)
     }
 
     //set tex
-    uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iLLOuterWallType);
+    uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iLUOuterWallType);
     GetTextureCoordinates(uiSurfaceType,
                           vertices[i * uiNumVertsPerChunk + 2],
                           vertices[i * uiNumVertsPerChunk + 0],
@@ -1699,7 +1699,7 @@ tVertex *CTrackData::MakeVertsRUOWall(uint32 &numVertices)
     }
 
     //set tex
-    uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iRLOuterWallType);
+    uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iRUOuterWallType);
     GetTextureCoordinates(uiSurfaceType,
                           vertices[i * uiNumVertsPerChunk + 2],
                           vertices[i * uiNumVertsPerChunk + 0],

@@ -630,6 +630,10 @@ CShapeData *CTrackData::MakeTrackSurface(CShader *pShader, eShapeSection section
   } else {
     indices = MakeIndicesSingleSectionWireframe(uiNumIndices);
     drawType = GL_LINES;
+
+    for (uint32 i = 0; i < uiNumVerts; ++i) {
+      vertices[i].flags.x = 1.0f; //use color rather than tex
+    }
   }
 
   CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);

@@ -633,6 +633,7 @@ CShapeData *CTrackData::MakeTrackSurface(CShader *pShader, eShapeSection section
 
     for (uint32 i = 0; i < uiNumVerts; ++i) {
       vertices[i].flags.x = 1.0f; //use color rather than tex
+      vertices[i].color = ShapeGenerator::RandomColor();
     }
   }
 
@@ -1990,6 +1991,8 @@ void CTrackData::GetTextureCoordinates(uint32 uiSurfaceType,
   bool bPair = uiSurfaceType & SURFACE_FLAG_TEXTURE_PAIR;
   bool bFlipVert = uiSurfaceType & SURFACE_FLAG_FLIP_VERT;
   bool bFlipHoriz = uiSurfaceType & SURFACE_FLAG_FLIP_HORIZ;
+  bool bTransparent = uiSurfaceType & SURFACE_FLAG_TRANSPARENT;
+  bool bPartialTrans = uiSurfaceType & SURFACE_FLAG_PARTIAL_TRANS;
   uint32 uiTexIndex = uiSurfaceType & SURFACE_TEXTURE_INDEX;
 
   //right lane takes the second texture on center surface
@@ -2034,10 +2037,23 @@ void CTrackData::GetTextureCoordinates(uint32 uiSurfaceType,
   else if (bFlipHoriz && bFlipVert)
     bottomRight.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
 
-  topLeft.color = ShapeGenerator::RandomColor();
-  topRight.color = ShapeGenerator::RandomColor();
-  bottomLeft.color = ShapeGenerator::RandomColor();
-  bottomRight.color = ShapeGenerator::RandomColor();
+  if (bTransparent) {
+    ////use color
+    //topLeft.flags.x = 1.0f;
+    //topRight.flags.x = 1.0f;
+    //bottomLeft.flags.x = 1.0f;
+    //bottomRight.flags.x = 1.0f;
+    //alpha
+    topLeft.flags.y = 0.2f;
+    topRight.flags.y = 0.2f;
+    bottomLeft.flags.y = 0.2f;
+    bottomRight.flags.y = 0.2f;
+    //color
+    topLeft.color = glm::vec3(0.0f, 0.0f, 1.0f);
+    topRight.color = glm::vec3(0.0f, 0.0f, 1.0f);
+    bottomLeft.color = glm::vec3(0.0f, 0.0f, 1.0f);
+    bottomRight.color = glm::vec3(0.0f, 0.0f, 1.0f);
+  }
 }
 
 //-------------------------------------------------------------------------------------------------

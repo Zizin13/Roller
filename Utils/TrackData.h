@@ -242,14 +242,10 @@ protected:
 
   void GetCenter(int i, glm::vec3 prevCenter,
                  glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched, glm::mat4 &rollMat);
-  void GetLLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat,
-                glm::vec3 &lLane);
-  void GetRLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat,
-                glm::vec3 &rLane);
-  void GetLShoulder(int i, glm::vec3 lLane, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched, 
-                    glm::vec3 &lShoulder);
-  void GetRShoulder(int i, glm::vec3 rLane, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
-                    glm::vec3 &rShoulder);
+  void GetXLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat,
+                glm::vec3 &lane, bool bLeft);
+  void GetXShoulder(int i, glm::vec3 attach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched, 
+                    glm::vec3 &shoulder, bool bLeft);
   void GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                 glm::vec3 &wall);
   void GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder,

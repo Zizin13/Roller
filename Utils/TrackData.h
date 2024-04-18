@@ -228,6 +228,7 @@ protected:
   tVertex *MakeVertsRoof(uint32 &numVertices);
 
   uint32 *MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section);
+  bool ShouldMakeIndicesForChunk(int i, eShapeSection section);
   uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices);
 
   void GetCenter(int i, glm::vec3 prevCenter, float fScale, 

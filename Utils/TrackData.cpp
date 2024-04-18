@@ -1300,18 +1300,9 @@ uint32 *CTrackData::MakeIndicesSingleSection(uint32 &numIndices, eShapeSection s
 
   uint32 i = 0;
   for (; i < m_chunkAy.size(); i++) {
-    if ((section == eShapeSection::LLANE || section == eShapeSection::RLANE) 
-        && (m_chunkAy[i].iCenterSurfaceType & SURFACE_FLAG_NON_SOLID))
+    if (!ShouldMakeIndicesForChunk(i, section))
       continue;
-    if (section == eShapeSection::LSHOULDER && (m_chunkAy[i].iLeftSurfaceType & SURFACE_FLAG_NON_SOLID))
-      continue;
-    if (section == eShapeSection::RSHOULDER && (m_chunkAy[i].iRightSurfaceType & SURFACE_FLAG_NON_SOLID))
-      continue;
-    if (section == eShapeSection::LWALL && m_chunkAy[i].iLeftWallType == -1)
-      continue;
-    if (section == eShapeSection::RWALL && m_chunkAy[i].iRightWallType == -1)
-      continue;
-    if (section == eShapeSection::ROOF && m_chunkAy[i].iRoofType == -1)
+    if (i > 0 && !ShouldMakeIndicesForChunk(i - 1, section))
       continue;
     indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 2;
     indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 3;
@@ -1322,6 +1313,26 @@ uint32 *CTrackData::MakeIndicesSingleSection(uint32 &numIndices, eShapeSection s
   }
 
   return indices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CTrackData::ShouldMakeIndicesForChunk(int i, eShapeSection section)
+{
+  if ((section == eShapeSection::LLANE || section == eShapeSection::RLANE)
+      && (m_chunkAy[i].iCenterSurfaceType & SURFACE_FLAG_NON_SOLID))
+    return false;
+  if (section == eShapeSection::LSHOULDER && (m_chunkAy[i].iLeftSurfaceType & SURFACE_FLAG_NON_SOLID))
+    return false;
+  if (section == eShapeSection::RSHOULDER && (m_chunkAy[i].iRightSurfaceType & SURFACE_FLAG_NON_SOLID))
+    return false;
+  if (section == eShapeSection::LWALL && m_chunkAy[i].iLeftWallType == -1)
+    return false;
+  if (section == eShapeSection::RWALL && m_chunkAy[i].iRightWallType == -1)
+    return false;
+  if (section == eShapeSection::ROOF && m_chunkAy[i].iRoofType == -1)
+    return false;
+  return true;
 }
 
 //-------------------------------------------------------------------------------------------------

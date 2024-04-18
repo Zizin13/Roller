@@ -1434,8 +1434,9 @@ tVertex *CTrackData::MakeVertsLLOWall(uint32 &numVertices)
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
-    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
     glm::mat4 rollMatNoRoll = glm::mat4(1);
+    glm::mat4 useRollMat;
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
 
     glm::vec3 bottomAttach;
     if (m_chunkAy[i].iOuterFloorType == -1) {
@@ -1443,6 +1444,7 @@ tVertex *CTrackData::MakeVertsLLOWall(uint32 &numVertices)
       glm::vec3 lLane;
       GetLLane(i, center, pitchAxis, rollMat, lLane);
       GetLShoulder(i, lLane, pitchAxis, rollMat, nextChunkPitched, bottomAttach);
+      useRollMat = rollMat;
     } else {
       //attach bottom to outer floor
       glm::vec3 lLane;
@@ -1451,10 +1453,11 @@ tVertex *CTrackData::MakeVertsLLOWall(uint32 &numVertices)
       GetRLane(i, center, pitchAxis, rollMatNoRoll, rLane);
       glm::vec3 rFloor;
       GetOWallFloor(i, lLane, rLane, pitchAxis, nextChunkPitched, bottomAttach, rFloor);
+      useRollMat = rollMatNoRoll;
     }
 
     glm::vec3 lloWall;
-    GetLLOWall(i, bottomAttach, pitchAxis, rollMat, nextChunkPitched, lloWall);
+    GetLLOWall(i, bottomAttach, pitchAxis, useRollMat, nextChunkPitched, lloWall);
 
     //set verts
     vertices[i * uiNumVertsPerChunk + 1].position = bottomAttach;
@@ -1718,7 +1721,16 @@ void CTrackData::GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, glm::vec
 void CTrackData::GetLLOWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                             glm::vec3 &lloWall)
 {
-
+  glm::mat4 translateMat = glm::translate(bottomAttach);
+  float fHOffset = (float)m_chunkAy[i].iLLOuterWallHOffset / m_fScale * -1.0f;
+  float fHeight = (float)m_chunkAy[i].iLLOuterWallHeight / m_fScale * -1.0f;
+  glm::mat4 scaleMatWidth = glm::scale(glm::vec3(fHOffset, fHOffset, fHOffset));
+  glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
+  glm::vec3 widthVec = glm::vec3(scaleMatWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
+  glm::vec3 normal = glm::normalize(glm::cross(nextChunkPitched, pitchAxis));
+  glm::vec3 heightVec = glm::vec3(scaleMatHeight * rollMat * glm::vec4(normal, 1.0f));
+  glm::vec3 wallVec = widthVec + heightVec;
+  lloWall = glm::vec3(translateMat * glm::vec4(wallVec, 1.0f));
 }
 
 //-------------------------------------------------------------------------------------------------

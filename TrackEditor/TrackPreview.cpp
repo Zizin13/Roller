@@ -270,10 +270,10 @@ void CTrackPreview::paintGL()
     p->m_pOWallFloorSurf->Draw(worldToProjectionMatrix);
   if (m_uiShowModels & SHOW_OWALLFLOOR_WIRE_MODEL && p->m_pOWallFloorWire)
     p->m_pOWallFloorWire->Draw(worldToProjectionMatrix);
-  //if (m_uiShowModels & SHOW_LLOWALL_SURF_MODEL && p->m_pLLOWallSurf)
-  //  p->m_pLLOWallSurf->Draw(worldToProjectionMatrix);
-  //if (m_uiShowModels & SHOW_LLOWALL_WIRE_MODEL && p->m_pLLOWallWire)
-  //  p->m_pLLOWallWire->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_LLOWALL_SURF_MODEL && p->m_pLLOWallSurf)
+    p->m_pLLOWallSurf->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_LLOWALL_WIRE_MODEL && p->m_pLLOWallWire)
+    p->m_pLLOWallWire->Draw(worldToProjectionMatrix);
 }
 
 //-------------------------------------------------------------------------------------------------

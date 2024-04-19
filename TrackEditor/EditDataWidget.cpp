@@ -1100,7 +1100,8 @@ void CEditDataWidget::UpdateTextures(QLineEdit *pLineEdit, QLabel *pTex1, QLabel
       pTex1->setPixmap(pixmap);
 
       if (uiSignedBitVal & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
-        pixmap.convertFromImage(QtHelpers::GetQImageFromTile(p->m_pTrack->m_tex.m_pTileAy[iIndex + 1]));
+        if (uiSignedBitVal & SURFACE_FLAG_PAIR_NEXT_TEX)
+          pixmap.convertFromImage(QtHelpers::GetQImageFromTile(p->m_pTrack->m_tex.m_pTileAy[iIndex + 1]));
         pTex2->setPixmap(pixmap);
       } else {
         pTex2->setPixmap(QPixmap());

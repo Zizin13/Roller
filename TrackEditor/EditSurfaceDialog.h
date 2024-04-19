@@ -20,7 +20,7 @@ protected slots:
   void On30BounceChecked(bool bChecked);
   void On29EchoChecked(bool bChecked);
   void On28Checked(bool bChecked);
-  void On27Checked(bool bChecked);
+  void On27PairNextChecked(bool bChecked);
   void On26Checked(bool bChecked);
   void On25PitChecked(bool bChecked);
   void On24YellowMapChecked(bool bChecked);

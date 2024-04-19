@@ -22,7 +22,7 @@ CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, int
   ck30Bounce->setChecked(m_uiSignedBitValue & SURFACE_FLAG_BOUNCE_30);
   ck29Echo->setChecked(m_uiSignedBitValue & SURFACE_FLAG_ECHO);
   ck28->setChecked(m_uiSignedBitValue & SURFACE_FLAG_28);
-  ck27->setChecked(m_uiSignedBitValue & SURFACE_FLAG_27);
+  ck27PairNext->setChecked(m_uiSignedBitValue & SURFACE_FLAG_PAIR_NEXT_TEX);
   ck26->setChecked(m_uiSignedBitValue & SURFACE_FLAG_26);
   ck25Pit->setChecked(m_uiSignedBitValue & SURFACE_FLAG_PIT);
   ck24Yellow->setChecked(m_uiSignedBitValue & SURFACE_FLAG_YELLOW_MAP);
@@ -47,7 +47,7 @@ CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, int
   connect(ck30Bounce,           &QCheckBox::toggled, this, &CEditSurfaceDialog::On30BounceChecked);
   connect(ck29Echo,             &QCheckBox::toggled, this, &CEditSurfaceDialog::On29EchoChecked);
   connect(ck28,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On28Checked);
-  connect(ck27,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On27Checked);
+  connect(ck27PairNext,         &QCheckBox::toggled, this, &CEditSurfaceDialog::On27PairNextChecked);
   connect(ck26,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On26Checked);
   connect(ck25Pit,              &QCheckBox::toggled, this, &CEditSurfaceDialog::On25PitChecked);
   connect(ck24Yellow,           &QCheckBox::toggled, this, &CEditSurfaceDialog::On24YellowMapChecked);
@@ -133,12 +133,12 @@ void CEditSurfaceDialog::On28Checked(bool bChecked)
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditSurfaceDialog::On27Checked(bool bChecked)
+void CEditSurfaceDialog::On27PairNextChecked(bool bChecked)
 {
   if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_27;
+    m_uiSignedBitValue |= SURFACE_FLAG_PAIR_NEXT_TEX;
   else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_27;
+    m_uiSignedBitValue &= ~SURFACE_FLAG_PAIR_NEXT_TEX;
   UpdateDialog();
 }
 
@@ -386,9 +386,13 @@ void CEditSurfaceDialog::UpdateDialog()
     pbTexture1->setIcon(pixmap);
 
     if (m_uiSignedBitValue & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
-      QPixmap pixmap2;
-      pixmap2.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_pTileAy[iIndex + 1]));
-      lblTexture2->setPixmap(pixmap2);
+      if (m_uiSignedBitValue & SURFACE_FLAG_PAIR_NEXT_TEX) {
+        QPixmap pixmap2;
+        pixmap2.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_pTileAy[iIndex + 1]));
+        lblTexture2->setPixmap(pixmap2);
+      } else {
+        lblTexture2->setPixmap(pixmap);
+      }
     } else {
       lblTexture2->setPixmap(QPixmap());
     }

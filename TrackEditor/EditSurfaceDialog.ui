@@ -190,9 +190,9 @@
       </widget>
      </item>
      <item row="5" column="0">
-      <widget class="QCheckBox" name="ck27">
+      <widget class="QCheckBox" name="ck27PairNext">
        <property name="text">
-        <string>Bit 27</string>
+        <string>Pair Next Texture (requires Texture Pair)</string>
        </property>
       </widget>
      </item>

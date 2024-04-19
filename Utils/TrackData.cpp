@@ -1415,7 +1415,7 @@ void CTrackData::GetTextureCoordinates(uint32 uiSurfaceType,
                                        bool bLeftLane, bool bRightLane)
 {
     //TEXTURES
-  bool bPair = uiSurfaceType & SURFACE_FLAG_TEXTURE_PAIR;
+  bool bPair = uiSurfaceType & SURFACE_FLAG_TEXTURE_PAIR && uiSurfaceType & SURFACE_FLAG_PAIR_NEXT_TEX; //TODO: having pair but not pair next should double current texture
   bool bFlipVert = uiSurfaceType & SURFACE_FLAG_FLIP_VERT;
   bool bFlipHoriz = uiSurfaceType & SURFACE_FLAG_FLIP_HORIZ;
   bool bTransparent = uiSurfaceType & SURFACE_FLAG_TRANSPARENT;
@@ -1425,7 +1425,7 @@ void CTrackData::GetTextureCoordinates(uint32 uiSurfaceType,
   //right lane takes the second texture on center surface
   //both center lanes only draw one texture each when paired
   uint32 uiTexIncVal = (bPair && !(bLeftLane || bRightLane)) ? 2 : 1;
-  if (bRightLane && bPair)
+  if (bRightLane && uiSurfaceType & SURFACE_FLAG_TEXTURE_PAIR)
     uiTexIndex++;
 
   if (!bFlipHoriz && !bFlipVert)

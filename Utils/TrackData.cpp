@@ -703,6 +703,34 @@ CShapeData *CTrackData::MakeTrackSurface(CShader *pShader, eShapeSection section
 
   return pRet;
 }
+//-------------------------------------------------------------------------------------------------
+
+CShapeData *CTrackData::MakeSelectedChunks(CShader *pShader, int iStart, int iEnd)
+{
+  uint32 uiNumVerts;
+  struct tVertex *vertices = MakeVerts(uiNumVerts, eShapeSection::SELECTED);
+  uint32 uiNumIndices;
+  uint32 *indices = MakeIndicesSelectedChunks(uiNumIndices, iStart, iEnd);
+  GLenum drawType = GL_LINES;
+
+  for (uint32 i = 0; i < uiNumVerts; ++i) {
+    vertices[i].flags.x = 1.0f; //use color rather than tex
+    vertices[i].color = ShapeGenerator::RandomColor();
+  }
+
+  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
+  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+
+  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, &m_tex, drawType);
+
+  if (vertices)
+    delete[] vertices;
+  if (indices)
+    delete[] indices;
+
+  return pRet;
+}
 
 //-------------------------------------------------------------------------------------------------
 
@@ -714,6 +742,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
   }
 
   uint32 uiNumVertsPerChunk = 4;
+  if (section == eShapeSection::SELECTED) uiNumVertsPerChunk = 8;
 
   numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
@@ -891,6 +920,14 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
                               vertices[i * uiNumVertsPerChunk + 1]);
         break;
       case SELECTED:
+        vertices[i * uiNumVertsPerChunk + 0].position = luoWall;
+        vertices[i * uiNumVertsPerChunk + 1].position = ruoWall;
+        vertices[i * uiNumVertsPerChunk + 2].position = lloWallBottomAttach;
+        vertices[i * uiNumVertsPerChunk + 3].position = rloWallBottomAttach;
+        vertices[i * uiNumVertsPerChunk + 4].position = prevLUOWall;
+        vertices[i * uiNumVertsPerChunk + 5].position = prevRUOWall;
+        vertices[i * uiNumVertsPerChunk + 6].position = prevLLOWallBottomAttach;
+        vertices[i * uiNumVertsPerChunk + 7].position = prevRLOWallBottomAttach;
         break;
       default:
         assert(0); //shape not implemented
@@ -965,6 +1002,12 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     case RUOWALL:
       vertices[2].position = prevRLOWall;
       vertices[3].position = prevRUOWall;
+      break;
+    case SELECTED:
+      vertices[4].position = prevLUOWall;
+      vertices[5].position = prevRUOWall;
+      vertices[6].position = prevLLOWallBottomAttach;
+      vertices[7].position = prevRLOWallBottomAttach;
       break;
   }
 
@@ -1057,6 +1100,57 @@ uint32 *CTrackData::MakeIndicesSingleSection(uint32 &numIndices, eShapeSection s
     indices[i * uiNumIndicesPerChunk + 3] = (i * uiNumVertsPerChunk) + 2;
     indices[i * uiNumIndicesPerChunk + 4] = (i * uiNumVertsPerChunk) + 1;
     indices[i * uiNumIndicesPerChunk + 5] = (i * uiNumVertsPerChunk) + 0;
+  }
+
+  return indices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+uint32 *CTrackData::MakeIndicesSelectedChunks(uint32 &numIndices, int iStart, int iEnd)
+{
+  if (m_chunkAy.empty() || iEnd >= m_chunkAy.size()) {
+    numIndices = 0;
+    return NULL;
+  }
+
+  uint32 uiNumVertsPerChunk = 8;
+  uint32 uiNumIndicesPerChunk = 24;
+  numIndices = (uint32)m_chunkAy.size() * uiNumIndicesPerChunk;
+  uint32 *indices = new uint32[numIndices];
+  memset(indices, 0, numIndices * sizeof(uint32));
+
+  iStart = iStart + 1;
+  iEnd = iEnd + 2;
+
+  int i = iStart;
+  for (; i < iEnd; i++) {
+    indices[i * uiNumIndicesPerChunk + 0]  = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 1]  = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 2]  = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 3]  = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 4]  = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 5]  = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 6]  = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 7]  = (i * uiNumVertsPerChunk) + 0;
+
+    indices[i * uiNumIndicesPerChunk + 8]  = (i * uiNumVertsPerChunk) + 4;
+    indices[i * uiNumIndicesPerChunk + 9]  = (i * uiNumVertsPerChunk) + 5;
+    indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumVertsPerChunk) + 5;
+    indices[i * uiNumIndicesPerChunk + 11] = (i * uiNumVertsPerChunk) + 7;
+    indices[i * uiNumIndicesPerChunk + 12] = (i * uiNumVertsPerChunk) + 7;
+    indices[i * uiNumIndicesPerChunk + 13] = (i * uiNumVertsPerChunk) + 6;
+    indices[i * uiNumIndicesPerChunk + 14] = (i * uiNumVertsPerChunk) + 6;
+    indices[i * uiNumIndicesPerChunk + 15] = (i * uiNumVertsPerChunk) + 4;
+
+    indices[i * uiNumIndicesPerChunk + 16] = (i * uiNumVertsPerChunk) + 4;
+    indices[i * uiNumIndicesPerChunk + 17] = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 18] = (i * uiNumVertsPerChunk) + 6;
+    indices[i * uiNumIndicesPerChunk + 19] = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 20] = (i * uiNumVertsPerChunk) + 7;
+    indices[i * uiNumIndicesPerChunk + 21] = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 22] = (i * uiNumVertsPerChunk) + 5;
+    indices[i * uiNumIndicesPerChunk + 23] = (i * uiNumVertsPerChunk) + 1;
   }
 
   return indices;

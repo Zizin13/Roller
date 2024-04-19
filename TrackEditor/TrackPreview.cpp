@@ -53,6 +53,7 @@ public:
     , m_pLUOWallWire(NULL)
     , m_pRUOWallSurf(NULL)
     , m_pRUOWallWire(NULL)
+    , m_pSelection(NULL)
   {};
   ~CTrackPreviewPrivate()
   {
@@ -168,6 +169,10 @@ public:
       delete m_pRUOWallWire;
       m_pRUOWallWire = NULL;
     }
+    if (m_pSelection) {
+      delete m_pSelection;
+      m_pSelection = NULL;
+    }
   }
 
   CShapeData *m_pLLaneSurf;
@@ -196,6 +201,7 @@ public:
   CShapeData *m_pLUOWallWire;
   CShapeData *m_pRUOWallSurf;
   CShapeData *m_pRUOWallWire;
+  CShapeData *m_pSelection;
   CShader *m_pShader;
   CTrack *m_pTrack;
 };
@@ -262,6 +268,18 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
 void CTrackPreview::ShowModels(uint32 uiShowModels)
 {
   m_uiShowModels = uiShowModels;
+  repaint();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::UpdateGeometrySelection(int iFrom, int iTo)
+{
+  if (p->m_pSelection)
+    delete p->m_pSelection;
+  if (p->m_pTrack) {
+    p->m_pSelection = p->m_pTrack->MakeSelectedChunks(p->m_pShader, iFrom, iTo);
+  }
   repaint();
 }
 
@@ -336,6 +354,8 @@ void CTrackPreview::paintGL()
     p->m_pRUOWallSurf->Draw(worldToProjectionMatrix);
   if (m_uiShowModels & SHOW_RUOWALL_WIRE_MODEL && p->m_pRUOWallWire)
     p->m_pRUOWallWire->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_SELECTION_HIGHLIGHT && p->m_pSelection)
+    p->m_pSelection->Draw(worldToProjectionMatrix);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -354,6 +374,7 @@ void CTrackPreview::initializeGL()
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_ALPHA_TEST);
   glAlphaFunc(GL_GREATER, 0.7f);
+  glLineWidth(3.0f);
 
   if (!p->m_pShader)
     p->m_pShader = new CShader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");

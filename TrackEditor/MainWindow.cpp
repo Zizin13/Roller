@@ -555,6 +555,8 @@ void CMainWindow::UpdateGeometrySelection(int iFrom, int iTo)
   c.setPosition(iStart);
   c.setPosition(iEnd, QTextCursor::KeepAnchor);
   txData->setTextCursor(c);
+
+  openGLWidget->UpdateGeometrySelection(iFrom, iTo);
 }
 
 //-------------------------------------------------------------------------------------------------

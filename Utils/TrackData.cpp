@@ -1109,7 +1109,7 @@ uint32 *CTrackData::MakeIndicesSingleSection(uint32 &numIndices, eShapeSection s
 
 uint32 *CTrackData::MakeIndicesSelectedChunks(uint32 &numIndices, int iStart, int iEnd)
 {
-  if (m_chunkAy.empty() || iEnd >= m_chunkAy.size()) {
+  if (m_chunkAy.empty()) {
     numIndices = 0;
     return NULL;
   }
@@ -1120,11 +1120,17 @@ uint32 *CTrackData::MakeIndicesSelectedChunks(uint32 &numIndices, int iStart, in
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
-  iStart = iStart + 1;
-  iEnd = iEnd + 2;
+  if (iStart >= m_chunkAy.size() - 1)
+    iStart = 0;
+  else
+    iStart++;
+  if (iEnd >= m_chunkAy.size() - 1)
+    iEnd = 0;
+  else
+    iEnd++;
 
   int i = iStart;
-  for (; i < iEnd; i++) {
+  for (; i <= iEnd; i++) {
     indices[i * uiNumIndicesPerChunk + 0]  = (i * uiNumVertsPerChunk) + 0;
     indices[i * uiNumIndicesPerChunk + 1]  = (i * uiNumVertsPerChunk) + 1;
     indices[i * uiNumIndicesPerChunk + 2]  = (i * uiNumVertsPerChunk) + 1;

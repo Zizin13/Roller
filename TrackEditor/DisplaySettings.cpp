@@ -14,6 +14,7 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
   setupUi(this);
 
   ckAllSurface->setChecked(true);
+  ckHighlightSelection->setChecked(true);
 
   connect(ckAllSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAll);
   connect(ckAllWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAll);

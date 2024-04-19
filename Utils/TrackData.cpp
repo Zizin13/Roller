@@ -1788,18 +1788,22 @@ bool CTrackData::ShouldMakeIndicesForChunk(int i, eShapeSection section)
     return false;
   if (section == eShapeSection::LLOWALL
       && (m_chunkAy[i].iLLOuterWallType == -1
+          || m_chunkAy[i].iOuterFloorType == -1
           || GetSignedBitValueFromInt(m_chunkAy[i].iLLOuterWallType) & SURFACE_FLAG_NON_SOLID))
     return false;
   if (section == eShapeSection::RLOWALL
       && (m_chunkAy[i].iRLOuterWallType == -1
+          || m_chunkAy[i].iOuterFloorType == -1
           || GetSignedBitValueFromInt(m_chunkAy[i].iRLOuterWallType) & SURFACE_FLAG_NON_SOLID))
     return false;
   if (section == eShapeSection::LUOWALL
       && (m_chunkAy[i].iLUOuterWallType == -1
+          || m_chunkAy[i].iOuterFloorType == -1
           || GetSignedBitValueFromInt(m_chunkAy[i].iLUOuterWallType) & SURFACE_FLAG_NON_SOLID))
     return false;
   if (section == eShapeSection::RUOWALL
       && (m_chunkAy[i].iRUOuterWallType == -1
+          || m_chunkAy[i].iOuterFloorType == -1
           || GetSignedBitValueFromInt(m_chunkAy[i].iRUOuterWallType) & SURFACE_FLAG_NON_SOLID))
     return false;
   return true;

@@ -353,7 +353,7 @@ void CTrackPreview::initializeGL()
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_ALPHA_TEST);
-  glAlphaFunc(GL_GREATER, 0.4);
+  glAlphaFunc(GL_GREATER, 0.4f);
 
   if (!p->m_pShader)
     p->m_pShader = new CShader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");

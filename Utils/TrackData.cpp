@@ -2034,21 +2034,21 @@ void CTrackData::GetTextureCoordinates(uint32 uiSurfaceType,
     bottomRight.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
 
   if (bTransparent) {
-    ////use color
-    //topLeft.flags.x = 1.0f;
-    //topRight.flags.x = 1.0f;
-    //bottomLeft.flags.x = 1.0f;
-    //bottomRight.flags.x = 1.0f;
+    //use color
+    topLeft.flags.x = 1.0f;
+    topRight.flags.x = 1.0f;
+    bottomLeft.flags.x = 1.0f;
+    bottomRight.flags.x = 1.0f;
     //alpha
-    topLeft.flags.y = 0.2f;
-    topRight.flags.y = 0.2f;
-    bottomLeft.flags.y = 0.2f;
-    bottomRight.flags.y = 0.2f;
+    topLeft.flags.y = 0.5f;
+    topRight.flags.y = 0.5f;
+    bottomLeft.flags.y = 0.5f;
+    bottomRight.flags.y = 0.5f;
     //color
-    topLeft.color = glm::vec3(0.0f, 0.0f, 1.0f);
-    topRight.color = glm::vec3(0.0f, 0.0f, 1.0f);
-    bottomLeft.color = glm::vec3(0.0f, 0.0f, 1.0f);
-    bottomRight.color = glm::vec3(0.0f, 0.0f, 1.0f);
+    topLeft.color = glm::vec3(0);
+    topRight.color = glm::vec3(0);
+    bottomLeft.color = glm::vec3(0);
+    bottomRight.color = glm::vec3(0);
   }
 }
 

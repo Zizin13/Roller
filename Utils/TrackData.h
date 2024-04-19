@@ -204,7 +204,7 @@ public:
   void GetTrackData(std::vector<uint8_t> &data);
   CShapeData *MakeTrackCenterline(CShader *pShader);
   CShapeData *MakeTrackSurface(CShader *pShader, eShapeSection section, bool bWireframe = false);
-  CShapeData *MakeTextureTester(CShader *pShader);
+  CShapeData *MakeSelectedChunks(CShader *pShader, int iStart, int iEnd);
 
   static unsigned int GetSignedBitValueFromInt(int iValue);
   static int GetIntValueFromSignedBit(unsigned int uiValue);
@@ -226,7 +226,8 @@ protected:
   uint32 *MakeIndicesSurface(uint32 &numIndices);
   uint32 *MakeIndicesSurfaceWireframe(uint32 &numIndices);
 
-  tVertex *MakeVertsSelectedChunks(uint32 &numIndices);
+  tVertex *MakeVertsSelectedChunks(uint32 &numVertices, int iStart, int iEnd);
+  uint32 *MakeIndicesSelectedChunks(uint32 &numIndices, int iStart, int iEnd);
 
   tVertex *MakeVertsLLane(uint32 &numVertices);
   tVertex *MakeVertsRLane(uint32 &numVertices);

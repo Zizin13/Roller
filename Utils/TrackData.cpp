@@ -653,72 +653,6 @@ CShapeData *CTrackData::MakeTrackSurface(CShader *pShader, eShapeSection section
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CTrackData::MakeTextureTester(CShader *pShader)
-{
-  uint32 uiNumVerts = 8;
-  struct tVertex *vertices = new tVertex[uiNumVerts];
-  uint32 uiNumIndices = 18;
-  uint32 *indices = new uint32[uiNumIndices];
-  GLenum drawType = GL_TRIANGLES;
-
-  vertices[0].position = glm::vec3(0,   1,   0);
-  vertices[1].position = glm::vec3(0,   1,   0.1);
-  vertices[2].position = glm::vec3(0,   1.1, 0);
-  vertices[3].position = glm::vec3(0,   1.1, 0.1);
-  vertices[4].position = glm::vec3(0.1, 1,   0);
-  vertices[5].position = glm::vec3(0.1, 1,   0.1);
-  vertices[6].position = glm::vec3(0.1, 1.1, 0);
-  vertices[7].position = glm::vec3(0.1, 1.1, 0.1);
-
-  uint32 uiTexIndex = GetSignedBitValueFromInt(m_tex.m_iNumTiles - 5);
-  uiTexIndex = uiTexIndex & SURFACE_TEXTURE_INDEX;
-
-  vertices[2].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  vertices[3].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  vertices[0].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles);
-  vertices[1].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles);
-  vertices[7].texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  vertices[6].texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  vertices[5].texCoords = glm::vec2(0.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles);
-  vertices[4].texCoords = glm::vec2(1.0f, (float)(uiTexIndex + 1) / (float)m_tex.m_iNumTiles);
-
-  indices[0] = 0;
-  indices[1] = 1;
-  indices[2] = 3;
-  indices[3] = 0;
-  indices[4] = 3;
-  indices[5] = 2;
-
-  indices[6] = 1;
-  indices[7] = 5;
-  indices[8] = 7;
-  indices[9] = 1;
-  indices[10] = 7;
-  indices[11] = 3;
-
-  indices[12] = 5;
-  indices[13] = 4;
-  indices[14] = 6;
-  indices[15] = 5;
-  indices[16] = 6;
-  indices[17] = 7;
-
-  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
-  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
-  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
-
-  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, &m_tex, drawType);
-
-  if (vertices)
-    delete[] vertices;
-  if (indices)
-    delete[] indices;
-
-  return pRet;
-}
-
-//-------------------------------------------------------------------------------------------------
-
 tVertex *CTrackData::MakeVertsSurface(uint32 &numVertices)
 {
   if (m_chunkAy.empty()) {
@@ -892,9 +826,51 @@ uint32 *CTrackData::MakeIndicesSurfaceWireframe(uint32 &numIndices)
 
 //-------------------------------------------------------------------------------------------------
 
-tVertex *CTrackData::MakeVertsSelectedChunks(uint32 &numIndices)
+tVertex *CTrackData::MakeVertsSelectedChunks(uint32 &numVertices, int iStart, int iEnd)
 {
-  return NULL;
+  if (m_chunkAy.empty()) {
+    numVertices = 0;
+    return NULL;
+  }
+
+  uint32 uiNumVertsPerChunk = 4;
+
+  numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
+  tVertex *vertices = new tVertex[numVertices];
+  glm::vec3 prevCenter = glm::vec3(0, 0, 1);
+  glm::vec3 prevLLane = glm::vec3(0, 0, 1);
+  for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
+    glm::vec3 center;
+    glm::vec3 pitchAxis;
+    glm::vec3 nextChunkPitched;
+    glm::mat4 rollMat;
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
+
+    vertices[i * uiNumVertsPerChunk + 1].position = center;
+    //left lane
+    glm::vec3 lLane;
+    GetLane(i, center, pitchAxis, rollMat, lLane, true);
+    vertices[i * uiNumVertsPerChunk + 0].position = lLane;
+
+    if (i > 0) {
+      vertices[i * uiNumVertsPerChunk + 3].position = prevCenter;
+      vertices[i * uiNumVertsPerChunk + 2].position = prevLLane;
+    }
+
+    uint32 uiSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iCenterSurfaceType);
+    GetTextureCoordinates(uiSurfaceType,
+                          vertices[i * uiNumVertsPerChunk + 0],
+                          vertices[i * uiNumVertsPerChunk + 1],
+                          vertices[i * uiNumVertsPerChunk + 2],
+                          vertices[i * uiNumVertsPerChunk + 3], true, false);
+
+    prevCenter = center;
+    prevLLane = lLane;
+  }
+  vertices[3].position = prevCenter;
+  vertices[2].position = prevLLane;
+
+  return vertices;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1768,6 +1744,7 @@ bool CTrackData::ShouldMakeIndicesForChunk(int i, eShapeSection section)
     return false;
   if (section == eShapeSection::ROOF
       && (m_chunkAy[i].iRoofType == -1 
+          || (m_chunkAy[i].iLeftWallType == -1 && m_chunkAy[i].iRightWallType == -1)
           || GetSignedBitValueFromInt(m_chunkAy[i].iRoofType) & SURFACE_FLAG_NON_SOLID))
     return false;
   if (section == eShapeSection::ENVIRFLOOR

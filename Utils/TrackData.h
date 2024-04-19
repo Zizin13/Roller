@@ -226,6 +226,8 @@ protected:
   uint32 *MakeIndicesSurface(uint32 &numIndices);
   uint32 *MakeIndicesSurfaceWireframe(uint32 &numIndices);
 
+  tVertex *MakeVertsSelectedChunks(uint32 &numIndices);
+
   tVertex *MakeVertsLLane(uint32 &numVertices);
   tVertex *MakeVertsRLane(uint32 &numVertices);
   tVertex *MakeVertsLShoulder(uint32 &numVertices);

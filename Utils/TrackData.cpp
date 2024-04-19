@@ -892,6 +892,13 @@ uint32 *CTrackData::MakeIndicesSurfaceWireframe(uint32 &numIndices)
 
 //-------------------------------------------------------------------------------------------------
 
+tVertex *CTrackData::MakeVertsSelectedChunks(uint32 &numIndices)
+{
+  return NULL;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 tVertex *CTrackData::MakeVertsLLane(uint32 &numVertices)
 {
   if (m_chunkAy.empty()) {
@@ -1144,10 +1151,10 @@ tVertex *CTrackData::MakeVertsLWall(uint32 &numVertices)
     }
 
     GetTextureCoordinates(uiSurfaceType,
-                          vertices[i * uiNumVertsPerChunk + 1],
-                          vertices[i * uiNumVertsPerChunk + 3],
+                          vertices[i * uiNumVertsPerChunk + 2],
                           vertices[i * uiNumVertsPerChunk + 0],
-                          vertices[i * uiNumVertsPerChunk + 2]);
+                          vertices[i * uiNumVertsPerChunk + 3],
+                          vertices[i * uiNumVertsPerChunk + 1]);
 
     prevCenter = center;
     prevBottomAttach = bottomAttach;

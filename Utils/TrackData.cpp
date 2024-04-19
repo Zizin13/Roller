@@ -810,22 +810,40 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     //outer wall roll mat
     glm::mat4 oWallRollMat = m_chunkAy[i].iOuterFloorType < 0 ? rollMat : rollMatNoRoll;
     //llowall
-    glm::vec3 lloWallBottomAttach = m_chunkAy[i].iOuterFloorType < 0 ? lShoulder : lFloor;
+    bool bLLOWallNonSolid = GetSignedBitValueFromInt(m_chunkAy[i].iLLOuterWallType) & SURFACE_FLAG_NON_SOLID;
+    glm::vec3 lloWallBottomAttach = lFloor;
+    if (m_chunkAy[i].iOuterFloorType < 0) {
+      if (bLLOWallNonSolid) {
+        glm::vec3 lShoulderNoHeight;
+        GetShoulder(i, lLane, pitchAxis, rollMat, nextChunkPitched, lShoulderNoHeight, true, true);
+        lloWallBottomAttach = lShoulderNoHeight;
+      } else {
+        lloWallBottomAttach = lShoulder;
+      }
+    }
     glm::vec3 lloWall;
     GetWall(i, lloWallBottomAttach, pitchAxis, oWallRollMat, nextChunkPitched, lloWall, eShapeSection::LLOWALL);
     //rlowall
-    glm::vec3 rloWallBottomAttach = m_chunkAy[i].iOuterFloorType < 0 ? rShoulder : rFloor;
+    bool bRLOWallNonSolid = GetSignedBitValueFromInt(m_chunkAy[i].iRLOuterWallType) & SURFACE_FLAG_NON_SOLID;
+    glm::vec3 rloWallBottomAttach = rFloor;
+    if (m_chunkAy[i].iOuterFloorType < 0) {
+      if (bRLOWallNonSolid) {
+        glm::vec3 rShoulderNoHeight;
+        GetShoulder(i, rLane, pitchAxis, rollMat, nextChunkPitched, rShoulderNoHeight, false, true);
+        rloWallBottomAttach = rShoulderNoHeight;
+      } else {
+        rloWallBottomAttach = rShoulder;
+      }
+    }
     glm::vec3 rloWall;
     GetWall(i, rloWallBottomAttach, pitchAxis, oWallRollMat, nextChunkPitched, rloWall, eShapeSection::RLOWALL);
     //luowall
     glm::vec3 luoWall;
-    bool bLUOWallAttach = GetSignedBitValueFromInt(m_chunkAy[i].iLLOuterWallType) & SURFACE_FLAG_NON_SOLID;
-    glm::vec3 luoWallBottomAttach = bLUOWallAttach ? lWall : lloWall;
+    glm::vec3 luoWallBottomAttach = lloWall;
     GetWall(i, luoWallBottomAttach, pitchAxis, oWallRollMat, nextChunkPitched, luoWall, eShapeSection::LUOWALL);
     //ruowall
     glm::vec3 ruoWall;
-    bool bRUOWallAttach = GetSignedBitValueFromInt(m_chunkAy[i].iRLOuterWallType) & SURFACE_FLAG_NON_SOLID;
-    glm::vec3 ruoWallBottomAttach = bRUOWallAttach ? rWall : rloWall;
+    glm::vec3 ruoWallBottomAttach = rloWall;
     GetWall(i, ruoWallBottomAttach, pitchAxis, oWallRollMat, nextChunkPitched, ruoWall, eShapeSection::RUOWALL);
 
     switch (section) {
@@ -1309,17 +1327,19 @@ void CTrackData::GetLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4
 //-------------------------------------------------------------------------------------------------
 
 void CTrackData::GetShoulder(int i, glm::vec3 lLane, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched, 
-                              glm::vec3 &shoulder, bool bLeft)
+                              glm::vec3 &shoulder, bool bLeft, bool bIgnoreHeight)
 {
   glm::mat4 translateMat = glm::translate(lLane); //translate to end of left lane
-  float fLen;
-  float fHeight;
+  float fLen = 0.0f;
+  float fHeight = 0.0f;
   if (bLeft) {
     fLen = (float)m_chunkAy[i].iLeftShoulderWidth / m_fScale * -1.0f;
-    fHeight = (float)m_chunkAy[i].iLeftShoulderHeight / m_fScale * -1.0f;
+    if (!bIgnoreHeight)
+      fHeight = (float)m_chunkAy[i].iLeftShoulderHeight / m_fScale * -1.0f;
   } else {
     fLen = (float)m_chunkAy[i].iRightShoulderWidth / m_fScale;
-    fHeight = (float)m_chunkAy[i].iRightShoulderHeight / m_fScale * -1.0f;
+    if (!bIgnoreHeight)
+      fHeight = (float)m_chunkAy[i].iRightShoulderHeight / m_fScale * -1.0f;
   }
   glm::mat4 scaleMatWidth = glm::scale(glm::vec3(fLen, fLen, fLen));
   glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));

@@ -17,7 +17,7 @@ CTilePicker::CTilePicker(QWidget *pParent, CTexture *pTexture, int iIndex, bool 
 {
   setupUi(this);
   resize(QDesktopWidget().availableGeometry(this).size() * 0.3);
-  lblNotLoaded->setVisible(pTexture->m_iNumTiles > 0);
+  lblNotLoaded->setVisible(pTexture->m_iNumTiles == 0);
 
   int iButtonSize = 90;
   int iTilesPerLine = (width() - 256) / (iButtonSize + 6);

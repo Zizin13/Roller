@@ -269,6 +269,10 @@ void CTrackPreview::ShowModels(uint32 uiShowModels)
 
 void CTrackPreview::paintGL()
 {
+  if (m_uiShowModels & SHOW_ENVIRFLOOR_SURF_MODEL)
+    glClearColor(0.031f, 0.301f, 1.0f, 1.0f);
+  else
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
   glViewport(0, 0, width(), height());
 

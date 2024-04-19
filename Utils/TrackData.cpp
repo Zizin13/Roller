@@ -1313,60 +1313,45 @@ tVertex *CTrackData::MakeVertsEnvirFloor(uint32 &numVertices)
     return NULL;
   }
 
-  uint32 uiNumVertsPerChunk = 4;
-
-  numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
+  numVertices = 4;
   tVertex *vertices = new tVertex[numVertices];
   glm::vec3 prevCenter = glm::vec3(0, 0, 1);
-  glm::vec3 prevLFloor = glm::vec3(0, 0, 1);
-  glm::vec3 prevRFloor = glm::vec3(0, 0, 1);
+  float fMinX = 0.0f;
+  float fMaxX = 0.0f;
+  float fMinZ = 0.0f;
+  float fMaxZ = 0.0f;
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
     glm::vec3 center;
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
     glm::mat4 rollMat;
     GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
-    glm::mat4 rollMatNoRoll = glm::mat4(1);
-
-    //left shoulder
-    glm::vec3 lLane;
-    glm::vec3 lShoulder;
-    GetLane(i, center, pitchAxis, rollMatNoRoll, lLane, true);
-    GetShoulder(i, lLane, pitchAxis, rollMatNoRoll, nextChunkPitched, lShoulder, true);
-
-    //right shoulder
-    glm::vec3 rLane;
-    glm::vec3 rShoulder;
-    GetLane(i, center, pitchAxis, rollMatNoRoll, rLane, false);
-    GetShoulder(i, rLane, pitchAxis, rollMatNoRoll, nextChunkPitched, rShoulder, false);
-
-    //floor
-    glm::vec3 lFloor;
-    glm::vec3 rFloor;
-    GetEnvirFloor(i, lShoulder, rShoulder, lFloor, rFloor);
-
-    //set verts
-    vertices[i * uiNumVertsPerChunk + 0].position = lFloor;
-    vertices[i * uiNumVertsPerChunk + 1].position = rFloor;
-    if (i > 0) {
-      vertices[i * uiNumVertsPerChunk + 2].position = prevLFloor;
-      vertices[i * uiNumVertsPerChunk + 3].position = prevRFloor;
-    }
-
-    //set tex
-    uint32 uiFloorSurfaceType = GetSignedBitValueFromInt(m_chunkAy[i].iEnvironmentFloorType);
-    GetTextureCoordinates(uiFloorSurfaceType,
-                          vertices[i * uiNumVertsPerChunk + 0],
-                          vertices[i * uiNumVertsPerChunk + 1],
-                          vertices[i * uiNumVertsPerChunk + 2],
-                          vertices[i * uiNumVertsPerChunk + 3]);
+    if (center.x > fMaxX)
+      fMaxX = center.x;
+    if (center.x < fMinX)
+      fMinX = center.x;
+    if (center.z > fMaxZ)
+      fMaxZ = center.z;
+    if (center.z < fMinZ)
+      fMinZ = center.z;
 
     prevCenter = center;
-    prevLFloor = lFloor;
-    prevRFloor = rFloor;
   }
-  vertices[2].position = prevLFloor;
-  vertices[3].position = prevRFloor;
+
+  float fEnvirFloorDepth = (float)m_header.iFloorDepth / m_fScale * -1.0f;
+  float fPadding = 10.0f;
+  vertices[0].position = glm::vec3(fMinX - fPadding, fEnvirFloorDepth, fMinZ - fPadding);
+  vertices[1].position = glm::vec3(fMinX - fPadding, fEnvirFloorDepth, fMaxZ + fPadding);
+  vertices[2].position = glm::vec3(fMaxX + fPadding, fEnvirFloorDepth, fMinZ - fPadding);
+  vertices[3].position = glm::vec3(fMaxX + fPadding, fEnvirFloorDepth, fMaxZ + fPadding);
+  vertices[0].color = glm::vec3(0.235f, 0.317f, 0.157f);
+  vertices[1].color = glm::vec3(0.235f, 0.317f, 0.157f);
+  vertices[2].color = glm::vec3(0.235f, 0.317f, 0.157f);
+  vertices[3].color = glm::vec3(0.235f, 0.317f, 0.157f);
+  vertices[0].flags.x = 1.0f;
+  vertices[1].flags.x = 1.0f;
+  vertices[2].flags.x = 1.0f;
+  vertices[3].flags.x = 1.0f;
 
   return vertices;
 }

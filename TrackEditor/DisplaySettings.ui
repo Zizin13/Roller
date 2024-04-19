@@ -237,7 +237,7 @@
    <item row="16" column="0">
     <widget class="QLabel" name="lblEnvirFloor">
      <property name="text">
-      <string>Environment Floor</string>
+      <string>Environment</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

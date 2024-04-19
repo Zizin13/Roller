@@ -10,7 +10,7 @@ uniform sampler2D textureSlot;
 
 void main()
 {
-  if (vertexToFragmentFlags.x == 1) {
+  if (vertexToFragmentFlags.x != 0) {
     daColor = vec4(vertexToFragmentColor, 1);
   } else {
     daColor = texture(textureSlot, vertexToFragmentTexCoords);

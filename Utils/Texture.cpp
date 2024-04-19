@@ -130,9 +130,10 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length, const CPale
     for (int j = 0; j < iPixelsPerTile; ++j) {
       unsigned char byPaletteIndex = pData[i * iPixelsPerTile + j];
       if (palette.m_paletteAy.size() > byPaletteIndex) {
-        pTile->data[j % TILE_WIDTH][j / TILE_WIDTH] = glm::vec<3, uint8>(palette.m_paletteAy[byPaletteIndex].r,
+        pTile->data[j % TILE_WIDTH][j / TILE_WIDTH] = glm::vec<4, uint8>(palette.m_paletteAy[byPaletteIndex].r,
                                                                          palette.m_paletteAy[byPaletteIndex].g,
-                                                                         palette.m_paletteAy[byPaletteIndex].b);
+                                                                         palette.m_paletteAy[byPaletteIndex].b,
+                                                                         byPaletteIndex ? 255 : 0);
       } else {
         assert(0);
         //TODO g_pMainWindow->LogMessage("Error loading texture " + sFilename + ": palette index out of bounds");
@@ -143,11 +144,11 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length, const CPale
 
   tTile *pTilesFlipped = new tTile[m_iNumTiles];
   FlipTileLines(m_pTileAy, pTilesFlipped, m_iNumTiles);
-  int iLength = TILE_WIDTH;// *3;
-  int iHeight = TILE_HEIGHT * m_iNumTiles;// (int)length / (TILE_WIDTH * 3);
-  GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, 
+  int iLength = TILE_WIDTH;
+  int iHeight = TILE_HEIGHT * m_iNumTiles;
+  GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 
                       iLength, iHeight, 0,
-                      GL_RGB, GL_UNSIGNED_BYTE, pTilesFlipped));
+                      GL_RGBA, GL_UNSIGNED_BYTE, pTilesFlipped));
   GLCALL(glBindTexture(GL_TEXTURE_2D, 0));
   delete[] pTilesFlipped;
   return true;

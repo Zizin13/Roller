@@ -269,16 +269,24 @@ void CTrackPreview::ShowModels(uint32 uiShowModels)
 
 void CTrackPreview::paintGL()
 {
-  if (m_uiShowModels & SHOW_ENVIRFLOOR_SURF_MODEL)
-    glClearColor(0.031f, 0.301f, 1.0f, 1.0f);
-  else
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+  //if (m_uiShowModels & SHOW_ENVIRFLOOR_SURF_MODEL)
+  //  glClearColor(0.031f, 0.301f, 1.0f, 1.0f);
+  //else
+  //  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
   glViewport(0, 0, width(), height());
 
   glm::mat4 viewToProjectionMatrix = glm::perspective(glm::radians(60.0f), ((float)width()) / height(), 0.1f, 100.0f);
   glm::mat4 worldToViewMatrix = camera.GetWorldToViewMatrix();
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
+
+  if (m_uiShowModels & SHOW_ENVIRFLOOR_SURF_MODEL && p->m_pEnvirFloorSurf)
+    p->m_pEnvirFloorSurf->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_ENVIRFLOOR_WIRE_MODEL && p->m_pEnvirFloorWire)
+    p->m_pEnvirFloorWire->Draw(worldToProjectionMatrix);
+  //environment floor should never clip through track even when it is higher than it
+  //so we draw it first then clear depth buffer bit
+  glClear(GL_DEPTH_BUFFER_BIT);
 
   if (m_uiShowModels & SHOW_LLANE_SURF_MODEL && p->m_pLLaneSurf)
     p->m_pLLaneSurf->Draw(worldToProjectionMatrix);
@@ -308,10 +316,6 @@ void CTrackPreview::paintGL()
     p->m_pRoofSurf->Draw(worldToProjectionMatrix);
   if (m_uiShowModels & SHOW_ROOF_WIRE_MODEL && p->m_pRoofWire)
     p->m_pRoofWire->Draw(worldToProjectionMatrix);
-  if (m_uiShowModels & SHOW_ENVIRFLOOR_SURF_MODEL && p->m_pEnvirFloorSurf)
-    p->m_pEnvirFloorSurf->Draw(worldToProjectionMatrix);
-  if (m_uiShowModels & SHOW_ENVIRFLOOR_WIRE_MODEL && p->m_pEnvirFloorWire)
-    p->m_pEnvirFloorWire->Draw(worldToProjectionMatrix);
   if (m_uiShowModels & SHOW_OWALLFLOOR_SURF_MODEL && p->m_pOWallFloorSurf)
     p->m_pOWallFloorSurf->Draw(worldToProjectionMatrix);
   if (m_uiShowModels & SHOW_OWALLFLOOR_WIRE_MODEL && p->m_pOWallFloorWire)
@@ -348,6 +352,8 @@ void CTrackPreview::initializeGL()
   //glEnable(GL_CULL_FACE);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_ALPHA_TEST);
+  glAlphaFunc(GL_GREATER, 0.4);
 
   if (!p->m_pShader)
     p->m_pShader = new CShader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");

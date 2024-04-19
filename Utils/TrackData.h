@@ -174,6 +174,7 @@ enum eFileSection
 enum eShapeSection
 {
   DRIVING_SURFACE = 0,
+  CENTER,
   LLANE,
   RLANE,
   LSHOULDER,
@@ -220,29 +221,12 @@ public:
   float m_fScale;
 
 protected:
-  tVertex *MakeVertsCenterline(uint32 &numVertices);
+  tVertex *MakeVerts(uint32 &numVertices, eShapeSection section);
+  tVertex *MakeVertsEnvirFloor(uint32 &numVertices);
+
   uint32 *MakeIndicesCenterline(uint32 &numIndices);
-  tVertex *MakeVertsSurface(uint32 &numVertices);
   uint32 *MakeIndicesSurface(uint32 &numIndices);
   uint32 *MakeIndicesSurfaceWireframe(uint32 &numIndices);
-
-  tVertex *MakeVertsSelectedChunks(uint32 &numVertices, int iStart, int iEnd);
-  uint32 *MakeIndicesSelectedChunks(uint32 &numIndices, int iStart, int iEnd);
-
-  tVertex *MakeVertsLLane(uint32 &numVertices);
-  tVertex *MakeVertsRLane(uint32 &numVertices);
-  tVertex *MakeVertsLShoulder(uint32 &numVertices);
-  tVertex *MakeVertsRShoulder(uint32 &numVertices);
-  tVertex *MakeVertsLWall(uint32 &numVertices);
-  tVertex *MakeVertsRWall(uint32 &numVertices);
-  tVertex *MakeVertsRoof(uint32 &numVertices);
-  tVertex *MakeVertsEnvirFloor(uint32 &numVertices);
-  tVertex *MakeVertsOWallFloor(uint32 &numVertices);
-  tVertex *MakeVertsLLOWall(uint32 &numVertices);
-  tVertex *MakeVertsRLOWall(uint32 &numVertices);
-  tVertex *MakeVertsLUOWall(uint32 &numVertices);
-  tVertex *MakeVertsRUOWall(uint32 &numVertices);
-
   uint32 *MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section);
   bool ShouldMakeIndicesForChunk(int i, eShapeSection section);
   uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices);

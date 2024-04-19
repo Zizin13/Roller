@@ -735,9 +735,6 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
   glm::vec3 prevLUOWall = glm::vec3(0, 0, 1);
   glm::vec3 prevRUOWall = glm::vec3(0, 0, 1);
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
-    //uint32 i = iChunkIndex + 1;
-    //if (i == m_chunkAy.size())
-    //  i = 0;
     glm::vec3 center;
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
@@ -792,7 +789,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     glm::vec3 ruoWall;
     GetWall(i, rloWall, pitchAxis, oWallRollMat, nextChunkPitched, ruoWall, eShapeSection::RUOWALL);
 
-    uint32 iChunkIndex = m_chunkAy.size() - 1;
+    int iChunkIndex = (int)m_chunkAy.size() - 1;
     if (i > 0)
       iChunkIndex = i - 1;
 
@@ -1041,12 +1038,14 @@ uint32 *CTrackData::MakeIndicesSingleSection(uint32 &numIndices, eShapeSection s
 
   uint32 i = 0;
   for (; i < m_chunkAy.size(); i++) {
-    if (!ShouldMakeIndicesForChunk(i, section))
-      continue;
+    //if (!ShouldMakeIndicesForChunk(i, section))
+    //  continue;
     if (i > 0 && !ShouldMakeIndicesForChunk(i - 1, section))
       continue;
-    else if (i == 0 && !ShouldMakeIndicesForChunk((int)m_chunkAy.size() - (int)i + 1, section))
+    else if (i == 0 && !ShouldMakeIndicesForChunk(((int)m_chunkAy.size() - 1), section))
       continue;
+    //else if (i == 0 && !ShouldMakeIndicesForChunk(((int)m_chunkAy.size() - (int)i + 1), section))
+    //  continue;
     indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 2;
     indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 3;
     indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 1;

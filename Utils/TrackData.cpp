@@ -763,6 +763,8 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
   glm::vec3 prevRLOWallBottomAttach = glm::vec3(0, 0, 1);
   glm::vec3 prevLUOWall = glm::vec3(0, 0, 1);
   glm::vec3 prevRUOWall = glm::vec3(0, 0, 1);
+  glm::vec3 prevLUOWallBottomAttach = glm::vec3(0, 0, 1);
+  glm::vec3 prevRUOWallBottomAttach = glm::vec3(0, 0, 1);
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
     glm::vec3 center;
     glm::vec3 pitchAxis;
@@ -817,10 +819,14 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     GetWall(i, rloWallBottomAttach, pitchAxis, oWallRollMat, nextChunkPitched, rloWall, eShapeSection::RLOWALL);
     //luowall
     glm::vec3 luoWall;
-    GetWall(i, lloWall, pitchAxis, oWallRollMat, nextChunkPitched, luoWall, eShapeSection::LUOWALL);
+    bool bLUOWallAttach = GetSignedBitValueFromInt(m_chunkAy[i].iLLOuterWallType) & SURFACE_FLAG_NON_SOLID;
+    glm::vec3 luoWallBottomAttach = bLUOWallAttach ? lWall : lloWall;
+    GetWall(i, luoWallBottomAttach, pitchAxis, oWallRollMat, nextChunkPitched, luoWall, eShapeSection::LUOWALL);
     //ruowall
     glm::vec3 ruoWall;
-    GetWall(i, rloWall, pitchAxis, oWallRollMat, nextChunkPitched, ruoWall, eShapeSection::RUOWALL);
+    bool bRUOWallAttach = GetSignedBitValueFromInt(m_chunkAy[i].iRLOuterWallType) & SURFACE_FLAG_NON_SOLID;
+    glm::vec3 ruoWallBottomAttach = bRUOWallAttach ? rWall : rloWall;
+    GetWall(i, ruoWallBottomAttach, pitchAxis, oWallRollMat, nextChunkPitched, ruoWall, eShapeSection::RUOWALL);
 
     switch (section) {
       case LLANE:
@@ -904,7 +910,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
                               vertices[i * uiNumVertsPerChunk + 1]);
         break;
       case LUOWALL:
-        ApplyVerticesSingleSection(i, vertices, luoWall, lloWall, prevLUOWall, prevLLOWall);
+        ApplyVerticesSingleSection(i, vertices, luoWall, luoWallBottomAttach, prevLUOWall, prevLUOWallBottomAttach);
         GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iLUOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
@@ -912,7 +918,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
                               vertices[i * uiNumVertsPerChunk + 1]);
         break;
       case RUOWALL:
-        ApplyVerticesSingleSection(i, vertices, rloWall, ruoWall, prevRLOWall, prevRUOWall);
+        ApplyVerticesSingleSection(i, vertices, ruoWallBottomAttach, ruoWall, prevRUOWallBottomAttach, prevRUOWall);
         GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iRUOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
@@ -951,6 +957,8 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     prevRLOWallBottomAttach = rloWallBottomAttach;
     prevLUOWall = luoWall;
     prevRUOWall = ruoWall;
+    prevLUOWallBottomAttach = luoWallBottomAttach;
+    prevRUOWallBottomAttach = ruoWallBottomAttach;
   }
 
   //attach final chunk
@@ -1203,11 +1211,13 @@ bool CTrackData::ShouldMakeIndicesForChunk(int i, eShapeSection section)
     return false;
   if (section == eShapeSection::LUOWALL
       && (!ShouldDrawSurfaceType(m_chunkAy[i].iLUOuterWallType)
-          || m_chunkAy[i].iOuterFloorType == -1))
+          || m_chunkAy[i].iOuterFloorType == -1
+          || m_chunkAy[i].iLLOuterWallType == -1))
     return false;
   if (section == eShapeSection::RUOWALL
       && (!ShouldDrawSurfaceType(m_chunkAy[i].iRUOuterWallType)
-          || m_chunkAy[i].iOuterFloorType == -1))
+          || m_chunkAy[i].iOuterFloorType == -1
+          || m_chunkAy[i].iRLOuterWallType == -1))
     return false;
   return true;
 }

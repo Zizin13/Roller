@@ -735,6 +735,9 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
   glm::vec3 prevLUOWall = glm::vec3(0, 0, 1);
   glm::vec3 prevRUOWall = glm::vec3(0, 0, 1);
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
+    //uint32 i = iChunkIndex + 1;
+    //if (i == m_chunkAy.size())
+    //  i = 0;
     glm::vec3 center;
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
@@ -789,10 +792,14 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     glm::vec3 ruoWall;
     GetWall(i, rloWall, pitchAxis, oWallRollMat, nextChunkPitched, ruoWall, eShapeSection::RUOWALL);
 
+    uint32 iChunkIndex = m_chunkAy.size() - 1;
+    if (i > 0)
+      iChunkIndex = i - 1;
+
     switch (section) {
       case LLANE:
         ApplyVerticesSingleSection(i, vertices, lLane, center, prevLLane, prevCenter);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[i].iCenterSurfaceType),
+        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iCenterSurfaceType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -800,7 +807,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case RLANE:
         ApplyVerticesSingleSection(i, vertices, center, rLane, prevCenter, prevRLane);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[i].iCenterSurfaceType),
+        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iCenterSurfaceType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -808,7 +815,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case LSHOULDER:
         ApplyVerticesSingleSection(i, vertices, lShoulder, lLane, prevLShoulder, prevLLane);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[i].iLeftSurfaceType),
+        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iLeftSurfaceType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -816,7 +823,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case RSHOULDER:
         ApplyVerticesSingleSection(i, vertices, rLane, rShoulder, prevRLane, prevRShoulder);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[i].iRightSurfaceType),
+        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iRightSurfaceType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -824,7 +831,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case LWALL:
         ApplyVerticesSingleSection(i, vertices, lWall, lWallBottomAttach, prevLWall, prevLWallBottomAttach);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType),
+        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iLeftWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -832,7 +839,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case RWALL:
         ApplyVerticesSingleSection(i, vertices, rWallBottomAttach, rWall, prevRWallBottomAttach, prevRWall);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType),
+        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iRightWallType),
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 3],
                               vertices[i * uiNumVertsPerChunk + 0],
@@ -840,7 +847,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case ROOF:
         ApplyVerticesSingleSection(i, vertices, rWall, lWall, prevRWall, prevLWall);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[i].iRoofType),
+        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iRoofType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -848,7 +855,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case OWALLFLOOR:
         ApplyVerticesSingleSection(i, vertices, lFloor, rFloor, prevLFloor, prevRFloor);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[i].iOuterFloorType),
+        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iOuterFloorType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -856,7 +863,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case LLOWALL:
         ApplyVerticesSingleSection(i, vertices, lloWall, lloWallBottomAttach, prevLLOWall, prevLLOWallBottomAttach);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[i].iLLOuterWallType),
+        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iLLOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -864,7 +871,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case RLOWALL:
         ApplyVerticesSingleSection(i, vertices, rloWallBottomAttach, rloWall, prevRLOWallBottomAttach, prevRLOWall);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[i].iRLOuterWallType),
+        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iRLOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -872,7 +879,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case LUOWALL:
         ApplyVerticesSingleSection(i, vertices, luoWall, lloWall, prevLUOWall, prevLLOWall);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[i].iLUOuterWallType),
+        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iLUOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -880,11 +887,14 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case RUOWALL:
         ApplyVerticesSingleSection(i, vertices, rloWall, ruoWall, prevRLOWall, prevRUOWall);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[i].iRUOuterWallType),
+        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iRUOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
                               vertices[i * uiNumVertsPerChunk + 1]);
+        break;
+      default:
+        assert(0); //shape not implemented
         break;
     }
 
@@ -907,6 +917,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     prevRUOWall = ruoWall;
   }
 
+  //attach final chunk
   switch (section) {
     case LLANE:
       vertices[3].position = prevCenter;

@@ -742,6 +742,10 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     glm::mat4 rollMatNoRoll = glm::mat4(1);
     GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
 
+    int iChunkIndex = (int)m_chunkAy.size() - 1;
+    if (i > 0)
+      iChunkIndex = i - 1;
+
     //left lane
     glm::vec3 lLane;
     GetLane(i, center, pitchAxis, rollMat, lLane, true);
@@ -788,10 +792,6 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     //ruowall
     glm::vec3 ruoWall;
     GetWall(i, rloWall, pitchAxis, oWallRollMat, nextChunkPitched, ruoWall, eShapeSection::RUOWALL);
-
-    int iChunkIndex = (int)m_chunkAy.size() - 1;
-    if (i > 0)
-      iChunkIndex = i - 1;
 
     switch (section) {
       case LLANE:
@@ -889,6 +889,8 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
                               vertices[i * uiNumVertsPerChunk + 1]);
+        break;
+      case SELECTED:
         break;
       default:
         assert(0); //shape not implemented
@@ -1038,8 +1040,11 @@ uint32 *CTrackData::MakeIndicesSingleSection(uint32 &numIndices, eShapeSection s
 
   uint32 i = 0;
   for (; i < m_chunkAy.size(); i++) {
-    //if (!ShouldMakeIndicesForChunk(i, section))
-    //  continue;
+    //if (section == eShapeSection::LWALL || section == eShapeSection::RWALL) {
+    //  //walls don't draw if forward section isn't drawn
+    //  if (!ShouldMakeIndicesForChunk(i, section))
+    //    continue;
+    //}
     if (i > 0 && !ShouldMakeIndicesForChunk(i - 1, section))
       continue;
     else if (i == 0 && !ShouldMakeIndicesForChunk(((int)m_chunkAy.size() - 1), section))
@@ -1062,55 +1067,62 @@ uint32 *CTrackData::MakeIndicesSingleSection(uint32 &numIndices, eShapeSection s
 bool CTrackData::ShouldMakeIndicesForChunk(int i, eShapeSection section)
 {
   if ((section == eShapeSection::LLANE || section == eShapeSection::RLANE)
-      && (GetSignedBitValueFromInt(m_chunkAy[i].iCenterSurfaceType) & SURFACE_FLAG_NON_SOLID))
+      && !ShouldDrawSurfaceType(m_chunkAy[i].iCenterSurfaceType))
     return false;
-  if (section == eShapeSection::LSHOULDER 
-      && (GetSignedBitValueFromInt(m_chunkAy[i].iLeftSurfaceType) & SURFACE_FLAG_NON_SOLID))
+  if (section == eShapeSection::LSHOULDER
+      && !ShouldDrawSurfaceType(m_chunkAy[i].iLeftSurfaceType))
     return false;
-  if (section == eShapeSection::RSHOULDER 
-      && (GetSignedBitValueFromInt(m_chunkAy[i].iRightSurfaceType) & SURFACE_FLAG_NON_SOLID))
+  if (section == eShapeSection::RSHOULDER
+      && !ShouldDrawSurfaceType(m_chunkAy[i].iRightSurfaceType))
     return false;
   if (section == eShapeSection::LWALL 
-      && (m_chunkAy[i].iLeftWallType == -1 
-          || GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_NON_SOLID))
+      && !ShouldDrawSurfaceType(m_chunkAy[i].iLeftWallType))
     return false;
   if (section == eShapeSection::RWALL
-      && (m_chunkAy[i].iRightWallType == -1 
-          || GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType) & SURFACE_FLAG_NON_SOLID))
+      && !ShouldDrawSurfaceType(m_chunkAy[i].iRightWallType))
     return false;
   if (section == eShapeSection::ROOF
-      && (m_chunkAy[i].iRoofType == -1 
-          || m_chunkAy[i].iLeftWallType == -1
-          || m_chunkAy[i].iRightWallType == -1
-          || GetSignedBitValueFromInt(m_chunkAy[i].iRoofType) & SURFACE_FLAG_NON_SOLID))
+      && (!ShouldDrawSurfaceType(m_chunkAy[i].iRoofType)
+          || !ShouldDrawSurfaceType(m_chunkAy[i].iLeftWallType)
+          || !ShouldDrawSurfaceType(m_chunkAy[i].iRightWallType)))
     return false;
   if (section == eShapeSection::ENVIRFLOOR
-      && (m_chunkAy[i].iEnvironmentFloorType == -1
-          || GetSignedBitValueFromInt(m_chunkAy[i].iEnvironmentFloorType) & SURFACE_FLAG_NON_SOLID))
+      && !ShouldDrawSurfaceType(m_chunkAy[i].iEnvironmentFloorType))
     return false;
   if (section == eShapeSection::OWALLFLOOR
-      && (m_chunkAy[i].iOuterFloorType < 0
-          || GetSignedBitValueFromInt(m_chunkAy[i].iOuterFloorType) & SURFACE_FLAG_NON_SOLID))
+      && (m_chunkAy[i].iOuterFloorType == -2 
+          || !ShouldDrawSurfaceType(m_chunkAy[i].iOuterFloorType)))
     return false;
   if (section == eShapeSection::LLOWALL
-      && (m_chunkAy[i].iLLOuterWallType == -1
-          || m_chunkAy[i].iOuterFloorType == -1
-          || GetSignedBitValueFromInt(m_chunkAy[i].iLLOuterWallType) & SURFACE_FLAG_NON_SOLID))
+      && (!ShouldDrawSurfaceType(m_chunkAy[i].iLLOuterWallType)
+          || m_chunkAy[i].iOuterFloorType == -1))
     return false;
   if (section == eShapeSection::RLOWALL
-      && (m_chunkAy[i].iRLOuterWallType == -1
-          || m_chunkAy[i].iOuterFloorType == -1
-          || GetSignedBitValueFromInt(m_chunkAy[i].iRLOuterWallType) & SURFACE_FLAG_NON_SOLID))
+      && (!ShouldDrawSurfaceType(m_chunkAy[i].iRLOuterWallType)
+          || m_chunkAy[i].iOuterFloorType == -1))
     return false;
   if (section == eShapeSection::LUOWALL
-      && (m_chunkAy[i].iLUOuterWallType == -1
-          || m_chunkAy[i].iOuterFloorType == -1
-          || GetSignedBitValueFromInt(m_chunkAy[i].iLUOuterWallType) & SURFACE_FLAG_NON_SOLID))
+      && (!ShouldDrawSurfaceType(m_chunkAy[i].iLUOuterWallType)
+          || m_chunkAy[i].iOuterFloorType == -1))
     return false;
   if (section == eShapeSection::RUOWALL
-      && (m_chunkAy[i].iRUOuterWallType == -1
-          || m_chunkAy[i].iOuterFloorType == -1
-          || GetSignedBitValueFromInt(m_chunkAy[i].iRUOuterWallType) & SURFACE_FLAG_NON_SOLID))
+      && (!ShouldDrawSurfaceType(m_chunkAy[i].iRUOuterWallType)
+          || m_chunkAy[i].iOuterFloorType == -1))
+    return false;
+  return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CTrackData::ShouldDrawSurfaceType(int iSurfaceType)
+{
+  if (iSurfaceType == -1)
+    return false;
+  uint32 uiSurfaceType = GetSignedBitValueFromInt(iSurfaceType);
+  if (uiSurfaceType & SURFACE_FLAG_NON_SOLID)
+    return false;
+  if (!(uiSurfaceType & SURFACE_FLAG_TRANSPARENT)
+      && !(uiSurfaceType & SURFACE_FLAG_APPLY_TEXTURE))
     return false;
   return true;
 }

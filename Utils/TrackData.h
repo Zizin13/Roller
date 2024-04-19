@@ -187,7 +187,8 @@ enum eShapeSection
   LLOWALL,
   RLOWALL,
   LUOWALL,
-  RUOWALL
+  RUOWALL,
+  SELECTED,
 };
 //-------------------------------------------------------------------------------------------------
 class CShader;
@@ -229,6 +230,7 @@ protected:
   uint32 *MakeIndicesSurfaceWireframe(uint32 &numIndices);
   uint32 *MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section);
   bool ShouldMakeIndicesForChunk(int i, eShapeSection section);
+  bool ShouldDrawSurfaceType(int iSurfaceType);
   uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices);
 
   void GetCenter(int i, glm::vec3 prevCenter,

@@ -1710,6 +1710,8 @@ uint32 *CTrackData::MakeIndicesSingleSection(uint32 &numIndices, eShapeSection s
       continue;
     if (i > 0 && !ShouldMakeIndicesForChunk(i - 1, section))
       continue;
+    else if (i == 0 && !ShouldMakeIndicesForChunk((int)m_chunkAy.size() - (int)i + 1, section))
+      continue;
     indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 2;
     indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 3;
     indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 1;
@@ -1744,7 +1746,8 @@ bool CTrackData::ShouldMakeIndicesForChunk(int i, eShapeSection section)
     return false;
   if (section == eShapeSection::ROOF
       && (m_chunkAy[i].iRoofType == -1 
-          || (m_chunkAy[i].iLeftWallType == -1 && m_chunkAy[i].iRightWallType == -1)
+          || m_chunkAy[i].iLeftWallType == -1
+          || m_chunkAy[i].iRightWallType == -1
           || GetSignedBitValueFromInt(m_chunkAy[i].iRoofType) & SURFACE_FLAG_NON_SOLID))
     return false;
   if (section == eShapeSection::ENVIRFLOOR
@@ -2017,10 +2020,11 @@ void CTrackData::GetTextureCoordinates(uint32 uiSurfaceType,
     bottomLeft.flags.x = 1.0f;
     bottomRight.flags.x = 1.0f;
     //alpha
-    topLeft.flags.y = 0.5f;
-    topRight.flags.y = 0.5f;
-    bottomLeft.flags.y = 0.5f;
-    bottomRight.flags.y = 0.5f;
+    float fAlphaVal = 0.8f;
+    topLeft.flags.y = fAlphaVal;
+    topRight.flags.y = fAlphaVal;
+    bottomLeft.flags.y = fAlphaVal;
+    bottomRight.flags.y = fAlphaVal;
     //color
     topLeft.color = glm::vec3(0);
     topRight.color = glm::vec3(0);

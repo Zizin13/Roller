@@ -758,12 +758,12 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     bool bLWallAttachToLane = GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_WALL_31;
     glm::vec3 lWallBottomAttach = bLWallAttachToLane ? lLane : lShoulder;
     glm::vec3 lWall;
-    GetWall(i, lWallBottomAttach, pitchAxis, rollMat, nextChunkPitched, lWall);
+    GetWall(i, lWallBottomAttach, pitchAxis, rollMat, nextChunkPitched, lWall, eShapeSection::LWALL);
     //right wall
     bool bRWallAttachToLane = GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType) & SURFACE_FLAG_WALL_31;
     glm::vec3 rWallBottomAttach = bRWallAttachToLane ? rLane : rShoulder;
     glm::vec3 rWall;
-    GetWall(i, rWallBottomAttach, pitchAxis, rollMat, nextChunkPitched, rWall);
+    GetWall(i, rWallBottomAttach, pitchAxis, rollMat, nextChunkPitched, rWall, eShapeSection::RWALL);
     //outer floor
     glm::vec3 lLaneNoRoll;
     GetLane(i, center, pitchAxis, rollMatNoRoll, lLaneNoRoll, true);
@@ -777,17 +777,17 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     //llowall
     glm::vec3 lloWallBottomAttach = m_chunkAy[i].iOuterFloorType < 0 ? lShoulder : lFloor;
     glm::vec3 lloWall;
-    GetOuterWall(i, lloWallBottomAttach, pitchAxis, oWallRollMat, nextChunkPitched, lloWall, true, false);
+    GetWall(i, lloWallBottomAttach, pitchAxis, oWallRollMat, nextChunkPitched, lloWall, eShapeSection::LLOWALL);
     //rlowall
     glm::vec3 rloWallBottomAttach = m_chunkAy[i].iOuterFloorType < 0 ? rShoulder : rFloor;
     glm::vec3 rloWall;
-    GetOuterWall(i, rloWallBottomAttach, pitchAxis, oWallRollMat, nextChunkPitched, rloWall, false, false);
+    GetWall(i, rloWallBottomAttach, pitchAxis, oWallRollMat, nextChunkPitched, rloWall, eShapeSection::RLOWALL);
     //luowall
     glm::vec3 luoWall;
-    GetOuterWall(i, lloWall, pitchAxis, oWallRollMat, nextChunkPitched, luoWall, true, true);
+    GetWall(i, lloWall, pitchAxis, oWallRollMat, nextChunkPitched, luoWall, eShapeSection::LUOWALL);
     //ruowall
     glm::vec3 ruoWall;
-    GetOuterWall(i, rloWall, pitchAxis, oWallRollMat, nextChunkPitched, ruoWall, false, true);
+    GetWall(i, rloWall, pitchAxis, oWallRollMat, nextChunkPitched, ruoWall, eShapeSection::RUOWALL);
 
     switch (section) {
       case LLANE:
@@ -1260,19 +1260,6 @@ void CTrackData::GetShoulder(int i, glm::vec3 lLane, glm::vec3 pitchAxis, glm::m
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
-                         glm::vec3 &lWall)
-{
-  glm::mat4 translateMat = glm::translate(bottomAttach);
-  float fLWallHeight = (float)m_chunkAy[i].iRoofHeight / m_fScale * -1.0f;
-  glm::mat4 scaleMatLWallHeight = glm::scale(glm::vec3(fLWallHeight, fLWallHeight, fLWallHeight));
-  glm::vec3 normal = glm::normalize(glm::cross(nextChunkPitched, pitchAxis));
-  glm::vec3 lWallHeightVec = glm::vec3(scaleMatLWallHeight * rollMat * glm::vec4(normal, 1.0f));
-  lWall = glm::vec3(translateMat * glm::vec4(lWallHeightVec, 1.0f));
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CTrackData::GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder,
                                glm::vec3 &lEnvirFloor, glm::vec3 &rEnvirFloor)
 {
@@ -1309,28 +1296,35 @@ void CTrackData::GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, glm::vec
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetOuterWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
-                            glm::vec3 &lloWall, bool bLeft, bool bUpper)
+void CTrackData::GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+                            glm::vec3 &lloWall, eShapeSection wallSection)
 {
   glm::mat4 translateMat = glm::translate(bottomAttach);
-  float fHOffset;
-  float fHeight;
-  if (bLeft) {
-    if (bUpper) {
-      fHOffset = (float)m_chunkAy[i].iLUOuterWallHOffset / m_fScale * -1.0f;
-      fHeight = (float)m_chunkAy[i].iLUOuterWallHeight / m_fScale * -1.0f;
-    } else {
+  float fHOffset = 0.0f;
+  float fHeight = 0.0f;
+  switch (wallSection) {
+    case LWALL:
+    case RWALL:
+      fHeight = (float)m_chunkAy[i].iRoofHeight / m_fScale * -1.0f;
+      break;
+    case LLOWALL:
       fHOffset = (float)m_chunkAy[i].iLLOuterWallHOffset / m_fScale * -1.0f;
       fHeight = (float)m_chunkAy[i].iLLOuterWallHeight / m_fScale * -1.0f;
-    }
-  } else {
-    if (bUpper) {
-      fHOffset = (float)m_chunkAy[i].iRUOuterWallHOffset / m_fScale;
-      fHeight = (float)m_chunkAy[i].iRUOuterWallHeight / m_fScale * -1.0f;
-    } else {
+      break;
+    case RLOWALL:
       fHOffset = (float)m_chunkAy[i].iRLOuterWallHOffset / m_fScale;
       fHeight = (float)m_chunkAy[i].iRLOuterWallHeight / m_fScale * -1.0f;
-    }
+      break;
+    case LUOWALL:
+      fHOffset = (float)m_chunkAy[i].iLUOuterWallHOffset / m_fScale * -1.0f;
+      fHeight = (float)m_chunkAy[i].iLUOuterWallHeight / m_fScale * -1.0f;
+      break;
+    case RUOWALL:
+      fHOffset = (float)m_chunkAy[i].iRUOuterWallHOffset / m_fScale;
+      fHeight = (float)m_chunkAy[i].iRUOuterWallHeight / m_fScale * -1.0f;
+      break;
+    default:
+      assert(0); //only wall sections should use this function
   }
   glm::mat4 scaleMatWidth = glm::scale(glm::vec3(fHOffset, fHOffset, fHOffset));
   glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));

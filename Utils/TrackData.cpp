@@ -1218,7 +1218,8 @@ bool CTrackData::ShouldMakeIndicesForChunk(int i, eShapeSection section)
   if (section == eShapeSection::ROOF
       && (!ShouldDrawSurfaceType(m_chunkAy[i].iRoofType)
           || m_chunkAy[i].iLeftWallType == -1
-          || m_chunkAy[i].iRightWallType == -1))
+          || m_chunkAy[i].iRightWallType == -1
+          || (!ShouldDrawSurfaceType(m_chunkAy[i].iLeftWallType) && !ShouldDrawSurfaceType(m_chunkAy[i].iRightWallType))))
     return false;
   if (section == eShapeSection::ENVIRFLOOR
       && !ShouldDrawSurfaceType(m_chunkAy[i].iEnvironmentFloorType))

@@ -755,6 +755,8 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
   glm::vec3 prevRWall = glm::vec3(0, 0, 1);
   glm::vec3 prevLWallBottomAttach = glm::vec3(0, 0, 1);
   glm::vec3 prevRWallBottomAttach = glm::vec3(0, 0, 1);
+  bool bPrevLWallAttachToLane = false;
+  bool bPrevRWallAttachToLane = false;
   glm::vec3 prevLFloor = glm::vec3(0, 0, 1);
   glm::vec3 prevRFloor = glm::vec3(0, 0, 1);
   glm::vec3 prevLLOWall = glm::vec3(0, 0, 1);
@@ -790,12 +792,18 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     glm::vec3 rShoulder;
     GetShoulder(i, rLane, pitchAxis, rollMat, nextChunkPitched, rShoulder, false);
     //left wall
-    bool bLWallAttachToLane = m_chunkAy[i].iLeftWallType != -1 && GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_WALL_31;
+    bool bLWallAttachToLane = GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_WALL_31;
+    if (m_chunkAy[i].iLeftWallType == -1)
+      bLWallAttachToLane = bPrevLWallAttachToLane;
+    bPrevLWallAttachToLane = bLWallAttachToLane;
     glm::vec3 lWallBottomAttach = bLWallAttachToLane ? lLane : lShoulder;
     glm::vec3 lWall;
     GetWall(i, lWallBottomAttach, pitchAxis, rollMat, nextChunkPitched, lWall, eShapeSection::LWALL);
     //right wall
-    bool bRWallAttachToLane = m_chunkAy[i].iRightWallType != -1 && GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType) & SURFACE_FLAG_WALL_31;
+    bool bRWallAttachToLane = GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType) & SURFACE_FLAG_WALL_31;
+    if (m_chunkAy[i].iRightWallType == -1)
+      bRWallAttachToLane = bPrevRWallAttachToLane;
+    bPrevRWallAttachToLane = bRWallAttachToLane;
     glm::vec3 rWallBottomAttach = bRWallAttachToLane ? rLane : rShoulder;
     glm::vec3 rWall;
     GetWall(i, rWallBottomAttach, pitchAxis, rollMat, nextChunkPitched, rWall, eShapeSection::RWALL);

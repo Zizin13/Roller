@@ -790,12 +790,12 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     glm::vec3 rShoulder;
     GetShoulder(i, rLane, pitchAxis, rollMat, nextChunkPitched, rShoulder, false);
     //left wall
-    bool bLWallAttachToLane = GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_WALL_31;
+    bool bLWallAttachToLane = m_chunkAy[i].iLeftWallType != -1 && GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_WALL_31;
     glm::vec3 lWallBottomAttach = bLWallAttachToLane ? lLane : lShoulder;
     glm::vec3 lWall;
     GetWall(i, lWallBottomAttach, pitchAxis, rollMat, nextChunkPitched, lWall, eShapeSection::LWALL);
     //right wall
-    bool bRWallAttachToLane = GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType) & SURFACE_FLAG_WALL_31;
+    bool bRWallAttachToLane = m_chunkAy[i].iRightWallType != -1 && GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType) & SURFACE_FLAG_WALL_31;
     glm::vec3 rWallBottomAttach = bRWallAttachToLane ? rLane : rShoulder;
     glm::vec3 rWall;
     GetWall(i, rWallBottomAttach, pitchAxis, rollMat, nextChunkPitched, rWall, eShapeSection::RWALL);
@@ -1396,8 +1396,11 @@ void CTrackData::GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm
   float fHeight = 0.0f;
   switch (wallSection) {
     case LWALL:
+      if (m_chunkAy[i].iLeftWallType != -1)
+        fHeight = (float)m_chunkAy[i].iRoofHeight / m_fScale * -1.0f;
     case RWALL:
-      fHeight = (float)m_chunkAy[i].iRoofHeight / m_fScale * -1.0f;
+      if (m_chunkAy[i].iRightWallType != -1)
+        fHeight = (float)m_chunkAy[i].iRoofHeight / m_fScale * -1.0f;
       break;
     case LLOWALL:
       fHOffset = (float)m_chunkAy[i].iLLOuterWallHOffset / m_fScale * -1.0f;

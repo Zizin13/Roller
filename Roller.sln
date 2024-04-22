@@ -15,20 +15,38 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TrackEditor", "TrackEditor\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utils", "Utils\Utils.vcxproj", "{FFE1E8A8-1052-4271-AA18-253855ABA0E6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CarPlansParser", "CarPlansParser\CarPlansParser.vcxproj", "{2D4EFE3E-1FF1-465C-A4A2-2D3A0CB54305}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{330E2D62-402B-485C-9EF7-3F2058263D55}.Debug|x64.ActiveCfg = Debug|x64
 		{330E2D62-402B-485C-9EF7-3F2058263D55}.Debug|x64.Build.0 = Debug|x64
+		{330E2D62-402B-485C-9EF7-3F2058263D55}.Debug|x86.ActiveCfg = Debug|x64
+		{330E2D62-402B-485C-9EF7-3F2058263D55}.Debug|x86.Build.0 = Debug|x64
 		{330E2D62-402B-485C-9EF7-3F2058263D55}.Release|x64.ActiveCfg = Release|x64
 		{330E2D62-402B-485C-9EF7-3F2058263D55}.Release|x64.Build.0 = Release|x64
+		{330E2D62-402B-485C-9EF7-3F2058263D55}.Release|x86.ActiveCfg = Release|x64
+		{330E2D62-402B-485C-9EF7-3F2058263D55}.Release|x86.Build.0 = Release|x64
 		{FFE1E8A8-1052-4271-AA18-253855ABA0E6}.Debug|x64.ActiveCfg = Debug|x64
 		{FFE1E8A8-1052-4271-AA18-253855ABA0E6}.Debug|x64.Build.0 = Debug|x64
+		{FFE1E8A8-1052-4271-AA18-253855ABA0E6}.Debug|x86.ActiveCfg = Debug|x64
+		{FFE1E8A8-1052-4271-AA18-253855ABA0E6}.Debug|x86.Build.0 = Debug|x64
 		{FFE1E8A8-1052-4271-AA18-253855ABA0E6}.Release|x64.ActiveCfg = Release|x64
 		{FFE1E8A8-1052-4271-AA18-253855ABA0E6}.Release|x64.Build.0 = Release|x64
+		{FFE1E8A8-1052-4271-AA18-253855ABA0E6}.Release|x86.ActiveCfg = Release|x64
+		{FFE1E8A8-1052-4271-AA18-253855ABA0E6}.Release|x86.Build.0 = Release|x64
+		{2D4EFE3E-1FF1-465C-A4A2-2D3A0CB54305}.Debug|x64.ActiveCfg = Debug|x64
+		{2D4EFE3E-1FF1-465C-A4A2-2D3A0CB54305}.Debug|x64.Build.0 = Debug|x64
+		{2D4EFE3E-1FF1-465C-A4A2-2D3A0CB54305}.Debug|x86.ActiveCfg = Debug|x64
+		{2D4EFE3E-1FF1-465C-A4A2-2D3A0CB54305}.Release|x64.ActiveCfg = Release|x64
+		{2D4EFE3E-1FF1-465C-A4A2-2D3A0CB54305}.Release|x64.Build.0 = Release|x64
+		{2D4EFE3E-1FF1-465C-A4A2-2D3A0CB54305}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

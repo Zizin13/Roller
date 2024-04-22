@@ -1,6 +1,6 @@
 #include <glew.h>
 #include "CarData.h"
-#include "CarPlans.h"
+#include "ZizinPlans.h"
 #include "Vertex.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -60,7 +60,7 @@ CShapeData *CCarData::MakeCar(CShader *pShader)
 tVertex *CCarData::MakeVerts(uint32 &numVertices)
 {
   numVertices = g_xzizinCoordsCount / 3;
-  tVertex *vertices = new tVertex[numVertices + 1];
+  tVertex *vertices = new tVertex[numVertices];
   int iVertIndex = 0;
   for (uint32 i = 0; i < g_xzizinCoordsCount; ++i) {
     vertices[i / 3].position[iVertIndex] = g_xzizinCoords[i] / m_fScale;
@@ -68,7 +68,6 @@ tVertex *CCarData::MakeVerts(uint32 &numVertices)
     if (iVertIndex == 3)
       iVertIndex = 0;
   }
-  vertices[g_xzizinCoordsCount].position = glm::vec3(0);
 
   return vertices;
 }
@@ -77,14 +76,21 @@ tVertex *CCarData::MakeVerts(uint32 &numVertices)
 
 uint32 *CCarData::MakeIndices(uint32 &numIndices)
 {
-  numIndices = g_xzizinCoordsCount * 2;
+  int iNumIndicesPerPol = 8;
+  numIndices = g_xzizinPolsCount * iNumIndicesPerPol;
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
   uint32 i = 0;
-  for (; i < g_xzizinCoordsCount; i++) {
-    indices[i * 2 + 0] = g_xzizinCoordsCount;
-    indices[i * 2 + 1] = i;
+  for (; i < g_xzizinPolsCount; i++) {
+    indices[i * iNumIndicesPerPol + 0] = g_xzizinPols[i].byVert1;
+    indices[i * iNumIndicesPerPol + 1] = g_xzizinPols[i].byVert2;
+    indices[i * iNumIndicesPerPol + 2] = g_xzizinPols[i].byVert2;
+    indices[i * iNumIndicesPerPol + 3] = g_xzizinPols[i].byVert3;
+    indices[i * iNumIndicesPerPol + 4] = g_xzizinPols[i].byVert3;
+    indices[i * iNumIndicesPerPol + 5] = g_xzizinPols[i].byVert4;
+    indices[i * iNumIndicesPerPol + 6] = g_xzizinPols[i].byVert4;
+    indices[i * iNumIndicesPerPol + 7] = g_xzizinPols[i].byVert1;
   }
 
   return indices;

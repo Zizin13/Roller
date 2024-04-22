@@ -105,10 +105,11 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CarData.h" />
-    <ClInclude Include="CarPlans.h" />
+    <ClInclude Include="ZizinPlans.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="OpenGLDebug.h" />
     <ClInclude Include="Palette.h" />
+    <ClInclude Include="Polygon.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShapeData.h" />
     <ClInclude Include="ShapeGenerator.h" />

@@ -3,6 +3,7 @@
 #include <vector>
 #include <assert.h>
 #include <algorithm>
+#include "Polygon.h"
 
 //-------------------------------------------------------------------------------------------------
 // just a little app to turn the "carplans.c.asm" file created by 
@@ -104,19 +105,76 @@ std::vector<unsigned short> BytesToUShorts(const std::vector<unsigned char> byte
 
 //-------------------------------------------------------------------------------------------------
 
+std::vector<tPolygon> BytesToPols(const std::vector<unsigned char> bytes)
+{
+  std::vector<tPolygon> polAy;
+
+  int j = 0;
+  tPolygon data;
+  memset(&data, 0, sizeof(data));
+  for (unsigned int i = 0; i < bytes.size(); ++i) {
+    unsigned char c = bytes[i];
+
+    switch (j) {
+      case 0:
+        data.byVert1 = c;
+        break;
+      case 1:
+        data.byVert2 = c;
+        break;
+      case 2:
+        data.byVert3 = c;
+        break;
+      case 3:
+        data.byVert4 = c;
+        break;
+      case 4:
+        data.byTex = c;
+        break;
+      case 5:
+        data.byUnknown1 = c;
+        break;
+      case 6:
+        data.byUnknown2 = c;
+        break;
+      case 7:
+        data.byUnknown3 = c;
+        break;
+      case 8:
+        data.byUnknown4 = c;
+        break;
+      case 9:
+        data.byUnknown5 = c;
+        break;
+      case 10:
+        data.byUnknown6 = c;
+        break;
+      case 11:
+        data.byUnknown7 = c;
+        break;
+    }
+
+    ++j;
+
+    if (j == 12) {
+      polAy.push_back(data);
+      memset(&data, 0, sizeof(data));
+      j = 0;
+    }
+  }
+
+  return polAy;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 std::string GetStringBytes(const std::string &sLine)
 {
   std::string sRet;
   size_t colPos = sLine.find(":");
-  size_t hexPos = sLine.find("0x");
   
-  if (colPos != std::string::npos && hexPos != std::string::npos) {
-    size_t dupPos = sLine.find("dup");
-    int iSubVal = 8;
-    if (dupPos != std::string::npos)
-      iSubVal = 16;
-
-    sRet = sLine.substr(colPos + 1, hexPos - iSubVal - colPos);
+  if (colPos != std::string::npos) {
+    sRet = sLine.substr(colPos + 1, 21);
   }
   
   sRet.erase(remove_if(sRet.begin(), sRet.end(), isspace), sRet.end());
@@ -131,7 +189,9 @@ enum eCarPlansSection
   NONE = 0,
   ZIZIN_COORDS,
   ZIZIN_POLS,
-  ZIZIN_BACKS
+  ZIZIN_BACKS,
+  ZIZIN_PLACES,
+  ZIZIN_ANMS
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -156,6 +216,8 @@ int main(int argc, char *argv[])
   std::string sCoordsBytes;
   std::string sPolsBytes;
   std::string sBacksBytes;
+  std::string sPlacesBytes;
+  std::string sAnmsBytes;
   int i = 0;
   while (std::getline(file, sLine)) {
     if (sLine.compare("_xzizin_coords:") == 0)
@@ -165,7 +227,11 @@ int main(int argc, char *argv[])
     if (sLine.compare("_xzizin_backs:") == 0)
       section = eCarPlansSection::ZIZIN_BACKS;
     if (sLine.compare("_xzizin_places:") == 0)
-      break; //stop here for now
+      section = eCarPlansSection::ZIZIN_PLACES;
+    if (sLine.compare("_xzizin_anms:") == 0)
+      section = eCarPlansSection::ZIZIN_ANMS;
+    if (sLine.compare("_xreise_coords:") == 0)
+      break;
 
     if (section == eCarPlansSection::ZIZIN_COORDS)
       sCoordsBytes += GetStringBytes(sLine);
@@ -173,6 +239,10 @@ int main(int argc, char *argv[])
       sPolsBytes += GetStringBytes(sLine);
     if (section == eCarPlansSection::ZIZIN_BACKS)
       sBacksBytes += GetStringBytes(sLine);
+    if (section == eCarPlansSection::ZIZIN_PLACES)
+      sPlacesBytes += GetStringBytes(sLine);
+    if (section == eCarPlansSection::ZIZIN_ANMS)
+      sAnmsBytes += GetStringBytes(sLine);
   }
   file.close();
 
@@ -183,11 +253,20 @@ int main(int argc, char *argv[])
   printf("found %d floats in _xzizin_coords\n", (int)zizinCoordsFloats.size());
 
   bytes = HexToBytes(sPolsBytes);
-  printf("found %d bytes in _xzizin_pols\n", (int)bytes.size());
+  std::vector<tPolygon> zizinPols = BytesToPols(bytes);
+  printf("found %d polygons in _xzizin_pols\n", (int)zizinPols.size());
 
   bytes = HexToBytes(sBacksBytes);
   std::vector<unsigned int> zizinBacksUInts = BytesToUInts(bytes);
-  printf("found %d ints in _xzizin_backs\n", (int)zizinBacksUInts.size());
+  printf("found %d uints in _xzizin_backs\n", (int)zizinBacksUInts.size());
+
+  bytes = HexToBytes(sPlacesBytes);
+  std::vector<unsigned int> zizinPlacesUInts = BytesToUInts(bytes);
+  printf("found %d uints in _xzizin_places\n", (int)zizinPlacesUInts.size());
+
+  bytes = HexToBytes(sAnmsBytes);
+  std::vector<unsigned int> zizinAnmsUInts = BytesToUInts(bytes);
+  printf("found %d uints in _xzizin_anms\n", (int)zizinAnmsUInts.size());
 
   //open output file
   std::ofstream out(argv[2]);
@@ -197,9 +276,12 @@ int main(int argc, char *argv[])
   }
 
 
-  out << "#ifndef _WHIPLIB_CARPLANS_H\n";
-  out << "#define _WHIPLIB_CARPLANS_H\n";
+  out << "#ifndef _WHIPLIB_ZIZINPLANS_H\n";
+  out << "#define _WHIPLIB_ZIZINPLANS_H\n";
   out << "//-------------------------------------------------------------------------------------------------\n";
+  out << "#include \"Polygon.h\"\n";
+  out << "//-------------------------------------------------------------------------------------------------\n";
+
 
   printf("writing _xzizin_coords\n");
   out << "float g_xzizinCoords[] = {\n";
@@ -208,8 +290,31 @@ int main(int argc, char *argv[])
   }
   out << "};\n";
   out << "int g_xzizinCoordsCount = sizeof(g_xzizinCoords)/sizeof(float);\n";
-
   out << "//-------------------------------------------------------------------------------------------------\n";
+
+
+  printf("writing _xzizin_pols\n");
+  out << "tPolygon g_xzizinPols[] = {\n";
+  for (int i = 0; i < zizinPols.size(); ++i) {
+    out << "{"
+      << (int)zizinPols[i].byVert1 << ","
+      << (int)zizinPols[i].byVert2 << ","
+      << (int)zizinPols[i].byVert3 << ","
+      << (int)zizinPols[i].byVert4 << ","
+      << (int)zizinPols[i].byTex << ","
+      << (int)zizinPols[i].byUnknown1 << ","
+      << (int)zizinPols[i].byUnknown2 << ","
+      << (int)zizinPols[i].byUnknown3 << ","
+      << (int)zizinPols[i].byUnknown4 << ","
+      << (int)zizinPols[i].byUnknown5 << ","
+      << (int)zizinPols[i].byUnknown6 << ","
+      << (int)zizinPols[i].byUnknown7 << "},\n";
+  }
+  out << "};\n";
+  out << "int g_xzizinPolsCount = sizeof(g_xzizinPols)/sizeof(tPolygon);\n";
+  out << "//-------------------------------------------------------------------------------------------------\n";
+
+
   out << "#endif\n";
 
   out.close();

@@ -62,7 +62,10 @@
     <ClInclude Include="CarData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CarPlans.h">
+    <ClInclude Include="ZizinPlans.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Polygon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

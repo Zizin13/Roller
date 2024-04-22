@@ -1,5 +1,5 @@
-#ifndef _TRACKEDITOR_SHAPEDATA_H
-#define _TRACKEDITOR_SHAPEDATA_H
+#ifndef _WHIPLIB_SHAPEDATA_H
+#define _WHIPLIB_SHAPEDATA_H
 //-------------------------------------------------------------------------------------------------
 #include <glew.h>
 #include "glm.hpp"

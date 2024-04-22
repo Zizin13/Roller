@@ -1,5 +1,5 @@
-#ifndef _UTILS_OPENGLDEBUG_H
-#define _UTILS_OPENGLDEBUG_H
+#ifndef _WHIPLIB_OPENGLDEBUG_H
+#define _WHIPLIB_OPENGLDEBUG_H
 //-------------------------------------------------------------------------------------------------
 #include "glew.h"
 #include "stdio.h"

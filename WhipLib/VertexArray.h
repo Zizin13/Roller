@@ -1,5 +1,5 @@
-#ifndef _UTILS_VERTEXARRAY_H
-#define _UTILS_VERTEXARRAY_H
+#ifndef _WHIPLIB_VERTEXARRAY_H
+#define _WHIPLIB_VERTEXARRAY_H
 //-------------------------------------------------------------------------------------------------
 #include "Types.h"
 //-------------------------------------------------------------------------------------------------

@@ -1,5 +1,5 @@
-#ifndef _UTILS_TRACKDATA_H
-#define _UTILS_TRACKDATA_H
+#ifndef _WHIPLIB_TRACKDATA_H
+#define _WHIPLIB_TRACKDATA_H
 //-------------------------------------------------------------------------------------------------
 #include <vector>
 #include <map>

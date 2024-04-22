@@ -1,5 +1,5 @@
-#ifndef _UTILS_INDEXBUFFER_H
-#define _UTILS_INDEXBUFFER_H
+#ifndef _WHIPLIB_INDEXBUFFER_H
+#define _WHIPLIB_INDEXBUFFER_H
 //-------------------------------------------------------------------------------------------------
 #include "Types.h"
 //-------------------------------------------------------------------------------------------------

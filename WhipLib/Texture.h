@@ -1,5 +1,5 @@
-#ifndef _UTILS_TEXTURE_H
-#define _UTILS_TEXTURE_H
+#ifndef _WHIPLIB_TEXTURE_H
+#define _WHIPLIB_TEXTURE_H
 //-------------------------------------------------------------------------------------------------
 #include <vector>
 #include <string>

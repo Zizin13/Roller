@@ -1,5 +1,5 @@
-#ifndef _UTILS_SHAPEGENERATOR_H
-#define _UTILS_SHAPEGENERATOR_H
+#ifndef _WHIPLIB_SHAPEGENERATOR_H
+#define _WHIPLIB_SHAPEGENERATOR_H
 //-------------------------------------------------------------------------------------------------
 #include "ShapeData.h"
 #include "Vertex.h"

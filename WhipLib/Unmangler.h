@@ -1,5 +1,5 @@
-#ifndef _UTILS_UNMANGLER_H
-#define _UTILS_UNMANGLER_H
+#ifndef _WHIPLIB_UNMANGLER_H
+#define _WHIPLIB_UNMANGLER_H
 #include <stdint.h>
 #include <vector>
 //-------------------------------------------------------------------------------------------------

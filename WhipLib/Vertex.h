@@ -1,5 +1,5 @@
-#ifndef _UTILS_VERTEX_H
-#define _UTILS_VERTEX_H
+#ifndef _WHIPLIB_VERTEX_H
+#define _WHIPLIB_VERTEX_H
 //-------------------------------------------------------------------------------------------------
 #include "glm.hpp"
 #include "Types.h"

@@ -153,13 +153,13 @@ int main(int argc, char *argv[])
 
   printf("writing _xzizin_coords\n");
 
-  out << "#ifndef _UTILS_CARPLANS_H\n";
-  out << "#define _UTILS_CARPLANS_H\n";
+  out << "#ifndef _WHIPLIB_CARPLANS_H\n";
+  out << "#define _WHIPLIB_CARPLANS_H\n";
   out << "//-------------------------------------------------------------------------------------------------\n";
 
   out << "float g_xzizinCoords[] = {\n";
   for (int i = 0; i < floats.size(); ++i) {
-    out << floats[i] << ",\n";
+    out << floats[i] << "f,\n";
   }
   out << "};\n";
   out << "int g_xzizinCoordsCount = sizeof(g_xzizinCoords)/sizeof(float);\n";

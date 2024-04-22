@@ -372,7 +372,7 @@ exit 1</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Utils\Utils.vcxproj">
+    <ProjectReference Include="..\WhipLib\WhipLib.vcxproj">
       <Project>{ffe1e8a8-1052-4271-aa18-253855aba0e6}</Project>
     </ProjectReference>
   </ItemGroup>

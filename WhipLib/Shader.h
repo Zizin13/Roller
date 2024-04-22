@@ -1,5 +1,5 @@
-#ifndef _UTILS_SHADER_H
-#define _UTILS_SHADER_H
+#ifndef _WHIPLIB_SHADER_H
+#define _WHIPLIB_SHADER_H
 //-------------------------------------------------------------------------------------------------
 #include "Types.h"
 #include "glew.h"

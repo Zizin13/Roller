@@ -1,5 +1,5 @@
-#ifndef _UTILS_PALETTE_H
-#define _UTILS_PALETTE_H
+#ifndef _WHIPLIB_PALETTE_H
+#define _WHIPLIB_PALETTE_H
 //-------------------------------------------------------------------------------------------------
 #include <vector>
 #include <string>

@@ -1,5 +1,7 @@
-#ifndef _UTILS_TYPES_H
-#define _UTILS_TYPES_H
+#ifndef _WHIPLIB_TYPES_H
+#define _WHIPLIB_TYPES_H
+//-------------------------------------------------------------------------------------------------
+#include <stddef.h>
 //-------------------------------------------------------------------------------------------------
 
 typedef signed char      int8;

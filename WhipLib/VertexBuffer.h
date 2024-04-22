@@ -1,5 +1,5 @@
-#ifndef _UTILS_VERTEXBUFFER_H
-#define _UTILS_VERTEXBUFFER_H
+#ifndef _WHIPLIB_VERTEXBUFFER_H
+#define _WHIPLIB_VERTEXBUFFER_H
 //-------------------------------------------------------------------------------------------------
 #include "Types.h"
 #include "Vertex.h"

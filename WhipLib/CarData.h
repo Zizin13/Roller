@@ -11,13 +11,13 @@ struct tVertex;
 
 class CCarData
 {
+public:
   CCarData();
   ~CCarData();
 
   CShapeData *MakeCar(CShader *pShader);
 
   float m_fScale;
-  CTexture m_tex;
 
 private:
   tVertex *MakeVerts(uint32 &numVertices);

@@ -11,6 +11,7 @@
 #include "OpenGLDebug.h"
 #include "Track.h"
 #include "DisplaySettings.h"
+#include "CarData.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -54,6 +55,7 @@ public:
     , m_pRUOWallSurf(NULL)
     , m_pRUOWallWire(NULL)
     , m_pSelection(NULL)
+    , m_pTestCar(NULL)
   {};
   ~CTrackPreviewPrivate()
   {
@@ -173,6 +175,10 @@ public:
       delete m_pSelection;
       m_pSelection = NULL;
     }
+    if (m_pTestCar) {
+      delete m_pTestCar;
+      m_pTestCar = NULL;
+    }
   }
 
   CShapeData *m_pLLaneSurf;
@@ -202,8 +208,11 @@ public:
   CShapeData *m_pRUOWallSurf;
   CShapeData *m_pRUOWallWire;
   CShapeData *m_pSelection;
+  CShapeData *m_pTestCar;
   CShader *m_pShader;
   CTrack *m_pTrack;
+
+  CCarData carData;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -280,6 +289,9 @@ void CTrackPreview::UpdateGeometrySelection(int iFrom, int iTo)
   if (p->m_pTrack) {
     p->m_pSelection = p->m_pTrack->MakeSelectedChunks(p->m_pShader, iFrom, iTo);
   }
+
+  p->m_pTestCar = p->carData.MakeCar(p->m_pShader);
+
   repaint();
 }
 
@@ -356,6 +368,9 @@ void CTrackPreview::paintGL()
     p->m_pRUOWallWire->Draw(worldToProjectionMatrix);
   if (m_uiShowModels & SHOW_SELECTION_HIGHLIGHT && p->m_pSelection)
     p->m_pSelection->Draw(worldToProjectionMatrix);
+
+  if (p->m_pTestCar)
+    p->m_pTestCar->Draw(worldToProjectionMatrix);
 }
 
 //-------------------------------------------------------------------------------------------------

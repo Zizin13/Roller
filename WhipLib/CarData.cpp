@@ -14,7 +14,7 @@
 //-------------------------------------------------------------------------------------------------
 
 CCarData::CCarData()
-  : m_fScale(10000.0f)
+  : m_fScale(1000.0f)
 {
 
 }
@@ -59,14 +59,35 @@ CShapeData *CCarData::MakeCar(CShader *pShader)
 
 tVertex *CCarData::MakeVerts(uint32 &numVertices)
 {
-  return NULL;
+  numVertices = g_xzizinCoordsCount / 3;
+  tVertex *vertices = new tVertex[numVertices + 1];
+  int iVertIndex = 0;
+  for (uint32 i = 0; i < g_xzizinCoordsCount; ++i) {
+    vertices[i / 3].position[iVertIndex] = g_xzizinCoords[i] / m_fScale;
+    iVertIndex++;
+    if (iVertIndex == 3)
+      iVertIndex = 0;
+  }
+  vertices[g_xzizinCoordsCount].position = glm::vec3(0);
+
+  return vertices;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 uint32 *CCarData::MakeIndices(uint32 &numIndices)
 {
-  return NULL;
+  numIndices = g_xzizinCoordsCount * 2;
+  uint32 *indices = new uint32[numIndices];
+  memset(indices, 0, numIndices * sizeof(uint32));
+
+  uint32 i = 0;
+  for (; i < g_xzizinCoordsCount; i++) {
+    indices[i * 2 + 0] = g_xzizinCoordsCount;
+    indices[i * 2 + 1] = i;
+  }
+
+  return indices;
 }
 
 //-------------------------------------------------------------------------------------------------

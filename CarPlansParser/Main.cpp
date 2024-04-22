@@ -114,6 +114,7 @@ std::vector<tPolygon> BytesToPols(const std::vector<unsigned char> bytes)
   memset(&data, 0, sizeof(data));
   for (unsigned int i = 0; i < bytes.size(); ++i) {
     unsigned char c = bytes[i];
+    unsigned int uiTemp = 0;
 
     switch (j) {
       case 0:
@@ -129,28 +130,24 @@ std::vector<tPolygon> BytesToPols(const std::vector<unsigned char> bytes)
         data.byVert4 = c;
         break;
       case 4:
-        data.byTex = c;
-        break;
       case 5:
-        data.byUnknown1 = c;
-        break;
       case 6:
-        data.byUnknown2 = c;
-        break;
       case 7:
-        data.byUnknown3 = c;
+        uiTemp |= c;
+        uiTemp = uiTemp << 8 * (j - 4);
+        data.uiTex |= uiTemp;
         break;
       case 8:
-        data.byUnknown4 = c;
+        data.byUnknown1 = c;
         break;
       case 9:
-        data.byUnknown5 = c;
+        data.byUnknown2 = c;
         break;
       case 10:
-        data.byUnknown6 = c;
+        data.byUnknown3 = c;
         break;
       case 11:
-        data.byUnknown7 = c;
+        data.byUnknown4 = c;
         break;
     }
 
@@ -301,14 +298,11 @@ int main(int argc, char *argv[])
       << (int)zizinPols[i].byVert2 << ","
       << (int)zizinPols[i].byVert3 << ","
       << (int)zizinPols[i].byVert4 << ","
-      << (int)zizinPols[i].byTex << ","
+      << (int)zizinPols[i].uiTex << ","
       << (int)zizinPols[i].byUnknown1 << ","
       << (int)zizinPols[i].byUnknown2 << ","
       << (int)zizinPols[i].byUnknown3 << ","
-      << (int)zizinPols[i].byUnknown4 << ","
-      << (int)zizinPols[i].byUnknown5 << ","
-      << (int)zizinPols[i].byUnknown6 << ","
-      << (int)zizinPols[i].byUnknown7 << "},\n";
+      << (int)zizinPols[i].byUnknown4 << "},\n";
   }
   out << "};\n";
   out << "int g_xzizinPolsCount = sizeof(g_xzizinPols)/sizeof(tPolygon);\n";

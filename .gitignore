@@ -377,3 +377,4 @@ FodyWeavers.xsd
 !/external/glew/lib/Debug/x64
 !/external/glew/lib/Release/x64
 /CarPlansParser/out.txt
+/CarPlansParser/null

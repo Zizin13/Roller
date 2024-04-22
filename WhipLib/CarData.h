@@ -2,8 +2,9 @@
 #define _WHIPLIB_CARDATA_H
 //-------------------------------------------------------------------------------------------------
 #include "Types.h"
-#include "Texture.h"
+#include <string>
 //-------------------------------------------------------------------------------------------------
+class CCarDataPrivate;
 class CShapeData;
 class CShader;
 struct tVertex;
@@ -15,6 +16,7 @@ public:
   CCarData();
   ~CCarData();
 
+  void LoadTexture(const std::string &sPal, const std::string &sTex, bool bMangled);
   CShapeData *MakeCar(CShader *pShader);
 
   float m_fScale;
@@ -22,6 +24,9 @@ public:
 private:
   tVertex *MakeVerts(uint32 &numVertices);
   uint32 *MakeIndices(uint32 &numIndices);
+  void GetTextureCoordinates(uint32 uiSurfaceType, tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight);
+
+  CCarDataPrivate *p;
 };
 
 //-------------------------------------------------------------------------------------------------

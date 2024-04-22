@@ -56,6 +56,7 @@ public:
     , m_pRUOWallWire(NULL)
     , m_pSelection(NULL)
     , m_pTestCar(NULL)
+    , m_pCarData(new CCarData)
   {};
   ~CTrackPreviewPrivate()
   {
@@ -179,6 +180,10 @@ public:
       delete m_pTestCar;
       m_pTestCar = NULL;
     }
+    if (m_pCarData) {
+      delete m_pCarData;
+      m_pCarData = NULL;
+    }
   }
 
   CShapeData *m_pLLaneSurf;
@@ -212,7 +217,7 @@ public:
   CShader *m_pShader;
   CTrack *m_pTrack;
 
-  CCarData carData;
+  CCarData *m_pCarData;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -290,7 +295,9 @@ void CTrackPreview::UpdateGeometrySelection(int iFrom, int iTo)
     p->m_pSelection = p->m_pTrack->MakeSelectedChunks(p->m_pShader, iFrom, iTo);
   }
 
-  p->m_pTestCar = p->carData.MakeCar(p->m_pShader);
+  p->m_pCarData->LoadTexture("C:\\WHIP\\WHIPLASH\\FATDATA\\PALETTE.PAL",
+                         "C:\\WHIP\\WHIPLASH\\FATDATA\\XZIZIN.BM", true);
+  p->m_pTestCar = p->m_pCarData->MakeCar(p->m_pShader);
 
   repaint();
 }
@@ -371,6 +378,13 @@ void CTrackPreview::paintGL()
 
   if (p->m_pTestCar)
     p->m_pTestCar->Draw(worldToProjectionMatrix);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::DeleteModels()
+{
+  p->DeleteModels();
 }
 
 //-------------------------------------------------------------------------------------------------

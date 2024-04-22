@@ -18,6 +18,7 @@ public:
   void SetTrack(CTrack *pTrack);
   void ShowModels(uint32 uiShowModels);
   void UpdateGeometrySelection(int iFrom, int iTo);
+  void DeleteModels();
 
 protected:
   void initializeGL();

@@ -136,6 +136,7 @@ void CMainWindow::closeEvent(QCloseEvent *pEvent)
   SaveSettings();
 
   //cleanup
+  openGLWidget->DeleteModels();
   if (p) {
     delete p;
     p = NULL;

@@ -259,6 +259,7 @@ float g_xzizinCoords[] = {
 299.253f,
 -642.379f,
 249.106f,
+293.975f,
 };
 int g_xzizinCoordsCount = sizeof(g_xzizinCoords) / sizeof(float);
 //-------------------------------------------------------------------------------------------------

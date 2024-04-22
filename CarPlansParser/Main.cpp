@@ -10,9 +10,9 @@
 // a little more usable
 //-------------------------------------------------------------------------------------------------
 
-std::vector<char> HexToBytes(const std::string &sBytes)
+std::vector<unsigned char> HexToBytes(const std::string &sBytes)
 {
-  std::vector<char> byteAy;
+  std::vector<unsigned char> byteAy;
 
   for (unsigned int i = 0; i < sBytes.length(); i += 2) {
     std::string sByte = sBytes.substr(i, 2);
@@ -25,13 +25,19 @@ std::vector<char> HexToBytes(const std::string &sBytes)
 
 //-------------------------------------------------------------------------------------------------
 
-std::vector<float> BytesToFloats(const std::vector<char> bytes)
+std::vector<float> BytesToFloats(const std::vector<unsigned char> bytes)
 {
   std::vector<float> floatAy;
 
   int j = 0;
   unsigned int uiData = 0;
   for (unsigned int i = 0; i < bytes.size(); ++i) {
+    unsigned int uiTemp = 0;
+    unsigned char c = (unsigned char)bytes[i];
+    uiTemp |= c;
+    uiTemp = uiTemp << 8 * j;
+    uiData |= uiTemp;
+    ++j;
 
     if (j == 4) {
       float *pfData = reinterpret_cast<float *>(&uiData);
@@ -39,13 +45,6 @@ std::vector<float> BytesToFloats(const std::vector<char> bytes)
       uiData = 0;
       j = 0;
     }
-
-    unsigned int uiTemp = 0;
-    unsigned char c = (unsigned char)bytes[i];
-    uiTemp |= c;
-    uiTemp = uiTemp << 8 * j;
-    uiData |= uiTemp;
-    ++j;
   }
 
   return floatAy;
@@ -53,30 +52,76 @@ std::vector<float> BytesToFloats(const std::vector<char> bytes)
 
 //-------------------------------------------------------------------------------------------------
 
-std::vector<int> BytesToInts(const std::vector<char> bytes)
+std::vector<unsigned int> BytesToUInts(const std::vector<unsigned char> bytes)
 {
-  std::vector<int> intAy;
+  std::vector<unsigned int> intAy;
 
   int j = 0;
   unsigned int uiData = 0;
   for (unsigned int i = 0; i < bytes.size(); ++i) {
-
-    if (j == 4) {
-      int *piData = reinterpret_cast<int *>(&uiData);
-      intAy.push_back(*piData);
-      uiData = 0;
-      j = 0;
-    }
-
     unsigned int uiTemp = 0;
     unsigned char c = (unsigned char)bytes[i];
     uiTemp |= c;
     uiTemp = uiTemp << 8 * j;
     uiData |= uiTemp;
     ++j;
+
+    if (j == 4) {
+      intAy.push_back(uiData);
+      uiData = 0;
+      j = 0;
+    }
   }
 
   return intAy;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+std::vector<unsigned short> BytesToUShorts(const std::vector<unsigned char> bytes)
+{
+  std::vector<unsigned short> shorAy;
+
+  int j = 0;
+  unsigned short unData = 0;
+  for (unsigned int i = 0; i < bytes.size(); ++i) {
+    unsigned int uiTemp = 0;
+    unsigned char c = (unsigned char)bytes[i];
+    uiTemp |= c;
+    uiTemp = uiTemp << 8 * j;
+    unData |= uiTemp;
+    ++j;
+
+    if (j == 2) {
+      shorAy.push_back(unData);
+      unData = 0;
+      j = 0;
+    }
+  }
+
+  return shorAy;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+std::string GetStringBytes(const std::string &sLine)
+{
+  std::string sRet;
+  size_t colPos = sLine.find(":");
+  size_t hexPos = sLine.find("0x");
+  
+  if (colPos != std::string::npos && hexPos != std::string::npos) {
+    size_t dupPos = sLine.find("dup");
+    int iSubVal = 8;
+    if (dupPos != std::string::npos)
+      iSubVal = 16;
+
+    sRet = sLine.substr(colPos + 1, hexPos - iSubVal - colPos);
+  }
+  
+  sRet.erase(remove_if(sRet.begin(), sRet.end(), isspace), sRet.end());
+  
+  return sRet;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -85,7 +130,8 @@ enum eCarPlansSection
 {
   NONE = 0,
   ZIZIN_COORDS,
-  ZIZIN_POLS
+  ZIZIN_POLS,
+  ZIZIN_BACKS
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -109,6 +155,7 @@ int main(int argc, char *argv[])
   std::string sLine;
   std::string sCoordsBytes;
   std::string sPolsBytes;
+  std::string sBacksBytes;
   int i = 0;
   while (std::getline(file, sLine)) {
     if (sLine.compare("_xzizin_coords:") == 0)
@@ -116,33 +163,31 @@ int main(int argc, char *argv[])
     if (sLine.compare("_xzizin_pols:") == 0)
       section = eCarPlansSection::ZIZIN_POLS;
     if (sLine.compare("_xzizin_backs:") == 0)
+      section = eCarPlansSection::ZIZIN_BACKS;
+    if (sLine.compare("_xzizin_places:") == 0)
       break; //stop here for now
 
-    if (section == eCarPlansSection::ZIZIN_COORDS) {
-      size_t pos = sLine.find("0x");
-      if (pos != std::string::npos) {
-        std::string sByte = sLine.substr(pos + 2, 2);
-        sCoordsBytes += sByte;
-      }
-    }
-    if (section == eCarPlansSection::ZIZIN_POLS) {
-      size_t pos = sLine.find("0x");
-      if (pos != std::string::npos) {
-        std::string sByte = sLine.substr(pos + 2, 2);
-        sPolsBytes += sByte;
-      }
-    }
+    if (section == eCarPlansSection::ZIZIN_COORDS)
+      sCoordsBytes += GetStringBytes(sLine);
+    if (section == eCarPlansSection::ZIZIN_POLS)
+      sPolsBytes += GetStringBytes(sLine);
+    if (section == eCarPlansSection::ZIZIN_BACKS)
+      sBacksBytes += GetStringBytes(sLine);
   }
   file.close();
 
   printf("file loaded...\n");
 
-  std::vector<char> bytes = HexToBytes(sCoordsBytes);
-  std::vector<float> floats = BytesToFloats(bytes);
-  bytes = HexToBytes(sPolsBytes);
-  std::vector<int> ints = BytesToInts(bytes);
+  std::vector<unsigned char> bytes = HexToBytes(sCoordsBytes);
+  std::vector<float> zizinCoordsFloats = BytesToFloats(bytes);
+  printf("found %d floats in _xzizin_coords\n", (int)zizinCoordsFloats.size());
 
-  printf("values converted...\n");
+  bytes = HexToBytes(sPolsBytes);
+  printf("found %d bytes in _xzizin_pols\n", (int)bytes.size());
+
+  bytes = HexToBytes(sBacksBytes);
+  std::vector<unsigned int> zizinBacksUInts = BytesToUInts(bytes);
+  printf("found %d ints in _xzizin_backs\n", (int)zizinBacksUInts.size());
 
   //open output file
   std::ofstream out(argv[2]);
@@ -151,15 +196,15 @@ int main(int argc, char *argv[])
     return -1;
   }
 
-  printf("writing _xzizin_coords\n");
 
   out << "#ifndef _WHIPLIB_CARPLANS_H\n";
   out << "#define _WHIPLIB_CARPLANS_H\n";
   out << "//-------------------------------------------------------------------------------------------------\n";
 
+  printf("writing _xzizin_coords\n");
   out << "float g_xzizinCoords[] = {\n";
-  for (int i = 0; i < floats.size(); ++i) {
-    out << floats[i] << "f,\n";
+  for (int i = 0; i < zizinCoordsFloats.size(); ++i) {
+    out << zizinCoordsFloats[i] << "f,\n";
   }
   out << "};\n";
   out << "int g_xzizinCoordsCount = sizeof(g_xzizinCoords)/sizeof(float);\n";

@@ -368,6 +368,7 @@ FodyWeavers.xsd
 /TrackEditor/ui
 /TrackEditor/moc
 /bin/TrackEditor
+/bin/CarPlansParser
 !/external
 !/external/glew
 !/external/glew/lib

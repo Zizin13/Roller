@@ -16,6 +16,7 @@
     <ProjectGuid>{ffe1e8a8-1052-4271-aa18-253855aba0e6}</ProjectGuid>
     <RootNamespace>Utils</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>WhipLib</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -103,6 +104,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CarData.h" />
+    <ClInclude Include="CarPlans.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="OpenGLDebug.h" />
     <ClInclude Include="Palette.h" />
@@ -120,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CarData.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Palette.cpp" />
     <ClCompile Include="Shader.cpp" />

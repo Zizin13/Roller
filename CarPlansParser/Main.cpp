@@ -53,6 +53,43 @@ std::vector<float> BytesToFloats(const std::vector<char> bytes)
 
 //-------------------------------------------------------------------------------------------------
 
+std::vector<int> BytesToInts(const std::vector<char> bytes)
+{
+  std::vector<int> intAy;
+
+  int j = 0;
+  unsigned int uiData = 0;
+  for (unsigned int i = 0; i < bytes.size(); ++i) {
+
+    if (j == 4) {
+      int *piData = reinterpret_cast<int *>(&uiData);
+      intAy.push_back(*piData);
+      uiData = 0;
+      j = 0;
+    }
+
+    unsigned int uiTemp = 0;
+    unsigned char c = (unsigned char)bytes[i];
+    uiTemp |= c;
+    uiTemp = uiTemp << 8 * j;
+    uiData |= uiTemp;
+    ++j;
+  }
+
+  return intAy;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+enum eCarPlansSection
+{
+  NONE = 0,
+  ZIZIN_COORDS,
+  ZIZIN_POLS
+};
+
+//-------------------------------------------------------------------------------------------------
+
 int main(int argc, char *argv[])
 {
   //must pass in filename
@@ -68,28 +105,44 @@ int main(int argc, char *argv[])
     return -1;
   }
   
-  bool bFoundZizinCoords = false;
+  eCarPlansSection section = eCarPlansSection::NONE;
   std::string sLine;
   std::string sCoordsBytes;
+  std::string sPolsBytes;
   int i = 0;
   while (std::getline(file, sLine)) {
     if (sLine.compare("_xzizin_coords:") == 0)
-      bFoundZizinCoords = true;
+      section = eCarPlansSection::ZIZIN_COORDS;
     if (sLine.compare("_xzizin_pols:") == 0)
+      section = eCarPlansSection::ZIZIN_POLS;
+    if (sLine.compare("_xzizin_backs:") == 0)
       break; //stop here for now
 
-    if (bFoundZizinCoords) {
+    if (section == eCarPlansSection::ZIZIN_COORDS) {
       size_t pos = sLine.find("0x");
       if (pos != std::string::npos) {
         std::string sByte = sLine.substr(pos + 2, 2);
         sCoordsBytes += sByte;
       }
     }
+    if (section == eCarPlansSection::ZIZIN_POLS) {
+      size_t pos = sLine.find("0x");
+      if (pos != std::string::npos) {
+        std::string sByte = sLine.substr(pos + 2, 2);
+        sPolsBytes += sByte;
+      }
+    }
   }
   file.close();
 
+  printf("file loaded...\n");
+
   std::vector<char> bytes = HexToBytes(sCoordsBytes);
   std::vector<float> floats = BytesToFloats(bytes);
+  bytes = HexToBytes(sPolsBytes);
+  std::vector<int> ints = BytesToInts(bytes);
+
+  printf("values converted...\n");
 
   //open output file
   std::ofstream out(argv[2]);
@@ -98,10 +151,21 @@ int main(int argc, char *argv[])
     return -1;
   }
 
-  out << "_xzizin_coords:\n";
+  printf("writing _xzizin_coords\n");
+
+  out << "#ifndef _UTILS_CARPLANS_H\n";
+  out << "#define _UTILS_CARPLANS_H\n";
+  out << "//-------------------------------------------------------------------------------------------------\n";
+
+  out << "float g_xzizinCoords[] = {\n";
   for (int i = 0; i < floats.size(); ++i) {
-    out << floats[i] << "\n";
+    out << floats[i] << ",\n";
   }
+  out << "};\n";
+  out << "int g_xzizinCoordsCount = sizeof(g_xzizinCoords)/sizeof(float);\n";
+
+  out << "//-------------------------------------------------------------------------------------------------\n";
+  out << "#endif\n";
 
   out.close();
 

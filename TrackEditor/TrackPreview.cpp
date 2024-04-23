@@ -61,6 +61,14 @@ public:
   ~CTrackPreviewPrivate()
   {
     DeleteModels();
+    if (m_pTestCar) {
+      delete m_pTestCar;
+      m_pTestCar = NULL;
+    }
+    if (m_pCarData) {
+      delete m_pCarData;
+      m_pCarData = NULL;
+    }
     if (m_pShader) {
       delete m_pShader;
       m_pShader = NULL;
@@ -176,14 +184,6 @@ public:
       delete m_pSelection;
       m_pSelection = NULL;
     }
-    if (m_pTestCar) {
-      delete m_pTestCar;
-      m_pTestCar = NULL;
-    }
-    if (m_pCarData) {
-      delete m_pCarData;
-      m_pCarData = NULL;
-    }
   }
 
   CShapeData *m_pLLaneSurf;
@@ -295,13 +295,6 @@ void CTrackPreview::UpdateGeometrySelection(int iFrom, int iTo)
     p->m_pSelection = p->m_pTrack->MakeSelectedChunks(p->m_pShader, iFrom, iTo);
   }
 
-  if (p->m_pCarData) {
-    p->m_pCarData->LoadTexture("C:\\WHIP\\WHIPLASH\\FATDATA\\PALETTE.PAL",
-                           "C:\\WHIP\\WHIPLASH\\FATDATA\\YZIZIN.BM", true);
-    p->m_pTestCar = p->m_pCarData->MakeCar(p->m_pShader);
-    p->m_pTestCar->m_modelToWorldMatrix = glm::rotate(glm::radians(-90.0f), glm::vec3(1,0,0));
-  }
-
   repaint();
 }
 
@@ -388,6 +381,14 @@ void CTrackPreview::paintGL()
 void CTrackPreview::DeleteModels()
 {
   p->DeleteModels();
+  if (p->m_pTestCar) {
+    delete p->m_pTestCar;
+    p->m_pTestCar = NULL;
+  }
+  if (p->m_pCarData) {
+    delete p->m_pCarData;
+    p->m_pCarData = NULL;
+  }
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -410,6 +411,14 @@ void CTrackPreview::initializeGL()
 
   if (!p->m_pShader)
     p->m_pShader = new CShader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");
+
+
+  if (p->m_pCarData) {
+    p->m_pCarData->LoadTexture("C:\\WHIP\\WHIPLASH\\FATDATA\\PALETTE.PAL",
+                           "C:\\WHIP\\WHIPLASH\\FATDATA\\YZIZIN.BM", true);
+    p->m_pTestCar = p->m_pCarData->MakeCar(p->m_pShader);
+    p->m_pTestCar->m_modelToWorldMatrix = glm::translate(glm::vec3(3.0f, 1.5f, 0.0f)) * glm::rotate(glm::radians(-90.0f), glm::vec3(1, 0, 0));
+  }
 }
 
 //-------------------------------------------------------------------------------------------------

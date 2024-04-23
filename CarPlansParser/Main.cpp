@@ -81,32 +81,6 @@ std::vector<uint32> BytesToUInts(const std::vector<uint8> bytes)
 
 //-------------------------------------------------------------------------------------------------
 
-std::vector<unsigned short> BytesToUShorts(const std::vector<uint8> bytes)
-{
-  std::vector<unsigned short> shorAy;
-
-  int j = 0;
-  unsigned short unData = 0;
-  for (uint32 i = 0; i < bytes.size(); ++i) {
-    uint32 uiTemp = 0;
-    uint8 c = (uint8)bytes[i];
-    uiTemp |= c;
-    uiTemp = uiTemp << 8 * j;
-    unData |= uiTemp;
-    ++j;
-
-    if (j == 2) {
-      shorAy.push_back(unData);
-      unData = 0;
-      j = 0;
-    }
-  }
-
-  return shorAy;
-}
-
-//-------------------------------------------------------------------------------------------------
-
 std::vector<tPolygon> BytesToPols(const std::vector<uint8> bytes)
 {
   std::vector<tPolygon> polAy;
@@ -230,7 +204,8 @@ int main(int argc, char *argv[])
 {
   //must pass in filename
   if (argc < 3) {
-    printf("need carplans.c.asm file location and output file\n");
+    printf("Usage: CarPlansParser input_file output_file\n");
+    printf("       ex: CarPlansParser carplans.c.asm ZizinPlans.h\n");
     return -1;
   }
 

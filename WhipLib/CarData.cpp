@@ -104,7 +104,11 @@ tVertex *CCarData::MakeVerts(uint32 &numVertices)
     vertices[i * 4 + 2] = coordAy[g_xzizinPols[i].byVert3];
     vertices[i * 4 + 3] = coordAy[g_xzizinPols[i].byVert4];
 
-    GetTextureCoordinates(g_xzizinPols[i].uiTex,
+    uint32 uiUseTex = g_xzizinPols[i].uiTex;
+    if (uiUseTex & SURFACE_FLAG_9) {
+      uiUseTex = g_xzizinAnms[uiUseTex].framesAy[0];
+    }
+    GetTextureCoordinates(uiUseTex,
                           vertices[i * 4 + 1],
                           vertices[i * 4 + 0],
                           vertices[i * 4 + 2],

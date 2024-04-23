@@ -12,8 +12,11 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{a17399c9-fc31-4729-87e5-af9c62cb7e33}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Plans">
+    <Filter Include="Header Files\CarPlans">
       <UniqueIdentifier>{62c23e94-bf3c-4258-9272-d2fb7a180ed3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\SignPlans">
+      <UniqueIdentifier>{8011ca94-9194-4b24-a3cc-78f3d3f52777}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -65,35 +68,89 @@
     <ClInclude Include="CarData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ZizinPlans.h">
-      <Filter>Header Files\Plans</Filter>
+    <ClInclude Include="Animation.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Polygon.h">
-      <Filter>Header Files\Plans</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Animation.h">
-      <Filter>Header Files\Plans</Filter>
+    <ClInclude Include="CarPlans\AutoPlans.h">
+      <Filter>Header Files\CarPlans</Filter>
     </ClInclude>
-    <ClInclude Include="AutoPlans.h">
-      <Filter>Header Files\Plans</Filter>
+    <ClInclude Include="CarPlans\DesilvaPlans.h">
+      <Filter>Header Files\CarPlans</Filter>
     </ClInclude>
-    <ClInclude Include="DesilvaPlans.h">
-      <Filter>Header Files\Plans</Filter>
+    <ClInclude Include="CarPlans\F1WackPlans.h">
+      <Filter>Header Files\CarPlans</Filter>
     </ClInclude>
-    <ClInclude Include="GlobalPlans.h">
-      <Filter>Header Files\Plans</Filter>
+    <ClInclude Include="CarPlans\GlobalPlans.h">
+      <Filter>Header Files\CarPlans</Filter>
     </ClInclude>
-    <ClInclude Include="MillionPlans.h">
-      <Filter>Header Files\Plans</Filter>
+    <ClInclude Include="CarPlans\MillionPlans.h">
+      <Filter>Header Files\CarPlans</Filter>
     </ClInclude>
-    <ClInclude Include="MissionPlans.h">
-      <Filter>Header Files\Plans</Filter>
+    <ClInclude Include="CarPlans\MissionPlans.h">
+      <Filter>Header Files\CarPlans</Filter>
     </ClInclude>
-    <ClInclude Include="PulsePlans.h">
-      <Filter>Header Files\Plans</Filter>
+    <ClInclude Include="CarPlans\PulsePlans.h">
+      <Filter>Header Files\CarPlans</Filter>
     </ClInclude>
-    <ClInclude Include="ReisePlans.h">
-      <Filter>Header Files\Plans</Filter>
+    <ClInclude Include="CarPlans\ReisePlans.h">
+      <Filter>Header Files\CarPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="CarPlans\ZizinPlans.h">
+      <Filter>Header Files\CarPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\Advert2Plans.h">
+      <Filter>Header Files\SignPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\Advert3Plans.h">
+      <Filter>Header Files\SignPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\AdvertPlans.h">
+      <Filter>Header Files\SignPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\Balloon2Plans.h">
+      <Filter>Header Files\SignPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\BalloonPlans.h">
+      <Filter>Header Files\SignPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\Bld0Plans.h">
+      <Filter>Header Files\SignPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\Build1Plans.h">
+      <Filter>Header Files\SignPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\Build2Plans.h">
+      <Filter>Header Files\SignPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\Build3Plans.h">
+      <Filter>Header Files\SignPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\BuildPlans.h">
+      <Filter>Header Files\SignPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\HeelbarPlans.h">
+      <Filter>Header Files\SignPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\QuadBldPlans.h">
+      <Filter>Header Files\SignPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\Sign01Plans.h">
+      <Filter>Header Files\SignPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\Sign02Plans.h">
+      <Filter>Header Files\SignPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\Tower2Plans.h">
+      <Filter>Header Files\SignPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\TowerPlans.h">
+      <Filter>Header Files\SignPlans</Filter>
+    </ClInclude>
+    <ClInclude Include="SignPlans\TreePlans.h">
+      <Filter>Header Files\SignPlans</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

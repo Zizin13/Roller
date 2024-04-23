@@ -106,7 +106,7 @@ exit 1</Command>
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="carplans.c.asm" />
+    <None Include="FATAL.EXE_disasm_object_3_disassembly_formatted.asm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

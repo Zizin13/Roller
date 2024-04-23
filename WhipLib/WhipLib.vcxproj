@@ -59,7 +59,7 @@
       <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;IS_WINDOWS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\external\glew\include\GL;..\external\glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\external\glew\include\GL;..\external\glm;CarPlans;SignPlans</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -84,7 +84,7 @@
       <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;IS_WINDOWS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\external\glew\include\GL;..\external\glm</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\external\glew\include\GL;..\external\glm;CarPlans;SignPlans</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -104,16 +104,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
-    <ClInclude Include="AutoPlans.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CarData.h" />
-    <ClInclude Include="DesilvaPlans.h" />
-    <ClInclude Include="GlobalPlans.h" />
-    <ClInclude Include="MillionPlans.h" />
-    <ClInclude Include="MissionPlans.h" />
-    <ClInclude Include="PulsePlans.h" />
-    <ClInclude Include="ReisePlans.h" />
-    <ClInclude Include="ZizinPlans.h" />
+    <ClInclude Include="CarPlans\AutoPlans.h" />
+    <ClInclude Include="CarPlans\DesilvaPlans.h" />
+    <ClInclude Include="CarPlans\F1WackPlans.h" />
+    <ClInclude Include="CarPlans\GlobalPlans.h" />
+    <ClInclude Include="CarPlans\MillionPlans.h" />
+    <ClInclude Include="CarPlans\MissionPlans.h" />
+    <ClInclude Include="CarPlans\PulsePlans.h" />
+    <ClInclude Include="CarPlans\ReisePlans.h" />
+    <ClInclude Include="CarPlans\ZizinPlans.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="OpenGLDebug.h" />
     <ClInclude Include="Palette.h" />
@@ -121,6 +122,23 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShapeData.h" />
     <ClInclude Include="ShapeGenerator.h" />
+    <ClInclude Include="SignPlans\Advert2Plans.h" />
+    <ClInclude Include="SignPlans\Advert3Plans.h" />
+    <ClInclude Include="SignPlans\AdvertPlans.h" />
+    <ClInclude Include="SignPlans\Balloon2Plans.h" />
+    <ClInclude Include="SignPlans\BalloonPlans.h" />
+    <ClInclude Include="SignPlans\Bld0Plans.h" />
+    <ClInclude Include="SignPlans\Build1Plans.h" />
+    <ClInclude Include="SignPlans\Build2Plans.h" />
+    <ClInclude Include="SignPlans\Build3Plans.h" />
+    <ClInclude Include="SignPlans\BuildPlans.h" />
+    <ClInclude Include="SignPlans\HeelbarPlans.h" />
+    <ClInclude Include="SignPlans\QuadBldPlans.h" />
+    <ClInclude Include="SignPlans\Sign01Plans.h" />
+    <ClInclude Include="SignPlans\Sign02Plans.h" />
+    <ClInclude Include="SignPlans\Tower2Plans.h" />
+    <ClInclude Include="SignPlans\TowerPlans.h" />
+    <ClInclude Include="SignPlans\TreePlans.h" />
     <ClInclude Include="TeapotData.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TrackData.h" />

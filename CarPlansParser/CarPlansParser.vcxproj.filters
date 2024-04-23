@@ -20,7 +20,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="carplans.c.asm">
+    <None Include="FATAL.EXE_disasm_object_3_disassembly_formatted.asm">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

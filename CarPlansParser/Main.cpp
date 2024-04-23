@@ -191,11 +191,11 @@ std::string GetStringBytes(const std::string &sLine)
 enum eCarPlansSection
 {
   NONE = 0,
-  ZIZIN_COORDS,
-  ZIZIN_POLS,
-  ZIZIN_BACKS,
-  ZIZIN_PLACES,
-  ZIZIN_ANMS
+  COORDS,
+  POLS,
+  BACKS,
+  PLACES,
+  ANMS
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -203,11 +203,19 @@ enum eCarPlansSection
 int main(int argc, char *argv[])
 {
   //must pass in filename
-  if (argc < 3) {
-    printf("Usage: CarPlansParser input_file output_file\n");
-    printf("       ex: CarPlansParser carplans.c.asm ZizinPlans.h\n");
+  if (argc < 4) {
+    printf("Usage: CarPlansParser input_file output_file car_name\n");
+    printf("       ex: CarPlansParser FATAL.EXE_disasm_object_3_disassembly_formatted.asm ZizinPlans.h xzizin\n");
     return -1;
   }
+
+  std::string sCarName = argv[3];
+  std::string sCarNameLower = sCarName;
+  std::transform(sCarNameLower.begin(), sCarNameLower.end(), sCarNameLower.begin(),
+    [](unsigned char c) { return std::tolower(c); });
+  std::string sCarNameUpper = sCarName;
+  std::transform(sCarNameUpper.begin(), sCarNameUpper.end(), sCarNameUpper.begin(),
+    [](unsigned char c) { return std::toupper(c); });
 
   //open input file
   std::ifstream file(argv[1]);
@@ -225,28 +233,33 @@ int main(int argc, char *argv[])
   std::string sAnmsBytes;
   int i = 0;
   while (std::getline(file, sLine)) {
-    if (sLine.compare("_xzizin_coords:") == 0)
-      section = eCarPlansSection::ZIZIN_COORDS;
-    if (sLine.compare("_xzizin_pols:") == 0)
-      section = eCarPlansSection::ZIZIN_POLS;
-    if (sLine.compare("_xzizin_backs:") == 0)
-      section = eCarPlansSection::ZIZIN_BACKS;
-    if (sLine.compare("_xzizin_places:") == 0)
-      section = eCarPlansSection::ZIZIN_PLACES;
-    if (sLine.compare("_xzizin_anms:") == 0)
-      section = eCarPlansSection::ZIZIN_ANMS;
-    if (sLine.compare("_xreise_coords:") == 0)
+    std::string sCoordsComp = "_" + sCarNameLower + "_coords:";
+    std::string sPolsComp = "_" + sCarNameLower + "_pols:";
+    std::string sBacksComp = "_" + sCarNameLower + "_backs:";
+    std::string sPlacesComp = "_" + sCarNameLower + "_places:";
+    std::string sAnmsComp = "_" + sCarNameLower + "_anms:";
+    if (sLine.compare(sCoordsComp) == 0)
+      section = eCarPlansSection::COORDS;
+    else if (sLine.compare(sPolsComp) == 0)
+      section = eCarPlansSection::POLS;
+    else if (sLine.compare(sBacksComp) == 0)
+      section = eCarPlansSection::BACKS;
+    else if (sLine.compare(sPlacesComp) == 0)
+      section = eCarPlansSection::PLACES;
+    else if (sLine.compare(sAnmsComp) == 0)
+      section = eCarPlansSection::ANMS;
+    else if (section != eCarPlansSection::NONE && sLine.at(0) == '_')
       break;
 
-    if (section == eCarPlansSection::ZIZIN_COORDS)
+    if (section == eCarPlansSection::COORDS)
       sCoordsBytes += GetStringBytes(sLine);
-    if (section == eCarPlansSection::ZIZIN_POLS)
+    if (section == eCarPlansSection::POLS)
       sPolsBytes += GetStringBytes(sLine);
-    if (section == eCarPlansSection::ZIZIN_BACKS)
+    if (section == eCarPlansSection::BACKS)
       sBacksBytes += GetStringBytes(sLine);
-    if (section == eCarPlansSection::ZIZIN_PLACES)
+    if (section == eCarPlansSection::PLACES)
       sPlacesBytes += GetStringBytes(sLine);
-    if (section == eCarPlansSection::ZIZIN_ANMS)
+    if (section == eCarPlansSection::ANMS)
       sAnmsBytes += GetStringBytes(sLine);
   }
   file.close();
@@ -254,25 +267,25 @@ int main(int argc, char *argv[])
   printf("file loaded...\n");
 
   std::vector<uint8> bytes = HexToBytes(sCoordsBytes);
-  std::vector<float> zizinCoordsFloats = BytesToFloats(bytes);
-  printf("found %d floats in _xzizin_coords\n", (int)zizinCoordsFloats.size());
+  std::vector<float> coordsFloats = BytesToFloats(bytes);
+  printf("found %d floats in _%s_coords\n", (int)coordsFloats.size(), sCarNameLower.c_str());
 
   bytes = HexToBytes(sPolsBytes);
-  std::vector<tPolygon> zizinPols = BytesToPols(bytes);
-  printf("found %d polygons in _xzizin_pols\n", (int)zizinPols.size());
+  std::vector<tPolygon> pols = BytesToPols(bytes);
+  printf("found %d polygons in _%s_pols\n", (int)pols.size(), sCarNameLower.c_str());
 
   bytes = HexToBytes(sBacksBytes);
-  std::vector<uint32> zizinBacksUInts = BytesToUInts(bytes);
-  printf("found %d uints in _xzizin_backs\n", (int)zizinBacksUInts.size());
+  std::vector<uint32> backsUInts = BytesToUInts(bytes);
+  printf("found %d uints in _%s_backs\n", (int)backsUInts.size(), sCarNameLower.c_str());
 
   bytes = HexToBytes(sPlacesBytes);
-  std::vector<uint32> zizinPlacesUInts = BytesToUInts(bytes);
-  printf("found %d uints in _xzizin_places\n", (int)zizinPlacesUInts.size());
+  std::vector<uint32> placesUInts = BytesToUInts(bytes);
+  printf("found %d uints in _%s_places\n", (int)placesUInts.size(), sCarNameLower.c_str());
 
   bytes = HexToBytes(sAnmsBytes);
   std::vector<uint32> anmsUInts = BytesToUInts(bytes);
-  std::vector<tAnimation> zizinAnms = UIntsToAnms(anmsUInts);
-  printf("found %d animations in _xzizin_anms\n", (int)zizinAnms.size());
+  std::vector<tAnimation> anms = UIntsToAnms(anmsUInts);
+  printf("found %d animations in _%s_anms\n", (int)anms.size(), sCarNameLower.c_str());
 
   //open output file
   std::ofstream out(argv[2]);
@@ -282,74 +295,74 @@ int main(int argc, char *argv[])
   }
 
 
-  out << "#ifndef _WHIPLIB_ZIZINPLANS_H\n";
-  out << "#define _WHIPLIB_ZIZINPLANS_H\n";
+  out << "#ifndef _WHIPLIB_" << sCarNameUpper << "PLANS_H\n";
+  out << "#define _WHIPLIB_" << sCarNameUpper <<"PLANS_H\n";
   out << "//-------------------------------------------------------------------------------------------------\n";
   out << "#include \"Polygon.h\"\n";
   out << "#include \"Animation.h\"\n";
   out << "//-------------------------------------------------------------------------------------------------\n";
 
 
-  printf("writing _xzizin_coords\n");
-  out << "float g_xzizinCoords[] = {\n";
-  for (int i = 0; i < zizinCoordsFloats.size(); ++i) {
-    out << zizinCoordsFloats[i] << "f,\n";
+  printf("writing _%s_coords\n", sCarNameLower.c_str());
+  out << "float g_" << sCarNameLower << "Coords[] = {\n";
+  for (int i = 0; i < coordsFloats.size(); ++i) {
+    out << coordsFloats[i] << "f,\n";
   }
   out << "};\n";
-  out << "int g_xzizinCoordsCount = sizeof(g_xzizinCoords)/sizeof(float);\n";
+  out << "int g_" << sCarNameLower << "CoordsCount = sizeof(g_" << sCarNameLower << "Coords) / sizeof(float); \n";
   out << "//-------------------------------------------------------------------------------------------------\n";
 
 
-  printf("writing _xzizin_pols\n");
-  out << "tPolygon g_xzizinPols[] = {\n";
-  for (int i = 0; i < zizinPols.size(); ++i) {
+  printf("writing _%s_pols\n", sCarNameLower.c_str());
+  out << "tPolygon g_" << sCarNameLower << "Pols[] = {\n";
+  for (int i = 0; i < pols.size(); ++i) {
     out << "{"
-      << (int)zizinPols[i].byVert1 << ","
-      << (int)zizinPols[i].byVert2 << ","
-      << (int)zizinPols[i].byVert3 << ","
-      << (int)zizinPols[i].byVert4 << ","
-      << zizinPols[i].uiTex << ","
-      << (int)zizinPols[i].byUnknown1 << ","
-      << (int)zizinPols[i].byUnknown2 << ","
-      << (int)zizinPols[i].byUnknown3 << ","
-      << (int)zizinPols[i].byUnknown4 << "},\n";
+      << (int)pols[i].byVert1 << ","
+      << (int)pols[i].byVert2 << ","
+      << (int)pols[i].byVert3 << ","
+      << (int)pols[i].byVert4 << ","
+      << pols[i].uiTex << ","
+      << (int)pols[i].byUnknown1 << ","
+      << (int)pols[i].byUnknown2 << ","
+      << (int)pols[i].byUnknown3 << ","
+      << (int)pols[i].byUnknown4 << "},\n";
   }
   out << "};\n";
-  out << "int g_xzizinPolsCount = sizeof(g_xzizinPols)/sizeof(tPolygon);\n";
+  out << "int g_" << sCarNameLower << "PolsCount = sizeof(g_" << sCarNameLower << "Pols)/sizeof(tPolygon);\n";
   out << "//-------------------------------------------------------------------------------------------------\n";
 
 
-  printf("writing _xzizin_backs\n");
-  out << "uint32 g_xzizinBacks[] = {\n";
-  for (int i = 0; i < zizinBacksUInts.size(); ++i) {
-    out << zizinBacksUInts[i] << ",\n";
+  printf("writing _%s_backs\n", sCarNameLower.c_str());
+  out << "uint32 g_" << sCarNameLower << "Backs[] = {\n";
+  for (int i = 0; i < backsUInts.size(); ++i) {
+    out << backsUInts[i] << ",\n";
   }
   out << "};\n";
-  out << "int g_xzizinBacksCount = sizeof(g_xzizinBacks)/sizeof(uint32);\n";
+  out << "int g_" << sCarNameLower << "BacksCount = sizeof(g_" << sCarNameLower << "Backs) / sizeof(uint32); \n";
   out << "//-------------------------------------------------------------------------------------------------\n";
 
 
-  printf("writing _xzizin_places\n");
-  out << "uint32 g_xzizinPlaces[] = {\n";
-  for (int i = 0; i < zizinPlacesUInts.size(); ++i) {
-    out << zizinPlacesUInts[i] << ",\n";
+  printf("writing _%s_places\n", sCarNameLower.c_str());
+  out << "uint32 g_" << sCarNameLower << "Places[] = {\n";
+  for (int i = 0; i < placesUInts.size(); ++i) {
+    out << placesUInts[i] << ",\n";
   }
   out << "};\n";
-  out << "int g_xzizinPlacesCount = sizeof(g_xzizinPlaces)/sizeof(uint32);\n";
+  out << "int g_" << sCarNameLower << "PlacesCount = sizeof(g_" << sCarNameLower << "Places) / sizeof(uint32); \n";
   out << "//-------------------------------------------------------------------------------------------------\n";
 
 
-  printf("writing _xzizin_anms\n");
-  out << "tAnimation g_xzizinAnms[] = {\n";
-  for (int i = 0; i < zizinAnms.size(); ++i) {
-    out << "{" << zizinAnms[i].uiCount << ",{";
+  printf("writing _%s_anms\n", sCarNameLower.c_str());
+  out << "tAnimation g_" << sCarNameLower << "Anms[] = {\n";
+  for (int i = 0; i < anms.size(); ++i) {
+    out << "{" << anms[i].uiCount << ",{";
     for (int j = 0; j < 16; ++j) {
-      out << zizinAnms[i].framesAy[j] << ",";
+      out << anms[i].framesAy[j] << ",";
     }
     out << "}},\n";
   }
   out << "};\n";
-  out << "int g_xzizinAnmsCount = sizeof(g_xzizinAnms)/sizeof(tAnimation);\n";
+  out << "int g_" << sCarNameLower << "AnmsCount = sizeof(g_" << sCarNameLower << "Anms) / sizeof(tAnimation); \n";
   out << "//-------------------------------------------------------------------------------------------------\n";
   
 

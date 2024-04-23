@@ -1,5 +1,5 @@
-#ifndef _WHIPLIB_ZIZINPLANS_H
-#define _WHIPLIB_ZIZINPLANS_H
+#ifndef _WHIPLIB_XZIZINPLANS_H
+#define _WHIPLIB_XZIZINPLANS_H
 //-------------------------------------------------------------------------------------------------
 #include "Polygon.h"
 #include "Animation.h"

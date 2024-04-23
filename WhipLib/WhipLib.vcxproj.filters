@@ -74,6 +74,27 @@
     <ClInclude Include="Animation.h">
       <Filter>Header Files\Plans</Filter>
     </ClInclude>
+    <ClInclude Include="AutoPlans.h">
+      <Filter>Header Files\Plans</Filter>
+    </ClInclude>
+    <ClInclude Include="DesilvaPlans.h">
+      <Filter>Header Files\Plans</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalPlans.h">
+      <Filter>Header Files\Plans</Filter>
+    </ClInclude>
+    <ClInclude Include="MillionPlans.h">
+      <Filter>Header Files\Plans</Filter>
+    </ClInclude>
+    <ClInclude Include="MissionPlans.h">
+      <Filter>Header Files\Plans</Filter>
+    </ClInclude>
+    <ClInclude Include="PulsePlans.h">
+      <Filter>Header Files\Plans</Filter>
+    </ClInclude>
+    <ClInclude Include="ReisePlans.h">
+      <Filter>Header Files\Plans</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Unmangler.cpp">

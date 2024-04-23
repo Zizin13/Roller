@@ -104,8 +104,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="AutoPlans.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CarData.h" />
+    <ClInclude Include="DesilvaPlans.h" />
+    <ClInclude Include="GlobalPlans.h" />
+    <ClInclude Include="MillionPlans.h" />
+    <ClInclude Include="MissionPlans.h" />
+    <ClInclude Include="PulsePlans.h" />
+    <ClInclude Include="ReisePlans.h" />
     <ClInclude Include="ZizinPlans.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="OpenGLDebug.h" />

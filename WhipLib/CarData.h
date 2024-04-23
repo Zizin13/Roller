@@ -24,7 +24,6 @@ public:
 private:
   tVertex *MakeVerts(uint32 &numVertices);
   uint32 *MakeIndices(uint32 &numIndices);
-  void GetTextureCoordinates(uint32 uiSurfaceType, tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight);
 
   CCarDataPrivate *p;
 };

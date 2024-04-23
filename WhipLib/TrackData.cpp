@@ -857,7 +857,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     switch (section) {
       case LLANE:
         ApplyVerticesSingleSection(i, vertices, lLane, center, prevLLane, prevCenter);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iCenterSurfaceType),
+        m_tex.GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iCenterSurfaceType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -865,7 +865,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case RLANE:
         ApplyVerticesSingleSection(i, vertices, center, rLane, prevCenter, prevRLane);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iCenterSurfaceType),
+        m_tex.GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iCenterSurfaceType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -873,7 +873,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case LSHOULDER:
         ApplyVerticesSingleSection(i, vertices, lShoulder, lLane, prevLShoulder, prevLLane);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iLeftSurfaceType),
+        m_tex.GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iLeftSurfaceType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -881,7 +881,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case RSHOULDER:
         ApplyVerticesSingleSection(i, vertices, rLane, rShoulder, prevRLane, prevRShoulder);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iRightSurfaceType),
+        m_tex.GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iRightSurfaceType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -889,7 +889,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case LWALL:
         ApplyVerticesSingleSection(i, vertices, lWall, lWallBottomAttach, prevLWall, prevLWallBottomAttach);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iLeftWallType),
+        m_tex.GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iLeftWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -897,7 +897,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case RWALL:
         ApplyVerticesSingleSection(i, vertices, rWallBottomAttach, rWall, prevRWallBottomAttach, prevRWall);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iRightWallType),
+        m_tex.GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iRightWallType),
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 3],
                               vertices[i * uiNumVertsPerChunk + 0],
@@ -905,7 +905,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case ROOF:
         ApplyVerticesSingleSection(i, vertices, rWall, lWall, prevRWall, prevLWall);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iRoofType),
+        m_tex.GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iRoofType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -913,7 +913,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case OWALLFLOOR:
         ApplyVerticesSingleSection(i, vertices, lFloor, rFloor, prevLFloor, prevRFloor);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iOuterFloorType),
+        m_tex.GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iOuterFloorType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -921,7 +921,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case LLOWALL:
         ApplyVerticesSingleSection(i, vertices, lloWall, lloWallBottomAttach, prevLLOWall, prevLLOWallBottomAttach);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iLLOuterWallType),
+        m_tex.GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iLLOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -929,7 +929,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case RLOWALL:
         ApplyVerticesSingleSection(i, vertices, rloWallBottomAttach, rloWall, prevRLOWallBottomAttach, prevRLOWall);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iRLOuterWallType),
+        m_tex.GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iRLOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -937,7 +937,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case LUOWALL:
         ApplyVerticesSingleSection(i, vertices, luoWall, luoWallBottomAttach, prevLUOWall, prevLUOWallBottomAttach);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iLUOuterWallType),
+        m_tex.GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iLUOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -945,7 +945,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         break;
       case RUOWALL:
         ApplyVerticesSingleSection(i, vertices, ruoWallBottomAttach, ruoWall, prevRUOWallBottomAttach, prevRUOWall);
-        GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iRUOuterWallType),
+        m_tex.GetTextureCoordinates(GetSignedBitValueFromInt(m_chunkAy[iChunkIndex].iRUOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -1448,82 +1448,6 @@ void CTrackData::ApplyVerticesSingleSection(int i, tVertex *vertices, const glm:
   vertices[i * uiNumVertsPerChunk + 1].position = v1;
   vertices[i * uiNumVertsPerChunk + 2].position = v2;
   vertices[i * uiNumVertsPerChunk + 3].position = v3;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrackData::GetTextureCoordinates(uint32 uiSurfaceType,
-                                       tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
-                                       bool bLeftLane, bool bRightLane)
-{
-    //TEXTURES
-  bool bPair = uiSurfaceType & SURFACE_FLAG_TEXTURE_PAIR && uiSurfaceType & SURFACE_FLAG_PAIR_NEXT_TEX; //TODO: having pair but not pair next should double current texture
-  bool bFlipVert = uiSurfaceType & SURFACE_FLAG_FLIP_VERT;
-  bool bFlipHoriz = uiSurfaceType & SURFACE_FLAG_FLIP_HORIZ;
-  bool bTransparent = uiSurfaceType & SURFACE_FLAG_TRANSPARENT;
-  bool bPartialTrans = uiSurfaceType & SURFACE_FLAG_PARTIAL_TRANS;
-  uint32 uiTexIndex = uiSurfaceType & SURFACE_TEXTURE_INDEX;
-
-  //right lane takes the second texture on center surface
-  //both center lanes only draw one texture each when paired
-  uint32 uiTexIncVal = (bPair && !(bLeftLane || bRightLane)) ? 2 : 1;
-  if (bRightLane && uiSurfaceType & SURFACE_FLAG_TEXTURE_PAIR)
-    uiTexIndex++;
-
-  if (!bFlipHoriz && !bFlipVert)
-    topLeft.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  else if (bFlipHoriz && !bFlipVert)
-    topLeft.texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-  else if (!bFlipHoriz && bFlipVert)
-    topLeft.texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  else if (bFlipHoriz && bFlipVert)
-    topLeft.texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-
-  if (!bFlipHoriz && !bFlipVert)
-    topRight.texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-  else if (bFlipHoriz && !bFlipVert)
-    topRight.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  else if (!bFlipHoriz && bFlipVert)
-    topRight.texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-  else if (bFlipHoriz && bFlipVert)
-    topRight.texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-
-  if (!bFlipHoriz && !bFlipVert)
-    bottomLeft.texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  else if (bFlipHoriz && !bFlipVert)
-    bottomLeft.texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-  else if (!bFlipHoriz && bFlipVert)
-    bottomLeft.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  else if (bFlipHoriz && bFlipVert)
-    bottomLeft.texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-
-  if (!bFlipHoriz && !bFlipVert)
-    bottomRight.texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-  else if (bFlipHoriz && !bFlipVert)
-    bottomRight.texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-  else if (!bFlipHoriz && bFlipVert)
-    bottomRight.texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_tex.m_iNumTiles);
-  else if (bFlipHoriz && bFlipVert)
-    bottomRight.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_tex.m_iNumTiles);
-
-  if (bTransparent) {
-    //use color
-    topLeft.flags.x = 1.0f;
-    topRight.flags.x = 1.0f;
-    bottomLeft.flags.x = 1.0f;
-    bottomRight.flags.x = 1.0f;
-    //alpha
-    float fAlphaVal = 0.8f;
-    topLeft.flags.y = fAlphaVal;
-    topRight.flags.y = fAlphaVal;
-    bottomLeft.flags.y = fAlphaVal;
-    bottomRight.flags.y = fAlphaVal;
-    //color
-    topLeft.color = glm::vec3(0);
-    topRight.color = glm::vec3(0);
-    bottomLeft.color = glm::vec3(0);
-    bottomRight.color = glm::vec3(0);
-  }
 }
 
 //-------------------------------------------------------------------------------------------------

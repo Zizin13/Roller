@@ -5,6 +5,7 @@
 #include "Unmangler.h"
 #include "glew.h"
 #include "OpenGLDebug.h"
+#include "Vertex.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
   #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -116,6 +117,81 @@ void CTexture::Bind(uint32 uiSlot) const
 void CTexture::Unbind() const
 {
   GLCALL(glBindTexture(GL_TEXTURE_2D, 0));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
+                                     tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
+                                     bool bLeftLane, bool bRightLane)
+{
+  bool bPair = uiSurfaceType & SURFACE_FLAG_TEXTURE_PAIR && uiSurfaceType & SURFACE_FLAG_PAIR_NEXT_TEX; //TODO: having pair but not pair next should double current texture
+  bool bFlipVert = uiSurfaceType & SURFACE_FLAG_FLIP_VERT;
+  bool bFlipHoriz = uiSurfaceType & SURFACE_FLAG_FLIP_HORIZ;
+  bool bTransparent = uiSurfaceType & SURFACE_FLAG_TRANSPARENT;
+  bool bPartialTrans = uiSurfaceType & SURFACE_FLAG_PARTIAL_TRANS;
+  uint32 uiTexIndex = uiSurfaceType & SURFACE_TEXTURE_INDEX;
+
+  //right lane takes the second texture on center surface
+  //both center lanes only draw one texture each when paired
+  uint32 uiTexIncVal = (bPair && !(bLeftLane || bRightLane)) ? 2 : 1;
+  if (bRightLane && uiSurfaceType & SURFACE_FLAG_TEXTURE_PAIR)
+    uiTexIndex++;
+
+  if (!bFlipHoriz && !bFlipVert)
+    topLeft.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
+  else if (bFlipHoriz && !bFlipVert)
+    topLeft.texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+  else if (!bFlipHoriz && bFlipVert)
+    topLeft.texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
+  else if (bFlipHoriz && bFlipVert)
+    topLeft.texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+
+  if (!bFlipHoriz && !bFlipVert)
+    topRight.texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+  else if (bFlipHoriz && !bFlipVert)
+    topRight.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
+  else if (!bFlipHoriz && bFlipVert)
+    topRight.texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+  else if (bFlipHoriz && bFlipVert)
+    topRight.texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
+
+  if (!bFlipHoriz && !bFlipVert)
+    bottomLeft.texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
+  else if (bFlipHoriz && !bFlipVert)
+    bottomLeft.texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+  else if (!bFlipHoriz && bFlipVert)
+    bottomLeft.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
+  else if (bFlipHoriz && bFlipVert)
+    bottomLeft.texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+
+  if (!bFlipHoriz && !bFlipVert)
+    bottomRight.texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+  else if (bFlipHoriz && !bFlipVert)
+    bottomRight.texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
+  else if (!bFlipHoriz && bFlipVert)
+    bottomRight.texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+  else if (bFlipHoriz && bFlipVert)
+    bottomRight.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
+
+  if (bTransparent) {
+    //use color
+    topLeft.flags.x = 1.0f;
+    topRight.flags.x = 1.0f;
+    bottomLeft.flags.x = 1.0f;
+    bottomRight.flags.x = 1.0f;
+    //alpha
+    float fAlphaVal = 0.8f;
+    topLeft.flags.y = fAlphaVal;
+    topRight.flags.y = fAlphaVal;
+    bottomLeft.flags.y = fAlphaVal;
+    bottomRight.flags.y = fAlphaVal;
+    //color
+    topLeft.color = glm::vec3(0);
+    topRight.color = glm::vec3(0);
+    bottomLeft.color = glm::vec3(0);
+    bottomRight.color = glm::vec3(0);
+  }
 }
 
 //-------------------------------------------------------------------------------------------------

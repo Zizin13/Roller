@@ -7,32 +7,6 @@
 #include "Vertex.h"
 #include "Texture.h"
 //-------------------------------------------------------------------------------------------------
-#define SURFACE_FLAG_WALL_31       0x80000000
-#define SURFACE_FLAG_BOUNCE_30     0x40000000
-#define SURFACE_FLAG_ECHO          0x20000000
-#define SURFACE_FLAG_28            0x10000000 //todo
-#define SURFACE_FLAG_PAIR_NEXT_TEX 0x08000000
-#define SURFACE_FLAG_26            0x04000000 //todo
-#define SURFACE_FLAG_PIT           0x02000000
-#define SURFACE_FLAG_YELLOW_MAP    0x01000000
-#define SURFACE_FLAG_23            0x00800000 //todo
-#define SURFACE_FLAG_WALL_22       0x00400000
-#define SURFACE_FLAG_TRANSPARENT   0x00200000
-#define SURFACE_FLAG_BOUNCE_20     0x00100000
-#define SURFACE_FLAG_NON_MAGNETIC  0x00080000
-#define SURFACE_FLAG_FLIP_VERT     0x00040000
-#define SURFACE_FLAG_NON_SOLID     0x00020000
-#define SURFACE_FLAG_TEXTURE_PAIR  0x00010000
-#define SURFACE_FLAG_15            0x00008000 //todo
-#define SURFACE_FLAG_14            0x00004000 //todo
-#define SURFACE_FLAG_13            0x00002000 //todo
-#define SURFACE_FLAG_FLIP_HORIZ    0x00001000
-#define SURFACE_FLAG_BACK          0x00000800
-#define SURFACE_FLAG_PARTIAL_TRANS 0x00000400
-#define SURFACE_FLAG_9             0x00000200 //todo
-#define SURFACE_FLAG_APPLY_TEXTURE 0x00000100
-#define SURFACE_TEXTURE_INDEX      0x000000FF
-//-------------------------------------------------------------------------------------------------
 struct tTrackHeader
 {
   int iNumChunks;
@@ -247,9 +221,6 @@ protected:
   void GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                glm::vec3 &lloWall, eShapeSection wallSection);
   void ApplyVerticesSingleSection(int i, tVertex *vertices, const glm::vec3 &v0, const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3);
-  void GetTextureCoordinates(uint32 uiSurfaceType,
-                             tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
-                             bool bLeftLane = false, bool bRightLane = false);
 
   bool IsNumber(const std::string &str);
   bool ProcessTrackData(const uint8_t *pData, size_t length);

@@ -90,9 +90,9 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QCheckBox" name="ck15">
+      <widget class="QCheckBox" name="ck15Livery">
        <property name="text">
-        <string>Bit 15</string>
+        <string>(Cars only) Change Livery</string>
        </property>
       </widget>
      </item>
@@ -125,9 +125,9 @@
       </widget>
      </item>
      <item row="7" column="1">
-      <widget class="QCheckBox" name="ck9">
+      <widget class="QCheckBox" name="ck9AnmsLookup">
        <property name="text">
-        <string>Bit 9</string>
+        <string>(Cars only) Lookup in anms array</string>
        </property>
       </widget>
      </item>
@@ -231,9 +231,9 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QCheckBox" name="ck13">
+      <widget class="QCheckBox" name="ck13Motion">
        <property name="text">
-        <string>Bit 13</string>
+        <string>(Cars only) Animate motion</string>
        </property>
       </widget>
      </item>

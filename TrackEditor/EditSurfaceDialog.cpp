@@ -34,13 +34,13 @@ CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, int
   ck18FlipVertically->setChecked(m_uiSignedBitValue & SURFACE_FLAG_FLIP_VERT);
   ck17NonSolid->setChecked(m_uiSignedBitValue & SURFACE_FLAG_NON_SOLID);
   ck16TexturePair->setChecked(m_uiSignedBitValue & SURFACE_FLAG_TEXTURE_PAIR);
-  ck15->setChecked(m_uiSignedBitValue & SURFACE_FLAG_15);
+  ck15Livery->setChecked(m_uiSignedBitValue & SURFACE_FLAG_ANMS_LIVERY);
   ck14->setChecked(m_uiSignedBitValue & SURFACE_FLAG_14);
-  ck13->setChecked(m_uiSignedBitValue & SURFACE_FLAG_13);
+  ck13Motion->setChecked(m_uiSignedBitValue & SURFACE_FLAG_ANMS_MOTION);
   ck12FlipHorizontally->setChecked(m_uiSignedBitValue & SURFACE_FLAG_FLIP_HORIZ);
   ck11Back->setChecked(m_uiSignedBitValue & SURFACE_FLAG_BACK);
   ck10PartialTrans->setChecked(m_uiSignedBitValue & SURFACE_FLAG_PARTIAL_TRANS);
-  ck9->setChecked(m_uiSignedBitValue & SURFACE_FLAG_9);
+  ck9AnmsLookup->setChecked(m_uiSignedBitValue & SURFACE_FLAG_ANMS_LOOKUP);
   ck8ApplyTexture->setChecked(m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE);
 
   connect(ck31Wall,             &QCheckBox::toggled, this, &CEditSurfaceDialog::On31WallChecked);
@@ -59,13 +59,13 @@ CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, int
   connect(ck18FlipVertically,   &QCheckBox::toggled, this, &CEditSurfaceDialog::On18FlipVertChecked);
   connect(ck17NonSolid,         &QCheckBox::toggled, this, &CEditSurfaceDialog::On17NonSolidChecked);
   connect(ck16TexturePair,      &QCheckBox::toggled, this, &CEditSurfaceDialog::On16TexturePairChecked);
-  connect(ck15,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On15Checked);
+  connect(ck15Livery,           &QCheckBox::toggled, this, &CEditSurfaceDialog::On15LiveryChecked);
   connect(ck14,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On14Checked);
-  connect(ck13,                 &QCheckBox::toggled, this, &CEditSurfaceDialog::On13Checked);
+  connect(ck13Motion,           &QCheckBox::toggled, this, &CEditSurfaceDialog::On13MotionChecked);
   connect(ck12FlipHorizontally, &QCheckBox::toggled, this, &CEditSurfaceDialog::On12FlipHorizChecked);
   connect(ck11Back,             &QCheckBox::toggled, this, &CEditSurfaceDialog::On11BackChecked);
   connect(ck10PartialTrans,     &QCheckBox::toggled, this, &CEditSurfaceDialog::On10PartialTransChecked);
-  connect(ck9,                  &QCheckBox::toggled, this, &CEditSurfaceDialog::On9Checked);
+  connect(ck9AnmsLookup,        &QCheckBox::toggled, this, &CEditSurfaceDialog::On9AnmsLookupChecked);
   connect(ck8ApplyTexture,      &QCheckBox::toggled, this, &CEditSurfaceDialog::On8ApplyTextureChecked);
   connect(pbTexture1, &QPushButton::clicked, this, &CEditSurfaceDialog::OnTextureClicked);
 
@@ -265,12 +265,12 @@ void CEditSurfaceDialog::On16TexturePairChecked(bool bChecked)
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditSurfaceDialog::On15Checked(bool bChecked)
+void CEditSurfaceDialog::On15LiveryChecked(bool bChecked)
 {
   if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_15;
+    m_uiSignedBitValue |= SURFACE_FLAG_ANMS_LIVERY;
   else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_15;
+    m_uiSignedBitValue &= ~SURFACE_FLAG_ANMS_LIVERY;
   UpdateDialog();
 }
 
@@ -287,12 +287,12 @@ void CEditSurfaceDialog::On14Checked(bool bChecked)
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditSurfaceDialog::On13Checked(bool bChecked)
+void CEditSurfaceDialog::On13MotionChecked(bool bChecked)
 {
   if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_13;
+    m_uiSignedBitValue |= SURFACE_FLAG_ANMS_MOTION;
   else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_13;
+    m_uiSignedBitValue &= ~SURFACE_FLAG_ANMS_MOTION;
   UpdateDialog();
 }
 
@@ -331,12 +331,12 @@ void CEditSurfaceDialog::On10PartialTransChecked(bool bChecked)
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditSurfaceDialog::On9Checked(bool bChecked)
+void CEditSurfaceDialog::On9AnmsLookupChecked(bool bChecked)
 {
   if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_9;
+    m_uiSignedBitValue |= SURFACE_FLAG_ANMS_LOOKUP;
   else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_9;
+    m_uiSignedBitValue &= ~SURFACE_FLAG_ANMS_LOOKUP;
   UpdateDialog();
 }
 

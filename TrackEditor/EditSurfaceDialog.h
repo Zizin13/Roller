@@ -32,13 +32,13 @@ protected slots:
   void On18FlipVertChecked(bool bChecked);
   void On17NonSolidChecked(bool bChecked);
   void On16TexturePairChecked(bool bChecked);
-  void On15Checked(bool bChecked);
+  void On15LiveryChecked(bool bChecked);
   void On14Checked(bool bChecked);
-  void On13Checked(bool bChecked);
+  void On13MotionChecked(bool bChecked);
   void On12FlipHorizChecked(bool bChecked);
   void On11BackChecked(bool bChecked);
   void On10PartialTransChecked(bool bChecked);
-  void On9Checked(bool bChecked);
+  void On9AnmsLookupChecked(bool bChecked);
   void On8ApplyTextureChecked(bool bChecked);
   void OnTextureClicked();
 

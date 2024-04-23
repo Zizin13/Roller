@@ -25,13 +25,13 @@
 #define SURFACE_FLAG_FLIP_VERT     0x00040000
 #define SURFACE_FLAG_NON_SOLID     0x00020000
 #define SURFACE_FLAG_TEXTURE_PAIR  0x00010000
-#define SURFACE_FLAG_15            0x00008000 //todo
+#define SURFACE_FLAG_ANMS_LIVERY   0x00008000
 #define SURFACE_FLAG_14            0x00004000 //todo
-#define SURFACE_FLAG_13            0x00002000 //todo
+#define SURFACE_FLAG_ANMS_MOTION   0x00002000
 #define SURFACE_FLAG_FLIP_HORIZ    0x00001000
 #define SURFACE_FLAG_BACK          0x00000800
 #define SURFACE_FLAG_PARTIAL_TRANS 0x00000400
-#define SURFACE_FLAG_9             0x00000200 //todo
+#define SURFACE_FLAG_ANMS_LOOKUP   0x00000200
 #define SURFACE_FLAG_APPLY_TEXTURE 0x00000100
 #define SURFACE_TEXTURE_INDEX      0x000000FF
 //-------------------------------------------------------------------------------------------------

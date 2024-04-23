@@ -105,7 +105,7 @@ tVertex *CCarData::MakeVerts(uint32 &numVertices)
     vertices[i * 4 + 3] = coordAy[g_xzizinPols[i].byVert4];
 
     uint32 uiUseTex = g_xzizinPols[i].uiTex;
-    if (uiUseTex & SURFACE_FLAG_9) {
+    if (uiUseTex & SURFACE_FLAG_ANMS_LOOKUP) {
       uiUseTex = g_xzizinAnms[uiUseTex & SURFACE_TEXTURE_INDEX].framesAy[0];
     }
     p->m_tex.GetTextureCoordinates(uiUseTex,

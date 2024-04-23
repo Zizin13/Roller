@@ -1230,11 +1230,13 @@ bool CTrackData::ShouldMakeIndicesForChunk(int i, eShapeSection section)
     return false;
   if (section == eShapeSection::LLOWALL
       && (!ShouldDrawSurfaceType(m_chunkAy[i].iLLOuterWallType)
-          || m_chunkAy[i].iOuterFloorType == -1))
+          || m_chunkAy[i].iOuterFloorType == -1
+          || (m_chunkAy[i].iOuterFloorType == -2 && !ShouldDrawSurfaceType(m_chunkAy[i].iCenterSurfaceType))))
     return false;
   if (section == eShapeSection::RLOWALL
       && (!ShouldDrawSurfaceType(m_chunkAy[i].iRLOuterWallType)
-          || m_chunkAy[i].iOuterFloorType == -1))
+          || m_chunkAy[i].iOuterFloorType == -1
+          || (m_chunkAy[i].iOuterFloorType == -2 && !ShouldDrawSurfaceType(m_chunkAy[i].iCenterSurfaceType))))
     return false;
   if (section == eShapeSection::LUOWALL
       && (!ShouldDrawSurfaceType(m_chunkAy[i].iLUOuterWallType)

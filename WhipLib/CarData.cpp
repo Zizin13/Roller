@@ -88,7 +88,7 @@ tVertex *CCarData::MakeVerts(uint32 &numVertices)
   uint32 uiNumCoords = g_xzizinCoordsCount / 3;
   tVertex *coordAy = new tVertex[uiNumCoords];
   int iVertIndex = 0;
-  for (uint32 i = 0; i < g_xzizinCoordsCount; ++i) {
+  for (int i = 0; i < g_xzizinCoordsCount; ++i) {
     coordAy[i / 3].position[iVertIndex] = g_xzizinCoords[i] / m_fScale;
     iVertIndex++;
     if (iVertIndex == 3)
@@ -98,7 +98,7 @@ tVertex *CCarData::MakeVerts(uint32 &numVertices)
   //then get vertices for polygons
   numVertices = g_xzizinPolsCount * 4;  
   tVertex *vertices = new tVertex[numVertices];
-  for (uint32 i = 0; i < g_xzizinPolsCount; ++i) {
+  for (int i = 0; i < g_xzizinPolsCount; ++i) {
     vertices[i * 4 + 0] = coordAy[g_xzizinPols[i].byVert1];
     vertices[i * 4 + 1] = coordAy[g_xzizinPols[i].byVert2];
     vertices[i * 4 + 2] = coordAy[g_xzizinPols[i].byVert3];
@@ -125,7 +125,7 @@ uint32 *CCarData::MakeIndices(uint32 &numIndices)
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
-  uint32 i = 0;
+  int i = 0;
   for (; i < g_xzizinPolsCount; i++) {
     indices[i * iNumIndicesPerPol + 0] = (i * iNumVertsPerPol) + 0;
     indices[i * iNumIndicesPerPol + 1] = (i * iNumVertsPerPol) + 1;

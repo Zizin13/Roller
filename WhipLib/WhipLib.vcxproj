@@ -103,6 +103,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CarData.h" />
     <ClInclude Include="ZizinPlans.h" />

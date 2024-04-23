@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <algorithm>
 #include "Polygon.h"
+#include "Animation.h"
+#include "Types.h"
 
 //-------------------------------------------------------------------------------------------------
 // just a little app to turn the "carplans.c.asm" file created by 
@@ -11,11 +13,11 @@
 // a little more usable
 //-------------------------------------------------------------------------------------------------
 
-std::vector<unsigned char> HexToBytes(const std::string &sBytes)
+std::vector<uint8> HexToBytes(const std::string &sBytes)
 {
-  std::vector<unsigned char> byteAy;
+  std::vector<uint8> byteAy;
 
-  for (unsigned int i = 0; i < sBytes.length(); i += 2) {
+  for (uint32 i = 0; i < sBytes.length(); i += 2) {
     std::string sByte = sBytes.substr(i, 2);
     char byte = (char)strtol(sByte.c_str(), NULL, 16);
     byteAy.push_back(byte);
@@ -26,15 +28,15 @@ std::vector<unsigned char> HexToBytes(const std::string &sBytes)
 
 //-------------------------------------------------------------------------------------------------
 
-std::vector<float> BytesToFloats(const std::vector<unsigned char> bytes)
+std::vector<float> BytesToFloats(const std::vector<uint8> bytes)
 {
   std::vector<float> floatAy;
 
   int j = 0;
-  unsigned int uiData = 0;
-  for (unsigned int i = 0; i < bytes.size(); ++i) {
-    unsigned int uiTemp = 0;
-    unsigned char c = (unsigned char)bytes[i];
+  uint32 uiData = 0;
+  for (uint32 i = 0; i < bytes.size(); ++i) {
+    uint32 uiTemp = 0;
+    uint8 c = (uint8)bytes[i];
     uiTemp |= c;
     uiTemp = uiTemp << 8 * j;
     uiData |= uiTemp;
@@ -53,15 +55,15 @@ std::vector<float> BytesToFloats(const std::vector<unsigned char> bytes)
 
 //-------------------------------------------------------------------------------------------------
 
-std::vector<unsigned int> BytesToUInts(const std::vector<unsigned char> bytes)
+std::vector<uint32> BytesToUInts(const std::vector<uint8> bytes)
 {
-  std::vector<unsigned int> intAy;
+  std::vector<uint32> intAy;
 
   int j = 0;
-  unsigned int uiData = 0;
-  for (unsigned int i = 0; i < bytes.size(); ++i) {
-    unsigned int uiTemp = 0;
-    unsigned char c = (unsigned char)bytes[i];
+  uint32 uiData = 0;
+  for (uint32 i = 0; i < bytes.size(); ++i) {
+    uint32 uiTemp = 0;
+    uint8 c = (uint8)bytes[i];
     uiTemp |= c;
     uiTemp = uiTemp << 8 * j;
     uiData |= uiTemp;
@@ -79,15 +81,15 @@ std::vector<unsigned int> BytesToUInts(const std::vector<unsigned char> bytes)
 
 //-------------------------------------------------------------------------------------------------
 
-std::vector<unsigned short> BytesToUShorts(const std::vector<unsigned char> bytes)
+std::vector<unsigned short> BytesToUShorts(const std::vector<uint8> bytes)
 {
   std::vector<unsigned short> shorAy;
 
   int j = 0;
   unsigned short unData = 0;
-  for (unsigned int i = 0; i < bytes.size(); ++i) {
-    unsigned int uiTemp = 0;
-    unsigned char c = (unsigned char)bytes[i];
+  for (uint32 i = 0; i < bytes.size(); ++i) {
+    uint32 uiTemp = 0;
+    uint8 c = (uint8)bytes[i];
     uiTemp |= c;
     uiTemp = uiTemp << 8 * j;
     unData |= uiTemp;
@@ -105,16 +107,16 @@ std::vector<unsigned short> BytesToUShorts(const std::vector<unsigned char> byte
 
 //-------------------------------------------------------------------------------------------------
 
-std::vector<tPolygon> BytesToPols(const std::vector<unsigned char> bytes)
+std::vector<tPolygon> BytesToPols(const std::vector<uint8> bytes)
 {
   std::vector<tPolygon> polAy;
 
   int j = 0;
   tPolygon data;
   memset(&data, 0, sizeof(data));
-  for (unsigned int i = 0; i < bytes.size(); ++i) {
-    unsigned char c = bytes[i];
-    unsigned int uiTemp = 0;
+  for (uint32 i = 0; i < bytes.size(); ++i) {
+    uint8 c = bytes[i];
+    uint32 uiTemp = 0;
 
     switch (j) {
       case 0:
@@ -161,6 +163,33 @@ std::vector<tPolygon> BytesToPols(const std::vector<unsigned char> bytes)
   }
 
   return polAy;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+std::vector<tAnimation> UIntsToAnms(const std::vector<uint32> uints)
+{
+  std::vector<tAnimation> anmAy;
+
+  int j = 0;
+  tAnimation data;
+  memset(&data, 0, sizeof(data));
+  for (uint32 i = 0; i < uints.size(); ++i) {
+    if (j == 0)
+      data.uiCount = uints[i];
+    else
+      data.framesAy[j - 1] = uints[i];
+
+    ++j;
+
+    if (j == 17) {
+      anmAy.push_back(data);
+      memset(&data, 0, sizeof(data));
+      j = 0;
+    }
+  }
+
+  return anmAy;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -249,7 +278,7 @@ int main(int argc, char *argv[])
 
   printf("file loaded...\n");
 
-  std::vector<unsigned char> bytes = HexToBytes(sCoordsBytes);
+  std::vector<uint8> bytes = HexToBytes(sCoordsBytes);
   std::vector<float> zizinCoordsFloats = BytesToFloats(bytes);
   printf("found %d floats in _xzizin_coords\n", (int)zizinCoordsFloats.size());
 
@@ -258,16 +287,17 @@ int main(int argc, char *argv[])
   printf("found %d polygons in _xzizin_pols\n", (int)zizinPols.size());
 
   bytes = HexToBytes(sBacksBytes);
-  std::vector<unsigned int> zizinBacksUInts = BytesToUInts(bytes);
+  std::vector<uint32> zizinBacksUInts = BytesToUInts(bytes);
   printf("found %d uints in _xzizin_backs\n", (int)zizinBacksUInts.size());
 
   bytes = HexToBytes(sPlacesBytes);
-  std::vector<unsigned int> zizinPlacesUInts = BytesToUInts(bytes);
+  std::vector<uint32> zizinPlacesUInts = BytesToUInts(bytes);
   printf("found %d uints in _xzizin_places\n", (int)zizinPlacesUInts.size());
 
   bytes = HexToBytes(sAnmsBytes);
-  std::vector<unsigned int> anmsUInts = BytesToUInts(bytes);
-  printf("found %d uints in _xzizin_anms\n", (int)anmsUInts.size());
+  std::vector<uint32> anmsUInts = BytesToUInts(bytes);
+  std::vector<tAnimation> zizinAnms = UIntsToAnms(anmsUInts);
+  printf("found %d animations in _xzizin_anms\n", (int)zizinAnms.size());
 
   //open output file
   std::ofstream out(argv[2]);
@@ -281,7 +311,7 @@ int main(int argc, char *argv[])
   out << "#define _WHIPLIB_ZIZINPLANS_H\n";
   out << "//-------------------------------------------------------------------------------------------------\n";
   out << "#include \"Polygon.h\"\n";
-  out << "#include \"Types.h\"\n";
+  out << "#include \"Animation.h\"\n";
   out << "//-------------------------------------------------------------------------------------------------\n";
 
 
@@ -303,7 +333,7 @@ int main(int argc, char *argv[])
       << (int)zizinPols[i].byVert2 << ","
       << (int)zizinPols[i].byVert3 << ","
       << (int)zizinPols[i].byVert4 << ","
-      << (int)zizinPols[i].uiTex << ","
+      << zizinPols[i].uiTex << ","
       << (int)zizinPols[i].byUnknown1 << ","
       << (int)zizinPols[i].byUnknown2 << ","
       << (int)zizinPols[i].byUnknown3 << ","
@@ -335,12 +365,16 @@ int main(int argc, char *argv[])
 
 
   printf("writing _xzizin_anms\n");
-  out << "uint32 g_xzizinAnms[] = {\n";
-  for (int i = 0; i < anmsUInts.size(); ++i) {
-    out << anmsUInts[i] << ",\n";
+  out << "tAnimation g_xzizinAnms[] = {\n";
+  for (int i = 0; i < zizinAnms.size(); ++i) {
+    out << "{" << zizinAnms[i].uiCount << ",{";
+    for (int j = 0; j < 16; ++j) {
+      out << zizinAnms[i].framesAy[j] << ",";
+    }
+    out << "}},\n";
   }
   out << "};\n";
-  out << "int g_xzizinAnmsCount = sizeof(g_xzizinAnms)/sizeof(uint32);\n";
+  out << "int g_xzizinAnmsCount = sizeof(g_xzizinAnms)/sizeof(tAnimation);\n";
   out << "//-------------------------------------------------------------------------------------------------\n";
   
 

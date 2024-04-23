@@ -518,8 +518,8 @@ void CMainWindow::LoadTextures()
   QString sTex = m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sTextureFile.c_str());
   QString sBld = m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sBuildingFile.c_str());
   bool bPalLoaded = p->m_palette.LoadPalette(sPal.toLatin1().constData());
-  bool bTexLoaded = p->m_track.m_tex.LoadTexture(sTex.toLatin1().constData(), p->m_palette, bMangled);
-  bool bBldLoaded = p->m_track.m_bld.LoadTexture(sBld.toLatin1().constData(), p->m_palette, bMangled);
+  bool bTexLoaded = p->m_track.m_tex.LoadTexture(sTex.toLatin1().constData(), &p->m_palette, bMangled);
+  bool bBldLoaded = p->m_track.m_bld.LoadTexture(sBld.toLatin1().constData(), &p->m_palette, bMangled);
   lblPalletteLoaded->setVisible(!bPalLoaded);
   frmTex->setVisible(bTexLoaded);
   frmBld->setVisible(bBldLoaded);

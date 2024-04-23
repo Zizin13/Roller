@@ -49,7 +49,7 @@ CCarData::~CCarData()
 void CCarData::LoadTexture(const std::string &sPal, const std::string &sTex, bool bMangled)
 {
   p->m_pal.LoadPalette(sPal);
-  p->m_tex.LoadTexture(sTex, p->m_pal, bMangled);
+  p->m_tex.LoadTexture(sTex, &p->m_pal, bMangled);
 }
 
 //-------------------------------------------------------------------------------------------------

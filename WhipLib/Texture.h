@@ -51,7 +51,7 @@ public:
   ~CTexture();
 
   void ClearData();
-  bool LoadTexture(const std::string &sFilename, const CPalette &palette, bool bMangled);
+  bool LoadTexture(const std::string &sFilename, CPalette *pPalette, bool bMangled);
   void Bind(uint32 uiSlot = 0) const;
   void Unbind() const;
   void GetTextureCoordinates(uint32 uiSurfaceType,
@@ -62,10 +62,11 @@ public:
   int m_iNumTiles;
 
 private:
-  bool ProcessTextureData(const uint8 *pData, size_t length, const CPalette &palette);
+  bool ProcessTextureData(const uint8 *pData, size_t length);
   void FlipTileLines(tTile *pSource, tTile *pDest, int iNumTiles);
 
   uint32 m_uiId;
+  CPalette *m_pPalette; //not owned by this class
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -16,6 +16,7 @@ CTexture::CTexture()
   : m_uiId(0)
   , m_iNumTiles(0)
   , m_pTileAy(NULL)
+  , m_pPalette(NULL)
 {
 }
 
@@ -37,13 +38,15 @@ void CTexture::ClearData()
     delete[] m_pTileAy;
     m_pTileAy = NULL;
   }
+  m_pPalette = NULL;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTexture::LoadTexture(const std::string &sFilename, const CPalette &palette, bool bMangled)
+bool CTexture::LoadTexture(const std::string &sFilename, CPalette *pPalette, bool bMangled)
 {
   ClearData();
+  m_pPalette = pPalette;
   if (m_uiId == 0) {
     GLCALL(glGenTextures(1, &m_uiId));
     GLCALL(glBindTexture(GL_TEXTURE_2D, m_uiId));
@@ -91,10 +94,10 @@ bool CTexture::LoadTexture(const std::string &sFilename, const CPalette &palette
     int iUnmangledLength = GetUnmangledLength((uint8 *)szBuf, (int)length);
     uint8 *szUnmangledData = new uint8[iUnmangledLength];
     UnmangleFile((uint8 *)szBuf, (int)length, szUnmangledData, iUnmangledLength);
-    bSuccess = ProcessTextureData(szUnmangledData, (size_t)iUnmangledLength, palette);
+    bSuccess = ProcessTextureData(szUnmangledData, (size_t)iUnmangledLength);
     delete[] szUnmangledData;
   } else {
-    bSuccess = ProcessTextureData((uint8 *)szBuf, length, palette);
+    bSuccess = ProcessTextureData((uint8 *)szBuf, length);
   }
 
   delete[] szBuf;
@@ -126,11 +129,17 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
                                      tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
                                      bool bLeftLane, bool bRightLane)
 {
+  if (!m_pPalette) {
+    assert(0);
+    return;
+  }
+
   bool bPair = uiSurfaceType & SURFACE_FLAG_TEXTURE_PAIR && uiSurfaceType & SURFACE_FLAG_PAIR_NEXT_TEX; //TODO: having pair but not pair next should double current texture
   bool bFlipVert = uiSurfaceType & SURFACE_FLAG_FLIP_VERT;
   bool bFlipHoriz = uiSurfaceType & SURFACE_FLAG_FLIP_HORIZ;
   bool bTransparent = uiSurfaceType & SURFACE_FLAG_TRANSPARENT;
   bool bPartialTrans = uiSurfaceType & SURFACE_FLAG_PARTIAL_TRANS;
+  bool bApplyTexture = uiSurfaceType & SURFACE_FLAG_APPLY_TEXTURE;
   uint32 uiTexIndex = uiSurfaceType & SURFACE_TEXTURE_INDEX;
 
   //right lane takes the second texture on center surface
@@ -193,12 +202,31 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
     bottomLeft.color = glm::vec3(0);
     bottomRight.color = glm::vec3(0);
   }
+
+  if (!bApplyTexture) {
+    //use color
+    topLeft.flags.x = 1.0f;
+    topRight.flags.x = 1.0f;
+    bottomLeft.flags.x = 1.0f;
+    bottomRight.flags.x = 1.0f;
+
+    //color
+    topLeft.color = m_pPalette->m_paletteAy[uiTexIndex];
+    topRight.color = m_pPalette->m_paletteAy[uiTexIndex];
+    bottomLeft.color = m_pPalette->m_paletteAy[uiTexIndex];
+    bottomRight.color = m_pPalette->m_paletteAy[uiTexIndex];
+  }
 }
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTexture::ProcessTextureData(const uint8 *pData, size_t length, const CPalette &palette)
+bool CTexture::ProcessTextureData(const uint8 *pData, size_t length)
 {
+  if (!m_pPalette) {
+    assert(0);
+    return false;
+  }
+
   int iPixelsPerTile = TILE_WIDTH * TILE_HEIGHT;
   m_iNumTiles = (int)length / iPixelsPerTile;
   m_pTileAy = new tTile[m_iNumTiles];
@@ -206,10 +234,10 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length, const CPale
     tTile *pTile = &m_pTileAy[i];
     for (int j = 0; j < iPixelsPerTile; ++j) {
       unsigned char byPaletteIndex = pData[i * iPixelsPerTile + j];
-      if (palette.m_paletteAy.size() > byPaletteIndex) {
-        pTile->data[j % TILE_WIDTH][j / TILE_WIDTH] = glm::vec<4, uint8>(palette.m_paletteAy[byPaletteIndex].r,
-                                                                         palette.m_paletteAy[byPaletteIndex].g,
-                                                                         palette.m_paletteAy[byPaletteIndex].b,
+      if (m_pPalette->m_paletteAy.size() > byPaletteIndex) {
+        pTile->data[j % TILE_WIDTH][j / TILE_WIDTH] = glm::vec<4, uint8>(m_pPalette->m_paletteAy[byPaletteIndex].r,
+                                                                         m_pPalette->m_paletteAy[byPaletteIndex].g,
+                                                                         m_pPalette->m_paletteAy[byPaletteIndex].b,
                                                                          byPaletteIndex ? 255 : 0);
       } else {
         assert(0);

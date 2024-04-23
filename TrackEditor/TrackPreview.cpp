@@ -415,7 +415,7 @@ void CTrackPreview::initializeGL()
 
   if (p->m_pCarData) {
     p->m_pCarData->LoadTexture("C:\\WHIP\\WHIPLASH\\FATDATA\\PALETTE.PAL",
-                           "C:\\WHIP\\WHIPLASH\\FATDATA\\YZIZIN.BM", true);
+                           "C:\\WHIP\\WHIPLASH\\FATDATA\\XZIZIN.BM", true);
     p->m_pTestCar = p->m_pCarData->MakeCar(p->m_pShader);
     p->m_pTestCar->m_modelToWorldMatrix = glm::translate(glm::vec3(3.0f, 1.5f, 0.0f)) * glm::rotate(glm::radians(-90.0f), glm::vec3(1, 0, 0));
   }

@@ -191,12 +191,12 @@
       <widget class="QLineEdit" name="leEasyLaps"/>
      </item>
      <item row="7" column="2">
-      <widget class="QLineEdit" name="leInfoUnknown"/>
+      <widget class="QLineEdit" name="lePreviewSize"/>
      </item>
      <item row="6" column="2">
-      <widget class="QLabel" name="lblInfoUnknown">
+      <widget class="QLabel" name="lblPreviewSize">
        <property name="text">
-        <string>Unknown</string>
+        <string>Track Preview Size</string>
        </property>
       </widget>
      </item>

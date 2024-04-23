@@ -266,7 +266,8 @@ int main(int argc, char *argv[])
   printf("found %d uints in _xzizin_places\n", (int)zizinPlacesUInts.size());
 
   bytes = HexToBytes(sAnmsBytes);
-  printf("found %d bytes in _xzizin_anms\n", (int)bytes.size());
+  std::vector<unsigned int> anmsUInts = BytesToUInts(bytes);
+  printf("found %d uints in _xzizin_anms\n", (int)anmsUInts.size());
 
   //open output file
   std::ofstream out(argv[2]);
@@ -334,12 +335,12 @@ int main(int argc, char *argv[])
 
 
   printf("writing _xzizin_anms\n");
-  out << "uint8 g_xzizinAnms[] = {\n";
-  for (int i = 0; i < bytes.size(); ++i) {
-    out << (int)bytes[i] << ",\n";
+  out << "uint32 g_xzizinAnms[] = {\n";
+  for (int i = 0; i < anmsUInts.size(); ++i) {
+    out << anmsUInts[i] << ",\n";
   }
   out << "};\n";
-  out << "int g_xzizinAnmsCount = sizeof(g_xzizinAnms)/sizeof(uint8);\n";
+  out << "int g_xzizinAnmsCount = sizeof(g_xzizinAnms)/sizeof(uint32);\n";
   out << "//-------------------------------------------------------------------------------------------------\n";
   
 

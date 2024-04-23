@@ -49,7 +49,7 @@ void tGeometryChunk::Clear()
   iTrackGrip = 0;
   iLeftShoulderGrip = 0;
   iRightShoulderGrip = 0;
-  iUnk04 = 0;
+  iAIMaxAccel = 0;
   iUnk05 = 0;
   iAudioAboveTrigger = 0;
   iAudioTriggerSpeed = 0;
@@ -292,7 +292,7 @@ bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
             currChunk.iTrackGrip            = std::stoi(lineAy[14]);
             currChunk.iLeftShoulderGrip     = std::stoi(lineAy[15]);
             currChunk.iRightShoulderGrip    = std::stoi(lineAy[16]);
-            currChunk.iUnk04                = std::stoi(lineAy[17]);
+            currChunk.iAIMaxAccel                = std::stoi(lineAy[17]);
             currChunk.iUnk05                = std::stoi(lineAy[18]);
             currChunk.iAudioAboveTrigger    = std::stoi(lineAy[19]);
             currChunk.iAudioTriggerSpeed    = std::stoi(lineAy[20]);
@@ -468,7 +468,7 @@ bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
         if (lineAy.size() == MAP_COUNT) {
           m_raceInfo.dTrackMapSize      = std::stod(lineAy[0]);
           m_raceInfo.iTrackMapFidelity  = std::stoi(lineAy[1]);
-          m_raceInfo.dUnknown           = std::stod(lineAy[2]);
+          m_raceInfo.dPreviewSize           = std::stod(lineAy[2]);
         }
         break;
     }
@@ -1631,7 +1631,7 @@ void CTrackData::GetTrackData(std::vector<uint8_t> &data)
         && m_raceInfo.iGirlieLaps == 0
         && m_raceInfo.dTrackMapSize == 0
         && m_raceInfo.iTrackMapFidelity == 0
-        && m_raceInfo.dUnknown == 0)) {
+        && m_raceInfo.dPreviewSize == 0)) {
 
     memset(szBuf, 0, sizeof(szBuf));
     snprintf(szBuf, sizeof(szBuf), "%d\r\n", m_raceInfo.iTrackNumber);
@@ -1643,7 +1643,7 @@ void CTrackData::GetTrackData(std::vector<uint8_t> &data)
     WriteToVector(data, szBuf);
     memset(szBuf, 0, sizeof(szBuf));
     snprintf(szBuf, sizeof(szBuf), "%.2lf %4d %.2lf\r\n\r\n",
-             m_raceInfo.dTrackMapSize, m_raceInfo.iTrackMapFidelity, m_raceInfo.dUnknown);
+             m_raceInfo.dTrackMapSize, m_raceInfo.iTrackMapFidelity, m_raceInfo.dPreviewSize);
     WriteToVector(data, szBuf);
   }
 }

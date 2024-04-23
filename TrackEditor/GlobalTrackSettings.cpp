@@ -38,7 +38,7 @@ public:
   QString sGirlieLaps;
   QString sTrackMapSize;
   QString sTrackMapFidelity;
-  QString sInfoUnknown;
+  QString sPreviewSize;
 };
 //-------------------------------------------------------------------------------------------------
 
@@ -66,7 +66,7 @@ CGlobalTrackSettings::CGlobalTrackSettings(QWidget *pParent, CTrack *pTrack)
   connect(leGirlieLaps, &QLineEdit::textChanged, this, &CGlobalTrackSettings::UpdateInfoEditMode);
   connect(leMapSize, &QLineEdit::textChanged, this, &CGlobalTrackSettings::UpdateInfoEditMode);
   connect(leMapFidelity, &QLineEdit::textChanged, this, &CGlobalTrackSettings::UpdateInfoEditMode);
-  connect(leInfoUnknown, &QLineEdit::textChanged, this, &CGlobalTrackSettings::UpdateInfoEditMode);
+  connect(lePreviewSize, &QLineEdit::textChanged, this, &CGlobalTrackSettings::UpdateInfoEditMode);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -106,7 +106,7 @@ void CGlobalTrackSettings::OnApplyInfoClicked()
   p->m_pTrack->m_raceInfo.iGirlieLaps = leGirlieLaps->text().toInt();
   p->m_pTrack->m_raceInfo.dTrackMapSize = leMapSize->text().toDouble();
   p->m_pTrack->m_raceInfo.iTrackMapFidelity = leMapFidelity->text().toInt();
-  p->m_pTrack->m_raceInfo.dUnknown = leInfoUnknown->text().toDouble();
+  p->m_pTrack->m_raceInfo.dPreviewSize = lePreviewSize->text().toDouble();
   p->m_pTrack->m_sTextureFile = leTex->text().toLatin1().constData();
   p->m_pTrack->m_sBuildingFile = leBld->text().toLatin1().constData();
   p->m_pTrack->m_header.iFloorDepth = leFloorDepth->text().toInt();
@@ -142,7 +142,7 @@ void CGlobalTrackSettings::UpdateInfoEditMode()
   QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leGirlieLaps, p->sGirlieLaps);
   QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leMapFidelity, p->sTrackMapFidelity);
   QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leMapSize, p->sTrackMapSize);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leInfoUnknown, p->sInfoUnknown);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, lePreviewSize, p->sPreviewSize);
 
   pbApplyInfo->setEnabled(bEditMode);
   pbRevertInfo->setEnabled(bEditMode);
@@ -164,7 +164,7 @@ void CGlobalTrackSettings::UpdateInfoSelection()
   p->sGirlieLaps = QString::number(p->m_pTrack->m_raceInfo.iGirlieLaps);
   p->sTrackMapSize = QString::number(p->m_pTrack->m_raceInfo.dTrackMapSize, 'f', 2);
   p->sTrackMapFidelity = QString::number(p->m_pTrack->m_raceInfo.iTrackMapFidelity);
-  p->sInfoUnknown = QString::number(p->m_pTrack->m_raceInfo.dUnknown, 'f', 2);
+  p->sPreviewSize = QString::number(p->m_pTrack->m_raceInfo.dPreviewSize, 'f', 2);
 
   RevertInfo();
 }
@@ -185,7 +185,7 @@ void CGlobalTrackSettings::RevertInfo()
   QtHelpers::UpdateLEWithSelectionValue(leGirlieLaps, p->sGirlieLaps);
   QtHelpers::UpdateLEWithSelectionValue(leMapSize, p->sTrackMapSize);
   QtHelpers::UpdateLEWithSelectionValue(leMapFidelity, p->sTrackMapFidelity);
-  QtHelpers::UpdateLEWithSelectionValue(leInfoUnknown, p->sInfoUnknown);
+  QtHelpers::UpdateLEWithSelectionValue(lePreviewSize, p->sPreviewSize);
 
   pbApplyInfo->setEnabled(false);
   pbRevertInfo->setEnabled(false);

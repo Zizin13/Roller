@@ -77,7 +77,7 @@ struct tGeometryChunk
   int iTrackGrip;
   int iLeftShoulderGrip;
   int iRightShoulderGrip;
-  int iUnk04; //todo
+  int iAIMaxAccel; //todo
   int iUnk05; //todo
   int iAudioAboveTrigger;
   int iAudioTriggerSpeed;
@@ -156,7 +156,7 @@ struct tRaceInfo
   int iGirlieLaps;
   double dTrackMapSize;
   int iTrackMapFidelity;
-  double dUnknown; //todo
+  double dPreviewSize;
 };
 //-------------------------------------------------------------------------------------------------
 enum eFileSection

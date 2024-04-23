@@ -24,13 +24,14 @@ CTexture::CTexture()
 CTexture::~CTexture()
 {
   ClearData();
-  GLCALL(glDeleteTextures(1, &m_uiId));
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CTexture::ClearData()
 {
+  GLCALL(glDeleteTextures(1, &m_uiId));
+  m_uiId = 0;
   m_iNumTiles = 0;
   if (m_pTileAy) {
     delete[] m_pTileAy;
@@ -42,6 +43,7 @@ void CTexture::ClearData()
 
 bool CTexture::LoadTexture(const std::string &sFilename, const CPalette &palette, bool bMangled)
 {
+  ClearData();
   if (m_uiId == 0) {
     GLCALL(glGenTextures(1, &m_uiId));
     GLCALL(glBindTexture(GL_TEXTURE_2D, m_uiId));
@@ -50,7 +52,6 @@ bool CTexture::LoadTexture(const std::string &sFilename, const CPalette &palette
     GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
     GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
   }
-  ClearData();
 
   //TODO LOGGING
   //if (sFilename.isEmpty()) {

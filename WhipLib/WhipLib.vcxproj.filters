@@ -12,6 +12,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{a17399c9-fc31-4729-87e5-af9c62cb7e33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Plans">
+      <UniqueIdentifier>{62c23e94-bf3c-4258-9272-d2fb7a180ed3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Unmangler.h">
@@ -63,13 +66,13 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ZizinPlans.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Plans</Filter>
     </ClInclude>
     <ClInclude Include="Polygon.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Plans</Filter>
     </ClInclude>
     <ClInclude Include="Animation.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Plans</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

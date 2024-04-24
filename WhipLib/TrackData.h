@@ -199,7 +199,7 @@ public:
   CTexture m_tex;
   CTexture m_bld;
   float m_fScale;
-  uint32 m_uiAILineHeight;
+  int m_iAILineHeight;
 
 protected:
   tVertex *MakeVerts(uint32 &numVertices, eShapeSection section);

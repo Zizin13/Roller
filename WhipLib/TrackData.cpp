@@ -118,7 +118,7 @@ void tGeometryChunk::Clear()
 
 CTrackData::CTrackData()
   : m_fScale(10000.0f)
-  , m_uiAILineHeight(100)
+  , m_iAILineHeight(100)
 {
   ClearData();
 }
@@ -540,6 +540,7 @@ uint32 *CTrackData::MakeIndicesCenterline(uint32 &numIndices)
   for (uint32 i = 1; i < numIndices + 1; i++) {
     indices[i - 1] = i / 2;
   }
+  indices[numIndices - 1] = 0;
   
   return indices;
 }
@@ -1518,23 +1519,40 @@ void CTrackData::GetAILine(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::ma
 {
   glm::mat4 translateMat = glm::translate(center);
   float fLen = 0.0f;
-  float fHeight = (float)m_uiAILineHeight / m_fScale * -1.0f;
+  int iUseAILine;
   switch (lineSection) {
     case eShapeSection::AILINE1:
-      fLen = (float)m_chunkAy[i].iAILine1 / m_fScale * -1.0f;
+      iUseAILine = m_chunkAy[i].iAILine1;
       break;
     case eShapeSection::AILINE2:
-      fLen = (float)m_chunkAy[i].iAILine2 / m_fScale * -1.0f;
+      iUseAILine = m_chunkAy[i].iAILine2;
       break;
     case eShapeSection::AILINE3:
-      fLen = (float)m_chunkAy[i].iAILine3 / m_fScale * -1.0f;
+      iUseAILine = m_chunkAy[i].iAILine3;
       break;
     case eShapeSection::AILINE4:
-      fLen = (float)m_chunkAy[i].iAILine4 / m_fScale * -1.0f;
+      iUseAILine = m_chunkAy[i].iAILine4;
       break;
     default:
       assert(0);
   }
+  int iShoulderHeight = 0;
+  if (iUseAILine > 0 && iUseAILine > m_chunkAy[i].iLeftLaneWidth) {
+    //ai line must be on left shoulder
+    float fTheta = atan((float)m_chunkAy[i].iLeftShoulderHeight / (float)m_chunkAy[i].iLeftShoulderWidth);
+    int iLengthIntoShoulder = abs(iUseAILine) - m_chunkAy[i].iLeftLaneWidth;
+    iShoulderHeight = (int)(tan(fTheta) * (float)iLengthIntoShoulder);
+  }
+  if (iUseAILine < 0 && abs(iUseAILine) > m_chunkAy[i].iRightLaneWidth) {
+    //ai line must be on right shoulder
+    float fTheta = atan((float)m_chunkAy[i].iRightShoulderHeight / (float)m_chunkAy[i].iRightShoulderWidth);
+    int iLengthIntoShoulder = abs(iUseAILine) - m_chunkAy[i].iRightLaneWidth;
+    iShoulderHeight = (int)(tan(fTheta) * (float)iLengthIntoShoulder);
+  }
+
+  fLen = (float)iUseAILine / m_fScale * -1.0f;
+  float fHeight = (float)(m_iAILineHeight + iShoulderHeight) / m_fScale * -1.0f;
+
   glm::mat4 scaleMatWidth = glm::scale(glm::vec3(fLen, fLen, fLen));
   glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
   glm::vec3 widthVec = glm::vec3(scaleMatWidth * rollMat * glm::vec4(pitchAxis, 1.0f));

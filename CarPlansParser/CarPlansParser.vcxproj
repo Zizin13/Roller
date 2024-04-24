@@ -63,15 +63,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>echo Copying carplans...
-echo f | xcopy carplans.c.asm .\$(OutDir) /R /Y /d /i &gt; null
-
-echo Post-Build Step for $(ProjectName) completed successfully
-exit 0
-
-:Failed
-echo Post-Build Step for $(ProjectName) FAILED!
-exit 1</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -91,15 +84,8 @@ exit 1</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>echo Copying carplans...
-echo f | xcopy carplans.c.asm .\$(OutDir) /R /Y /d /i &gt; null
-
-echo Post-Build Step for $(ProjectName) completed successfully
-exit 0
-
-:Failed
-echo Post-Build Step for $(ProjectName) FAILED!
-exit 1</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

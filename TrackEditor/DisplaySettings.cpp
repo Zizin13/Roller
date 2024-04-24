@@ -18,7 +18,7 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
   ckAILines->setChecked(true);
   ckTestCar->setChecked(true);
 
-  cbTestCarType->addItem("F1WACK", (int)eWhipModel::CAR_F1WACK); //TODO broken?
+  cbTestCarType->addItem("F1WACK", (int)eWhipModel::CAR_F1WACK);
   cbTestCarType->addItem("AUTO", (int)eWhipModel::CAR_AUTO);
   cbTestCarType->addItem("DESILVA", (int)eWhipModel::CAR_DESILVA);
   cbTestCarType->addItem("PULSE", (int)eWhipModel::CAR_PULSE);

@@ -379,9 +379,15 @@ void CMainWindow::LoadSettings()
     p->m_pDisplaySettingsDockWidget->setVisible(false);
   }
   if (settings.contains("show_models")) {
-    uint32 uiShowModels = p->m_pDisplaySettings->GetDisplaySettings();
+    eWhipModel carModel;
+    eShapeSection aiLine;
+    bool bMillionPlus;
+    uint32 uiShowModels = p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus);
     uiShowModels = settings.value("show_models", uiShowModels).toUInt();
-    p->m_pDisplaySettings->SetDisplaySettings(uiShowModels);
+    carModel = (eWhipModel)settings.value("car_model", (int)carModel).toInt();
+    aiLine = (eShapeSection)settings.value("car_pos", (int)aiLine).toInt();
+    bMillionPlus = settings.value("wrong_way", bMillionPlus).toBool();
+    p->m_pDisplaySettings->SetDisplaySettings(uiShowModels, carModel, aiLine, bMillionPlus);
   }
 
   show();
@@ -394,6 +400,10 @@ void CMainWindow::SaveSettings()
   QSettings settings(m_sSettingsFile, QSettings::IniFormat);
   settings.setValue("track_folder", m_sTrackFilesFolder);
 
+  eWhipModel carModel;
+  eShapeSection aiLine;
+  bool bMillionPlus;
+
   QByteArray geometry = saveGeometry();
   QByteArray state = saveState();
   settings.setValue("window_geometry", geometry);
@@ -402,7 +412,10 @@ void CMainWindow::SaveSettings()
   settings.setValue("show_global_settings", p->m_pGlobalSettingsDockWidget->isVisible());
   settings.setValue("show_edit_series", p->m_pEditSeriesDockWidget->isVisible());
   settings.setValue("show_display_settings", p->m_pDisplaySettingsDockWidget->isVisible());
-  settings.setValue("show_models", p->m_pDisplaySettings->GetDisplaySettings());
+  settings.setValue("show_models", p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus));
+  settings.setValue("car_model", (int)carModel);
+  settings.setValue("car_pos", (int)aiLine);
+  settings.setValue("wrong_way", bMillionPlus);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -544,6 +557,9 @@ void CMainWindow::LoadTextures()
     bldLayout->addWidget(pImageLabel, i / iTilesPerLine, i % iTilesPerLine);
     p->m_lblAy.push_back(pImageLabel);
   }
+
+  //make sure car textures are reloaded too
+  openGLWidget->ReloadCar();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -558,6 +574,20 @@ void CMainWindow::UpdateGeometrySelection(int iFrom, int iTo)
   txData->setTextCursor(c);
 
   openGLWidget->UpdateGeometrySelection(iFrom, iTo);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CMainWindow::UnmangleTextures()
+{
+  return ckUnmangleTextures->isChecked();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+const QString &CMainWindow::GetTrackFilesFolder()
+{
+  return m_sTrackFilesFolder;
 }
 
 //-------------------------------------------------------------------------------------------------

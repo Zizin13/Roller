@@ -16,6 +16,24 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
   ckAllSurface->setChecked(true);
   ckHighlightSelection->setChecked(true);
   ckAILines->setChecked(true);
+  ckTestCar->setChecked(true);
+
+  //cbTestCarType->addItem("F1WACK", (int)eWhipModel::CAR_F1WACK); //TODO broken?
+  cbTestCarType->addItem("AUTO", (int)eWhipModel::CAR_AUTO);
+  cbTestCarType->addItem("DESILVA", (int)eWhipModel::CAR_DESILVA);
+  cbTestCarType->addItem("PULSE", (int)eWhipModel::CAR_PULSE);
+  cbTestCarType->addItem("GLOBAL", (int)eWhipModel::CAR_GLOBAL);
+  cbTestCarType->addItem("MILLION", (int)eWhipModel::CAR_MILLION);
+  cbTestCarType->addItem("MISSION", (int)eWhipModel::CAR_MISSION);
+  cbTestCarType->addItem("ZIZIN", (int)eWhipModel::CAR_ZIZIN);
+  cbTestCarType->addItem("REISE", (int)eWhipModel::CAR_REISE);
+  cbTestCarType->setCurrentIndex(cbTestCarType->findData((int)eWhipModel::CAR_ZIZIN));
+
+  cbTestCarPos->addItem("AILINE 1", (int)eShapeSection::AILINE1);
+  cbTestCarPos->addItem("AILINE 2", (int)eShapeSection::AILINE2);
+  cbTestCarPos->addItem("AILINE 3", (int)eShapeSection::AILINE3);
+  cbTestCarPos->addItem("AILINE 4", (int)eShapeSection::AILINE4);
+  cbTestCarPos->setCurrentIndex(cbTestCarPos->findData((int)eShapeSection::AILINE1));
 
   connect(ckAllSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAll);
   connect(ckAllWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAll);
@@ -47,6 +65,10 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
   connect(ckEnvirFloorWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckHighlightSelection, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckAILines, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
+  connect(ckTestCar, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
+  connect(cbTestCarType, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
+  connect(cbTestCarPos, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
+  connect(ckMillionPlus, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
 
   UpdateAll();
 }
@@ -59,7 +81,7 @@ CDisplaySettings::~CDisplaySettings()
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 CDisplaySettings::GetDisplaySettings()
+uint32 CDisplaySettings::GetDisplaySettings(eWhipModel &carModel, eShapeSection &aiLine, bool &bMillionPlus)
 {
   uint32 uiShowModels = 0;
   if (ckLLaneSurface->isChecked())        uiShowModels |= SHOW_LLANE_SURF_MODEL;
@@ -90,12 +112,18 @@ uint32 CDisplaySettings::GetDisplaySettings()
   if (ckEnvirFloorWireframe->isChecked()) uiShowModels |= SHOW_ENVIRFLOOR_WIRE_MODEL;
   if (ckHighlightSelection->isChecked())  uiShowModels |= SHOW_SELECTION_HIGHLIGHT;
   if (ckAILines->isChecked())             uiShowModels |= SHOW_AILINE_MODELS;
+  if (ckTestCar->isChecked())             uiShowModels |= SHOW_TEST_CAR;
+
+  carModel = (eWhipModel)cbTestCarType->currentData().toInt();
+  aiLine = (eShapeSection)cbTestCarPos->currentData().toInt();
+  bMillionPlus = ckMillionPlus->isChecked();
+
   return uiShowModels;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels)
+void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels, eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus)
 {
   ckLLaneSurface->blockSignals(true);
   ckLLaneWireframe->blockSignals(true);
@@ -125,6 +153,7 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels)
   ckEnvirFloorWireframe->blockSignals(true);
   ckHighlightSelection->blockSignals(true);
   ckAILines->blockSignals(true);
+  ckTestCar->blockSignals(true);
 
   ckLLaneSurface->setChecked(       uiShowModels & SHOW_LLANE_SURF_MODEL);
   ckLLaneWireframe->setChecked(     uiShowModels & SHOW_LLANE_WIRE_MODEL);
@@ -154,6 +183,7 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels)
   ckEnvirFloorWireframe->setChecked(uiShowModels & SHOW_ENVIRFLOOR_WIRE_MODEL);
   ckHighlightSelection->setChecked( uiShowModels & SHOW_SELECTION_HIGHLIGHT);
   ckAILines->setChecked(            uiShowModels & SHOW_AILINE_MODELS);
+  ckTestCar->setChecked(            uiShowModels & SHOW_TEST_CAR);
 
   ckLLaneSurface->blockSignals(false);
   ckLLaneWireframe->blockSignals(false);
@@ -183,6 +213,17 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels)
   ckEnvirFloorWireframe->blockSignals(false);
   ckHighlightSelection->blockSignals(false);
   ckAILines->blockSignals(false);
+  ckTestCar->blockSignals(false);
+
+  cbTestCarType->blockSignals(true);
+  cbTestCarPos->blockSignals(true);
+  ckMillionPlus->blockSignals(true);
+  cbTestCarType->setCurrentIndex(cbTestCarType->findData((int)carModel));
+  cbTestCarPos->setCurrentIndex(cbTestCarPos->findData((int)aiLine));
+  ckMillionPlus->setChecked(bMillionPlus);
+  cbTestCarType->blockSignals(false);
+  cbTestCarPos->blockSignals(false);
+  ckMillionPlus->blockSignals(false);
 
   UpdatePreviewSelection();
 }
@@ -324,8 +365,12 @@ void CDisplaySettings::UpdatePreviewSelection()
 
 void CDisplaySettings::UpdatePreview()
 {
-  uint32 uiShowModels = GetDisplaySettings();
+  eWhipModel carModel;
+  eShapeSection aiLine;
+  bool bMillionPlus;
+  uint32 uiShowModels = GetDisplaySettings(carModel, aiLine, bMillionPlus);
   m_pTrackPreview->ShowModels(uiShowModels);
+  m_pTrackPreview->UpdateCar(carModel, aiLine, bMillionPlus);
 }
 
 //-------------------------------------------------------------------------------------------------

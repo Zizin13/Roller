@@ -783,7 +783,7 @@ CShapeData *CTrackData::MakeSelectedChunks(CShader *pShader, int iStart, int iEn
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetCarPos(int iChunk, eShapeSection aiLineSection, glm::mat4 &modelToWorldMatrix)
+void CTrackData::GetCarPos(int iChunk, eShapeSection aiLineSection, glm::mat4 &modelToWorldMatrix, bool bMillionPlus)
 {
   if (m_chunkAy.empty() || iChunk > (int)m_chunkAy.size())
     return;
@@ -794,7 +794,7 @@ void CTrackData::GetCarPos(int iChunk, eShapeSection aiLineSection, glm::mat4 &m
   glm::mat4 yawMat;
   glm::mat4 pitchMat;
   glm::mat4 rollMat;
-  for (int i = 0; i < iChunk; ++i) {
+  for (int i = 0; i <= iChunk; ++i) {
     glm::vec3 center;
     glm::vec3 pitchAxis;;
     GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, yawMat, pitchMat, rollMat);
@@ -803,9 +803,12 @@ void CTrackData::GetCarPos(int iChunk, eShapeSection aiLineSection, glm::mat4 &m
     prevCenter = center;
   }
 
+  float fRotate = -90.0f;
+  if (bMillionPlus)
+    fRotate = 90.0f;
   modelToWorldMatrix = glm::translate(aiLine) * rollMat * pitchMat * yawMat *
-    glm::rotate(glm::radians(90.0f), glm::vec3(0, 0, 1)) * //car starts on its side
-    glm::rotate(glm::radians(90.0f), glm::vec3(0, 1, 0)); //track starts facing z positive, car starts facing x positive
+    glm::rotate(glm::radians(fRotate), glm::vec3(0, 0, 1)) * //car starts on its side
+    glm::rotate(glm::radians(fRotate), glm::vec3(0, 1, 0)); //track starts facing z positive, car starts facing x positive
 }
 
 //-------------------------------------------------------------------------------------------------

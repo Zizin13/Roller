@@ -34,6 +34,7 @@ class CTrackPreview;
 #define SHOW_RUOWALL_WIRE_MODEL    0x02000000
 #define SHOW_SELECTION_HIGHLIGHT   0x04000000
 #define SHOW_AILINE_MODELS         0x08000000
+#define SHOW_TEST_CAR              0x10000000
 //-------------------------------------------------------------------------------------------------
 
 class CDisplaySettings : public QWidget, private Ui::DisplaySettings
@@ -44,8 +45,8 @@ public:
   CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPreview);
   ~CDisplaySettings();
 
-  uint32 GetDisplaySettings();
-  void SetDisplaySettings(uint32 uiShowModels);
+  uint32 GetDisplaySettings(eWhipModel &carModel, eShapeSection &aiLine, bool &bMillionPlus);
+  void SetDisplaySettings(uint32 uiShowModels,eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
 
 protected slots:
   void UpdateAll();

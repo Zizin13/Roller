@@ -18,7 +18,9 @@ public:
   void SetTrack(CTrack *pTrack);
   void ShowModels(uint32 uiShowModels);
   void UpdateGeometrySelection(int iFrom, int iTo);
+  void UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
   void DeleteModels();
+  void ReloadCar();
 
 protected:
   void initializeGL();
@@ -29,6 +31,10 @@ protected:
 private:
   CTrackPreviewPrivate *p;
   uint32 m_uiShowModels;
+  int m_iFrom;
+  eWhipModel m_carModel;
+  eShapeSection m_carAILine;
+  bool m_bMillionPlus;
 };
 
 //-------------------------------------------------------------------------------------------------

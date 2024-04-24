@@ -13,6 +13,7 @@
 #include "WhipModel.h"
 #include "ShapeData.h"
 #include "DebugShapes.h"
+#include "qdir.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -62,7 +63,7 @@ public:
     , m_pAILine4(NULL)
     , m_pTestCar(NULL)
     , m_pAxes(NULL)
-    , m_pCarData(new CWhipModel)
+    , m_pCarData(NULL)
   {};
   ~CTrackPreviewPrivate()
   {
@@ -256,6 +257,10 @@ public:
 CTrackPreview::CTrackPreview(QWidget *pParent)
   : QGLWidget(QGLFormat(QGL::SampleBuffers), pParent)
   , m_uiShowModels(0)
+  , m_iFrom(0)
+  , m_carModel(eWhipModel::CAR_ZIZIN)
+  , m_carAILine(eShapeSection::AILINE1)
+  , m_bMillionPlus(false)
 {
   p = new CTrackPreviewPrivate;
 }
@@ -308,6 +313,9 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
     p->m_pAILine2 = p->m_pTrack->MakeAILine(p->m_pShader, eShapeSection::AILINE2);
     p->m_pAILine3 = p->m_pTrack->MakeAILine(p->m_pShader, eShapeSection::AILINE3);
     p->m_pAILine4 = p->m_pTrack->MakeAILine(p->m_pShader, eShapeSection::AILINE4);
+
+    if (p->m_pTestCar)
+      p->m_pTrack->GetCarPos(m_iFrom, m_carAILine, p->m_pTestCar->m_modelToWorldMatrix, m_bMillionPlus);
   }
   repaint();
 }
@@ -324,15 +332,74 @@ void CTrackPreview::ShowModels(uint32 uiShowModels)
 
 void CTrackPreview::UpdateGeometrySelection(int iFrom, int iTo)
 {
+  m_iFrom = iFrom;
+
   if (p->m_pSelection)
     delete p->m_pSelection;
   if (p->m_pTrack) {
     p->m_pSelection = p->m_pTrack->MakeSelectedChunks(p->m_pShader, iFrom, iTo);
   }
 
-  if (p->m_pTestCar && p->m_pTrack) {
-    p->m_pTrack->GetCarPos(iFrom, eShapeSection::AILINE1, p->m_pTestCar->m_modelToWorldMatrix);
+  if (p->m_pTestCar && p->m_pTrack) 
+    p->m_pTrack->GetCarPos(m_iFrom, m_carAILine, p->m_pTestCar->m_modelToWorldMatrix, m_bMillionPlus);
+
+  repaint();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus)
+{
+  m_carModel = carModel;
+  m_carAILine = aiLine;
+  m_bMillionPlus = bMillionPlus;
+
+  if (p->m_pTestCar) {
+    delete p->m_pTestCar;
+    p->m_pTestCar = NULL;
   }
+
+  if (p->m_pCarData && !g_pMainWindow->GetTrackFilesFolder().isEmpty()) {
+    QString sTexName;
+    switch (carModel) {
+      case CAR_F1WACK:
+        sTexName = "RED28.BM";
+        break;
+      case CAR_AUTO:
+        sTexName = "XAUTO.BM";
+        break;
+      case CAR_DESILVA:
+        sTexName = "XDESILVA.BM";
+        break;
+      case CAR_PULSE:
+        sTexName = "XPULSE.BM";
+        break;
+      case CAR_GLOBAL:
+        sTexName = "XGLOBAL.BM";
+        break;
+      case CAR_MILLION:
+        sTexName = "XMILLION.BM";
+        break;
+      case CAR_MISSION:
+        sTexName = "XMISSION.BM";
+        break;
+      case CAR_ZIZIN:
+        sTexName = "XZIZIN.BM";
+        break;
+      case CAR_REISE:
+        sTexName = "XREISE.BM";
+        break;
+    }
+    QString sPal = g_pMainWindow->GetTrackFilesFolder() + QDir::separator() + "PALETTE.PAL";
+    QString sTex = g_pMainWindow->GetTrackFilesFolder() + QDir::separator() + sTexName;
+    p->m_pCarData->LoadTexture(sPal.toLatin1().constData(),
+                               sTex.toLatin1().constData(),
+                               g_pMainWindow->UnmangleTextures());
+    p->m_pTestCar = p->m_pCarData->MakeModel(p->m_pShader, carModel);
+  }
+
+  if (p->m_pTestCar && p->m_pTrack)
+    p->m_pTrack->GetCarPos(m_iFrom, m_carAILine, p->m_pTestCar->m_modelToWorldMatrix, m_bMillionPlus);
 
   repaint();
 }
@@ -420,10 +487,10 @@ void CTrackPreview::paintGL()
     p->m_pAILine3->Draw(worldToProjectionMatrix);
     p->m_pAILine4->Draw(worldToProjectionMatrix);
   }
-  if (p->m_pTestCar)
+  if (m_uiShowModels & SHOW_TEST_CAR && p->m_pTestCar)
     p->m_pTestCar->Draw(worldToProjectionMatrix);
-  if (p->m_pAxes)
-    p->m_pAxes->Draw(worldToProjectionMatrix);
+  //if (p->m_pAxes)
+  //  p->m_pAxes->Draw(worldToProjectionMatrix);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -447,6 +514,13 @@ void CTrackPreview::DeleteModels()
 
 //-------------------------------------------------------------------------------------------------
 
+void CTrackPreview::ReloadCar()
+{
+  UpdateCar(m_carModel, m_carAILine, m_bMillionPlus);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CTrackPreview::initializeGL()
 {
   setMouseTracking(false);
@@ -466,14 +540,9 @@ void CTrackPreview::initializeGL()
   if (!p->m_pShader)
     p->m_pShader = new CShader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");
 
-
-  if (p->m_pCarData) {
-    p->m_pCarData->LoadTexture("C:\\WHIP\\WHIPLASH\\FATDATA\\PALETTE.PAL",
-                           "C:\\WHIP\\WHIPLASH\\FATDATA\\XMILLION.BM", true);
-    p->m_pTestCar = p->m_pCarData->MakeModel(p->m_pShader, eWhipModel::CAR_MILLION);
-    p->m_pTestCar->m_modelToWorldMatrix = glm::rotate(glm::radians(-90.0f), glm::vec3(0, 0, 1)) * glm::rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
-  }
   p->m_pAxes = DebugShapes::MakeAxes(p->m_pShader);
+  p->m_pCarData = new CWhipModel();
+  UpdateCar(m_carModel, m_carAILine, m_bMillionPlus);
 }
 
 //-------------------------------------------------------------------------------------------------

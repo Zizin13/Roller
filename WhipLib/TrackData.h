@@ -145,30 +145,6 @@ enum eFileSection
   MAP
 };
 //-------------------------------------------------------------------------------------------------
-enum eShapeSection
-{
-  DRIVING_SURFACE = 0,
-  CENTER,
-  LLANE,
-  RLANE,
-  LSHOULDER,
-  RSHOULDER,
-  LWALL,
-  RWALL,
-  ROOF,
-  ENVIRFLOOR,
-  OWALLFLOOR,
-  LLOWALL,
-  RLOWALL,
-  LUOWALL,
-  RUOWALL,
-  SELECTED,
-  AILINE1,
-  AILINE2,
-  AILINE3,
-  AILINE4
-};
-//-------------------------------------------------------------------------------------------------
 class CShader;
 class CShapeData;
 //-------------------------------------------------------------------------------------------------
@@ -186,7 +162,7 @@ public:
   CShapeData *MakeTrackSurface(CShader *pShader, eShapeSection section, bool bWireframe = false);
   CShapeData *MakeAILine(CShader *pShader, eShapeSection section);
   CShapeData *MakeSelectedChunks(CShader *pShader, int iStart, int iEnd);
-  void GetCarPos(int iChunk, eShapeSection aiLine, glm::mat4 &modelToWorldMatrix);
+  void GetCarPos(int iChunk, eShapeSection aiLine, glm::mat4 &modelToWorldMatrix, bool bMillionPlus = false);
 
   static unsigned int GetSignedBitValueFromInt(int iValue);
   static int GetIntValueFromSignedBit(unsigned int uiValue);

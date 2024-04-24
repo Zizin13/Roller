@@ -20,6 +20,8 @@ public:
   void UpdateWindow();
   void LoadTextures();
   void UpdateGeometrySelection(int iFrom, int iTo);
+  bool UnmangleTextures();
+  const QString &GetTrackFilesFolder();
 
 protected:
   void closeEvent(QCloseEvent *pEvent);

@@ -798,7 +798,7 @@ void CTrackData::GetCarPos(int iChunk, eShapeSection aiLineSection, glm::mat4 &m
     glm::vec3 center;
     glm::vec3 pitchAxis;;
     GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, yawMat, pitchMat, rollMat);
-    GetAILine(i, center, pitchAxis, rollMat, nextChunkPitched, aiLine, aiLineSection);
+    GetAILine(i, center, pitchAxis, rollMat, nextChunkPitched, aiLine, aiLineSection, 0);
 
     prevCenter = center;
   }
@@ -937,13 +937,13 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     GetWall(i, ruoWallBottomAttach, pitchAxis, oWallRollMat, nextChunkPitched, ruoWall, eShapeSection::RUOWALL);
     //ailines
     glm::vec3 aiLine1;
-    GetAILine(i, center, pitchAxis, rollMat, nextChunkPitched, aiLine1, eShapeSection::AILINE1);
+    GetAILine(i, center, pitchAxis, rollMat, nextChunkPitched, aiLine1, eShapeSection::AILINE1, m_iAILineHeight);
     glm::vec3 aiLine2;
-    GetAILine(i, center, pitchAxis, rollMat, nextChunkPitched, aiLine2, eShapeSection::AILINE2);
+    GetAILine(i, center, pitchAxis, rollMat, nextChunkPitched, aiLine2, eShapeSection::AILINE2, m_iAILineHeight);
     glm::vec3 aiLine3;
-    GetAILine(i, center, pitchAxis, rollMat, nextChunkPitched, aiLine3, eShapeSection::AILINE3);
+    GetAILine(i, center, pitchAxis, rollMat, nextChunkPitched, aiLine3, eShapeSection::AILINE3, m_iAILineHeight);
     glm::vec3 aiLine4;
-    GetAILine(i, center, pitchAxis, rollMat, nextChunkPitched, aiLine4, eShapeSection::AILINE4);
+    GetAILine(i, center, pitchAxis, rollMat, nextChunkPitched, aiLine4, eShapeSection::AILINE4, m_iAILineHeight);
 
     switch (section) {
       case LLANE:
@@ -1550,7 +1550,7 @@ void CTrackData::GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm
 //-------------------------------------------------------------------------------------------------
 
 void CTrackData::GetAILine(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
-                           glm::vec3 &aiLine, eShapeSection lineSection)
+                           glm::vec3 &aiLine, eShapeSection lineSection, int iHeight)
 {
   glm::mat4 translateMat = glm::translate(center);
   float fLen = 0.0f;
@@ -1586,7 +1586,7 @@ void CTrackData::GetAILine(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::ma
   }
 
   fLen = (float)iUseAILine / m_fScale * -1.0f;
-  float fHeight = (float)(m_iAILineHeight + iShoulderHeight) / m_fScale * -1.0f;
+  float fHeight = (float)(iHeight + iShoulderHeight) / m_fScale * -1.0f;
 
   glm::mat4 scaleMatWidth = glm::scale(glm::vec3(fLen, fLen, fLen));
   glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));

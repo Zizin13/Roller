@@ -205,7 +205,7 @@ protected:
   void GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                glm::vec3 &lloWall, eShapeSection wallSection);
   void GetAILine(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
-               glm::vec3 &aiLine, eShapeSection lineSection);
+               glm::vec3 &aiLine, eShapeSection lineSection, int iHeight);
   void ApplyVerticesSingleSection(int i, tVertex *vertices, const glm::vec3 &v0, const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3);
 
   bool IsNumber(const std::string &str);

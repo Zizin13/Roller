@@ -62,6 +62,7 @@ public:
   int m_iNumTiles;
 
   static glm::vec3 RandomColor();
+  static glm::vec3 ColorBytesToFloat(const glm::vec3 &color);
 
 private:
   bool ProcessTextureData(const uint8 *pData, size_t length);

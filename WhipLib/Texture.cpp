@@ -211,10 +211,10 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
     bottomRight.flags.x = 1.0f;
 
     //color
-    topLeft.color = m_pPalette->m_paletteAy[uiTexIndex];
-    topRight.color = m_pPalette->m_paletteAy[uiTexIndex];
-    bottomLeft.color = m_pPalette->m_paletteAy[uiTexIndex];
-    bottomRight.color = m_pPalette->m_paletteAy[uiTexIndex];
+    topLeft.color     = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
+    topRight.color    = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
+    bottomLeft.color  = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
+    bottomRight.color = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
   }
 }
 
@@ -226,6 +226,17 @@ glm::vec3 CTexture::RandomColor()
   ret.x = rand() / (float)RAND_MAX;
   ret.y = rand() / (float)RAND_MAX;
   ret.z = rand() / (float)RAND_MAX;
+  return ret;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+glm::vec3 CTexture::ColorBytesToFloat(const glm::vec3 &color)
+{
+  glm::vec3 ret;
+  ret.r = (float)color.r / 255.0f;
+  ret.g = (float)color.g / 255.0f;
+  ret.b = (float)color.b / 255.0f;
   return ret;
 }
 

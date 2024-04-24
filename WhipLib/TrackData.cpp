@@ -118,6 +118,7 @@ void tGeometryChunk::Clear()
 
 CTrackData::CTrackData()
   : m_fScale(10000.0f)
+  , m_uiAILineHeight(100)
 {
   ClearData();
 }
@@ -542,6 +543,9 @@ uint32 *CTrackData::MakeIndicesCenterline(uint32 &numIndices)
   
   return indices;
 }
+
+//-------------------------------------------------------------------------------------------------
+
 uint32 *CTrackData::MakeIndicesSurface(uint32 &numIndices)
 {
   if (m_chunkAy.empty()) {
@@ -704,6 +708,49 @@ CShapeData *CTrackData::MakeTrackSurface(CShader *pShader, eShapeSection section
 
   return pRet;
 }
+
+//-------------------------------------------------------------------------------------------------
+
+CShapeData *CTrackData::MakeAILine(CShader *pShader, eShapeSection section)
+{
+  uint32 uiNumVerts;
+  struct tVertex *vertices = MakeVerts(uiNumVerts, section);
+  uint32 uiNumIndices;
+  uint32 *indices = MakeIndicesCenterline(uiNumIndices);
+  GLenum drawType = GL_LINES;
+
+  for (uint32 i = 0; i < uiNumVerts; ++i) {
+    vertices[i].flags.x = 1.0f; //use color rather than tex
+    switch (section) {
+      case eShapeSection::AILINE1:
+        vertices[i].color = glm::vec3(1.0f, 0.0f, 0.0f);
+        break;
+      case eShapeSection::AILINE2:
+        vertices[i].color = glm::vec3(0.0f, 1.0f, 0.0f);
+        break;
+      case eShapeSection::AILINE3:
+        vertices[i].color = glm::vec3(0.0f, 0.0f, 1.0f);
+        break;
+      case eShapeSection::AILINE4:
+        vertices[i].color = glm::vec3(1.0f, 1.0f, 0.0f);
+        break;
+    }
+  }
+
+  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
+  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+
+  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
+
+  if (vertices)
+    delete[] vertices;
+  if (indices)
+    delete[] indices;
+
+  return pRet;
+}
+
 //-------------------------------------------------------------------------------------------------
 
 CShapeData *CTrackData::MakeSelectedChunks(CShader *pShader, int iStart, int iEnd)
@@ -744,6 +791,7 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
 
   uint32 uiNumVertsPerChunk = 4;
   if (section == eShapeSection::SELECTED) uiNumVertsPerChunk = 8;
+  if (section >= eShapeSection::AILINE1 && section <= eShapeSection::AILINE4) uiNumVertsPerChunk = 1;
 
   numVertices = (uint32)m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
@@ -854,6 +902,15 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     glm::vec3 ruoWall;
     glm::vec3 ruoWallBottomAttach = rloWall;
     GetWall(i, ruoWallBottomAttach, pitchAxis, oWallRollMat, nextChunkPitched, ruoWall, eShapeSection::RUOWALL);
+    //ailines
+    glm::vec3 aiLine1;
+    GetAILine(i, center, pitchAxis, rollMat, nextChunkPitched, aiLine1, eShapeSection::AILINE1);
+    glm::vec3 aiLine2;
+    GetAILine(i, center, pitchAxis, rollMat, nextChunkPitched, aiLine2, eShapeSection::AILINE2);
+    glm::vec3 aiLine3;
+    GetAILine(i, center, pitchAxis, rollMat, nextChunkPitched, aiLine3, eShapeSection::AILINE3);
+    glm::vec3 aiLine4;
+    GetAILine(i, center, pitchAxis, rollMat, nextChunkPitched, aiLine4, eShapeSection::AILINE4);
 
     switch (section) {
       case LLANE:
@@ -961,6 +1018,18 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
         vertices[i * uiNumVertsPerChunk + 5].position = prevRUOWall;
         vertices[i * uiNumVertsPerChunk + 6].position = prevLLOWallBottomAttach;
         vertices[i * uiNumVertsPerChunk + 7].position = prevRLOWallBottomAttach;
+        break;
+      case AILINE1:
+        vertices[i * uiNumVertsPerChunk + 0].position = aiLine1;
+        break;
+      case AILINE2:
+        vertices[i * uiNumVertsPerChunk + 0].position = aiLine2;
+        break;
+      case AILINE3:
+        vertices[i * uiNumVertsPerChunk + 0].position = aiLine3;
+        break;
+      case AILINE4:
+        vertices[i * uiNumVertsPerChunk + 0].position = aiLine4;
         break;
       default:
         assert(0); //shape not implemented
@@ -1440,6 +1509,39 @@ void CTrackData::GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm
   glm::vec3 heightVec = glm::vec3(scaleMatHeight * rollMat * glm::vec4(normal, 1.0f));
   glm::vec3 wallVec = widthVec + heightVec;
   lloWall = glm::vec3(translateMat * glm::vec4(wallVec, 1.0f));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GetAILine(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+                           glm::vec3 &aiLine, eShapeSection lineSection)
+{
+  glm::mat4 translateMat = glm::translate(center);
+  float fLen = 0.0f;
+  float fHeight = (float)m_uiAILineHeight / m_fScale * -1.0f;
+  switch (lineSection) {
+    case eShapeSection::AILINE1:
+      fLen = (float)m_chunkAy[i].iAILine1 / m_fScale * -1.0f;
+      break;
+    case eShapeSection::AILINE2:
+      fLen = (float)m_chunkAy[i].iAILine2 / m_fScale * -1.0f;
+      break;
+    case eShapeSection::AILINE3:
+      fLen = (float)m_chunkAy[i].iAILine3 / m_fScale * -1.0f;
+      break;
+    case eShapeSection::AILINE4:
+      fLen = (float)m_chunkAy[i].iAILine4 / m_fScale * -1.0f;
+      break;
+    default:
+      assert(0);
+  }
+  glm::mat4 scaleMatWidth = glm::scale(glm::vec3(fLen, fLen, fLen));
+  glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
+  glm::vec3 widthVec = glm::vec3(scaleMatWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
+  glm::vec3 normal = glm::normalize(glm::cross(nextChunkPitched, pitchAxis));
+  glm::vec3 heightVec = glm::vec3(scaleMatHeight * rollMat * glm::vec4(normal, 1.0f));
+  glm::vec3 lineVec = widthVec + heightVec;
+  aiLine = glm::vec3(translateMat * glm::vec4(lineVec, 1.0f));
 }
 
 //-------------------------------------------------------------------------------------------------

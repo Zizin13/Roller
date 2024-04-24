@@ -33,6 +33,7 @@ class CTrackPreview;
 #define SHOW_RUOWALL_SURF_MODEL    0x01000000
 #define SHOW_RUOWALL_WIRE_MODEL    0x02000000
 #define SHOW_SELECTION_HIGHLIGHT   0x04000000
+#define SHOW_AILINE_MODELS         0x08000000
 //-------------------------------------------------------------------------------------------------
 
 class CDisplaySettings : public QWidget, private Ui::DisplaySettings

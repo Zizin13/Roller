@@ -55,6 +55,10 @@ public:
     , m_pRUOWallSurf(NULL)
     , m_pRUOWallWire(NULL)
     , m_pSelection(NULL)
+    , m_pAILine1(NULL)
+    , m_pAILine2(NULL)
+    , m_pAILine3(NULL)
+    , m_pAILine4(NULL)
     , m_pTestCar(NULL)
     , m_pCarData(new CWhipModel)
   {};
@@ -180,6 +184,22 @@ public:
       delete m_pRUOWallWire;
       m_pRUOWallWire = NULL;
     }
+    if (m_pAILine1) {
+      delete m_pAILine1;
+      m_pAILine1 = NULL;
+    }
+    if (m_pAILine2) {
+      delete m_pAILine2;
+      m_pAILine2 = NULL;
+    }
+    if (m_pAILine3) {
+      delete m_pAILine3;
+      m_pAILine3 = NULL;
+    }
+    if (m_pAILine4) {
+      delete m_pAILine4;
+      m_pAILine4 = NULL;
+    }
     if (m_pSelection) {
       delete m_pSelection;
       m_pSelection = NULL;
@@ -213,6 +233,10 @@ public:
   CShapeData *m_pRUOWallSurf;
   CShapeData *m_pRUOWallWire;
   CShapeData *m_pSelection;
+  CShapeData *m_pAILine1;
+  CShapeData *m_pAILine2;
+  CShapeData *m_pAILine3;
+  CShapeData *m_pAILine4;
   CShapeData *m_pTestCar;
   CShader *m_pShader;
   CTrack *m_pTrack;
@@ -273,6 +297,10 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
     p->m_pLUOWallWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::LUOWALL, true);
     p->m_pRUOWallSurf = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::RUOWALL);
     p->m_pRUOWallWire = p->m_pTrack->MakeTrackSurface(p->m_pShader, eShapeSection::RUOWALL, true);
+    p->m_pAILine1 = p->m_pTrack->MakeAILine(p->m_pShader, eShapeSection::AILINE1);
+    p->m_pAILine2 = p->m_pTrack->MakeAILine(p->m_pShader, eShapeSection::AILINE2);
+    p->m_pAILine3 = p->m_pTrack->MakeAILine(p->m_pShader, eShapeSection::AILINE3);
+    p->m_pAILine4 = p->m_pTrack->MakeAILine(p->m_pShader, eShapeSection::AILINE4);
   }
   repaint();
 }
@@ -371,7 +399,16 @@ void CTrackPreview::paintGL()
     p->m_pRUOWallWire->Draw(worldToProjectionMatrix);
   if (m_uiShowModels & SHOW_SELECTION_HIGHLIGHT && p->m_pSelection)
     p->m_pSelection->Draw(worldToProjectionMatrix);
-
+  if (/*m_uiShowModels & SHOW_AILINE_MODELS
+      &&*/ p->m_pAILine1
+      && p->m_pAILine2
+      && p->m_pAILine3
+      && p->m_pAILine4) {
+    p->m_pAILine1->Draw(worldToProjectionMatrix);
+    p->m_pAILine2->Draw(worldToProjectionMatrix);
+    p->m_pAILine3->Draw(worldToProjectionMatrix);
+    p->m_pAILine4->Draw(worldToProjectionMatrix);
+  }
   if (p->m_pTestCar)
     p->m_pTestCar->Draw(worldToProjectionMatrix);
 }

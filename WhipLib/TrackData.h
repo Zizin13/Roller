@@ -163,6 +163,10 @@ enum eShapeSection
   LUOWALL,
   RUOWALL,
   SELECTED,
+  AILINE1,
+  AILINE2,
+  AILINE3,
+  AILINE4
 };
 //-------------------------------------------------------------------------------------------------
 class CShader;
@@ -180,6 +184,7 @@ public:
   void GetTrackData(std::vector<uint8_t> &data);
   CShapeData *MakeTrackCenterline(CShader *pShader);
   CShapeData *MakeTrackSurface(CShader *pShader, eShapeSection section, bool bWireframe = false);
+  CShapeData *MakeAILine(CShader *pShader, eShapeSection section);
   CShapeData *MakeSelectedChunks(CShader *pShader, int iStart, int iEnd);
 
   static unsigned int GetSignedBitValueFromInt(int iValue);
@@ -194,6 +199,7 @@ public:
   CTexture m_tex;
   CTexture m_bld;
   float m_fScale;
+  uint32 m_uiAILineHeight;
 
 protected:
   tVertex *MakeVerts(uint32 &numVertices, eShapeSection section);
@@ -220,6 +226,8 @@ protected:
                      glm::vec3 &lFloor, glm::vec3 &rFloor);
   void GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                glm::vec3 &lloWall, eShapeSection wallSection);
+  void GetAILine(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+               glm::vec3 &aiLine, eShapeSection lineSection);
   void ApplyVerticesSingleSection(int i, tVertex *vertices, const glm::vec3 &v0, const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3);
 
   bool IsNumber(const std::string &str);

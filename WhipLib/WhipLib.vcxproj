@@ -105,8 +105,7 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="DebugShapes.h" />
-    <ClInclude Include="WhipModel.h" />
+    <ClInclude Include="ShapeFactory.h" />
     <ClInclude Include="CarPlans\AutoPlans.h" />
     <ClInclude Include="CarPlans\DesilvaPlans.h" />
     <ClInclude Include="CarPlans\F1WackPlans.h" />
@@ -149,8 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="DebugShapes.cpp" />
-    <ClCompile Include="WhipModel.cpp" />
+    <ClCompile Include="ShapeFactory.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Palette.cpp" />
     <ClCompile Include="Shader.cpp" />

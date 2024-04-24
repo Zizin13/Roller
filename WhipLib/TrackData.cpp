@@ -783,13 +783,6 @@ CShapeData *CTrackData::MakeSelectedChunks(CShader *pShader, int iStart, int iEn
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::MakeSigns(CShader *pShader, std::vector<CShapeData *> &signAy)
-{
-
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CTrackData::GetCarPos(int iChunk, eShapeSection aiLineSection, glm::mat4 &modelToWorldMatrix, bool bMillionPlus)
 {
   if (m_chunkAy.empty() || iChunk > (int)m_chunkAy.size())

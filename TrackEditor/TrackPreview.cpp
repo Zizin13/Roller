@@ -10,9 +10,8 @@
 #include "OpenGLDebug.h"
 #include "Track.h"
 #include "DisplaySettings.h"
-#include "WhipModel.h"
 #include "ShapeData.h"
-#include "DebugShapes.h"
+#include "ShapeFactory.h"
 #include "qdir.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -62,14 +61,14 @@ public:
     , m_pAILine3(NULL)
     , m_pAILine4(NULL)
     , m_pAxes(NULL)
-    , m_pCarData(NULL)
+    , m_pCar(NULL)
   {};
   ~CTrackPreviewPrivate()
   {
     DeleteModels();
-    if (m_pCarData) {
-      delete m_pCarData;
-      m_pCarData = NULL;
+    if (m_pCar) {
+      delete m_pCar;
+      m_pCar = NULL;
     }
     if (m_pShader) {
       delete m_pShader;
@@ -243,7 +242,7 @@ public:
   CShader *m_pShader;
   CTrack *m_pTrack;
 
-  CWhipModel *m_pCarData;
+  CShapeData *m_pCar;
   CTexture m_carTex;
 };
 
@@ -306,8 +305,8 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
     p->m_pAILine4 = p->m_pTrack->MakeAILine(p->m_pShader, eShapeSection::AILINE4);
 
     UpdateCar(m_carModel, m_carAILine, m_bMillionPlus);
-    if (p->m_pCarData && p->m_pCarData->m_pShapeData)
-      p->m_pTrack->GetCarPos(m_iFrom, m_carAILine, p->m_pCarData->m_pShapeData->m_modelToWorldMatrix, m_bMillionPlus);
+    if (p->m_pCar)
+      p->m_pTrack->GetCarPos(m_iFrom, m_carAILine, p->m_pCar->m_modelToWorldMatrix, m_bMillionPlus);
   }
   repaint();
 }
@@ -332,8 +331,8 @@ void CTrackPreview::UpdateGeometrySelection(int iFrom, int iTo)
     p->m_pSelection = p->m_pTrack->MakeSelectedChunks(p->m_pShader, iFrom, iTo);
   }
 
-  if (p->m_pCarData && p->m_pCarData->m_pShapeData && p->m_pTrack)
-    p->m_pTrack->GetCarPos(m_iFrom, m_carAILine, p->m_pCarData->m_pShapeData->m_modelToWorldMatrix, m_bMillionPlus);
+  if (p->m_pCar && p->m_pTrack)
+    p->m_pTrack->GetCarPos(m_iFrom, m_carAILine, p->m_pCar->m_modelToWorldMatrix, m_bMillionPlus);
 
   repaint();
 }
@@ -346,7 +345,12 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
   m_carAILine = aiLine;
   m_bMillionPlus = bMillionPlus;
 
-  if (p->m_pTrack && p->m_pCarData && !g_pMainWindow->GetTrackFilesFolder().isEmpty()) {
+  if (p->m_pCar) {
+    delete p->m_pCar;
+    p->m_pCar = NULL;
+  }
+
+  if (p->m_pTrack && !g_pMainWindow->GetTrackFilesFolder().isEmpty()) {
     QString sTexName;
     switch (carModel) {
       case CAR_F1WACK:
@@ -380,11 +384,11 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
     QString sPal = g_pMainWindow->GetTrackFilesFolder() + QDir::separator() + "PALETTE.PAL";
     QString sTex = g_pMainWindow->GetTrackFilesFolder() + QDir::separator() + sTexName;
     p->m_carTex.LoadTexture(sTex.toLatin1().constData(), &p->m_pTrack->m_palette, g_pMainWindow->UnmangleTextures());
-    p->m_pCarData->MakeModel(p->m_pShader, &p->m_carTex, carModel);
+    p->m_pCar = CShapeFactory::GetShapeFactory().MakeModel(p->m_pShader, &p->m_carTex, carModel);
   }
 
-  if (p->m_pCarData && p->m_pCarData->m_pShapeData && p->m_pTrack)
-    p->m_pTrack->GetCarPos(m_iFrom, m_carAILine, p->m_pCarData->m_pShapeData->m_modelToWorldMatrix, m_bMillionPlus);
+  if (p->m_pCar && p->m_pTrack)
+    p->m_pTrack->GetCarPos(m_iFrom, m_carAILine, p->m_pCar->m_modelToWorldMatrix, m_bMillionPlus);
 
   repaint();
 }
@@ -472,8 +476,8 @@ void CTrackPreview::paintGL()
     p->m_pAILine3->Draw(worldToProjectionMatrix);
     p->m_pAILine4->Draw(worldToProjectionMatrix);
   }
-  if (m_uiShowModels & SHOW_TEST_CAR && p->m_pCarData && p->m_pCarData->m_pShapeData)
-    p->m_pCarData->m_pShapeData->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_TEST_CAR && p->m_pCar)
+    p->m_pCar->Draw(worldToProjectionMatrix);
   //if (p->m_pAxes)
   //  p->m_pAxes->Draw(worldToProjectionMatrix);
 }
@@ -516,8 +520,7 @@ void CTrackPreview::initializeGL()
   if (!p->m_pShader)
     p->m_pShader = new CShader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");
 
-  p->m_pAxes = DebugShapes::MakeAxes(p->m_pShader);
-  p->m_pCarData = new CWhipModel();
+  //p->m_pAxes = DebugShapes::MakeAxes(p->m_pShader);
   UpdateCar(m_carModel, m_carAILine, m_bMillionPlus);
 }
 

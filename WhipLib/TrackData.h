@@ -163,7 +163,6 @@ public:
   CShapeData *MakeTrackSurface(CShader *pShader, eShapeSection section, bool bWireframe = false);
   CShapeData *MakeAILine(CShader *pShader, eShapeSection section);
   CShapeData *MakeSelectedChunks(CShader *pShader, int iStart, int iEnd);
-  void MakeSigns(CShader *pShader, std::vector<CShapeData *> &signAy);
   void GetCarPos(int iChunk, eShapeSection aiLine, glm::mat4 &modelToWorldMatrix, bool bMillionPlus = false);
 
   static unsigned int GetSignedBitValueFromInt(int iValue);

@@ -19,7 +19,7 @@ public:
   void ShowModels(uint32 uiShowModels);
   void UpdateGeometrySelection(int iFrom, int iTo);
   void UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
-  void DeleteModels();
+  void Shutdown();
   void ReloadCar();
 
 protected:

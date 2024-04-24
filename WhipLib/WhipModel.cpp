@@ -28,9 +28,7 @@ class CWhipModelPrivate
 public:
   CWhipModelPrivate() {};
   ~CWhipModelPrivate() {};
-
-  CPalette m_pal;
-  CTexture m_tex;
+;
   eWhipModel m_model;
 };
 
@@ -38,6 +36,7 @@ public:
 
 CWhipModel::CWhipModel()
   : m_fScale(10000.0f)
+  , m_pShapeData(NULL)
 {
   p = new CWhipModelPrivate;
 }
@@ -54,19 +53,16 @@ CWhipModel::~CWhipModel()
 
 //-------------------------------------------------------------------------------------------------
 
-void CWhipModel::LoadTexture(const std::string &sPal, const std::string &sTex, bool bMangled)
+void CWhipModel::MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model)
 {
-  p->m_pal.LoadPalette(sPal);
-  p->m_tex.LoadTexture(sTex, &p->m_pal, bMangled);
-}
+  if (m_pShapeData) {
+    delete m_pShapeData;
+    m_pShapeData = NULL;
+  }
 
-//-------------------------------------------------------------------------------------------------
-
-CShapeData *CWhipModel::MakeModel(CShader *pShader, eWhipModel model)
-{
   p->m_model = model;
   uint32 uiNumVerts;
-  struct tVertex *vertices = MakeVerts(uiNumVerts);
+  struct tVertex *vertices = MakeVerts(uiNumVerts, pTexture);
   uint32 uiNumIndices;
   uint32 *indices = MakeIndices(uiNumIndices);
 
@@ -74,19 +70,17 @@ CShapeData *CWhipModel::MakeModel(CShader *pShader, eWhipModel model)
   CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
   CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
-  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, &p->m_tex);
+  m_pShapeData = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture);
 
   if (vertices)
     delete[] vertices;
   if (indices)
     delete[] indices;
-
-  return pRet;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-tVertex *CWhipModel::MakeVerts(uint32 &numVertices)
+tVertex *CWhipModel::MakeVerts(uint32 &numVertices, CTexture *pTexture)
 {
   //first turn float array into vertex array
   uint32 uiNumCoords = GetCoordsCount() / 3;
@@ -112,11 +106,11 @@ tVertex *CWhipModel::MakeVerts(uint32 &numVertices)
     if (uiUseTex & SURFACE_FLAG_ANMS_LOOKUP) {
       uiUseTex = GetAnms()[uiUseTex & SURFACE_TEXTURE_INDEX].framesAy[0];
     }
-    p->m_tex.GetTextureCoordinates(uiUseTex,
-                                   vertices[i * 4 + 1],
-                                   vertices[i * 4 + 0],
-                                   vertices[i * 4 + 2],
-                                   vertices[i * 4 + 3]);
+    pTexture->GetTextureCoordinates(uiUseTex,
+                                    vertices[i * 4 + 1],
+                                    vertices[i * 4 + 0],
+                                    vertices[i * 4 + 2],
+                                    vertices[i * 4 + 3]);
   }
 
   delete[] coordAy;

@@ -61,17 +61,12 @@ public:
     , m_pAILine2(NULL)
     , m_pAILine3(NULL)
     , m_pAILine4(NULL)
-    , m_pTestCar(NULL)
     , m_pAxes(NULL)
     , m_pCarData(NULL)
   {};
   ~CTrackPreviewPrivate()
   {
     DeleteModels();
-    if (m_pTestCar) {
-      delete m_pTestCar;
-      m_pTestCar = NULL;
-    }
     if (m_pCarData) {
       delete m_pCarData;
       m_pCarData = NULL;
@@ -245,11 +240,11 @@ public:
   CShapeData *m_pAILine3;
   CShapeData *m_pAILine4;
   CShapeData *m_pAxes;
-  CShapeData *m_pTestCar;
   CShader *m_pShader;
   CTrack *m_pTrack;
 
   CWhipModel *m_pCarData;
+  CTexture m_carTex;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -270,10 +265,6 @@ CTrackPreview::CTrackPreview(QWidget *pParent)
 CTrackPreview::~CTrackPreview()
 {
   glUseProgram(0);
-  if (p) {
-    delete p;
-    p = NULL;
-  }
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -314,8 +305,9 @@ void CTrackPreview::SetTrack(CTrack *pTrack)
     p->m_pAILine3 = p->m_pTrack->MakeAILine(p->m_pShader, eShapeSection::AILINE3);
     p->m_pAILine4 = p->m_pTrack->MakeAILine(p->m_pShader, eShapeSection::AILINE4);
 
-    if (p->m_pTestCar)
-      p->m_pTrack->GetCarPos(m_iFrom, m_carAILine, p->m_pTestCar->m_modelToWorldMatrix, m_bMillionPlus);
+    UpdateCar(m_carModel, m_carAILine, m_bMillionPlus);
+    if (p->m_pCarData && p->m_pCarData->m_pShapeData)
+      p->m_pTrack->GetCarPos(m_iFrom, m_carAILine, p->m_pCarData->m_pShapeData->m_modelToWorldMatrix, m_bMillionPlus);
   }
   repaint();
 }
@@ -340,8 +332,8 @@ void CTrackPreview::UpdateGeometrySelection(int iFrom, int iTo)
     p->m_pSelection = p->m_pTrack->MakeSelectedChunks(p->m_pShader, iFrom, iTo);
   }
 
-  if (p->m_pTestCar && p->m_pTrack) 
-    p->m_pTrack->GetCarPos(m_iFrom, m_carAILine, p->m_pTestCar->m_modelToWorldMatrix, m_bMillionPlus);
+  if (p->m_pCarData && p->m_pCarData->m_pShapeData && p->m_pTrack)
+    p->m_pTrack->GetCarPos(m_iFrom, m_carAILine, p->m_pCarData->m_pShapeData->m_modelToWorldMatrix, m_bMillionPlus);
 
   repaint();
 }
@@ -354,12 +346,7 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
   m_carAILine = aiLine;
   m_bMillionPlus = bMillionPlus;
 
-  if (p->m_pTestCar) {
-    delete p->m_pTestCar;
-    p->m_pTestCar = NULL;
-  }
-
-  if (p->m_pCarData && !g_pMainWindow->GetTrackFilesFolder().isEmpty()) {
+  if (p->m_pTrack && p->m_pCarData && !g_pMainWindow->GetTrackFilesFolder().isEmpty()) {
     QString sTexName;
     switch (carModel) {
       case CAR_F1WACK:
@@ -392,14 +379,12 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
     }
     QString sPal = g_pMainWindow->GetTrackFilesFolder() + QDir::separator() + "PALETTE.PAL";
     QString sTex = g_pMainWindow->GetTrackFilesFolder() + QDir::separator() + sTexName;
-    p->m_pCarData->LoadTexture(sPal.toLatin1().constData(),
-                               sTex.toLatin1().constData(),
-                               g_pMainWindow->UnmangleTextures());
-    p->m_pTestCar = p->m_pCarData->MakeModel(p->m_pShader, carModel);
+    p->m_carTex.LoadTexture(sTex.toLatin1().constData(), &p->m_pTrack->m_palette, g_pMainWindow->UnmangleTextures());
+    p->m_pCarData->MakeModel(p->m_pShader, &p->m_carTex, carModel);
   }
 
-  if (p->m_pTestCar && p->m_pTrack)
-    p->m_pTrack->GetCarPos(m_iFrom, m_carAILine, p->m_pTestCar->m_modelToWorldMatrix, m_bMillionPlus);
+  if (p->m_pCarData && p->m_pCarData->m_pShapeData && p->m_pTrack)
+    p->m_pTrack->GetCarPos(m_iFrom, m_carAILine, p->m_pCarData->m_pShapeData->m_modelToWorldMatrix, m_bMillionPlus);
 
   repaint();
 }
@@ -487,28 +472,19 @@ void CTrackPreview::paintGL()
     p->m_pAILine3->Draw(worldToProjectionMatrix);
     p->m_pAILine4->Draw(worldToProjectionMatrix);
   }
-  if (m_uiShowModels & SHOW_TEST_CAR && p->m_pTestCar)
-    p->m_pTestCar->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_TEST_CAR && p->m_pCarData && p->m_pCarData->m_pShapeData)
+    p->m_pCarData->m_pShapeData->Draw(worldToProjectionMatrix);
   //if (p->m_pAxes)
   //  p->m_pAxes->Draw(worldToProjectionMatrix);
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackPreview::DeleteModels()
+void CTrackPreview::Shutdown()
 {
-  p->DeleteModels();
-  if (p->m_pTestCar) {
-    delete p->m_pTestCar;
-    p->m_pTestCar = NULL;
-  }
-  if (p->m_pCarData) {
-    delete p->m_pCarData;
-    p->m_pCarData = NULL;
-  }
-  if (p->m_pAxes) {
-    delete p->m_pAxes;
-    p->m_pAxes = NULL;
+  if (p) {
+    delete p;
+    p = NULL;
   }
 }
 

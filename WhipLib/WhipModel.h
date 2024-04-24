@@ -7,6 +7,7 @@
 class CWhipModelPrivate;
 class CShapeData;
 class CShader;
+class CTexture;
 struct tVertex;
 struct tPolygon;
 struct tAnimation;
@@ -18,13 +19,13 @@ public:
   CWhipModel();
   ~CWhipModel();
 
-  void LoadTexture(const std::string &sPal, const std::string &sTex, bool bMangled);
-  CShapeData *MakeModel(CShader *pShader, eWhipModel model);
+  void MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model);
 
   float m_fScale;
+  CShapeData *m_pShapeData;
 
 private:
-  tVertex *MakeVerts(uint32 &numVertices);
+  tVertex *MakeVerts(uint32 &numVertices, CTexture *pTexture);
   uint32 *MakeIndices(uint32 &numIndices);
 
   float *GetCoords();

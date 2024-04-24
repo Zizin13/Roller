@@ -399,8 +399,8 @@ void CTrackPreview::paintGL()
     p->m_pRUOWallWire->Draw(worldToProjectionMatrix);
   if (m_uiShowModels & SHOW_SELECTION_HIGHLIGHT && p->m_pSelection)
     p->m_pSelection->Draw(worldToProjectionMatrix);
-  if (/*m_uiShowModels & SHOW_AILINE_MODELS
-      &&*/ p->m_pAILine1
+  if (m_uiShowModels & SHOW_AILINE_MODELS
+      && p->m_pAILine1
       && p->m_pAILine2
       && p->m_pAILine3
       && p->m_pAILine4) {

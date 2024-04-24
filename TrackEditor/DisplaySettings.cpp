@@ -15,6 +15,7 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
 
   ckAllSurface->setChecked(true);
   ckHighlightSelection->setChecked(true);
+  ckAILines->setChecked(true);
 
   connect(ckAllSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAll);
   connect(ckAllWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAll);
@@ -45,6 +46,7 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
   connect(ckEnvirFloorSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckEnvirFloorWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckHighlightSelection, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
+  connect(ckAILines, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
 
   UpdateAll();
 }
@@ -87,6 +89,7 @@ uint32 CDisplaySettings::GetDisplaySettings()
   if (ckEnvirFloorSurface->isChecked())   uiShowModels |= SHOW_ENVIRFLOOR_SURF_MODEL;
   if (ckEnvirFloorWireframe->isChecked()) uiShowModels |= SHOW_ENVIRFLOOR_WIRE_MODEL;
   if (ckHighlightSelection->isChecked())  uiShowModels |= SHOW_SELECTION_HIGHLIGHT;
+  if (ckAILines->isChecked())             uiShowModels |= SHOW_AILINE_MODELS;
   return uiShowModels;
 }
 
@@ -121,6 +124,7 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels)
   ckEnvirFloorSurface->blockSignals(true);
   ckEnvirFloorWireframe->blockSignals(true);
   ckHighlightSelection->blockSignals(true);
+  ckAILines->blockSignals(true);
 
   ckLLaneSurface->setChecked(       uiShowModels & SHOW_LLANE_SURF_MODEL);
   ckLLaneWireframe->setChecked(     uiShowModels & SHOW_LLANE_WIRE_MODEL);
@@ -149,6 +153,7 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels)
   ckEnvirFloorSurface->setChecked(  uiShowModels & SHOW_ENVIRFLOOR_SURF_MODEL);
   ckEnvirFloorWireframe->setChecked(uiShowModels & SHOW_ENVIRFLOOR_WIRE_MODEL);
   ckHighlightSelection->setChecked( uiShowModels & SHOW_SELECTION_HIGHLIGHT);
+  ckAILines->setChecked(            uiShowModels & SHOW_AILINE_MODELS);
 
   ckLLaneSurface->blockSignals(false);
   ckLLaneWireframe->blockSignals(false);
@@ -177,6 +182,7 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels)
   ckEnvirFloorSurface->blockSignals(false);
   ckEnvirFloorWireframe->blockSignals(false);
   ckHighlightSelection->blockSignals(false);
+  ckAILines->blockSignals(false);
 
   UpdatePreviewSelection();
 }

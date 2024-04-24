@@ -14,124 +14,31 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="5" column="0">
-    <widget class="QLabel" name="lblRLane">
-     <property name="text">
-      <string>Right Lane</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="14" column="1">
-    <widget class="QCheckBox" name="ckRLOWallSurface">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="0">
-    <widget class="QLabel" name="lblLUOWall">
-     <property name="text">
-      <string>L Upper Outer Wall</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="2">
-    <widget class="QCheckBox" name="ckRWallWireframe">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1">
+   <item row="10" column="1">
     <widget class="QCheckBox" name="ckRWallSurface">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="6" column="2">
-    <widget class="QCheckBox" name="ckLShoulderWireframe">
+   <item row="12" column="1">
+    <widget class="QCheckBox" name="ckLUOWallSurface">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="10" column="2">
-    <widget class="QCheckBox" name="ckRoofWireframe">
+   <item row="5" column="0">
+    <widget class="QLabel" name="lblLLane">
      <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QCheckBox" name="ckAllSurface">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="0">
-    <widget class="QLabel" name="lblRWall">
-     <property name="text">
-      <string>Right Wall</string>
+      <string>Left Lane</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="2">
-    <widget class="QCheckBox" name="ckLUOWallWireframe">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="14" column="2">
-    <widget class="QCheckBox" name="ckRLOWallWireframe">
-     <property name="text">
-      <string/>
      </property>
     </widget>
    </item>
    <item row="14" column="0">
-    <widget class="QLabel" name="lblRLOWall">
-     <property name="text">
-      <string>R Lower Outer Wall</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Surface</string>
-     </property>
-    </widget>
-   </item>
-   <item row="15" column="2">
-    <widget class="QCheckBox" name="ckOWallFloorWireframe">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Wireframe</string>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="0">
     <widget class="QLabel" name="lblRUOWall">
      <property name="text">
       <string>R Upper Outer Wall</string>
@@ -141,73 +48,134 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="2">
-    <widget class="QCheckBox" name="ckAllWireframe">
+   <item row="16" column="2">
+    <widget class="QCheckBox" name="ckOWallFloorWireframe">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="10" column="1">
+   <item row="11" column="1">
     <widget class="QCheckBox" name="ckRoofSurface">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="8" column="1">
-    <widget class="QCheckBox" name="ckLWallSurface">
+   <item row="15" column="0">
+    <widget class="QLabel" name="lblRLOWall">
      <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QCheckBox" name="ckLShoulderSurface">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="1">
-    <widget class="QCheckBox" name="ckRShoulderSurface">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="1">
-    <widget class="QCheckBox" name="ckRUOWallSurface">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="2">
-    <widget class="QCheckBox" name="ckLLaneWireframe">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="13" column="2">
-    <widget class="QCheckBox" name="ckRUOWallWireframe">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="lblRShoulder">
-     <property name="text">
-      <string>Right Shoulder</string>
+      <string>R Lower Outer Wall</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
-   <item row="2" column="3">
+   <item row="13" column="2">
+    <widget class="QCheckBox" name="ckLLOWallWireframe">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="0">
+    <widget class="QLabel" name="lblLUOWall">
+     <property name="text">
+      <string>L Upper Outer Wall</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="17" column="0">
+    <widget class="QLabel" name="lblEnvirFloor">
+     <property name="text">
+      <string>Environment</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="17" column="1">
+    <widget class="QCheckBox" name="ckEnvirFloorSurface">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="14" column="2">
+    <widget class="QCheckBox" name="ckRUOWallWireframe">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="2">
+    <widget class="QCheckBox" name="ckRLaneWireframe">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="1">
+    <widget class="QCheckBox" name="ckLShoulderSurface">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="12" column="2">
+    <widget class="QCheckBox" name="ckLUOWallWireframe">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="4">
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="0">
+    <widget class="QLabel" name="lblLWall">
+     <property name="text">
+      <string>Left Wall</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Surface</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="2">
+    <widget class="QCheckBox" name="ckRShoulderWireframe">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="11" column="0">
+    <widget class="QLabel" name="lblRoof">
+     <property name="text">
+      <string>Roof</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="3">
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -220,65 +188,55 @@
      </property>
     </spacer>
    </item>
-   <item row="15" column="1">
-    <widget class="QCheckBox" name="ckOWallFloorSurface">
+   <item row="4" column="1">
+    <widget class="QCheckBox" name="ckAllSurface">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="7" column="2">
-    <widget class="QCheckBox" name="ckRShoulderWireframe">
+   <item row="13" column="1">
+    <widget class="QCheckBox" name="ckLLOWallSurface">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="16" column="0">
-    <widget class="QLabel" name="lblEnvirFloor">
+   <item row="6" column="1">
+    <widget class="QCheckBox" name="ckRLaneSurface">
      <property name="text">
-      <string>Environment</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      <string/>
      </property>
     </widget>
    </item>
-   <item row="16" column="2">
-    <widget class="QCheckBox" name="ckEnvirFloorWireframe">
+   <item row="18" column="2">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="3" column="2">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Wireframe</string>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="2">
+    <widget class="QCheckBox" name="ckLWallWireframe">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QLabel" name="lblAll">
-     <property name="text">
-      <string>All</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="2">
-    <widget class="QCheckBox" name="ckRLaneWireframe">
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="12" column="0">
-    <widget class="QLabel" name="lblLLOWall">
-     <property name="text">
-      <string>L Lower Outer Wall</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
     <widget class="QLabel" name="label_16">
      <property name="font">
       <font>
@@ -294,10 +252,65 @@
      </property>
     </widget>
    </item>
-   <item row="10" column="0">
-    <widget class="QLabel" name="lblRoof">
+   <item row="6" column="0">
+    <widget class="QLabel" name="lblRLane">
      <property name="text">
-      <string>Roof</string>
+      <string>Right Lane</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="14" column="1">
+    <widget class="QCheckBox" name="ckRUOWallSurface">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="1">
+    <widget class="QCheckBox" name="ckRShoulderSurface">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="13" column="0">
+    <widget class="QLabel" name="lblLLOWall">
+     <property name="text">
+      <string>L Lower Outer Wall</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2">
+    <widget class="QCheckBox" name="ckLLaneWireframe">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="9" column="1">
+    <widget class="QCheckBox" name="ckLWallSurface">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="10" column="2">
+    <widget class="QCheckBox" name="ckRWallWireframe">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="lblAll">
+     <property name="text">
+      <string>All</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -305,47 +318,37 @@
     </widget>
    </item>
    <item row="8" column="0">
-    <widget class="QLabel" name="lblLWall">
+    <widget class="QLabel" name="lblRShoulder">
      <property name="text">
-      <string>Left Wall</string>
+      <string>Right Shoulder</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
-   <item row="5" column="1">
-    <widget class="QCheckBox" name="ckRLaneSurface">
+   <item row="4" column="2">
+    <widget class="QCheckBox" name="ckAllWireframe">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="4" column="1">
-    <widget class="QCheckBox" name="ckLLaneSurface">
+   <item row="11" column="2">
+    <widget class="QCheckBox" name="ckRoofWireframe">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="4" column="0">
-    <widget class="QLabel" name="lblLLane">
-     <property name="text">
-      <string>Left Lane</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="16" column="1">
-    <widget class="QCheckBox" name="ckEnvirFloorSurface">
+   <item row="15" column="1">
+    <widget class="QCheckBox" name="ckRLOWallSurface">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="15" column="0">
+   <item row="16" column="0">
     <widget class="QLabel" name="lblOWallFloor">
      <property name="text">
       <string>Outer Wall Floor</string>
@@ -355,21 +358,38 @@
      </property>
     </widget>
    </item>
-   <item row="12" column="2">
-    <widget class="QCheckBox" name="ckLLOWallWireframe">
+   <item row="17" column="2">
+    <widget class="QCheckBox" name="ckEnvirFloorWireframe">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="12" column="1">
-    <widget class="QCheckBox" name="ckLLOWallSurface">
+   <item row="10" column="0">
+    <widget class="QLabel" name="lblRWall">
+     <property name="text">
+      <string>Right Wall</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="16" column="1">
+    <widget class="QCheckBox" name="ckOWallFloorSurface">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="6" column="0">
+   <item row="15" column="2">
+    <widget class="QCheckBox" name="ckRLOWallWireframe">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
     <widget class="QLabel" name="lblLShoulder">
      <property name="text">
       <string>Left Shoulder</string>
@@ -379,37 +399,17 @@
      </property>
     </widget>
    </item>
-   <item row="11" column="1">
-    <widget class="QCheckBox" name="ckLUOWallSurface">
+   <item row="7" column="2">
+    <widget class="QCheckBox" name="ckLShoulderWireframe">
      <property name="text">
       <string/>
      </property>
     </widget>
    </item>
-   <item row="8" column="2">
-    <widget class="QCheckBox" name="ckLWallWireframe">
+   <item row="5" column="1">
+    <widget class="QCheckBox" name="ckLLaneSurface">
      <property name="text">
       <string/>
-     </property>
-    </widget>
-   </item>
-   <item row="17" column="2">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="1" column="0" colspan="4">
-    <widget class="Line" name="line">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
      </property>
     </widget>
    </item>
@@ -417,6 +417,13 @@
     <widget class="QCheckBox" name="ckHighlightSelection">
      <property name="text">
       <string>Highlight Selected Chunks</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QCheckBox" name="ckAILines">
+     <property name="text">
+      <string>AI Lines</string>
      </property>
     </widget>
    </item>

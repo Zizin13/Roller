@@ -783,6 +783,33 @@ CShapeData *CTrackData::MakeSelectedChunks(CShader *pShader, int iStart, int iEn
 
 //-------------------------------------------------------------------------------------------------
 
+void CTrackData::GetCarPos(int iChunk, eShapeSection aiLineSection, glm::mat4 &modelToWorldMatrix)
+{
+  if (m_chunkAy.empty() || iChunk > (int)m_chunkAy.size())
+    return;
+
+  glm::vec3 prevCenter = glm::vec3(0, 0, 1);
+  glm::vec3 aiLine = glm::vec3(0, 0, 1);
+  glm::vec3 nextChunkPitched = glm::vec3(0, 0, 1);
+  glm::mat4 yawMat;
+  glm::mat4 pitchMat;
+  glm::mat4 rollMat;
+  for (int i = 0; i < iChunk; ++i) {
+    glm::vec3 center;
+    glm::vec3 pitchAxis;;
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, yawMat, pitchMat, rollMat);
+    GetAILine(i, center, pitchAxis, rollMat, nextChunkPitched, aiLine, aiLineSection);
+
+    prevCenter = center;
+  }
+
+  modelToWorldMatrix = glm::translate(aiLine) * rollMat * pitchMat * yawMat *
+    glm::rotate(glm::radians(90.0f), glm::vec3(0, 0, 1)) * //car starts on its side
+    glm::rotate(glm::radians(90.0f), glm::vec3(0, 1, 0)); //track starts facing z positive, car starts facing x positive
+}
+
+//-------------------------------------------------------------------------------------------------
+
 tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
 {
   if (m_chunkAy.empty()) {
@@ -821,9 +848,11 @@ tVertex *CTrackData::MakeVerts(uint32 &numVertices, eShapeSection section)
     glm::vec3 center;
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
+    glm::mat4 yawMat;
+    glm::mat4 pitchMat;
     glm::mat4 rollMat;
     glm::mat4 rollMatNoRoll = glm::mat4(1);
-    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, yawMat, pitchMat, rollMat);
 
     int iChunkIndex = (int)m_chunkAy.size() - 1;
     if (i > 0)
@@ -1139,8 +1168,10 @@ tVertex *CTrackData::MakeVertsEnvirFloor(uint32 &numVertices)
     glm::vec3 center;
     glm::vec3 pitchAxis;
     glm::vec3 nextChunkPitched;
+    glm::mat4 yawMat;
+    glm::mat4 pitchMat;
     glm::mat4 rollMat;
-    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, rollMat);
+    GetCenter(i, prevCenter, center, pitchAxis, nextChunkPitched, yawMat, pitchMat, rollMat);
     if (center.x > fMaxX)
       fMaxX = center.x;
     if (center.x < fMinX)
@@ -1370,15 +1401,16 @@ uint32 *CTrackData::MakeIndicesSingleSectionWireframe(uint32 &numIndices)
 //-------------------------------------------------------------------------------------------------
 
 void CTrackData::GetCenter(int i, glm::vec3 prevCenter, 
-                           glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched, glm::mat4 &rollMat)
+                           glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched, 
+                           glm::mat4 &yawMat, glm::mat4 &pitchMat, glm::mat4 &rollMat)
 {
   glm::vec3 nextChunkBase = glm::vec3(0, 0, 1);
 
-  glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, 1.0f, 0.0f));
+  yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, 1.0f, 0.0f));
   glm::vec3 nextChunkYawed = glm::vec3(yawMat * glm::vec4(nextChunkBase, 1.0f));
   pitchAxis = glm::normalize(glm::cross(nextChunkYawed, glm::vec3(0.0f, 1.0f, 0.0f)));
 
-  glm::mat4 pitchMat = glm::rotate(glm::radians((float)m_chunkAy[i].dPitch), pitchAxis);
+  pitchMat = glm::rotate(glm::radians((float)m_chunkAy[i].dPitch), pitchAxis);
   nextChunkPitched = glm::vec3(pitchMat * glm::vec4(nextChunkYawed, 1.0f));
 
   glm::mat4 translateMat = glm::mat4(1);

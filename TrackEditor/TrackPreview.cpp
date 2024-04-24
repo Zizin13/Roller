@@ -12,6 +12,7 @@
 #include "DisplaySettings.h"
 #include "WhipModel.h"
 #include "ShapeData.h"
+#include "DebugShapes.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -60,6 +61,7 @@ public:
     , m_pAILine3(NULL)
     , m_pAILine4(NULL)
     , m_pTestCar(NULL)
+    , m_pAxes(NULL)
     , m_pCarData(new CWhipModel)
   {};
   ~CTrackPreviewPrivate()
@@ -76,6 +78,10 @@ public:
     if (m_pShader) {
       delete m_pShader;
       m_pShader = NULL;
+    }
+    if (m_pAxes) {
+      delete m_pAxes;
+      m_pAxes = NULL;
     }
   };
   void DeleteModels()
@@ -237,6 +243,7 @@ public:
   CShapeData *m_pAILine2;
   CShapeData *m_pAILine3;
   CShapeData *m_pAILine4;
+  CShapeData *m_pAxes;
   CShapeData *m_pTestCar;
   CShader *m_pShader;
   CTrack *m_pTrack;
@@ -321,6 +328,10 @@ void CTrackPreview::UpdateGeometrySelection(int iFrom, int iTo)
     delete p->m_pSelection;
   if (p->m_pTrack) {
     p->m_pSelection = p->m_pTrack->MakeSelectedChunks(p->m_pShader, iFrom, iTo);
+  }
+
+  if (p->m_pTestCar && p->m_pTrack) {
+    p->m_pTrack->GetCarPos(iFrom, eShapeSection::AILINE1, p->m_pTestCar->m_modelToWorldMatrix);
   }
 
   repaint();
@@ -411,6 +422,8 @@ void CTrackPreview::paintGL()
   }
   if (p->m_pTestCar)
     p->m_pTestCar->Draw(worldToProjectionMatrix);
+  if (p->m_pAxes)
+    p->m_pAxes->Draw(worldToProjectionMatrix);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -425,6 +438,10 @@ void CTrackPreview::DeleteModels()
   if (p->m_pCarData) {
     delete p->m_pCarData;
     p->m_pCarData = NULL;
+  }
+  if (p->m_pAxes) {
+    delete p->m_pAxes;
+    p->m_pAxes = NULL;
   }
 }
 
@@ -452,10 +469,11 @@ void CTrackPreview::initializeGL()
 
   if (p->m_pCarData) {
     p->m_pCarData->LoadTexture("C:\\WHIP\\WHIPLASH\\FATDATA\\PALETTE.PAL",
-                           "C:\\WHIP\\WHIPLASH\\FATDATA\\XZIZIN.BM", true);
-    p->m_pTestCar = p->m_pCarData->MakeCar(p->m_pShader);
-    p->m_pTestCar->m_modelToWorldMatrix = glm::translate(glm::vec3(3.0f, 1.5f, 0.0f)) * glm::rotate(glm::radians(-90.0f), glm::vec3(1, 0, 0));
+                           "C:\\WHIP\\WHIPLASH\\FATDATA\\XMILLION.BM", true);
+    p->m_pTestCar = p->m_pCarData->MakeModel(p->m_pShader, eWhipModel::CAR_MILLION);
+    p->m_pTestCar->m_modelToWorldMatrix = glm::rotate(glm::radians(-90.0f), glm::vec3(0, 0, 1)) * glm::rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0));
   }
+  p->m_pAxes = DebugShapes::MakeAxes(p->m_pShader);
 }
 
 //-------------------------------------------------------------------------------------------------

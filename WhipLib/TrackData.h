@@ -186,6 +186,7 @@ public:
   CShapeData *MakeTrackSurface(CShader *pShader, eShapeSection section, bool bWireframe = false);
   CShapeData *MakeAILine(CShader *pShader, eShapeSection section);
   CShapeData *MakeSelectedChunks(CShader *pShader, int iStart, int iEnd);
+  void GetCarPos(int iChunk, eShapeSection aiLine, glm::mat4 &modelToWorldMatrix);
 
   static unsigned int GetSignedBitValueFromInt(int iValue);
   static int GetIntValueFromSignedBit(unsigned int uiValue);
@@ -215,7 +216,8 @@ protected:
   uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices);
 
   void GetCenter(int i, glm::vec3 prevCenter,
-                 glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched, glm::mat4 &rollMat);
+                 glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched, 
+                 glm::mat4 &yawMat, glm::mat4 &pitchMat, glm::mat4 &rollMat);
   void GetLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat,
                glm::vec3 &lane, bool bLeft);
   void GetShoulder(int i, glm::vec3 attach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched, 

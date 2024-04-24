@@ -105,6 +105,7 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="DebugShapes.h" />
     <ClInclude Include="WhipModel.h" />
     <ClInclude Include="CarPlans\AutoPlans.h" />
     <ClInclude Include="CarPlans\DesilvaPlans.h" />
@@ -148,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="DebugShapes.cpp" />
     <ClCompile Include="WhipModel.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Palette.cpp" />

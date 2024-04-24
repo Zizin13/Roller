@@ -197,7 +197,8 @@ float *CWhipModel::GetCoords()
 int CWhipModel::GetCoordsCount()
 {
   switch (p->m_model) {
-    return g_f1wackCoordsCount;
+    case CAR_F1WACK:
+      return g_f1wackCoordsCount;
     case CAR_AUTO:
       return g_xautoCoordsCount;
     case CAR_DESILVA:

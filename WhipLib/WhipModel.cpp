@@ -1,12 +1,11 @@
 #include <glew.h>
-#include "CarData.h"
+#include "WhipModel.h"
 #include "ZizinPlans.h"
 #include "Vertex.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "ShapeData.h"
-#include "ShapeGenerator.h"
 #include "Texture.h"
 #include "Palette.h"
 #include "TrackData.h"
@@ -16,11 +15,11 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
-class CCarDataPrivate
+class CWhipModelPrivate
 {
 public:
-  CCarDataPrivate() {};
-  ~CCarDataPrivate() {};
+  CWhipModelPrivate() {};
+  ~CWhipModelPrivate() {};
 
   CPalette m_pal;
   CTexture m_tex;
@@ -28,15 +27,15 @@ public:
 
 //-------------------------------------------------------------------------------------------------
 
-CCarData::CCarData()
+CWhipModel::CWhipModel()
   : m_fScale(1000.0f)
 {
-  p = new CCarDataPrivate;
+  p = new CWhipModelPrivate;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-CCarData::~CCarData()
+CWhipModel::~CWhipModel()
 {
   if (p) {
     delete p;
@@ -46,7 +45,7 @@ CCarData::~CCarData()
 
 //-------------------------------------------------------------------------------------------------
 
-void CCarData::LoadTexture(const std::string &sPal, const std::string &sTex, bool bMangled)
+void CWhipModel::LoadTexture(const std::string &sPal, const std::string &sTex, bool bMangled)
 {
   p->m_pal.LoadPalette(sPal);
   p->m_tex.LoadTexture(sTex, &p->m_pal, bMangled);
@@ -54,7 +53,7 @@ void CCarData::LoadTexture(const std::string &sPal, const std::string &sTex, boo
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CCarData::MakeCar(CShader *pShader)
+CShapeData *CWhipModel::MakeCar(CShader *pShader)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVerts(uiNumVerts);
@@ -82,7 +81,7 @@ CShapeData *CCarData::MakeCar(CShader *pShader)
 
 //-------------------------------------------------------------------------------------------------
 
-tVertex *CCarData::MakeVerts(uint32 &numVertices)
+tVertex *CWhipModel::MakeVerts(uint32 &numVertices)
 {
   //first turn float array into vertex array
   uint32 uiNumCoords = g_xzizinCoordsCount / 3;
@@ -121,7 +120,7 @@ tVertex *CCarData::MakeVerts(uint32 &numVertices)
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 *CCarData::MakeIndices(uint32 &numIndices)
+uint32 *CWhipModel::MakeIndices(uint32 &numIndices)
 {
   int iNumIndicesPerPol = 6;
   int iNumVertsPerPol = 4;

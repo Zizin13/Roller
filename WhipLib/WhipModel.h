@@ -1,20 +1,20 @@
-#ifndef _WHIPLIB_CARDATA_H
-#define _WHIPLIB_CARDATA_H
+#ifndef _WHIPLIB_WHIPMODEL_H
+#define _WHIPLIB_WHIPMODEL_H
 //-------------------------------------------------------------------------------------------------
 #include "Types.h"
 #include <string>
 //-------------------------------------------------------------------------------------------------
-class CCarDataPrivate;
+class CWhipModelPrivate;
 class CShapeData;
 class CShader;
 struct tVertex;
 //-------------------------------------------------------------------------------------------------
 
-class CCarData
+class CWhipModel
 {
 public:
-  CCarData();
-  ~CCarData();
+  CWhipModel();
+  ~CWhipModel();
 
   void LoadTexture(const std::string &sPal, const std::string &sTex, bool bMangled);
   CShapeData *MakeCar(CShader *pShader);
@@ -25,7 +25,7 @@ private:
   tVertex *MakeVerts(uint32 &numVertices);
   uint32 *MakeIndices(uint32 &numIndices);
 
-  CCarDataPrivate *p;
+  CWhipModelPrivate *p;
 };
 
 //-------------------------------------------------------------------------------------------------

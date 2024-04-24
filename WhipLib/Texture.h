@@ -61,6 +61,8 @@ public:
   tTile *m_pTileAy;
   int m_iNumTiles;
 
+  static glm::vec3 RandomColor();
+
 private:
   bool ProcessTextureData(const uint8 *pData, size_t length);
   void FlipTileLines(tTile *pSource, tTile *pDest, int iNumTiles);

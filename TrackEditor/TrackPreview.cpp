@@ -1,7 +1,6 @@
 #include "glew.h"
 #include "TrackPreview.h"
 #include "MainWindow.h"
-#include "ShapeGenerator.h"
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
 #include "Camera.h"
@@ -11,7 +10,8 @@
 #include "OpenGLDebug.h"
 #include "Track.h"
 #include "DisplaySettings.h"
-#include "CarData.h"
+#include "WhipModel.h"
+#include "ShapeData.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -56,7 +56,7 @@ public:
     , m_pRUOWallWire(NULL)
     , m_pSelection(NULL)
     , m_pTestCar(NULL)
-    , m_pCarData(new CCarData)
+    , m_pCarData(new CWhipModel)
   {};
   ~CTrackPreviewPrivate()
   {
@@ -217,7 +217,7 @@ public:
   CShader *m_pShader;
   CTrack *m_pTrack;
 
-  CCarData *m_pCarData;
+  CWhipModel *m_pCarData;
 };
 
 //-------------------------------------------------------------------------------------------------

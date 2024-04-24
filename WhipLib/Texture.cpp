@@ -220,6 +220,17 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
 
 //-------------------------------------------------------------------------------------------------
 
+glm::vec3 CTexture::RandomColor()
+{
+  glm::vec3 ret;
+  ret.x = rand() / (float)RAND_MAX;
+  ret.y = rand() / (float)RAND_MAX;
+  ret.z = rand() / (float)RAND_MAX;
+  return ret;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 bool CTexture::ProcessTextureData(const uint8 *pData, size_t length)
 {
   if (!m_pPalette) {

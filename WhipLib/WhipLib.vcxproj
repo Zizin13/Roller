@@ -105,7 +105,7 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="CarData.h" />
+    <ClInclude Include="WhipModel.h" />
     <ClInclude Include="CarPlans\AutoPlans.h" />
     <ClInclude Include="CarPlans\DesilvaPlans.h" />
     <ClInclude Include="CarPlans\F1WackPlans.h" />
@@ -121,7 +121,6 @@
     <ClInclude Include="Polygon.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShapeData.h" />
-    <ClInclude Include="ShapeGenerator.h" />
     <ClInclude Include="SignPlans\Advert2Plans.h" />
     <ClInclude Include="SignPlans\Advert3Plans.h" />
     <ClInclude Include="SignPlans\AdvertPlans.h" />
@@ -139,7 +138,6 @@
     <ClInclude Include="SignPlans\Tower2Plans.h" />
     <ClInclude Include="SignPlans\TowerPlans.h" />
     <ClInclude Include="SignPlans\TreePlans.h" />
-    <ClInclude Include="TeapotData.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TrackData.h" />
     <ClInclude Include="Types.h" />
@@ -150,12 +148,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="CarData.cpp" />
+    <ClCompile Include="WhipModel.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Palette.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShapeData.cpp" />
-    <ClCompile Include="ShapeGenerator.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TrackData.cpp" />
     <ClCompile Include="Unmangler.cpp" />

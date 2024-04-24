@@ -1,9 +1,9 @@
+#include <glew.h>
 #include "TrackData.h"
 #include "Unmangler.h"
 #include <assert.h>
 #include <fstream>
 #include <sstream>
-#include "ShapeGenerator.h"
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
 #include "Types.h"
@@ -12,6 +12,7 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Texture.h"
+#include "ShapeData.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -686,7 +687,7 @@ CShapeData *CTrackData::MakeTrackSurface(CShader *pShader, eShapeSection section
 
     for (uint32 i = 0; i < uiNumVerts; ++i) {
       vertices[i].flags.x = 1.0f; //use color rather than tex
-      vertices[i].color = ShapeGenerator::RandomColor();
+      vertices[i].color = CTexture::RandomColor();
     }
   }
 
@@ -715,7 +716,7 @@ CShapeData *CTrackData::MakeSelectedChunks(CShader *pShader, int iStart, int iEn
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {
     vertices[i].flags.x = 1.0f; //use color rather than tex
-    vertices[i].color = ShapeGenerator::RandomColor();
+    vertices[i].color = CTexture::RandomColor();
   }
 
   CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);

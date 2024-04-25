@@ -10,6 +10,7 @@
 #include "VertexArray.h"
 #include "Texture.h"
 #include "TrackData.h"
+#include "SignType.h"
 //-------------------------------------------------------------------------------------------------
 #include "AutoPlans.h"
 #include "DesilvaPlans.h"
@@ -877,7 +878,39 @@ CShapeData *CShapeFactory::MakeSelectedChunks(CShader *pShader, CTrackData *pTra
 
 void CShapeFactory::MakeSigns(CShader *pShader, CTexture *pBld, CTrackData *pTrack, std::vector<CShapeData *> &signAy)
 {
+  glm::vec3 prevCenter = glm::vec3(0, 0, 1);
+  for (int i = 0; i < (int)pTrack->m_chunkAy.size(); ++i) {
+    glm::vec3 nextChunkPitched = glm::vec3(0, 0, 1);
+    glm::mat4 yawMat;
+    glm::mat4 pitchMat;
+    glm::mat4 rollMat;
+    glm::vec3 center;
+    glm::vec3 pitchAxis;;
+    GetCenter(pTrack, i, prevCenter, center, pitchAxis, nextChunkPitched, yawMat, pitchMat, rollMat);
+    prevCenter = center;
 
+    if (pTrack->m_chunkAy[i].iSignType < 0 || pTrack->m_chunkAy[i].iSignType >= m_signAyCount)
+      continue; //no signs in this chunk
+
+    //make sign
+    CShapeData *pNewSign = MakeModel(pShader, pBld, m_signAy[pTrack->m_chunkAy[i].iSignType]);
+
+    //position sign
+    float fLen = (float)pTrack->m_chunkAy[i].iSignHorizOffset / m_fScale * -1.0f;
+    float fHeight = (float)pTrack->m_chunkAy[i].iSignVertOffset / m_fScale * -1.0f;
+    glm::mat4 translateMat = glm::translate(center);
+    glm::mat4 scaleMatWidth = glm::scale(glm::vec3(fLen, fLen, fLen));
+    glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
+    glm::vec3 widthVec = glm::vec3(scaleMatWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
+    glm::vec3 normal = glm::normalize(glm::cross(nextChunkPitched, pitchAxis));
+    glm::vec3 heightVec = glm::vec3(scaleMatHeight * rollMat * glm::vec4(normal, 1.0f));
+    glm::vec3 signPos = widthVec + heightVec;
+    glm::vec3 signPosTranslated = glm::vec3(translateMat * glm::vec4(signPos, 1.0f));
+    pNewSign->m_modelToWorldMatrix = glm::translate(signPosTranslated);
+    
+    //add sign to array
+    signAy.push_back(pNewSign);
+  }
 }
 
 //-------------------------------------------------------------------------------------------------

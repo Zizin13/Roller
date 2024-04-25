@@ -146,6 +146,9 @@
     <ClInclude Include="ShapeFactory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SignType.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Unmangler.cpp">

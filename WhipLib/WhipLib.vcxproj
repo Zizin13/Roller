@@ -138,6 +138,7 @@
     <ClInclude Include="SignPlans\Tower2Plans.h" />
     <ClInclude Include="SignPlans\TowerPlans.h" />
     <ClInclude Include="SignPlans\TreePlans.h" />
+    <ClInclude Include="SignType.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TrackData.h" />
     <ClInclude Include="Types.h" />

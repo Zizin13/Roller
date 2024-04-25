@@ -3,7 +3,10 @@
 #include <assert.h>
 #include <fstream>
 #include <sstream>
-#include "Types.h"
+#include "Texture.h"
+#include "glm.hpp"
+#include "gtc/matrix_transform.hpp"
+#include "gtx/transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -108,6 +111,8 @@ void tGeometryChunk::Clear()
 //-------------------------------------------------------------------------------------------------
 
 CTrackData::CTrackData()
+  : m_iAILineHeight(100)
+  , m_fScale(10000.0f)
 {
   ClearData();
 }
@@ -459,11 +464,13 @@ bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
         if (lineAy.size() == MAP_COUNT) {
           m_raceInfo.dTrackMapSize      = std::stod(lineAy[0]);
           m_raceInfo.iTrackMapFidelity  = std::stoi(lineAy[1]);
-          m_raceInfo.dPreviewSize           = std::stod(lineAy[2]);
+          m_raceInfo.dPreviewSize       = std::stod(lineAy[2]);
         }
         break;
     }
   }
+
+  GenerateTrackMath();
 
   return bSuccess;
 }
@@ -622,6 +629,444 @@ void CTrackData::WriteToVector(std::vector<uint8_t> &data, const char *szText)
     uint8_t val = (uint8_t)szText[i];
     data.push_back(val);
   }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GenerateTrackMath()
+{
+  if (m_chunkAy.empty()) {
+    return;
+  }
+
+  glm::vec3 prevCenter = glm::vec3(0, 0, 1);
+  glm::vec3 prevLLane = glm::vec3(0, 0, 1);
+  glm::vec3 prevRLane = glm::vec3(0, 0, 1);
+  glm::vec3 prevLShoulder = glm::vec3(0, 0, 1);
+  glm::vec3 prevRShoulder = glm::vec3(0, 0, 1);
+  glm::vec3 prevLWall = glm::vec3(0, 0, 1);
+  glm::vec3 prevRWall = glm::vec3(0, 0, 1);
+  glm::vec3 prevLWallBottomAttach = glm::vec3(0, 0, 1);
+  glm::vec3 prevRWallBottomAttach = glm::vec3(0, 0, 1);
+  bool bPrevLWallAttachToLane = false;
+  bool bPrevRWallAttachToLane = false;
+  glm::vec3 prevLFloor = glm::vec3(0, 0, 1);
+  glm::vec3 prevRFloor = glm::vec3(0, 0, 1);
+  glm::vec3 prevLLOWall = glm::vec3(0, 0, 1);
+  glm::vec3 prevRLOWall = glm::vec3(0, 0, 1);
+  glm::vec3 prevLLOWallBottomAttach = glm::vec3(0, 0, 1);
+  glm::vec3 prevRLOWallBottomAttach = glm::vec3(0, 0, 1);
+  glm::vec3 prevLUOWall = glm::vec3(0, 0, 1);
+  glm::vec3 prevRUOWall = glm::vec3(0, 0, 1);
+  for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
+    glm::mat4 rollMatNoRoll = glm::mat4(1);
+    GetCenter(i, prevCenter,
+              m_chunkAy[i].math.center,
+              m_chunkAy[i].math.pitchAxis,
+              m_chunkAy[i].math.nextChunkPitched,
+              m_chunkAy[i].math.yawMat,
+              m_chunkAy[i].math.pitchMat,
+              m_chunkAy[i].math.rollMat);
+
+    int iChunkIndex = (int)m_chunkAy.size() - 1;
+    if (i > 0)
+      iChunkIndex = i - 1;
+
+    //left lane
+    GetLane(i,
+            m_chunkAy[i].math.center,
+            m_chunkAy[i].math.pitchAxis,
+            m_chunkAy[i].math.rollMat,
+            m_chunkAy[i].math.lLane, true);
+    //right lane
+    GetLane(i,
+            m_chunkAy[i].math.center,
+            m_chunkAy[i].math.pitchAxis,
+            m_chunkAy[i].math.rollMat,
+            m_chunkAy[i].math.rLane, false);
+    //left shoulder
+    GetShoulder(i,
+                m_chunkAy[i].math.lLane,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.lShoulder, true);
+    //right shoulder
+    GetShoulder(i,
+                m_chunkAy[i].math.rLane,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.rShoulder, false);
+    //left wall
+    m_chunkAy[i].math.bLWallAttachToLane = CTrackData::GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_WALL_31;
+    if (m_chunkAy[i].iLeftWallType == -1)
+      m_chunkAy[i].math.bLWallAttachToLane = bPrevLWallAttachToLane;
+    bPrevLWallAttachToLane = m_chunkAy[i].math.bLWallAttachToLane;
+    m_chunkAy[i].math.lWallBottomAttach = m_chunkAy[i].math.bLWallAttachToLane ? m_chunkAy[i].math.lLane : m_chunkAy[i].math.lShoulder;
+    GetWall(i,
+            m_chunkAy[i].math.lWallBottomAttach,
+            m_chunkAy[i].math.pitchAxis,
+            m_chunkAy[i].math.rollMat,
+            m_chunkAy[i].math.nextChunkPitched,
+            m_chunkAy[i].math.lWall, eShapeSection::LWALL);
+    //right wall
+    m_chunkAy[i].math.bRWallAttachToLane = CTrackData::GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType) & SURFACE_FLAG_WALL_31;
+    if (m_chunkAy[i].iRightWallType == -1)
+      m_chunkAy[i].math.bRWallAttachToLane = bPrevRWallAttachToLane;
+    bPrevRWallAttachToLane = m_chunkAy[i].math.bRWallAttachToLane;
+    m_chunkAy[i].math.rWallBottomAttach = m_chunkAy[i].math.bRWallAttachToLane ? m_chunkAy[i].math.rLane : m_chunkAy[i].math.rShoulder;
+    GetWall(i,
+            m_chunkAy[i].math.rWallBottomAttach,
+            m_chunkAy[i].math.pitchAxis,
+            m_chunkAy[i].math.rollMat,
+            m_chunkAy[i].math.nextChunkPitched,
+            m_chunkAy[i].math.rWall, eShapeSection::RWALL);
+    //outer floor
+    glm::vec3 lLaneNoRoll;
+    GetLane(i,
+            m_chunkAy[i].math.center,
+            m_chunkAy[i].math.pitchAxis,
+            rollMatNoRoll, lLaneNoRoll, true);
+    glm::vec3 rLaneNoRoll;
+    GetLane(i,
+            m_chunkAy[i].math.center,
+            m_chunkAy[i].math.pitchAxis,
+            rollMatNoRoll, rLaneNoRoll, false);
+    GetOWallFloor(i, lLaneNoRoll, rLaneNoRoll,
+                  m_chunkAy[i].math.pitchAxis,
+                  m_chunkAy[i].math.nextChunkPitched,
+                  m_chunkAy[i].math.lFloor,
+                  m_chunkAy[i].math.rFloor);
+    //outer wall roll mat
+    glm::mat4 oWallRollMat = m_chunkAy[i].iOuterFloorType < 0 ? m_chunkAy[i].math.rollMat : rollMatNoRoll;
+    //llowall
+    bool bLLOWallNonSolid = CTrackData::GetSignedBitValueFromInt(m_chunkAy[i].iLLOuterWallType) & SURFACE_FLAG_NON_SOLID;
+    m_chunkAy[i].math.lloWallBottomAttach = m_chunkAy[i].math.lFloor;
+    if (m_chunkAy[i].iOuterFloorType < 0) {
+      if (bLLOWallNonSolid) {
+        glm::vec3 lShoulderNoHeight;
+        GetShoulder(i,
+                    m_chunkAy[i].math.lLane,
+                    m_chunkAy[i].math.pitchAxis,
+                    m_chunkAy[i].math.rollMat,
+                    m_chunkAy[i].math.nextChunkPitched,
+                    lShoulderNoHeight, true, true);
+        m_chunkAy[i].math.lloWallBottomAttach = lShoulderNoHeight;
+      } else {
+        m_chunkAy[i].math.lloWallBottomAttach = m_chunkAy[i].math.lShoulder;
+      }
+    }
+    GetWall(i,
+            m_chunkAy[i].math.lloWallBottomAttach,
+            m_chunkAy[i].math.pitchAxis, oWallRollMat,
+            m_chunkAy[i].math.nextChunkPitched,
+            m_chunkAy[i].math.lloWall, eShapeSection::LLOWALL);
+    //rlowall
+    bool bRLOWallNonSolid = CTrackData::GetSignedBitValueFromInt(m_chunkAy[i].iRLOuterWallType) & SURFACE_FLAG_NON_SOLID;
+    m_chunkAy[i].math.rloWallBottomAttach = m_chunkAy[i].math.rFloor;
+    if (m_chunkAy[i].iOuterFloorType < 0) {
+      if (bRLOWallNonSolid) {
+        glm::vec3 rShoulderNoHeight;
+        GetShoulder(i,
+                    m_chunkAy[i].math.rLane,
+                    m_chunkAy[i].math.pitchAxis,
+                    m_chunkAy[i].math.rollMat,
+                    m_chunkAy[i].math.nextChunkPitched, rShoulderNoHeight, false, true);
+        m_chunkAy[i].math.rloWallBottomAttach = rShoulderNoHeight;
+      } else {
+        m_chunkAy[i].math.rloWallBottomAttach = m_chunkAy[i].math.rShoulder;
+      }
+    }
+    GetWall(i,
+            m_chunkAy[i].math.rloWallBottomAttach,
+            m_chunkAy[i].math.pitchAxis, oWallRollMat,
+            m_chunkAy[i].math.nextChunkPitched,
+            m_chunkAy[i].math.rloWall, eShapeSection::RLOWALL);
+    //luowall
+    GetWall(i,
+            m_chunkAy[i].math.lloWall,
+            m_chunkAy[i].math.pitchAxis, oWallRollMat,
+            m_chunkAy[i].math.nextChunkPitched,
+            m_chunkAy[i].math.luoWall, eShapeSection::LUOWALL);
+    //ruowall
+    GetWall(i,
+            m_chunkAy[i].math.rloWall,
+            m_chunkAy[i].math.pitchAxis, oWallRollMat,
+            m_chunkAy[i].math.nextChunkPitched,
+            m_chunkAy[i].math.ruoWall, eShapeSection::RUOWALL);
+    //ailines
+    GetAILine(i,
+              m_chunkAy[i].math.center,
+              m_chunkAy[i].math.pitchAxis,
+              m_chunkAy[i].math.rollMat,
+              m_chunkAy[i].math.nextChunkPitched,
+              m_chunkAy[i].math.aiLine1,
+              eShapeSection::AILINE1, m_iAILineHeight);
+    GetAILine(i,
+              m_chunkAy[i].math.center,
+              m_chunkAy[i].math.pitchAxis,
+              m_chunkAy[i].math.rollMat,
+              m_chunkAy[i].math.nextChunkPitched,
+              m_chunkAy[i].math.aiLine2,
+              eShapeSection::AILINE2, m_iAILineHeight);
+    GetAILine(i,
+              m_chunkAy[i].math.center,
+              m_chunkAy[i].math.pitchAxis,
+              m_chunkAy[i].math.rollMat,
+              m_chunkAy[i].math.nextChunkPitched,
+              m_chunkAy[i].math.aiLine3, eShapeSection::AILINE3, m_iAILineHeight);
+    GetAILine(i,
+              m_chunkAy[i].math.center,
+              m_chunkAy[i].math.pitchAxis,
+              m_chunkAy[i].math.rollMat,
+              m_chunkAy[i].math.nextChunkPitched,
+              m_chunkAy[i].math.aiLine4,
+              eShapeSection::AILINE4, m_iAILineHeight);
+    //car positions are ai lines with 0 height
+    GetAILine(i,
+              m_chunkAy[i].math.center,
+              m_chunkAy[i].math.pitchAxis,
+              m_chunkAy[i].math.rollMat,
+              m_chunkAy[i].math.nextChunkPitched,
+              m_chunkAy[i].math.carLine1,
+              eShapeSection::AILINE1, 0);
+    GetAILine(i,
+              m_chunkAy[i].math.center,
+              m_chunkAy[i].math.pitchAxis,
+              m_chunkAy[i].math.rollMat,
+              m_chunkAy[i].math.nextChunkPitched,
+              m_chunkAy[i].math.carLine2,
+              eShapeSection::AILINE2, 0);
+    GetAILine(i,
+              m_chunkAy[i].math.center,
+              m_chunkAy[i].math.pitchAxis,
+              m_chunkAy[i].math.rollMat,
+              m_chunkAy[i].math.nextChunkPitched,
+              m_chunkAy[i].math.carLine3, 
+              eShapeSection::AILINE3, 0);
+    GetAILine(i,
+              m_chunkAy[i].math.center,
+              m_chunkAy[i].math.pitchAxis,
+              m_chunkAy[i].math.rollMat,
+              m_chunkAy[i].math.nextChunkPitched,
+              m_chunkAy[i].math.carLine4,
+              eShapeSection::AILINE4, 0);
+
+    prevCenter = m_chunkAy[i].math.center;
+    prevLLane = m_chunkAy[i].math.lLane;
+    prevRLane = m_chunkAy[i].math.rLane;
+    prevLShoulder = m_chunkAy[i].math.lShoulder;
+    prevRShoulder = m_chunkAy[i].math.rShoulder;
+    prevLWall = m_chunkAy[i].math.lWall;
+    prevRWall = m_chunkAy[i].math.rWall;
+    prevLWallBottomAttach = m_chunkAy[i].math.lWallBottomAttach;
+    prevRWallBottomAttach = m_chunkAy[i].math.rWallBottomAttach;
+    prevLFloor = m_chunkAy[i].math.lFloor;
+    prevRFloor = m_chunkAy[i].math.rFloor;
+    prevLLOWall = m_chunkAy[i].math.lloWall;
+    prevRLOWall = m_chunkAy[i].math.rloWall;
+    prevLLOWallBottomAttach = m_chunkAy[i].math.lloWallBottomAttach;
+    prevRLOWallBottomAttach = m_chunkAy[i].math.rloWallBottomAttach;
+    prevLUOWall = m_chunkAy[i].math.luoWall;
+    prevRUOWall = m_chunkAy[i].math.ruoWall;
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GetCenter(int i, glm::vec3 prevCenter,
+                           glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched,
+                           glm::mat4 &yawMat, glm::mat4 &pitchMat, glm::mat4 &rollMat)
+{
+  glm::vec3 nextChunkBase = glm::vec3(0, 0, 1);
+
+  yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw), glm::vec3(0.0f, 1.0f, 0.0f));
+  glm::vec3 nextChunkYawed = glm::vec3(yawMat * glm::vec4(nextChunkBase, 1.0f));
+  pitchAxis = glm::normalize(glm::cross(nextChunkYawed, glm::vec3(0.0f, 1.0f, 0.0f)));
+
+  pitchMat = glm::rotate(glm::radians((float)m_chunkAy[i].dPitch), pitchAxis);
+  nextChunkPitched = glm::vec3(pitchMat * glm::vec4(nextChunkYawed, 1.0f));
+
+  glm::mat4 translateMat = glm::mat4(1);
+  if (i > 0)
+    translateMat = glm::translate(prevCenter);
+  //center
+  float fLen = (float)m_chunkAy[i].iLength / m_fScale;
+  glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
+  center = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
+  rollMat = glm::rotate(glm::radians((float)m_chunkAy[i].dRoll * -1.0f), glm::normalize(nextChunkPitched));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GetLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat,
+                          glm::vec3 &lane, bool bLeft)
+{
+  glm::mat4 translateMat = glm::translate(center); //translate to centerline
+  float fLen;
+  if (bLeft)
+    fLen = (float)(m_chunkAy[i].iLeftLaneWidth) / m_fScale * -1.0f;
+  else
+    fLen = (float)(m_chunkAy[i].iRightLaneWidth) / m_fScale;
+  glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
+  lane = glm::vec3(translateMat * scaleMat * rollMat * glm::vec4(pitchAxis, 1.0f));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GetShoulder(int i, glm::vec3 lLane, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+                              glm::vec3 &shoulder, bool bLeft, bool bIgnoreHeight)
+{
+  glm::mat4 translateMat = glm::translate(lLane); //translate to end of left lane
+  float fLen = 0.0f;
+  float fHeight = 0.0f;
+  if (bLeft) {
+    fLen = (float)m_chunkAy[i].iLeftShoulderWidth / m_fScale * -1.0f;
+    if (!bIgnoreHeight)
+      fHeight = (float)m_chunkAy[i].iLeftShoulderHeight / m_fScale * -1.0f;
+  } else {
+    fLen = (float)m_chunkAy[i].iRightShoulderWidth / m_fScale;
+    if (!bIgnoreHeight)
+      fHeight = (float)m_chunkAy[i].iRightShoulderHeight / m_fScale * -1.0f;
+  }
+  glm::mat4 scaleMatWidth = glm::scale(glm::vec3(fLen, fLen, fLen));
+  glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
+  glm::vec3 widthVec = glm::vec3(scaleMatWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
+  glm::vec3 normal = glm::normalize(glm::cross(nextChunkPitched, pitchAxis));
+  glm::vec3 heightVec = glm::vec3(scaleMatHeight * rollMat * glm::vec4(normal, 1.0f));
+  glm::vec3 shoulderVec = widthVec + heightVec;
+  shoulder = glm::vec3(translateMat * glm::vec4(shoulderVec, 1.0f));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder,
+                               glm::vec3 &lEnvirFloor, glm::vec3 &rEnvirFloor)
+{
+  float fEnvirFloorDepth = (float)m_header.iFloorDepth / m_fScale * -1.0f;
+  lEnvirFloor = lShoulder;
+  rEnvirFloor = rShoulder;
+  lEnvirFloor.y = fEnvirFloorDepth;
+  rEnvirFloor.y = fEnvirFloorDepth;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
+                               glm::vec3 &lFloor, glm::vec3 &rFloor)
+{
+  glm::mat4 translateMatL = glm::translate(lLane);
+  glm::mat4 translateMatR = glm::translate(rLane);
+  float fEnvirFloorDepth = (float)m_header.iFloorDepth / m_fScale * -1.0f;
+  float fLOFloorHeight = (float)m_chunkAy[i].iLOuterFloorHeight / m_fScale * 1.0f;
+  float fROFloorHeight = (float)m_chunkAy[i].iROuterFloorHeight / m_fScale * 1.0f;
+  float fROFloorOffset = (float)m_chunkAy[i].iROuterFloorHOffset / m_fScale * 1.0f;
+  float fLOFloorOffset = (float)m_chunkAy[i].iLOuterFloorHOffset / m_fScale * -1.0f;
+
+  glm::mat4 scaleMatRWidth = glm::scale(glm::vec3(fROFloorOffset, fROFloorOffset, fROFloorOffset));
+  glm::vec3 rWidthVec = glm::vec3(scaleMatRWidth * glm::vec4(pitchAxis, 1.0f));
+  glm::mat4 scaleMatLWidth = glm::scale(glm::vec3(fLOFloorOffset, fLOFloorOffset, fLOFloorOffset));
+  glm::vec3 lWidthVec = glm::vec3(scaleMatLWidth * glm::vec4(pitchAxis, 1.0f));
+
+  lFloor = glm::vec3(translateMatL * glm::vec4(lWidthVec, 1.0f));;
+  rFloor = glm::vec3(translateMatR * glm::vec4(rWidthVec, 1.0f));;
+  lFloor.y = fEnvirFloorDepth + fLOFloorHeight;
+  rFloor.y = fEnvirFloorDepth + fROFloorHeight;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+                            glm::vec3 &lloWall, eShapeSection wallSection)
+{
+  glm::mat4 translateMat = glm::translate(bottomAttach);
+  float fHOffset = 0.0f;
+  float fHeight = 0.0f;
+  switch (wallSection) {
+    case LWALL:
+      if (m_chunkAy[i].iLeftWallType != -1)
+        fHeight = (float)m_chunkAy[i].iRoofHeight / m_fScale * -1.0f;
+    case RWALL:
+      if (m_chunkAy[i].iRightWallType != -1)
+        fHeight = (float)m_chunkAy[i].iRoofHeight / m_fScale * -1.0f;
+      break;
+    case LLOWALL:
+      fHOffset = (float)m_chunkAy[i].iLLOuterWallHOffset / m_fScale * -1.0f;
+      fHeight = (float)m_chunkAy[i].iLLOuterWallHeight / m_fScale * -1.0f;
+      break;
+    case RLOWALL:
+      fHOffset = (float)m_chunkAy[i].iRLOuterWallHOffset / m_fScale;
+      fHeight = (float)m_chunkAy[i].iRLOuterWallHeight / m_fScale * -1.0f;
+      break;
+    case LUOWALL:
+      fHOffset = (float)m_chunkAy[i].iLUOuterWallHOffset / m_fScale * -1.0f;
+      fHeight = (float)m_chunkAy[i].iLUOuterWallHeight / m_fScale * -1.0f;
+      break;
+    case RUOWALL:
+      fHOffset = (float)m_chunkAy[i].iRUOuterWallHOffset / m_fScale;
+      fHeight = (float)m_chunkAy[i].iRUOuterWallHeight / m_fScale * -1.0f;
+      break;
+    default:
+      assert(0); //only wall sections should use this function
+  }
+  glm::mat4 scaleMatWidth = glm::scale(glm::vec3(fHOffset, fHOffset, fHOffset));
+  glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
+  glm::vec3 widthVec = glm::vec3(scaleMatWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
+  glm::vec3 normal = glm::normalize(glm::cross(nextChunkPitched, pitchAxis));
+  glm::vec3 heightVec = glm::vec3(scaleMatHeight * rollMat * glm::vec4(normal, 1.0f));
+  glm::vec3 wallVec = widthVec + heightVec;
+  lloWall = glm::vec3(translateMat * glm::vec4(wallVec, 1.0f));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GetAILine(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+                           glm::vec3 &aiLine, eShapeSection lineSection, int iHeight)
+{
+  glm::mat4 translateMat = glm::translate(center);
+  float fLen = 0.0f;
+  int iUseAILine;
+  switch (lineSection) {
+    case eShapeSection::AILINE1:
+      iUseAILine = m_chunkAy[i].iAILine1;
+      break;
+    case eShapeSection::AILINE2:
+      iUseAILine = m_chunkAy[i].iAILine2;
+      break;
+    case eShapeSection::AILINE3:
+      iUseAILine = m_chunkAy[i].iAILine3;
+      break;
+    case eShapeSection::AILINE4:
+      iUseAILine = m_chunkAy[i].iAILine4;
+      break;
+    default:
+      assert(0);
+  }
+  int iShoulderHeight = 0;
+  if (iUseAILine > 0 && iUseAILine > m_chunkAy[i].iLeftLaneWidth) {
+    //ai line must be on left shoulder
+    float fTheta = atan((float)m_chunkAy[i].iLeftShoulderHeight / (float)m_chunkAy[i].iLeftShoulderWidth);
+    int iLengthIntoShoulder = abs(iUseAILine) - m_chunkAy[i].iLeftLaneWidth;
+    iShoulderHeight = (int)(tan(fTheta) * (float)iLengthIntoShoulder);
+  }
+  if (iUseAILine < 0 && abs(iUseAILine) > m_chunkAy[i].iRightLaneWidth) {
+    //ai line must be on right shoulder
+    float fTheta = atan((float)m_chunkAy[i].iRightShoulderHeight / (float)m_chunkAy[i].iRightShoulderWidth);
+    int iLengthIntoShoulder = abs(iUseAILine) - m_chunkAy[i].iRightLaneWidth;
+    iShoulderHeight = (int)(tan(fTheta) * (float)iLengthIntoShoulder);
+  }
+
+  fLen = (float)iUseAILine / m_fScale * -1.0f;
+  float fHeight = (float)(iHeight + iShoulderHeight) / m_fScale * -1.0f;
+
+  glm::mat4 scaleMatWidth = glm::scale(glm::vec3(fLen, fLen, fLen));
+  glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
+  glm::vec3 widthVec = glm::vec3(scaleMatWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
+  glm::vec3 normal = glm::normalize(glm::cross(nextChunkPitched, pitchAxis));
+  glm::vec3 heightVec = glm::vec3(scaleMatHeight * rollMat * glm::vec4(normal, 1.0f));
+  glm::vec3 lineVec = widthVec + heightVec;
+  aiLine = glm::vec3(translateMat * glm::vec4(lineVec, 1.0f));
 }
 
 //-------------------------------------------------------------------------------------------------

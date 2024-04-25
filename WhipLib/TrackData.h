@@ -1,9 +1,11 @@
 #ifndef _WHIPLIB_TRACKDATA_H
 #define _WHIPLIB_TRACKDATA_H
 //-------------------------------------------------------------------------------------------------
+#include "glm.hpp"
 #include <vector>
 #include <map>
 #include <string>
+#include "Types.h"
 //-------------------------------------------------------------------------------------------------
 struct tTrackHeader
 {
@@ -24,6 +26,42 @@ struct tStunt
   int iTimeFlat;
   int iSmallerExpandsLargerContracts;
   int iBulge;
+};
+//-------------------------------------------------------------------------------------------------
+struct tChunkMath
+{
+  glm::vec3 center;
+  glm::vec3 pitchAxis;
+  glm::vec3 nextChunkPitched;
+  glm::vec3 lLane;
+  glm::vec3 rLane;
+  glm::vec3 lShoulder;
+  glm::vec3 rShoulder;
+  glm::vec3 lWall;
+  glm::vec3 rWall;
+  glm::vec3 lWallBottomAttach;
+  glm::vec3 rWallBottomAttach;
+  bool bLWallAttachToLane;
+  bool bRWallAttachToLane;
+  glm::vec3 lFloor;
+  glm::vec3 rFloor;
+  glm::vec3 lloWall;
+  glm::vec3 rloWall;
+  glm::vec3 lloWallBottomAttach;
+  glm::vec3 rloWallBottomAttach;
+  glm::vec3 luoWall;
+  glm::vec3 ruoWall;
+  glm::vec3 aiLine1;
+  glm::vec3 aiLine2;
+  glm::vec3 aiLine3;
+  glm::vec3 aiLine4;
+  glm::vec3 carLine1;
+  glm::vec3 carLine2;
+  glm::vec3 carLine3;
+  glm::vec3 carLine4;
+  glm::mat4 yawMat;
+  glm::mat4 pitchMat;
+  glm::mat4 rollMat;
 };
 //-------------------------------------------------------------------------------------------------
 struct tGeometryChunk
@@ -111,6 +149,9 @@ struct tGeometryChunk
 
   //stunt
   tStunt stunt;
+
+  //math
+  tChunkMath math;
 };
 typedef std::vector<tGeometryChunk> CChunkAy;
 //-------------------------------------------------------------------------------------------------
@@ -166,12 +207,31 @@ public:
   std::string m_sBuildingFile;
   tRaceInfo m_raceInfo;
   bool m_bIsMangled;
+  int m_iAILineHeight;
+  float m_fScale;
 
 protected:
   bool IsNumber(const std::string &str);
   bool ProcessTrackData(const uint8_t *pData, size_t length);
   void ProcessSign(const std::vector<std::string> &lineAy, eFileSection &section);
   void WriteToVector(std::vector<uint8_t> &data, const char *szText);
+  void GenerateTrackMath();
+
+  void GetCenter(int i, glm::vec3 prevCenter,
+                 glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched,
+                 glm::mat4 &yawMat, glm::mat4 &pitchMat, glm::mat4 &rollMat);
+  void GetLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat,
+               glm::vec3 &lane, bool bLeft);
+  void GetShoulder(int i, glm::vec3 attach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+                   glm::vec3 &shoulder, bool bLeft, bool bIgnoreHeight = false);
+  void GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder,
+                     glm::vec3 &lEnvirFloor, glm::vec3 &rEnvirFloor);
+  void GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
+                     glm::vec3 &lFloor, glm::vec3 &rFloor);
+  void GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+               glm::vec3 &lloWall, eShapeSection wallSection);
+  void GetAILine(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+               glm::vec3 &aiLine, eShapeSection lineSection, int iHeight);
 };
 
 //-------------------------------------------------------------------------------------------------

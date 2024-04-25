@@ -16,7 +16,7 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
   ckAllSurface->setChecked(true);
   ckHighlightSelection->setChecked(true);
   ckAILines->setChecked(true);
-  ckSigns->setChecked(true);
+  //ckSigns->setChecked(true);
   ckTestCar->setChecked(true);
 
   cbTestCarType->addItem("F1WACK", (int)eWhipModel::CAR_F1WACK);

@@ -16,6 +16,7 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
   ckAllSurface->setChecked(true);
   ckHighlightSelection->setChecked(true);
   ckAILines->setChecked(true);
+  ckSigns->setChecked(true);
   ckTestCar->setChecked(true);
 
   cbTestCarType->addItem("F1WACK", (int)eWhipModel::CAR_F1WACK);
@@ -65,6 +66,7 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
   connect(ckEnvirFloorWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckHighlightSelection, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckAILines, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
+  connect(ckSigns, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckTestCar, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(cbTestCarType, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
   connect(cbTestCarPos, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
@@ -113,6 +115,7 @@ uint32 CDisplaySettings::GetDisplaySettings(eWhipModel &carModel, eShapeSection 
   if (ckHighlightSelection->isChecked())  uiShowModels |= SHOW_SELECTION_HIGHLIGHT;
   if (ckAILines->isChecked())             uiShowModels |= SHOW_AILINE_MODELS;
   if (ckTestCar->isChecked())             uiShowModels |= SHOW_TEST_CAR;
+  if (ckSigns->isChecked())               uiShowModels |= SHOW_SIGNS;
 
   carModel = (eWhipModel)cbTestCarType->currentData().toInt();
   aiLine = (eShapeSection)cbTestCarPos->currentData().toInt();
@@ -154,6 +157,7 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels, eWhipModel carMod
   ckHighlightSelection->blockSignals(true);
   ckAILines->blockSignals(true);
   ckTestCar->blockSignals(true);
+  ckSigns->blockSignals(true);
 
   ckLLaneSurface->setChecked(       uiShowModels & SHOW_LLANE_SURF_MODEL);
   ckLLaneWireframe->setChecked(     uiShowModels & SHOW_LLANE_WIRE_MODEL);
@@ -184,6 +188,7 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels, eWhipModel carMod
   ckHighlightSelection->setChecked( uiShowModels & SHOW_SELECTION_HIGHLIGHT);
   ckAILines->setChecked(            uiShowModels & SHOW_AILINE_MODELS);
   ckTestCar->setChecked(            uiShowModels & SHOW_TEST_CAR);
+  ckSigns->setChecked(              uiShowModels & SHOW_SIGNS);
 
   ckLLaneSurface->blockSignals(false);
   ckLLaneWireframe->blockSignals(false);
@@ -214,6 +219,7 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels, eWhipModel carMod
   ckHighlightSelection->blockSignals(false);
   ckAILines->blockSignals(false);
   ckTestCar->blockSignals(false);
+  ckSigns->blockSignals(false);
 
   cbTestCarType->blockSignals(true);
   cbTestCarPos->blockSignals(true);

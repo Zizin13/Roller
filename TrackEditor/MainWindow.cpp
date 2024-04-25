@@ -484,7 +484,7 @@ void CMainWindow::UpdateWindow()
   }
   txData->insertPlainText(sText);
 
-  openGLWidget->SetTrack(&p->m_track, &p->m_tex, &p->m_palette);
+  openGLWidget->SetTrack(&p->m_track, &p->m_tex, &p->m_bld, &p->m_palette);
   emit UpdateWindowSig();
 }
 

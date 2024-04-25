@@ -17,7 +17,7 @@ public:
   CTrackPreview(QWidget *pParent);
   ~CTrackPreview();
 
-  void SetTrack(CTrack *pTrack, CTexture *pTex, CPalette *pPal);
+  void SetTrack(CTrack *pTrack, CTexture *pTex, CTexture *pBld, CPalette *pPal);
   void ShowModels(uint32 uiShowModels);
   void UpdateGeometrySelection(int iFrom, int iTo);
   void UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);

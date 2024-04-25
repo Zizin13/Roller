@@ -8,6 +8,9 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
+#include "Texture.h"
+#include "TrackData.h"
+//-------------------------------------------------------------------------------------------------
 #include "AutoPlans.h"
 #include "DesilvaPlans.h"
 #include "F1WackPlans.h"
@@ -17,8 +20,23 @@
 #include "PulsePlans.h"
 #include "ReisePlans.h"
 #include "ZizinPlans.h"
-#include "Texture.h"
-#include "TrackData.h"
+#include "Advert2Plans.h"
+#include "Advert3Plans.h"
+#include "AdvertPlans.h"
+#include "Balloon2Plans.h"
+#include "BalloonPlans.h"
+#include "Bld0Plans.h"
+#include "Build1Plans.h"
+#include "Build2Plans.h"
+#include "Build3Plans.h"
+#include "BuildPlans.h"
+#include "HeelbarPlans.h"
+#include "QuadBldPlans.h"
+#include "Sign01Plans.h"
+#include "Sign02Plans.h"
+#include "Tower2Plans.h"
+#include "TowerPlans.h"
+#include "TreePlans.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -161,7 +179,7 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
     vertices[i * 4 + 3] = coordAy[GetPols(model)[i].byVert4];
 
     uint32 uiUseTex = GetPols(model)[i].uiTex;
-    if (uiUseTex & SURFACE_FLAG_ANMS_LOOKUP) {
+    if (uiUseTex & SURFACE_FLAG_ANMS_LOOKUP && GetAnms(model)) {
       uiUseTex = GetAnms(model)[uiUseTex & SURFACE_TEXTURE_INDEX].framesAy[0];
     }
     pTexture->GetTextureCoordinates(uiUseTex,
@@ -222,22 +240,39 @@ float *CShapeFactory::GetCoords(eWhipModel model)
     case CAR_REISE:
       return g_xreiseCoords;
     case SIGN_TOWER:
+      return g_towerCoords;
     case SIGN_TOWER2:
+      return g_tower2Coords;
     case SIGN_SIGN01:
+      return g_sign01Coords;
     case SIGN_SIGN02:
+      return g_sign02Coords;
     case SIGN_BUILD:
+      return g_buildCoords;
     case SIGN_BUILD1:
+      return g_build1Coords;
     case SIGN_BUILD2:
+      return g_build2Coords;
     case SIGN_BUILD3:
+      return g_build3Coords;
     case SIGN_HEELBAR:
+      return g_heelbarCoords;
     case SIGN_BALLOON:
+      return g_balloonCoords;
     case SIGN_BALLOON2:
+      return g_balloon2Coords;
     case SIGN_TREE:
+      return g_treeCoords;
     case SIGN_ADVERT:
+      return g_advertCoords;
     case SIGN_ADVERT2:
+      return g_advert2Coords;
     case SIGN_ADVERT3:
+      return g_advert3Coords;
     case SIGN_QUADBLD:
+      return g_quadbldCoords;
     case SIGN_BLD0:
+      return g_bld0Coords;
     default:
       assert(0);
       return NULL;
@@ -268,22 +303,39 @@ int CShapeFactory::GetCoordsCount(eWhipModel model)
     case CAR_REISE:
       return g_xreiseCoordsCount;
     case SIGN_TOWER:
+      return g_towerCoordsCount;
     case SIGN_TOWER2:
+      return g_tower2CoordsCount;
     case SIGN_SIGN01:
+      return g_sign01CoordsCount;
     case SIGN_SIGN02:
+      return g_sign02CoordsCount;
     case SIGN_BUILD:
+      return g_buildCoordsCount;
     case SIGN_BUILD1:
+      return g_build1CoordsCount;
     case SIGN_BUILD2:
+      return g_build2CoordsCount;
     case SIGN_BUILD3:
+      return g_build3CoordsCount;
     case SIGN_HEELBAR:
+      return g_heelbarCoordsCount;
     case SIGN_BALLOON:
+      return g_balloonCoordsCount;
     case SIGN_BALLOON2:
+      return g_balloon2CoordsCount;
     case SIGN_TREE:
+      return g_treeCoordsCount;
     case SIGN_ADVERT:
+      return g_advertCoordsCount;
     case SIGN_ADVERT2:
+      return g_advert2CoordsCount;
     case SIGN_ADVERT3:
+      return g_advert3CoordsCount;
     case SIGN_QUADBLD:
+      return g_quadbldCoordsCount;
     case SIGN_BLD0:
+      return g_bld0CoordsCount;
     default:
       assert(0);
       return NULL;
@@ -314,22 +366,39 @@ tPolygon *CShapeFactory::GetPols(eWhipModel model)
     case CAR_REISE:
       return g_xreisePols;
     case SIGN_TOWER:
+      return g_towerPols;
     case SIGN_TOWER2:
+      return g_tower2Pols;
     case SIGN_SIGN01:
+      return g_sign01Pols;
     case SIGN_SIGN02:
+      return g_sign02Pols;
     case SIGN_BUILD:
+      return g_buildPols;
     case SIGN_BUILD1:
+      return g_build1Pols;
     case SIGN_BUILD2:
+      return g_build2Pols;
     case SIGN_BUILD3:
+      return g_build3Pols;
     case SIGN_HEELBAR:
+      return g_heelbarPols;
     case SIGN_BALLOON:
+      return g_balloonPols;
     case SIGN_BALLOON2:
+      return g_balloon2Pols;
     case SIGN_TREE:
+      return g_treePols;
     case SIGN_ADVERT:
+      return g_advertPols;
     case SIGN_ADVERT2:
+      return g_advert2Pols;
     case SIGN_ADVERT3:
+      return g_advert3Pols;
     case SIGN_QUADBLD:
+      return g_quadbldPols;
     case SIGN_BLD0:
+      return g_bld0Pols;
     default:
       assert(0);
       return NULL;
@@ -360,22 +429,39 @@ int CShapeFactory::GetPolsCount(eWhipModel model)
     case CAR_REISE:
       return g_xreisePolsCount;
     case SIGN_TOWER:
+      return g_towerPolsCount;
     case SIGN_TOWER2:
+      return g_tower2PolsCount;
     case SIGN_SIGN01:
+      return g_sign01PolsCount;
     case SIGN_SIGN02:
+      return g_sign02PolsCount;
     case SIGN_BUILD:
+      return g_buildPolsCount;
     case SIGN_BUILD1:
+      return g_build1PolsCount;
     case SIGN_BUILD2:
+      return g_build2PolsCount;
     case SIGN_BUILD3:
+      return g_build3PolsCount;
     case SIGN_HEELBAR:
+      return g_heelbarPolsCount;
     case SIGN_BALLOON:
+      return g_balloonPolsCount;
     case SIGN_BALLOON2:
+      return g_balloon2PolsCount;
     case SIGN_TREE:
+      return g_treePolsCount;
     case SIGN_ADVERT:
+      return g_advertPolsCount;
     case SIGN_ADVERT2:
+      return g_advert2PolsCount;
     case SIGN_ADVERT3:
+      return g_advert3PolsCount;
     case SIGN_QUADBLD:
+      return g_quadbldPolsCount;
     case SIGN_BLD0:
+      return g_bld0PolsCount;
     default:
       assert(0);
       return NULL;
@@ -406,22 +492,39 @@ tAnimation *CShapeFactory::GetAnms(eWhipModel model)
     case CAR_REISE:
       return g_xreiseAnms;
     case SIGN_TOWER:
+      return g_towerAnms;
     case SIGN_TOWER2:
+      return NULL;
     case SIGN_SIGN01:
+      return g_sign01Anms;
     case SIGN_SIGN02:
+      return g_sign02Anms;
     case SIGN_BUILD:
+      return NULL;
     case SIGN_BUILD1:
+      return NULL;
     case SIGN_BUILD2:
+      return NULL;
     case SIGN_BUILD3:
+      return g_build3Anms;
     case SIGN_HEELBAR:
+      return NULL;
     case SIGN_BALLOON:
+      return NULL;
     case SIGN_BALLOON2:
+      return g_balloon2Anms;
     case SIGN_TREE:
+      return NULL;
     case SIGN_ADVERT:
+      return g_advertAnms;
     case SIGN_ADVERT2:
+      return g_advert2Anms;
     case SIGN_ADVERT3:
+      return g_advert3Anms;
     case SIGN_QUADBLD:
+      return NULL;
     case SIGN_BLD0:
+      return NULL;
     default:
       assert(0);
       return NULL;
@@ -452,22 +555,39 @@ int CShapeFactory::GetAnmsCount(eWhipModel model)
     case CAR_REISE:
       return g_xreiseAnmsCount;
     case SIGN_TOWER:
+      return g_towerAnmsCount;
     case SIGN_TOWER2:
+      return 0;
     case SIGN_SIGN01:
+      return g_sign01AnmsCount;
     case SIGN_SIGN02:
+      return g_sign02AnmsCount;
     case SIGN_BUILD:
+      return 0;
     case SIGN_BUILD1:
+      return 0;
     case SIGN_BUILD2:
+      return 0;
     case SIGN_BUILD3:
+      return g_build3AnmsCount;
     case SIGN_HEELBAR:
+      return 0;
     case SIGN_BALLOON:
+      return 0;
     case SIGN_BALLOON2:
+      return g_balloon2AnmsCount;
     case SIGN_TREE:
+      return 0;
     case SIGN_ADVERT:
+      return g_advertAnmsCount;
     case SIGN_ADVERT2:
+      return g_advert2AnmsCount;
     case SIGN_ADVERT3:
+      return g_advert3AnmsCount;
     case SIGN_QUADBLD:
+      return 0;
     case SIGN_BLD0:
+      return 0;
     default:
       assert(0);
       return NULL;
@@ -752,6 +872,38 @@ CShapeData *CShapeFactory::MakeSelectedChunks(CShader *pShader, CTrackData *pTra
 
   return pRet;
 }
+
+//-------------------------------------------------------------------------------------------------
+
+void CShapeFactory::MakeSigns(CShader *pShader, CTexture *pBld, CTrackData *pTrack, std::vector<CShapeData *> &signAy)
+{
+
+}
+
+//-------------------------------------------------------------------------------------------------
+
+//CShapeData ShapeGenerator::GenerateNormals(const CShapeData &data)
+//{
+//  CShapeData ret;
+//  ret.numVertices = data.numVertices * 2;
+//  ret.vertices = new tVertex[ret.numVertices];
+//  glm::vec3 white(1.0f, 1.0f, 1.0f);
+//  for (int i = 0; i < data.numVertices; i++) {
+//    GLuint vertIndex = i * 2;
+//    tVertex &v1 = ret.vertices[vertIndex];
+//    tVertex &v2 = ret.vertices[vertIndex + 1];
+//    const tVertex &sourceVertex = data.vertices[i];
+//    v1.position = sourceVertex.position;
+//    v2.position = sourceVertex.position + sourceVertex.normal;
+//    v1.color = v2.color = white;
+//  }
+//
+//  ret.numIndices = ret.numVertices;
+//  ret.indices = new GLushort[ret.numIndices];
+//  for (int i = 0; i < ret.numIndices; i++)
+//    ret.indices[i] = i;
+//  return ret;
+//}*/
 
 //-------------------------------------------------------------------------------------------------
 

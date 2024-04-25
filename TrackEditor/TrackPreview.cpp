@@ -207,6 +207,10 @@ public:
       delete m_pSelection;
       m_pSelection = NULL;
     }
+    for (std::vector<CShapeData *>::iterator it = m_signAy.begin(); it != m_signAy.end(); ++it) {
+      delete *it;
+    }
+    m_signAy.clear();
   }
 
   CShapeData *m_pLLaneSurf;
@@ -241,6 +245,7 @@ public:
   CShapeData *m_pAILine3;
   CShapeData *m_pAILine4;
   CShapeData *m_pAxes;
+  std::vector<CShapeData *> m_signAy;
   CShader *m_pShader;
   CTrack *m_pTrack;
   CPalette *m_pPal;
@@ -271,7 +276,7 @@ CTrackPreview::~CTrackPreview()
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackPreview::SetTrack(CTrack *pTrack, CTexture *pTex, CPalette *pPal)
+void CTrackPreview::SetTrack(CTrack *pTrack, CTexture *pTex, CTexture *pBld, CPalette *pPal)
 {
   p->DeleteModels();
   p->m_pTrack = pTrack;
@@ -307,6 +312,7 @@ void CTrackPreview::SetTrack(CTrack *pTrack, CTexture *pTex, CPalette *pPal)
     p->m_pAILine2        = CShapeFactory::GetShapeFactory().MakeAILine(p->m_pShader, p->m_pTrack, eShapeSection::AILINE2);
     p->m_pAILine3        = CShapeFactory::GetShapeFactory().MakeAILine(p->m_pShader, p->m_pTrack, eShapeSection::AILINE3);
     p->m_pAILine4        = CShapeFactory::GetShapeFactory().MakeAILine(p->m_pShader, p->m_pTrack, eShapeSection::AILINE4);
+    CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, pBld, p->m_pTrack, p->m_signAy);
 
     UpdateCar(m_carModel, m_carAILine, m_bMillionPlus);
     if (p->m_pCar)
@@ -482,6 +488,11 @@ void CTrackPreview::paintGL()
   }
   if (m_uiShowModels & SHOW_TEST_CAR && p->m_pCar)
     p->m_pCar->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_SIGNS) {
+    for (std::vector<CShapeData *>::iterator it = p->m_signAy.begin(); it != p->m_signAy.end(); ++it) {
+      (*it)->Draw(worldToProjectionMatrix);
+    }
+  }
   //if (p->m_pAxes)
   //  p->m_pAxes->Draw(worldToProjectionMatrix);
 }

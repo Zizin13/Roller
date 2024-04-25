@@ -2,6 +2,7 @@
 #define _WHIPLIB_SHAPEFACTORY_H
 //-------------------------------------------------------------------------------------------------
 #include "Types.h"
+#include <vector>
 //-------------------------------------------------------------------------------------------------
 class CShapeData;
 class CShader;
@@ -26,6 +27,8 @@ public:
   CShapeData *MakeTrackSurface(CShader *pShader, CTexture *pTexture, CTrackData *pTrack, eShapeSection section, bool bWireframe = false);
   CShapeData *MakeAILine(CShader *pShader, CTrackData *pTrack, eShapeSection section);
   CShapeData *MakeSelectedChunks(CShader *pShader, CTrackData *pTrack, int iStart, int iEnd);
+  void MakeSigns(CShader *pShader, CTexture *pBld, CTrackData *pTrack, std::vector<CShapeData*> &signAy);
+  //static CShapeData GenerateNormals(const CShapeData &data);
   void GetCarPos(CTrackData *pTrack, int iChunk, eShapeSection aiLine, glm::mat4 &modelToWorldMatrix, bool bMillionPlus = false);
 
   float m_fScale;

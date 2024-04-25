@@ -22,7 +22,6 @@ public:
   ~CShapeData();
 
   void Draw(const glm::mat4 &worldToProjectionMatrix);
-  //static CShapeData GenerateNormals(const CShapeData &data);
 
   glm::mat4 m_modelToWorldMatrix;
 

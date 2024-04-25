@@ -639,28 +639,16 @@ void CTrackData::GenerateTrackMath()
     return;
   }
 
-  glm::vec3 prevCenter = glm::vec3(0, 0, 1);
-  glm::vec3 prevLLane = glm::vec3(0, 0, 1);
-  glm::vec3 prevRLane = glm::vec3(0, 0, 1);
-  glm::vec3 prevLShoulder = glm::vec3(0, 0, 1);
-  glm::vec3 prevRShoulder = glm::vec3(0, 0, 1);
-  glm::vec3 prevLWall = glm::vec3(0, 0, 1);
-  glm::vec3 prevRWall = glm::vec3(0, 0, 1);
-  glm::vec3 prevLWallBottomAttach = glm::vec3(0, 0, 1);
-  glm::vec3 prevRWallBottomAttach = glm::vec3(0, 0, 1);
+  m_chunkAy[m_chunkAy.size() - 1].math.center = glm::vec3(0, 0, 1);
   bool bPrevLWallAttachToLane = false;
   bool bPrevRWallAttachToLane = false;
-  glm::vec3 prevLFloor = glm::vec3(0, 0, 1);
-  glm::vec3 prevRFloor = glm::vec3(0, 0, 1);
-  glm::vec3 prevLLOWall = glm::vec3(0, 0, 1);
-  glm::vec3 prevRLOWall = glm::vec3(0, 0, 1);
-  glm::vec3 prevLLOWallBottomAttach = glm::vec3(0, 0, 1);
-  glm::vec3 prevRLOWallBottomAttach = glm::vec3(0, 0, 1);
-  glm::vec3 prevLUOWall = glm::vec3(0, 0, 1);
-  glm::vec3 prevRUOWall = glm::vec3(0, 0, 1);
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
+    int iPrevIndex = (int)m_chunkAy.size() - 1;
+    if (i > 0)
+      iPrevIndex = i - 1;
+
     glm::mat4 rollMatNoRoll = glm::mat4(1);
-    GetCenter(i, prevCenter,
+    GetCenter(i, m_chunkAy[iPrevIndex].math.center,
               m_chunkAy[i].math.center,
               m_chunkAy[i].math.pitchAxis,
               m_chunkAy[i].math.nextChunkPitched,
@@ -852,24 +840,6 @@ void CTrackData::GenerateTrackMath()
               m_chunkAy[i].math.nextChunkPitched,
               m_chunkAy[i].math.carLine4,
               eShapeSection::AILINE4, 0);
-
-    prevCenter = m_chunkAy[i].math.center;
-    prevLLane = m_chunkAy[i].math.lLane;
-    prevRLane = m_chunkAy[i].math.rLane;
-    prevLShoulder = m_chunkAy[i].math.lShoulder;
-    prevRShoulder = m_chunkAy[i].math.rShoulder;
-    prevLWall = m_chunkAy[i].math.lWall;
-    prevRWall = m_chunkAy[i].math.rWall;
-    prevLWallBottomAttach = m_chunkAy[i].math.lWallBottomAttach;
-    prevRWallBottomAttach = m_chunkAy[i].math.rWallBottomAttach;
-    prevLFloor = m_chunkAy[i].math.lFloor;
-    prevRFloor = m_chunkAy[i].math.rFloor;
-    prevLLOWall = m_chunkAy[i].math.lloWall;
-    prevRLOWall = m_chunkAy[i].math.rloWall;
-    prevLLOWallBottomAttach = m_chunkAy[i].math.lloWallBottomAttach;
-    prevRLOWallBottomAttach = m_chunkAy[i].math.rloWallBottomAttach;
-    prevLUOWall = m_chunkAy[i].math.luoWall;
-    prevRUOWall = m_chunkAy[i].math.ruoWall;
   }
 }
 

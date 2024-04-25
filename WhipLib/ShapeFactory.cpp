@@ -134,10 +134,10 @@ uint32 *CShapeFactory::MakeIndicesAxes(uint32 &uiNumIndices)
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model)
+CShapeData *CShapeFactory::MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType)
 {
   uint32 uiNumVerts;
-  struct tVertex *vertices = MakeModelVerts(uiNumVerts, pTexture, model);
+  struct tVertex *vertices = MakeModelVerts(uiNumVerts, pTexture, model, iSignSurfaceType);
   uint32 uiNumIndices;
   uint32 *indices = MakeModelIndices(uiNumIndices, model);
 
@@ -157,7 +157,7 @@ CShapeData *CShapeFactory::MakeModel(CShader *pShader, CTexture *pTexture, eWhip
 
 //-------------------------------------------------------------------------------------------------
 
-tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, eWhipModel model)
+tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, eWhipModel model, int iSignSurfaceType)
 {
   //first turn float array into vertex array
   uint32 uiNumCoords = GetCoordsCount(model) / 3;
@@ -182,6 +182,10 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
     uint32 uiUseTex = GetPols(model)[i].uiTex;
     if (uiUseTex & SURFACE_FLAG_ANMS_LOOKUP && GetAnms(model)) {
       uiUseTex = GetAnms(model)[uiUseTex & SURFACE_TEXTURE_INDEX].framesAy[0];
+    }
+    if (iSignSurfaceType > 0) {
+      uint32 uiSignSurfaceType = CTrackData::GetSignedBitValueFromInt(iSignSurfaceType);
+      uiUseTex = uiSignSurfaceType;
     }
     pTexture->GetTextureCoordinates(uiUseTex,
                                     vertices[i * 4 + 1],
@@ -889,16 +893,20 @@ void CShapeFactory::MakeSigns(CShader *pShader, CTexture *pBld, CTrackData *pTra
     GetCenter(pTrack, i, prevCenter, center, pitchAxis, nextChunkPitched, yawMat, pitchMat, rollMat);
     prevCenter = center;
 
+    //right lane
+    glm::vec3 rLane;
+    GetLane(pTrack, i, center, pitchAxis, rollMat, rLane, false);
+
     if (pTrack->m_chunkAy[i].iSignType < 0 || pTrack->m_chunkAy[i].iSignType >= m_signAyCount)
       continue; //no signs in this chunk
 
     //make sign
-    CShapeData *pNewSign = MakeModel(pShader, pBld, m_signAy[pTrack->m_chunkAy[i].iSignType]);
+    CShapeData *pNewSign = MakeModel(pShader, pBld, m_signAy[pTrack->m_chunkAy[i].iSignType], pTrack->m_chunkAy[i].iSignTexture);
 
     //position sign
-    float fLen = (float)pTrack->m_chunkAy[i].iSignHorizOffset / m_fScale * -1.0f;
+    float fLen = (float)pTrack->m_chunkAy[i].iSignHorizOffset / m_fScale;// *-1.0f;
     float fHeight = (float)pTrack->m_chunkAy[i].iSignVertOffset / m_fScale * -1.0f;
-    glm::mat4 translateMat = glm::translate(center);
+    glm::mat4 translateMat = glm::translate(rLane);
     glm::mat4 scaleMatWidth = glm::scale(glm::vec3(fLen, fLen, fLen));
     glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
     glm::vec3 widthVec = glm::vec3(scaleMatWidth * rollMat * glm::vec4(pitchAxis, 1.0f));
@@ -906,7 +914,21 @@ void CShapeFactory::MakeSigns(CShader *pShader, CTexture *pBld, CTrackData *pTra
     glm::vec3 heightVec = glm::vec3(scaleMatHeight * rollMat * glm::vec4(normal, 1.0f));
     glm::vec3 signPos = widthVec + heightVec;
     glm::vec3 signPosTranslated = glm::vec3(translateMat * glm::vec4(signPos, 1.0f));
-    pNewSign->m_modelToWorldMatrix = glm::translate(signPosTranslated);
+
+    if (m_signAy[pTrack->m_chunkAy[i].iSignType] == eWhipModel::SIGN_BALLOON || m_signAy[pTrack->m_chunkAy[i].iSignType] == eWhipModel::SIGN_BALLOON2)       {
+      pNewSign->m_modelToWorldMatrix = glm::translate(signPosTranslated) *
+        rollMat * pitchMat * yawMat *
+        glm::rotate(glm::radians(-90.0f), glm::vec3(0, 0, 1)) * //sign starts on its side
+        glm::rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0)); //track starts facing z positive, sign starts facing x positive
+    } else {
+      glm::mat4 signYawMat = glm::rotate(glm::radians((float)pTrack->m_chunkAy[i].dSignYaw * -1.0f), normal);// glm::vec3(0, 1, 0));
+      glm::mat4 signPitchMat = glm::rotate(glm::radians((float)pTrack->m_chunkAy[i].dSignPitch * -1.0f), pitchAxis); //glm::vec3(1, 0, 0));
+      glm::mat4 signRollMat = glm::rotate(glm::radians((float)pTrack->m_chunkAy[i].dSignRoll * -1.0f), glm::normalize(nextChunkPitched));// glm::vec3(0, 0, 1));
+      pNewSign->m_modelToWorldMatrix = glm::translate(signPosTranslated) * signRollMat * signPitchMat * signYawMat *
+        rollMat * pitchMat * yawMat *
+        glm::rotate(glm::radians(-90.0f), glm::vec3(0, 0, 1)) * //sign starts on its side
+        glm::rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0)); //track starts facing z positive, sign starts facing x positive
+    }
     
     //add sign to array
     signAy.push_back(pNewSign);

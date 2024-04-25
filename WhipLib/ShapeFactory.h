@@ -22,7 +22,7 @@ public:
   void operator=(CShapeFactory const &) = delete;
 
   CShapeData *MakeAxes(CShader *pShader);
-  CShapeData *MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model);
+  CShapeData *MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1);
   CShapeData *MakeTrackCenterline(CShader *pShader, CTrackData *pTrack);
   CShapeData *MakeTrackSurface(CShader *pShader, CTexture *pTexture, CTrackData *pTrack, eShapeSection section, bool bWireframe = false);
   CShapeData *MakeAILine(CShader *pShader, CTrackData *pTrack, eShapeSection section);
@@ -40,7 +40,7 @@ private:
   tVertex *MakeVertsAxes(uint32 &uiNumVerts);
   uint32 *MakeIndicesAxes(uint32 &uiNumIndices);
 
-  tVertex *MakeModelVerts(uint32 &numVertices, CTexture *pTexture, eWhipModel model);
+  tVertex *MakeModelVerts(uint32 &numVertices, CTexture *pTexture, eWhipModel model, int iSignSurfaceType);
   uint32 *MakeModelIndices(uint32 &numIndices, eWhipModel model);
 
   float *GetCoords(eWhipModel model);

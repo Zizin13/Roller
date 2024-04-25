@@ -15,6 +15,7 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
 
   ckAllSurface->setChecked(true);
   ckHighlightSelection->setChecked(true);
+  ckAttachLast->setChecked(true);
   ckAILines->setChecked(true);
   //ckSigns->setChecked(true);
   ckTestCar->setChecked(true);
@@ -71,8 +72,10 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
   connect(cbTestCarType, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
   connect(cbTestCarPos, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
   connect(ckMillionPlus, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
+  connect(ckAttachLast, &QCheckBox::toggled, this, &CDisplaySettings::OnAttachLastChecked);
 
   UpdateAll();
+  OnAttachLastChecked();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -236,6 +239,22 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels, eWhipModel carMod
 
 //-------------------------------------------------------------------------------------------------
 
+bool CDisplaySettings::GetAttachLast()
+{
+  return ckAttachLast->isChecked();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CDisplaySettings::SetAttachLast(bool bAttachLast)
+{
+  ckAttachLast->blockSignals(true);
+  ckAttachLast->setChecked(bAttachLast);
+  ckAttachLast->blockSignals(false);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CDisplaySettings::UpdateAll()
 {
   ckLLaneSurface->blockSignals(true);
@@ -365,6 +384,13 @@ void CDisplaySettings::UpdatePreviewSelection()
   ckAllWireframe->blockSignals(false);
 
   UpdatePreview();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CDisplaySettings::OnAttachLastChecked()
+{
+  m_pTrackPreview->AttachLast(ckAttachLast->isChecked());
 }
 
 //-------------------------------------------------------------------------------------------------

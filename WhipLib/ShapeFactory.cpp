@@ -643,7 +643,7 @@ uint32 *CShapeFactory::MakeIndicesCenterline(uint32 &numIndices, CTrackData *pTr
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 *CShapeFactory::MakeIndicesSurface(uint32 &numIndices, CTrackData *pTrack)
+uint32 *CShapeFactory::MakeIndicesSurface(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast)
 {
   if (pTrack->m_chunkAy.empty()) {
     numIndices = 0;
@@ -684,37 +684,39 @@ uint32 *CShapeFactory::MakeIndicesSurface(uint32 &numIndices, CTrackData *pTrack
     indices[i * uiNumIndicesPerChunk + 23] = (i * uiNumVertsPerChunk) + 7;
   }
   //final chunk must be tied to first
-  indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 3;
-  indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 1;
-  indices[i * uiNumIndicesPerChunk + 2] = 1;
-  indices[i * uiNumIndicesPerChunk + 3] = (i * uiNumVertsPerChunk) + 3;
-  indices[i * uiNumIndicesPerChunk + 4] = 1;
-  indices[i * uiNumIndicesPerChunk + 5] = 3;
-  indices[i * uiNumIndicesPerChunk + 6] = (i * uiNumVertsPerChunk) + 1;
-  indices[i * uiNumIndicesPerChunk + 7] = (i * uiNumVertsPerChunk) + 0;
-  indices[i * uiNumIndicesPerChunk + 8] = 0;
-  indices[i * uiNumIndicesPerChunk + 9] = (i * uiNumVertsPerChunk) + 1;
-  indices[i * uiNumIndicesPerChunk + 10] = 0;
-  indices[i * uiNumIndicesPerChunk + 11] = 1;
-  indices[i * uiNumIndicesPerChunk + 12] = (i * uiNumVertsPerChunk) + 0;
-  indices[i * uiNumIndicesPerChunk + 13] = (i * uiNumVertsPerChunk) + 2;
-  indices[i * uiNumIndicesPerChunk + 14] = 2;
-  indices[i * uiNumIndicesPerChunk + 15] = (i * uiNumVertsPerChunk) + 0;
-  indices[i * uiNumIndicesPerChunk + 16] = 2;
-  indices[i * uiNumIndicesPerChunk + 17] = 0;
-  indices[i * uiNumIndicesPerChunk + 18] = (i * uiNumVertsPerChunk) + 2;
-  indices[i * uiNumIndicesPerChunk + 19] = (i * uiNumVertsPerChunk) + 4;
-  indices[i * uiNumIndicesPerChunk + 20] = 4;
-  indices[i * uiNumIndicesPerChunk + 21] = (i * uiNumVertsPerChunk) + 2;
-  indices[i * uiNumIndicesPerChunk + 22] = 4;
-  indices[i * uiNumIndicesPerChunk + 23] = 2;
+  if (bAttachLast) {
+    indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 2] = 1;
+    indices[i * uiNumIndicesPerChunk + 3] = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 4] = 1;
+    indices[i * uiNumIndicesPerChunk + 5] = 3;
+    indices[i * uiNumIndicesPerChunk + 6] = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 7] = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 8] = 0;
+    indices[i * uiNumIndicesPerChunk + 9] = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 10] = 0;
+    indices[i * uiNumIndicesPerChunk + 11] = 1;
+    indices[i * uiNumIndicesPerChunk + 12] = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 13] = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 14] = 2;
+    indices[i * uiNumIndicesPerChunk + 15] = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 16] = 2;
+    indices[i * uiNumIndicesPerChunk + 17] = 0;
+    indices[i * uiNumIndicesPerChunk + 18] = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 19] = (i * uiNumVertsPerChunk) + 4;
+    indices[i * uiNumIndicesPerChunk + 20] = 4;
+    indices[i * uiNumIndicesPerChunk + 21] = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 22] = 4;
+    indices[i * uiNumIndicesPerChunk + 23] = 2;
+  }
 
   return indices;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 *CShapeFactory::MakeIndicesSurfaceWireframe(uint32 &numIndices, CTrackData *pTrack)
+uint32 *CShapeFactory::MakeIndicesSurfaceWireframe(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast)
 {
   if (pTrack->m_chunkAy.empty()) {
     numIndices = 0;
@@ -750,23 +752,25 @@ uint32 *CShapeFactory::MakeIndicesSurfaceWireframe(uint32 &numIndices, CTrackDat
     indices[i * uiNumIndicesPerChunk + 17] = (i * uiNumVertsPerChunk) + 9;
   }
   //final chunk must be tied to first
-  indices[i * uiNumIndicesPerChunk + 8] = (i * uiNumVertsPerChunk) + 3;
-  indices[i * uiNumIndicesPerChunk + 9] = 3;
-  indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumVertsPerChunk) + 1;
-  indices[i * uiNumIndicesPerChunk + 11] = 1;
-  indices[i * uiNumIndicesPerChunk + 12] = (i * uiNumVertsPerChunk) + 0;
-  indices[i * uiNumIndicesPerChunk + 13] = 0;
-  indices[i * uiNumIndicesPerChunk + 14] = (i * uiNumVertsPerChunk) + 2;
-  indices[i * uiNumIndicesPerChunk + 15] = 2;
-  indices[i * uiNumIndicesPerChunk + 16] = (i * uiNumVertsPerChunk) + 4;
-  indices[i * uiNumIndicesPerChunk + 17] = 4;
+  if (bAttachLast) {
+    indices[i * uiNumIndicesPerChunk + 8] = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 9] = 3;
+    indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 11] = 1;
+    indices[i * uiNumIndicesPerChunk + 12] = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 13] = 0;
+    indices[i * uiNumIndicesPerChunk + 14] = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 15] = 2;
+    indices[i * uiNumIndicesPerChunk + 16] = (i * uiNumVertsPerChunk) + 4;
+    indices[i * uiNumIndicesPerChunk + 17] = 4;
+  }
 
   return indices;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeTrackSurface(CShader *pShader, CTexture *pTexture, CTrackData *pTrack, eShapeSection section, bool bWireframe)
+CShapeData *CShapeFactory::MakeTrackSurface(CShader *pShader, CTexture *pTexture, CTrackData *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = NULL;
@@ -778,12 +782,16 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShader *pShader, CTexture *pTexture
   uint32 *indices = NULL;
   GLenum drawType = GL_TRIANGLES;
   if (!bWireframe) {
-    if (section == DRIVING_SURFACE)
-      indices = MakeIndicesSurface(uiNumIndices, pTrack);
-    else
-      indices = MakeIndicesSingleSection(uiNumIndices, section, pTrack);
+    if (section == DRIVING_SURFACE) {
+      indices = MakeIndicesSurface(uiNumIndices, pTrack, bAttachLast);
+    } else {
+      if (section != eShapeSection::ENVIRFLOOR)
+        indices = MakeIndicesSingleSection(uiNumIndices, section, pTrack, bAttachLast);
+      else
+        indices = MakeIndicesEnvirFloor(uiNumIndices);
+    }
   } else {
-    indices = MakeIndicesSingleSectionWireframe(uiNumIndices, pTrack);
+    indices = MakeIndicesSingleSectionWireframe(uiNumIndices, pTrack, bAttachLast);
     drawType = GL_LINES;
 
     for (uint32 i = 0; i < uiNumVerts; ++i) {
@@ -808,7 +816,7 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShader *pShader, CTexture *pTexture
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeAILine(CShader *pShader, CTrackData *pTrack, eShapeSection section)
+CShapeData *CShapeFactory::MakeAILine(CShader *pShader, CTrackData *pTrack, eShapeSection section, bool bAttachLast)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVerts(uiNumVerts, section, pTrack, NULL);
@@ -1238,7 +1246,25 @@ tVertex *CShapeFactory::MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTr
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section, CTrackData *pTrack)
+uint32 *CShapeFactory::MakeIndicesEnvirFloor(uint32 &numIndices)
+{
+  uint32 uiNumVertsPerChunk = 4;
+  uint32 uiNumIndicesPerChunk = 6;
+  numIndices = 6;
+  uint32 *indices = new uint32[numIndices];
+  memset(indices, 0, numIndices * sizeof(uint32));
+  indices[0] = 2;
+  indices[1] = 3;
+  indices[2] = 1;
+  indices[3] = 2;
+  indices[4] = 1;
+  indices[5] = 0;
+  return indices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section, CTrackData *pTrack, bool bAttachLast)
 {
   if (pTrack->m_chunkAy.empty()) {
     numIndices = 0;
@@ -1264,6 +1290,9 @@ uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSectio
       continue;
     //else if (i == 0 && !ShouldMakeIndicesForChunk(((int)pTrack->m_chunkAy.size() - (int)i + 1), section))
     //  continue;
+    if (!bAttachLast && i == 0)
+      continue;
+
     indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 2;
     indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 3;
     indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 1;
@@ -1404,7 +1433,7 @@ bool CShapeFactory::ShouldDrawSurfaceType(int iSurfaceType)
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 *CShapeFactory::MakeIndicesSingleSectionWireframe(uint32 &numIndices, CTrackData *pTrack)
+uint32 *CShapeFactory::MakeIndicesSingleSectionWireframe(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast)
 {
   if (pTrack->m_chunkAy.empty()) {
     numIndices = 0;
@@ -1419,6 +1448,9 @@ uint32 *CShapeFactory::MakeIndicesSingleSectionWireframe(uint32 &numIndices, CTr
 
   uint32 i = 0;
   for (; i < pTrack->m_chunkAy.size(); i++) {
+    if (!bAttachLast && i == 0)
+      continue;
+
     indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 2;
     indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 3;
     indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 3;

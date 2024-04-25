@@ -21,6 +21,7 @@ public:
   void ShowModels(uint32 uiShowModels);
   void UpdateGeometrySelection(int iFrom, int iTo);
   void UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
+  void AttachLast(bool bAttachLast);
   void Shutdown();
   void ReloadCar();
 
@@ -37,6 +38,7 @@ private:
   eWhipModel m_carModel;
   eShapeSection m_carAILine;
   bool m_bMillionPlus;
+  bool m_bAttachLast;
 };
 
 //-------------------------------------------------------------------------------------------------

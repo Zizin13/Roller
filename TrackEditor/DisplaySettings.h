@@ -48,10 +48,13 @@ public:
 
   uint32 GetDisplaySettings(eWhipModel &carModel, eShapeSection &aiLine, bool &bMillionPlus);
   void SetDisplaySettings(uint32 uiShowModels,eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
+  bool GetAttachLast();
+  void SetAttachLast(bool bAttachLast);
 
 protected slots:
   void UpdateAll();
   void UpdatePreviewSelection();
+  void OnAttachLastChecked();
 
 private:
   void UpdatePreview();

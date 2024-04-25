@@ -24,8 +24,8 @@ public:
   CShapeData *MakeAxes(CShader *pShader);
   CShapeData *MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1);
   CShapeData *MakeTrackCenterline(CShader *pShader, CTrackData *pTrack);
-  CShapeData *MakeTrackSurface(CShader *pShader, CTexture *pTexture, CTrackData *pTrack, eShapeSection section, bool bWireframe = false);
-  CShapeData *MakeAILine(CShader *pShader, CTrackData *pTrack, eShapeSection section);
+  CShapeData *MakeTrackSurface(CShader *pShader, CTexture *pTexture, CTrackData *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false);
+  CShapeData *MakeAILine(CShader *pShader, CTrackData *pTrack, eShapeSection section, bool bAttachLast);
   CShapeData *MakeSelectedChunks(CShader *pShader, CTrackData *pTrack, int iStart, int iEnd);
   void MakeSigns(CShader *pShader, CTexture *pBld, CTrackData *pTrack, std::vector<CShapeData*> &signAy);
   //static CShapeData GenerateNormals(const CShapeData &data);
@@ -52,14 +52,15 @@ private:
   tVertex *MakeVerts(uint32 &numVertices, eShapeSection section, CTrackData *pTrack, CTexture *pTexture);
   tVertex *MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTrack);
 
+  uint32 *MakeIndicesEnvirFloor(uint32 &numIndices);
   uint32 *MakeIndicesCenterline(uint32 &numIndices, CTrackData *pTrack);
-  uint32 *MakeIndicesSurface(uint32 &numIndices, CTrackData *pTrack);
-  uint32 *MakeIndicesSurfaceWireframe(uint32 &numIndices, CTrackData *pTrack);
-  uint32 *MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section, CTrackData *pTrack);
+  uint32 *MakeIndicesSurface(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast);
+  uint32 *MakeIndicesSurfaceWireframe(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast);
+  uint32 *MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section, CTrackData *pTrack, bool bAttachLast);
   uint32 *MakeIndicesSelectedChunks(uint32 &numIndices, int iStart, int iEnd, CTrackData *pTrack);
   bool ShouldMakeIndicesForChunk(int i, eShapeSection section, CTrackData *pTrack);
   bool ShouldDrawSurfaceType(int iSurfaceType);
-  uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices, CTrackData *pTrack);
+  uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast);
 
   void ApplyVerticesSingleSection(int i, tVertex *vertices, const glm::vec3 &v0, const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3);
 

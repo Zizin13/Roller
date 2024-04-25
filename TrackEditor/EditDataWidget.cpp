@@ -67,17 +67,12 @@ CEditDataWidget::CEditDataWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTe
   }
 
 
-  connect(g_pMainWindow, &CMainWindow::ResetSelectionSig, this, &CEditDataWidget::OnResetSelection);
   connect(g_pMainWindow, &CMainWindow::UpdateWindowSig, this, &CEditDataWidget::OnUpdateWindow);
 
   connect(pbInsertBefore, &QPushButton::clicked, this, &CEditDataWidget::OnInsertBeforeClicked);
   connect(pbInsertAfter, &QPushButton::clicked, this, &CEditDataWidget::OnInsertAfterClicked);
-  connect(sbSelChunksFrom, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksFromChanged(int)));
-  connect(sbSelChunksTo, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksToChanged(int)));
-  connect(ckTo, &QCheckBox::toggled, this, &CEditDataWidget::OnToChecked);
   connect(pbApply, &QPushButton::clicked, this, &CEditDataWidget::OnApplyClicked);
   connect(pbCancel, &QPushButton::clicked, this, &CEditDataWidget::OnCancelClicked);
-  connect(pbDelete, &QPushButton::clicked, this, &CEditDataWidget::OnDeleteChunkClicked);
   connect(pbEditLSurface, &QPushButton::clicked, this, &CEditDataWidget::OnEditLSurface);
   connect(pbEditCSurface, &QPushButton::clicked, this, &CEditDataWidget::OnEditCSurface);
   connect(pbEditRSurface, &QPushButton::clicked, this, &CEditDataWidget::OnEditRSurface);
@@ -193,28 +188,13 @@ CEditDataWidget::~CEditDataWidget()
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditDataWidget::OnResetSelection()
-{
-  sbSelChunksFrom->setValue(0);
-  sbSelChunksTo->setValue(0);
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CEditDataWidget::OnUpdateWindow()
 {
   if (!p->m_pTrack)
     return;
 
   leChunkCount->setText(QString::number(p->m_pTrack->m_chunkAy.size()));
-  sbSelChunksFrom->blockSignals(true);
-  sbSelChunksTo->blockSignals(true);
   sbInsert->setRange(1, 65535 - (int)p->m_pTrack->m_chunkAy.size());
-  sbSelChunksFrom->setRange(0, (int)p->m_pTrack->m_chunkAy.size() - 1);
-  sbSelChunksTo->setRange(0, (int)p->m_pTrack->m_chunkAy.size() - 1);
-  sbSelChunksFrom->blockSignals(false);
-  sbSelChunksTo->blockSignals(false);
-  UpdateGeometrySelection();
   UpdateGeometryEditMode();
 }
 
@@ -244,19 +224,10 @@ void CEditDataWidget::OnInsertBeforeClicked()
     , leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
     , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntBulge->text());
 
-  p->m_pTrack->InsertGeometryChunk(sbSelChunksFrom->value(), sbInsert->value(), editVals);
+  p->m_pTrack->InsertGeometryChunk(g_pMainWindow->GetSelFrom(), sbInsert->value(), editVals);
 
   g_pMainWindow->SetUnsavedChanges(true);
-  sbSelChunksFrom->blockSignals(true);
-  sbSelChunksTo->blockSignals(true);
-  ckTo->blockSignals(true);
-  sbSelChunksFrom->setRange(0, (int)p->m_pTrack->m_chunkAy.size() - 1);
-  sbSelChunksTo->setRange(0, (int)p->m_pTrack->m_chunkAy.size() - 1);
-  sbSelChunksTo->setValue(sbSelChunksFrom->value() + sbInsert->value() - 1);
-  ckTo->setChecked(sbInsert->value() > 1);
-  sbSelChunksFrom->blockSignals(false);
-  sbSelChunksTo->blockSignals(false);
-  ckTo->blockSignals(false);
+  g_pMainWindow->InsertUIUpdate(sbInsert->value());
   g_pMainWindow->UpdateWindow();
 }
 
@@ -286,55 +257,11 @@ void CEditDataWidget::OnInsertAfterClicked()
     , leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
     , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntBulge->text());
 
-  p->m_pTrack->InsertGeometryChunk(sbSelChunksTo->value() + 1, sbInsert->value(), editVals);
+  p->m_pTrack->InsertGeometryChunk(g_pMainWindow->GetSelTo() + 1, sbInsert->value(), editVals);
 
   g_pMainWindow->SetUnsavedChanges(true);
-  sbSelChunksFrom->blockSignals(true);
-  sbSelChunksTo->blockSignals(true);
-  ckTo->blockSignals(true);
-  sbSelChunksFrom->setRange(0, (int)p->m_pTrack->m_chunkAy.size() - 1);
-  sbSelChunksTo->setRange(0, (int)p->m_pTrack->m_chunkAy.size() - 1);
-  sbSelChunksFrom->setValue(sbSelChunksTo->value() + 1);
-  sbSelChunksTo->setValue(sbSelChunksFrom->value() + sbInsert->value() - 1);
-  ckTo->setChecked(sbInsert->value() > 1);
-  sbSelChunksFrom->blockSignals(false);
-  sbSelChunksTo->blockSignals(false);
-  ckTo->blockSignals(false);
+  g_pMainWindow->InsertUIUpdate(sbInsert->value());
   g_pMainWindow->UpdateWindow();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CEditDataWidget::OnSelChunksFromChanged(int iValue)
-{
-  if (!ckTo->isChecked() || sbSelChunksTo->value() < iValue) {
-    sbSelChunksTo->blockSignals(true);
-    sbSelChunksTo->setValue(iValue);
-    sbSelChunksTo->blockSignals(false);
-  }
-  UpdateGeometrySelection();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CEditDataWidget::OnSelChunksToChanged(int iValue)
-{
-  if (sbSelChunksFrom->value() > iValue) {
-    sbSelChunksFrom->blockSignals(true);
-    sbSelChunksFrom->setValue(iValue);
-    sbSelChunksFrom->blockSignals(false);
-  }
-  UpdateGeometrySelection();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CEditDataWidget::OnToChecked(bool bChecked)
-{
-  sbSelChunksTo->setEnabled(bChecked && !pbApply->isEnabled());
-  if (!bChecked) {
-    sbSelChunksTo->setValue(sbSelChunksFrom->value());
-  }
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -363,7 +290,7 @@ void CEditDataWidget::OnApplyClicked()
     , leStuntScaleFact->text(), leStuntAngle->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
     , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntBulge->text());
 
-  p->m_pTrack->ApplyGeometrySettings(sbSelChunksFrom->value(), sbSelChunksTo->value(), editVals);
+  p->m_pTrack->ApplyGeometrySettings(g_pMainWindow->GetSelFrom(), g_pMainWindow->GetSelTo(), editVals);
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -373,33 +300,6 @@ void CEditDataWidget::OnApplyClicked()
 void CEditDataWidget::OnCancelClicked()
 {
   RevertGeometry();
-  UpdateGeometryEditMode();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CEditDataWidget::OnDeleteChunkClicked()
-{
-  if (!p->m_pTrack)
-    return;
-
-  if (p->m_pTrack->m_chunkAy.empty()) return;
-  if (sbSelChunksFrom->value() > sbSelChunksTo->value() || sbSelChunksTo->value() > p->m_pTrack->m_chunkAy.size()) {
-    assert(0);
-    return;
-  }
-  p->m_pTrack->m_chunkAy.erase(
-    p->m_pTrack->m_chunkAy.begin() + sbSelChunksFrom->value(),
-    p->m_pTrack->m_chunkAy.begin() + sbSelChunksTo->value() + 1);
-
-  g_pMainWindow->SetUnsavedChanges(true);
-  g_pMainWindow->LogMessage("Deleted geometry chunk");
-  sbSelChunksFrom->blockSignals(true);
-  sbSelChunksTo->blockSignals(true);
-  g_pMainWindow->UpdateWindow();
-  sbSelChunksTo->setValue(sbSelChunksFrom->value());
-  sbSelChunksFrom->blockSignals(false);
-  sbSelChunksTo->blockSignals(false);
   UpdateGeometryEditMode();
 }
 
@@ -688,9 +588,7 @@ void CEditDataWidget::UpdateGeometryEditMode()
   pbCancel->setEnabled(bEditMode);
   pbInsertAfter->setEnabled(!bMixedData);
   pbInsertBefore->setEnabled(!bMixedData);
-  sbSelChunksFrom->setEnabled(!bEditMode);
-  ckTo->setEnabled(!bEditMode);
-  sbSelChunksTo->setEnabled(!bEditMode && ckTo->isChecked());
+  g_pMainWindow->UpdateGeometryEditMode(bEditMode);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -963,13 +861,10 @@ void CEditDataWidget::OnEnvirFloorChanged()
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditDataWidget::UpdateGeometrySelection()
+void CEditDataWidget::UpdateGeometrySelection(int iFrom, int iTo)
 {
-  //update view window selection
-  g_pMainWindow->UpdateGeometrySelection(sbSelChunksFrom->value(), sbSelChunksTo->value());
-
   //update values in edit window
-  p->m_pTrack->GetGeometryValuesFromSelection(sbSelChunksFrom->value(), sbSelChunksTo->value(), p->editVals);
+  p->m_pTrack->GetGeometryValuesFromSelection(iFrom, iTo, p->editVals);
 
   RevertGeometry();
 }
@@ -979,8 +874,6 @@ void CEditDataWidget::UpdateGeometrySelection()
 
 void CEditDataWidget::RevertGeometry()
 {
-  pbDelete->setEnabled(!p->m_pTrack->m_chunkAy.empty());
-
   bool bMixedData = false;
   bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLShoulderWidth, p->editVals.sLeftShoulderWidth);
   bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLLaneWidth, p->editVals.sLeftLaneWidth);
@@ -1082,9 +975,8 @@ void CEditDataWidget::RevertGeometry()
   pbInsertBefore->setEnabled(!bMixedData);
   pbApply->setEnabled(false);
   pbCancel->setEnabled(false);
-  sbSelChunksFrom->setEnabled(true);
-  ckTo->setEnabled(true);
-  sbSelChunksTo->setEnabled(ckTo->isChecked());
+
+  g_pMainWindow->RevertGeometry();
 }
 
 //-------------------------------------------------------------------------------------------------

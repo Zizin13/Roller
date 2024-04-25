@@ -40,11 +40,11 @@ public:
   ~CMainWindowPrivate() 
   {};
 
-  std::vector<QLabel *> m_lblAy;
   CTrack m_track;
   CLogDialog m_logDialog;
 
   QDockWidget *m_pEditDataDockWidget;
+  CEditDataWidget *m_pEditData;
   QDockWidget *m_pGlobalSettingsDockWidget;
   QDockWidget *m_pEditSeriesDockWidget;
   QDockWidget *m_pDisplaySettingsDockWidget;
@@ -74,14 +74,13 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   setupUi(this);
   p->m_logDialog.hide();
   txData->setFont(QFont("Courier", 8));
-  frmTex->hide();
-  frmBld->hide();
 
   //setup dock widgets
   p->m_pEditDataDockWidget = new QDockWidget("Edit Chunk Data", this);
   p->m_pEditDataDockWidget->setObjectName("EditChunkData");
   p->m_pEditDataDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pEditDataDockWidget->setWidget(new CEditDataWidget(p->m_pEditDataDockWidget, &p->m_track, &p->m_tex, &p->m_bld));
+  p->m_pEditData = new CEditDataWidget(p->m_pEditDataDockWidget, &p->m_track, &p->m_tex, &p->m_bld);
+  p->m_pEditDataDockWidget->setWidget(p->m_pEditData);
 
   p->m_pGlobalSettingsDockWidget = new QDockWidget("Global Track Settings", this);
   p->m_pGlobalSettingsDockWidget->setObjectName("GlobalTrackSettings");
@@ -120,6 +119,10 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(p->m_pDebugAction, &QAction::triggered, this, &CMainWindow::OnDebug);
   connect(actAbout, &QAction::triggered, this, &CMainWindow::OnAbout);
 
+  connect(sbSelChunksFrom, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksFromChanged(int)));
+  connect(sbSelChunksTo, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksToChanged(int)));
+  connect(ckTo, &QCheckBox::toggled, this, &CMainWindow::OnToChecked);
+  connect(pbDelete, &QPushButton::clicked, this, &CMainWindow::OnDeleteChunkClicked);
   connect(ckUnmangleTextures, &QCheckBox::toggled, this, &CMainWindow::OnUnmangleTexturesToggled);
 
   //open window
@@ -178,7 +181,8 @@ void CMainWindow::OnNewTrack()
   if (!SaveChangesAndContinue())
     return;
 
-  emit ResetSelectionSig();
+  sbSelChunksFrom->setValue(0);
+  sbSelChunksTo->setValue(0);
   p->m_track.ClearData();
   m_sTrackFile = "";
   m_bUnsavedChanges = false;
@@ -206,7 +210,8 @@ void CMainWindow::OnLoadTrack()
     m_sTrackFile = "";
   } else { //load successful
     //update ui
-    emit ResetSelectionSig();
+    sbSelChunksFrom->setValue(0);
+    sbSelChunksTo->setValue(0);
     
     //update variables
     m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
@@ -271,7 +276,8 @@ void CMainWindow::OnImportMangled()
     m_sTrackFile = "";
   } else { //load successful
     //update ui
-    emit ResetSelectionSig();
+    sbSelChunksFrom->setValue(0);
+    sbSelChunksTo->setValue(0);
 
     //update variables
     m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
@@ -321,6 +327,64 @@ void CMainWindow::OnDebug()
 void CMainWindow::OnAbout()
 {
   QMessageBox::information(this, "Git Gud", "YOU NEED MORE PRACTICE");
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnSelChunksFromChanged(int iValue)
+{
+  if (!ckTo->isChecked() || sbSelChunksTo->value() < iValue) {
+    sbSelChunksTo->blockSignals(true);
+    sbSelChunksTo->setValue(iValue);
+    sbSelChunksTo->blockSignals(false);
+  }
+  UpdateGeometrySelection();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnSelChunksToChanged(int iValue)
+{
+  if (sbSelChunksFrom->value() > iValue) {
+    sbSelChunksFrom->blockSignals(true);
+    sbSelChunksFrom->setValue(iValue);
+    sbSelChunksFrom->blockSignals(false);
+  }
+  UpdateGeometrySelection();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnToChecked(bool bChecked)
+{
+  sbSelChunksTo->setEnabled(bChecked/* && !pbApply->isEnabled()*/);
+  if (!bChecked) {
+    sbSelChunksTo->setValue(sbSelChunksFrom->value());
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnDeleteChunkClicked()
+{
+  if (p->m_track.m_chunkAy.empty()) return;
+  if (sbSelChunksFrom->value() > sbSelChunksTo->value() || sbSelChunksTo->value() > p->m_track.m_chunkAy.size()) {
+    assert(0);
+    return;
+  }
+  p->m_track.m_chunkAy.erase(
+    p->m_track.m_chunkAy.begin() + sbSelChunksFrom->value(),
+    p->m_track.m_chunkAy.begin() + sbSelChunksTo->value() + 1);
+
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->LogMessage("Deleted geometry chunk");
+  sbSelChunksFrom->blockSignals(true);
+  sbSelChunksTo->blockSignals(true);
+  g_pMainWindow->UpdateWindow();
+  sbSelChunksTo->setValue(sbSelChunksFrom->value());
+  sbSelChunksFrom->blockSignals(false);
+  sbSelChunksTo->blockSignals(false);
+  p->m_pEditData->UpdateGeometryEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -485,6 +549,14 @@ void CMainWindow::UpdateWindow()
   txData->insertPlainText(sText);
 
   openGLWidget->SetTrack(&p->m_track, &p->m_tex, &p->m_bld, &p->m_palette);
+
+  sbSelChunksFrom->blockSignals(true);
+  sbSelChunksTo->blockSignals(true);
+  sbSelChunksFrom->setRange(0, (int)p->m_track.m_chunkAy.size() - 1);
+  sbSelChunksTo->setRange(0,   (int)p->m_track.m_chunkAy.size() - 1);
+  sbSelChunksFrom->blockSignals(false);
+  sbSelChunksTo->blockSignals(false);
+  UpdateGeometrySelection();
   emit UpdateWindowSig();
 }
 
@@ -494,41 +566,6 @@ void CMainWindow::LoadTextures()
 {
   bool bMangled = ckUnmangleTextures->isChecked();
 
-  //avoid memory leak
-  while (!p->m_lblAy.empty()) {
-    std::vector<QLabel *>::iterator it = p->m_lblAy.begin();
-    QLabel *pLabel = *it;
-    delete pLabel;
-    p->m_lblAy.erase(it);
-  }
-  QLayoutItem *pItem;
-  QLayout *pSublayout;
-  QWidget *pWidget;
-  while ((pItem = texLayout->takeAt(0))) {
-    if ((pSublayout = pItem->layout()) != 0) {
-      //should not have any of these
-      assert(0);
-    } else if ((pWidget = pItem->widget()) != 0) {
-      pWidget->hide();
-      delete pWidget;
-    } else { 
-      delete pItem;
-    }
-  }
-  while ((pItem = bldLayout->takeAt(0))) {
-    if ((pSublayout = pItem->layout()) != 0) {
-      //should not have any of these
-      assert(0);
-    } else if ((pWidget = pItem->widget()) != 0) {
-      pWidget->hide();
-      delete pWidget;
-    } else {
-      delete pItem;
-    }
-  }
-  assert(texLayout->isEmpty());
-  assert(bldLayout->isEmpty());
-
   //load textures
   QString sPal = m_sTrackFilesFolder + QDir::separator() + "PALETTE.PAL";
   QString sTex = m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sTextureFile.c_str());
@@ -536,30 +573,6 @@ void CMainWindow::LoadTextures()
   bool bPalLoaded = p->m_palette.LoadPalette(sPal.toLatin1().constData());
   bool bTexLoaded = p->m_tex.LoadTexture(sTex.toLatin1().constData(), &p->m_palette, bMangled);
   bool bBldLoaded = p->m_bld.LoadTexture(sBld.toLatin1().constData(), &p->m_palette, bMangled);
-  lblPalletteLoaded->setVisible(!bPalLoaded);
-  frmTex->setVisible(bTexLoaded);
-  frmBld->setVisible(bBldLoaded);
-  lblTextureLoaded->setText(bTexLoaded ? p->m_track.m_sTextureFile.c_str() : "Texture not loaded");
-  lblBuildingsLoaded->setText(bBldLoaded ? p->m_track.m_sBuildingFile.c_str() : "Buildings not loaded");
-
-  //add tiles to viewer layouts
-  int iTilesPerLine = (twViewer->width() - 256) / (TILE_WIDTH + 6);
-  for (int i = 0; i < p->m_tex.m_iNumTiles; ++i) {
-    QLabel *pImageLabel = new QLabel();
-    QPixmap pixmap;
-    pixmap.convertFromImage(QtHelpers::GetQImageFromTile(p->m_tex.m_pTileAy[i]));
-    pImageLabel->setPixmap(pixmap);
-    texLayout->addWidget(pImageLabel, i / iTilesPerLine, i % iTilesPerLine);
-    p->m_lblAy.push_back(pImageLabel);
-  }
-  for (int i = 0; i < p->m_bld.m_iNumTiles; ++i) {
-    QLabel *pImageLabel = new QLabel();
-    QPixmap pixmap;
-    pixmap.convertFromImage(QtHelpers::GetQImageFromTile(p->m_bld.m_pTileAy[i]));
-    pImageLabel->setPixmap(pixmap);
-    bldLayout->addWidget(pImageLabel, i / iTilesPerLine, i % iTilesPerLine);
-    p->m_lblAy.push_back(pImageLabel);
-  }
 
   //make sure car textures are reloaded too
   openGLWidget->ReloadCar();
@@ -567,16 +580,18 @@ void CMainWindow::LoadTextures()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::UpdateGeometrySelection(int iFrom, int iTo)
+void CMainWindow::UpdateGeometrySelection()
 {
   int iStart = 0, iEnd = 0;
-  p->m_track.GetGeometryCursorPos(iFrom, iTo, iStart, iEnd);
+  p->m_track.GetGeometryCursorPos(sbSelChunksFrom->value(), sbSelChunksTo->value(), iStart, iEnd);
   QTextCursor c = txData->textCursor();
   c.setPosition(iStart);
   c.setPosition(iEnd, QTextCursor::KeepAnchor);
   txData->setTextCursor(c);
 
-  openGLWidget->UpdateGeometrySelection(iFrom, iTo);
+  p->m_pEditData->UpdateGeometrySelection(sbSelChunksFrom->value(), sbSelChunksTo->value());
+
+  openGLWidget->UpdateGeometrySelection(sbSelChunksFrom->value(), sbSelChunksTo->value());
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -588,9 +603,58 @@ bool CMainWindow::UnmangleTextures()
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::RevertGeometry()
+{
+  pbDelete->setEnabled(!p->m_track.m_chunkAy.empty());
+  sbSelChunksFrom->setEnabled(true);
+  ckTo->setEnabled(true);
+  sbSelChunksTo->setEnabled(ckTo->isChecked());
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::UpdateGeometryEditMode(bool bEditMode)
+{
+  sbSelChunksFrom->setEnabled(!bEditMode);
+  ckTo->setEnabled(!bEditMode);
+  sbSelChunksTo->setEnabled(!bEditMode && ckTo->isChecked());
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::InsertUIUpdate(int iInsertVal)
+{
+  sbSelChunksFrom->blockSignals(true);
+  sbSelChunksTo->blockSignals(true);
+  ckTo->blockSignals(true);
+  sbSelChunksFrom->setRange(0, (int)p->m_track.m_chunkAy.size() - 1);
+  sbSelChunksTo->setRange(0,   (int)p->m_track.m_chunkAy.size() - 1);
+  sbSelChunksTo->setValue(sbSelChunksFrom->value() + iInsertVal - 1);
+  ckTo->setChecked(iInsertVal > 1);
+  sbSelChunksFrom->blockSignals(false);
+  sbSelChunksTo->blockSignals(false);
+  ckTo->blockSignals(false);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 const QString &CMainWindow::GetTrackFilesFolder()
 {
   return m_sTrackFilesFolder;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+int CMainWindow::GetSelFrom()
+{
+  return sbSelChunksFrom->value();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+int CMainWindow::GetSelTo()
+{
+  return sbSelChunksTo->value();
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -19,9 +19,13 @@ public:
   void SetUnsavedChanges(bool bUnsavedChanges);
   void UpdateWindow();
   void LoadTextures();
-  void UpdateGeometrySelection(int iFrom, int iTo);
   bool UnmangleTextures();
+  void RevertGeometry();
+  void UpdateGeometryEditMode(bool bEditMode);
+  void InsertUIUpdate(int iInsertVal);
   const QString &GetTrackFilesFolder();
+  int GetSelFrom();
+  int GetSelTo();
 
 protected:
   void closeEvent(QCloseEvent *pEvent);
@@ -36,17 +40,21 @@ protected slots:
   void OnExportMangled();
   void OnDebug();
   void OnAbout();
+  void OnSelChunksFromChanged(int iValue);
+  void OnSelChunksToChanged(int iValue);
+  void OnToChecked(bool bChecked);
+  void OnDeleteChunkClicked();
   void OnUnmangleTexturesToggled(bool bChecked);
 
 signals:
   void LogMsgSig(QString sMsg);
-  void ResetSelectionSig();
   void UpdateWindowSig();
 
 private:
   void LoadSettings();
   void SaveSettings();
   bool SaveChangesAndContinue();
+  void UpdateGeometrySelection();
 
   CMainWindowPrivate *p;
   bool m_bUnsavedChanges;

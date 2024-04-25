@@ -15,17 +15,17 @@ public:
   CEditDataWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTex, CTexture *pBld);
   ~CEditDataWidget();
 
+  void UpdateGeometrySelection(int iFrom, int iTo);
+
+public slots:
+  void UpdateGeometryEditMode();
+
 protected slots:
-  void OnResetSelection();
   void OnUpdateWindow();
   void OnInsertBeforeClicked();
   void OnInsertAfterClicked();
-  void OnSelChunksFromChanged(int iValue);
-  void OnSelChunksToChanged(int iValue);
-  void OnToChecked(bool bChecked);
   void OnApplyClicked();
   void OnCancelClicked();
-  void OnDeleteChunkClicked();
   void OnEditLSurface();
   void OnEditCSurface();
   void OnEditRSurface();
@@ -38,7 +38,6 @@ protected slots:
   void OnEditRLOuterWall();
   void OnEditRUOuterWall();
   void OnEditEnvirFloor();
-  void UpdateGeometryEditMode();
   void OnSignClicked();
   void OnBackClicked();
   void OnApplySignToggled(bool bChecked);
@@ -62,7 +61,6 @@ protected slots:
   void OnEnvirFloorChanged();
 
 private:
-  void UpdateGeometrySelection();
   void RevertGeometry();
   void UpdateTextures(QLineEdit *pLineEdit, QLabel *pTex1, QLabel *pTex2);
 

@@ -457,6 +457,11 @@ void CMainWindow::LoadSettings()
     bMillionPlus = settings.value("wrong_way", bMillionPlus).toBool();
     p->m_pDisplaySettings->SetDisplaySettings(uiShowModels, carModel, aiLine, bMillionPlus);
   }
+  if (settings.contains("attach_last")) {
+    bool bAttachLast = p->m_pDisplaySettings->GetAttachLast();
+    bAttachLast = settings.value("attach_last", bAttachLast).toBool();
+    p->m_pDisplaySettings->SetAttachLast(bAttachLast);
+  }
 
   show();
 }
@@ -484,6 +489,7 @@ void CMainWindow::SaveSettings()
   settings.setValue("car_model", (int)carModel);
   settings.setValue("car_pos", (int)aiLine);
   settings.setValue("wrong_way", bMillionPlus);
+  settings.setValue("attach_last", p->m_pDisplaySettings->GetAttachLast());
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -251,6 +251,8 @@ void CDisplaySettings::SetAttachLast(bool bAttachLast)
   ckAttachLast->blockSignals(true);
   ckAttachLast->setChecked(bAttachLast);
   ckAttachLast->blockSignals(false);
+
+  OnAttachLastChecked();
 }
 
 //-------------------------------------------------------------------------------------------------

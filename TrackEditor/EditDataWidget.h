@@ -12,7 +12,7 @@ class CEditDataWidget : public QWidget, private Ui::EditDataWidget
   Q_OBJECT
 
 public:
-  CEditDataWidget(QWidget *pParent, CTrack *pTrack);
+  CEditDataWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTex, CTexture *pBld);
   ~CEditDataWidget();
 
 protected slots:

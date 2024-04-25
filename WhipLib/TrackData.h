@@ -4,9 +4,6 @@
 #include <vector>
 #include <map>
 #include <string>
-#include "Vertex.h"
-#include "Texture.h"
-#include "Palette.h"
 //-------------------------------------------------------------------------------------------------
 struct tTrackHeader
 {
@@ -169,9 +166,6 @@ public:
   std::string m_sBuildingFile;
   tRaceInfo m_raceInfo;
   bool m_bIsMangled;
-  CPalette m_palette;
-  CTexture m_tex;
-  CTexture m_bld;
 
 protected:
   bool IsNumber(const std::string &str);

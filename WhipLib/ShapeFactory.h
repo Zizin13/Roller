@@ -17,6 +17,8 @@ class CShapeFactory
 public:
   static CShapeFactory &GetShapeFactory();
   ~CShapeFactory();
+  CShapeFactory(CShapeFactory const &) = delete;
+  void operator=(CShapeFactory const &) = delete;
 
   CShapeData *MakeAxes(CShader *pShader);
   CShapeData *MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model);

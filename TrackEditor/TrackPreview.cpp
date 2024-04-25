@@ -12,6 +12,7 @@
 #include "DisplaySettings.h"
 #include "ShapeData.h"
 #include "ShapeFactory.h"
+#include "Texture.h"
 #include "qdir.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -62,6 +63,7 @@ public:
     , m_pAILine4(NULL)
     , m_pAxes(NULL)
     , m_pCar(NULL)
+    , m_pPal(NULL)
   {};
   ~CTrackPreviewPrivate()
   {
@@ -241,6 +243,7 @@ public:
   CShapeData *m_pAxes;
   CShader *m_pShader;
   CTrack *m_pTrack;
+  CPalette *m_pPal;
 
   CShapeData *m_pCar;
   CTexture m_carTex;
@@ -268,37 +271,38 @@ CTrackPreview::~CTrackPreview()
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackPreview::SetTrack(CTrack *pTrack)
+void CTrackPreview::SetTrack(CTrack *pTrack, CTexture *pTex, CPalette *pPal)
 {
   p->DeleteModels();
   p->m_pTrack = pTrack;
+  p->m_pPal = pPal;
   if (p->m_pTrack) {
-    p->m_pLLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::LLANE);
-    p->m_pLLaneWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::LLANE, true);
-    p->m_pRLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::RLANE);
-    p->m_pRLaneWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::RLANE, true);
-    p->m_pLShoulderSurf  = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::LSHOULDER);
-    p->m_pLShoulderWire  = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::LSHOULDER, true);
-    p->m_pRShoulderSurf  = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::RSHOULDER);
-    p->m_pRShoulderWire  = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::RSHOULDER, true);
-    p->m_pLWallSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::LWALL);
-    p->m_pLWallWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::LWALL, true);
-    p->m_pRWallSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::RWALL);
-    p->m_pRWallWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::RWALL, true);
-    p->m_pRoofSurf       = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::ROOF);
-    p->m_pRoofWire       = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::ROOF, true);
-    p->m_pEnvirFloorSurf = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::ENVIRFLOOR);
-    p->m_pEnvirFloorWire = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::ENVIRFLOOR, true);
-    p->m_pOWallFloorSurf = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::OWALLFLOOR);
-    p->m_pOWallFloorWire = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::OWALLFLOOR, true);
-    p->m_pLLOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::LLOWALL);
-    p->m_pLLOWallWire    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::LLOWALL, true);
-    p->m_pRLOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::RLOWALL);
-    p->m_pRLOWallWire    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::RLOWALL, true);
-    p->m_pLUOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::LUOWALL);
-    p->m_pLUOWallWire    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::LUOWALL, true);
-    p->m_pRUOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::RUOWALL);
-    p->m_pRUOWallWire    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_pTrack->m_tex, p->m_pTrack, eShapeSection::RUOWALL, true);
+    p->m_pLLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::LLANE);
+    p->m_pLLaneWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::LLANE, true);
+    p->m_pRLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::RLANE);
+    p->m_pRLaneWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::RLANE, true);
+    p->m_pLShoulderSurf  = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::LSHOULDER);
+    p->m_pLShoulderWire  = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::LSHOULDER, true);
+    p->m_pRShoulderSurf  = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::RSHOULDER);
+    p->m_pRShoulderWire  = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::RSHOULDER, true);
+    p->m_pLWallSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::LWALL);
+    p->m_pLWallWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::LWALL, true);
+    p->m_pRWallSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::RWALL);
+    p->m_pRWallWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::RWALL, true);
+    p->m_pRoofSurf       = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::ROOF);
+    p->m_pRoofWire       = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::ROOF, true);
+    p->m_pEnvirFloorSurf = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::ENVIRFLOOR);
+    p->m_pEnvirFloorWire = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::ENVIRFLOOR, true);
+    p->m_pOWallFloorSurf = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::OWALLFLOOR);
+    p->m_pOWallFloorWire = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::OWALLFLOOR, true);
+    p->m_pLLOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::LLOWALL);
+    p->m_pLLOWallWire    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::LLOWALL, true);
+    p->m_pRLOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::RLOWALL);
+    p->m_pRLOWallWire    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::RLOWALL, true);
+    p->m_pLUOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::LUOWALL);
+    p->m_pLUOWallWire    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::LUOWALL, true);
+    p->m_pRUOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::RUOWALL);
+    p->m_pRUOWallWire    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::RUOWALL, true);
     p->m_pAILine1        = CShapeFactory::GetShapeFactory().MakeAILine(p->m_pShader, p->m_pTrack, eShapeSection::AILINE1);
     p->m_pAILine2        = CShapeFactory::GetShapeFactory().MakeAILine(p->m_pShader, p->m_pTrack, eShapeSection::AILINE2);
     p->m_pAILine3        = CShapeFactory::GetShapeFactory().MakeAILine(p->m_pShader, p->m_pTrack, eShapeSection::AILINE3);
@@ -350,7 +354,7 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
     p->m_pCar = NULL;
   }
 
-  if (p->m_pTrack && !g_pMainWindow->GetTrackFilesFolder().isEmpty()) {
+  if (p->m_pTrack && p->m_pPal && !g_pMainWindow->GetTrackFilesFolder().isEmpty()) {
     QString sTexName;
     switch (carModel) {
       case CAR_F1WACK:
@@ -383,7 +387,7 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
     }
     QString sPal = g_pMainWindow->GetTrackFilesFolder() + QDir::separator() + "PALETTE.PAL";
     QString sTex = g_pMainWindow->GetTrackFilesFolder() + QDir::separator() + sTexName;
-    p->m_carTex.LoadTexture(sTex.toLatin1().constData(), &p->m_pTrack->m_palette, g_pMainWindow->UnmangleTextures());
+    p->m_carTex.LoadTexture(sTex.toLatin1().constData(), p->m_pPal, g_pMainWindow->UnmangleTextures());
     p->m_pCar = CShapeFactory::GetShapeFactory().MakeModel(p->m_pShader, &p->m_carTex, carModel);
   }
 

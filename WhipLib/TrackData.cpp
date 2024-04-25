@@ -699,11 +699,11 @@ void CTrackData::GenerateTrackMath()
                 m_chunkAy[i].math.nextChunkPitched,
                 m_chunkAy[i].math.rShoulder, false);
     //left wall
-    m_chunkAy[i].math.bLWallAttachToLane = CTrackData::GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_WALL_31;
+    bool bLWallAttachToLane = CTrackData::GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_WALL_31;
     if (m_chunkAy[i].iLeftWallType == -1)
-      m_chunkAy[i].math.bLWallAttachToLane = bPrevLWallAttachToLane;
-    bPrevLWallAttachToLane = m_chunkAy[i].math.bLWallAttachToLane;
-    m_chunkAy[i].math.lWallBottomAttach = m_chunkAy[i].math.bLWallAttachToLane ? m_chunkAy[i].math.lLane : m_chunkAy[i].math.lShoulder;
+      bLWallAttachToLane = bPrevLWallAttachToLane;
+    bPrevLWallAttachToLane =bLWallAttachToLane;
+    m_chunkAy[i].math.lWallBottomAttach = bLWallAttachToLane ? m_chunkAy[i].math.lLane : m_chunkAy[i].math.lShoulder;
     GetWall(i,
             m_chunkAy[i].math.lWallBottomAttach,
             m_chunkAy[i].math.pitchAxis,
@@ -711,11 +711,11 @@ void CTrackData::GenerateTrackMath()
             m_chunkAy[i].math.nextChunkPitched,
             m_chunkAy[i].math.lWall, eShapeSection::LWALL);
     //right wall
-    m_chunkAy[i].math.bRWallAttachToLane = CTrackData::GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType) & SURFACE_FLAG_WALL_31;
+    bool bRWallAttachToLane = CTrackData::GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType) & SURFACE_FLAG_WALL_31;
     if (m_chunkAy[i].iRightWallType == -1)
-      m_chunkAy[i].math.bRWallAttachToLane = bPrevRWallAttachToLane;
-    bPrevRWallAttachToLane = m_chunkAy[i].math.bRWallAttachToLane;
-    m_chunkAy[i].math.rWallBottomAttach = m_chunkAy[i].math.bRWallAttachToLane ? m_chunkAy[i].math.rLane : m_chunkAy[i].math.rShoulder;
+      bRWallAttachToLane = bPrevRWallAttachToLane;
+    bPrevRWallAttachToLane = bRWallAttachToLane;
+    m_chunkAy[i].math.rWallBottomAttach = bRWallAttachToLane ? m_chunkAy[i].math.rLane : m_chunkAy[i].math.rShoulder;
     GetWall(i,
             m_chunkAy[i].math.rWallBottomAttach,
             m_chunkAy[i].math.pitchAxis,

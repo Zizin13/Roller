@@ -41,8 +41,6 @@ struct tChunkMath
   glm::vec3 rWall;
   glm::vec3 lWallBottomAttach;
   glm::vec3 rWallBottomAttach;
-  bool bLWallAttachToLane;
-  bool bRWallAttachToLane;
   glm::vec3 lFloor;
   glm::vec3 rFloor;
   glm::vec3 lloWall;

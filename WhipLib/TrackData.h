@@ -159,11 +159,6 @@ public:
   void ClearData();
   bool LoadTrack(const std::string &sFilename, bool bIsMangled);
   void GetTrackData(std::vector<uint8_t> &data);
-  CShapeData *MakeTrackCenterline(CShader *pShader);
-  CShapeData *MakeTrackSurface(CShader *pShader, eShapeSection section, bool bWireframe = false);
-  CShapeData *MakeAILine(CShader *pShader, eShapeSection section);
-  CShapeData *MakeSelectedChunks(CShader *pShader, int iStart, int iEnd);
-  void GetCarPos(int iChunk, eShapeSection aiLine, glm::mat4 &modelToWorldMatrix, bool bMillionPlus = false);
 
   static unsigned int GetSignedBitValueFromInt(int iValue);
   static int GetIntValueFromSignedBit(unsigned int uiValue);
@@ -177,39 +172,8 @@ public:
   CPalette m_palette;
   CTexture m_tex;
   CTexture m_bld;
-  float m_fScale;
-  int m_iAILineHeight;
 
 protected:
-  tVertex *MakeVerts(uint32 &numVertices, eShapeSection section);
-  tVertex *MakeVertsEnvirFloor(uint32 &numVertices);
-
-  uint32 *MakeIndicesCenterline(uint32 &numIndices);
-  uint32 *MakeIndicesSurface(uint32 &numIndices);
-  uint32 *MakeIndicesSurfaceWireframe(uint32 &numIndices);
-  uint32 *MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section);
-  uint32 *MakeIndicesSelectedChunks(uint32 &numIndices, int iStart, int iEnd);
-  bool ShouldMakeIndicesForChunk(int i, eShapeSection section);
-  bool ShouldDrawSurfaceType(int iSurfaceType);
-  uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices);
-
-  void GetCenter(int i, glm::vec3 prevCenter,
-                 glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched, 
-                 glm::mat4 &yawMat, glm::mat4 &pitchMat, glm::mat4 &rollMat);
-  void GetLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat,
-               glm::vec3 &lane, bool bLeft);
-  void GetShoulder(int i, glm::vec3 attach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched, 
-                   glm::vec3 &shoulder, bool bLeft, bool bIgnoreHeight = false);
-  void GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder,
-                     glm::vec3 &lEnvirFloor, glm::vec3 &rEnvirFloor);
-  void GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
-                     glm::vec3 &lFloor, glm::vec3 &rFloor);
-  void GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
-               glm::vec3 &lloWall, eShapeSection wallSection);
-  void GetAILine(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
-               glm::vec3 &aiLine, eShapeSection lineSection, int iHeight);
-  void ApplyVerticesSingleSection(int i, tVertex *vertices, const glm::vec3 &v0, const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3);
-
   bool IsNumber(const std::string &str);
   bool ProcessTrackData(const uint8_t *pData, size_t length);
   void ProcessSign(const std::vector<std::string> &lineAy, eFileSection &section);

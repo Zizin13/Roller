@@ -20,8 +20,6 @@ public:
   void UpdateWindow();
   void LoadTextures();
   bool UnmangleTextures();
-  void RevertGeometry();
-  void UpdateGeometryEditMode(bool bEditMode);
   void InsertUIUpdate(int iInsertVal);
   const QString &GetTrackFilesFolder();
   int GetSelFrom();

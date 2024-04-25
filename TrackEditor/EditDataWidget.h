@@ -19,13 +19,13 @@ public:
 
 public slots:
   void UpdateGeometryEditMode();
+  void OnCancelClicked();
 
 protected slots:
   void OnUpdateWindow();
   void OnInsertBeforeClicked();
   void OnInsertAfterClicked();
   void OnApplyClicked();
-  void OnCancelClicked();
   void OnEditLSurface();
   void OnEditCSurface();
   void OnEditRSurface();

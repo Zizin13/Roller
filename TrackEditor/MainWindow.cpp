@@ -351,13 +351,14 @@ void CMainWindow::OnSelChunksToChanged(int iValue)
     sbSelChunksFrom->blockSignals(false);
   }
   UpdateGeometrySelection();
+  p->m_pEditData->OnCancelClicked();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CMainWindow::OnToChecked(bool bChecked)
 {
-  sbSelChunksTo->setEnabled(bChecked/* && !pbApply->isEnabled()*/);
+  sbSelChunksTo->setEnabled(bChecked);
   if (!bChecked) {
     sbSelChunksTo->setValue(sbSelChunksFrom->value());
   }
@@ -599,25 +600,6 @@ void CMainWindow::UpdateGeometrySelection()
 bool CMainWindow::UnmangleTextures()
 {
   return ckUnmangleTextures->isChecked();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::RevertGeometry()
-{
-  pbDelete->setEnabled(!p->m_track.m_chunkAy.empty());
-  sbSelChunksFrom->setEnabled(true);
-  ckTo->setEnabled(true);
-  sbSelChunksTo->setEnabled(ckTo->isChecked());
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::UpdateGeometryEditMode(bool bEditMode)
-{
-  sbSelChunksFrom->setEnabled(!bEditMode);
-  ckTo->setEnabled(!bEditMode);
-  sbSelChunksTo->setEnabled(!bEditMode && ckTo->isChecked());
 }
 
 //-------------------------------------------------------------------------------------------------

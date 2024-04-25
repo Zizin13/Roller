@@ -588,7 +588,6 @@ void CEditDataWidget::UpdateGeometryEditMode()
   pbCancel->setEnabled(bEditMode);
   pbInsertAfter->setEnabled(!bMixedData);
   pbInsertBefore->setEnabled(!bMixedData);
-  g_pMainWindow->UpdateGeometryEditMode(bEditMode);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -975,8 +974,6 @@ void CEditDataWidget::RevertGeometry()
   pbInsertBefore->setEnabled(!bMixedData);
   pbApply->setEnabled(false);
   pbCancel->setEnabled(false);
-
-  g_pMainWindow->RevertGeometry();
 }
 
 //-------------------------------------------------------------------------------------------------

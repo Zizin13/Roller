@@ -376,6 +376,7 @@ void CMainWindow::OnDeleteChunkClicked()
   p->m_track.m_chunkAy.erase(
     p->m_track.m_chunkAy.begin() + sbSelChunksFrom->value(),
     p->m_track.m_chunkAy.begin() + sbSelChunksTo->value() + 1);
+  p->m_track.GenerateTrackMath();
 
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->LogMessage("Deleted geometry chunk");

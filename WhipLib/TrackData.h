@@ -195,6 +195,7 @@ public:
   void ClearData();
   bool LoadTrack(const std::string &sFilename, bool bIsMangled);
   void GetTrackData(std::vector<uint8_t> &data);
+  void GenerateTrackMath();
 
   static unsigned int GetSignedBitValueFromInt(int iValue);
   static int GetIntValueFromSignedBit(unsigned int uiValue);
@@ -213,7 +214,6 @@ protected:
   bool ProcessTrackData(const uint8_t *pData, size_t length);
   void ProcessSign(const std::vector<std::string> &lineAy, eFileSection &section);
   void WriteToVector(std::vector<uint8_t> &data, const char *szText);
-  void GenerateTrackMath();
 
   void GetCenter(int i, glm::vec3 prevCenter,
                  glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched,

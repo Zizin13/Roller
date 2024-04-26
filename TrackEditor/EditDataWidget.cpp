@@ -194,7 +194,6 @@ void CEditDataWidget::OnUpdateWindow()
   if (!p->m_pTrack)
     return;
 
-  leChunkCount->setText(QString::number(p->m_pTrack->m_chunkAy.size()));
   sbInsert->setRange(1, 65535 - (int)p->m_pTrack->m_chunkAy.size());
   UpdateGeometryEditMode();
 }

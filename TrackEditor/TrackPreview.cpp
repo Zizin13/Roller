@@ -290,7 +290,7 @@ void CTrackPreview::SetTrack(CTrack *pTrack, CTexture *pTex, CTexture *pBld, CPa
   p->m_pPal = pPal;
   p->m_pTex = pTex;
   p->m_pBld = pBld;
-  if (p->m_pTrack) {
+  if (p->m_pTrack && !p->m_pTrack->m_chunkAy.empty()) {
     p->m_pLLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::LLANE, m_bAttachLast);
     p->m_pLLaneWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::LLANE, m_bAttachLast, true);
     p->m_pRLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::RLANE, m_bAttachLast);

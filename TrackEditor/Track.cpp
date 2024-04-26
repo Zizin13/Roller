@@ -96,7 +96,66 @@ void CTrack::GetGeometryCursorPos(int iStartIndex, int iEndIndex, int &iStartCur
 
 void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex, CChunkEditValues &editVals)
 {
-  if (m_chunkAy.empty()) return;
+  //return a default track piece
+  if (m_chunkAy.empty()) {
+    editVals.sLeftShoulderWidth = "3000";
+    editVals.sLeftLaneWidth = "3000";
+    editVals.sRightLaneWidth = "3000";
+    editVals.sRightShoulderWidth = "3000";
+    editVals.sLShoulderHeight = "100";
+    editVals.sRShoulderHeight = "100";
+    editVals.sLength = "2000";
+    editVals.sYaw = "0.0";
+    editVals.sPitch = "0.0";
+    editVals.sRoll = "0.0";
+    editVals.sAILine1 = "1000";
+    editVals.sAILine2 = "2000";
+    editVals.sAILine3 = "-1000";
+    editVals.sAILine4 = "-2000";
+    editVals.sAIMaxAccel = "1000";
+    editVals.sLeftSurfaceType = "134545758";
+    editVals.sCenterSurfaceType = "82326";
+    editVals.sRightSurfaceType = "134545758";
+    editVals.sLWallType = "525605";
+    editVals.sRWallType = "525605";
+    editVals.sRoofType = "-1";
+    editVals.sLUOuterWallType = "1351";
+    editVals.sLLOuterWallType = "134545758";
+    editVals.sOuterFloorType = "-2";
+    editVals.sRLOuterWallType = "134545758";
+    editVals.sRUOuterWallType = "263495";
+    editVals.sEnvironmentFloorType = "267";
+    editVals.sLUOuterWallHOffset = "2000";
+    editVals.sLLOuterWallHOffset = "6000";
+    editVals.sLOuterFloorHOffset = "1000";
+    editVals.sROuterFloorHOffset = "1000";
+    editVals.sRLOuterWallHOffset = "6000";
+    editVals.sRUOuterWallHOffset = "2000";
+    editVals.sLUOuterWallHeight = "4000";
+    editVals.sLLOuterWallHeight = "1000";
+    editVals.sLOuterFloorHeight = "1792";
+    editVals.sROuterFloorHeight = "1792";
+    editVals.sRLOuterWallHeight = "1000";
+    editVals.sRUOuterWallHeight = "4000";
+    editVals.sRoofHeight = "1000";
+    editVals.sDrawOrder1 = "39";
+    editVals.sDrawOrder2 = "-1";
+    editVals.sUnk37 = "20";
+    editVals.sUnk38 = "20";
+    editVals.sUnk39 = "20";
+    editVals.sUnk40 = "20";
+    editVals.sUnk41 = "20";
+    editVals.sUnk42 = "20";
+    editVals.sUnk43 = "1";
+    editVals.sUnk44 = "20";
+    editVals.sUnk45 = "1";
+    editVals.sUnk46 = "20";
+    editVals.sUnk47 = "1";
+    editVals.sUnk48 = "64";
+    editVals.sUnk49 = "-1";
+    return;
+  }
+
   if (iEndIndex < iStartIndex || iEndIndex >= m_chunkAy.size()) {
     assert(0);
     return;

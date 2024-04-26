@@ -130,7 +130,6 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
                                      bool bLeftLane, bool bRightLane)
 {
   if (!m_pPalette) {
-    assert(0);
     return;
   }
 
@@ -211,10 +210,12 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
     bottomRight.flags.x = 1.0f;
 
     //color
-    topLeft.color     = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
-    topRight.color    = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
-    bottomLeft.color  = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
-    bottomRight.color = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
+    if (uiTexIndex < m_pPalette->m_paletteAy.size()) {
+      topLeft.color = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
+      topRight.color = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
+      bottomLeft.color = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
+      bottomRight.color = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
+    }
   }
 }
 

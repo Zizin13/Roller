@@ -131,6 +131,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(sbSelChunksTo, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksToChanged(int)));
   connect(ckTo, &QCheckBox::toggled, this, &CMainWindow::OnToChecked);
   connect(pbDelete, &QPushButton::clicked, this, &CMainWindow::OnDeleteChunkClicked);
+  connect(pbAddChunk, &QPushButton::clicked, this, &CMainWindow::OnAddChunkClicked);
   connect(ckUnmangleTextures, &QCheckBox::toggled, this, &CMainWindow::OnUnmangleTexturesToggled);
 
   //open window
@@ -381,6 +382,7 @@ void CMainWindow::OnDeleteChunkClicked()
     assert(0);
     return;
   }
+
   p->m_track.m_chunkAy.erase(
     p->m_track.m_chunkAy.begin() + sbSelChunksFrom->value(),
     p->m_track.m_chunkAy.begin() + sbSelChunksTo->value() + 1);
@@ -388,6 +390,25 @@ void CMainWindow::OnDeleteChunkClicked()
 
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->LogMessage("Deleted geometry chunk");
+  sbSelChunksFrom->blockSignals(true);
+  sbSelChunksTo->blockSignals(true);
+  g_pMainWindow->UpdateWindow();
+  sbSelChunksTo->setValue(sbSelChunksFrom->value());
+  sbSelChunksFrom->blockSignals(false);
+  sbSelChunksTo->blockSignals(false);
+  p->m_pEditData->UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnAddChunkClicked()
+{
+  CChunkEditValues editVals;
+  p->m_track.GetGeometryValuesFromSelection(sbSelChunksTo->value(), sbSelChunksTo->value(), editVals);
+  p->m_track.InsertGeometryChunk(sbSelChunksTo->value(), 1, editVals);
+
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->LogMessage("Added geometry chunk");
   sbSelChunksFrom->blockSignals(true);
   sbSelChunksTo->blockSignals(true);
   g_pMainWindow->UpdateWindow();
@@ -580,6 +601,7 @@ void CMainWindow::UpdateWindow()
   sbSelChunksTo->setRange(0,   (int)p->m_track.m_chunkAy.size() - 1);
   sbSelChunksFrom->blockSignals(false);
   sbSelChunksTo->blockSignals(false);
+  leChunkCount->setText(QString::number(p->m_track.m_chunkAy.size()));
   UpdateGeometrySelection();
   emit UpdateWindowSig();
 }

@@ -42,6 +42,7 @@ protected slots:
   void OnSelChunksToChanged(int iValue);
   void OnToChecked(bool bChecked);
   void OnDeleteChunkClicked();
+  void OnAddChunkClicked();
   void OnUnmangleTexturesToggled(bool bChecked);
 
 signals:

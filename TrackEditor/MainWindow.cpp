@@ -18,6 +18,7 @@
 #include "GlobalTrackSettings.h"
 #include "qdockwidget.h"
 #include "DisplaySettings.h"
+#include "EditGeometryWidget.h"
 #include "qtextstream.h"
 #include "QtHelpers.h"
 #if defined (IS_WINDOWS)
@@ -48,6 +49,7 @@ public:
   QDockWidget *m_pGlobalSettingsDockWidget;
   QDockWidget *m_pEditSeriesDockWidget;
   QDockWidget *m_pDisplaySettingsDockWidget;
+  QDockWidget *m_pEditGeometryDockWidget;
   CDisplaySettings *m_pDisplaySettings;
   QAction *m_pDebugAction;
 
@@ -98,7 +100,13 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   p->m_pDisplaySettings = new CDisplaySettings(p->m_pDisplaySettingsDockWidget, openGLWidget);
   p->m_pDisplaySettingsDockWidget->setWidget(p->m_pDisplaySettings);
 
+  p->m_pEditGeometryDockWidget = new QDockWidget("Edit Geometry", this);
+  p->m_pEditGeometryDockWidget->setObjectName("EditGeometry");
+  p->m_pEditGeometryDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+  p->m_pEditGeometryDockWidget->setWidget(new CEditGeometryWidget(p->m_pEditGeometryDockWidget, &p->m_track));
+
   //setup view menu
+  menuView->addAction(p->m_pEditGeometryDockWidget->toggleViewAction());
   menuView->addAction(p->m_pEditDataDockWidget->toggleViewAction());
   menuView->addAction(p->m_pEditSeriesDockWidget->toggleViewAction());
   menuView->addAction(p->m_pGlobalSettingsDockWidget->toggleViewAction());
@@ -420,32 +428,39 @@ void CMainWindow::LoadSettings()
   if (settings.contains("show_edit_data")
       && settings.contains("show_global_settings")
       && settings.contains("show_edit_series")
-      && settings.contains("show_display_settings")) {
+      && settings.contains("show_display_settings")
+      && settings.contains("show_edit_geometry")) {
     bool bShowEditData = false;
     bool bShowGlobalSettings = false;
     bool bShowEditSeries = false;
     bool bShowDisplaySettings = false;
+    bool bShowEditGeometry = false;
     bShowEditData = settings.value("show_edit_data", bShowEditData).toBool();
     bShowGlobalSettings = settings.value("show_global_settings", bShowGlobalSettings).toBool();
     bShowEditSeries = settings.value("show_edit_series", bShowEditSeries).toBool();
     bShowDisplaySettings = settings.value("show_display_settings", bShowDisplaySettings).toBool();
+    bShowEditGeometry = settings.value("show_edit_geometry", bShowEditGeometry).toBool();
     p->m_pEditDataDockWidget->setVisible(bShowEditData);
     p->m_pGlobalSettingsDockWidget->setVisible(bShowGlobalSettings);
     p->m_pEditSeriesDockWidget->setVisible(bShowEditSeries);
     p->m_pDisplaySettingsDockWidget->setVisible(bShowDisplaySettings);
+    p->m_pEditGeometryDockWidget->setVisible(bShowEditGeometry);
     restoreDockWidget(p->m_pEditDataDockWidget);
     restoreDockWidget(p->m_pGlobalSettingsDockWidget);
     restoreDockWidget(p->m_pEditSeriesDockWidget);
     restoreDockWidget(p->m_pDisplaySettingsDockWidget);
+    restoreDockWidget(p->m_pEditGeometryDockWidget);
   } else {
     addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditDataDockWidget);
     addDockWidget(Qt::LeftDockWidgetArea, p->m_pGlobalSettingsDockWidget);
     addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditSeriesDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, p->m_pDisplaySettingsDockWidget);
+    addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditGeometryDockWidget);
     p->m_pEditDataDockWidget->setVisible(false);
     p->m_pGlobalSettingsDockWidget->setVisible(false);
     p->m_pEditSeriesDockWidget->setVisible(false);
     p->m_pDisplaySettingsDockWidget->setVisible(false);
+    p->m_pEditGeometryDockWidget->setVisible(false);
   }
   if (settings.contains("show_models")) {
     eWhipModel carModel;
@@ -486,6 +501,7 @@ void CMainWindow::SaveSettings()
   settings.setValue("show_global_settings", p->m_pGlobalSettingsDockWidget->isVisible());
   settings.setValue("show_edit_series", p->m_pEditSeriesDockWidget->isVisible());
   settings.setValue("show_display_settings", p->m_pDisplaySettingsDockWidget->isVisible());
+  settings.setValue("show_edit_geometry", p->m_pEditGeometryDockWidget->isVisible());
   settings.setValue("show_models", p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus));
   settings.setValue("car_model", (int)carModel);
   settings.setValue("car_pos", (int)aiLine);
@@ -597,9 +613,7 @@ void CMainWindow::UpdateGeometrySelection()
   c.setPosition(iEnd, QTextCursor::KeepAnchor);
   txData->setTextCursor(c);
 
-  p->m_pEditData->UpdateGeometrySelection(sbSelChunksFrom->value(), sbSelChunksTo->value());
-
-  openGLWidget->UpdateGeometrySelection(sbSelChunksFrom->value(), sbSelChunksTo->value());
+  emit UpdateGeometrySelectionSig(sbSelChunksFrom->value(), sbSelChunksTo->value());
 }
 
 //-------------------------------------------------------------------------------------------------

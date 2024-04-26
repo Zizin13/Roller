@@ -47,6 +47,7 @@ protected slots:
 signals:
   void LogMsgSig(QString sMsg);
   void UpdateWindowSig();
+  void UpdateGeometrySelectionSig(int iFrom, int iTo);
 
 private:
   void LoadSettings();

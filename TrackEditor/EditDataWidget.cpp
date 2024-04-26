@@ -68,6 +68,7 @@ CEditDataWidget::CEditDataWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTe
 
 
   connect(g_pMainWindow, &CMainWindow::UpdateWindowSig, this, &CEditDataWidget::OnUpdateWindow);
+  connect(g_pMainWindow, &CMainWindow::UpdateGeometrySelectionSig, this, &CEditDataWidget::UpdateGeometrySelection);
 
   connect(pbInsertBefore, &QPushButton::clicked, this, &CEditDataWidget::OnInsertBeforeClicked);
   connect(pbInsertAfter, &QPushButton::clicked, this, &CEditDataWidget::OnInsertAfterClicked);

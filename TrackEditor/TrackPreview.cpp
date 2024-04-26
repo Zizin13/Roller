@@ -270,6 +270,8 @@ CTrackPreview::CTrackPreview(QWidget *pParent)
   , m_bAttachLast(false)
 {
   p = new CTrackPreviewPrivate;
+
+  connect(g_pMainWindow, &CMainWindow::UpdateGeometrySelectionSig, this, &CTrackPreview::UpdateGeometrySelection);
 }
 
 //-------------------------------------------------------------------------------------------------

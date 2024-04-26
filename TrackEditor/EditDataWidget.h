@@ -15,7 +15,6 @@ public:
   CEditDataWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTex, CTexture *pBld);
   ~CEditDataWidget();
 
-  void UpdateGeometrySelection(int iFrom, int iTo);
 
 public slots:
   void UpdateGeometryEditMode();
@@ -23,6 +22,7 @@ public slots:
 
 protected slots:
   void OnUpdateWindow();
+  void UpdateGeometrySelection(int iFrom, int iTo);
   void OnInsertBeforeClicked();
   void OnInsertAfterClicked();
   void OnApplyClicked();

@@ -76,6 +76,12 @@
     <ClCompile Include="moc\moc_DisplaySettings.cpp">
       <Filter>Qt Generated Files\Moc Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EditGeometryWidget.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="moc\moc_EditGeometryWidget.cpp">
+      <Filter>Qt Generated Files\Moc Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Track.h">
@@ -115,6 +121,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_DisplaySettings.h">
+      <Filter>Qt Generated Files\Ui Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_EditGeometryWidget.h">
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -174,6 +183,12 @@
       <Filter>Resources</Filter>
     </CustomBuild>
     <CustomBuild Include="DisplaySettings.h">
+      <Filter>Headers</Filter>
+    </CustomBuild>
+    <CustomBuild Include="EditGeometryWidget.ui">
+      <Filter>Resources</Filter>
+    </CustomBuild>
+    <CustomBuild Include="EditGeometryWidget.h">
       <Filter>Headers</Filter>
     </CustomBuild>
   </ItemGroup>

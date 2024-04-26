@@ -404,15 +404,17 @@ void CMainWindow::OnDeleteChunkClicked()
 void CMainWindow::OnAddChunkClicked()
 {
   CChunkEditValues editVals;
-  p->m_track.GetGeometryValuesFromSelection(sbSelChunksTo->value(), sbSelChunksTo->value(), editVals);
-  p->m_track.InsertGeometryChunk(sbSelChunksTo->value(), 1, editVals);
+  int iLastPos = (int)p->m_track.m_chunkAy.size() - 1;
+  p->m_track.GetGeometryValuesFromSelection(iLastPos, iLastPos, editVals);
+  p->m_track.InsertGeometryChunk(iLastPos, 1, editVals);
 
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->LogMessage("Added geometry chunk");
   sbSelChunksFrom->blockSignals(true);
   sbSelChunksTo->blockSignals(true);
   g_pMainWindow->UpdateWindow();
-  sbSelChunksTo->setValue(sbSelChunksFrom->value());
+  sbSelChunksTo->setValue(iLastPos + 1);
+  sbSelChunksFrom->setValue(iLastPos + 1);
   sbSelChunksFrom->blockSignals(false);
   sbSelChunksTo->blockSignals(false);
   p->m_pEditData->UpdateGeometryEditMode();

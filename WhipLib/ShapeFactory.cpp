@@ -901,7 +901,12 @@ void CShapeFactory::MakeSigns(CShader *pShader, CTexture *pBld, CTrackData *pTra
     float fLen = (float)pTrack->m_chunkAy[i].iSignHorizOffset * 15.0f / m_fScale * -1.0f;
     float fHeight = (float)pTrack->m_chunkAy[i].iSignVertOffset * 15.0f / m_fScale * -1.0f;
 
-    glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[i].math.center);
+    glm::vec3 center; //sign origin is midpoint of centerline
+    if (i + 1 < pTrack->m_chunkAy.size())
+      center = (pTrack->m_chunkAy[i + 1].math.center - pTrack->m_chunkAy[i].math.center) * 0.5f;
+    else
+      center = (pTrack->m_chunkAy[i].math.center - pTrack->m_chunkAy[0].math.center) * 0.5f;
+    glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[i].math.center + center);
 
     glm::mat4 scaleMatWidth = glm::scale(glm::vec3(fLen, fLen, fLen));
     glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));

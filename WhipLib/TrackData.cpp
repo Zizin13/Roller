@@ -510,8 +510,19 @@ void CTrackData::ProcessSign(const std::vector<std::string> &lineAy, eFileSectio
     section = STUNTS;
   } else {
     //process sign
-    if (iVal0 < m_chunkAy.size()) {
-      m_chunkAy[iVal0].iSignTexture = std::stoi(lineAy[1]);
+    int iSignable = 0;
+    int iChunk = 0;
+    //extraneous signs will be lost
+    while (iChunk < m_chunkAy.size()) {
+      if (m_chunkAy[iChunk].iSignType >= 0 && m_chunkAy[iChunk].iSignType < 256) {
+        if (iSignable == iVal0)
+          break;
+        iSignable++;
+      }
+      iChunk++;
+    }
+    if (iChunk < m_chunkAy.size()) {
+      m_chunkAy[iChunk].iSignTexture = std::stoi(lineAy[1]);
     }
   }
 }
@@ -533,7 +544,7 @@ void CTrackData::GetTrackData(std::vector<uint8_t> &data)
     WriteToVector(data, m_chunkAy[i].sString.c_str());
     WriteToVector(data, "\r\n");
     if (m_chunkAy[i].iSignTexture >= 0) {
-      signMap[i] = m_chunkAy[i].iSignTexture;
+      signMap[signMap.size()] = m_chunkAy[i].iSignTexture;
     }
     if (m_chunkAy[i].iBackTexture >= 0) {
       backsMap[i] = m_chunkAy[i].iBackTexture;

@@ -898,12 +898,10 @@ void CShapeFactory::MakeSigns(CShader *pShader, CTexture *pBld, CTrackData *pTra
     uint32 uiSignSurfaceType = CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[i].iSignTexture);
 
     //position sign
-    float fLen = (float)pTrack->m_chunkAy[i].iSignHorizOffset / m_fScale * -1.0f;
-    float fHeight = (float)pTrack->m_chunkAy[i].iSignVertOffset / m_fScale * -1.0f;
+    float fLen = (float)pTrack->m_chunkAy[i].iSignHorizOffset * 15.0f / m_fScale * -1.0f;
+    float fHeight = (float)pTrack->m_chunkAy[i].iSignVertOffset * 15.0f / m_fScale * -1.0f;
 
-    glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[i].math.lShoulder);
-    if (pTrack->m_chunkAy[i].iSignHorizOffset < 0)
-      translateMat = glm::translate(pTrack->m_chunkAy[i].math.rShoulder);
+    glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[i].math.center);
 
     glm::mat4 scaleMatWidth = glm::scale(glm::vec3(fLen, fLen, fLen));
     glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));

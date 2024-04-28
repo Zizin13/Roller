@@ -21,13 +21,13 @@ int GetUnmangledLength(const uint8_t *pSource, int iSourceLen)
 
 //-------------------------------------------------------------------------------------------------
 
-bool UnmangleFile(const uint8_t *pSource, int iSourceLen, uint8_t *pDestination, int iLength)
+bool UnmangleFile(const uint8_t *pSource, int iSourceLen, uint8_t *pDestination, int iDestLength)
 {
   // start positions
   int iInputPos = 4;
   int iOutputPos = 0;
   
-  while ((iInputPos < iSourceLen) && (iOutputPos < iLength)) {
+  while ((iInputPos < iSourceLen) && (iOutputPos < iDestLength)) {
     int iValue = (int)pSource[iInputPos];
   
     if (iValue <= 0x3F) // 0x00 to 0x3F: read bytes from input
@@ -74,6 +74,10 @@ bool UnmangleFile(const uint8_t *pSource, int iSourceLen, uint8_t *pDestination,
     } else if (iValue <= 0xBF) // 0x80 to 0xBF: clone 3 bytes using offset
     {
       int iOffset = (iValue & 0x3F);
+      if (iOutputPos - iOffset - 3 < 0 || iOutputPos - iOffset - 3 >= iDestLength)
+        return false;
+      if (iOutputPos - iOffset - 1 < 0 || iOutputPos - iOffset - 1 >= iDestLength)
+        return false;
       pDestination[iOutputPos] = pDestination[iOutputPos - iOffset - 3];
       pDestination[iOutputPos + 1] = pDestination[iOutputPos - iOffset - 2];
       pDestination[iOutputPos + 2] = pDestination[iOutputPos - iOffset - 1];
@@ -84,6 +88,8 @@ bool UnmangleFile(const uint8_t *pSource, int iSourceLen, uint8_t *pDestination,
       int iOffset = ((iValue & 0x03) << 8) + (int)(pSource[iInputPos + 1]) + 3;
       int iLength = ((iValue >> 2) & 0x07) + 4;
       for (int i = 0; i < iLength; i++) {
+        if (iOutputPos - iOffset < 0 || iOutputPos - iOffset >= iDestLength)
+          return false;
         pDestination[iOutputPos] = pDestination[iOutputPos - iOffset];
         iOutputPos++;
       }
@@ -93,13 +99,15 @@ bool UnmangleFile(const uint8_t *pSource, int iSourceLen, uint8_t *pDestination,
       int iOffset = ((iValue & 0x1F) << 8) + (int)(pSource[iInputPos + 1]) + 3;
       int iLength = (int)(pSource[iInputPos + 2]) + 5;
       for (int i = 0; i < iLength; i++) {
+        if (iOutputPos - iOffset < 0 || iOutputPos - iOffset >= iDestLength)
+          return false;
         pDestination[iOutputPos] = pDestination[iOutputPos - iOffset];
         iOutputPos++;
       }
       iInputPos += 3;
     }
   }
-  return true;
+  return iOutputPos == iDestLength;
 }
 
 

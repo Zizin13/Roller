@@ -145,6 +145,12 @@ CMainWindow::~CMainWindow()
 
 void CMainWindow::closeEvent(QCloseEvent *pEvent)
 {
+  if (!SaveChangesAndContinue()) {
+    pEvent->ignore();
+    return;
+  }
+  pEvent->accept();
+
   SaveSettings();
 
   //cleanup
@@ -484,11 +490,8 @@ bool CMainWindow::SaveChangesAndContinue()
   QString sFilename = m_sTrackFile;
   if (iButton == QMessageBox::Save) {
     if (sFilename.isEmpty()) {
-      QString sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
-        this, "Save Track File As", m_sTrackFilesFolder, QString("Track Files (*.TRK)")));
-    }
-    if (sFilename.isEmpty()) {
-      return false;
+      sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
+        this, "Save Track As", m_sTrackFilesFolder, "Track Files (*.TRK)"));
     }
     if (!p->m_track.SaveTrack(sFilename))
       return false;
@@ -496,6 +499,7 @@ bool CMainWindow::SaveChangesAndContinue()
   }
 
   m_sTrackFile = sFilename;
+  m_bUnsavedChanges = false;
   UpdateWindow();
   return true;
 }

@@ -51,7 +51,7 @@ public:
   ~CTexture();
 
   void ClearData();
-  bool LoadTexture(const std::string &sFilename, CPalette *pPalette, bool bMangled);
+  bool LoadTexture(const std::string &sFilename, CPalette *pPalette);
   void Bind(uint32 uiSlot = 0) const;
   void Unbind() const;
   void GetTextureCoordinates(uint32 uiSurfaceType,

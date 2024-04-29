@@ -132,7 +132,6 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(ckTo, &QCheckBox::toggled, this, &CMainWindow::OnToChecked);
   connect(pbDelete, &QPushButton::clicked, this, &CMainWindow::OnDeleteChunkClicked);
   connect(pbAddChunk, &QPushButton::clicked, this, &CMainWindow::OnAddChunkClicked);
-  connect(ckUnmangleTextures, &QCheckBox::toggled, this, &CMainWindow::OnUnmangleTexturesToggled);
 
   //open window
   LoadSettings();
@@ -229,9 +228,6 @@ void CMainWindow::OnLoadTrack()
   m_bAlreadySaved = false;
   m_bUnsavedChanges = false;
   //update app
-  ckUnmangleTextures->blockSignals(true);
-  ckUnmangleTextures->setChecked(p->m_track.m_bIsMangled);
-  ckUnmangleTextures->blockSignals(false);
   LoadTextures();
   UpdateWindow();
 }
@@ -295,9 +291,6 @@ void CMainWindow::OnImportMangled()
   m_bAlreadySaved = false;
   m_bUnsavedChanges = false;
   //update app
-  ckUnmangleTextures->blockSignals(true);
-  ckUnmangleTextures->setChecked(p->m_track.m_bIsMangled);
-  ckUnmangleTextures->blockSignals(false);
   LoadTextures();
   UpdateWindow();
 }
@@ -418,15 +411,6 @@ void CMainWindow::OnAddChunkClicked()
   sbSelChunksFrom->blockSignals(false);
   sbSelChunksTo->blockSignals(false);
   p->m_pEditData->UpdateGeometryEditMode();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnUnmangleTexturesToggled(bool bChecked)
-{
-  (void)(bChecked);
-  LoadTextures();
-  UpdateWindow();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -612,15 +596,13 @@ void CMainWindow::UpdateWindow()
 
 void CMainWindow::LoadTextures()
 {
-  bool bMangled = ckUnmangleTextures->isChecked();
-
   //load textures
   QString sPal = m_sTrackFilesFolder + QDir::separator() + "PALETTE.PAL";
   QString sTex = m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sTextureFile.c_str());
   QString sBld = m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sBuildingFile.c_str());
   bool bPalLoaded = p->m_palette.LoadPalette(sPal.toLatin1().constData());
-  bool bTexLoaded = p->m_tex.LoadTexture(sTex.toLatin1().constData(), &p->m_palette, bMangled);
-  bool bBldLoaded = p->m_bld.LoadTexture(sBld.toLatin1().constData(), &p->m_palette, bMangled);
+  bool bTexLoaded = p->m_tex.LoadTexture(sTex.toLatin1().constData(), &p->m_palette);
+  bool bBldLoaded = p->m_bld.LoadTexture(sBld.toLatin1().constData(), &p->m_palette);
 
   //make sure car textures are reloaded too
   openGLWidget->ReloadCar();
@@ -638,13 +620,6 @@ void CMainWindow::UpdateGeometrySelection()
   txData->setTextCursor(c);
 
   emit UpdateGeometrySelectionSig(sbSelChunksFrom->value(), sbSelChunksTo->value());
-}
-
-//-------------------------------------------------------------------------------------------------
-
-bool CMainWindow::UnmangleTextures()
-{
-  return ckUnmangleTextures->isChecked();
 }
 
 //-------------------------------------------------------------------------------------------------

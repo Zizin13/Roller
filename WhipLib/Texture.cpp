@@ -43,7 +43,7 @@ void CTexture::ClearData()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTexture::LoadTexture(const std::string &sFilename, CPalette *pPalette, bool bMangled)
+bool CTexture::LoadTexture(const std::string &sFilename, CPalette *pPalette)
 {
   ClearData();
   m_pPalette = pPalette;

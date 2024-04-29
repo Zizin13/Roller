@@ -544,7 +544,7 @@ void CTrackData::GetTrackData(std::vector<uint8_t> &data)
     WriteToVector(data, m_chunkAy[i].sString.c_str());
     WriteToVector(data, "\r\n");
     if (m_chunkAy[i].iSignTexture >= 0) {
-      signMap[signMap.size()] = m_chunkAy[i].iSignTexture;
+      signMap[(int)signMap.size()] = m_chunkAy[i].iSignTexture;
     }
     if (m_chunkAy[i].iBackTexture >= 0) {
       backsMap[i] = m_chunkAy[i].iBackTexture;

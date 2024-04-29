@@ -402,7 +402,7 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
     }
     QString sPal = g_pMainWindow->GetTrackFilesFolder() + QDir::separator() + "PALETTE.PAL";
     QString sTex = g_pMainWindow->GetTrackFilesFolder() + QDir::separator() + sTexName;
-    p->m_carTex.LoadTexture(sTex.toLatin1().constData(), p->m_pPal, g_pMainWindow->UnmangleTextures());
+    p->m_carTex.LoadTexture(sTex.toLatin1().constData(), p->m_pPal);
     p->m_pCar = CShapeFactory::GetShapeFactory().MakeModel(p->m_pShader, &p->m_carTex, carModel);
   }
 

@@ -19,7 +19,6 @@ public:
   void SetUnsavedChanges(bool bUnsavedChanges);
   void UpdateWindow();
   void LoadTextures();
-  bool UnmangleTextures();
   void InsertUIUpdate(int iInsertVal);
   const QString &GetTrackFilesFolder();
   int GetSelFrom();
@@ -43,7 +42,6 @@ protected slots:
   void OnToChecked(bool bChecked);
   void OnDeleteChunkClicked();
   void OnAddChunkClicked();
-  void OnUnmangleTexturesToggled(bool bChecked);
 
 signals:
   void LogMsgSig(QString sMsg);

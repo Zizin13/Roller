@@ -37,8 +37,8 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
   cbTestCarPos->addItem("AILINE 4", (int)eShapeSection::AILINE4);
   cbTestCarPos->setCurrentIndex(cbTestCarPos->findData((int)eShapeSection::AILINE1));
 
-  connect(ckAllSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAll);
-  connect(ckAllWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAll);
+  connect(ckAllSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAllSurface);
+  connect(ckAllWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAllWireframe);
   connect(ckLLaneSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckLLaneWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckRLaneSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
@@ -74,7 +74,8 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
   connect(ckMillionPlus, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckAttachLast, &QCheckBox::toggled, this, &CDisplaySettings::OnAttachLastChecked);
 
-  UpdateAll();
+  UpdateAllSurface();
+  UpdateAllWireframe();
   OnAttachLastChecked();
 }
 
@@ -257,87 +258,97 @@ void CDisplaySettings::SetAttachLast(bool bAttachLast)
 
 //-------------------------------------------------------------------------------------------------
 
-void CDisplaySettings::UpdateAll()
+void CDisplaySettings::UpdateAllSurface()
 {
   ckLLaneSurface->blockSignals(true);
-  ckLLaneWireframe->blockSignals(true);
   ckRLaneSurface->blockSignals(true);
-  ckRLaneWireframe->blockSignals(true);
   ckLShoulderSurface->blockSignals(true);
-  ckLShoulderWireframe->blockSignals(true);
   ckRShoulderSurface->blockSignals(true);
-  ckRShoulderWireframe->blockSignals(true);
   ckLWallSurface->blockSignals(true);
-  ckLWallWireframe->blockSignals(true);
   ckRWallSurface->blockSignals(true);
-  ckRWallWireframe->blockSignals(true);
   ckRoofSurface->blockSignals(true);
-  ckRoofWireframe->blockSignals(true);
   ckLUOWallSurface->blockSignals(true);
-  ckLUOWallWireframe->blockSignals(true);
   ckLLOWallSurface->blockSignals(true);
-  ckLLOWallWireframe->blockSignals(true);
   ckRUOWallSurface->blockSignals(true);
-  ckRUOWallWireframe->blockSignals(true);
   ckRLOWallSurface->blockSignals(true);
-  ckRLOWallWireframe->blockSignals(true);
   ckOWallFloorSurface->blockSignals(true);
-  ckOWallFloorWireframe->blockSignals(true);
   ckEnvirFloorSurface->blockSignals(true);
-  ckEnvirFloorWireframe->blockSignals(true);
 
   ckLLaneSurface->setChecked(ckAllSurface->isChecked());
-  ckLLaneWireframe->setChecked(ckAllWireframe->isChecked());
   ckRLaneSurface->setChecked(ckAllSurface->isChecked());
-  ckRLaneWireframe->setChecked(ckAllWireframe->isChecked());
   ckLShoulderSurface->setChecked(ckAllSurface->isChecked());
-  ckLShoulderWireframe->setChecked(ckAllWireframe->isChecked());
   ckRShoulderSurface->setChecked(ckAllSurface->isChecked());
-  ckRShoulderWireframe->setChecked(ckAllWireframe->isChecked());
   ckLWallSurface->setChecked(ckAllSurface->isChecked());
-  ckLWallWireframe->setChecked(ckAllWireframe->isChecked());
   ckRWallSurface->setChecked(ckAllSurface->isChecked());
-  ckRWallWireframe->setChecked(ckAllWireframe->isChecked());
   ckRoofSurface->setChecked(ckAllSurface->isChecked());
-  ckRoofWireframe->setChecked(ckAllWireframe->isChecked());
   ckLUOWallSurface->setChecked(ckAllSurface->isChecked());
-  ckLUOWallWireframe->setChecked(ckAllWireframe->isChecked());
   ckLLOWallSurface->setChecked(ckAllSurface->isChecked());
-  ckLLOWallWireframe->setChecked(ckAllWireframe->isChecked());
   ckRUOWallSurface->setChecked(ckAllSurface->isChecked());
-  ckRUOWallWireframe->setChecked(ckAllWireframe->isChecked());
   ckRLOWallSurface->setChecked(ckAllSurface->isChecked());
-  ckRLOWallWireframe->setChecked(ckAllWireframe->isChecked());
   ckOWallFloorSurface->setChecked(ckAllSurface->isChecked());
-  ckOWallFloorWireframe->setChecked(ckAllWireframe->isChecked());
   ckEnvirFloorSurface->setChecked(ckAllSurface->isChecked());
-  ckEnvirFloorWireframe->setChecked(ckAllWireframe->isChecked());
 
   ckLLaneSurface->blockSignals(false);
-  ckLLaneWireframe->blockSignals(false);
   ckRLaneSurface->blockSignals(false);
-  ckRLaneWireframe->blockSignals(false);
   ckLShoulderSurface->blockSignals(false);
-  ckLShoulderWireframe->blockSignals(false);
   ckRShoulderSurface->blockSignals(false);
-  ckRShoulderWireframe->blockSignals(false);
   ckLWallSurface->blockSignals(false);
-  ckLWallWireframe->blockSignals(false);
   ckRWallSurface->blockSignals(false);
-  ckRWallWireframe->blockSignals(false);
   ckRoofSurface->blockSignals(false);
-  ckRoofWireframe->blockSignals(false);
   ckLUOWallSurface->blockSignals(false);
-  ckLUOWallWireframe->blockSignals(false);
   ckLLOWallSurface->blockSignals(false);
-  ckLLOWallWireframe->blockSignals(false);
   ckRUOWallSurface->blockSignals(false);
-  ckRUOWallWireframe->blockSignals(false);
   ckRLOWallSurface->blockSignals(false);
-  ckRLOWallWireframe->blockSignals(false);
   ckOWallFloorSurface->blockSignals(false);
-  ckOWallFloorWireframe->blockSignals(false);
   ckEnvirFloorSurface->blockSignals(false);
+
+  UpdatePreview();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CDisplaySettings::UpdateAllWireframe()
+{
+  ckLLaneWireframe->blockSignals(true);
+  ckRLaneWireframe->blockSignals(true);
+  ckLShoulderWireframe->blockSignals(true);
+  ckRShoulderWireframe->blockSignals(true);
+  ckLWallWireframe->blockSignals(true);
+  ckRWallWireframe->blockSignals(true);
+  ckRoofWireframe->blockSignals(true);
+  ckLUOWallWireframe->blockSignals(true);
+  ckLLOWallWireframe->blockSignals(true);
+  ckRUOWallWireframe->blockSignals(true);
+  ckRLOWallWireframe->blockSignals(true);
+  ckOWallFloorWireframe->blockSignals(true);
+  ckEnvirFloorWireframe->blockSignals(true);
+
+  ckLLaneWireframe->setChecked(ckAllWireframe->isChecked());
+  ckRLaneWireframe->setChecked(ckAllWireframe->isChecked());
+  ckLShoulderWireframe->setChecked(ckAllWireframe->isChecked());
+  ckRShoulderWireframe->setChecked(ckAllWireframe->isChecked());
+  ckLWallWireframe->setChecked(ckAllWireframe->isChecked());
+  ckRWallWireframe->setChecked(ckAllWireframe->isChecked());
+  ckRoofWireframe->setChecked(ckAllWireframe->isChecked());
+  ckLUOWallWireframe->setChecked(ckAllWireframe->isChecked());
+  ckLLOWallWireframe->setChecked(ckAllWireframe->isChecked());
+  ckRUOWallWireframe->setChecked(ckAllWireframe->isChecked());
+  ckRLOWallWireframe->setChecked(ckAllWireframe->isChecked());
+  ckOWallFloorWireframe->setChecked(ckAllWireframe->isChecked());
+  ckEnvirFloorWireframe->setChecked(ckAllWireframe->isChecked());
+
+  ckLLaneWireframe->blockSignals(false);
+  ckRLaneWireframe->blockSignals(false);
+  ckLShoulderWireframe->blockSignals(false);
+  ckRShoulderWireframe->blockSignals(false);
+  ckLWallWireframe->blockSignals(false);
+  ckRWallWireframe->blockSignals(false);
+  ckRoofWireframe->blockSignals(false);
+  ckLUOWallWireframe->blockSignals(false);
+  ckLLOWallWireframe->blockSignals(false);
+  ckRUOWallWireframe->blockSignals(false);
+  ckRLOWallWireframe->blockSignals(false);
+  ckOWallFloorWireframe->blockSignals(false);
   ckEnvirFloorWireframe->blockSignals(false);
 
   UpdatePreview();

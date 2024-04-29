@@ -52,7 +52,8 @@ public:
   void SetAttachLast(bool bAttachLast);
 
 protected slots:
-  void UpdateAll();
+  void UpdateAllSurface();
+  void UpdateAllWireframe();
   void UpdatePreviewSelection();
   void OnAttachLastChecked();
 

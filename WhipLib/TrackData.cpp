@@ -133,16 +133,14 @@ void CTrackData::ClearData()
   m_chunkAy.clear();
   m_sTextureFile = "";
   m_sBuildingFile = "";
-  m_bIsMangled = false;
   memset(&m_raceInfo, 0, sizeof(m_raceInfo));
 }
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrackData::LoadTrack(const std::string &sFilename, bool bIsMangled)
+bool CTrackData::LoadTrack(const std::string &sFilename)
 {
   ClearData();
-  m_bIsMangled = bIsMangled;
 
   if (sFilename.empty()) {
     //TODO Logging g_pMainWindow->LogMessage("Track filename empty: " + sFilename);
@@ -170,9 +168,9 @@ bool CTrackData::LoadTrack(const std::string &sFilename, bool bIsMangled)
   file.read(szBuf, length);
 
   bool bSuccess = false;
+  int iUnmangledLength = GetUnmangledLength((uint8_t *)szBuf, (int)length);
   //unmangle
-  if (bIsMangled) {
-    int iUnmangledLength = GetUnmangledLength((uint8_t *)szBuf, (int)length);
+  if (iUnmangledLength > 0 && iUnmangledLength < 67108864) {  // arbitrary 64 MB max, realistic maximum is much smaller
     uint8_t *szUnmangledData = new uint8_t[iUnmangledLength];
     UnmangleFile((uint8_t *)szBuf, (int)length, szUnmangledData, iUnmangledLength);
     bSuccess = ProcessTrackData(szUnmangledData, (size_t)iUnmangledLength);

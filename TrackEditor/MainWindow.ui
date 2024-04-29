@@ -190,7 +190,6 @@
     <addaction name="actSave"/>
     <addaction name="actSaveAs"/>
     <addaction name="separator"/>
-    <addaction name="actImportMangled"/>
     <addaction name="actExportMangled"/>
    </widget>
    <widget class="QMenu" name="menuHelp">

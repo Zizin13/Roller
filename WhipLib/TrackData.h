@@ -193,7 +193,7 @@ public:
   ~CTrackData();
 
   void ClearData();
-  bool LoadTrack(const std::string &sFilename, bool bIsMangled);
+  bool LoadTrack(const std::string &sFilename);
   void GetTrackData(std::vector<uint8_t> &data);
   void GenerateTrackMath();
 
@@ -205,7 +205,6 @@ public:
   std::string m_sTextureFile;
   std::string m_sBuildingFile;
   tRaceInfo m_raceInfo;
-  bool m_bIsMangled;
   int m_iAILineHeight;
   float m_fScale;
 

@@ -122,7 +122,6 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(actLoad, &QAction::triggered, this, &CMainWindow::OnLoadTrack);
   connect(actSave, &QAction::triggered, this, &CMainWindow::OnSaveTrack);
   connect(actSaveAs, &QAction::triggered, this, &CMainWindow::OnSaveTrackAs);
-  connect(actImportMangled, &QAction::triggered, this, &CMainWindow::OnImportMangled);
   connect(actExportMangled, &QAction::triggered, this, &CMainWindow::OnExportMangled);
   connect(p->m_pDebugAction, &QAction::triggered, this, &CMainWindow::OnDebug);
   connect(actAbout, &QAction::triggered, this, &CMainWindow::OnAbout);
@@ -213,7 +212,7 @@ void CMainWindow::OnLoadTrack()
   if (sFilename.isEmpty())
     return;
 
-  if (!p->m_track.LoadTrack(sFilename, false)) {
+  if (!p->m_track.LoadTrack(sFilename)) {
     //load failed
     m_sTrackFile = "";
   } else { //load successful
@@ -259,39 +258,6 @@ void CMainWindow::OnSaveTrackAs()
   m_sTrackFile = sFilename;
   m_bUnsavedChanges = false;
   m_bAlreadySaved = true;
-  UpdateWindow();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnImportMangled()
-{
-  //check for unsaved data
-  if (!SaveChangesAndContinue())
-    return;
-
-  //load track
-  QString sFilename = QDir::toNativeSeparators(QFileDialog::getOpenFileName(
-    this, "Load Track", m_sTrackFilesFolder, QString("Track Files (*.TRK)")));
-  if (sFilename.isEmpty())
-    return;
-
-  if (!p->m_track.LoadTrack(sFilename, true)) {
-    //load failed
-    m_sTrackFile = "";
-  } else { //load successful
-    //update ui
-    sbSelChunksFrom->setValue(0);
-    sbSelChunksTo->setValue(0);
-
-    //update variables
-    m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
-    m_sTrackFile = sFilename;
-  }
-  m_bAlreadySaved = false;
-  m_bUnsavedChanges = false;
-  //update app
-  LoadTextures();
   UpdateWindow();
 }
 

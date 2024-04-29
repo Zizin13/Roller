@@ -26,9 +26,9 @@ CTrack::~CTrack()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrack::LoadTrack(const QString &sFilename, bool bIsMangled)
+bool CTrack::LoadTrack(const QString &sFilename)
 {
-  bool bSuccess = CTrackData::LoadTrack(sFilename.toLatin1().constData(), bIsMangled);
+  bool bSuccess = CTrackData::LoadTrack(sFilename.toLatin1().constData());
 
   //generate strings
   UpdateChunkStrings();

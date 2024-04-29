@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>265</width>
-    <height>690</height>
+    <height>846</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -25,190 +25,38 @@
         <x>0</x>
         <y>0</y>
         <width>245</width>
-        <height>670</height>
+        <height>826</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="1">
-        <widget class="QDoubleSpinBox" name="dsbYaw">
+       <item row="1" column="1">
+        <widget class="QDoubleSpinBox" name="dsbPitch">
+         <property name="minimum">
+          <double>-360.000000000000000</double>
+         </property>
          <property name="maximum">
           <double>360.000000000000000</double>
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="label_10">
-         <property name="text">
-          <string>Length</string>
+       <item row="19" column="1">
+        <widget class="QSpinBox" name="sbLOuterFloorHOffset">
+         <property name="minimum">
+          <number>-65535</number>
          </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Pitch</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QSpinBox" name="sbRLaneWidth">
          <property name="maximum">
           <number>65535</number>
          </property>
          <property name="singleStep">
           <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="18" column="0">
-        <widget class="QLabel" name="label_21">
-         <property name="text">
-          <string>RUO Wall Height</string>
          </property>
         </widget>
        </item>
        <item row="9" column="1">
         <widget class="QSpinBox" name="sbRShoulderHeight">
-         <property name="maximum">
-          <number>65535</number>
+         <property name="minimum">
+          <number>-65535</number>
          </property>
-         <property name="singleStep">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="1">
-        <widget class="QSpinBox" name="sbLUOWallHeight">
-         <property name="maximum">
-          <number>65535</number>
-         </property>
-         <property name="singleStep">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="QSpinBox" name="sbLShoulderHeight">
-         <property name="maximum">
-          <number>65535</number>
-         </property>
-         <property name="singleStep">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="16" column="0">
-        <widget class="QLabel" name="label_19">
-         <property name="text">
-          <string>RLO Wall Height</string>
-         </property>
-        </widget>
-       </item>
-       <item row="19" column="0">
-        <widget class="QLabel" name="label_12">
-         <property name="text">
-          <string>Left Outer Floor Horiz Offset</string>
-         </property>
-        </widget>
-       </item>
-       <item row="21" column="0">
-        <widget class="QLabel" name="label_22">
-         <property name="text">
-          <string>Left Outer Floor Height</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Left Lane Width</string>
-         </property>
-        </widget>
-       </item>
-       <item row="21" column="1">
-        <widget class="QSpinBox" name="sbLOuterFloorHeight">
-         <property name="maximum">
-          <number>65535</number>
-         </property>
-         <property name="singleStep">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QDoubleSpinBox" name="dsbRoll">
-         <property name="maximum">
-          <double>360.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="14" column="0">
-        <widget class="QLabel" name="label_17">
-         <property name="text">
-          <string>LUO Wall Height</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_3">
-         <property name="text">
-          <string>Roll</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QDoubleSpinBox" name="dsbPitch">
-         <property name="maximum">
-          <double>360.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="17" column="1">
-        <widget class="QSpinBox" name="sbRUOWallHOffset">
-         <property name="maximum">
-          <number>65535</number>
-         </property>
-         <property name="singleStep">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="label_9">
-         <property name="text">
-          <string>Right Shoulder Height</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QSpinBox" name="sbLength">
-         <property name="maximum">
-          <number>65535</number>
-         </property>
-         <property name="singleStep">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="17" column="0">
-        <widget class="QLabel" name="label_20">
-         <property name="text">
-          <string>RUO Wall Horiz Offset</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QSpinBox" name="sbLShoulderWidth">
-         <property name="maximum">
-          <number>65535</number>
-         </property>
-         <property name="singleStep">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="16" column="1">
-        <widget class="QSpinBox" name="sbRLOWallHeight">
          <property name="maximum">
           <number>65535</number>
          </property>
@@ -224,8 +72,11 @@
          </property>
         </widget>
        </item>
-       <item row="19" column="1">
-        <widget class="QSpinBox" name="sbLOuterFloorHOffset">
+       <item row="22" column="1">
+        <widget class="QSpinBox" name="sbROuterFloorHeight">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
          <property name="maximum">
           <number>65535</number>
          </property>
@@ -234,22 +85,91 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="0">
-        <widget class="QLabel" name="label_15">
+       <item row="14" column="0">
+        <widget class="QLabel" name="label_17">
          <property name="text">
-          <string>LLO Wall Height</string>
+          <string>LUO Wall Height</string>
          </property>
         </widget>
        </item>
-       <item row="13" column="0">
-        <widget class="QLabel" name="label_16">
+       <item row="10" column="0">
+        <widget class="QLabel" name="label_11">
          <property name="text">
-          <string>LUO Wall Horiz Offset</string>
+          <string>Wall/Roof Height</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="label_5">
+         <property name="text">
+          <string>Right Lane Width</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QSpinBox" name="sbLShoulderWidth">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
          </property>
         </widget>
        </item>
        <item row="18" column="1">
         <widget class="QSpinBox" name="sbRUOWallHeight">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="17" column="0">
+        <widget class="QLabel" name="label_20">
+         <property name="text">
+          <string>RUO Wall Horiz Offset</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="1">
+        <widget class="QSpinBox" name="sbLLOWallHOffset">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="20" column="1">
+        <widget class="QSpinBox" name="sbROuterFloorHOffset">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="1">
+        <widget class="QSpinBox" name="sbLLOWallHeight">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
          <property name="maximum">
           <number>65535</number>
          </property>
@@ -265,80 +185,10 @@
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="label_6">
+       <item row="18" column="0">
+        <widget class="QLabel" name="label_21">
          <property name="text">
-          <string>Left Shoulder Width</string>
-         </property>
-        </widget>
-       </item>
-       <item row="13" column="1">
-        <widget class="QSpinBox" name="sbLUOWallHOffset">
-         <property name="maximum">
-          <number>65535</number>
-         </property>
-         <property name="singleStep">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="10" column="1">
-        <widget class="QSpinBox" name="sbWallHeight">
-         <property name="maximum">
-          <number>65535</number>
-         </property>
-         <property name="singleStep">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="23" column="0">
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>Left Shoulder Height</string>
-         </property>
-        </widget>
-       </item>
-       <item row="20" column="1">
-        <widget class="QSpinBox" name="sbROuterFloorHOffset">
-         <property name="maximum">
-          <number>65535</number>
-         </property>
-         <property name="singleStep">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="1">
-        <widget class="QSpinBox" name="sbLLOWallHOffset">
-         <property name="maximum">
-          <number>65535</number>
-         </property>
-         <property name="singleStep">
-          <number>100</number>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="1">
-        <widget class="QSpinBox" name="sbLLaneWidth">
-         <property name="maximum">
-          <number>65535</number>
-         </property>
-         <property name="singleStep">
-          <number>100</number>
+          <string>RUO Wall Height</string>
          </property>
         </widget>
        </item>
@@ -346,6 +196,19 @@
         <widget class="QLabel" name="label_14">
          <property name="text">
           <string>LLO Wall Horiz Offset</string>
+         </property>
+        </widget>
+       </item>
+       <item row="16" column="1">
+        <widget class="QSpinBox" name="sbRLOWallHeight">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
          </property>
         </widget>
        </item>
@@ -363,8 +226,28 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="1">
-        <widget class="QSpinBox" name="sbLLOWallHeight">
+       <item row="0" column="1">
+        <widget class="QDoubleSpinBox" name="dsbYaw">
+         <property name="minimum">
+          <double>-360.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>360.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>Left Shoulder Height</string>
+         </property>
+        </widget>
+       </item>
+       <item row="17" column="1">
+        <widget class="QSpinBox" name="sbRUOWallHOffset">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
          <property name="maximum">
           <number>65535</number>
          </property>
@@ -373,15 +256,51 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="label_5">
+       <item row="13" column="0">
+        <widget class="QLabel" name="label_16">
          <property name="text">
-          <string>Right Lane Width</string>
+          <string>LUO Wall Horiz Offset</string>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0">
+        <widget class="QLabel" name="label_15">
+         <property name="text">
+          <string>LLO Wall Height</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QSpinBox" name="sbLLaneWidth">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QSpinBox" name="sbRLaneWidth">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
          </property>
         </widget>
        </item>
        <item row="8" column="1">
         <widget class="QSpinBox" name="sbRShoulderWidth">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
          <property name="maximum">
           <number>65535</number>
          </property>
@@ -390,15 +309,25 @@
          </property>
         </widget>
        </item>
-       <item row="10" column="0">
-        <widget class="QLabel" name="label_11">
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>Wall/Roof Height</string>
+          <string>Pitch</string>
          </property>
         </widget>
        </item>
-       <item row="15" column="1">
-        <widget class="QSpinBox" name="sbRLOWallHOffset">
+       <item row="4" column="0">
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Left Lane Width</string>
+         </property>
+        </widget>
+       </item>
+       <item row="21" column="1">
+        <widget class="QSpinBox" name="sbLOuterFloorHeight">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
          <property name="maximum">
           <number>65535</number>
          </property>
@@ -406,6 +335,75 @@
           <number>100</number>
          </property>
         </widget>
+       </item>
+       <item row="16" column="0">
+        <widget class="QLabel" name="label_19">
+         <property name="text">
+          <string>RLO Wall Height</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1">
+        <widget class="QSpinBox" name="sbWallHeight">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="14" column="1">
+        <widget class="QSpinBox" name="sbLUOWallHeight">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QDoubleSpinBox" name="dsbRoll">
+         <property name="minimum">
+          <double>-360.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>360.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QSpinBox" name="sbLShoulderHeight">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="27" column="0">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
        </item>
        <item row="22" column="0">
         <widget class="QLabel" name="label_23">
@@ -414,8 +412,159 @@
          </property>
         </widget>
        </item>
-       <item row="22" column="1">
-        <widget class="QSpinBox" name="sbROuterFloorHeight">
+       <item row="23" column="0">
+        <widget class="QLabel" name="label_24">
+         <property name="text">
+          <string>AI Line 1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="21" column="0">
+        <widget class="QLabel" name="label_22">
+         <property name="text">
+          <string>Left Outer Floor Height</string>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="0">
+        <widget class="QLabel" name="label_26">
+         <property name="text">
+          <string>AI Line 3</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>Left Shoulder Width</string>
+         </property>
+        </widget>
+       </item>
+       <item row="19" column="0">
+        <widget class="QLabel" name="label_12">
+         <property name="text">
+          <string>Left Outer Floor Horiz Offset</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string>Length</string>
+         </property>
+        </widget>
+       </item>
+       <item row="15" column="1">
+        <widget class="QSpinBox" name="sbRLOWallHOffset">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Roll</string>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="0">
+        <widget class="QLabel" name="label_25">
+         <property name="text">
+          <string>AI Line 2</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>Right Shoulder Height</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QSpinBox" name="sbLength">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="1">
+        <widget class="QSpinBox" name="sbLUOWallHOffset">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="26" column="0">
+        <widget class="QLabel" name="label_27">
+         <property name="text">
+          <string>AI Line 4</string>
+         </property>
+        </widget>
+       </item>
+       <item row="24" column="1">
+        <widget class="QSpinBox" name="sbAILine2">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="23" column="1">
+        <widget class="QSpinBox" name="sbAILine1">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="25" column="1">
+        <widget class="QSpinBox" name="sbAILine3">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>100</number>
+         </property>
+        </widget>
+       </item>
+       <item row="26" column="1">
+        <widget class="QSpinBox" name="sbAILine4">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
          <property name="maximum">
           <number>65535</number>
          </property>

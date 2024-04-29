@@ -122,7 +122,7 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(actLoad, &QAction::triggered, this, &CMainWindow::OnLoadTrack);
   connect(actSave, &QAction::triggered, this, &CMainWindow::OnSaveTrack);
   connect(actSaveAs, &QAction::triggered, this, &CMainWindow::OnSaveTrackAs);
-  connect(actExportMangled, &QAction::triggered, this, &CMainWindow::OnExportMangled);
+  //connect(actExportMangled, &QAction::triggered, this, &CMainWindow::OnExportMangled);
   connect(p->m_pDebugAction, &QAction::triggered, this, &CMainWindow::OnDebug);
   connect(actAbout, &QAction::triggered, this, &CMainWindow::OnAbout);
 

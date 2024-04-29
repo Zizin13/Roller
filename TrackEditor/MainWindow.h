@@ -33,7 +33,6 @@ protected slots:
   void OnLoadTrack();
   void OnSaveTrack();
   void OnSaveTrackAs();
-  void OnExportMangled();
   void OnDebug();
   void OnAbout();
   void OnSelChunksFromChanged(int iValue);

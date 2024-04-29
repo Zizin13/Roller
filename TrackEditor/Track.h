@@ -20,7 +20,7 @@ public:
   ~CTrack();
 
   bool LoadTrack(const QString &sFilename);
-  bool SaveTrack(const QString &sFilename, bool bIsMangled);
+  bool SaveTrack(const QString &sFilename);
   void GetGeometryCursorPos(int iStartIndex, int iEndIndex, int &iStartCursorPos, int &iEndCursorPos);
   void GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex, CChunkEditValues &editVals);
   void ApplyGeometrySettings(int iStartIndex, int iEndIndex, const CChunkEditValues &editVals);

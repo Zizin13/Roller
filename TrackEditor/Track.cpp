@@ -38,7 +38,7 @@ bool CTrack::LoadTrack(const QString &sFilename)
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrack::SaveTrack(const QString &sFilename, bool bIsMangled)
+bool CTrack::SaveTrack(const QString &sFilename)
 {
   if (sFilename.isEmpty())
     return false;
@@ -48,12 +48,12 @@ bool CTrack::SaveTrack(const QString &sFilename, bool bIsMangled)
   GetTrackData(data);
 
   std::vector<uint8_t> *pOutData;
-  if (bIsMangled) {
-    MangleFile(data, mangledData);
-    pOutData = &mangledData;
-  } else {
+  //if (bIsMangled) {
+  //  MangleFile(data, mangledData);
+  //  pOutData = &mangledData;
+  //} else {
     pOutData = &data;
-  }
+  //}
 
   QFile file(sFilename);
   file.resize(0);

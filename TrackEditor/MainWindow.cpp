@@ -122,7 +122,6 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   connect(actLoad, &QAction::triggered, this, &CMainWindow::OnLoadTrack);
   connect(actSave, &QAction::triggered, this, &CMainWindow::OnSaveTrack);
   connect(actSaveAs, &QAction::triggered, this, &CMainWindow::OnSaveTrackAs);
-  //connect(actExportMangled, &QAction::triggered, this, &CMainWindow::OnExportMangled);
   connect(p->m_pDebugAction, &QAction::triggered, this, &CMainWindow::OnDebug);
   connect(actAbout, &QAction::triggered, this, &CMainWindow::OnAbout);
 
@@ -236,7 +235,7 @@ void CMainWindow::OnLoadTrack()
 void CMainWindow::OnSaveTrack()
 {
   if (!m_sTrackFile.isEmpty() && m_bAlreadySaved) {
-    m_bUnsavedChanges = !p->m_track.SaveTrack(m_sTrackFile, false);
+    m_bUnsavedChanges = !p->m_track.SaveTrack(m_sTrackFile);
     UpdateWindow();
   } else {
     OnSaveTrackAs();
@@ -250,7 +249,7 @@ void CMainWindow::OnSaveTrackAs()
   //save track
   QString sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
     this, "Save Track As", m_sTrackFilesFolder, "Track Files (*.TRK)"));
-  if (!p->m_track.SaveTrack(sFilename, false))
+  if (!p->m_track.SaveTrack(sFilename))
     return;
 
   //save successful, update app
@@ -259,25 +258,6 @@ void CMainWindow::OnSaveTrackAs()
   m_bUnsavedChanges = false;
   m_bAlreadySaved = true;
   UpdateWindow();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnExportMangled()
-{
-#if !defined(_DEBUG)
-  QMessageBox::warning(this, "Fatality!", "Not implemented yet");
-#else
-  //save track
-  QString sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
-    this, "Export Mangled", m_sTrackFilesFolder, "Track Files (*.TRK)"));
-  if (!p->m_track.SaveTrack(sFilename, true))
-    return;
-  
-  //save successful, update app
-  m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
-  UpdateWindow();
-#endif
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -510,7 +490,7 @@ bool CMainWindow::SaveChangesAndContinue()
     if (sFilename.isEmpty()) {
       return false;
     }
-    if (!p->m_track.SaveTrack(sFilename, false))
+    if (!p->m_track.SaveTrack(sFilename))
       return false;
     m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
   }

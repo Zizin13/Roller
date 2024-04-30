@@ -112,7 +112,7 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex, CChu
     editVals.sAILine2 = "2000";
     editVals.sAILine3 = "-1000";
     editVals.sAILine4 = "-2000";
-    editVals.sAIMaxAccel = "1000";
+    editVals.sAIMaxSpeed = "1000";
     editVals.sLeftSurfaceType = "134545758";
     editVals.sCenterSurfaceType = "82326";
     editVals.sRightSurfaceType = "134545758";
@@ -221,9 +221,9 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex, CChu
     if (editVals.sRightShoulderGrip.isEmpty()) editVals.sRightShoulderGrip = sVal;
     else if (editVals.sRightShoulderGrip.compare(sVal) != 0) editVals.sRightShoulderGrip = MIXED_DATA;
 
-    sVal = QString::number(m_chunkAy[i].iAIMaxAccel);
-    if (editVals.sAIMaxAccel.isEmpty()) editVals.sAIMaxAccel = sVal;
-    else if (editVals.sAIMaxAccel.compare(sVal) != 0) editVals.sAIMaxAccel = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].iAIMaxSpeed);
+    if (editVals.sAIMaxSpeed.isEmpty()) editVals.sAIMaxSpeed = sVal;
+    else if (editVals.sAIMaxSpeed.compare(sVal) != 0) editVals.sAIMaxSpeed = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iUnk05);
     if (editVals.sUnk05.isEmpty()) editVals.sUnk05 = sVal;
     else if (editVals.sUnk05.compare(sVal) != 0) editVals.sUnk05 = MIXED_DATA;
@@ -444,7 +444,7 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex, const CChunkE
     if (!editVals.sTrackGrip.isEmpty()) m_chunkAy[i].iTrackGrip = editVals.sTrackGrip.toInt();
     if (!editVals.sLeftShoulderGrip.isEmpty()) m_chunkAy[i].iLeftShoulderGrip = editVals.sLeftShoulderGrip.toInt();
     if (!editVals.sRightShoulderGrip.isEmpty()) m_chunkAy[i].iRightShoulderGrip = editVals.sRightShoulderGrip.toInt();
-    if (!editVals.sAIMaxAccel.isEmpty()) m_chunkAy[i].iAIMaxAccel = editVals.sAIMaxAccel.toInt();
+    if (!editVals.sAIMaxSpeed.isEmpty()) m_chunkAy[i].iAIMaxSpeed = editVals.sAIMaxSpeed.toInt();
     if (!editVals.sUnk05.isEmpty()) m_chunkAy[i].iUnk05 = editVals.sUnk05.toInt();
     if (!editVals.sAudioAboveTrigger.isEmpty()) m_chunkAy[i].iAudioAboveTrigger = editVals.sAudioAboveTrigger.toInt();
     if (!editVals.sAudioTriggerSpeed.isEmpty()) m_chunkAy[i].iAudioTriggerSpeed = editVals.sAudioTriggerSpeed.toInt();
@@ -538,7 +538,7 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount, const CChunkEditValues 
     newChunk.iTrackGrip = editVals.sTrackGrip.toInt();
     newChunk.iLeftShoulderGrip = editVals.sLeftShoulderGrip.toInt();
     newChunk.iRightShoulderGrip = editVals.sRightShoulderGrip.toInt();
-    newChunk.iAIMaxAccel = editVals.sAIMaxAccel.toInt();
+    newChunk.iAIMaxSpeed = editVals.sAIMaxSpeed.toInt();
     newChunk.iUnk05 = editVals.sUnk05.toInt();
     newChunk.iAudioAboveTrigger = editVals.sAudioAboveTrigger.toInt();
     newChunk.iAudioTriggerSpeed = editVals.sAudioTriggerSpeed.toInt();
@@ -648,7 +648,7 @@ void CTrack::GenerateChunkString(tGeometryChunk &chunk)
            , chunk.iTrackGrip
            , chunk.iLeftShoulderGrip
            , chunk.iRightShoulderGrip
-           , chunk.iAIMaxAccel
+           , chunk.iAIMaxSpeed
            , chunk.iUnk05
            , chunk.iAudioAboveTrigger
            , chunk.iAudioTriggerSpeed

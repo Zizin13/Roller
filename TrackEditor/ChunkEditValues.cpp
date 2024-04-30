@@ -29,7 +29,7 @@ CChunkEditValues::CChunkEditValues(const QString &sCopyLeftShoulderWidth
                 , const QString &sCopyTrackGrip
                 , const QString &sCopyLeftShoulderGrip
                 , const QString &sCopyRightShoulderGrip
-                , const QString &sCopyAIMaxAccel
+                , const QString &sCopyAIMaxSpeed
                 , const QString &sCopyUnk05
                 , const QString &sCopyAudioAboveTrigger
                 , const QString &sCopyAudioTriggerSpeed
@@ -111,7 +111,7 @@ CChunkEditValues::CChunkEditValues(const QString &sCopyLeftShoulderWidth
   sTrackGrip = sCopyTrackGrip;
   sLeftShoulderGrip = sCopyLeftShoulderGrip;
   sRightShoulderGrip = sCopyRightShoulderGrip;
-  sAIMaxAccel = sCopyAIMaxAccel;
+  sAIMaxSpeed = sCopyAIMaxSpeed;
   sUnk05 = sCopyUnk05;
   sAudioAboveTrigger = sCopyAudioAboveTrigger;
   sAudioTriggerSpeed = sCopyAudioTriggerSpeed;
@@ -193,7 +193,7 @@ void CChunkEditValues::Clear()
   sYaw = ""; sPitch = ""; sRoll = "";
   sAILine1 = ""; sAILine2 = ""; sAILine3 = ""; sAILine4 = "";
   sTrackGrip = ""; sLeftShoulderGrip = ""; sRightShoulderGrip = "";
-  sAIMaxAccel = ""; sUnk05 = ""; sAudioAboveTrigger = ""; sAudioTriggerSpeed = ""; sAudioBelowTrigger = "";
+  sAIMaxSpeed = ""; sUnk05 = ""; sAudioAboveTrigger = ""; sAudioTriggerSpeed = ""; sAudioBelowTrigger = "";
   sLeftSurfaceType = ""; sCenterSurfaceType = ""; sRightSurfaceType = "";
   sLWallType = ""; sRWallType = ""; sRoofType = ""; sLUOuterWallType = ""; sLLOuterWallType = ""; sOuterFloorType = "";
   sRLOuterWallType = ""; sRUOuterWallType = ""; sEnvironmentFloorType = ""; sSignType = ""; sSignHorizOffset = ""; sSignVertOffset = "";
@@ -230,7 +230,7 @@ void CChunkEditValues::Set(int index, QString value)
     case 14: sTrackGrip = value; break;
     case 15: sLeftShoulderGrip = value; break;
     case 16: sRightShoulderGrip = value; break;
-    case 17: sAIMaxAccel = value; break;
+    case 17: sAIMaxSpeed = value; break;
     case 18: sUnk05 = value; break;
     case 19: sAudioAboveTrigger = value; break;
     case 20: sAudioTriggerSpeed = value; break;

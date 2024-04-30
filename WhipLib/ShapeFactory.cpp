@@ -600,29 +600,6 @@ int CShapeFactory::GetAnmsCount(eWhipModel model)
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeTrackCenterline(CShader *pShader, CTrackData *pTrack)
-{
-  uint32 uiNumVerts;
-  struct tVertex *vertices = MakeVerts(uiNumVerts, eShapeSection::CENTER, pTrack, NULL);
-  uint32 uiNumIndices;
-  uint32 *indices = MakeIndicesCenterline(uiNumIndices, pTrack);
-
-  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
-  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
-  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
-
-  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, GL_LINES);
-
-  if (vertices)
-    delete[] vertices;
-  if (indices)
-    delete[] indices;
-
-  return pRet;
-}
-
-//-------------------------------------------------------------------------------------------------
-
 uint32 *CShapeFactory::MakeIndicesCenterline(uint32 &numIndices, CTrackData *pTrack)
 {
   if (pTrack->m_chunkAy.empty()) {

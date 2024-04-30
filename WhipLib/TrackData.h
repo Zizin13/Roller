@@ -85,7 +85,7 @@ struct tGeometryChunk
   int iTrackGrip;
   int iLeftShoulderGrip;
   int iRightShoulderGrip;
-  int iAIMaxAccel; //todo
+  int iAIMaxSpeed;
   int iUnk05; //todo
   int iAudioAboveTrigger;
   int iAudioTriggerSpeed;

@@ -44,7 +44,7 @@ void tGeometryChunk::Clear()
   iTrackGrip = 0;
   iLeftShoulderGrip = 0;
   iRightShoulderGrip = 0;
-  iAIMaxAccel = 0;
+  iAIMaxSpeed = 0;
   iUnk05 = 0;
   iAudioAboveTrigger = 0;
   iAudioTriggerSpeed = 0;
@@ -286,7 +286,7 @@ bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
             currChunk.iTrackGrip            = std::stoi(lineAy[14]);
             currChunk.iLeftShoulderGrip     = std::stoi(lineAy[15]);
             currChunk.iRightShoulderGrip    = std::stoi(lineAy[16]);
-            currChunk.iAIMaxAccel                = std::stoi(lineAy[17]);
+            currChunk.iAIMaxSpeed                = std::stoi(lineAy[17]);
             currChunk.iUnk05                = std::stoi(lineAy[18]);
             currChunk.iAudioAboveTrigger    = std::stoi(lineAy[19]);
             currChunk.iAudioTriggerSpeed    = std::stoi(lineAy[20]);

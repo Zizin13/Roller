@@ -287,7 +287,7 @@
          <item row="10" column="0">
           <widget class="QLabel" name="label_27">
            <property name="text">
-            <string>AI max acceleration</string>
+            <string>AI max speed</string>
            </property>
           </widget>
          </item>
@@ -336,7 +336,7 @@
           </widget>
          </item>
          <item row="11" column="0">
-          <widget class="QLineEdit" name="leAIMaxAccel"/>
+          <widget class="QLineEdit" name="leAIMaxSpeed"/>
          </item>
          <item row="10" column="1">
           <widget class="QLabel" name="label_28">

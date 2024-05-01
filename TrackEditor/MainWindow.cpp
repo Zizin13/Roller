@@ -21,6 +21,7 @@
 #include "EditGeometryWidget.h"
 #include "EditSignWidget.h"
 #include "EditAudioWidget.h"
+#include "EditStuntWidget.h"
 #include "qtextstream.h"
 #include "QtHelpers.h"
 #if defined (IS_WINDOWS)
@@ -54,6 +55,7 @@ public:
   QDockWidget *m_pEditGeometryDockWidget;
   QDockWidget *m_pEditSignDockWidget;
   QDockWidget *m_pEditAudioDockWidget;
+  QDockWidget *m_pEditStuntDockWidget;
   CDisplaySettings *m_pDisplaySettings;
   QAction *m_pDebugAction;
 
@@ -83,7 +85,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   txData->setFont(QFont("Courier", 8));
 
   //setup dock widgets
-  p->m_pEditDataDockWidget = new QDockWidget("Legacy Edit Chunk Data", this);
+  p->m_pEditDataDockWidget = new QDockWidget("Debug Chunk Data", this);
   p->m_pEditDataDockWidget->setObjectName("EditChunkData");
   p->m_pEditDataDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   p->m_pEditData = new CEditDataWidget(p->m_pEditDataDockWidget, &p->m_track, &p->m_tex, &p->m_bld);
@@ -120,17 +122,22 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   p->m_pEditAudioDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   p->m_pEditAudioDockWidget->setWidget(new CEditAudioWidget(p->m_pEditAudioDockWidget, &p->m_track));
 
+  p->m_pEditStuntDockWidget = new QDockWidget("Edit Stunts", this);
+  p->m_pEditStuntDockWidget->setObjectName("EditStunts");
+  p->m_pEditStuntDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+  p->m_pEditStuntDockWidget->setWidget(new CEditStuntWidget(p->m_pEditStuntDockWidget, &p->m_track));
+
   //setup view menu
   menuView->addAction(p->m_pEditGeometryDockWidget->toggleViewAction());
   menuView->addAction(p->m_pEditSignDockWidget->toggleViewAction());
   menuView->addAction(p->m_pEditAudioDockWidget->toggleViewAction());
+  menuView->addAction(p->m_pEditStuntDockWidget->toggleViewAction());
   menuView->addAction(p->m_pEditSeriesDockWidget->toggleViewAction());
   menuView->addAction(p->m_pGlobalSettingsDockWidget->toggleViewAction());
   menuView->addAction(p->m_pDisplaySettingsDockWidget->toggleViewAction());
   menuView->addSeparator();
   menuView->addAction(p->m_pEditDataDockWidget->toggleViewAction());
-  menuView->addSeparator();
-  p->m_pDebugAction = new QAction("Debug", menuView);
+  p->m_pDebugAction = new QAction("Debug Log", menuView);
   p->m_pDebugAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_G));
   menuView->addAction(p->m_pDebugAction);
 
@@ -408,7 +415,8 @@ void CMainWindow::LoadSettings()
       && settings.contains("show_display_settings")
       && settings.contains("show_edit_geometry")
       && settings.contains("show_edit_sign")
-      && settings.contains("show_edit_audio")) {
+      && settings.contains("show_edit_audio")
+      && settings.contains("show_edit_stunt")) {
     bool bShowEditData = false;
     bool bShowGlobalSettings = false;
     bool bShowEditSeries = false;
@@ -416,6 +424,7 @@ void CMainWindow::LoadSettings()
     bool bShowEditGeometry = false;
     bool bShowEditSign = false;
     bool bShowEditAudio = false;
+    bool bShowEditStunt = false;
     bShowEditData = settings.value("show_edit_data", bShowEditData).toBool();
     bShowGlobalSettings = settings.value("show_global_settings", bShowGlobalSettings).toBool();
     bShowEditSeries = settings.value("show_edit_series", bShowEditSeries).toBool();
@@ -423,6 +432,7 @@ void CMainWindow::LoadSettings()
     bShowEditGeometry = settings.value("show_edit_geometry", bShowEditGeometry).toBool();
     bShowEditSign = settings.value("show_edit_sign", bShowEditSign).toBool();
     bShowEditAudio = settings.value("show_edit_audio", bShowEditAudio).toBool();
+    bShowEditStunt = settings.value("show_edit_stunt", bShowEditStunt).toBool();
     p->m_pEditDataDockWidget->setVisible(bShowEditData);
     p->m_pGlobalSettingsDockWidget->setVisible(bShowGlobalSettings);
     p->m_pEditSeriesDockWidget->setVisible(bShowEditSeries);
@@ -430,6 +440,7 @@ void CMainWindow::LoadSettings()
     p->m_pEditGeometryDockWidget->setVisible(bShowEditGeometry);
     p->m_pEditSignDockWidget->setVisible(bShowEditSign);
     p->m_pEditAudioDockWidget->setVisible(bShowEditAudio);
+    p->m_pEditStuntDockWidget->setVisible(bShowEditStunt);
     restoreDockWidget(p->m_pEditDataDockWidget);
     restoreDockWidget(p->m_pGlobalSettingsDockWidget);
     restoreDockWidget(p->m_pEditSeriesDockWidget);
@@ -437,6 +448,7 @@ void CMainWindow::LoadSettings()
     restoreDockWidget(p->m_pEditGeometryDockWidget);
     restoreDockWidget(p->m_pEditSignDockWidget);
     restoreDockWidget(p->m_pEditAudioDockWidget);
+    restoreDockWidget(p->m_pEditStuntDockWidget);
   } else {
     addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditDataDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, p->m_pGlobalSettingsDockWidget);
@@ -445,6 +457,7 @@ void CMainWindow::LoadSettings()
     addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditGeometryDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, p->m_pEditSignDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, p->m_pEditAudioDockWidget);
+    addDockWidget(Qt::RightDockWidgetArea, p->m_pEditStuntDockWidget);
     p->m_pEditDataDockWidget->setVisible(false);
     p->m_pGlobalSettingsDockWidget->setVisible(false);
     p->m_pEditSeriesDockWidget->setVisible(false);
@@ -452,6 +465,7 @@ void CMainWindow::LoadSettings()
     p->m_pEditGeometryDockWidget->setVisible(false);
     p->m_pEditSignDockWidget->setVisible(false);
     p->m_pEditAudioDockWidget->setVisible(false);
+    p->m_pEditStuntDockWidget->setVisible(false);
   }
   if (settings.contains("show_models")) {
     eWhipModel carModel;
@@ -495,6 +509,7 @@ void CMainWindow::SaveSettings()
   settings.setValue("show_edit_geometry", p->m_pEditGeometryDockWidget->isVisible());
   settings.setValue("show_edit_sign", p->m_pEditSignDockWidget->isVisible());
   settings.setValue("show_edit_audio", p->m_pEditAudioDockWidget->isVisible());
+  settings.setValue("show_edit_stunt", p->m_pEditStuntDockWidget->isVisible());
   settings.setValue("show_models", p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus));
   settings.setValue("car_model", (int)carModel);
   settings.setValue("car_pos", (int)aiLine);

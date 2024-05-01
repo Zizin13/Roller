@@ -4,6 +4,7 @@
 #include "MainWindow.h"
 #include "ChunkEditValues.h"
 #include "QtHelpers.h"
+#include "EditSurfaceDialog.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -33,7 +34,7 @@ CEditGeometryWidget::CEditGeometryWidget(QWidget *pParent, CTrack *pTrack, CText
 
   connect(g_pMainWindow, &CMainWindow::UpdateGeometrySelectionSig, this, &CEditGeometryWidget::UpdateGeometrySelection);
 
-
+  
   connect(dsbYaw              , SIGNAL(valueChanged(double)), this, SLOT(YawChanged(double)));
   connect(dsbPitch            , SIGNAL(valueChanged(double)), this, SLOT(PitchChanged(double)));
   connect(dsbRoll             , SIGNAL(valueChanged(double)), this, SLOT(RollChanged(double)));
@@ -61,6 +62,19 @@ CEditGeometryWidget::CEditGeometryWidget(QWidget *pParent, CTrack *pTrack, CText
   connect(sbAILine2           , SIGNAL(valueChanged(int)), this, SLOT(AILine2Changed(int)));
   connect(sbAILine3           , SIGNAL(valueChanged(int)), this, SLOT(AILine3Changed(int)));
   connect(sbAILine4           , SIGNAL(valueChanged(int)), this, SLOT(AILine4Changed(int)));
+
+  connect(pbEditCenter,     &QPushButton::clicked, this, &CEditGeometryWidget::EditCSurface);
+  connect(pbEditLShoulder,  &QPushButton::clicked, this, &CEditGeometryWidget::EditLShoulder);
+  connect(pbEditRShoulder,  &QPushButton::clicked, this, &CEditGeometryWidget::EditRShoulder);
+  connect(pbEditLWall,      &QPushButton::clicked, this, &CEditGeometryWidget::EditLWall);
+  connect(pbEditRWall,      &QPushButton::clicked, this, &CEditGeometryWidget::EditRWall);
+  connect(pbEditBack,       &QPushButton::clicked, this, &CEditGeometryWidget::EditBack);
+  connect(pbEditRoofTex,    &QPushButton::clicked, this, &CEditGeometryWidget::EditRoof);
+  connect(pbEditLUOWall,    &QPushButton::clicked, this, &CEditGeometryWidget::EditLUOWall);
+  connect(pbEditLLOWall,    &QPushButton::clicked, this, &CEditGeometryWidget::EditLLOWall);
+  connect(pbEditRLOWall,    &QPushButton::clicked, this, &CEditGeometryWidget::EditRLOWall);
+  connect(pbEditRUOWall,    &QPushButton::clicked, this, &CEditGeometryWidget::EditRUOWall);
+  connect(pbEditOFloor,     &QPushButton::clicked, this, &CEditGeometryWidget::EditOFloor);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -763,6 +777,210 @@ void CEditGeometryWidget::AILine4Changed(int iValue)
 
   p->m_pTrack->UpdateChunkStrings();
   p->m_pTrack->GenerateTrackMath();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::EditCSurface()
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType);
+  if (dlg.exec()) {
+    for (int i = iFrom; i <= iTo; ++i) {
+      p->m_pTrack->m_chunkAy[i].iCenterSurfaceType = dlg.GetValue();
+    }
+  }
+  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::EditLShoulder()
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLeftSurfaceType);
+  if (dlg.exec()) {
+    for (int i = iFrom; i <= iTo; ++i) {
+      p->m_pTrack->m_chunkAy[i].iLeftSurfaceType = dlg.GetValue();
+    }
+  }
+  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::EditRShoulder()
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRightSurfaceType);
+  if (dlg.exec()) {
+    for (int i = iFrom; i <= iTo; ++i) {
+      p->m_pTrack->m_chunkAy[i].iRightSurfaceType = dlg.GetValue();
+    }
+  }
+  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::EditLWall()
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLeftWallType);
+  if (dlg.exec()) {
+    for (int i = iFrom; i <= iTo; ++i) {
+      p->m_pTrack->m_chunkAy[i].iLeftWallType = dlg.GetValue();
+    }
+  }
+  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::EditRWall()
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRightWallType);
+  if (dlg.exec()) {
+    for (int i = iFrom; i <= iTo; ++i) {
+      p->m_pTrack->m_chunkAy[i].iRightWallType = dlg.GetValue();
+    }
+  }
+  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::EditBack()
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iBackTexture);
+  if (dlg.exec()) {
+    for (int i = iFrom; i <= iTo; ++i) {
+      p->m_pTrack->m_chunkAy[i].iBackTexture = dlg.GetValue();
+    }
+  }
+  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::EditRoof()
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRoofType);
+  if (dlg.exec()) {
+    for (int i = iFrom; i <= iTo; ++i) {
+      p->m_pTrack->m_chunkAy[i].iRoofType = dlg.GetValue();
+    }
+  }
+  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::EditLUOWall()
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLUOuterWallType);
+  if (dlg.exec()) {
+    for (int i = iFrom; i <= iTo; ++i) {
+      p->m_pTrack->m_chunkAy[i].iLUOuterWallType = dlg.GetValue();
+    }
+  }
+  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::EditLLOWall()
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallType);
+  if (dlg.exec()) {
+    for (int i = iFrom; i <= iTo; ++i) {
+      p->m_pTrack->m_chunkAy[i].iLLOuterWallType = dlg.GetValue();
+    }
+  }
+  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::EditRLOWall()
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallType);
+  if (dlg.exec()) {
+    for (int i = iFrom; i <= iTo; ++i) {
+      p->m_pTrack->m_chunkAy[i].iRLOuterWallType = dlg.GetValue();
+    }
+  }
+  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::EditRUOWall()
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRUOuterWallType);
+  if (dlg.exec()) {
+    for (int i = iFrom; i <= iTo; ++i) {
+      p->m_pTrack->m_chunkAy[i].iRUOuterWallType = dlg.GetValue();
+    }
+  }
+  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::EditOFloor()
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType);
+  if (dlg.exec()) {
+    for (int i = iFrom; i <= iTo; ++i) {
+      p->m_pTrack->m_chunkAy[i].iOuterFloorType = dlg.GetValue();
+    }
+  }
+  p->m_pTrack->UpdateChunkStrings();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }

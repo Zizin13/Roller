@@ -45,6 +45,18 @@ protected slots:
   void AILine2Changed(int iValue);
   void AILine3Changed(int iValue);
   void AILine4Changed(int iValue);
+  void EditCSurface();
+  void EditLShoulder();
+  void EditRShoulder();
+  void EditLWall();
+  void EditRWall();
+  void EditBack();
+  void EditRoof();
+  void EditLUOWall();
+  void EditLLOWall();
+  void EditRLOWall();
+  void EditRUOWall();
+  void EditOFloor();
 
 private:
   CEditGeometryWidgetPrivate *p;

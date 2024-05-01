@@ -19,6 +19,7 @@
 #include "qdockwidget.h"
 #include "DisplaySettings.h"
 #include "EditGeometryWidget.h"
+#include "EditSignWidget.h"
 #include "qtextstream.h"
 #include "QtHelpers.h"
 #if defined (IS_WINDOWS)
@@ -50,6 +51,7 @@ public:
   QDockWidget *m_pEditSeriesDockWidget;
   QDockWidget *m_pDisplaySettingsDockWidget;
   QDockWidget *m_pEditGeometryDockWidget;
+  QDockWidget *m_pEditSignDockWidget;
   CDisplaySettings *m_pDisplaySettings;
   QAction *m_pDebugAction;
 
@@ -106,8 +108,14 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   p->m_pEditGeometryDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   p->m_pEditGeometryDockWidget->setWidget(new CEditGeometryWidget(p->m_pEditGeometryDockWidget, &p->m_track, &p->m_tex));
 
+  p->m_pEditSignDockWidget = new QDockWidget("Edit Signs", this);
+  p->m_pEditSignDockWidget->setObjectName("EditSigns");
+  p->m_pEditSignDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+  p->m_pEditSignDockWidget->setWidget(new CEditSignWidget(p->m_pEditSignDockWidget, &p->m_track, &p->m_bld));
+
   //setup view menu
   menuView->addAction(p->m_pEditGeometryDockWidget->toggleViewAction());
+  menuView->addAction(p->m_pEditSignDockWidget->toggleViewAction());
   menuView->addAction(p->m_pEditSeriesDockWidget->toggleViewAction());
   menuView->addAction(p->m_pGlobalSettingsDockWidget->toggleViewAction());
   menuView->addAction(p->m_pDisplaySettingsDockWidget->toggleViewAction());
@@ -390,38 +398,45 @@ void CMainWindow::LoadSettings()
       && settings.contains("show_global_settings")
       && settings.contains("show_edit_series")
       && settings.contains("show_display_settings")
-      && settings.contains("show_edit_geometry")) {
+      && settings.contains("show_edit_geometry")
+      && settings.contains("show_edit_sign")) {
     bool bShowEditData = false;
     bool bShowGlobalSettings = false;
     bool bShowEditSeries = false;
     bool bShowDisplaySettings = false;
     bool bShowEditGeometry = false;
+    bool bShowEditSign = false;
     bShowEditData = settings.value("show_edit_data", bShowEditData).toBool();
     bShowGlobalSettings = settings.value("show_global_settings", bShowGlobalSettings).toBool();
     bShowEditSeries = settings.value("show_edit_series", bShowEditSeries).toBool();
     bShowDisplaySettings = settings.value("show_display_settings", bShowDisplaySettings).toBool();
     bShowEditGeometry = settings.value("show_edit_geometry", bShowEditGeometry).toBool();
+    bShowEditSign = settings.value("show_edit_sign", bShowEditSign).toBool();
     p->m_pEditDataDockWidget->setVisible(bShowEditData);
     p->m_pGlobalSettingsDockWidget->setVisible(bShowGlobalSettings);
     p->m_pEditSeriesDockWidget->setVisible(bShowEditSeries);
     p->m_pDisplaySettingsDockWidget->setVisible(bShowDisplaySettings);
     p->m_pEditGeometryDockWidget->setVisible(bShowEditGeometry);
+    p->m_pEditSignDockWidget->setVisible(bShowEditSign);
     restoreDockWidget(p->m_pEditDataDockWidget);
     restoreDockWidget(p->m_pGlobalSettingsDockWidget);
     restoreDockWidget(p->m_pEditSeriesDockWidget);
     restoreDockWidget(p->m_pDisplaySettingsDockWidget);
     restoreDockWidget(p->m_pEditGeometryDockWidget);
+    restoreDockWidget(p->m_pEditSignDockWidget);
   } else {
     addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditDataDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, p->m_pGlobalSettingsDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, p->m_pEditSeriesDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, p->m_pDisplaySettingsDockWidget);
     addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditGeometryDockWidget);
+    addDockWidget(Qt::RightDockWidgetArea, p->m_pEditSignDockWidget);
     p->m_pEditDataDockWidget->setVisible(false);
     p->m_pGlobalSettingsDockWidget->setVisible(false);
     p->m_pEditSeriesDockWidget->setVisible(false);
     p->m_pDisplaySettingsDockWidget->setVisible(false);
     p->m_pEditGeometryDockWidget->setVisible(false);
+    p->m_pEditSignDockWidget->setVisible(false);
   }
   if (settings.contains("show_models")) {
     eWhipModel carModel;
@@ -463,6 +478,7 @@ void CMainWindow::SaveSettings()
   settings.setValue("show_edit_series", p->m_pEditSeriesDockWidget->isVisible());
   settings.setValue("show_display_settings", p->m_pDisplaySettingsDockWidget->isVisible());
   settings.setValue("show_edit_geometry", p->m_pEditGeometryDockWidget->isVisible());
+  settings.setValue("show_edit_sign", p->m_pEditSignDockWidget->isVisible());
   settings.setValue("show_models", p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus));
   settings.setValue("car_model", (int)carModel);
   settings.setValue("car_pos", (int)aiLine);

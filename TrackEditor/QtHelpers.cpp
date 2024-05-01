@@ -168,24 +168,31 @@ void QtHelpers::UpdateTextures(QLabel *pTex1, QLabel *pTex2, CTexture *pTex, int
   int iIndex;
   QSize size((int)(TILE_WIDTH * g_pMainWindow->GetDesktopScale() / 200.0),
              (int)(TILE_HEIGHT * g_pMainWindow->GetDesktopScale() / 200.0));
-  pTex1->setMinimumSize(size);
-  pTex2->setMinimumSize(size);
+  if (pTex1)
+    pTex1->setMinimumSize(size);
+  if (pTex2)
+    pTex2->setMinimumSize(size);
   if (iSurface == -1) {
-    pTex1->setPixmap(QPixmap());
-    pTex2->setPixmap(QPixmap());
+    if (pTex1)
+      pTex1->setPixmap(QPixmap());
+    if (pTex2)
+      pTex2->setPixmap(QPixmap());
   } else {
     unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iSurface);
     iIndex = CTrack::GetIntValueFromSignedBit(uiSignedBitVal & SURFACE_TEXTURE_INDEX);
     if (iIndex < pTex->m_iNumTiles) {
       pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTex->m_pTileAy[iIndex], true));
-      pTex1->setPixmap(pixmap);
+      if (pTex1)
+        pTex1->setPixmap(pixmap);
 
       if (uiSignedBitVal & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
         if (uiSignedBitVal & SURFACE_FLAG_PAIR_NEXT_TEX)
           pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTex->m_pTileAy[iIndex + 1], true));
-        pTex2->setPixmap(pixmap);
+        if (pTex2)
+          pTex2->setPixmap(pixmap);
       } else {
-        pTex2->setPixmap(QPixmap());
+        if (pTex2)
+          pTex2->setPixmap(QPixmap());
       }
     }
   }

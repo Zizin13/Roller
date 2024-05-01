@@ -6,233 +6,267 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>250</width>
-    <height>319</height>
+    <width>400</width>
+    <height>362</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <item row="3" column="1">
-    <widget class="QSpinBox" name="sbUnk">
-     <property name="minimum">
-      <number>-65535</number>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
      </property>
-     <property name="maximum">
-      <number>65535</number>
-     </property>
-     <property name="singleStep">
-      <number>1</number>
-     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>398</width>
+        <height>360</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout">
+       <item row="6" column="1">
+        <widget class="QSpinBox" name="sbTimeBulging">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QSpinBox" name="sbExpandContract">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QSpinBox" name="sbTimeFlat">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QSpinBox" name="sbUnk">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="lblTimingGroup">
+         <property name="text">
+          <string>Timing Group</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QSpinBox" name="sbTimingGroup">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="lblExpandContract">
+         <property name="text">
+          <string>Smaller Expands Larger Contracts</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="lblTimeFlat">
+         <property name="text">
+          <string>Time Flat</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="lblHeight">
+         <property name="text">
+          <string>Height</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="lblUnk">
+         <property name="text">
+          <string>Unknown</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="lblTimeBulging">
+         <property name="text">
+          <string>Time Bulging</string>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QSpinBox" name="sbBulge">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="0">
+        <widget class="QLabel" name="lblBulge">
+         <property name="text">
+          <string>Bulge</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QSpinBox" name="sbHeight">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="lblAngle">
+         <property name="text">
+          <string>Angle</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="2">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QPushButton" name="pbStunt">
+           <property name="text">
+            <string>Add Stunt</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="2" column="1">
+        <widget class="QSpinBox" name="sbAngle">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QSpinBox" name="sbScaleFact">
+         <property name="minimum">
+          <number>-65535</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="lblScaleFact">
+         <property name="toolTip">
+          <string>Increases the length and height of the &quot;ramp&quot;. 1 is a bump, 4 starts breaking textures, 6 is huge vertical wall</string>
+         </property>
+         <property name="text">
+          <string>Scale Factor</string>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="0">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
     </widget>
-   </item>
-   <item row="10" column="0">
-    <widget class="QLabel" name="lblBulge">
-     <property name="text">
-      <string>Bulge</string>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="lblUnk">
-     <property name="text">
-      <string>Unknown</string>
-     </property>
-    </widget>
-   </item>
-   <item row="7" column="0">
-    <widget class="QLabel" name="lblTimeBulging">
-     <property name="text">
-      <string>Time Bulging</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="1">
-    <widget class="QSpinBox" name="sbExpandContract">
-     <property name="minimum">
-      <number>-65535</number>
-     </property>
-     <property name="maximum">
-      <number>65535</number>
-     </property>
-     <property name="singleStep">
-      <number>1</number>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1">
-    <widget class="QSpinBox" name="sbTimingGroup">
-     <property name="minimum">
-      <number>-65535</number>
-     </property>
-     <property name="maximum">
-      <number>65535</number>
-     </property>
-     <property name="singleStep">
-      <number>1</number>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QSpinBox" name="sbScaleFact">
-     <property name="minimum">
-      <number>-65535</number>
-     </property>
-     <property name="maximum">
-      <number>65535</number>
-     </property>
-     <property name="singleStep">
-      <number>1</number>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="1">
-    <widget class="QSpinBox" name="sbHeight">
-     <property name="minimum">
-      <number>-65535</number>
-     </property>
-     <property name="maximum">
-      <number>65535</number>
-     </property>
-     <property name="singleStep">
-      <number>1</number>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="lblAngle">
-     <property name="text">
-      <string>Angle</string>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QSpinBox" name="sbAngle">
-     <property name="minimum">
-      <number>-65535</number>
-     </property>
-     <property name="maximum">
-      <number>65535</number>
-     </property>
-     <property name="singleStep">
-      <number>1</number>
-     </property>
-    </widget>
-   </item>
-   <item row="6" column="0">
-    <widget class="QLabel" name="lblHeight">
-     <property name="text">
-      <string>Height</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="lblScaleFact">
-     <property name="toolTip">
-      <string>Increases the length and height of the &quot;ramp&quot;. 1 is a bump, 4 starts breaking textures, 6 is huge vertical wall</string>
-     </property>
-     <property name="text">
-      <string>Scale Factor</string>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="1">
-    <widget class="QSpinBox" name="sbBulge">
-     <property name="minimum">
-      <number>-65535</number>
-     </property>
-     <property name="maximum">
-      <number>65535</number>
-     </property>
-     <property name="singleStep">
-      <number>1</number>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="0">
-    <widget class="QLabel" name="lblExpandContract">
-     <property name="text">
-      <string>Smaller Expands Larger Contracts</string>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="lblTimingGroup">
-     <property name="text">
-      <string>Timing Group</string>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="1">
-    <widget class="QSpinBox" name="sbTimeFlat">
-     <property name="minimum">
-      <number>-65535</number>
-     </property>
-     <property name="maximum">
-      <number>65535</number>
-     </property>
-     <property name="singleStep">
-      <number>1</number>
-     </property>
-    </widget>
-   </item>
-   <item row="8" column="0">
-    <widget class="QLabel" name="lblTimeFlat">
-     <property name="text">
-      <string>Time Flat</string>
-     </property>
-    </widget>
-   </item>
-   <item row="11" column="0">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="7" column="1">
-    <widget class="QSpinBox" name="sbTimeBulging">
-     <property name="minimum">
-      <number>-65535</number>
-     </property>
-     <property name="maximum">
-      <number>65535</number>
-     </property>
-     <property name="singleStep">
-      <number>1</number>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="2">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QPushButton" name="pbStunt">
-       <property name="text">
-        <string>Add Stunt</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
    </item>
   </layout>
  </widget>

@@ -222,6 +222,85 @@ uint32 *CShapeFactory::MakeModelIndices(uint32 &numIndices, eWhipModel model)
 
 //-------------------------------------------------------------------------------------------------
 
+CShapeData *CShapeFactory::MakeAudioMarker(CShader *pShader)
+{
+  uint32 uiNumVerts;
+  struct tVertex *vertices = MakeVertsAudioMarker(uiNumVerts);
+  uint32 uiNumIndices;
+  uint32 *indices = MakeIndicesAudioMarker(uiNumIndices);
+  GLenum drawType = GL_TRIANGLES;
+
+  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
+  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+
+  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
+
+  if (vertices)
+    delete[] vertices;
+  if (indices)
+    delete[] indices;
+
+  return pRet;
+
+}
+
+//-------------------------------------------------------------------------------------------------
+
+tVertex *CShapeFactory::MakeVertsAudioMarker(uint32 &uiNumVerts)
+{
+  uiNumVerts = 6;
+  tVertex *vertices = new tVertex[uiNumVerts];
+
+  glm::vec3 color = glm::vec3(1, 1, 1);
+  vertices[0].position = glm::vec3(  +0.0f / m_fScale,   +0.0f / m_fScale, +0.0f);
+  vertices[1].position = glm::vec3(+500.0f / m_fScale,   +0.0f / m_fScale, +0.0f);
+  vertices[2].position = glm::vec3(+500.0f / m_fScale, +500.0f / m_fScale, +0.0f);
+  vertices[3].position = glm::vec3(  +0.0f / m_fScale, +500.0f / m_fScale, +0.0f);
+  vertices[4].position = glm::vec3(-500.0f / m_fScale, +800.0f / m_fScale, +0.0f);
+  vertices[5].position = glm::vec3(-500.0f / m_fScale, -300.0f / m_fScale, +0.0f);
+  vertices[0].color = color;
+  vertices[1].color = color;
+  vertices[2].color = color;
+  vertices[3].color = color;
+  vertices[4].color = color;
+  vertices[5].color = color;
+  vertices[0].flags.x = 1.0f;
+  vertices[1].flags.x = 1.0f;
+  vertices[2].flags.x = 1.0f;
+  vertices[3].flags.x = 1.0f;
+  vertices[4].flags.x = 1.0f;
+  vertices[5].flags.x = 1.0f;
+
+  return vertices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+uint32 *CShapeFactory::MakeIndicesAudioMarker(uint32 &uiNumIndices)
+{
+  uiNumIndices = 12;
+  uint32 *indices = new uint32[uiNumIndices];
+  memset(indices, 0, uiNumIndices * sizeof(uint32));
+
+  indices[0] = 1;
+  indices[1] = 0;
+  indices[2] = 3;
+  indices[3] = 1;
+  indices[4] = 3;
+  indices[5] = 2;
+  indices[6] = 0;
+  indices[7] = 5;
+  indices[8] = 4;
+  indices[9] = 0;
+  indices[10] = 4;
+  indices[11] = 3;
+
+  return indices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 float *CShapeFactory::GetCoords(eWhipModel model)
 {
   switch (model) {
@@ -910,6 +989,34 @@ void CShapeFactory::MakeSigns(CShader *pShader, CTexture *pBld, CTrackData *pTra
     
     //add sign to array
     signAy.push_back(pNewSign);
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CShapeFactory::MakeAudio(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &audioAy)
+{
+  for (int i = 0; i < (int)pTrack->m_chunkAy.size(); ++i) {
+    bool bChunkHasAudio = pTrack->m_chunkAy[i].iAudioTriggerSpeed != 0;
+    if (!bChunkHasAudio)
+      continue; //no audio in this chunk
+
+    //make marker
+    CShapeData *pNewMarker = MakeAudioMarker(pShader);
+
+    float fHeight = (float)1000.0f / m_fScale * -1.0f;
+    glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[i].math.center);
+    glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
+    glm::vec3 normal = glm::normalize(glm::cross(pTrack->m_chunkAy[i].math.nextChunkPitched, pTrack->m_chunkAy[i].math.pitchAxis));
+    glm::vec3 heightVec = glm::vec3(scaleMatHeight * pTrack->m_chunkAy[i].math.rollMat * glm::vec4(normal, 1.0f));
+    glm::vec3 markerPos = heightVec;
+    glm::vec3 markerPosTranslated = glm::vec3(translateMat * glm::vec4(markerPos, 1.0f));
+
+    pNewMarker->m_modelToWorldMatrix = glm::translate(markerPosTranslated) *
+      pTrack->m_chunkAy[i].math.rollMat * pTrack->m_chunkAy[i].math.pitchMat * pTrack->m_chunkAy[i].math.yawMat;
+
+    //add sign to array
+    audioAy.push_back(pNewMarker);
   }
 }
 

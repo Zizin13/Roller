@@ -14,6 +14,21 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>0</number>
+   </property>
    <item row="1" column="0">
     <widget class="QScrollArea" name="scrollArea">
      <property name="widgetResizable">
@@ -23,9 +38,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-346</y>
-        <width>440</width>
-        <height>1172</height>
+        <y>0</y>
+        <width>458</width>
+        <height>1283</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
@@ -42,7 +57,7 @@
         <number>3</number>
        </property>
        <property name="spacing">
-        <number>3</number>
+        <number>6</number>
        </property>
        <item row="11" column="0">
         <spacer name="verticalSpacer">
@@ -64,19 +79,19 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_15">
           <property name="leftMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="topMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="rightMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="bottomMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="spacing">
-           <number>3</number>
+           <number>6</number>
           </property>
           <item row="1" column="1">
            <widget class="QSpinBox" name="sbROuterFloorHOffset">
@@ -213,19 +228,19 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_9">
           <property name="leftMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="topMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="rightMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="bottomMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="spacing">
-           <number>3</number>
+           <number>6</number>
           </property>
           <item row="1" column="2">
            <widget class="QLabel" name="lblLWallTex2">
@@ -465,19 +480,19 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_6">
           <property name="leftMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="topMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="rightMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="bottomMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="spacing">
-           <number>3</number>
+           <number>6</number>
           </property>
           <item row="0" column="2" rowspan="2">
            <widget class="QLabel" name="lblLLOWallTex1">
@@ -574,19 +589,19 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_7">
           <property name="leftMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="topMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="rightMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="bottomMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="spacing">
-           <number>3</number>
+           <number>6</number>
           </property>
           <item row="0" column="2" rowspan="2">
            <widget class="QLabel" name="lblLUOWallTex1">
@@ -683,19 +698,19 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_14">
           <property name="leftMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="topMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="rightMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="bottomMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="spacing">
-           <number>3</number>
+           <number>6</number>
           </property>
           <item row="0" column="2" rowspan="2">
            <widget class="QLabel" name="lblRUOWallTex1">
@@ -788,7 +803,7 @@
        <item row="0" column="0" colspan="2">
         <layout class="QGridLayout" name="gridLayout_13">
          <property name="spacing">
-          <number>3</number>
+          <number>6</number>
          </property>
          <item row="1" column="1">
           <widget class="QDoubleSpinBox" name="dsbPitch">
@@ -870,19 +885,19 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_5">
           <property name="leftMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="topMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="rightMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="bottomMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="spacing">
-           <number>3</number>
+           <number>6</number>
           </property>
           <item row="1" column="0">
            <widget class="QLabel" name="label_34">
@@ -1023,19 +1038,19 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
           <property name="leftMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="topMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="rightMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="bottomMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="spacing">
-           <number>3</number>
+           <number>6</number>
           </property>
           <item row="1" column="0">
            <widget class="QLabel" name="label_28">
@@ -1176,19 +1191,19 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_4">
           <property name="leftMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="topMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="rightMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="bottomMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="spacing">
-           <number>3</number>
+           <number>6</number>
           </property>
           <item row="1" column="0">
            <widget class="QLabel" name="label_31">
@@ -1329,19 +1344,19 @@
          </property>
          <layout class="QGridLayout" name="gridLayout_8">
           <property name="leftMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="topMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="rightMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="bottomMargin">
-           <number>3</number>
+           <number>6</number>
           </property>
           <property name="spacing">
-           <number>3</number>
+           <number>6</number>
           </property>
           <item row="0" column="2" rowspan="2">
            <widget class="QLabel" name="lblRLOWallTex1">

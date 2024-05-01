@@ -23,10 +23,12 @@ public:
 
   CShapeData *MakeAxes(CShader *pShader);
   CShapeData *MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1);
+  CShapeData *MakeAudioMarker(CShader *pShader);
   CShapeData *MakeTrackSurface(CShader *pShader, CTexture *pTexture, CTrackData *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false);
   CShapeData *MakeAILine(CShader *pShader, CTrackData *pTrack, eShapeSection section, bool bAttachLast);
   CShapeData *MakeSelectedChunks(CShader *pShader, CTrackData *pTrack, int iStart, int iEnd);
   void MakeSigns(CShader *pShader, CTexture *pBld, CTrackData *pTrack, std::vector<CShapeData*> &signAy);
+  void MakeAudio(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &audioAy);
   //static CShapeData GenerateNormals(const CShapeData &data);
   void GetCarPos(CTrackData *pTrack, int iChunk, eShapeSection aiLine, glm::mat4 &modelToWorldMatrix, bool bMillionPlus = false);
 
@@ -40,6 +42,9 @@ private:
 
   tVertex *MakeModelVerts(uint32 &numVertices, CTexture *pTexture, eWhipModel model, int iSignSurfaceType);
   uint32 *MakeModelIndices(uint32 &numIndices, eWhipModel model);
+
+  tVertex *MakeVertsAudioMarker(uint32 &uiNumVerts);
+  uint32 *MakeIndicesAudioMarker(uint32 &uiNumIndices);
 
   float *GetCoords(eWhipModel model);
   int GetCoordsCount(eWhipModel model);

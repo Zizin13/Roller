@@ -88,6 +88,12 @@
     <ClCompile Include="moc\moc_EditSignWidget.cpp">
       <Filter>Qt Generated Files\Moc Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="EditAudioWidget.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="moc\moc_EditAudioWidget.cpp">
+      <Filter>Qt Generated Files\Moc Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Track.h">
@@ -133,6 +139,9 @@
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_EditSignWidget.h">
+      <Filter>Qt Generated Files\Ui Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_EditAudioWidget.h">
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -204,6 +213,12 @@
       <Filter>Resources</Filter>
     </CustomBuild>
     <CustomBuild Include="EditSignWidget.h">
+      <Filter>Headers</Filter>
+    </CustomBuild>
+    <CustomBuild Include="EditAudioWidget.ui">
+      <Filter>Resources</Filter>
+    </CustomBuild>
+    <CustomBuild Include="EditAudioWidget.h">
       <Filter>Headers</Filter>
     </CustomBuild>
   </ItemGroup>

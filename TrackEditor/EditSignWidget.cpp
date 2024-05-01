@@ -2,7 +2,6 @@
 #include "Track.h"
 #include "Texture.h"
 #include "MainWindow.h"
-#include "ChunkEditValues.h"
 #include "QtHelpers.h"
 #include "EditSurfaceDialog.h"
 //-------------------------------------------------------------------------------------------------
@@ -118,6 +117,12 @@ void CEditSignWidget::UpdateGeometrySelection(int iFrom, int iTo)
   sbVOffset ->setEnabled(bChunkHasSign);
   cbType    ->setEnabled(bChunkHasSign);
   pbEdit    ->setEnabled(bChunkHasSign);
+  lblYaw    ->setEnabled(bChunkHasSign);
+  lblPitch  ->setEnabled(bChunkHasSign);
+  lblRoll   ->setEnabled(bChunkHasSign);
+  lblHOffset->setEnabled(bChunkHasSign);
+  lblVOffset->setEnabled(bChunkHasSign);
+  lblType   ->setEnabled(bChunkHasSign);
   pbSign    ->setText(bChunkHasSign ? "Delete Sign" : "Add Sign");
 
   bool bUnk = p->m_pTrack->m_chunkAy[iFrom].iSignType > 255;

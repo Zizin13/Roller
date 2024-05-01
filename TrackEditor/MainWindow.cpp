@@ -79,7 +79,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   txData->setFont(QFont("Courier", 8));
 
   //setup dock widgets
-  p->m_pEditDataDockWidget = new QDockWidget("Edit Chunk Data", this);
+  p->m_pEditDataDockWidget = new QDockWidget("Legacy Edit Chunk Data", this);
   p->m_pEditDataDockWidget->setObjectName("EditChunkData");
   p->m_pEditDataDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   p->m_pEditData = new CEditDataWidget(p->m_pEditDataDockWidget, &p->m_track, &p->m_tex, &p->m_bld);
@@ -101,7 +101,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   p->m_pDisplaySettings = new CDisplaySettings(p->m_pDisplaySettingsDockWidget, openGLWidget);
   p->m_pDisplaySettingsDockWidget->setWidget(p->m_pDisplaySettings);
 
-  p->m_pEditGeometryDockWidget = new QDockWidget("Edit Geometry", this);
+  p->m_pEditGeometryDockWidget = new QDockWidget("Edit Chunk Data", this);
   p->m_pEditGeometryDockWidget->setObjectName("EditGeometry");
   p->m_pEditGeometryDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   p->m_pEditGeometryDockWidget->setWidget(new CEditGeometryWidget(p->m_pEditGeometryDockWidget, &p->m_track, &p->m_tex));

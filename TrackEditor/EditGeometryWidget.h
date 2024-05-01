@@ -57,6 +57,10 @@ protected slots:
   void EditRLOWall();
   void EditRUOWall();
   void EditOFloor();
+  void CGripChanged(int iValue);
+  void LGripChanged(int iValue);
+  void RGripChanged(int iValue);
+  void AISpeedChanged(int iValue);
 
 private:
   CEditGeometryWidgetPrivate *p;

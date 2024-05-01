@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
+   <item row="1" column="0">
     <widget class="QScrollArea" name="scrollArea">
      <property name="widgetResizable">
       <bool>true</bool>
@@ -23,9 +23,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-260</y>
+        <y>-321</y>
         <width>440</width>
-        <height>1127</height>
+        <height>1147</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
@@ -974,7 +974,7 @@
             <item row="2" column="1">
              <widget class="QLabel" name="lblRShoulderGrip">
               <property name="text">
-               <string>0</string>
+               <string>(0)</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1000,6 +1000,12 @@
             </item>
             <item row="1" column="0" rowspan="3">
              <widget class="QSlider" name="sldRShoulderGrip">
+              <property name="maximum">
+               <number>12</number>
+              </property>
+              <property name="pageStep">
+               <number>1</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -1121,7 +1127,7 @@
             <item row="2" column="1">
              <widget class="QLabel" name="lblCGrip">
               <property name="text">
-               <string>0</string>
+               <string>(0)</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1147,6 +1153,12 @@
             </item>
             <item row="1" column="0" rowspan="3">
              <widget class="QSlider" name="sldCGrip">
+              <property name="maximum">
+               <number>12</number>
+              </property>
+              <property name="pageStep">
+               <number>1</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -1268,7 +1280,7 @@
             <item row="2" column="1">
              <widget class="QLabel" name="lblLShoulderGrip">
               <property name="text">
-               <string>0</string>
+               <string>(0)</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -1294,6 +1306,12 @@
             </item>
             <item row="1" column="0" rowspan="3">
              <widget class="QSlider" name="sldLShoulderGrip">
+              <property name="maximum">
+               <number>12</number>
+              </property>
+              <property name="pageStep">
+               <number>1</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
@@ -1415,6 +1433,13 @@
        </item>
        <item row="10" column="0" colspan="2">
         <layout class="QGridLayout" name="gridLayout_16">
+         <item row="0" column="1">
+          <widget class="QLabel" name="label_44">
+           <property name="text">
+            <string>AI Line 2</string>
+           </property>
+          </widget>
+         </item>
          <item row="1" column="0">
           <widget class="QSpinBox" name="sbAILine1">
            <property name="minimum">
@@ -1467,20 +1492,6 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_24">
-           <property name="text">
-            <string>AI Line 1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="label_44">
-           <property name="text">
-            <string>AI Line 2</string>
-           </property>
-          </widget>
-         </item>
          <item row="0" column="2">
           <widget class="QLabel" name="label_45">
            <property name="text">
@@ -1488,10 +1499,44 @@
            </property>
           </widget>
          </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_24">
+           <property name="text">
+            <string>AI Line 1</string>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="3">
           <widget class="QLabel" name="label_46">
            <property name="text">
             <string>AI Line 4</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>AI Max Speed</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1" colspan="2">
+          <widget class="QSlider" name="sldAISpeed">
+           <property name="maximum">
+            <number>100</number>
+           </property>
+           <property name="singleStep">
+            <number>1</number>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QLabel" name="lblAISpeed">
+           <property name="text">
+            <string>(100%)</string>
            </property>
           </widget>
          </item>

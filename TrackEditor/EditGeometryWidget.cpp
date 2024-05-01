@@ -75,6 +75,11 @@ CEditGeometryWidget::CEditGeometryWidget(QWidget *pParent, CTrack *pTrack, CText
   connect(pbEditRLOWall,    &QPushButton::clicked, this, &CEditGeometryWidget::EditRLOWall);
   connect(pbEditRUOWall,    &QPushButton::clicked, this, &CEditGeometryWidget::EditRUOWall);
   connect(pbEditOFloor,     &QPushButton::clicked, this, &CEditGeometryWidget::EditOFloor);
+
+  connect(sldCGrip        , SIGNAL(valueChanged(int)), this, SLOT(CGripChanged(int)));
+  connect(sldLShoulderGrip, SIGNAL(valueChanged(int)), this, SLOT(LGripChanged(int)));
+  connect(sldRShoulderGrip, SIGNAL(valueChanged(int)), this, SLOT(RGripChanged(int)));
+  connect(sldAISpeed,       SIGNAL(valueChanged(int)), this, SLOT(AISpeedChanged(int)));
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -118,6 +123,10 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
   sbAILine2           ->blockSignals(true);
   sbAILine3           ->blockSignals(true);
   sbAILine4           ->blockSignals(true);
+  sldCGrip            ->blockSignals(true);
+  sldLShoulderGrip    ->blockSignals(true);
+  sldRShoulderGrip    ->blockSignals(true);
+  sldAISpeed          ->blockSignals(true);
   dsbYaw->setValue(               p->m_pTrack->m_chunkAy[iFrom].dYaw);
   dsbPitch->setValue(             p->m_pTrack->m_chunkAy[iFrom].dPitch);
   dsbRoll->setValue(              p->m_pTrack->m_chunkAy[iFrom].dRoll);
@@ -145,6 +154,10 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
   sbAILine2->setValue(            p->m_pTrack->m_chunkAy[iFrom].iAILine2);
   sbAILine3->setValue(            p->m_pTrack->m_chunkAy[iFrom].iAILine3);
   sbAILine4->setValue(            p->m_pTrack->m_chunkAy[iFrom].iAILine4);
+  sldCGrip->setValue(             p->m_pTrack->m_chunkAy[iFrom].iTrackGrip);
+  sldLShoulderGrip->setValue(     p->m_pTrack->m_chunkAy[iFrom].iLeftShoulderGrip);
+  sldRShoulderGrip->setValue(     p->m_pTrack->m_chunkAy[iFrom].iRightShoulderGrip);
+  sldAISpeed->setValue(           p->m_pTrack->m_chunkAy[iFrom].iAIMaxSpeed / 10);
   dsbYaw              ->blockSignals(false);
   dsbPitch            ->blockSignals(false);
   dsbRoll             ->blockSignals(false);
@@ -172,6 +185,15 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
   sbAILine2           ->blockSignals(false);
   sbAILine3           ->blockSignals(false);
   sbAILine4           ->blockSignals(false);
+  sldCGrip            ->blockSignals(false);
+  sldLShoulderGrip    ->blockSignals(false);
+  sldRShoulderGrip    ->blockSignals(false);
+  sldAISpeed          ->blockSignals(false);
+
+  lblCGrip->setText(        "(" + QString::number(p->m_pTrack->m_chunkAy[iFrom].iTrackGrip) + ")");
+  lblLShoulderGrip->setText("(" + QString::number(p->m_pTrack->m_chunkAy[iFrom].iLeftShoulderGrip) + ")");
+  lblRShoulderGrip->setText("(" + QString::number(p->m_pTrack->m_chunkAy[iFrom].iRightShoulderGrip) + ")");
+  lblAISpeed->setText(      "(" + QString::number(p->m_pTrack->m_chunkAy[iFrom].iAIMaxSpeed / 10) + "%)");
 
   QtHelpers::UpdateTextures(lblCTex1, lblCTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType);
   QtHelpers::UpdateTextures(lblLShoulderTex1, lblLShoulderTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLeftSurfaceType);
@@ -787,6 +809,12 @@ void CEditGeometryWidget::EditCSurface()
 {
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
+  
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
   CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
@@ -804,6 +832,12 @@ void CEditGeometryWidget::EditLShoulder()
 {
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
+
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
   CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLeftSurfaceType);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
@@ -821,6 +855,12 @@ void CEditGeometryWidget::EditRShoulder()
 {
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
+
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
   CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRightSurfaceType);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
@@ -838,6 +878,12 @@ void CEditGeometryWidget::EditLWall()
 {
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
+
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
   CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLeftWallType);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
@@ -855,6 +901,12 @@ void CEditGeometryWidget::EditRWall()
 {
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
+
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
   CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRightWallType);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
@@ -872,6 +924,12 @@ void CEditGeometryWidget::EditBack()
 {
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
+
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
   CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iBackTexture);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
@@ -889,6 +947,12 @@ void CEditGeometryWidget::EditRoof()
 {
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
+
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
   CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRoofType);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
@@ -906,6 +970,12 @@ void CEditGeometryWidget::EditLUOWall()
 {
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
+
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
   CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLUOuterWallType);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
@@ -923,6 +993,12 @@ void CEditGeometryWidget::EditLLOWall()
 {
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
+
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
   CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallType);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
@@ -940,6 +1016,12 @@ void CEditGeometryWidget::EditRLOWall()
 {
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
+
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
   CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallType);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
@@ -957,6 +1039,12 @@ void CEditGeometryWidget::EditRUOWall()
 {
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
+
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
   CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRUOuterWallType);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
@@ -974,11 +1062,97 @@ void CEditGeometryWidget::EditOFloor()
 {
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
+
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
   CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iOuterFloorType = dlg.GetValue();
     }
+  }
+  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::CGripChanged(int iValue)
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
+  for (int i = iFrom; i <= iTo; ++i) {
+    p->m_pTrack->m_chunkAy[i].iTrackGrip = iValue;
+  }
+  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::LGripChanged(int iValue)
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
+  for (int i = iFrom; i <= iTo; ++i) {
+    p->m_pTrack->m_chunkAy[i].iLeftShoulderGrip = iValue;
+  }
+  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::RGripChanged(int iValue)
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
+  for (int i = iFrom; i <= iTo; ++i) {
+    p->m_pTrack->m_chunkAy[i].iRightShoulderGrip = iValue;
+  }
+  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::AISpeedChanged(int iValue)
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
+  for (int i = iFrom; i <= iTo; ++i) {
+    p->m_pTrack->m_chunkAy[i].iAIMaxSpeed = iValue * 10;
   }
   p->m_pTrack->UpdateChunkStrings();
   g_pMainWindow->SetUnsavedChanges(true);

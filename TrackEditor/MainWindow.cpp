@@ -60,13 +60,14 @@ public:
 
 //-------------------------------------------------------------------------------------------------
 
-CMainWindow::CMainWindow(const QString &sAppPath)
+CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   : QMainWindow(NULL)
   , m_bUnsavedChanges(false)
   , m_bAlreadySaved(false)
   , m_sAppPath(sAppPath)
   , m_sTrackFile("")
   , m_sTrackFilesFolder("")
+  , m_fDesktopScale(fDesktopScale)
 {
   //init
   p = new CMainWindowPrivate(this);
@@ -103,14 +104,15 @@ CMainWindow::CMainWindow(const QString &sAppPath)
   p->m_pEditGeometryDockWidget = new QDockWidget("Edit Geometry", this);
   p->m_pEditGeometryDockWidget->setObjectName("EditGeometry");
   p->m_pEditGeometryDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pEditGeometryDockWidget->setWidget(new CEditGeometryWidget(p->m_pEditGeometryDockWidget, &p->m_track));
+  p->m_pEditGeometryDockWidget->setWidget(new CEditGeometryWidget(p->m_pEditGeometryDockWidget, &p->m_track, &p->m_tex));
 
   //setup view menu
   menuView->addAction(p->m_pEditGeometryDockWidget->toggleViewAction());
-  menuView->addAction(p->m_pEditDataDockWidget->toggleViewAction());
   menuView->addAction(p->m_pEditSeriesDockWidget->toggleViewAction());
   menuView->addAction(p->m_pGlobalSettingsDockWidget->toggleViewAction());
   menuView->addAction(p->m_pDisplaySettingsDockWidget->toggleViewAction());
+  menuView->addSeparator();
+  menuView->addAction(p->m_pEditDataDockWidget->toggleViewAction());
   menuView->addSeparator();
   p->m_pDebugAction = new QAction("Debug", menuView);
   p->m_pDebugAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_G));
@@ -411,8 +413,8 @@ void CMainWindow::LoadSettings()
     restoreDockWidget(p->m_pEditGeometryDockWidget);
   } else {
     addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditDataDockWidget);
-    addDockWidget(Qt::LeftDockWidgetArea, p->m_pGlobalSettingsDockWidget);
-    addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditSeriesDockWidget);
+    addDockWidget(Qt::RightDockWidgetArea, p->m_pGlobalSettingsDockWidget);
+    addDockWidget(Qt::RightDockWidgetArea, p->m_pEditSeriesDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, p->m_pDisplaySettingsDockWidget);
     addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditGeometryDockWidget);
     p->m_pEditDataDockWidget->setVisible(false);

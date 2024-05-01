@@ -12,7 +12,7 @@ class CMainWindow : public QMainWindow, private Ui::MainWindow
   Q_OBJECT
 
 public:
-  CMainWindow(const QString &sAppPath);
+  CMainWindow(const QString &sAppPath, float fDesktopScale);
   ~CMainWindow();
 
   void LogMessage(const QString &sMsg);
@@ -23,6 +23,7 @@ public:
   const QString &GetTrackFilesFolder();
   int GetSelFrom();
   int GetSelTo();
+  float GetDesktopScale() { return m_fDesktopScale; };
 
 protected:
   void closeEvent(QCloseEvent *pEvent);
@@ -59,6 +60,7 @@ private:
   QString m_sSettingsFile;
   QString m_sTrackFile;
   QString m_sTrackFilesFolder;
+  float m_fDesktopScale;
 };
 
 //-------------------------------------------------------------------------------------------------

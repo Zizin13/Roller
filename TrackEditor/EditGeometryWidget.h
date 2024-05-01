@@ -4,6 +4,7 @@
 #include "ui_EditGeometryWidget.h"
 //-------------------------------------------------------------------------------------------------
 class CTrack;
+class CTexture;
 class CEditGeometryWidgetPrivate;
 //-------------------------------------------------------------------------------------------------
 
@@ -12,7 +13,7 @@ class CEditGeometryWidget : public QWidget, private Ui::EditGeometryWidget
   Q_OBJECT
 
 public:
-  CEditGeometryWidget(QWidget *pParent, CTrack *pTrack);
+  CEditGeometryWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTex);
   ~CEditGeometryWidget();
 
 protected slots:

@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include "EditSurfaceDialog.h"
 #include "Texture.h"
+#include "MainWindow.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -160,7 +161,39 @@ void QtHelpers::UpdateSignEditMode(bool &bEdited, bool &bMixedData, QLineEdit *p
 
 //-------------------------------------------------------------------------------------------------
 
-QImage QtHelpers::GetQImageFromTile(const tTile &tile)
+void QtHelpers::UpdateTextures(QLabel *pTex1, QLabel *pTex2, CTexture *pTex, int iSurface)
+{
+  //textures
+  QPixmap pixmap;
+  int iIndex;
+  QSize size((int)(TILE_WIDTH * g_pMainWindow->GetDesktopScale() / 200.0),
+             (int)(TILE_HEIGHT * g_pMainWindow->GetDesktopScale() / 200.0));
+  pTex1->setMinimumSize(size);
+  pTex2->setMinimumSize(size);
+  if (iSurface == -1) {
+    pTex1->setPixmap(QPixmap());
+    pTex2->setPixmap(QPixmap());
+  } else {
+    unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iSurface);
+    iIndex = CTrack::GetIntValueFromSignedBit(uiSignedBitVal & SURFACE_TEXTURE_INDEX);
+    if (iIndex < pTex->m_iNumTiles) {
+      pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTex->m_pTileAy[iIndex], true));
+      pTex1->setPixmap(pixmap);
+
+      if (uiSignedBitVal & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
+        if (uiSignedBitVal & SURFACE_FLAG_PAIR_NEXT_TEX)
+          pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTex->m_pTileAy[iIndex + 1], true));
+        pTex2->setPixmap(pixmap);
+      } else {
+        pTex2->setPixmap(QPixmap());
+      }
+    }
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+QImage QtHelpers::GetQImageFromTile(const tTile &tile, bool bScale)
 {
   QImage image(TILE_WIDTH, TILE_HEIGHT, QImage::Format_RGB32);
   for (int i = 0; i < TILE_WIDTH; ++i) {
@@ -169,7 +202,11 @@ QImage QtHelpers::GetQImageFromTile(const tTile &tile)
                                        tile.data[i][j].g,
                                        tile.data[i][j].b));
   }
-  return image;
+  if (bScale)
+    return image.scaled((int)(TILE_WIDTH * g_pMainWindow->GetDesktopScale() / 200.0),
+                        (int)(TILE_HEIGHT * g_pMainWindow->GetDesktopScale() / 200.0));
+  else
+    return image;
 }
 
 //-------------------------------------------------------------------------------------------------

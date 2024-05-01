@@ -1,5 +1,6 @@
 #include "EditGeometryWidget.h"
 #include "Track.h"
+#include "Texture.h"
 #include "MainWindow.h"
 #include "ChunkEditValues.h"
 #include "QtHelpers.h"
@@ -16,15 +17,17 @@ public:
   ~CEditGeometryWidgetPrivate() {};
 
   CTrack *m_pTrack;
+  CTexture *m_pTex;
 };
 
 //-------------------------------------------------------------------------------------------------
 
-CEditGeometryWidget::CEditGeometryWidget(QWidget *pParent, CTrack *pTrack)
+CEditGeometryWidget::CEditGeometryWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTex)
   : QWidget(pParent)
 {
   p = new CEditGeometryWidgetPrivate;
   p->m_pTrack = pTrack;
+  p->m_pTex = pTex;
 
   setupUi(this);
 
@@ -155,6 +158,19 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
   sbAILine2           ->blockSignals(false);
   sbAILine3           ->blockSignals(false);
   sbAILine4           ->blockSignals(false);
+
+  QtHelpers::UpdateTextures(lblCTex1, lblCTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType);
+  QtHelpers::UpdateTextures(lblLShoulderTex1, lblLShoulderTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLeftSurfaceType);
+  QtHelpers::UpdateTextures(lblRShoulderTex1, lblRShoulderTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRightSurfaceType);
+  QtHelpers::UpdateTextures(lblLWallTex1, lblLWallTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLeftWallType);
+  QtHelpers::UpdateTextures(lblRWallTex1, lblRWallTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRightWallType);
+  QtHelpers::UpdateTextures(lblBackTex1, lblBackTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iBackTexture);
+  QtHelpers::UpdateTextures(lblRoofTex1, lblRoofTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRoofType);
+  QtHelpers::UpdateTextures(lblLLOWallTex1, lblLLOWallTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallType);
+  QtHelpers::UpdateTextures(lblLUOWallTex1, lblLUOWallTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLUOuterWallType);
+  QtHelpers::UpdateTextures(lblRLOWallTex1, lblRLOWallTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallType);
+  QtHelpers::UpdateTextures(lblRUOWallTex1, lblRUOWallTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRUOuterWallType);
+  QtHelpers::UpdateTextures(lblOFloorTex1, lblOFloorTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType);
 }
 
 //-------------------------------------------------------------------------------------------------

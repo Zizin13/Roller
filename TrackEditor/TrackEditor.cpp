@@ -1,6 +1,7 @@
 #include "TrackEditor.h"
 #include "MainWindow.h"
 #include "qapplication.h"
+#include "qdesktopwidget.h"
 #include <qstring.h>
 #include "qdir.h"
 #include <QtCore>
@@ -28,7 +29,8 @@ int main(int argc, char* argv[])
   sAppPath = sAppPath.left(sAppPath.lastIndexOf(QDir::separator()));
 
   QApplication app(argc, argv);
-  CMainWindow *pMainWin = new CMainWindow(sAppPath);
+  float fScale = app.desktop()->logicalDpiX() / 96.0 * 100.0;
+  CMainWindow *pMainWin = new CMainWindow(sAppPath, fScale);
   
   int iRetCode = app.exec();
 

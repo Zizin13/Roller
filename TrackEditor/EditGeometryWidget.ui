@@ -23,9 +23,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-321</y>
+        <y>-346</y>
         <width>440</width>
-        <height>1147</height>
+        <height>1172</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
@@ -1433,13 +1433,6 @@
        </item>
        <item row="10" column="0" colspan="2">
         <layout class="QGridLayout" name="gridLayout_16">
-         <item row="0" column="1">
-          <widget class="QLabel" name="label_44">
-           <property name="text">
-            <string>AI Line 2</string>
-           </property>
-          </widget>
-         </item>
          <item row="1" column="0">
           <widget class="QSpinBox" name="sbAILine1">
            <property name="minimum">
@@ -1466,16 +1459,24 @@
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QSpinBox" name="sbAILine2">
-           <property name="minimum">
-            <number>-65535</number>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_24">
+           <property name="text">
+            <string>AI Line 1</string>
            </property>
-           <property name="maximum">
-            <number>65535</number>
+          </widget>
+         </item>
+         <item row="2" column="3">
+          <widget class="QLabel" name="lblAISpeed">
+           <property name="text">
+            <string>(100%)</string>
            </property>
-           <property name="singleStep">
-            <number>100</number>
+          </widget>
+         </item>
+         <item row="0" column="3">
+          <widget class="QLabel" name="label_46">
+           <property name="text">
+            <string>AI Line 4</string>
            </property>
           </widget>
          </item>
@@ -1489,27 +1490,6 @@
            </property>
            <property name="singleStep">
             <number>100</number>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QLabel" name="label_45">
-           <property name="text">
-            <string>AI Line 3</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_24">
-           <property name="text">
-            <string>AI Line 1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3">
-          <widget class="QLabel" name="label_46">
-           <property name="text">
-            <string>AI Line 4</string>
            </property>
           </widget>
          </item>
@@ -1533,12 +1513,42 @@
            </property>
           </widget>
          </item>
-         <item row="2" column="3">
-          <widget class="QLabel" name="lblAISpeed">
-           <property name="text">
-            <string>(100%)</string>
+         <item row="1" column="1">
+          <widget class="QSpinBox" name="sbAILine2">
+           <property name="minimum">
+            <number>-65535</number>
+           </property>
+           <property name="maximum">
+            <number>65535</number>
+           </property>
+           <property name="singleStep">
+            <number>100</number>
            </property>
           </widget>
+         </item>
+         <item row="0" column="2">
+          <widget class="QLabel" name="label_45">
+           <property name="text">
+            <string>AI Line 3</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLabel" name="label_44">
+           <property name="text">
+            <string>AI Line 2</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QLabel" name="label_13">
+           <property name="text">
+            <string>Unknown</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1" colspan="2">
+          <widget class="QLineEdit" name="leUnk05"/>
          </item>
         </layout>
        </item>

@@ -80,6 +80,8 @@ CEditGeometryWidget::CEditGeometryWidget(QWidget *pParent, CTrack *pTrack, CText
   connect(sldLShoulderGrip, SIGNAL(valueChanged(int)), this, SLOT(LGripChanged(int)));
   connect(sldRShoulderGrip, SIGNAL(valueChanged(int)), this, SLOT(RGripChanged(int)));
   connect(sldAISpeed,       SIGNAL(valueChanged(int)), this, SLOT(AISpeedChanged(int)));
+
+  connect(leUnk05,          &QLineEdit::textChanged, this, &CEditGeometryWidget::Unk05Changed);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -127,6 +129,7 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
   sldLShoulderGrip    ->blockSignals(true);
   sldRShoulderGrip    ->blockSignals(true);
   sldAISpeed          ->blockSignals(true);
+  leUnk05             ->blockSignals(true);
   dsbYaw->setValue(               p->m_pTrack->m_chunkAy[iFrom].dYaw);
   dsbPitch->setValue(             p->m_pTrack->m_chunkAy[iFrom].dPitch);
   dsbRoll->setValue(              p->m_pTrack->m_chunkAy[iFrom].dRoll);
@@ -158,6 +161,7 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
   sldLShoulderGrip->setValue(     p->m_pTrack->m_chunkAy[iFrom].iLeftShoulderGrip);
   sldRShoulderGrip->setValue(     p->m_pTrack->m_chunkAy[iFrom].iRightShoulderGrip);
   sldAISpeed->setValue(           p->m_pTrack->m_chunkAy[iFrom].iAIMaxSpeed / 10);
+  leUnk05->setText(               QString::number(p->m_pTrack->m_chunkAy[iFrom].iUnk05));
   dsbYaw              ->blockSignals(false);
   dsbPitch            ->blockSignals(false);
   dsbRoll             ->blockSignals(false);
@@ -189,6 +193,7 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
   sldLShoulderGrip    ->blockSignals(false);
   sldRShoulderGrip    ->blockSignals(false);
   sldAISpeed          ->blockSignals(false);
+  leUnk05             ->blockSignals(false);
 
   lblCGrip->setText(        "(" + QString::number(p->m_pTrack->m_chunkAy[iFrom].iTrackGrip) + ")");
   lblLShoulderGrip->setText("(" + QString::number(p->m_pTrack->m_chunkAy[iFrom].iLeftShoulderGrip) + ")");
@@ -1153,6 +1158,26 @@ void CEditGeometryWidget::AISpeedChanged(int iValue)
 
   for (int i = iFrom; i <= iTo; ++i) {
     p->m_pTrack->m_chunkAy[i].iAIMaxSpeed = iValue * 10;
+  }
+  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::Unk05Changed(const QString &sValue)
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+
+  if (!p->m_pTrack
+      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
+      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+    return;
+
+  for (int i = iFrom; i <= iTo; ++i) {
+    p->m_pTrack->m_chunkAy[i].iUnk05 = sValue.toInt();
   }
   p->m_pTrack->UpdateChunkStrings();
   g_pMainWindow->SetUnsavedChanges(true);

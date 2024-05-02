@@ -37,6 +37,7 @@ class CTrackPreview;
 #define SHOW_TEST_CAR              0x10000000
 #define SHOW_SIGNS                 0x20000000
 #define SHOW_AUDIO                 0x40000000
+#define SHOW_STUNTS                0x80000000
 //-------------------------------------------------------------------------------------------------
 
 class CDisplaySettings : public QWidget, private Ui::DisplaySettings

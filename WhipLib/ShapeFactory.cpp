@@ -301,6 +301,93 @@ uint32 *CShapeFactory::MakeIndicesAudioMarker(uint32 &uiNumIndices)
 
 //-------------------------------------------------------------------------------------------------
 
+CShapeData *CShapeFactory::MakeStuntMarker(CShader *pShader)
+{
+  uint32 uiNumVerts;
+  struct tVertex *vertices = MakeVertsStuntMarker(uiNumVerts);
+  uint32 uiNumIndices;
+  uint32 *indices = MakeIndicesStuntMarker(uiNumIndices);
+  GLenum drawType = GL_TRIANGLES;
+
+  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
+  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+
+  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
+
+  if (vertices)
+    delete[] vertices;
+  if (indices)
+    delete[] indices;
+
+  return pRet;
+
+}
+
+//-------------------------------------------------------------------------------------------------
+
+tVertex *CShapeFactory::MakeVertsStuntMarker(uint32 &uiNumVerts)
+{
+  uiNumVerts = 8;
+  tVertex *vertices = new tVertex[uiNumVerts];
+
+  glm::vec3 color = glm::vec3(1, 0, 0);
+  vertices[0].position = glm::vec3(+300.0f / m_fScale, +400.0f / m_fScale, +0.0f);
+  vertices[1].position = glm::vec3(+400.0f / m_fScale, +300.0f / m_fScale, +0.0f);
+  vertices[2].position = glm::vec3(+400.0f / m_fScale, -300.0f / m_fScale, +0.0f);
+  vertices[3].position = glm::vec3(+300.0f / m_fScale, -400.0f / m_fScale, +0.0f);
+  vertices[4].position = glm::vec3(-300.0f / m_fScale, -400.0f / m_fScale, +0.0f);
+  vertices[5].position = glm::vec3(-400.0f / m_fScale, -300.0f / m_fScale, +0.0f);
+  vertices[6].position = glm::vec3(-400.0f / m_fScale, +300.0f / m_fScale, +0.0f);
+  vertices[7].position = glm::vec3(-300.0f / m_fScale, +400.0f / m_fScale, +0.0f);
+
+  vertices[0].color = color;
+  vertices[1].color = color;
+  vertices[2].color = color;
+  vertices[3].color = color;
+  vertices[4].color = color;
+  vertices[5].color = color;
+  vertices[6].color = color;
+  vertices[7].color = color;
+
+  vertices[0].flags.x = 1.0f;
+  vertices[1].flags.x = 1.0f;
+  vertices[2].flags.x = 1.0f;
+  vertices[3].flags.x = 1.0f;
+  vertices[4].flags.x = 1.0f;
+  vertices[5].flags.x = 1.0f;
+  vertices[6].flags.x = 1.0f;
+  vertices[7].flags.x = 1.0f;
+
+  return vertices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+uint32 *CShapeFactory::MakeIndicesStuntMarker(uint32 &uiNumIndices)
+{
+  uiNumIndices = 12;
+  uint32 *indices = new uint32[uiNumIndices];
+  memset(indices, 0, uiNumIndices * sizeof(uint32));
+
+  indices[0]  = 4;
+  indices[1]  = 1;
+  indices[2]  = 0;
+  indices[3]  = 4;
+  indices[4]  = 0;
+  indices[5]  = 5;
+  indices[6]  = 6;
+  indices[7]  = 3;
+  indices[8]  = 2;
+  indices[9]  = 6;
+  indices[10] = 2;
+  indices[11] = 7;
+
+  return indices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 float *CShapeFactory::GetCoords(eWhipModel model)
 {
   switch (model) {
@@ -1017,6 +1104,42 @@ void CShapeFactory::MakeAudio(CShader *pShader, CTrackData *pTrack, std::vector<
 
     //add sign to array
     audioAy.push_back(pNewMarker);
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CShapeFactory::MakeStunts(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &stuntAy)
+{
+  for (int i = 0; i < (int)pTrack->m_chunkAy.size(); ++i) {
+    bool bChunkHasStunt = pTrack->m_chunkAy[i].stunt.iScaleFactor != 0
+      || pTrack->m_chunkAy[i].stunt.iAngle != 0
+      || pTrack->m_chunkAy[i].stunt.iUnknown != 0
+      || pTrack->m_chunkAy[i].stunt.iTimingGroup != 0
+      || pTrack->m_chunkAy[i].stunt.iHeight != 0
+      || pTrack->m_chunkAy[i].stunt.iTimeBulging != 0
+      || pTrack->m_chunkAy[i].stunt.iTimeFlat != 0
+      || pTrack->m_chunkAy[i].stunt.iSmallerExpandsLargerContracts != 0
+      || pTrack->m_chunkAy[i].stunt.iBulge != 0;
+    if (!bChunkHasStunt)
+      continue; //no stunt in this chunk
+
+    //make marker
+    CShapeData *pNewMarker = MakeStuntMarker(pShader);
+
+    float fHeight = (float)1000.0f / m_fScale * -1.0f;
+    glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[i].math.center);
+    glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
+    glm::vec3 normal = glm::normalize(glm::cross(pTrack->m_chunkAy[i].math.nextChunkPitched, pTrack->m_chunkAy[i].math.pitchAxis));
+    glm::vec3 heightVec = glm::vec3(scaleMatHeight * pTrack->m_chunkAy[i].math.rollMat * glm::vec4(normal, 1.0f));
+    glm::vec3 markerPos = heightVec;
+    glm::vec3 markerPosTranslated = glm::vec3(translateMat * glm::vec4(markerPos, 1.0f));
+
+    pNewMarker->m_modelToWorldMatrix = glm::translate(markerPosTranslated) *
+      pTrack->m_chunkAy[i].math.rollMat * pTrack->m_chunkAy[i].math.pitchMat * pTrack->m_chunkAy[i].math.yawMat;
+
+    //add sign to array
+    stuntAy.push_back(pNewMarker);
   }
 }
 

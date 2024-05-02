@@ -217,6 +217,10 @@ public:
       delete *it;
     }
     m_audioAy.clear();
+    for (std::vector<CShapeData *>::iterator it = m_stuntAy.begin(); it != m_stuntAy.end(); ++it) {
+      delete *it;
+    }
+    m_stuntAy.clear();
   }
 
   CShapeData *m_pLLaneSurf;
@@ -253,6 +257,7 @@ public:
   CShapeData *m_pAxes;
   std::vector<CShapeData *> m_signAy;
   std::vector<CShapeData *> m_audioAy;
+  std::vector<CShapeData *> m_stuntAy;
   CShader *m_pShader;
   CTrack *m_pTrack;
   CTexture *m_pTex;
@@ -328,6 +333,7 @@ void CTrackPreview::SetTrack(CTrack *pTrack, CTexture *pTex, CTexture *pBld, CPa
     p->m_pAILine4        = CShapeFactory::GetShapeFactory().MakeAILine(p->m_pShader, p->m_pTrack, eShapeSection::AILINE4, m_bAttachLast);
     CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, pBld, p->m_pTrack, p->m_signAy);
     CShapeFactory::GetShapeFactory().MakeAudio(p->m_pShader, p->m_pTrack, p->m_audioAy);
+    CShapeFactory::GetShapeFactory().MakeStunts(p->m_pShader, p->m_pTrack, p->m_stuntAy);
 
     UpdateCar(m_carModel, m_carAILine, m_bMillionPlus);
     if (p->m_pCar)
@@ -518,6 +524,11 @@ void CTrackPreview::paintGL()
   }
   if (m_uiShowModels & SHOW_AUDIO) {
     for (std::vector<CShapeData *>::iterator it = p->m_audioAy.begin(); it != p->m_audioAy.end(); ++it) {
+      (*it)->Draw(worldToProjectionMatrix);
+    }
+  }
+  if (m_uiShowModels & SHOW_STUNTS) {
+    for (std::vector<CShapeData *>::iterator it = p->m_stuntAy.begin(); it != p->m_stuntAy.end(); ++it) {
       (*it)->Draw(worldToProjectionMatrix);
     }
   }

@@ -20,6 +20,7 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
   ckSigns->setChecked(true);
   ckTestCar->setChecked(true);
   ckAudio->setChecked(true);
+  ckStunts->setChecked(true);
 
   cbTestCarType->addItem("F1WACK", (int)eWhipModel::CAR_F1WACK);
   cbTestCarType->addItem("AUTO", (int)eWhipModel::CAR_AUTO);
@@ -70,6 +71,7 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
   connect(ckAILines, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckSigns, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckAudio, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
+  connect(ckStunts, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckTestCar, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(cbTestCarType, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
   connect(cbTestCarPos, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
@@ -123,6 +125,7 @@ uint32 CDisplaySettings::GetDisplaySettings(eWhipModel &carModel, eShapeSection 
   if (ckTestCar->isChecked())             uiShowModels |= SHOW_TEST_CAR;
   if (ckSigns->isChecked())               uiShowModels |= SHOW_SIGNS;
   if (ckAudio->isChecked())               uiShowModels |= SHOW_AUDIO;
+  if (ckStunts->isChecked())              uiShowModels |= SHOW_STUNTS;
 
   carModel = (eWhipModel)cbTestCarType->currentData().toInt();
   aiLine = (eShapeSection)cbTestCarPos->currentData().toInt();
@@ -166,6 +169,7 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels, eWhipModel carMod
   ckTestCar->blockSignals(true);
   ckSigns->blockSignals(true);
   ckAudio->blockSignals(true);
+  ckStunts->blockSignals(true);
 
   ckLLaneSurface->setChecked(       uiShowModels & SHOW_LLANE_SURF_MODEL);
   ckLLaneWireframe->setChecked(     uiShowModels & SHOW_LLANE_WIRE_MODEL);
@@ -198,6 +202,7 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels, eWhipModel carMod
   ckTestCar->setChecked(            uiShowModels & SHOW_TEST_CAR);
   ckSigns->setChecked(              uiShowModels & SHOW_SIGNS);
   ckAudio->setChecked(              uiShowModels & SHOW_AUDIO);
+  ckStunts->setChecked(             uiShowModels & SHOW_STUNTS);
 
   ckLLaneSurface->blockSignals(false);
   ckLLaneWireframe->blockSignals(false);
@@ -230,6 +235,7 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels, eWhipModel carMod
   ckTestCar->blockSignals(false);
   ckSigns->blockSignals(false);
   ckAudio->blockSignals(false);
+  ckStunts->blockSignals(false);
 
   cbTestCarType->blockSignals(true);
   cbTestCarPos->blockSignals(true);

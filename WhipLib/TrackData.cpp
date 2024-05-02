@@ -172,9 +172,14 @@ bool CTrackData::LoadTrack(const std::string &sFilename)
   int iUnmangledLength = GetUnmangledLength((uint8_t *)szBuf, (int)length);
   //unmangle
   if (iUnmangledLength > 0 && iUnmangledLength < 67108864) {  // arbitrary 64 MB max, realistic maximum is much smaller
+    Logging::LogMessage("Track file %s is mangled", sFilename.c_str());
     uint8_t *szUnmangledData = new uint8_t[iUnmangledLength];
-    UnmangleFile((uint8_t *)szBuf, (int)length, szUnmangledData, iUnmangledLength);
-    bSuccess = ProcessTrackData(szUnmangledData, (size_t)iUnmangledLength);
+    bSuccess = UnmangleFile((uint8_t *)szBuf, (int)length, szUnmangledData, iUnmangledLength);
+    Logging::LogMessage("%s track file %s", bSuccess ? "Unmangled" : "Failed to unmangle", sFilename.c_str());
+
+    if (bSuccess)
+      bSuccess = ProcessTrackData(szUnmangledData, (size_t)iUnmangledLength);
+
     delete[] szUnmangledData;
   } else {
     bSuccess = ProcessTrackData((uint8_t *)szBuf, length);

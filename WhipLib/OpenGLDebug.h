@@ -20,7 +20,10 @@ static void GLErrorCb(GLenum source,
                       const GLchar * message,
                       const void *userParam)
 {
-  (void)(source); (void)(type); (void)(id); (void)(severity); (void)(length); (void)(userParam);
+  (void)(source); (void)(type); (void)(id); (void)(length); (void)(userParam);
+  if (severity == GL_DEBUG_SEVERITY_NOTIFICATION)
+    return;
+
   Logging::LogMessage(message);
 }
 

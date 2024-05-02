@@ -85,18 +85,23 @@ bool CTexture::LoadTexture(const std::string &sFilename, CPalette *pPalette)
   //unmangle
   int iUnmangledLength = GetUnmangledLength((uint8 *)szBuf, (int)length);
   if (iUnmangledLength > 0 && iUnmangledLength < 67108864) { // arbitrary 64 MB max, realistic maximum is much smaller
+    Logging::LogMessage("Texture file %s is mangled", sFilename.c_str());
     uint8 *szUnmangledData = new uint8[iUnmangledLength];
-    if (UnmangleFile((uint8 *)szBuf, (int)length, szUnmangledData, iUnmangledLength))
+    bSuccess = UnmangleFile((uint8 *)szBuf, (int)length, szUnmangledData, iUnmangledLength);
+    Logging::LogMessage("%s texture file %s", bSuccess ? "Unmangled" : "Failed to unmangle", sFilename.c_str());
+
+    if (bSuccess)
       bSuccess = ProcessTextureData(szUnmangledData, (size_t)iUnmangledLength);
+
     delete[] szUnmangledData;
-  }
-  if (!bSuccess)
+  } else {
     bSuccess = ProcessTextureData((uint8 *)szBuf, length);
+  }
 
   delete[] szBuf;
   file.close();
 
-  Logging::LogMessage("Loaded texture: %s", sFilename.c_str());
+  Logging::LogMessage("%s texture: %s", bSuccess ? "Loaded" : "Failed to load", sFilename.c_str());
 
   return bSuccess;
 }

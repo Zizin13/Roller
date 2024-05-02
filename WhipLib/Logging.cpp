@@ -3,6 +3,10 @@
 #include <stdarg.h>
 #include <stdio.h>
 //-------------------------------------------------------------------------------------------------
+#if defined(_DEBUG) && defined(IS_WINDOWS)
+#define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
+#endif
+//-------------------------------------------------------------------------------------------------
 
 static Logging::WhipLibLoggingCallback g_pfnLoggingCallback = NULL;
 

@@ -5,6 +5,7 @@
 //-------------------------------------------------------------------------------------------------
 class CTrack;
 class CTexture;
+class CPalette;
 class CEditSignWidgetPrivate;
 //-------------------------------------------------------------------------------------------------
 
@@ -13,7 +14,7 @@ class CEditSignWidget : public QWidget, private Ui::EditSignWidget
   Q_OBJECT
 
 public:
-  CEditSignWidget(QWidget *pParent, CTrack *pTrack, CTexture *pBld);
+  CEditSignWidget(QWidget *pParent, CTrack *pTrack, CTexture *pBld, CPalette *pPal);
   ~CEditSignWidget();
 
 protected slots:

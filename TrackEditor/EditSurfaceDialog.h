@@ -4,13 +4,14 @@
 #include "ui_EditSurfaceDialog.h"
 //-------------------------------------------------------------------------------------------------
 class CTexture;
+class CPalette;
 //-------------------------------------------------------------------------------------------------
 class CEditSurfaceDialog : public QDialog, private Ui::EditSurfaceDialog
 {
   Q_OBJECT
 
 public:
-  CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, int iValue, 
+  CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, CPalette *pPalette, int iValue, 
                      bool bShowDisable = false, const QString &sDisableEffects = "", bool bShowDisableAttach = false);
   ~CEditSurfaceDialog();
 
@@ -49,6 +50,7 @@ private:
   void UpdateDialog();
 
   CTexture *m_pTexture;
+  CPalette *m_pPalette;
   unsigned int m_uiSignedBitValue;
   bool m_bShowDisable;
   bool m_bShowDisableAttach;

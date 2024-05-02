@@ -1,6 +1,7 @@
 #include "EditGeometryWidget.h"
 #include "Track.h"
 #include "Texture.h"
+#include "Palette.h"
 #include "MainWindow.h"
 #include "ChunkEditValues.h"
 #include "QtHelpers.h"
@@ -19,16 +20,18 @@ public:
 
   CTrack *m_pTrack;
   CTexture *m_pTex;
+  CPalette *m_pPal;
 };
 
 //-------------------------------------------------------------------------------------------------
 
-CEditGeometryWidget::CEditGeometryWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTex)
+CEditGeometryWidget::CEditGeometryWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTex, CPalette *pPal)
   : QWidget(pParent)
 {
   p = new CEditGeometryWidgetPrivate;
   p->m_pTrack = pTrack;
   p->m_pTex = pTex;
+  p->m_pPal = pPal;
 
   setupUi(this);
 
@@ -140,18 +143,18 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
   lblRShoulderGrip->setText("(" + QString::number(p->m_pTrack->m_chunkAy[iFrom].iRightShoulderGrip) + ")");
   lblAISpeed->setText(      "(" + QString::number(p->m_pTrack->m_chunkAy[iFrom].iAIMaxSpeed / 10) + "%)");
 
-  QtHelpers::UpdateTextures(lblCTex1, lblCTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType);
-  QtHelpers::UpdateTextures(lblLShoulderTex1, lblLShoulderTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLeftSurfaceType);
-  QtHelpers::UpdateTextures(lblRShoulderTex1, lblRShoulderTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRightSurfaceType);
-  QtHelpers::UpdateTextures(lblLWallTex1, lblLWallTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLeftWallType);
-  QtHelpers::UpdateTextures(lblRWallTex1, lblRWallTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRightWallType);
-  QtHelpers::UpdateTextures(lblBackTex1, lblBackTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iBackTexture);
-  QtHelpers::UpdateTextures(lblRoofTex1, lblRoofTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRoofType);
-  QtHelpers::UpdateTextures(lblLLOWallTex1, lblLLOWallTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallType);
-  QtHelpers::UpdateTextures(lblLUOWallTex1, lblLUOWallTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLUOuterWallType);
-  QtHelpers::UpdateTextures(lblRLOWallTex1, lblRLOWallTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallType);
-  QtHelpers::UpdateTextures(lblRUOWallTex1, lblRUOWallTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRUOuterWallType);
-  QtHelpers::UpdateTextures(lblOFloorTex1, lblOFloorTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType);
+  QtHelpers::UpdateTextures(lblCTex1, lblCTex2, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType);
+  QtHelpers::UpdateTextures(lblLShoulderTex1, lblLShoulderTex2, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iLeftSurfaceType);
+  QtHelpers::UpdateTextures(lblRShoulderTex1, lblRShoulderTex2, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iRightSurfaceType);
+  QtHelpers::UpdateTextures(lblLWallTex1, lblLWallTex2, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iLeftWallType);
+  QtHelpers::UpdateTextures(lblRWallTex1, lblRWallTex2, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iRightWallType);
+  QtHelpers::UpdateTextures(lblBackTex1, lblBackTex2, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iBackTexture);
+  QtHelpers::UpdateTextures(lblRoofTex1, lblRoofTex2, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iRoofType);
+  QtHelpers::UpdateTextures(lblLLOWallTex1, lblLLOWallTex2, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallType);
+  QtHelpers::UpdateTextures(lblLUOWallTex1, lblLUOWallTex2, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iLUOuterWallType);
+  QtHelpers::UpdateTextures(lblRLOWallTex1, lblRLOWallTex2, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallType);
+  QtHelpers::UpdateTextures(lblRUOWallTex1, lblRUOWallTex2, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iRUOuterWallType);
+  QtHelpers::UpdateTextures(lblOFloorTex1, lblOFloorTex2, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType);
 
   //update roof disabled text
   lblRoofDisabled->setVisible(p->m_pTrack->m_chunkAy[iFrom].iLeftWallType == -1
@@ -803,7 +806,7 @@ void CEditGeometryWidget::EditCSurface()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType, true, "(also disables outer walls if floor is -2)");
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType, true, "(also disables outer walls if floor is -2)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iCenterSurfaceType = dlg.GetValue();
@@ -826,7 +829,7 @@ void CEditGeometryWidget::EditLShoulder()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLeftSurfaceType, true);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iLeftSurfaceType, true);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iLeftSurfaceType = dlg.GetValue();
@@ -849,7 +852,7 @@ void CEditGeometryWidget::EditRShoulder()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRightSurfaceType, true);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iRightSurfaceType, true);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iRightSurfaceType = dlg.GetValue();
@@ -872,7 +875,7 @@ void CEditGeometryWidget::EditLWall()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLeftWallType, true, "(also disables roof)");
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iLeftWallType, true, "(also disables roof)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iLeftWallType = dlg.GetValue();
@@ -895,7 +898,7 @@ void CEditGeometryWidget::EditRWall()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRightWallType, true, "(also disables roof)");
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iRightWallType, true, "(also disables roof)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iRightWallType = dlg.GetValue();
@@ -918,7 +921,7 @@ void CEditGeometryWidget::EditBack()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iBackTexture);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iBackTexture);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iBackTexture = dlg.GetValue();
@@ -941,7 +944,7 @@ void CEditGeometryWidget::EditRoof()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRoofType, true);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iRoofType, true);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iRoofType = dlg.GetValue();
@@ -964,7 +967,7 @@ void CEditGeometryWidget::EditLUOWall()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLUOuterWallType, true);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iLUOuterWallType, true);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iLUOuterWallType = dlg.GetValue();
@@ -987,7 +990,7 @@ void CEditGeometryWidget::EditLLOWall()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallType, true, "(also disables upper wall)");
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallType, true, "(also disables upper wall)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iLLOuterWallType = dlg.GetValue();
@@ -1010,7 +1013,7 @@ void CEditGeometryWidget::EditRLOWall()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallType, true, "(also disables upper wall)");
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallType, true, "(also disables upper wall)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iRLOuterWallType = dlg.GetValue();
@@ -1033,7 +1036,7 @@ void CEditGeometryWidget::EditRUOWall()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRUOuterWallType, true);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iRUOuterWallType, true);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iRUOuterWallType = dlg.GetValue();
@@ -1056,7 +1059,7 @@ void CEditGeometryWidget::EditOFloor()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType, true, "(also disables outer walls)", true);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType, true, "(also disables outer walls)", true);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iOuterFloorType = dlg.GetValue();

@@ -98,7 +98,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   p->m_pEditDataDockWidget = new QDockWidget("Debug Chunk Data", this);
   p->m_pEditDataDockWidget->setObjectName("EditChunkData");
   p->m_pEditDataDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pEditData = new CEditDataWidget(p->m_pEditDataDockWidget, &p->m_track, &p->m_tex, &p->m_bld);
+  p->m_pEditData = new CEditDataWidget(p->m_pEditDataDockWidget, &p->m_track, &p->m_tex, &p->m_bld, &p->m_palette);
   p->m_pEditDataDockWidget->setWidget(p->m_pEditData);
 
   p->m_pGlobalSettingsDockWidget = new QDockWidget("Global Track Settings", this);
@@ -120,12 +120,12 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   p->m_pEditGeometryDockWidget = new QDockWidget("Edit Chunk Data", this);
   p->m_pEditGeometryDockWidget->setObjectName("EditGeometry");
   p->m_pEditGeometryDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pEditGeometryDockWidget->setWidget(new CEditGeometryWidget(p->m_pEditGeometryDockWidget, &p->m_track, &p->m_tex));
+  p->m_pEditGeometryDockWidget->setWidget(new CEditGeometryWidget(p->m_pEditGeometryDockWidget, &p->m_track, &p->m_tex, &p->m_palette));
 
   p->m_pEditSignDockWidget = new QDockWidget("Edit Signs", this);
   p->m_pEditSignDockWidget->setObjectName("EditSigns");
   p->m_pEditSignDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pEditSignDockWidget->setWidget(new CEditSignWidget(p->m_pEditSignDockWidget, &p->m_track, &p->m_bld));
+  p->m_pEditSignDockWidget->setWidget(new CEditSignWidget(p->m_pEditSignDockWidget, &p->m_track, &p->m_bld, &p->m_palette));
 
   p->m_pEditAudioDockWidget = new QDockWidget("Edit Audio", this);
   p->m_pEditAudioDockWidget->setObjectName("EditAudio");

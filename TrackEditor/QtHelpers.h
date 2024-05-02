@@ -1,6 +1,7 @@
 #ifndef _TRACKEDITOR_QTHELPERS_H
 #define _TRACKEDITOR_QTHELPERS_H
 //-------------------------------------------------------------------------------------------------
+#include "glm.hpp"
 #include "QImage.h"
 //-------------------------------------------------------------------------------------------------
 class QLineEdit;
@@ -9,6 +10,7 @@ class QComboBox;
 class QPushButton;
 class QCheckBox;
 class CTexture;
+class CPalette;
 class QWidget;
 class QLabel;
 struct tTile;
@@ -28,8 +30,9 @@ namespace QtHelpers
   extern void UpdateLEEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, const QString &sValue);
   extern void UpdateCBEditMode(bool &bEdited, bool &bMixedData, QComboBox *pComboBox, const QString &sValue);
   extern void UpdateSignEditMode(bool &bEdited, bool &bMixedData, QLineEdit *pLineEdit, QWidget *pWidget, const QString &sValue);
-  extern void UpdateTextures(QLabel *pTex1, QLabel *pTex2, CTexture *pTex, int iSurface);
+  extern void UpdateTextures(QLabel *pTex1, QLabel *pTex2, CTexture *pTex, CPalette *pPal, int iSurface);
   extern QImage GetQImageFromTile(const tTile &tile, bool bScale = false);
+  extern QImage GetQImageFromColor(const glm::vec3 &color, bool bScale = false);
 };
 
 //-------------------------------------------------------------------------------------------------

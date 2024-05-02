@@ -5,6 +5,7 @@
 #include "EditSurfaceDialog.h"
 #include "TilePicker.h"
 #include "Texture.h"
+#include "Palette.h"
 #include "QtHelpers.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -27,6 +28,7 @@ public:
   CTrack *m_pTrack;
   CTexture *m_pTex;
   CTexture *m_pBld;
+  CPalette *m_pPal;
 
   //selected geometry values
   CChunkEditValues editVals;
@@ -52,13 +54,14 @@ public:
 };
 //-------------------------------------------------------------------------------------------------
 
-CEditDataWidget::CEditDataWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTex, CTexture *pBld)
+CEditDataWidget::CEditDataWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTex, CTexture *pBld, CPalette *pPal)
   : QWidget(pParent)
 {
   p = new CEditDataWidgetPrivate;
   p->m_pTrack = pTrack;
   p->m_pTex = pTex;
   p->m_pBld = pBld;
+  p->m_pPal = pPal;
   setupUi(this);
 
   cbSignType->addItem("<none>", -1);
@@ -309,7 +312,7 @@ void CEditDataWidget::OnEditLSurface()
 {
   int iValue = leLeftSurfaceType->text().toInt();
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, iValue);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, iValue);
   if (dlg.exec()) {
     iValue = dlg.GetValue();
     leLeftSurfaceType->setText(QString::number(iValue));
@@ -325,7 +328,7 @@ void CEditDataWidget::OnEditCSurface()
 {
   int iValue = leCenterSurfaceType->text().toInt();
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, iValue);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, iValue);
   if (dlg.exec()) {
     iValue = dlg.GetValue();
     leCenterSurfaceType->setText(QString::number(iValue));
@@ -341,7 +344,7 @@ void CEditDataWidget::OnEditRSurface()
 {
   int iValue = leRightSurfaceType->text().toInt();
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, iValue);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, iValue);
   if (dlg.exec()) {
     iValue = dlg.GetValue();
     leRightSurfaceType->setText(QString::number(iValue));
@@ -357,7 +360,7 @@ void CEditDataWidget::OnEditLWall()
 {
   int iValue = leLWallType->text().toInt();
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, iValue);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, iValue);
   if (dlg.exec()) {
     iValue = dlg.GetValue();
     leLWallType->setText(QString::number(iValue));
@@ -373,7 +376,7 @@ void CEditDataWidget::OnEditRWall()
 {
   int iValue = leRWallType->text().toInt();
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, iValue);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, iValue);
   if (dlg.exec()) {
     iValue = dlg.GetValue();
     leRWallType->setText(QString::number(iValue));
@@ -389,7 +392,7 @@ void CEditDataWidget::OnEditRoof()
 {
   int iValue = leRoofType->text().toInt();
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, iValue);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, iValue);
   if (dlg.exec()) {
     iValue = dlg.GetValue();
     leRoofType->setText(QString::number(iValue));
@@ -405,7 +408,7 @@ void CEditDataWidget::OnEditLUOuterWall()
 {
   int iValue = leLUOuterWallType->text().toInt();
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, iValue);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, iValue);
   if (dlg.exec()) {
     iValue = dlg.GetValue();
     leLUOuterWallType->setText(QString::number(iValue));
@@ -421,7 +424,7 @@ void CEditDataWidget::OnEditLLOuterWall()
 {
   int iValue = leLLOuterWallType->text().toInt();
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, iValue);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, iValue);
   if (dlg.exec()) {
     iValue = dlg.GetValue();
     leLLOuterWallType->setText(QString::number(iValue));
@@ -437,7 +440,7 @@ void CEditDataWidget::OnEditOuterFloor()
 {
   int iValue = leOuterFloorType->text().toInt();
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, iValue);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, iValue);
   if (dlg.exec()) {
     iValue = dlg.GetValue();
     leOuterFloorType->setText(QString::number(iValue));
@@ -453,7 +456,7 @@ void CEditDataWidget::OnEditRLOuterWall()
 {
   int iValue = leRLOuterWallType->text().toInt();
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, iValue);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, iValue);
   if (dlg.exec()) {
     iValue = dlg.GetValue();
     leRLOuterWallType->setText(QString::number(iValue));
@@ -469,7 +472,7 @@ void CEditDataWidget::OnEditRUOuterWall()
 {
   int iValue = leRUOuterWallType->text().toInt();
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, iValue);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, iValue);
   if (dlg.exec()) {
     iValue = dlg.GetValue();
     leRUOuterWallType->setText(QString::number(iValue));
@@ -485,7 +488,7 @@ void CEditDataWidget::OnEditEnvirFloor()
 {
   int iValue = leEnvironmentFloorType->text().toInt();
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, iValue);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, iValue);
   if (dlg.exec()) {
     iValue = dlg.GetValue();
     leEnvironmentFloorType->setText(QString::number(iValue));

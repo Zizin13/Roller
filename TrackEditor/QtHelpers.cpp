@@ -7,6 +7,7 @@
 #include "Texture.h"
 #include "EditSurfaceDialog.h"
 #include "Texture.h"
+#include "Palette.h"
 #include "MainWindow.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -161,11 +162,11 @@ void QtHelpers::UpdateSignEditMode(bool &bEdited, bool &bMixedData, QLineEdit *p
 
 //-------------------------------------------------------------------------------------------------
 
-void QtHelpers::UpdateTextures(QLabel *pTex1, QLabel *pTex2, CTexture *pTex, int iSurface)
+void QtHelpers::UpdateTextures(QLabel *pTex1, QLabel *pTex2, CTexture *pTex, CPalette *pPal, int iSurface)
 {
-  //textures
   QPixmap pixmap;
-  int iIndex;
+  unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iSurface);
+  int iIndex = (int)(uiSignedBitVal & SURFACE_TEXTURE_INDEX);
   QSize size((int)(TILE_WIDTH * g_pMainWindow->GetDesktopScale() / 200.0),
              (int)(TILE_HEIGHT * g_pMainWindow->GetDesktopScale() / 200.0));
   if (pTex1)
@@ -178,22 +179,32 @@ void QtHelpers::UpdateTextures(QLabel *pTex1, QLabel *pTex2, CTexture *pTex, int
     if (pTex2)
       pTex2->setPixmap(QPixmap());
   } else {
-    unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iSurface);
-    iIndex = CTrack::GetIntValueFromSignedBit(uiSignedBitVal & SURFACE_TEXTURE_INDEX);
-    if (iIndex < pTex->m_iNumTiles) {
-      pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTex->m_pTileAy[iIndex], true));
-      if (pTex1)
-        pTex1->setPixmap(pixmap);
+    if (uiSignedBitVal & SURFACE_FLAG_APPLY_TEXTURE) {
+      if (iIndex < pTex->m_iNumTiles) {
+        pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTex->m_pTileAy[iIndex], true));
+        if (pTex1)
+          pTex1->setPixmap(pixmap);
 
-      if (uiSignedBitVal & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
-        if (uiSignedBitVal & SURFACE_FLAG_PAIR_NEXT_TEX)
-          pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTex->m_pTileAy[iIndex + 1], true));
-        if (pTex2)
-          pTex2->setPixmap(pixmap);
-      } else {
-        if (pTex2)
-          pTex2->setPixmap(QPixmap());
+        if (uiSignedBitVal & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
+          if (uiSignedBitVal & SURFACE_FLAG_PAIR_NEXT_TEX)
+            pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTex->m_pTileAy[iIndex + 1], true));
+          if (pTex2)
+            pTex2->setPixmap(pixmap);
+        } else {
+          if (pTex2)
+            pTex2->setPixmap(QPixmap());
+        }
       }
+    } else {
+      if (iIndex < (int)pPal->m_paletteAy.size()) {
+        QPixmap pixmap;
+        pixmap.convertFromImage(QtHelpers::GetQImageFromColor(pPal->m_paletteAy[iIndex]));
+        pTex1->setPixmap(pixmap);
+      } else {
+        pTex1->setPixmap(QPixmap());
+      }
+
+      pTex2->setPixmap(QPixmap());
     }
   }
 }
@@ -208,6 +219,24 @@ QImage QtHelpers::GetQImageFromTile(const tTile &tile, bool bScale)
       image.setPixelColor(i, j, QColor(tile.data[i][j].r,
                                        tile.data[i][j].g,
                                        tile.data[i][j].b));
+  }
+  if (bScale)
+    return image.scaled((int)(TILE_WIDTH * g_pMainWindow->GetDesktopScale() / 200.0),
+                        (int)(TILE_HEIGHT * g_pMainWindow->GetDesktopScale() / 200.0));
+  else
+    return image;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+QImage QtHelpers::GetQImageFromColor(const glm::vec3 &color, bool bScale)
+{
+  QImage image(TILE_WIDTH, TILE_HEIGHT, QImage::Format_RGB32);
+  for (int i = 0; i < TILE_WIDTH; ++i) {
+    for (int j = 0; j < TILE_HEIGHT; ++j)
+      image.setPixelColor(i, j, QColor(color.r,
+                                       color.g,
+                                       color.b));
   }
   if (bScale)
     return image.scaled((int)(TILE_WIDTH * g_pMainWindow->GetDesktopScale() / 200.0),

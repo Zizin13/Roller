@@ -1,6 +1,7 @@
 #include "TrackEditor.h"
 #include "EditSurfaceDialog.h"
 #include "Texture.h"
+#include "Palette.h"
 #include "TilePicker.h"
 #include "Track.h"
 #include "QtHelpers.h"
@@ -10,10 +11,11 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
-CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, int iValue, 
+CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, CPalette *pPalette, int iValue, 
                                        bool bShowDisable, const QString &sDisableEffects, bool bShowDisableAttach)
   : QDialog(pParent)
   , m_pTexture(pTexture)
+  , m_pPalette(pPalette)
   , m_bShowDisable(bShowDisable)
   , m_bShowDisableAttach(bShowDisableAttach)
 {
@@ -447,23 +449,36 @@ void CEditSurfaceDialog::UpdateDialog()
   leValue->setText(QString::number(iValue).leftJustified(10, ' ') + szBuf);
 
   //textures
-  int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
-  if (iIndex < m_pTexture->m_iNumTiles) {
-    QPixmap pixmap;
-    pixmap.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_pTileAy[iIndex]));
-    pbTexture1->setIcon(pixmap);
+  if (m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE) {
+    int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
+    if (iIndex < m_pTexture->m_iNumTiles) {
+      QPixmap pixmap;
+      pixmap.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_pTileAy[iIndex]));
+      pbTexture1->setIcon(pixmap);
 
-    if (m_uiSignedBitValue & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
-      if (m_uiSignedBitValue & SURFACE_FLAG_PAIR_NEXT_TEX) {
-        QPixmap pixmap2;
-        pixmap2.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_pTileAy[iIndex + 1]));
-        lblTexture2->setPixmap(pixmap2);
+      if (m_uiSignedBitValue & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
+        if (m_uiSignedBitValue & SURFACE_FLAG_PAIR_NEXT_TEX) {
+          QPixmap pixmap2;
+          pixmap2.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_pTileAy[iIndex + 1]));
+          lblTexture2->setPixmap(pixmap2);
+        } else {
+          lblTexture2->setPixmap(pixmap);
+        }
       } else {
-        lblTexture2->setPixmap(pixmap);
+        lblTexture2->setPixmap(QPixmap());
       }
-    } else {
-      lblTexture2->setPixmap(QPixmap());
     }
+  } else {
+    int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
+    if (iIndex < (int)m_pPalette->m_paletteAy.size()) {
+      QPixmap pixmap;
+      pixmap.convertFromImage(QtHelpers::GetQImageFromColor(m_pPalette->m_paletteAy[iIndex]));
+      pbTexture1->setIcon(pixmap);
+    } else {
+      pbTexture1->setIcon(QPixmap());
+    }
+
+    lblTexture2->setPixmap(QPixmap());
   }
 }
 

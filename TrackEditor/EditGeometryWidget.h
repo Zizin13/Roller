@@ -5,6 +5,7 @@
 //-------------------------------------------------------------------------------------------------
 class CTrack;
 class CTexture;
+class CPalette;
 class CEditGeometryWidgetPrivate;
 //-------------------------------------------------------------------------------------------------
 
@@ -13,7 +14,7 @@ class CEditGeometryWidget : public QWidget, private Ui::EditGeometryWidget
   Q_OBJECT
 
 public:
-  CEditGeometryWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTex);
+  CEditGeometryWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTex, CPalette *pPal);
   ~CEditGeometryWidget();
 
 protected slots:

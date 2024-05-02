@@ -24,6 +24,7 @@
 #include "EditStuntWidget.h"
 #include "qtextstream.h"
 #include "QtHelpers.h"
+#include "Logging.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
 #endif
@@ -33,6 +34,14 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 CMainWindow *g_pMainWindow = NULL;
+//-------------------------------------------------------------------------------------------------
+
+static void LogMessageCbStatic(const char *szMsg, int iLen)
+{
+  (void)(iLen);
+  g_pMainWindow->LogMessage(szMsg);
+}
+
 //-------------------------------------------------------------------------------------------------
 
 class CMainWindowPrivate
@@ -76,6 +85,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   , m_fDesktopScale(fDesktopScale)
 {
   //init
+  Logging::SetWhipLibLoggingCallback(LogMessageCbStatic);
   p = new CMainWindowPrivate(this);
   g_pMainWindow = this;
   m_sSettingsFile = m_sAppPath + "/TrackEditor.ini";

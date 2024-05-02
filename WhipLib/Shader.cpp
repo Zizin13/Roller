@@ -2,6 +2,7 @@
 #include "Shader.h"
 #include <fstream>
 #include <assert.h>
+#include "Logging.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -112,8 +113,7 @@ bool CShader::CheckStatus(GLuint objectId,
     GLsizei bufferSize;
     getInfoLogFunc(objectId, infoLogLength, &bufferSize, buffer);
 
-    //TODO: LOGGING
-    //g_pMainWindow->LogMessage(buffer);
+    Logging::LogMessage(buffer);
     assert(0);
 
     delete[] buffer;

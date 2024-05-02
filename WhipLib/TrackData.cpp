@@ -7,6 +7,7 @@
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
+#include "Logging.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -143,14 +144,14 @@ bool CTrackData::LoadTrack(const std::string &sFilename)
   ClearData();
 
   if (sFilename.empty()) {
-    //TODO Logging g_pMainWindow->LogMessage("Track filename empty: " + sFilename);
+    Logging::LogMessage("Track filename empty");
     return false;
   }
 
   //open file
   std::ifstream file(sFilename.c_str(), std::ios::binary);
   if (!file.is_open()) {
-    //todo logging
+    Logging::LogMessage("Failed to open track: %s", sFilename.c_str());
     return false;
   }
 
@@ -158,7 +159,7 @@ bool CTrackData::LoadTrack(const std::string &sFilename)
   size_t length = file.tellg();
   file.seekg(0, file.beg);
   if (length <= 0) {
-    //todo logging
+    Logging::LogMessage("Track file %s is empty", sFilename.c_str());
     return false;
   }
 
@@ -183,13 +184,7 @@ bool CTrackData::LoadTrack(const std::string &sFilename)
   delete[] szBuf;
   file.close();
 
-  //TODO logging
-  //QString sSuccess = (bSuccess ? "Successfully loaded" : "Failed to load");
-  //QString sLogMsg = sSuccess + " file " + sFilename + "\n"
-  //  + "  geometry chunks: " + QString::number(m_chunkAy.size()) + "\n"
-  //  + "  texture file: " + m_sTextureFile + "\n"
-  //  + "  building file: " + m_sBuildingFile;
-  //g_pMainWindow->LogMessage(sLogMsg);
+  Logging::LogMessage("%s track file: %s", bSuccess ? "Loaded" : "Failed to load", sFilename.c_str());
 
   return bSuccess;
 }
@@ -249,13 +244,7 @@ bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
         if (iChunkLine == 0) {
           if (lineAy.size() == SIGNS_COUNT) {
             if (m_chunkAy.size() != m_header.iNumChunks) {
-              //TODO logging
-              //QString sLogMsg = "Warning loading file: number of chunks loaded ("
-              //  + QString::number(m_chunkAy.size())
-              //  + ") does not match header ("
-              //  + QString::number(m_header.iNumChunks)
-              //  + ")";
-              //g_pMainWindow->LogMessage(sLogMsg);
+              Logging::LogMessage("Warning loading file: number of chunks loaded (%d) does not match header (%d)", (int)m_chunkAy.size(), m_header.iNumChunks);
             }
             // reached next section
             // there is no defined end to geometry chunks
@@ -298,8 +287,7 @@ bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
         } else if (iChunkLine == 1) {
           if (lineAy.size() != CHUNK_LINE_1_COUNT) {
             assert(0);
-            //TODO logging
-            //g_pMainWindow->LogMessage("Error loading file: invalid line before chunk completion");
+            Logging::LogMessage("Error loading file: invalid line before chunk completion");
             bSuccess = false;
           }
           //process line 2
@@ -326,8 +314,7 @@ bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
         } else if (iChunkLine == 2) {
           if (lineAy.size() != CHUNK_LINE_2_COUNT) {
             assert(0);
-            //TODO: logging
-            //g_pMainWindow->LogMessage("Error loading file: invalid line before chunk completion");
+            Logging::LogMessage("Error loading file: invalid line before chunk completion");
             bSuccess = false;
           }
           //process line 3
@@ -371,8 +358,7 @@ bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
           ProcessSign(lineAy, section);
         } else {
           assert(0);
-          //TODO: logging
-          //g_pMainWindow->LogMessage("Error loading file: signs section ended before anticipated");
+          Logging::LogMessage("Error loading file: signs section ended before anticipated");
           bSuccess = false;
         }
         break;
@@ -403,8 +389,7 @@ bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
           }
         } else {
           assert(0);
-          //TODO: logging
-          //g_pMainWindow->LogMessage("Error loading file: stunts section ended before anticipated");
+          Logging::LogMessage("Error loading file: stunts section ended before anticipated");
           bSuccess = false;
         }
         break;
@@ -436,8 +421,7 @@ bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
           }
         } else {
           assert(0);
-          //TODO: logging
-          //g_pMainWindow->LogMessage("Error loading file: texture section ended before anticipated");
+          Logging::LogMessage("Error loading file: texture section ended before anticipated");
           bSuccess = false;
         }
         break;

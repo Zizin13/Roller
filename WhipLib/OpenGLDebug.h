@@ -4,6 +4,7 @@
 #include "glew.h"
 #include "stdio.h"
 #include <assert.h>
+#include "Logging.h"
 //-------------------------------------------------------------------------------------------------
 #define ASSERT(x) if (!(x)) __debugbreak();
 #define GLCALL(x) GLClearError();\
@@ -19,9 +20,8 @@ static void GLErrorCb(GLenum source,
                       const GLchar * message,
                       const void *userParam)
 {
-  (void)(source); (void)(type); (void)(id); (void)(severity); (void)(length); (void)(userParam); (void)(message);
-    //TODO: LOGGING
-  //g_pMainWindow->LogMessage("OpenGL Debug: " + QString(message));
+  (void)(source); (void)(type); (void)(id); (void)(severity); (void)(length); (void)(userParam);
+  Logging::LogMessage(message);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -43,10 +43,7 @@ static void GLClearError()
 static bool GLLogCall(const char *szFunction, const char *szFile, int iLine)
 {
   while (GLenum error = glGetError()) {
-    char szOut[100];
-    snprintf(szOut, sizeof(szOut), "OpenGL Error (%d): %s %s %d", (int)error, szFunction, szFile, iLine);
-    //TODO: LOGGING
-    //g_pMainWindow->LogMessage(szOut);
+    Logging::LogMessage("OpenGL Error (%d): %s %s %d", (int)error, szFunction, szFile, iLine);
     return false;
   }
   return true;

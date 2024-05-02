@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include "Unmangler.h"
+#include "Logging.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
   #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -32,22 +33,15 @@ bool CPalette::LoadPalette(const std::string &sFilename)
 {
   ClearData();
 
-  //TODO logging
-  //if (sFilename.empty()) {
-  //  g_pMainWindow->LogMessage("Palette filename empty: " + sFilename);
-  //  return false;
-  //}
-  //
-  //QFile file(sFilename);
-  //if (!file.open(QIODevice::ReadOnly)) {
-  //  g_pMainWindow->LogMessage("Failed to open palette: " + sFilename);
-  //  return false;
-  //}
+  if (sFilename.empty()) {
+    Logging::LogMessage("Palette filename empty");
+    return false;
+  }
 
   //open file
   std::ifstream file(sFilename.c_str(), std::ios::binary);
   if (!file.is_open()) {
-    //todo logging
+    Logging::LogMessage("Failed to open palette: %s", sFilename.c_str());
     return false;
   }
 
@@ -55,7 +49,7 @@ bool CPalette::LoadPalette(const std::string &sFilename)
   size_t length = file.tellg();
   file.seekg(0, file.beg);
   if (length <= 0) {
-    //todo logging
+    Logging::LogMessage("Palette file %s is empty", sFilename.c_str());
     return false;
   }
 
@@ -75,8 +69,7 @@ bool CPalette::LoadPalette(const std::string &sFilename)
   delete[] szBuf;
   file.close();
 
-  //TODO: logging
-  //g_pMainWindow->LogMessage("Loaded palette: " + sFilename);
+  Logging::LogMessage("Loaded palette: %s", sFilename.c_str());
   return true;
 }
 

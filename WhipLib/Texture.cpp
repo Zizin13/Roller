@@ -56,22 +56,15 @@ bool CTexture::LoadTexture(const std::string &sFilename, CPalette *pPalette)
     GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
   }
 
-  //TODO LOGGING
-  //if (sFilename.isEmpty()) {
-  //  g_pMainWindow->LogMessage("Texture filename empty: " + sFilename);
-  //  return false;
-  //}
-  //
-  //QFile file(sFilename);
-  //if (!file.open(QIODevice::ReadOnly)) {
-  //  g_pMainWindow->LogMessage("Failed to open texture: " + sFilename);
-  //  return false;
-  //}
+  if (sFilename.empty()) {
+    Logging::LogMessage("Texture filename is empty");
+    return false;
+  }
 
   //open file
   std::ifstream file(sFilename.c_str(), std::ios::binary);
   if (!file.is_open()) {
-    //todo logging
+    Logging::LogMessage("Failed to open texture: %s", sFilename.c_str());
     return false;
   }
 
@@ -79,7 +72,7 @@ bool CTexture::LoadTexture(const std::string &sFilename, CPalette *pPalette)
   size_t length = file.tellg();
   file.seekg(0, file.beg);
   if (length <= 0) {
-    //todo logging
+    Logging::LogMessage("Texture file %s is empty", sFilename.c_str());
     return false;
   }
 
@@ -103,7 +96,7 @@ bool CTexture::LoadTexture(const std::string &sFilename, CPalette *pPalette)
   delete[] szBuf;
   file.close();
 
-  //TODO g_pMainWindow->LogMessage("Loaded texture: " + sFilename);
+  Logging::LogMessage("Loaded texture: %s", sFilename.c_str());
 
   return bSuccess;
 }
@@ -264,7 +257,7 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length)
                                                                          byPaletteIndex ? 255 : 0);
       } else {
         assert(0);
-        //TODO g_pMainWindow->LogMessage("Error loading texture " + sFilename + ": palette index out of bounds");
+        Logging::LogMessage("Error loading texture: palette index out of bounds");
         return false;
       }
     }

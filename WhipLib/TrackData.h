@@ -193,6 +193,7 @@ public:
   bool LoadTrack(const std::string &sFilename);
   void GetTrackData(std::vector<uint8_t> &data);
   void GenerateTrackMath();
+  bool ShouldShowChunkSection(int i, eShapeSection section);
 
   static unsigned int GetSignedBitValueFromInt(int iValue);
   static int GetIntValueFromSignedBit(unsigned int uiValue);

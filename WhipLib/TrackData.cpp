@@ -280,8 +280,8 @@ bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
             currChunk.iTrackGrip            = std::stoi(lineAy[14]);
             currChunk.iLeftShoulderGrip     = std::stoi(lineAy[15]);
             currChunk.iRightShoulderGrip    = std::stoi(lineAy[16]);
-            currChunk.iAIMaxSpeed                = std::stoi(lineAy[17]);
-            currChunk.iAIAccuracy                = std::stoi(lineAy[18]);
+            currChunk.iAIMaxSpeed           = std::stoi(lineAy[17]);
+            currChunk.iAIAccuracy           = std::stoi(lineAy[18]);
             currChunk.iAudioAboveTrigger    = std::stoi(lineAy[19]);
             currChunk.iAudioTriggerSpeed    = std::stoi(lineAy[20]);
             currChunk.iAudioBelowTrigger    = std::stoi(lineAy[21]);
@@ -323,16 +323,16 @@ bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
             bSuccess = false;
           }
           //process line 3
-          currChunk.iLUOuterWallHOffset   = std::stoi(lineAy[0]);
-          currChunk.iLLOuterWallHOffset   = std::stoi(lineAy[1]);
-          currChunk.iLOuterFloorHOffset              = std::stoi(lineAy[2]);
-          currChunk.iROuterFloorHOffset              = std::stoi(lineAy[3]);
-          currChunk.iRLOuterWallHOffset   = std::stoi(lineAy[4]);
-          currChunk.iRUOuterWallHOffset   = std::stoi(lineAy[5]);
+          currChunk.iLUOuterWallHOffset = std::stoi(lineAy[0]);
+          currChunk.iLLOuterWallHOffset = std::stoi(lineAy[1]);
+          currChunk.iLOuterFloorHOffset = std::stoi(lineAy[2]);
+          currChunk.iROuterFloorHOffset = std::stoi(lineAy[3]);
+          currChunk.iRLOuterWallHOffset = std::stoi(lineAy[4]);
+          currChunk.iRUOuterWallHOffset = std::stoi(lineAy[5]);
           currChunk.iLUOuterWallHeight  = std::stoi(lineAy[6]);
           currChunk.iLLOuterWallHeight  = std::stoi(lineAy[7]);
-          currChunk.iLOuterFloorHeight              = std::stoi(lineAy[8]);
-          currChunk.iROuterFloorHeight              = std::stoi(lineAy[9]);
+          currChunk.iLOuterFloorHeight  = std::stoi(lineAy[8]);
+          currChunk.iROuterFloorHeight  = std::stoi(lineAy[9]);
           currChunk.iRLOuterWallHeight  = std::stoi(lineAy[10]);
           currChunk.iRUOuterWallHeight  = std::stoi(lineAy[11]);
           currChunk.iRoofHeight         = std::stoi(lineAy[12]);
@@ -494,8 +494,67 @@ bool CTrackData::ShouldDrawSurfaceType(int iSurfaceType)
   uint32 uiSurfaceType = CTrackData::GetSignedBitValueFromInt(iSurfaceType);
   if (uiSurfaceType & SURFACE_FLAG_NON_SOLID)
     return false;
-  if (!(uiSurfaceType & SURFACE_FLAG_TRANSPARENT)
-      && !(uiSurfaceType & SURFACE_FLAG_APPLY_TEXTURE))
+  //if (!(uiSurfaceType & SURFACE_FLAG_TRANSPARENT)
+  //    && !(uiSurfaceType & SURFACE_FLAG_APPLY_TEXTURE))
+  //  return false;
+  return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CTrackData::ShouldShowChunkSection(int i, eShapeSection section)
+{
+  if ((section == eShapeSection::LLANE || section == eShapeSection::RLANE)
+      && !ShouldDrawSurfaceType(m_chunkAy[i].iCenterSurfaceType))
+    return false;
+  if (section == eShapeSection::LSHOULDER
+      && !ShouldDrawSurfaceType(m_chunkAy[i].iLeftSurfaceType))
+    return false;
+  if (section == eShapeSection::RSHOULDER
+      && !ShouldDrawSurfaceType(m_chunkAy[i].iRightSurfaceType))
+    return false;
+  if (section == eShapeSection::LWALL
+      && !ShouldDrawSurfaceType(m_chunkAy[i].iLeftWallType))
+    return false;
+  if (section == eShapeSection::RWALL
+      && !ShouldDrawSurfaceType(m_chunkAy[i].iRightWallType))
+    return false;
+  if (section == eShapeSection::ROOF
+      && (!ShouldDrawSurfaceType(m_chunkAy[i].iRoofType)
+          || m_chunkAy[i].iLeftWallType == -1
+          || m_chunkAy[i].iRightWallType == -1
+          || (!ShouldDrawSurfaceType(m_chunkAy[i].iLeftWallType) && !ShouldDrawSurfaceType(m_chunkAy[i].iRightWallType))))
+    return false;
+  if (section == eShapeSection::ENVIRFLOOR
+      && !ShouldDrawSurfaceType(m_chunkAy[i].iEnvironmentFloorType))
+    return false;
+  if (section == eShapeSection::OWALLFLOOR
+      && (m_chunkAy[i].iOuterFloorType == -2
+          || !ShouldDrawSurfaceType(m_chunkAy[i].iOuterFloorType)))
+    return false;
+  if (section == eShapeSection::LLOWALL
+      && (!ShouldDrawSurfaceType(m_chunkAy[i].iLLOuterWallType)
+          || m_chunkAy[i].iOuterFloorType == -1
+          || (m_chunkAy[i].iOuterFloorType == -2
+              && !ShouldDrawSurfaceType(m_chunkAy[i].iLeftSurfaceType)
+              && !ShouldDrawSurfaceType(m_chunkAy[i].iCenterSurfaceType))))
+    return false;
+  if (section == eShapeSection::RLOWALL
+      && (!ShouldDrawSurfaceType(m_chunkAy[i].iRLOuterWallType)
+          || m_chunkAy[i].iOuterFloorType == -1
+          || (m_chunkAy[i].iOuterFloorType == -2
+              && !ShouldDrawSurfaceType(m_chunkAy[i].iRightSurfaceType)
+              && !ShouldDrawSurfaceType(m_chunkAy[i].iCenterSurfaceType))))
+    return false;
+  if (section == eShapeSection::LUOWALL
+      && (!ShouldDrawSurfaceType(m_chunkAy[i].iLUOuterWallType)
+          || m_chunkAy[i].iOuterFloorType == -1
+          || m_chunkAy[i].iLLOuterWallType == -1))
+    return false;
+  if (section == eShapeSection::RUOWALL
+      && (!ShouldDrawSurfaceType(m_chunkAy[i].iRUOuterWallType)
+          || m_chunkAy[i].iOuterFloorType == -1
+          || m_chunkAy[i].iRLOuterWallType == -1))
     return false;
   return true;
 }

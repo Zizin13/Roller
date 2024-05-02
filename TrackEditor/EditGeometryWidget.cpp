@@ -157,30 +157,24 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
   QtHelpers::UpdateTextures(lblOFloorTex1, lblOFloorTex2, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType);
 
   //update roof disabled text
-  lblRoofDisabled->setVisible(p->m_pTrack->m_chunkAy[iFrom].iLeftWallType == -1
-                              || p->m_pTrack->m_chunkAy[iFrom].iRightWallType == -1
-                              || (!CTrackData::ShouldDrawSurfaceType(p->m_pTrack->m_chunkAy[iFrom].iLeftWallType) && !CTrackData::ShouldDrawSurfaceType(p->m_pTrack->m_chunkAy[iFrom].iRightWallType)));
+  lblRoofDisabled->setVisible(!p->m_pTrack->ShouldShowChunkSection(iFrom, eShapeSection::ROOF));
 
   //update llowall disabled text
-  lblLLOWallDisabled->setVisible(p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -1
-                                 || (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2 && !CTrackData::ShouldDrawSurfaceType(p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType)));
+  lblLLOWallDisabled->setVisible(!p->m_pTrack->ShouldShowChunkSection(iFrom, eShapeSection::LLOWALL));
   if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -1)
     lblLLOWallDisabled->setText("(disabled by floor)");
   else if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2)
     lblLLOWallDisabled->setText("(disabled by center)");
 
   //update rlowall disabled text
-  lblRLOWallDisabled->setVisible(p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -1
-                                 || (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2 && !CTrackData::ShouldDrawSurfaceType(p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType)));
+  lblRLOWallDisabled->setVisible(!p->m_pTrack->ShouldShowChunkSection(iFrom, eShapeSection::RLOWALL));
   if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -1)
     lblRLOWallDisabled->setText("(disabled by floor)");
   else if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2)
     lblRLOWallDisabled->setText("(disabled by center)");
 
   //update luowall disabled text
-  lblLUOWallDisabled->setVisible(p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallType == -1
-    || p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -1
-    || (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2 && !CTrackData::ShouldDrawSurfaceType(p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType)));
+  lblLUOWallDisabled->setVisible(!p->m_pTrack->ShouldShowChunkSection(iFrom, eShapeSection::LUOWALL));
   if (p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallType == -1)
     lblLUOWallDisabled->setText("(disabled by lower wall)");
   else if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -1)
@@ -189,9 +183,7 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
     lblLUOWallDisabled->setText("(disabled by center)");
 
   //update ruowall disabled text
-  lblRUOWallDisabled->setVisible(p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallType == -1
-    || p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -1
-    || (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2 && !CTrackData::ShouldDrawSurfaceType(p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType)));
+  lblRUOWallDisabled->setVisible(!p->m_pTrack->ShouldShowChunkSection(iFrom, eShapeSection::RUOWALL));
   if (p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallType == -1)
     lblRUOWallDisabled->setText("(disabled by lower wall)");
   else if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -1)
@@ -829,7 +821,7 @@ void CEditGeometryWidget::EditLShoulder()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iLeftSurfaceType, true);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iLeftSurfaceType, true, "(also disables outer walls if floor is -2)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iLeftSurfaceType = dlg.GetValue();
@@ -852,7 +844,7 @@ void CEditGeometryWidget::EditRShoulder()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iRightSurfaceType, true);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iRightSurfaceType, true, "(also disables outer walls if floor is -2)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iRightSurfaceType = dlg.GetValue();

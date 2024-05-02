@@ -66,7 +66,6 @@ private:
   uint32 *MakeIndicesSurfaceWireframe(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast);
   uint32 *MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section, CTrackData *pTrack, bool bAttachLast);
   uint32 *MakeIndicesSelectedChunks(uint32 &numIndices, int iStart, int iEnd, CTrackData *pTrack);
-  bool ShouldMakeIndicesForChunk(int i, eShapeSection section, CTrackData *pTrack);
   uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast);
 
   void ApplyVerticesSingleSection(int i, tVertex *vertices, const glm::vec3 &v0, const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3);

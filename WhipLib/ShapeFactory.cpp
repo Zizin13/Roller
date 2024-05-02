@@ -1494,9 +1494,9 @@ uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSectio
     //  if (!ShouldMakeIndicesForChunk(i, section))
     //    continue;
     //}
-    if (i > 0 && !ShouldMakeIndicesForChunk(i - 1, section, pTrack))
+    if (i > 0 && !pTrack->ShouldShowChunkSection(i - 1, section))
       continue;
-    else if (i == 0 && !ShouldMakeIndicesForChunk(((int)pTrack->m_chunkAy.size() - 1), section, pTrack))
+    else if (i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), section))
       continue;
     //else if (i == 0 && !ShouldMakeIndicesForChunk(((int)pTrack->m_chunkAy.size() - (int)i + 1), section))
     //  continue;
@@ -1569,61 +1569,6 @@ uint32 *CShapeFactory::MakeIndicesSelectedChunks(uint32 &numIndices, int iStart,
   }
 
   return indices;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-bool CShapeFactory::ShouldMakeIndicesForChunk(int i, eShapeSection section, CTrackData *pTrack)
-{
-  if ((section == eShapeSection::LLANE || section == eShapeSection::RLANE)
-      && !CTrackData::ShouldDrawSurfaceType(pTrack->m_chunkAy[i].iCenterSurfaceType))
-    return false;
-  if (section == eShapeSection::LSHOULDER
-      && !CTrackData::ShouldDrawSurfaceType(pTrack->m_chunkAy[i].iLeftSurfaceType))
-    return false;
-  if (section == eShapeSection::RSHOULDER
-      && !CTrackData::ShouldDrawSurfaceType(pTrack->m_chunkAy[i].iRightSurfaceType))
-    return false;
-  if (section == eShapeSection::LWALL
-      && !CTrackData::ShouldDrawSurfaceType(pTrack->m_chunkAy[i].iLeftWallType))
-    return false;
-  if (section == eShapeSection::RWALL
-      && !CTrackData::ShouldDrawSurfaceType(pTrack->m_chunkAy[i].iRightWallType))
-    return false;
-  if (section == eShapeSection::ROOF
-      && (!CTrackData::ShouldDrawSurfaceType(pTrack->m_chunkAy[i].iRoofType)
-          || pTrack->m_chunkAy[i].iLeftWallType == -1
-          || pTrack->m_chunkAy[i].iRightWallType == -1
-          || (!CTrackData::ShouldDrawSurfaceType(pTrack->m_chunkAy[i].iLeftWallType) && !CTrackData::ShouldDrawSurfaceType(pTrack->m_chunkAy[i].iRightWallType))))
-    return false;
-  if (section == eShapeSection::ENVIRFLOOR
-      && !CTrackData::ShouldDrawSurfaceType(pTrack->m_chunkAy[i].iEnvironmentFloorType))
-    return false;
-  if (section == eShapeSection::OWALLFLOOR
-      && (pTrack->m_chunkAy[i].iOuterFloorType == -2
-          || !CTrackData::ShouldDrawSurfaceType(pTrack->m_chunkAy[i].iOuterFloorType)))
-    return false;
-  if (section == eShapeSection::LLOWALL
-      && (!CTrackData::ShouldDrawSurfaceType(pTrack->m_chunkAy[i].iLLOuterWallType)
-          || pTrack->m_chunkAy[i].iOuterFloorType == -1
-          || (pTrack->m_chunkAy[i].iOuterFloorType == -2 && !CTrackData::ShouldDrawSurfaceType(pTrack->m_chunkAy[i].iCenterSurfaceType))))
-    return false;
-  if (section == eShapeSection::RLOWALL
-      && (!CTrackData::ShouldDrawSurfaceType(pTrack->m_chunkAy[i].iRLOuterWallType)
-          || pTrack->m_chunkAy[i].iOuterFloorType == -1
-          || (pTrack->m_chunkAy[i].iOuterFloorType == -2 && !CTrackData::ShouldDrawSurfaceType(pTrack->m_chunkAy[i].iCenterSurfaceType))))
-    return false;
-  if (section == eShapeSection::LUOWALL
-      && (!CTrackData::ShouldDrawSurfaceType(pTrack->m_chunkAy[i].iLUOuterWallType)
-          || pTrack->m_chunkAy[i].iOuterFloorType == -1
-          || pTrack->m_chunkAy[i].iLLOuterWallType == -1))
-    return false;
-  if (section == eShapeSection::RUOWALL
-      && (!CTrackData::ShouldDrawSurfaceType(pTrack->m_chunkAy[i].iRUOuterWallType)
-          || pTrack->m_chunkAy[i].iOuterFloorType == -1
-          || pTrack->m_chunkAy[i].iRLOuterWallType == -1))
-    return false;
-  return true;
 }
 
 //-------------------------------------------------------------------------------------------------

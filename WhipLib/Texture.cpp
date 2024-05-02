@@ -84,7 +84,7 @@ bool CTexture::LoadTexture(const std::string &sFilename, CPalette *pPalette)
   bool bSuccess = false;
   //unmangle
   int iUnmangledLength = GetUnmangledLength((uint8 *)szBuf, (int)length);
-  if (iUnmangledLength > 0 && iUnmangledLength < 67108864) { // arbitrary 64 MB max, realistic maximum is much smaller
+  if (iUnmangledLength > 0 && iUnmangledLength < MAX_MANGLED_LENGTH) {
     Logging::LogMessage("Texture file %s is mangled", sFilename.c_str());
     uint8 *szUnmangledData = new uint8[iUnmangledLength];
     bSuccess = UnmangleFile((uint8 *)szBuf, (int)length, szUnmangledData, iUnmangledLength);

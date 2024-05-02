@@ -105,7 +105,7 @@ CEditDataWidget::CEditDataWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTe
   connect(leLeftShoulderGrip, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
   connect(leRShoulderGrip, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
   connect(leAIMaxSpeed, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
-  connect(leUnk05, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
+  connect(leAIAccuracy, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
   connect(leAudioAboveTrigger, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
   connect(leAudioTriggerSpeed, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
   connect(leAudioBelowTrigger, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
@@ -210,7 +210,7 @@ void CEditDataWidget::OnInsertBeforeClicked()
     , leYaw->text(), lePitch->text(), leRoll->text()
     , leAILine1->text(), leAILine2->text(), leAILine3->text(), leAILine4->text()
     , leTrackGrip->text(), leLeftShoulderGrip->text(), leRShoulderGrip->text()
-    , leAIMaxSpeed->text(), leUnk05->text(), leAudioAboveTrigger->text(), leAudioTriggerSpeed->text(), leAudioBelowTrigger->text()
+    , leAIMaxSpeed->text(), leAIAccuracy->text(), leAudioAboveTrigger->text(), leAudioTriggerSpeed->text(), leAudioBelowTrigger->text()
     , leLeftSurfaceType->text(), leCenterSurfaceType->text(), leRightSurfaceType->text()
     , leLWallType->text(), leRWallType->text(), leRoofType->text(), leLUOuterWallType->text(), leLLOuterWallType->text(), leOuterFloorType->text()
     , leRLOuterWallType->text(), leRUOuterWallType->text(), leEnvironmentFloorType->text(), leSignType->text(), leSignHorizOffset->text(), leSignVertOffset->text()
@@ -243,7 +243,7 @@ void CEditDataWidget::OnInsertAfterClicked()
     , leYaw->text(), lePitch->text(), leRoll->text()
     , leAILine1->text(), leAILine2->text(), leAILine3->text(), leAILine4->text()
     , leTrackGrip->text(), leLeftShoulderGrip->text(), leRShoulderGrip->text()
-    , leAIMaxSpeed->text(), leUnk05->text(), leAudioAboveTrigger->text(), leAudioTriggerSpeed->text(), leAudioBelowTrigger->text()
+    , leAIMaxSpeed->text(), leAIAccuracy->text(), leAudioAboveTrigger->text(), leAudioTriggerSpeed->text(), leAudioBelowTrigger->text()
     , leLeftSurfaceType->text(), leCenterSurfaceType->text(), leRightSurfaceType->text()
     , leLWallType->text(), leRWallType->text(), leRoofType->text(), leLUOuterWallType->text(), leLLOuterWallType->text(), leOuterFloorType->text()
     , leRLOuterWallType->text(), leRUOuterWallType->text(), leEnvironmentFloorType->text(), leSignType->text(), leSignHorizOffset->text(), leSignVertOffset->text()
@@ -276,7 +276,7 @@ void CEditDataWidget::OnApplyClicked()
     , leYaw->text(), lePitch->text(), leRoll->text()
     , leAILine1->text(), leAILine2->text(), leAILine3->text(), leAILine4->text()
     , leTrackGrip->text(), leLeftShoulderGrip->text(), leRShoulderGrip->text()
-    , leAIMaxSpeed->text(), leUnk05->text(), leAudioAboveTrigger->text(), leAudioTriggerSpeed->text(), leAudioBelowTrigger->text()
+    , leAIMaxSpeed->text(), leAIAccuracy->text(), leAudioAboveTrigger->text(), leAudioTriggerSpeed->text(), leAudioBelowTrigger->text()
     , leLeftSurfaceType->text(), leCenterSurfaceType->text(), leRightSurfaceType->text()
     , leLWallType->text(), leRWallType->text(), leRoofType->text(), leLUOuterWallType->text(), leLLOuterWallType->text(), leOuterFloorType->text()
     , leRLOuterWallType->text(), leRUOuterWallType->text(), leEnvironmentFloorType->text(), leSignType->text(), leSignHorizOffset->text(), leSignVertOffset->text()
@@ -519,7 +519,7 @@ void CEditDataWidget::UpdateGeometryEditMode()
   QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leLeftShoulderGrip, p->editVals.sLeftShoulderGrip);
   QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leRShoulderGrip, p->editVals.sRightShoulderGrip);
   QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leAIMaxSpeed, p->editVals.sAIMaxSpeed);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk05, p->editVals.sUnk05);
+  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leAIAccuracy, p->editVals.sAIAccuracy);
   QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leAudioAboveTrigger, p->editVals.sAudioAboveTrigger);
   QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leAudioTriggerSpeed, p->editVals.sAudioTriggerSpeed);
   QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leAudioBelowTrigger, p->editVals.sAudioBelowTrigger);
@@ -892,7 +892,7 @@ void CEditDataWidget::RevertGeometry()
   bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLeftShoulderGrip, p->editVals.sLeftShoulderGrip);
   bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leRShoulderGrip, p->editVals.sRightShoulderGrip);
   bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leAIMaxSpeed, p->editVals.sAIMaxSpeed);
-  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk05, p->editVals.sUnk05);
+  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leAIAccuracy, p->editVals.sAIAccuracy);
   bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leAudioAboveTrigger, p->editVals.sAudioAboveTrigger);
   bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leAudioTriggerSpeed, p->editVals.sAudioTriggerSpeed);
   bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leAudioBelowTrigger, p->editVals.sAudioBelowTrigger);

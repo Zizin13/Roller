@@ -61,7 +61,7 @@ protected slots:
   void LGripChanged(int iValue);
   void RGripChanged(int iValue);
   void AISpeedChanged(int iValue);
-  void Unk05Changed(const QString &sValue);
+  void AIAccuracyChanged(int iValue);
 
 private:
   CEditGeometryWidgetPrivate *p;

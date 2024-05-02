@@ -26,7 +26,7 @@ public:
                   , const QString &sCopyLeftShoulderGrip
                   , const QString &sCopyRightShoulderGrip
                   , const QString &sCopyAIMaxSpeed
-                  , const QString &sCopyUnk05
+                  , const QString &sCopyAIAccuracy
                   , const QString &sCopyAudioAboveTrigger
                   , const QString &sCopyAudioTriggerSpeed
                   , const QString &sCopyAudioBelowTrigger
@@ -112,7 +112,7 @@ public:
   QString sLeftShoulderGrip;
   QString sRightShoulderGrip;
   QString sAIMaxSpeed;
-  QString sUnk05;
+  QString sAIAccuracy;
   QString sAudioAboveTrigger;
   QString sAudioTriggerSpeed;
   QString sAudioBelowTrigger;

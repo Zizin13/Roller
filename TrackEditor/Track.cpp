@@ -224,9 +224,9 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex, CChu
     sVal = QString::number(m_chunkAy[i].iAIMaxSpeed);
     if (editVals.sAIMaxSpeed.isEmpty()) editVals.sAIMaxSpeed = sVal;
     else if (editVals.sAIMaxSpeed.compare(sVal) != 0) editVals.sAIMaxSpeed = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].iUnk05);
-    if (editVals.sUnk05.isEmpty()) editVals.sUnk05 = sVal;
-    else if (editVals.sUnk05.compare(sVal) != 0) editVals.sUnk05 = MIXED_DATA;
+    sVal = QString::number(m_chunkAy[i].iAIAccuracy);
+    if (editVals.sAIAccuracy.isEmpty()) editVals.sAIAccuracy = sVal;
+    else if (editVals.sAIAccuracy.compare(sVal) != 0) editVals.sAIAccuracy = MIXED_DATA;
     sVal = QString::number(m_chunkAy[i].iAudioAboveTrigger);
     if (editVals.sAudioAboveTrigger.isEmpty()) editVals.sAudioAboveTrigger = sVal;
     else if (editVals.sAudioAboveTrigger.compare(sVal) != 0) editVals.sAudioAboveTrigger = MIXED_DATA;
@@ -445,7 +445,7 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex, const CChunkE
     if (!editVals.sLeftShoulderGrip.isEmpty()) m_chunkAy[i].iLeftShoulderGrip = editVals.sLeftShoulderGrip.toInt();
     if (!editVals.sRightShoulderGrip.isEmpty()) m_chunkAy[i].iRightShoulderGrip = editVals.sRightShoulderGrip.toInt();
     if (!editVals.sAIMaxSpeed.isEmpty()) m_chunkAy[i].iAIMaxSpeed = editVals.sAIMaxSpeed.toInt();
-    if (!editVals.sUnk05.isEmpty()) m_chunkAy[i].iUnk05 = editVals.sUnk05.toInt();
+    if (!editVals.sAIAccuracy.isEmpty()) m_chunkAy[i].iAIAccuracy = editVals.sAIAccuracy.toInt();
     if (!editVals.sAudioAboveTrigger.isEmpty()) m_chunkAy[i].iAudioAboveTrigger = editVals.sAudioAboveTrigger.toInt();
     if (!editVals.sAudioTriggerSpeed.isEmpty()) m_chunkAy[i].iAudioTriggerSpeed = editVals.sAudioTriggerSpeed.toInt();
     if (!editVals.sAudioBelowTrigger.isEmpty()) m_chunkAy[i].iAudioBelowTrigger = editVals.sAudioBelowTrigger.toInt();
@@ -539,7 +539,7 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount, const CChunkEditValues 
     newChunk.iLeftShoulderGrip = editVals.sLeftShoulderGrip.toInt();
     newChunk.iRightShoulderGrip = editVals.sRightShoulderGrip.toInt();
     newChunk.iAIMaxSpeed = editVals.sAIMaxSpeed.toInt();
-    newChunk.iUnk05 = editVals.sUnk05.toInt();
+    newChunk.iAIAccuracy = editVals.sAIAccuracy.toInt();
     newChunk.iAudioAboveTrigger = editVals.sAudioAboveTrigger.toInt();
     newChunk.iAudioTriggerSpeed = editVals.sAudioTriggerSpeed.toInt();
     newChunk.iAudioBelowTrigger = editVals.sAudioBelowTrigger.toInt();
@@ -649,7 +649,7 @@ void CTrack::GenerateChunkString(tGeometryChunk &chunk)
            , chunk.iLeftShoulderGrip
            , chunk.iRightShoulderGrip
            , chunk.iAIMaxSpeed
-           , chunk.iUnk05
+           , chunk.iAIAccuracy
            , chunk.iAudioAboveTrigger
            , chunk.iAudioTriggerSpeed
            , chunk.iAudioBelowTrigger

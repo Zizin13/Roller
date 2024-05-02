@@ -4,13 +4,15 @@
 #include "ui_TilePicker.h"
 //-------------------------------------------------------------------------------------------------
 class CTexture;
+class CPalette;
 //-------------------------------------------------------------------------------------------------
 class CTilePicker : public QDialog, private Ui::TilePicker
 {
   Q_OBJECT
 
 public:
-  CTilePicker(QWidget *pParent, CTexture *pTexture, int iIndex, bool bAddNone);
+  CTilePicker(QWidget *pParent, int iIndex, CTexture *pTexture);
+  CTilePicker(QWidget *pParent, int iIndex, CPalette *pTexture);
   ~CTilePicker();
 
   int GetSelected();
@@ -19,7 +21,6 @@ protected slots:
   void OnButtonClicked();
 
 private:
-  CTexture *m_pTexture;
   int m_iIndex;
 };
 

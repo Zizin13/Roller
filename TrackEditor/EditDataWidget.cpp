@@ -602,7 +602,7 @@ void CEditDataWidget::OnSignClicked()
   unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
   int iBldIndex = uiSignedBitVal & SURFACE_TEXTURE_INDEX;
 
-  CTilePicker dlg(this, p->m_pBld, iBldIndex, true);
+  CTilePicker dlg(this, iBldIndex, p->m_pBld);
   if (dlg.exec()) {
     int iIndex = dlg.GetSelected();
     if (iIndex >= 0) {
@@ -632,7 +632,7 @@ void CEditDataWidget::OnBackClicked()
   unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
   int iBldIndex = uiSignedBitVal & SURFACE_TEXTURE_INDEX;
 
-  CTilePicker dlg(this, p->m_pTex, iBldIndex, true);
+  CTilePicker dlg(this, iBldIndex, p->m_pTex);
   if (dlg.exec()) {
     int iIndex = dlg.GetSelected();
     if (iIndex >= 0) {

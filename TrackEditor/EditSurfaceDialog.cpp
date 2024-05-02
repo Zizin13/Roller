@@ -354,10 +354,18 @@ void CEditSurfaceDialog::On9AnmsLookupChecked(bool bChecked)
 
 void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
 {
-  if (bChecked)
+  int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
+
+  if (bChecked) {
+    if (iIndex >= m_pTexture->m_iNumTiles)
+      m_uiSignedBitValue = 0;
     m_uiSignedBitValue |= SURFACE_FLAG_APPLY_TEXTURE;
-  else
+  } else {
+    if (iIndex >= (int)m_pPalette->m_paletteAy.size())
+      m_uiSignedBitValue = 0;
     m_uiSignedBitValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
+  }
+
   UpdateDialog();
 }
 
@@ -366,11 +374,20 @@ void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
 void CEditSurfaceDialog::OnTextureClicked()
 {
   int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
-  CTilePicker dlg(this, m_pTexture, iIndex, false);
-  if (dlg.exec()) {
-    iIndex = dlg.GetSelected();
-    m_uiSignedBitValue &= ~SURFACE_TEXTURE_INDEX;
-    m_uiSignedBitValue |= iIndex;
+  if (m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE) {
+    CTilePicker dlg(this, iIndex, m_pTexture);
+    if (dlg.exec()) {
+      iIndex = dlg.GetSelected();
+      m_uiSignedBitValue &= ~SURFACE_TEXTURE_INDEX;
+      m_uiSignedBitValue |= iIndex;
+    }
+  } else {
+    CTilePicker dlg(this, iIndex, m_pPalette);
+    if (dlg.exec()) {
+      iIndex = dlg.GetSelected();
+      m_uiSignedBitValue &= ~SURFACE_TEXTURE_INDEX;
+      m_uiSignedBitValue |= iIndex;
+    }
   }
 
   UpdateDialog();

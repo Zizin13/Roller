@@ -217,7 +217,6 @@ void CEditGeometryWidget::YawChanged(double dValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -239,7 +238,6 @@ void CEditGeometryWidget::PitchChanged(double dValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -261,7 +259,6 @@ void CEditGeometryWidget::RollChanged(double dValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -283,7 +280,6 @@ void CEditGeometryWidget::LengthChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -305,7 +301,6 @@ void CEditGeometryWidget::LLaneWidthChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -327,7 +322,6 @@ void CEditGeometryWidget::RLaneWidthChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -349,7 +343,6 @@ void CEditGeometryWidget::LShoulderWidthChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -371,7 +364,6 @@ void CEditGeometryWidget::RShoulderWidthChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -393,7 +385,6 @@ void CEditGeometryWidget::LShoulderHeightChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -415,7 +406,6 @@ void CEditGeometryWidget::RShoulderHeightChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -437,7 +427,6 @@ void CEditGeometryWidget::WallHeightChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -459,7 +448,6 @@ void CEditGeometryWidget::LLOWallHOffsetChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -481,7 +469,6 @@ void CEditGeometryWidget::LLOWallHeightChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -503,7 +490,6 @@ void CEditGeometryWidget::LUOWallHOffsetChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -525,7 +511,6 @@ void CEditGeometryWidget::LUOWallHeightChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -547,7 +532,6 @@ void CEditGeometryWidget::RLOWallHOffsetChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -569,7 +553,6 @@ void CEditGeometryWidget::RLOWallHeightChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -591,7 +574,6 @@ void CEditGeometryWidget::RUOWallHOffsetChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -613,7 +595,6 @@ void CEditGeometryWidget::RUOWallHeightChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -635,7 +616,6 @@ void CEditGeometryWidget::LOuterFloorHOffsetChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -657,7 +637,6 @@ void CEditGeometryWidget::ROuterFloorHOffsetChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -679,7 +658,6 @@ void CEditGeometryWidget::LOuterFloorHeightChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -701,7 +679,6 @@ void CEditGeometryWidget::ROuterFloorHeightChanged(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -723,7 +700,6 @@ void CEditGeometryWidget::AILine1Changed(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -745,7 +721,6 @@ void CEditGeometryWidget::AILine2Changed(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -767,7 +742,6 @@ void CEditGeometryWidget::AILine3Changed(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -789,7 +763,6 @@ void CEditGeometryWidget::AILine4Changed(int iValue)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }

@@ -78,10 +78,12 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
   connect(cbTestCarPos, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
   connect(ckMillionPlus, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckAttachLast, &QCheckBox::toggled, this, &CDisplaySettings::OnAttachLastChecked);
+  connect(sldScale, &QSlider::valueChanged, this, &CDisplaySettings::OnSetScale);
 
   UpdateAllSurface();
   UpdateAllWireframe();
   OnAttachLastChecked();
+  OnSetScale(sldScale->value());
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -197,6 +199,22 @@ void CDisplaySettings::SetAttachLast(bool bAttachLast)
 
 //-------------------------------------------------------------------------------------------------
 
+int CDisplaySettings::GetScale()
+{
+  return sldScale->value();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CDisplaySettings::SetScale(int iScale)
+{
+  BLOCK_SIG_AND_DO(sldScale, setValue(iScale));
+
+  OnSetScale(iScale);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CDisplaySettings::UpdateAllSurface()
 {
   BLOCK_SIG_AND_DO(ckLLaneSurface, setChecked(ckAllSurface->isChecked()));
@@ -281,6 +299,13 @@ void CDisplaySettings::UpdatePreviewSelection()
 void CDisplaySettings::OnAttachLastChecked()
 {
   m_pTrackPreview->AttachLast(ckAttachLast->isChecked());
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CDisplaySettings::OnSetScale(int iValue)
+{
+  m_pTrackPreview->SetScale(iValue);
 }
 
 //-------------------------------------------------------------------------------------------------

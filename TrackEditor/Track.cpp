@@ -510,7 +510,6 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex, const CChunkE
     if (!editVals.sStuntBulge.isEmpty()) m_chunkAy[i].stunt.iBulge = editVals.sStuntBulge.toInt();
   }
   UpdateChunkStrings();
-  GenerateTrackMath();
   g_pMainWindow->LogMessage("Applied changes to " + QString::number(iEndIndex - iStartIndex + 1) + " geometry chunks");
 }
 
@@ -608,7 +607,6 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount, const CChunkEditValues 
       m_chunkAy.insert(m_chunkAy.begin() + iIndex, newChunk);
   }
   UpdateChunkStrings();
-  GenerateTrackMath();
   g_pMainWindow->LogMessage("Inserted " + QString::number(iCount) + " geometry chunks");
 }
 

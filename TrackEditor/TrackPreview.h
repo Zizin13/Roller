@@ -20,6 +20,7 @@ public:
   void SetTrack(CTrack *pTrack, CTexture *pTex, CTexture *pBld, CPalette *pPal);
   void ShowModels(uint32 uiShowModels);
   void UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
+  void SetScale(int iScale);
   void AttachLast(bool bAttachLast);
   void Shutdown();
   void ReloadCar();
@@ -41,6 +42,7 @@ private:
   eShapeSection m_carAILine;
   bool m_bMillionPlus;
   bool m_bAttachLast;
+  int m_iScale;
 };
 
 //-------------------------------------------------------------------------------------------------

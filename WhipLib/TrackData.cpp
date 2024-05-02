@@ -113,7 +113,7 @@ void tGeometryChunk::Clear()
 
 CTrackData::CTrackData()
   : m_iAILineHeight(100)
-  , m_fScale(10000.0f)
+  , m_fScale(1000.0f)
 {
   ClearData();
 }

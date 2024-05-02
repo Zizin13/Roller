@@ -278,6 +278,7 @@ CTrackPreview::CTrackPreview(QWidget *pParent)
   , m_carAILine(eShapeSection::AILINE1)
   , m_bMillionPlus(false)
   , m_bAttachLast(false)
+  , m_iScale(1)
 {
   p = new CTrackPreviewPrivate;
 
@@ -300,7 +301,12 @@ void CTrackPreview::SetTrack(CTrack *pTrack, CTexture *pTex, CTexture *pBld, CPa
   p->m_pPal = pPal;
   p->m_pTex = pTex;
   p->m_pBld = pBld;
+
+  CShapeFactory::GetShapeFactory().m_fScale = 10000.0f / m_iScale;
   if (p->m_pTrack && !p->m_pTrack->m_chunkAy.empty()) {
+    p->m_pTrack->m_fScale = 10000.0f / m_iScale;
+    p->m_pTrack->GenerateTrackMath();
+
     p->m_pLLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::LLANE, m_bAttachLast);
     p->m_pLLaneWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::LLANE, m_bAttachLast, true);
     p->m_pRLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, pTex, p->m_pTrack, eShapeSection::RLANE, m_bAttachLast);
@@ -336,8 +342,7 @@ void CTrackPreview::SetTrack(CTrack *pTrack, CTexture *pTex, CTexture *pBld, CPa
     CShapeFactory::GetShapeFactory().MakeStunts(p->m_pShader, p->m_pTrack, p->m_stuntAy);
 
     UpdateCar(m_carModel, m_carAILine, m_bMillionPlus);
-    if (p->m_pCar)
-      CShapeFactory::GetShapeFactory().GetCarPos(p->m_pTrack, m_iFrom, m_carAILine, p->m_pCar->m_modelToWorldMatrix, m_bMillionPlus);
+    UpdateGeometrySelection(g_pMainWindow->GetSelFrom(), g_pMainWindow->GetSelTo());;
   }
   repaint();
 }
@@ -422,6 +427,14 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
     CShapeFactory::GetShapeFactory().GetCarPos(p->m_pTrack, m_iFrom, m_carAILine, p->m_pCar->m_modelToWorldMatrix, m_bMillionPlus);
 
   repaint();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::SetScale(int iScale)
+{
+  m_iScale = iScale;
+  SetTrack(p->m_pTrack, p->m_pTex, p->m_pBld, p->m_pPal);
 }
 
 //-------------------------------------------------------------------------------------------------

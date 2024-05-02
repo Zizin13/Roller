@@ -105,7 +105,6 @@ void CEditStuntWidget::ScaleFactChanged(int iVal)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -127,7 +126,6 @@ void CEditStuntWidget::AngleChanged(int iVal)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -149,7 +147,6 @@ void CEditStuntWidget::UnknownChanged(int iVal)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -171,7 +168,6 @@ void CEditStuntWidget::TimingGroupChanged(int iVal)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -193,7 +189,6 @@ void CEditStuntWidget::HeightChanged(int iVal)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -215,7 +210,6 @@ void CEditStuntWidget::TimeBulgingChanged(int iVal)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -237,7 +231,6 @@ void CEditStuntWidget::TimeFlatChanged(int iVal)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -259,7 +252,6 @@ void CEditStuntWidget::ExpandContractChanged(int iVal)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -281,7 +273,6 @@ void CEditStuntWidget::BulgeChanged(int iVal)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -322,7 +313,6 @@ void CEditStuntWidget::StuntClicked()
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }

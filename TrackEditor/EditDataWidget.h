@@ -16,7 +16,6 @@ public:
   CEditDataWidget(QWidget *pParent, CTrack *pTrack, CTexture *pTex, CTexture *pBld, CPalette *pPal);
   ~CEditDataWidget();
 
-
 public slots:
   void UpdateGeometryEditMode();
   void OnCancelClicked();

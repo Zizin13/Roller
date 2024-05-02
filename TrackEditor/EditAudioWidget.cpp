@@ -287,7 +287,6 @@ void CEditAudioWidget::AudioClicked()
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }

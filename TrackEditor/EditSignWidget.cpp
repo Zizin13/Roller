@@ -135,7 +135,6 @@ void CEditSignWidget::YawChanged(double dVal)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -157,7 +156,6 @@ void CEditSignWidget::PitchChanged(double dVal)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -179,7 +177,6 @@ void CEditSignWidget::RollChanged(double dVal)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -201,7 +198,6 @@ void CEditSignWidget::HOffsetChanged(int iVal)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -223,7 +219,6 @@ void CEditSignWidget::VOffsetChanged(int iVal)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -245,7 +240,6 @@ void CEditSignWidget::TypeChanged(int iIndex)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -270,7 +264,6 @@ void CEditSignWidget::EditClicked()
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -296,7 +289,6 @@ void CEditSignWidget::SignClicked()
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -318,7 +310,6 @@ void CEditSignWidget::UnkChanged(const QString &sText)
   }
 
   p->m_pTrack->UpdateChunkStrings();
-  p->m_pTrack->GenerateTrackMath();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }

@@ -364,7 +364,6 @@ void CMainWindow::OnDeleteChunkClicked()
   p->m_track.m_chunkAy.erase(
     p->m_track.m_chunkAy.begin() + sbSelChunksFrom->value(),
     p->m_track.m_chunkAy.begin() + sbSelChunksTo->value() + 1);
-  p->m_track.GenerateTrackMath();
 
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->LogMessage("Deleted geometry chunk");
@@ -483,6 +482,11 @@ void CMainWindow::LoadSettings()
     bAttachLast = settings.value("attach_last", bAttachLast).toBool();
     p->m_pDisplaySettings->SetAttachLast(bAttachLast);
   }
+  if (settings.contains("scale")) {
+    int iScale = p->m_pDisplaySettings->GetScale();
+    iScale = settings.value("scale", iScale).toInt();
+    p->m_pDisplaySettings->SetScale(iScale);
+  }
 
   show();
 }
@@ -515,6 +519,7 @@ void CMainWindow::SaveSettings()
   settings.setValue("car_pos", (int)aiLine);
   settings.setValue("wrong_way", bMillionPlus);
   settings.setValue("attach_last", p->m_pDisplaySettings->GetAttachLast());
+  settings.setValue("scale", p->m_pDisplaySettings->GetScale());
 }
 
 //-------------------------------------------------------------------------------------------------

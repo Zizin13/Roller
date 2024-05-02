@@ -190,12 +190,13 @@ void CMainWindow::closeEvent(QCloseEvent *pEvent)
 
   //cleanup
   openGLWidget->Shutdown();
+
+  QMainWindow::closeEvent(pEvent);
+
   if (p) {
     delete p;
     p = NULL;
   }
-
-  QMainWindow::closeEvent(pEvent);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -218,7 +219,8 @@ void CMainWindow::SetUnsavedChanges(bool bUnsavedChanges)
 
 void CMainWindow::OnLogMsg(QString sMsg)
 {
-  p->m_logDialog.LogMessage(sMsg);
+  if (p)
+    p->m_logDialog.LogMessage(sMsg);
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -165,6 +165,8 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
     lblLLOWallDisabled->setText("(disabled by floor)");
   else if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2)
     lblLLOWallDisabled->setText("(disabled by center)");
+  else
+    lblLLOWallDisabled->setText("(disabled by other)");
 
   //update rlowall disabled text
   lblRLOWallDisabled->setVisible(!p->m_pTrack->ShouldShowChunkSection(iFrom, eShapeSection::RLOWALL));
@@ -172,6 +174,8 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
     lblRLOWallDisabled->setText("(disabled by floor)");
   else if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2)
     lblRLOWallDisabled->setText("(disabled by center)");
+  else
+    lblRLOWallDisabled->setText("(disabled by other)");
 
   //update luowall disabled text
   lblLUOWallDisabled->setVisible(!p->m_pTrack->ShouldShowChunkSection(iFrom, eShapeSection::LUOWALL));
@@ -181,6 +185,8 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
     lblLUOWallDisabled->setText("(disabled by floor)");
   else if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2)
     lblLUOWallDisabled->setText("(disabled by center)");
+  else
+    lblLUOWallDisabled->setText("(disabled by other)");
 
   //update ruowall disabled text
   lblRUOWallDisabled->setVisible(!p->m_pTrack->ShouldShowChunkSection(iFrom, eShapeSection::RUOWALL));
@@ -190,6 +196,8 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
     lblRUOWallDisabled->setText("(disabled by floor)");
   else if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2)
     lblRUOWallDisabled->setText("(disabled by center)");
+  else
+    lblRUOWallDisabled->setText("(disabled by other)");
 }
 
 //-------------------------------------------------------------------------------------------------

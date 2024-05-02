@@ -83,11 +83,11 @@ bool CTexture::LoadTexture(const std::string &sFilename, CPalette *pPalette)
 
   bool bSuccess = false;
   //unmangle
-  int iUnmangledLength = GetUnmangledLength((uint8 *)szBuf, (int)length);
+  int iUnmangledLength = Unmangler::GetUnmangledLength((uint8 *)szBuf, (int)length);
   if (iUnmangledLength > 0 && iUnmangledLength < MAX_MANGLED_LENGTH) {
     Logging::LogMessage("Texture file %s is mangled", sFilename.c_str());
     uint8 *szUnmangledData = new uint8[iUnmangledLength];
-    bSuccess = UnmangleFile((uint8 *)szBuf, (int)length, szUnmangledData, iUnmangledLength);
+    bSuccess = Unmangler::UnmangleFile((uint8 *)szBuf, (int)length, szUnmangledData, iUnmangledLength);
     Logging::LogMessage("%s texture file %s", bSuccess ? "Unmangled" : "Failed to unmangle", sFilename.c_str());
 
     if (bSuccess)

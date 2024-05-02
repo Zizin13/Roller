@@ -169,12 +169,12 @@ bool CTrackData::LoadTrack(const std::string &sFilename)
   file.read(szBuf, length);
 
   bool bSuccess = false;
-  int iUnmangledLength = GetUnmangledLength((uint8_t *)szBuf, (int)length);
+  int iUnmangledLength = Unmangler::GetUnmangledLength((uint8_t *)szBuf, (int)length);
   //unmangle
   if (iUnmangledLength > 0 && iUnmangledLength < MAX_MANGLED_LENGTH) {
     Logging::LogMessage("Track file %s is mangled", sFilename.c_str());
     uint8_t *szUnmangledData = new uint8_t[iUnmangledLength];
-    bSuccess = UnmangleFile((uint8_t *)szBuf, (int)length, szUnmangledData, iUnmangledLength);
+    bSuccess = Unmangler::UnmangleFile((uint8_t *)szBuf, (int)length, szUnmangledData, iUnmangledLength);
     Logging::LogMessage("%s track file %s", bSuccess ? "Unmangled" : "Failed to unmangle", sFilename.c_str());
 
     if (bSuccess)

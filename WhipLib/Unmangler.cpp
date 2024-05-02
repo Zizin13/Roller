@@ -11,7 +11,7 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
-int GetUnmangledLength(const uint8_t *pSource, int iSourceLen)
+int Unmangler::GetUnmangledLength(const uint8_t *pSource, int iSourceLen)
 {
   if (iSourceLen < 4)
     return -1;
@@ -21,7 +21,7 @@ int GetUnmangledLength(const uint8_t *pSource, int iSourceLen)
 
 //-------------------------------------------------------------------------------------------------
 
-bool UnmangleFile(const uint8_t *pSource, int iSourceLen, uint8_t *pDestination, int iDestLength)
+bool Unmangler::UnmangleFile(const uint8_t *pSource, int iSourceLen, uint8_t *pDestination, int iDestLength)
 {
   // start positions
   int iInputPos = 4;
@@ -137,7 +137,7 @@ std::vector<int> FindMaxRepeats(const std::vector<uint8_t> &inputData, int start
 
 //-------------------------------------------------------------------------------------------------
 
-void MangleFile(const std::vector<uint8_t> &source, std::vector<uint8_t> &destination)
+void Unmangler::MangleFile(const std::vector<uint8_t> &source, std::vector<uint8_t> &destination)
 {
   destination.push_back(0);
   destination.push_back(0);

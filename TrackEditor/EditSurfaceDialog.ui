@@ -81,7 +81,7 @@
      <item row="0" column="0">
       <widget class="QCheckBox" name="ck31Wall">
        <property name="text">
-        <string>Wall (cannot be driven on)</string>
+        <string>(Inner walls only) Attach wall to center</string>
        </property>
       </widget>
      </item>
@@ -95,14 +95,14 @@
      <item row="6" column="1">
       <widget class="QCheckBox" name="ck10PartialTrans">
        <property name="text">
-        <string>Partial Transparency</string>
+        <string>Partial transparency</string>
        </property>
       </widget>
      </item>
      <item row="8" column="1">
       <widget class="QCheckBox" name="ck8ApplyTexture">
        <property name="text">
-        <string>Apply Texture</string>
+        <string>Apply texture</string>
        </property>
       </widget>
      </item>
@@ -130,7 +130,7 @@
      <item row="0" column="1">
       <widget class="QCheckBox" name="ck15Livery">
        <property name="text">
-        <string>(Cars only) Change Livery</string>
+        <string>(Cars only) Change livery</string>
        </property>
       </widget>
      </item>
@@ -223,14 +223,14 @@
      <item row="5" column="1">
       <widget class="QCheckBox" name="ck11Back">
        <property name="text">
-        <string>Display Back Texture</string>
+        <string>Display back texture</string>
        </property>
       </widget>
      </item>
      <item row="5" column="0">
       <widget class="QCheckBox" name="ck27PairNext">
        <property name="text">
-        <string>Pair Next Texture (requires Texture Pair)</string>
+        <string>Pair next texture (requires texture pair)</string>
        </property>
       </widget>
      </item>

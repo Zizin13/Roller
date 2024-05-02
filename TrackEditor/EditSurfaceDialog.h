@@ -10,12 +10,15 @@ class CEditSurfaceDialog : public QDialog, private Ui::EditSurfaceDialog
   Q_OBJECT
 
 public:
-  CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, int iValue);
+  CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, int iValue, 
+                     bool bShowDisable = false, const QString &sDisableEffects = "", bool bShowDisableAttach = false);
   ~CEditSurfaceDialog();
 
   int GetValue();
 
 protected slots:
+  void OnDisableChecked(bool bChecked);
+  void OnDisableAttachChecked(bool bChecked);
   void On31WallChecked(bool bChecked);
   void On30BounceChecked(bool bChecked);
   void On29EchoChecked(bool bChecked);
@@ -47,6 +50,8 @@ private:
 
   CTexture *m_pTexture;
   unsigned int m_uiSignedBitValue;
+  bool m_bShowDisable;
+  bool m_bShowDisableAttach;
 };
 
 //-------------------------------------------------------------------------------------------------

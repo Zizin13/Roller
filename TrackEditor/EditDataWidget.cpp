@@ -690,35 +690,15 @@ void CEditDataWidget::OnApplyBackToggled(bool bChecked)
 
 void CEditDataWidget::OnDeleteStuntClicked()
 {
-  leStuntScaleFact->blockSignals(true);
-  leStuntAngle->blockSignals(true);
-  leStuntUnk->blockSignals(true);
-  leStuntTimingGroup->blockSignals(true);
-  leStuntHeight->blockSignals(true);
-  leStuntTimeBulging->blockSignals(true);
-  leStuntTimeFlat->blockSignals(true);
-  leStuntExpandContract->blockSignals(true);
-  leStuntBulge->blockSignals(true);
-
-  leStuntScaleFact->setText("0");
-  leStuntAngle->setText("0");
-  leStuntUnk->setText("0");
-  leStuntTimingGroup->setText("0");
-  leStuntHeight->setText("0");
-  leStuntTimeBulging->setText("0");
-  leStuntTimeFlat->setText("0");
-  leStuntExpandContract->setText("0");
-  leStuntBulge->setText("0");
-
-  leStuntScaleFact->blockSignals(false);
-  leStuntAngle->blockSignals(false);
-  leStuntUnk->blockSignals(false);
-  leStuntTimingGroup->blockSignals(false);
-  leStuntHeight->blockSignals(false);
-  leStuntTimeBulging->blockSignals(false);
-  leStuntTimeFlat->blockSignals(false);
-  leStuntExpandContract->blockSignals(false);
-  leStuntBulge->blockSignals(false);
+  BLOCK_SIG_AND_DO(leStuntScaleFact, setText("0"));
+  BLOCK_SIG_AND_DO(leStuntAngle, setText("0"));
+  BLOCK_SIG_AND_DO(leStuntUnk, setText("0"));
+  BLOCK_SIG_AND_DO(leStuntTimingGroup, setText("0"));
+  BLOCK_SIG_AND_DO(leStuntHeight, setText("0"));
+  BLOCK_SIG_AND_DO(leStuntTimeBulging, setText("0"));
+  BLOCK_SIG_AND_DO(leStuntTimeFlat, setText("0"));
+  BLOCK_SIG_AND_DO(leStuntExpandContract, setText("0"));
+  BLOCK_SIG_AND_DO(leStuntBulge, setText("0"));
 
   UpdateGeometryEditMode();
 }
@@ -728,9 +708,7 @@ void CEditDataWidget::OnDeleteStuntClicked()
 void CEditDataWidget::OnSignTypeChanged(int iIndex)
 {
   int iData = cbSignType->itemData(iIndex).toInt();
-  leSignType->blockSignals(true);
-  leSignType->setText(QString::number(iData));
-  leSignType->blockSignals(false);
+  BLOCK_SIG_AND_DO(leSignType, setText(QString::number(iData)));
 
   UpdateGeometryEditMode();
 }
@@ -739,9 +717,7 @@ void CEditDataWidget::OnSignTypeChanged(int iIndex)
 
 void CEditDataWidget::OnSignTypeLEChanged()
 {
-  cbSignType->blockSignals(true);
-  cbSignType->setCurrentIndex(cbSignType->findData(leSignType->text().toInt()));
-  cbSignType->blockSignals(false);
+  BLOCK_SIG_AND_DO(cbSignType, setCurrentIndex(cbSignType->findData(leSignType->text().toInt())));
 
   UpdateGeometryEditMode();
 }

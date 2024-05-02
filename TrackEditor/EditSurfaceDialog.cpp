@@ -10,39 +10,25 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
-CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, int iValue)
+CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, int iValue, 
+                                       bool bShowDisable, const QString &sDisableEffects, bool bShowDisableAttach)
   : QDialog(pParent)
   , m_pTexture(pTexture)
+  , m_bShowDisable(bShowDisable)
+  , m_bShowDisableAttach(bShowDisableAttach)
 {
   m_uiSignedBitValue = CTrack::GetSignedBitValueFromInt(iValue);
   setupUi(this);
 
-  UpdateDialog();
-  ck31Wall->setChecked(m_uiSignedBitValue & SURFACE_FLAG_WALL_31);
-  ck30Bounce->setChecked(m_uiSignedBitValue & SURFACE_FLAG_BOUNCE_30);
-  ck29Echo->setChecked(m_uiSignedBitValue & SURFACE_FLAG_ECHO);
-  ck28->setChecked(m_uiSignedBitValue & SURFACE_FLAG_28);
-  ck27PairNext->setChecked(m_uiSignedBitValue & SURFACE_FLAG_PAIR_NEXT_TEX);
-  ck26->setChecked(m_uiSignedBitValue & SURFACE_FLAG_26);
-  ck25Pit->setChecked(m_uiSignedBitValue & SURFACE_FLAG_PIT);
-  ck24Yellow->setChecked(m_uiSignedBitValue & SURFACE_FLAG_YELLOW_MAP);
-  ck23->setChecked(m_uiSignedBitValue & SURFACE_FLAG_23);
-  ck22Wall->setChecked(m_uiSignedBitValue & SURFACE_FLAG_WALL_22);
-  ck21Transparent->setChecked(m_uiSignedBitValue & SURFACE_FLAG_TRANSPARENT);
-  ck20Bounce->setChecked(m_uiSignedBitValue & SURFACE_FLAG_BOUNCE_20);
-  ck19NonMagnetic->setChecked(m_uiSignedBitValue & SURFACE_FLAG_NON_MAGNETIC);
-  ck18FlipVertically->setChecked(m_uiSignedBitValue & SURFACE_FLAG_FLIP_VERT);
-  ck17NonSolid->setChecked(m_uiSignedBitValue & SURFACE_FLAG_NON_SOLID);
-  ck16TexturePair->setChecked(m_uiSignedBitValue & SURFACE_FLAG_TEXTURE_PAIR);
-  ck15Livery->setChecked(m_uiSignedBitValue & SURFACE_FLAG_ANMS_LIVERY);
-  ck14->setChecked(m_uiSignedBitValue & SURFACE_FLAG_14);
-  ck13Motion->setChecked(m_uiSignedBitValue & SURFACE_FLAG_ANMS_MOTION);
-  ck12FlipHorizontally->setChecked(m_uiSignedBitValue & SURFACE_FLAG_FLIP_HORIZ);
-  ck11Back->setChecked(m_uiSignedBitValue & SURFACE_FLAG_BACK);
-  ck10PartialTrans->setChecked(m_uiSignedBitValue & SURFACE_FLAG_PARTIAL_TRANS);
-  ck9AnmsLookup->setChecked(m_uiSignedBitValue & SURFACE_FLAG_ANMS_LOOKUP);
-  ck8ApplyTexture->setChecked(m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE);
+  ckDisable->setVisible(bShowDisable);
+  lblDisableEffects->setVisible(bShowDisable);
+  ckDisableAttach->setVisible(bShowDisableAttach);
+  lblDisableEffects->setText(sDisableEffects);
 
+  UpdateDialog();
+
+  connect(ckDisable,            &QCheckBox::toggled, this, &CEditSurfaceDialog::OnDisableChecked);
+  connect(ckDisableAttach,      &QCheckBox::toggled, this, &CEditSurfaceDialog::OnDisableAttachChecked);
   connect(ck31Wall,             &QCheckBox::toggled, this, &CEditSurfaceDialog::On31WallChecked);
   connect(ck30Bounce,           &QCheckBox::toggled, this, &CEditSurfaceDialog::On30BounceChecked);
   connect(ck29Echo,             &QCheckBox::toggled, this, &CEditSurfaceDialog::On29EchoChecked);
@@ -85,6 +71,28 @@ CEditSurfaceDialog::~CEditSurfaceDialog()
 int CEditSurfaceDialog::GetValue()
 {
   return CTrack::GetIntValueFromSignedBit(m_uiSignedBitValue);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::OnDisableChecked(bool bChecked)
+{
+  if (bChecked)
+    m_uiSignedBitValue = CTrack::GetSignedBitValueFromInt(-1);
+  else
+    m_uiSignedBitValue = 0;
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::OnDisableAttachChecked(bool bChecked)
+{
+  if (bChecked)
+    m_uiSignedBitValue = CTrack::GetSignedBitValueFromInt(-2);
+  else
+    m_uiSignedBitValue = 0;
+  UpdateDialog();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -370,11 +378,71 @@ void CEditSurfaceDialog::OnTextureClicked()
 
 void CEditSurfaceDialog::UpdateDialog()
 {
+  int iValue = CTrack::GetIntValueFromSignedBit(m_uiSignedBitValue);
+
+  BLOCK_SIG_AND_DO(ckDisable            , setChecked(iValue == -1));
+  BLOCK_SIG_AND_DO(ckDisableAttach      , setChecked(iValue == -2));
+  BLOCK_SIG_AND_DO(ck31Wall             , setChecked(m_uiSignedBitValue & SURFACE_FLAG_WALL_31));
+  BLOCK_SIG_AND_DO(ck30Bounce           , setChecked(m_uiSignedBitValue & SURFACE_FLAG_BOUNCE_30));
+  BLOCK_SIG_AND_DO(ck29Echo             , setChecked(m_uiSignedBitValue & SURFACE_FLAG_ECHO));
+  BLOCK_SIG_AND_DO(ck28                 , setChecked(m_uiSignedBitValue & SURFACE_FLAG_28));
+  BLOCK_SIG_AND_DO(ck27PairNext         , setChecked(m_uiSignedBitValue & SURFACE_FLAG_PAIR_NEXT_TEX));
+  BLOCK_SIG_AND_DO(ck26                 , setChecked(m_uiSignedBitValue & SURFACE_FLAG_26));
+  BLOCK_SIG_AND_DO(ck25Pit              , setChecked(m_uiSignedBitValue & SURFACE_FLAG_PIT));
+  BLOCK_SIG_AND_DO(ck24Yellow           , setChecked(m_uiSignedBitValue & SURFACE_FLAG_YELLOW_MAP));
+  BLOCK_SIG_AND_DO(ck23                 , setChecked(m_uiSignedBitValue & SURFACE_FLAG_23));
+  BLOCK_SIG_AND_DO(ck22Wall             , setChecked(m_uiSignedBitValue & SURFACE_FLAG_WALL_22));
+  BLOCK_SIG_AND_DO(ck21Transparent      , setChecked(m_uiSignedBitValue & SURFACE_FLAG_TRANSPARENT));
+  BLOCK_SIG_AND_DO(ck20Bounce           , setChecked(m_uiSignedBitValue & SURFACE_FLAG_BOUNCE_20));
+  BLOCK_SIG_AND_DO(ck19NonMagnetic      , setChecked(m_uiSignedBitValue & SURFACE_FLAG_NON_MAGNETIC));
+  BLOCK_SIG_AND_DO(ck18FlipVertically   , setChecked(m_uiSignedBitValue & SURFACE_FLAG_FLIP_VERT));
+  BLOCK_SIG_AND_DO(ck17NonSolid         , setChecked(m_uiSignedBitValue & SURFACE_FLAG_NON_SOLID));
+  BLOCK_SIG_AND_DO(ck16TexturePair      , setChecked(m_uiSignedBitValue & SURFACE_FLAG_TEXTURE_PAIR));
+  BLOCK_SIG_AND_DO(ck15Livery           , setChecked(m_uiSignedBitValue & SURFACE_FLAG_ANMS_LIVERY));
+  BLOCK_SIG_AND_DO(ck14                 , setChecked(m_uiSignedBitValue & SURFACE_FLAG_14));
+  BLOCK_SIG_AND_DO(ck13Motion           , setChecked(m_uiSignedBitValue & SURFACE_FLAG_ANMS_MOTION));
+  BLOCK_SIG_AND_DO(ck12FlipHorizontally , setChecked(m_uiSignedBitValue & SURFACE_FLAG_FLIP_HORIZ));
+  BLOCK_SIG_AND_DO(ck11Back             , setChecked(m_uiSignedBitValue & SURFACE_FLAG_BACK));
+  BLOCK_SIG_AND_DO(ck10PartialTrans     , setChecked(m_uiSignedBitValue & SURFACE_FLAG_PARTIAL_TRANS));
+  BLOCK_SIG_AND_DO(ck9AnmsLookup        , setChecked(m_uiSignedBitValue & SURFACE_FLAG_ANMS_LOOKUP));
+  BLOCK_SIG_AND_DO(ck8ApplyTexture      , setChecked(m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE));
+
+  bool bEnableSurface = true;
+  if (m_bShowDisable)
+    bEnableSurface &= (iValue != -1);
+  if (m_bShowDisableAttach)
+    bEnableSurface &= (iValue != -2);
+
+  ck31Wall             ->setEnabled(bEnableSurface);
+  ck30Bounce           ->setEnabled(bEnableSurface);
+  ck29Echo             ->setEnabled(bEnableSurface);
+  ck28                 ->setEnabled(bEnableSurface);
+  ck27PairNext         ->setEnabled(bEnableSurface);
+  ck26                 ->setEnabled(bEnableSurface);
+  ck25Pit              ->setEnabled(bEnableSurface);
+  ck24Yellow           ->setEnabled(bEnableSurface);
+  ck23                 ->setEnabled(bEnableSurface);
+  ck22Wall             ->setEnabled(bEnableSurface);
+  ck21Transparent      ->setEnabled(bEnableSurface);
+  ck20Bounce           ->setEnabled(bEnableSurface);
+  ck19NonMagnetic      ->setEnabled(bEnableSurface);
+  ck18FlipVertically   ->setEnabled(bEnableSurface);
+  ck17NonSolid         ->setEnabled(bEnableSurface);
+  ck16TexturePair      ->setEnabled(bEnableSurface);
+  ck15Livery           ->setEnabled(bEnableSurface);
+  ck14                 ->setEnabled(bEnableSurface);
+  ck13Motion           ->setEnabled(bEnableSurface);
+  ck12FlipHorizontally ->setEnabled(bEnableSurface);
+  ck11Back             ->setEnabled(bEnableSurface);
+  ck10PartialTrans     ->setEnabled(bEnableSurface);
+  ck9AnmsLookup        ->setEnabled(bEnableSurface);
+  ck8ApplyTexture      ->setEnabled(bEnableSurface);
+  pbTexture1           ->setEnabled(bEnableSurface);
+
   //qstring::number makes negative values 64-bit for some reason
   char szBuf[128];
   snprintf(szBuf, sizeof(szBuf), " (%#010x)", m_uiSignedBitValue);
 
-  int iValue = CTrack::GetIntValueFromSignedBit(m_uiSignedBitValue);
   leValue->setFont(QFont("Courier", 8));
   leValue->setText(QString::number(iValue).leftJustified(10, ' ') + szBuf);
 

@@ -196,6 +196,7 @@ public:
 
   static unsigned int GetSignedBitValueFromInt(int iValue);
   static int GetIntValueFromSignedBit(unsigned int uiValue);
+  static bool ShouldDrawSurfaceType(int iSurfaceType);
 
   tTrackHeader m_header;
   CChunkAy m_chunkAy;

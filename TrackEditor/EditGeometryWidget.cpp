@@ -34,6 +34,11 @@ CEditGeometryWidget::CEditGeometryWidget(QWidget *pParent, CTrack *pTrack, CText
 
   connect(g_pMainWindow, &CMainWindow::UpdateGeometrySelectionSig, this, &CEditGeometryWidget::UpdateGeometrySelection);
 
+  lblRoofDisabled->setStyleSheet("QLabel { color : red; }");
+  lblLLOWallDisabled->setStyleSheet("QLabel { color : red; }");
+  lblLUOWallDisabled->setStyleSheet("QLabel { color : red; }");
+  lblRLOWallDisabled->setStyleSheet("QLabel { color : red; }");
+  lblRUOWallDisabled->setStyleSheet("QLabel { color : red; }");
   
   connect(dsbYaw              , SIGNAL(valueChanged(double)), this, SLOT(YawChanged(double)));
   connect(dsbPitch            , SIGNAL(valueChanged(double)), this, SLOT(PitchChanged(double)));
@@ -97,102 +102,38 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
   (void)(iTo);
   if (!p->m_pTrack || iFrom >= (int)p->m_pTrack->m_chunkAy.size())
     return;
-  dsbYaw              ->blockSignals(true);
-  dsbPitch            ->blockSignals(true);
-  dsbRoll             ->blockSignals(true);
-  sbLength            ->blockSignals(true);
-  sbLLaneWidth        ->blockSignals(true);
-  sbRLaneWidth        ->blockSignals(true);
-  sbLShoulderWidth    ->blockSignals(true);
-  sbRShoulderWidth    ->blockSignals(true);
-  sbLShoulderHeight   ->blockSignals(true);
-  sbRShoulderHeight   ->blockSignals(true);
-  sbWallHeight        ->blockSignals(true);
-  sbLLOWallHOffset    ->blockSignals(true);
-  sbLLOWallHeight     ->blockSignals(true);
-  sbLUOWallHOffset    ->blockSignals(true);
-  sbLUOWallHeight     ->blockSignals(true);
-  sbRLOWallHOffset    ->blockSignals(true);
-  sbRLOWallHeight     ->blockSignals(true);
-  sbRUOWallHOffset    ->blockSignals(true);
-  sbRUOWallHeight     ->blockSignals(true);
-  sbLOuterFloorHOffset->blockSignals(true);
-  sbROuterFloorHOffset->blockSignals(true);
-  sbLOuterFloorHeight ->blockSignals(true);
-  sbROuterFloorHeight ->blockSignals(true);
-  sbAILine1           ->blockSignals(true);
-  sbAILine2           ->blockSignals(true);
-  sbAILine3           ->blockSignals(true);
-  sbAILine4           ->blockSignals(true);
-  sldCGrip            ->blockSignals(true);
-  sldLShoulderGrip    ->blockSignals(true);
-  sldRShoulderGrip    ->blockSignals(true);
-  sldAISpeed          ->blockSignals(true);
-  sbAIAccuracy        ->blockSignals(true);
-  dsbYaw->setValue(               p->m_pTrack->m_chunkAy[iFrom].dYaw);
-  dsbPitch->setValue(             p->m_pTrack->m_chunkAy[iFrom].dPitch);
-  dsbRoll->setValue(              p->m_pTrack->m_chunkAy[iFrom].dRoll);
-  sbLength->setValue(             p->m_pTrack->m_chunkAy[iFrom].iLength);
-  sbLLaneWidth->setValue(         p->m_pTrack->m_chunkAy[iFrom].iLeftLaneWidth);
-  sbRLaneWidth->setValue(         p->m_pTrack->m_chunkAy[iFrom].iRightLaneWidth);
-  sbLShoulderWidth->setValue(     p->m_pTrack->m_chunkAy[iFrom].iLeftShoulderWidth);
-  sbRShoulderWidth->setValue(     p->m_pTrack->m_chunkAy[iFrom].iRightShoulderWidth);
-  sbLShoulderHeight->setValue(    p->m_pTrack->m_chunkAy[iFrom].iLeftShoulderHeight);
-  sbRShoulderHeight->setValue(    p->m_pTrack->m_chunkAy[iFrom].iRightShoulderHeight);
-  sbWallHeight->setValue(         p->m_pTrack->m_chunkAy[iFrom].iRoofHeight);
-  sbLLOWallHOffset->setValue(     p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallHOffset);
-  sbLLOWallHeight->setValue(      p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallHeight);
-  sbLUOWallHOffset->setValue(     p->m_pTrack->m_chunkAy[iFrom].iLUOuterWallHOffset);
-  sbLUOWallHeight->setValue(      p->m_pTrack->m_chunkAy[iFrom].iLUOuterWallHeight);
-  sbRLOWallHOffset->setValue(     p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallHOffset);
-  sbRLOWallHeight->setValue(      p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallHeight);
-  sbRUOWallHOffset->setValue(     p->m_pTrack->m_chunkAy[iFrom].iRUOuterWallHOffset);
-  sbRUOWallHeight->setValue(      p->m_pTrack->m_chunkAy[iFrom].iRUOuterWallHeight);
-  sbLOuterFloorHOffset->setValue( p->m_pTrack->m_chunkAy[iFrom].iLOuterFloorHOffset);
-  sbROuterFloorHOffset->setValue( p->m_pTrack->m_chunkAy[iFrom].iROuterFloorHOffset);
-  sbLOuterFloorHeight->setValue(  p->m_pTrack->m_chunkAy[iFrom].iLOuterFloorHeight);
-  sbROuterFloorHeight->setValue(  p->m_pTrack->m_chunkAy[iFrom].iROuterFloorHeight);
-  sbAILine1->setValue(            p->m_pTrack->m_chunkAy[iFrom].iAILine1);
-  sbAILine2->setValue(            p->m_pTrack->m_chunkAy[iFrom].iAILine2);
-  sbAILine3->setValue(            p->m_pTrack->m_chunkAy[iFrom].iAILine3);
-  sbAILine4->setValue(            p->m_pTrack->m_chunkAy[iFrom].iAILine4);
-  sldCGrip->setValue(             p->m_pTrack->m_chunkAy[iFrom].iTrackGrip);
-  sldLShoulderGrip->setValue(     p->m_pTrack->m_chunkAy[iFrom].iLeftShoulderGrip);
-  sldRShoulderGrip->setValue(     p->m_pTrack->m_chunkAy[iFrom].iRightShoulderGrip);
-  sldAISpeed->setValue(           p->m_pTrack->m_chunkAy[iFrom].iAIMaxSpeed / 10);
-  sbAIAccuracy->setValue(         p->m_pTrack->m_chunkAy[iFrom].iAIAccuracy);
-  dsbYaw              ->blockSignals(false);
-  dsbPitch            ->blockSignals(false);
-  dsbRoll             ->blockSignals(false);
-  sbLength            ->blockSignals(false);
-  sbLLaneWidth        ->blockSignals(false);
-  sbRLaneWidth        ->blockSignals(false);
-  sbLShoulderWidth    ->blockSignals(false);
-  sbRShoulderWidth    ->blockSignals(false);
-  sbLShoulderHeight   ->blockSignals(false);
-  sbRShoulderHeight   ->blockSignals(false);
-  sbWallHeight        ->blockSignals(false);
-  sbLLOWallHOffset    ->blockSignals(false);
-  sbLLOWallHeight     ->blockSignals(false);
-  sbLUOWallHOffset    ->blockSignals(false);
-  sbLUOWallHeight     ->blockSignals(false);
-  sbRLOWallHOffset    ->blockSignals(false);
-  sbRLOWallHeight     ->blockSignals(false);
-  sbRUOWallHOffset    ->blockSignals(false);
-  sbRUOWallHeight     ->blockSignals(false);
-  sbLOuterFloorHOffset->blockSignals(false);
-  sbROuterFloorHOffset->blockSignals(false);
-  sbLOuterFloorHeight ->blockSignals(false);
-  sbROuterFloorHeight ->blockSignals(false);
-  sbAILine1           ->blockSignals(false);
-  sbAILine2           ->blockSignals(false);
-  sbAILine3           ->blockSignals(false);
-  sbAILine4           ->blockSignals(false);
-  sldCGrip            ->blockSignals(false);
-  sldLShoulderGrip    ->blockSignals(false);
-  sldRShoulderGrip    ->blockSignals(false);
-  sldAISpeed          ->blockSignals(false);
-  sbAIAccuracy        ->blockSignals(false);
+  BLOCK_SIG_AND_DO(dsbYaw, setValue(               p->m_pTrack->m_chunkAy[iFrom].dYaw));
+  BLOCK_SIG_AND_DO(dsbPitch, setValue(             p->m_pTrack->m_chunkAy[iFrom].dPitch));
+  BLOCK_SIG_AND_DO(dsbRoll, setValue(              p->m_pTrack->m_chunkAy[iFrom].dRoll));
+  BLOCK_SIG_AND_DO(sbLength, setValue(             p->m_pTrack->m_chunkAy[iFrom].iLength));
+  BLOCK_SIG_AND_DO(sbLLaneWidth, setValue(         p->m_pTrack->m_chunkAy[iFrom].iLeftLaneWidth));
+  BLOCK_SIG_AND_DO(sbRLaneWidth, setValue(         p->m_pTrack->m_chunkAy[iFrom].iRightLaneWidth));
+  BLOCK_SIG_AND_DO(sbLShoulderWidth, setValue(     p->m_pTrack->m_chunkAy[iFrom].iLeftShoulderWidth));
+  BLOCK_SIG_AND_DO(sbRShoulderWidth, setValue(     p->m_pTrack->m_chunkAy[iFrom].iRightShoulderWidth));
+  BLOCK_SIG_AND_DO(sbLShoulderHeight, setValue(    p->m_pTrack->m_chunkAy[iFrom].iLeftShoulderHeight));
+  BLOCK_SIG_AND_DO(sbRShoulderHeight, setValue(    p->m_pTrack->m_chunkAy[iFrom].iRightShoulderHeight));
+  BLOCK_SIG_AND_DO(sbWallHeight, setValue(         p->m_pTrack->m_chunkAy[iFrom].iRoofHeight));
+  BLOCK_SIG_AND_DO(sbLLOWallHOffset, setValue(     p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallHOffset));
+  BLOCK_SIG_AND_DO(sbLLOWallHeight, setValue(      p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallHeight));
+  BLOCK_SIG_AND_DO(sbLUOWallHOffset, setValue(     p->m_pTrack->m_chunkAy[iFrom].iLUOuterWallHOffset));
+  BLOCK_SIG_AND_DO(sbLUOWallHeight, setValue(      p->m_pTrack->m_chunkAy[iFrom].iLUOuterWallHeight));
+  BLOCK_SIG_AND_DO(sbRLOWallHOffset, setValue(     p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallHOffset));
+  BLOCK_SIG_AND_DO(sbRLOWallHeight, setValue(      p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallHeight));
+  BLOCK_SIG_AND_DO(sbRUOWallHOffset, setValue(     p->m_pTrack->m_chunkAy[iFrom].iRUOuterWallHOffset));
+  BLOCK_SIG_AND_DO(sbRUOWallHeight, setValue(      p->m_pTrack->m_chunkAy[iFrom].iRUOuterWallHeight));
+  BLOCK_SIG_AND_DO(sbLOuterFloorHOffset, setValue( p->m_pTrack->m_chunkAy[iFrom].iLOuterFloorHOffset));
+  BLOCK_SIG_AND_DO(sbROuterFloorHOffset, setValue( p->m_pTrack->m_chunkAy[iFrom].iROuterFloorHOffset));
+  BLOCK_SIG_AND_DO(sbLOuterFloorHeight, setValue(  p->m_pTrack->m_chunkAy[iFrom].iLOuterFloorHeight));
+  BLOCK_SIG_AND_DO(sbROuterFloorHeight, setValue(  p->m_pTrack->m_chunkAy[iFrom].iROuterFloorHeight));
+  BLOCK_SIG_AND_DO(sbAILine1, setValue(            p->m_pTrack->m_chunkAy[iFrom].iAILine1));
+  BLOCK_SIG_AND_DO(sbAILine2, setValue(            p->m_pTrack->m_chunkAy[iFrom].iAILine2));
+  BLOCK_SIG_AND_DO(sbAILine3, setValue(            p->m_pTrack->m_chunkAy[iFrom].iAILine3));
+  BLOCK_SIG_AND_DO(sbAILine4, setValue(            p->m_pTrack->m_chunkAy[iFrom].iAILine4));
+  BLOCK_SIG_AND_DO(sldCGrip, setValue(             p->m_pTrack->m_chunkAy[iFrom].iTrackGrip));
+  BLOCK_SIG_AND_DO(sldLShoulderGrip, setValue(     p->m_pTrack->m_chunkAy[iFrom].iLeftShoulderGrip));
+  BLOCK_SIG_AND_DO(sldRShoulderGrip, setValue(     p->m_pTrack->m_chunkAy[iFrom].iRightShoulderGrip);)
+  BLOCK_SIG_AND_DO(sldAISpeed, setValue(           p->m_pTrack->m_chunkAy[iFrom].iAIMaxSpeed / 10));
+  BLOCK_SIG_AND_DO(sbAIAccuracy, setValue(         p->m_pTrack->m_chunkAy[iFrom].iAIAccuracy));
 
   lblCGrip->setText(        "(" + QString::number(p->m_pTrack->m_chunkAy[iFrom].iTrackGrip) + ")");
   lblLShoulderGrip->setText("(" + QString::number(p->m_pTrack->m_chunkAy[iFrom].iLeftShoulderGrip) + ")");
@@ -211,6 +152,49 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
   QtHelpers::UpdateTextures(lblRLOWallTex1, lblRLOWallTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallType);
   QtHelpers::UpdateTextures(lblRUOWallTex1, lblRUOWallTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRUOuterWallType);
   QtHelpers::UpdateTextures(lblOFloorTex1, lblOFloorTex2, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType);
+
+  //update roof disabled text
+  lblRoofDisabled->setVisible(p->m_pTrack->m_chunkAy[iFrom].iLeftWallType == -1
+                              || p->m_pTrack->m_chunkAy[iFrom].iRightWallType == -1
+                              || (!CTrackData::ShouldDrawSurfaceType(p->m_pTrack->m_chunkAy[iFrom].iLeftWallType) && !CTrackData::ShouldDrawSurfaceType(p->m_pTrack->m_chunkAy[iFrom].iRightWallType)));
+
+  //update llowall disabled text
+  lblLLOWallDisabled->setVisible(p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -1
+                                 || (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2 && !CTrackData::ShouldDrawSurfaceType(p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType)));
+  if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -1)
+    lblLLOWallDisabled->setText("(disabled by floor)");
+  else if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2)
+    lblLLOWallDisabled->setText("(disabled by center)");
+
+  //update rlowall disabled text
+  lblRLOWallDisabled->setVisible(p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -1
+                                 || (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2 && !CTrackData::ShouldDrawSurfaceType(p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType)));
+  if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -1)
+    lblRLOWallDisabled->setText("(disabled by floor)");
+  else if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2)
+    lblRLOWallDisabled->setText("(disabled by center)");
+
+  //update luowall disabled text
+  lblLUOWallDisabled->setVisible(p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallType == -1
+    || p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -1
+    || (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2 && !CTrackData::ShouldDrawSurfaceType(p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType)));
+  if (p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallType == -1)
+    lblLUOWallDisabled->setText("(disabled by lower wall)");
+  else if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -1)
+    lblLUOWallDisabled->setText("(disabled by floor)");
+  else if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2)
+    lblLUOWallDisabled->setText("(disabled by center)");
+
+  //update ruowall disabled text
+  lblRUOWallDisabled->setVisible(p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallType == -1
+    || p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -1
+    || (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2 && !CTrackData::ShouldDrawSurfaceType(p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType)));
+  if (p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallType == -1)
+    lblRUOWallDisabled->setText("(disabled by lower wall)");
+  else if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -1)
+    lblRUOWallDisabled->setText("(disabled by floor)");
+  else if (p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType == -2)
+    lblRUOWallDisabled->setText("(disabled by center)");
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -819,7 +803,7 @@ void CEditGeometryWidget::EditCSurface()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iCenterSurfaceType, true, "(also disables outer walls if floor is -2)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iCenterSurfaceType = dlg.GetValue();
@@ -842,7 +826,7 @@ void CEditGeometryWidget::EditLShoulder()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLeftSurfaceType);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLeftSurfaceType, true);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iLeftSurfaceType = dlg.GetValue();
@@ -865,7 +849,7 @@ void CEditGeometryWidget::EditRShoulder()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRightSurfaceType);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRightSurfaceType, true);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iRightSurfaceType = dlg.GetValue();
@@ -888,7 +872,7 @@ void CEditGeometryWidget::EditLWall()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLeftWallType);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLeftWallType, true, "(also disables roof)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iLeftWallType = dlg.GetValue();
@@ -911,7 +895,7 @@ void CEditGeometryWidget::EditRWall()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRightWallType);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRightWallType, true, "(also disables roof)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iRightWallType = dlg.GetValue();
@@ -957,7 +941,7 @@ void CEditGeometryWidget::EditRoof()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRoofType);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRoofType, true);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iRoofType = dlg.GetValue();
@@ -980,7 +964,7 @@ void CEditGeometryWidget::EditLUOWall()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLUOuterWallType);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLUOuterWallType, true);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iLUOuterWallType = dlg.GetValue();
@@ -1003,7 +987,7 @@ void CEditGeometryWidget::EditLLOWall()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallType);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iLLOuterWallType, true, "(also disables upper wall)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iLLOuterWallType = dlg.GetValue();
@@ -1026,7 +1010,7 @@ void CEditGeometryWidget::EditRLOWall()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallType);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRLOuterWallType, true, "(also disables upper wall)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iRLOuterWallType = dlg.GetValue();
@@ -1049,7 +1033,7 @@ void CEditGeometryWidget::EditRUOWall()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRUOuterWallType);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iRUOuterWallType, true);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iRUOuterWallType = dlg.GetValue();
@@ -1072,7 +1056,7 @@ void CEditGeometryWidget::EditOFloor()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType);
+  CEditSurfaceDialog dlg(this, p->m_pTex, p->m_pTrack->m_chunkAy[iFrom].iOuterFloorType, true, "(also disables outer walls)", true);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iOuterFloorType = dlg.GetValue();

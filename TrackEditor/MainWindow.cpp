@@ -325,9 +325,7 @@ void CMainWindow::OnAbout()
 void CMainWindow::OnSelChunksFromChanged(int iValue)
 {
   if (!ckTo->isChecked() || sbSelChunksTo->value() < iValue) {
-    sbSelChunksTo->blockSignals(true);
-    sbSelChunksTo->setValue(iValue);
-    sbSelChunksTo->blockSignals(false);
+    BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(iValue));
   }
   UpdateGeometrySelection();
 }
@@ -337,9 +335,7 @@ void CMainWindow::OnSelChunksFromChanged(int iValue)
 void CMainWindow::OnSelChunksToChanged(int iValue)
 {
   if (sbSelChunksFrom->value() > iValue) {
-    sbSelChunksFrom->blockSignals(true);
-    sbSelChunksFrom->setValue(iValue);
-    sbSelChunksFrom->blockSignals(false);
+    BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(iValue));
   }
   UpdateGeometrySelection();
   p->m_pEditData->OnCancelClicked();
@@ -372,12 +368,8 @@ void CMainWindow::OnDeleteChunkClicked()
 
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->LogMessage("Deleted geometry chunk");
-  sbSelChunksFrom->blockSignals(true);
-  sbSelChunksTo->blockSignals(true);
   g_pMainWindow->UpdateWindow();
-  sbSelChunksTo->setValue(sbSelChunksFrom->value());
-  sbSelChunksFrom->blockSignals(false);
-  sbSelChunksTo->blockSignals(false);
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(sbSelChunksFrom->value()));
   p->m_pEditData->UpdateGeometryEditMode();
 }
 
@@ -392,13 +384,9 @@ void CMainWindow::OnAddChunkClicked()
 
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->LogMessage("Added geometry chunk");
-  sbSelChunksFrom->blockSignals(true);
-  sbSelChunksTo->blockSignals(true);
   g_pMainWindow->UpdateWindow();
-  sbSelChunksTo->setValue(iLastPos + 1);
-  sbSelChunksFrom->setValue(iLastPos + 1);
-  sbSelChunksFrom->blockSignals(false);
-  sbSelChunksTo->blockSignals(false);
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(iLastPos + 1));
+  BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(iLastPos + 1));
   p->m_pEditData->UpdateGeometryEditMode();
 }
 
@@ -592,12 +580,8 @@ void CMainWindow::UpdateWindow()
 
   openGLWidget->SetTrack(&p->m_track, &p->m_tex, &p->m_bld, &p->m_palette);
 
-  sbSelChunksFrom->blockSignals(true);
-  sbSelChunksTo->blockSignals(true);
-  sbSelChunksFrom->setRange(0, (int)p->m_track.m_chunkAy.size() - 1);
-  sbSelChunksTo->setRange(0,   (int)p->m_track.m_chunkAy.size() - 1);
-  sbSelChunksFrom->blockSignals(false);
-  sbSelChunksTo->blockSignals(false);
+  BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)p->m_track.m_chunkAy.size() - 1));
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0,   (int)p->m_track.m_chunkAy.size() - 1));
   leChunkCount->setText(QString::number(p->m_track.m_chunkAy.size()));
   UpdateGeometrySelection();
   emit UpdateWindowSig();
@@ -637,16 +621,10 @@ void CMainWindow::UpdateGeometrySelection()
 
 void CMainWindow::InsertUIUpdate(int iInsertVal)
 {
-  sbSelChunksFrom->blockSignals(true);
-  sbSelChunksTo->blockSignals(true);
-  ckTo->blockSignals(true);
-  sbSelChunksFrom->setRange(0, (int)p->m_track.m_chunkAy.size() - 1);
-  sbSelChunksTo->setRange(0,   (int)p->m_track.m_chunkAy.size() - 1);
-  sbSelChunksTo->setValue(sbSelChunksFrom->value() + iInsertVal - 1);
-  ckTo->setChecked(iInsertVal > 1);
-  sbSelChunksFrom->blockSignals(false);
-  sbSelChunksTo->blockSignals(false);
-  ckTo->blockSignals(false);
+  BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)p->m_track.m_chunkAy.size() - 1));
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0,   (int)p->m_track.m_chunkAy.size() - 1));
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(sbSelChunksFrom->value() + iInsertVal - 1));
+  BLOCK_SIG_AND_DO(ckTo, setChecked(iInsertVal > 1));
 }
 
 //-------------------------------------------------------------------------------------------------

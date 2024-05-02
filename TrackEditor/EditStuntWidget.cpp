@@ -76,36 +76,16 @@ void CEditStuntWidget::UpdateGeometrySelection(int iFrom, int iTo)
   sbTimeFlat      ->setEnabled(bChunkHasStunt);
   sbExpandContract->setEnabled(bChunkHasStunt);
   sbBulge         ->setEnabled(bChunkHasStunt);
-
-  sbScaleFact     ->blockSignals(true);
-  sbAngle         ->blockSignals(true);
-  sbUnk           ->blockSignals(true);
-  sbTimingGroup   ->blockSignals(true);
-  sbHeight        ->blockSignals(true);
-  sbTimeBulging   ->blockSignals(true);
-  sbTimeFlat      ->blockSignals(true);
-  sbExpandContract->blockSignals(true);
-  sbBulge         ->blockSignals(true);
-  
-  sbScaleFact     ->setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iScaleFactor);
-  sbAngle         ->setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iAngle);
-  sbUnk           ->setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iUnknown);
-  sbTimingGroup   ->setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iTimingGroup);
-  sbHeight        ->setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iHeight);
-  sbTimeBulging   ->setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iTimeBulging);
-  sbTimeFlat      ->setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iTimeFlat);
-  sbExpandContract->setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iSmallerExpandsLargerContracts);
-  sbBulge         ->setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iBulge);
-  
-  sbScaleFact     ->blockSignals(false);
-  sbAngle         ->blockSignals(false);
-  sbUnk           ->blockSignals(false);
-  sbTimingGroup   ->blockSignals(false);
-  sbHeight        ->blockSignals(false);
-  sbTimeBulging   ->blockSignals(false);
-  sbTimeFlat      ->blockSignals(false);
-  sbExpandContract->blockSignals(false);
-  sbBulge         ->blockSignals(false);
+    
+  BLOCK_SIG_AND_DO(sbScaleFact     , setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iScaleFactor));
+  BLOCK_SIG_AND_DO(sbAngle         , setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iAngle));
+  BLOCK_SIG_AND_DO(sbUnk           , setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iUnknown));
+  BLOCK_SIG_AND_DO(sbTimingGroup   , setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iTimingGroup));
+  BLOCK_SIG_AND_DO(sbHeight        , setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iHeight));
+  BLOCK_SIG_AND_DO(sbTimeBulging   , setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iTimeBulging));
+  BLOCK_SIG_AND_DO(sbTimeFlat      , setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iTimeFlat));
+  BLOCK_SIG_AND_DO(sbExpandContract, setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iSmallerExpandsLargerContracts));
+  BLOCK_SIG_AND_DO(sbBulge         , setValue(p->m_pTrack->m_chunkAy[iFrom].stunt.iBulge));
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -194,18 +194,10 @@ void CEditAudioWidget::UpdateGeometrySelection(int iFrom, int iTo)
   lblMph->setEnabled(bChunkHasAudio);
   pbAudio->setText(bChunkHasAudio ? "Delete Audio" : "Add Audio");
 
-  sbSpeed->blockSignals(true);
-  cbBelow->blockSignals(true);
-  cbAbove->blockSignals(true);
-
-  sbSpeed->setMinimum(bChunkHasAudio ? 1 : 0);
-  sbSpeed->setValue(p->m_pTrack->m_chunkAy[iFrom].iAudioTriggerSpeed);
-  cbBelow->setCurrentIndex(cbBelow->findData(p->m_pTrack->m_chunkAy[iFrom].iAudioBelowTrigger));
-  cbAbove->setCurrentIndex(cbAbove->findData(p->m_pTrack->m_chunkAy[iFrom].iAudioAboveTrigger));
-
-  sbSpeed->blockSignals(false);
-  cbBelow->blockSignals(false);
-  cbAbove->blockSignals(false);
+  BLOCK_SIG_AND_DO(sbSpeed, setMinimum(bChunkHasAudio ? 1 : 0));
+  BLOCK_SIG_AND_DO(sbSpeed, setValue(p->m_pTrack->m_chunkAy[iFrom].iAudioTriggerSpeed));
+  BLOCK_SIG_AND_DO(cbBelow, setCurrentIndex(cbBelow->findData(p->m_pTrack->m_chunkAy[iFrom].iAudioBelowTrigger)));
+  BLOCK_SIG_AND_DO(cbAbove, setCurrentIndex(cbAbove->findData(p->m_pTrack->m_chunkAy[iFrom].iAudioAboveTrigger)));
 
   int iSpeedMph = (int)(p->m_pTrack->m_chunkAy[iFrom].iAudioTriggerSpeed * TRIGGER_SPEED_TO_MPH);
   lblMph->setText("(" + QString::number(iSpeedMph) + " mph)");

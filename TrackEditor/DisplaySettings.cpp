@@ -1,6 +1,7 @@
 #include "TrackEditor.h"
 #include "DisplaySettings.h"
 #include "TrackPreview.h"
+#include "QtHelpers.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -138,114 +139,42 @@ uint32 CDisplaySettings::GetDisplaySettings(eWhipModel &carModel, eShapeSection 
 
 void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels, eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus)
 {
-  ckLLaneSurface->blockSignals(true);
-  ckLLaneWireframe->blockSignals(true);
-  ckRLaneSurface->blockSignals(true);
-  ckRLaneWireframe->blockSignals(true);
-  ckLShoulderSurface->blockSignals(true);
-  ckLShoulderWireframe->blockSignals(true);
-  ckRShoulderSurface->blockSignals(true);
-  ckRShoulderWireframe->blockSignals(true);
-  ckLWallSurface->blockSignals(true);
-  ckLWallWireframe->blockSignals(true);
-  ckRWallSurface->blockSignals(true);
-  ckRWallWireframe->blockSignals(true);
-  ckRoofSurface->blockSignals(true);
-  ckRoofWireframe->blockSignals(true);
-  ckLUOWallSurface->blockSignals(true);
-  ckLUOWallWireframe->blockSignals(true);
-  ckLLOWallSurface->blockSignals(true);
-  ckLLOWallWireframe->blockSignals(true);
-  ckRUOWallSurface->blockSignals(true);
-  ckRUOWallWireframe->blockSignals(true);
-  ckRLOWallSurface->blockSignals(true);
-  ckRLOWallWireframe->blockSignals(true);
-  ckOWallFloorSurface->blockSignals(true);
-  ckOWallFloorWireframe->blockSignals(true);
-  ckEnvirFloorSurface->blockSignals(true);
-  ckEnvirFloorWireframe->blockSignals(true);
-  ckHighlightSelection->blockSignals(true);
-  ckAILines->blockSignals(true);
-  ckTestCar->blockSignals(true);
-  ckSigns->blockSignals(true);
-  ckAudio->blockSignals(true);
-  ckStunts->blockSignals(true);
+  BLOCK_SIG_AND_DO(ckLLaneSurface, setChecked(       uiShowModels & SHOW_LLANE_SURF_MODEL));
+  BLOCK_SIG_AND_DO(ckLLaneWireframe, setChecked(     uiShowModels & SHOW_LLANE_WIRE_MODEL));
+  BLOCK_SIG_AND_DO(ckRLaneSurface, setChecked(       uiShowModels & SHOW_RLANE_SURF_MODEL));
+  BLOCK_SIG_AND_DO(ckRLaneWireframe, setChecked(     uiShowModels & SHOW_RLANE_WIRE_MODEL));
+  BLOCK_SIG_AND_DO(ckLShoulderSurface, setChecked(   uiShowModels & SHOW_LSHOULDER_SURF_MODEL));
+  BLOCK_SIG_AND_DO(ckLShoulderWireframe, setChecked( uiShowModels & SHOW_LSHOULDER_WIRE_MODEL));
+  BLOCK_SIG_AND_DO(ckRShoulderSurface, setChecked(   uiShowModels & SHOW_RSHOULDER_SURF_MODEL));
+  BLOCK_SIG_AND_DO(ckRShoulderWireframe, setChecked( uiShowModels & SHOW_RSHOULDER_WIRE_MODEL));
+  BLOCK_SIG_AND_DO(ckLWallSurface, setChecked(       uiShowModels & SHOW_LWALL_SURF_MODEL));
+  BLOCK_SIG_AND_DO(ckLWallWireframe, setChecked(     uiShowModels & SHOW_LWALL_WIRE_MODEL));
+  BLOCK_SIG_AND_DO(ckRWallSurface, setChecked(       uiShowModels & SHOW_RWALL_SURF_MODEL));
+  BLOCK_SIG_AND_DO(ckRWallWireframe, setChecked(     uiShowModels & SHOW_RWALL_WIRE_MODEL));
+  BLOCK_SIG_AND_DO(ckRoofSurface, setChecked(        uiShowModels & SHOW_ROOF_SURF_MODEL));
+  BLOCK_SIG_AND_DO(ckRoofWireframe, setChecked(      uiShowModels & SHOW_ROOF_WIRE_MODEL));
+  BLOCK_SIG_AND_DO(ckLLOWallSurface, setChecked(     uiShowModels & SHOW_LLOWALL_SURF_MODEL));
+  BLOCK_SIG_AND_DO(ckLLOWallWireframe, setChecked(   uiShowModels & SHOW_LLOWALL_WIRE_MODEL));
+  BLOCK_SIG_AND_DO(ckLUOWallSurface, setChecked(     uiShowModels & SHOW_LUOWALL_SURF_MODEL));
+  BLOCK_SIG_AND_DO(ckLUOWallWireframe, setChecked(   uiShowModels & SHOW_LUOWALL_WIRE_MODEL));
+  BLOCK_SIG_AND_DO(ckRUOWallSurface, setChecked(     uiShowModels & SHOW_RUOWALL_SURF_MODEL));
+  BLOCK_SIG_AND_DO(ckRUOWallWireframe, setChecked(   uiShowModels & SHOW_RUOWALL_WIRE_MODEL));
+  BLOCK_SIG_AND_DO(ckRLOWallSurface, setChecked(     uiShowModels & SHOW_RLOWALL_SURF_MODEL));
+  BLOCK_SIG_AND_DO(ckRLOWallWireframe, setChecked(   uiShowModels & SHOW_RLOWALL_WIRE_MODEL));
+  BLOCK_SIG_AND_DO(ckOWallFloorSurface, setChecked(  uiShowModels & SHOW_OWALLFLOOR_SURF_MODEL));
+  BLOCK_SIG_AND_DO(ckOWallFloorWireframe, setChecked(uiShowModels & SHOW_OWALLFLOOR_WIRE_MODEL));
+  BLOCK_SIG_AND_DO(ckEnvirFloorSurface, setChecked(  uiShowModels & SHOW_ENVIRFLOOR_SURF_MODEL));
+  BLOCK_SIG_AND_DO(ckEnvirFloorWireframe, setChecked(uiShowModels & SHOW_ENVIRFLOOR_WIRE_MODEL));
+  BLOCK_SIG_AND_DO(ckHighlightSelection, setChecked( uiShowModels & SHOW_SELECTION_HIGHLIGHT));
+  BLOCK_SIG_AND_DO(ckAILines, setChecked(            uiShowModels & SHOW_AILINE_MODELS));
+  BLOCK_SIG_AND_DO(ckTestCar, setChecked(            uiShowModels & SHOW_TEST_CAR));
+  BLOCK_SIG_AND_DO(ckSigns, setChecked(              uiShowModels & SHOW_SIGNS));
+  BLOCK_SIG_AND_DO(ckAudio, setChecked(              uiShowModels & SHOW_AUDIO));
+  BLOCK_SIG_AND_DO(ckStunts, setChecked(             uiShowModels & SHOW_STUNTS));
 
-  ckLLaneSurface->setChecked(       uiShowModels & SHOW_LLANE_SURF_MODEL);
-  ckLLaneWireframe->setChecked(     uiShowModels & SHOW_LLANE_WIRE_MODEL);
-  ckRLaneSurface->setChecked(       uiShowModels & SHOW_RLANE_SURF_MODEL);
-  ckRLaneWireframe->setChecked(     uiShowModels & SHOW_RLANE_WIRE_MODEL);
-  ckLShoulderSurface->setChecked(   uiShowModels & SHOW_LSHOULDER_SURF_MODEL);
-  ckLShoulderWireframe->setChecked( uiShowModels & SHOW_LSHOULDER_WIRE_MODEL);
-  ckRShoulderSurface->setChecked(   uiShowModels & SHOW_RSHOULDER_SURF_MODEL);
-  ckRShoulderWireframe->setChecked( uiShowModels & SHOW_RSHOULDER_WIRE_MODEL);
-  ckLWallSurface->setChecked(       uiShowModels & SHOW_LWALL_SURF_MODEL);
-  ckLWallWireframe->setChecked(     uiShowModels & SHOW_LWALL_WIRE_MODEL);
-  ckRWallSurface->setChecked(       uiShowModels & SHOW_RWALL_SURF_MODEL);
-  ckRWallWireframe->setChecked(     uiShowModels & SHOW_RWALL_WIRE_MODEL);
-  ckRoofSurface->setChecked(        uiShowModels & SHOW_ROOF_SURF_MODEL);
-  ckRoofWireframe->setChecked(      uiShowModels & SHOW_ROOF_WIRE_MODEL);
-  ckLLOWallSurface->setChecked(     uiShowModels & SHOW_LLOWALL_SURF_MODEL);
-  ckLLOWallWireframe->setChecked(   uiShowModels & SHOW_LLOWALL_WIRE_MODEL);
-  ckLUOWallSurface->setChecked(     uiShowModels & SHOW_LUOWALL_SURF_MODEL);
-  ckLUOWallWireframe->setChecked(   uiShowModels & SHOW_LUOWALL_WIRE_MODEL);
-  ckRUOWallSurface->setChecked(     uiShowModels & SHOW_RUOWALL_SURF_MODEL);
-  ckRUOWallWireframe->setChecked(   uiShowModels & SHOW_RUOWALL_WIRE_MODEL);
-  ckRLOWallSurface->setChecked(     uiShowModels & SHOW_RLOWALL_SURF_MODEL);
-  ckRLOWallWireframe->setChecked(   uiShowModels & SHOW_RLOWALL_WIRE_MODEL);
-  ckOWallFloorSurface->setChecked(  uiShowModels & SHOW_OWALLFLOOR_SURF_MODEL);
-  ckOWallFloorWireframe->setChecked(uiShowModels & SHOW_OWALLFLOOR_WIRE_MODEL);
-  ckEnvirFloorSurface->setChecked(  uiShowModels & SHOW_ENVIRFLOOR_SURF_MODEL);
-  ckEnvirFloorWireframe->setChecked(uiShowModels & SHOW_ENVIRFLOOR_WIRE_MODEL);
-  ckHighlightSelection->setChecked( uiShowModels & SHOW_SELECTION_HIGHLIGHT);
-  ckAILines->setChecked(            uiShowModels & SHOW_AILINE_MODELS);
-  ckTestCar->setChecked(            uiShowModels & SHOW_TEST_CAR);
-  ckSigns->setChecked(              uiShowModels & SHOW_SIGNS);
-  ckAudio->setChecked(              uiShowModels & SHOW_AUDIO);
-  ckStunts->setChecked(             uiShowModels & SHOW_STUNTS);
-
-  ckLLaneSurface->blockSignals(false);
-  ckLLaneWireframe->blockSignals(false);
-  ckRLaneSurface->blockSignals(false);
-  ckRLaneWireframe->blockSignals(false);
-  ckLShoulderSurface->blockSignals(false);
-  ckLShoulderWireframe->blockSignals(false);
-  ckRShoulderSurface->blockSignals(false);
-  ckRShoulderWireframe->blockSignals(false);
-  ckLWallSurface->blockSignals(false);
-  ckLWallWireframe->blockSignals(false);
-  ckRWallSurface->blockSignals(false);
-  ckRWallWireframe->blockSignals(false);
-  ckRoofSurface->blockSignals(false);
-  ckRoofWireframe->blockSignals(false);
-  ckLUOWallSurface->blockSignals(false);
-  ckLUOWallWireframe->blockSignals(false);
-  ckLLOWallSurface->blockSignals(false);
-  ckLLOWallWireframe->blockSignals(false);
-  ckRUOWallSurface->blockSignals(false);
-  ckRUOWallWireframe->blockSignals(false);
-  ckRLOWallSurface->blockSignals(false);
-  ckRLOWallWireframe->blockSignals(false);
-  ckOWallFloorSurface->blockSignals(false);
-  ckOWallFloorWireframe->blockSignals(false);
-  ckEnvirFloorSurface->blockSignals(false);
-  ckEnvirFloorWireframe->blockSignals(false);
-  ckHighlightSelection->blockSignals(false);
-  ckAILines->blockSignals(false);
-  ckTestCar->blockSignals(false);
-  ckSigns->blockSignals(false);
-  ckAudio->blockSignals(false);
-  ckStunts->blockSignals(false);
-
-  cbTestCarType->blockSignals(true);
-  cbTestCarPos->blockSignals(true);
-  ckMillionPlus->blockSignals(true);
-  cbTestCarType->setCurrentIndex(cbTestCarType->findData((int)carModel));
-  cbTestCarPos->setCurrentIndex(cbTestCarPos->findData((int)aiLine));
-  ckMillionPlus->setChecked(bMillionPlus);
-  cbTestCarType->blockSignals(false);
-  cbTestCarPos->blockSignals(false);
-  ckMillionPlus->blockSignals(false);
+  BLOCK_SIG_AND_DO(cbTestCarType, setCurrentIndex(cbTestCarType->findData((int)carModel)));
+  BLOCK_SIG_AND_DO(cbTestCarPos, setCurrentIndex(cbTestCarPos->findData((int)aiLine)));
+  BLOCK_SIG_AND_DO(ckMillionPlus, setChecked(bMillionPlus));
 
   UpdatePreviewSelection();
 }
@@ -261,9 +190,7 @@ bool CDisplaySettings::GetAttachLast()
 
 void CDisplaySettings::SetAttachLast(bool bAttachLast)
 {
-  ckAttachLast->blockSignals(true);
-  ckAttachLast->setChecked(bAttachLast);
-  ckAttachLast->blockSignals(false);
+  BLOCK_SIG_AND_DO(ckAttachLast, setChecked(bAttachLast));
 
   OnAttachLastChecked();
 }
@@ -272,47 +199,19 @@ void CDisplaySettings::SetAttachLast(bool bAttachLast)
 
 void CDisplaySettings::UpdateAllSurface()
 {
-  ckLLaneSurface->blockSignals(true);
-  ckRLaneSurface->blockSignals(true);
-  ckLShoulderSurface->blockSignals(true);
-  ckRShoulderSurface->blockSignals(true);
-  ckLWallSurface->blockSignals(true);
-  ckRWallSurface->blockSignals(true);
-  ckRoofSurface->blockSignals(true);
-  ckLUOWallSurface->blockSignals(true);
-  ckLLOWallSurface->blockSignals(true);
-  ckRUOWallSurface->blockSignals(true);
-  ckRLOWallSurface->blockSignals(true);
-  ckOWallFloorSurface->blockSignals(true);
-  ckEnvirFloorSurface->blockSignals(true);
-
-  ckLLaneSurface->setChecked(ckAllSurface->isChecked());
-  ckRLaneSurface->setChecked(ckAllSurface->isChecked());
-  ckLShoulderSurface->setChecked(ckAllSurface->isChecked());
-  ckRShoulderSurface->setChecked(ckAllSurface->isChecked());
-  ckLWallSurface->setChecked(ckAllSurface->isChecked());
-  ckRWallSurface->setChecked(ckAllSurface->isChecked());
-  ckRoofSurface->setChecked(ckAllSurface->isChecked());
-  ckLUOWallSurface->setChecked(ckAllSurface->isChecked());
-  ckLLOWallSurface->setChecked(ckAllSurface->isChecked());
-  ckRUOWallSurface->setChecked(ckAllSurface->isChecked());
-  ckRLOWallSurface->setChecked(ckAllSurface->isChecked());
-  ckOWallFloorSurface->setChecked(ckAllSurface->isChecked());
-  ckEnvirFloorSurface->setChecked(ckAllSurface->isChecked());
-
-  ckLLaneSurface->blockSignals(false);
-  ckRLaneSurface->blockSignals(false);
-  ckLShoulderSurface->blockSignals(false);
-  ckRShoulderSurface->blockSignals(false);
-  ckLWallSurface->blockSignals(false);
-  ckRWallSurface->blockSignals(false);
-  ckRoofSurface->blockSignals(false);
-  ckLUOWallSurface->blockSignals(false);
-  ckLLOWallSurface->blockSignals(false);
-  ckRUOWallSurface->blockSignals(false);
-  ckRLOWallSurface->blockSignals(false);
-  ckOWallFloorSurface->blockSignals(false);
-  ckEnvirFloorSurface->blockSignals(false);
+  BLOCK_SIG_AND_DO(ckLLaneSurface, setChecked(ckAllSurface->isChecked()));
+  BLOCK_SIG_AND_DO(ckRLaneSurface, setChecked(ckAllSurface->isChecked()));
+  BLOCK_SIG_AND_DO(ckLShoulderSurface, setChecked(ckAllSurface->isChecked()));
+  BLOCK_SIG_AND_DO(ckRShoulderSurface, setChecked(ckAllSurface->isChecked()));
+  BLOCK_SIG_AND_DO(ckLWallSurface, setChecked(ckAllSurface->isChecked()));
+  BLOCK_SIG_AND_DO(ckRWallSurface, setChecked(ckAllSurface->isChecked()));
+  BLOCK_SIG_AND_DO(ckRoofSurface, setChecked(ckAllSurface->isChecked()));
+  BLOCK_SIG_AND_DO(ckLUOWallSurface, setChecked(ckAllSurface->isChecked()));
+  BLOCK_SIG_AND_DO(ckLLOWallSurface, setChecked(ckAllSurface->isChecked()));
+  BLOCK_SIG_AND_DO(ckRUOWallSurface, setChecked(ckAllSurface->isChecked()));
+  BLOCK_SIG_AND_DO(ckRLOWallSurface, setChecked(ckAllSurface->isChecked()));
+  BLOCK_SIG_AND_DO(ckOWallFloorSurface, setChecked(ckAllSurface->isChecked()));
+  BLOCK_SIG_AND_DO(ckEnvirFloorSurface, setChecked(ckAllSurface->isChecked()));
 
   UpdatePreview();
 }
@@ -321,47 +220,19 @@ void CDisplaySettings::UpdateAllSurface()
 
 void CDisplaySettings::UpdateAllWireframe()
 {
-  ckLLaneWireframe->blockSignals(true);
-  ckRLaneWireframe->blockSignals(true);
-  ckLShoulderWireframe->blockSignals(true);
-  ckRShoulderWireframe->blockSignals(true);
-  ckLWallWireframe->blockSignals(true);
-  ckRWallWireframe->blockSignals(true);
-  ckRoofWireframe->blockSignals(true);
-  ckLUOWallWireframe->blockSignals(true);
-  ckLLOWallWireframe->blockSignals(true);
-  ckRUOWallWireframe->blockSignals(true);
-  ckRLOWallWireframe->blockSignals(true);
-  ckOWallFloorWireframe->blockSignals(true);
-  ckEnvirFloorWireframe->blockSignals(true);
-
-  ckLLaneWireframe->setChecked(ckAllWireframe->isChecked());
-  ckRLaneWireframe->setChecked(ckAllWireframe->isChecked());
-  ckLShoulderWireframe->setChecked(ckAllWireframe->isChecked());
-  ckRShoulderWireframe->setChecked(ckAllWireframe->isChecked());
-  ckLWallWireframe->setChecked(ckAllWireframe->isChecked());
-  ckRWallWireframe->setChecked(ckAllWireframe->isChecked());
-  ckRoofWireframe->setChecked(ckAllWireframe->isChecked());
-  ckLUOWallWireframe->setChecked(ckAllWireframe->isChecked());
-  ckLLOWallWireframe->setChecked(ckAllWireframe->isChecked());
-  ckRUOWallWireframe->setChecked(ckAllWireframe->isChecked());
-  ckRLOWallWireframe->setChecked(ckAllWireframe->isChecked());
-  ckOWallFloorWireframe->setChecked(ckAllWireframe->isChecked());
-  ckEnvirFloorWireframe->setChecked(ckAllWireframe->isChecked());
-
-  ckLLaneWireframe->blockSignals(false);
-  ckRLaneWireframe->blockSignals(false);
-  ckLShoulderWireframe->blockSignals(false);
-  ckRShoulderWireframe->blockSignals(false);
-  ckLWallWireframe->blockSignals(false);
-  ckRWallWireframe->blockSignals(false);
-  ckRoofWireframe->blockSignals(false);
-  ckLUOWallWireframe->blockSignals(false);
-  ckLLOWallWireframe->blockSignals(false);
-  ckRUOWallWireframe->blockSignals(false);
-  ckRLOWallWireframe->blockSignals(false);
-  ckOWallFloorWireframe->blockSignals(false);
-  ckEnvirFloorWireframe->blockSignals(false);
+  BLOCK_SIG_AND_DO(ckLLaneWireframe, setChecked(ckAllWireframe->isChecked()));
+  BLOCK_SIG_AND_DO(ckRLaneWireframe, setChecked(ckAllWireframe->isChecked()));
+  BLOCK_SIG_AND_DO(ckLShoulderWireframe, setChecked(ckAllWireframe->isChecked()));
+  BLOCK_SIG_AND_DO(ckRShoulderWireframe, setChecked(ckAllWireframe->isChecked()));
+  BLOCK_SIG_AND_DO(ckLWallWireframe, setChecked(ckAllWireframe->isChecked()));
+  BLOCK_SIG_AND_DO(ckRWallWireframe, setChecked(ckAllWireframe->isChecked()));
+  BLOCK_SIG_AND_DO(ckRoofWireframe, setChecked(ckAllWireframe->isChecked()));
+  BLOCK_SIG_AND_DO(ckLUOWallWireframe, setChecked(ckAllWireframe->isChecked()));
+  BLOCK_SIG_AND_DO(ckLLOWallWireframe, setChecked(ckAllWireframe->isChecked()));
+  BLOCK_SIG_AND_DO(ckRUOWallWireframe, setChecked(ckAllWireframe->isChecked()));
+  BLOCK_SIG_AND_DO(ckRLOWallWireframe, setChecked(ckAllWireframe->isChecked()));
+  BLOCK_SIG_AND_DO(ckOWallFloorWireframe, setChecked(ckAllWireframe->isChecked()));
+  BLOCK_SIG_AND_DO(ckEnvirFloorWireframe, setChecked(ckAllWireframe->isChecked()));
 
   UpdatePreview();
 }
@@ -399,14 +270,8 @@ void CDisplaySettings::UpdatePreviewSelection()
   bAllSurfaceChecked &= ckEnvirFloorSurface->isChecked();
   bAllWireframeChecked &= ckEnvirFloorWireframe->isChecked();
 
-  ckAllSurface->blockSignals(true);
-  ckAllWireframe->blockSignals(true);
-
-  ckAllSurface->setChecked(bAllSurfaceChecked);
-  ckAllWireframe->setChecked(bAllWireframeChecked);
-
-  ckAllSurface->blockSignals(false);
-  ckAllWireframe->blockSignals(false);
+  BLOCK_SIG_AND_DO(ckAllSurface, setChecked(bAllSurfaceChecked));
+  BLOCK_SIG_AND_DO(ckAllWireframe, setChecked(bAllWireframeChecked));
 
   UpdatePreview();
 }

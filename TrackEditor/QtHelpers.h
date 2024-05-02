@@ -13,6 +13,11 @@ class QWidget;
 class QLabel;
 struct tTile;
 //-------------------------------------------------------------------------------------------------
+#define BLOCK_SIG_AND_DO(obj, func){\
+  obj->blockSignals(true);\
+  obj->func;\
+  obj->blockSignals(false);}
+//-------------------------------------------------------------------------------------------------
 
 namespace QtHelpers
 {

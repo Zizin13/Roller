@@ -38,7 +38,7 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-434</y>
+        <y>0</y>
         <width>458</width>
         <height>1283</height>
        </rect>
@@ -242,6 +242,25 @@
           <property name="spacing">
            <number>6</number>
           </property>
+          <item row="2" column="2">
+           <widget class="QLabel" name="lblRWallTex2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>64</width>
+              <height>64</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="2">
            <widget class="QLabel" name="lblLWallTex2">
             <property name="sizePolicy">
@@ -261,43 +280,8 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_14">
-            <property name="text">
-             <string>Right Wall</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_15">
-            <property name="text">
-             <string>Height</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_16">
-            <property name="text">
-             <string>Roof</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_17">
-            <property name="text">
-             <string>Left Wall</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_18">
-            <property name="text">
-             <string>Wall Backs</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLabel" name="lblLWallTex1">
+          <item row="3" column="2">
+           <widget class="QLabel" name="lblBackTex2">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -315,8 +299,8 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
-           <widget class="QPushButton" name="pbEditLWall">
+          <item row="4" column="3">
+           <widget class="QPushButton" name="pbEditRoofTex">
             <property name="text">
              <string>Edit</string>
             </property>
@@ -324,25 +308,6 @@
           </item>
           <item row="2" column="1">
            <widget class="QLabel" name="lblRWallTex1">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>64</width>
-              <height>64</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QLabel" name="lblRWallTex2">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -386,8 +351,56 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="2">
-           <widget class="QLabel" name="lblBackTex2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_15">
+            <property name="text">
+             <string>Height</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_14">
+            <property name="text">
+             <string>Right Wall</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_17">
+            <property name="text">
+             <string>Left Wall</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QPushButton" name="pbEditLWall">
+            <property name="text">
+             <string>Edit</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_18">
+            <property name="text">
+             <string>Wall Backs</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="sbWallHeight">
+            <property name="minimum">
+             <number>-65535</number>
+            </property>
+            <property name="maximum">
+             <number>65535</number>
+            </property>
+            <property name="singleStep">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="lblLWallTex1">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -412,7 +425,14 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
+          <item row="5" column="3">
+           <widget class="QLabel" name="lblRoofDisabled">
+            <property name="text">
+             <string>(disabled by walls)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1" rowspan="2">
            <widget class="QLabel" name="lblRoofTex1">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -431,7 +451,7 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="2">
+          <item row="4" column="2" rowspan="2">
            <widget class="QLabel" name="lblRoofTex2">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -450,132 +470,10 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="3">
-           <widget class="QPushButton" name="pbEditRoofTex">
+          <item row="4" column="0" rowspan="2">
+           <widget class="QLabel" name="label_16">
             <property name="text">
-             <string>Edit</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QSpinBox" name="sbWallHeight">
-            <property name="minimum">
-             <number>-65535</number>
-            </property>
-            <property name="maximum">
-             <number>65535</number>
-            </property>
-            <property name="singleStep">
-             <number>100</number>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="5" column="0" colspan="2">
-        <widget class="QGroupBox" name="groupBox">
-         <property name="title">
-          <string>Left Lower Outer Wall</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_6">
-          <property name="leftMargin">
-           <number>6</number>
-          </property>
-          <property name="topMargin">
-           <number>6</number>
-          </property>
-          <property name="rightMargin">
-           <number>6</number>
-          </property>
-          <property name="bottomMargin">
-           <number>6</number>
-          </property>
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <item row="0" column="2" rowspan="2">
-           <widget class="QLabel" name="lblLLOWallTex1">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>64</width>
-              <height>64</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QSpinBox" name="sbLLOWallHOffset">
-            <property name="minimum">
-             <number>-65535</number>
-            </property>
-            <property name="maximum">
-             <number>65535</number>
-            </property>
-            <property name="singleStep">
-             <number>100</number>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QSpinBox" name="sbLLOWallHeight">
-            <property name="minimum">
-             <number>-65535</number>
-            </property>
-            <property name="maximum">
-             <number>65535</number>
-            </property>
-            <property name="singleStep">
-             <number>100</number>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3" rowspan="2">
-           <widget class="QLabel" name="lblLLOWallTex2">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>64</width>
-              <height>64</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_37">
-            <property name="text">
-             <string>Height</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_7">
-            <property name="text">
-             <string>Width</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="4" rowspan="2">
-           <widget class="QPushButton" name="pbEditLLOWall">
-            <property name="text">
-             <string>Edit</string>
+             <string>Roof</string>
             </property>
            </widget>
           </item>
@@ -603,6 +501,45 @@
           <property name="spacing">
            <number>6</number>
           </property>
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="sbLUOWallHOffset">
+            <property name="minimum">
+             <number>-65535</number>
+            </property>
+            <property name="maximum">
+             <number>65535</number>
+            </property>
+            <property name="singleStep">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_8">
+            <property name="text">
+             <string>Width</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4" rowspan="2">
+           <widget class="QLabel" name="lblLUOWallTex2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>64</width>
+              <height>64</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="2" rowspan="2">
            <widget class="QLabel" name="lblLUOWallTex1">
             <property name="sizePolicy">
@@ -622,19 +559,6 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QSpinBox" name="sbLUOWallHOffset">
-            <property name="minimum">
-             <number>-65535</number>
-            </property>
-            <property name="maximum">
-             <number>65535</number>
-            </property>
-            <property name="singleStep">
-             <number>100</number>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="1">
            <widget class="QSpinBox" name="sbLUOWallHeight">
             <property name="minimum">
@@ -648,25 +572,6 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="3" rowspan="2">
-           <widget class="QLabel" name="lblLUOWallTex2">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>64</width>
-              <height>64</height>
-             </size>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="0">
            <widget class="QLabel" name="label_38">
             <property name="text">
@@ -674,17 +579,17 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_8">
-            <property name="text">
-             <string>Width</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="4" rowspan="2">
+          <item row="0" column="5">
            <widget class="QPushButton" name="pbEditLUOWall">
             <property name="text">
              <string>Edit</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="5">
+           <widget class="QLabel" name="lblLUOWallDisabled">
+            <property name="text">
+             <string>(disabled by floor)</string>
             </property>
            </widget>
           </item>
@@ -712,8 +617,15 @@
           <property name="spacing">
            <number>6</number>
           </property>
-          <item row="0" column="2" rowspan="2">
-           <widget class="QLabel" name="lblRUOWallTex1">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_41">
+            <property name="text">
+             <string>Width</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="3" rowspan="2">
+           <widget class="QLabel" name="lblRUOWallTex2">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -731,34 +643,8 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QSpinBox" name="sbRUOWallHOffset">
-            <property name="minimum">
-             <number>-65535</number>
-            </property>
-            <property name="maximum">
-             <number>65535</number>
-            </property>
-            <property name="singleStep">
-             <number>100</number>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QSpinBox" name="sbRUOWallHeight">
-            <property name="minimum">
-             <number>-65535</number>
-            </property>
-            <property name="maximum">
-             <number>65535</number>
-            </property>
-            <property name="singleStep">
-             <number>100</number>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3" rowspan="2">
-           <widget class="QLabel" name="lblRUOWallTex2">
+          <item row="0" column="2" rowspan="2">
+           <widget class="QLabel" name="lblRUOWallTex1">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -783,17 +669,43 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_41">
-            <property name="text">
-             <string>Width</string>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="sbRUOWallHeight">
+            <property name="minimum">
+             <number>-65535</number>
+            </property>
+            <property name="maximum">
+             <number>65535</number>
+            </property>
+            <property name="singleStep">
+             <number>100</number>
             </property>
            </widget>
           </item>
-          <item row="0" column="4" rowspan="2">
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="sbRUOWallHOffset">
+            <property name="minimum">
+             <number>-65535</number>
+            </property>
+            <property name="maximum">
+             <number>65535</number>
+            </property>
+            <property name="singleStep">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
            <widget class="QPushButton" name="pbEditRUOWall">
             <property name="text">
              <string>Edit</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QLabel" name="lblRUOWallDisabled">
+            <property name="text">
+             <string>(disabled by floor)</string>
             </property>
            </widget>
           </item>
@@ -1358,48 +1270,10 @@
           <property name="spacing">
            <number>6</number>
           </property>
-          <item row="0" column="2" rowspan="2">
-           <widget class="QLabel" name="lblRLOWallTex1">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>64</width>
-              <height>64</height>
-             </size>
-            </property>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_39">
             <property name="text">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QSpinBox" name="sbRLOWallHOffset">
-            <property name="minimum">
-             <number>-65535</number>
-            </property>
-            <property name="maximum">
-             <number>65535</number>
-            </property>
-            <property name="singleStep">
-             <number>100</number>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QSpinBox" name="sbRLOWallHeight">
-            <property name="minimum">
-             <number>-65535</number>
-            </property>
-            <property name="maximum">
-             <number>65535</number>
-            </property>
-            <property name="singleStep">
-             <number>100</number>
+             <string>Height</string>
             </property>
            </widget>
           </item>
@@ -1422,10 +1296,48 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_39">
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="sbRLOWallHeight">
+            <property name="minimum">
+             <number>-65535</number>
+            </property>
+            <property name="maximum">
+             <number>65535</number>
+            </property>
+            <property name="singleStep">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="sbRLOWallHOffset">
+            <property name="minimum">
+             <number>-65535</number>
+            </property>
+            <property name="maximum">
+             <number>65535</number>
+            </property>
+            <property name="singleStep">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2" rowspan="2">
+           <widget class="QLabel" name="lblRLOWallTex1">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>64</width>
+              <height>64</height>
+             </size>
+            </property>
             <property name="text">
-             <string>Height</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -1436,10 +1348,17 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="4" rowspan="2">
+          <item row="0" column="4">
            <widget class="QPushButton" name="pbEditRLOWall">
             <property name="text">
              <string>Edit</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QLabel" name="lblRLOWallDisabled">
+            <property name="text">
+             <string>(disabled by floor)</string>
             </property>
            </widget>
           </item>
@@ -1576,6 +1495,122 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item row="5" column="0" colspan="2">
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Left Lower Outer Wall</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_6">
+          <property name="leftMargin">
+           <number>6</number>
+          </property>
+          <property name="topMargin">
+           <number>6</number>
+          </property>
+          <property name="rightMargin">
+           <number>6</number>
+          </property>
+          <property name="bottomMargin">
+           <number>6</number>
+          </property>
+          <property name="spacing">
+           <number>6</number>
+          </property>
+          <item row="1" column="3" rowspan="2">
+           <widget class="QLabel" name="lblLLOWallTex2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>64</width>
+              <height>64</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QSpinBox" name="sbLLOWallHOffset">
+            <property name="minimum">
+             <number>-65535</number>
+            </property>
+            <property name="maximum">
+             <number>65535</number>
+            </property>
+            <property name="singleStep">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2" rowspan="2">
+           <widget class="QLabel" name="lblLLOWallTex1">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>64</width>
+              <height>64</height>
+             </size>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>Width</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_37">
+            <property name="text">
+             <string>Height</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QSpinBox" name="sbLLOWallHeight">
+            <property name="minimum">
+             <number>-65535</number>
+            </property>
+            <property name="maximum">
+             <number>65535</number>
+            </property>
+            <property name="singleStep">
+             <number>100</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
+           <widget class="QPushButton" name="pbEditLLOWall">
+            <property name="text">
+             <string>Edit</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="4">
+           <widget class="QLabel" name="lblLLOWallDisabled">
+            <property name="text">
+             <string>(disabled by floor)</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </item>
       </layout>
      </widget>

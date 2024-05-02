@@ -84,30 +84,14 @@ void CEditSignWidget::UpdateGeometrySelection(int iFrom, int iTo)
   (void)(iTo);
   if (!p->m_pTrack || iFrom >= (int)p->m_pTrack->m_chunkAy.size())
     return;
-  dsbYaw    ->blockSignals(true);
-  dsbPitch  ->blockSignals(true);
-  dsbRoll   ->blockSignals(true);
-  sbHOffset ->blockSignals(true);
-  sbVOffset ->blockSignals(true);
-  cbType    ->blockSignals(true);
-  leUnk     ->blockSignals(true);
   
-  dsbYaw    ->setValue(p->m_pTrack->m_chunkAy[iFrom].dSignYaw);
-  dsbPitch  ->setValue(p->m_pTrack->m_chunkAy[iFrom].dSignPitch);
-  dsbRoll   ->setValue(p->m_pTrack->m_chunkAy[iFrom].dSignRoll);
-  sbHOffset ->setValue(p->m_pTrack->m_chunkAy[iFrom].iSignHorizOffset);
-  sbVOffset ->setValue(p->m_pTrack->m_chunkAy[iFrom].iSignVertOffset);
-  cbType    ->setCurrentIndex(cbType->findData(p->m_pTrack->m_chunkAy[iFrom].iSignType));
-  leUnk     ->setText(QString::number(p->m_pTrack->m_chunkAy[iFrom].iSignType));
-
-  
-  dsbYaw    ->blockSignals(false);
-  dsbPitch  ->blockSignals(false);
-  dsbRoll   ->blockSignals(false);
-  sbHOffset ->blockSignals(false);
-  sbVOffset ->blockSignals(false);
-  cbType    ->blockSignals(false);
-  leUnk     ->blockSignals(false);
+  BLOCK_SIG_AND_DO(dsbYaw    , setValue(p->m_pTrack->m_chunkAy[iFrom].dSignYaw));
+  BLOCK_SIG_AND_DO(dsbPitch  , setValue(p->m_pTrack->m_chunkAy[iFrom].dSignPitch));
+  BLOCK_SIG_AND_DO(dsbRoll   , setValue(p->m_pTrack->m_chunkAy[iFrom].dSignRoll));
+  BLOCK_SIG_AND_DO(sbHOffset , setValue(p->m_pTrack->m_chunkAy[iFrom].iSignHorizOffset));
+  BLOCK_SIG_AND_DO(sbVOffset , setValue(p->m_pTrack->m_chunkAy[iFrom].iSignVertOffset));
+  BLOCK_SIG_AND_DO(cbType    , setCurrentIndex(cbType->findData(p->m_pTrack->m_chunkAy[iFrom].iSignType)));
+  BLOCK_SIG_AND_DO(leUnk     , setText(QString::number(p->m_pTrack->m_chunkAy[iFrom].iSignType)));
 
   bool bChunkHasSign = p->m_pTrack->m_chunkAy[iFrom].iSignType != -1;
   dsbYaw    ->setEnabled(bChunkHasSign);

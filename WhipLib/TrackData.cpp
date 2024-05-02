@@ -487,6 +487,21 @@ int CTrackData::GetIntValueFromSignedBit(unsigned int uiValue)
 
 //-------------------------------------------------------------------------------------------------
 
+bool CTrackData::ShouldDrawSurfaceType(int iSurfaceType)
+{
+  if (iSurfaceType == -1)
+    return false;
+  uint32 uiSurfaceType = CTrackData::GetSignedBitValueFromInt(iSurfaceType);
+  if (uiSurfaceType & SURFACE_FLAG_NON_SOLID)
+    return false;
+  if (!(uiSurfaceType & SURFACE_FLAG_TRANSPARENT)
+      && !(uiSurfaceType & SURFACE_FLAG_APPLY_TEXTURE))
+    return false;
+  return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CTrackData::ProcessSign(const std::vector<std::string> &lineAy, eFileSection &section)
 {
   //helper function because this process must be done in two places

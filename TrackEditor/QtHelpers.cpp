@@ -180,7 +180,7 @@ void QtHelpers::UpdateTextures(QLabel *pTex1, QLabel *pTex2, CTexture *pTex, CPa
       pTex2->setPixmap(QPixmap());
   } else {
     if (uiSignedBitVal & SURFACE_FLAG_APPLY_TEXTURE) {
-      if (iIndex < pTex->m_iNumTiles) {
+      if (pTex && iIndex < pTex->m_iNumTiles) {
         pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTex->m_pTileAy[iIndex], true));
         if (pTex1)
           pTex1->setPixmap(pixmap);
@@ -196,15 +196,18 @@ void QtHelpers::UpdateTextures(QLabel *pTex1, QLabel *pTex2, CTexture *pTex, CPa
         }
       }
     } else {
-      if (iIndex < (int)pPal->m_paletteAy.size()) {
+      if (pPal && iIndex < (int)pPal->m_paletteAy.size()) {
         QPixmap pixmap;
         pixmap.convertFromImage(QtHelpers::GetQImageFromColor(pPal->m_paletteAy[iIndex]));
-        pTex1->setPixmap(pixmap);
+        if (pTex1)
+          pTex1->setPixmap(pixmap);
       } else {
-        pTex1->setPixmap(QPixmap());
+        if (pTex1)
+          pTex1->setPixmap(QPixmap());
       }
 
-      pTex2->setPixmap(QPixmap());
+      if (pTex2)
+        pTex2->setPixmap(QPixmap());
     }
   }
 }

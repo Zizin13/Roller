@@ -153,6 +153,7 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex, CChu
     editVals.sUnk47 = "1";
     editVals.sUnk48 = "64";
     editVals.sUnk49 = "-1";
+    editVals.sSignType = "-1";
     return;
   }
 

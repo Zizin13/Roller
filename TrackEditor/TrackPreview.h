@@ -26,6 +26,7 @@ public:
   bool SaveTrack();
   bool SaveTrackAs();
   QString GetTitle(bool bFullPath);
+  const QString &GetFilename() { return m_sTrackFile; };
 
   bool m_bUnsavedChanges;
 

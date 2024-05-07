@@ -253,6 +253,12 @@ void CMainWindow::OnLoadTrack()
   if (sFilename.isEmpty())
     return;
 
+  for (int i = 0; i < (int)p->m_previewAy.size(); ++i) {
+    if (p->m_previewAy[i]->GetFilename().compare(sFilename) == 0) {
+      twViewer->setCurrentIndex(i);
+      return;
+    }
+  }
 
   CTrackPreview *pPreview = new CTrackPreview(this);
   if (!pPreview->LoadTrack(sFilename)) {
@@ -331,6 +337,7 @@ void CMainWindow::OnTabCloseRequested(int iIndex)
   if (bChangeCurrentIndex) {
     OnTabChanged(twViewer->currentIndex());
   }
+  UpdateWindow();
 }
 
 //-------------------------------------------------------------------------------------------------

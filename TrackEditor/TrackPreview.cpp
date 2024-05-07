@@ -285,6 +285,10 @@ CTrackPreview::CTrackPreview(QWidget *pParent)
 CTrackPreview::~CTrackPreview()
 {
   glUseProgram(0);
+  if (p) {
+    delete p;
+    p = NULL;
+  }
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -539,16 +543,6 @@ void CTrackPreview::paintGL()
   }
   //if (p->m_pAxes)
   //  p->m_pAxes->Draw(worldToProjectionMatrix);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrackPreview::Shutdown()
-{
-  if (p) {
-    delete p;
-    p = NULL;
-  }
 }
 
 //-------------------------------------------------------------------------------------------------

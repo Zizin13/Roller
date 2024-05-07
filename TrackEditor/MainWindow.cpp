@@ -196,7 +196,6 @@ void CMainWindow::closeEvent(QCloseEvent *pEvent)
     delete p->m_trackAy[i];
   }
   p->m_trackAy.clear();
-  p->m_previewAy[0]->Shutdown();
   for (int i = 0; i < (int)p->m_previewAy.size(); ++i) {
     delete p->m_previewAy[i];
   }

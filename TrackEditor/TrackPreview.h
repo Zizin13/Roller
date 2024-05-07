@@ -20,7 +20,6 @@ public:
   void UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
   void SetScale(int iScale);
   void AttachLast(bool bAttachLast);
-  void Shutdown();
   void ReloadCar();
 
 protected slots:

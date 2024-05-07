@@ -266,7 +266,6 @@ public:
 CTrackPreview::CTrackPreview(QWidget *pParent)
   : QGLWidget(QGLFormat(QGL::SampleBuffers), pParent)
   , m_uiShowModels(0)
-  , m_iFrom(0)
   , m_carModel(eWhipModel::CAR_ZIZIN)
   , m_carAILine(eShapeSection::AILINE1)
   , m_bMillionPlus(false)
@@ -275,10 +274,11 @@ CTrackPreview::CTrackPreview(QWidget *pParent)
   , m_bUnsavedChanges(false)
   , m_bAlreadySaved(false)
   , m_sTrackFile("")
+  , m_iSelFrom(0)
+  , m_iSelTo(0)
+  , m_bToChecked(false)
 {
   p = new CTrackPreviewPrivate;
-
-  connect(g_pMainWindow, &CMainWindow::UpdateGeometrySelectionSig, this, &CTrackPreview::UpdateGeometrySelection);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -346,7 +346,7 @@ void CTrackPreview::UpdateTrack()
     CShapeFactory::GetShapeFactory().MakeStunts(p->m_pShader, &p->m_track, p->m_stuntAy);
 
     UpdateCar(m_carModel, m_carAILine, m_bMillionPlus);
-    UpdateGeometrySelection(g_pMainWindow->GetSelFrom(), g_pMainWindow->GetSelTo());;
+    UpdateGeometrySelection();
   }
   repaint();
 }
@@ -361,18 +361,16 @@ void CTrackPreview::ShowModels(uint32 uiShowModels)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackPreview::UpdateGeometrySelection(int iFrom, int iTo)
+void CTrackPreview::UpdateGeometrySelection()
 {
-  m_iFrom = iFrom;
-
   if (p->m_pSelection)
     delete p->m_pSelection;
   if (&p->m_track) {
-    p->m_pSelection = CShapeFactory::GetShapeFactory().MakeSelectedChunks(p->m_pShader, &p->m_track, iFrom, iTo);
+    p->m_pSelection = CShapeFactory::GetShapeFactory().MakeSelectedChunks(p->m_pShader, &p->m_track, m_iSelFrom, m_iSelTo);
   }
 
   if (p->m_pCar && &p->m_track)
-    CShapeFactory::GetShapeFactory().GetCarPos(&p->m_track, m_iFrom, m_carAILine, p->m_pCar->m_modelToWorldMatrix, m_bMillionPlus);
+    CShapeFactory::GetShapeFactory().GetCarPos(&p->m_track, m_iSelFrom, m_carAILine, p->m_pCar->m_modelToWorldMatrix, m_bMillionPlus);
 
   repaint();
 }
@@ -428,7 +426,7 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
   }
 
   if (p->m_pCar && &p->m_track)
-    CShapeFactory::GetShapeFactory().GetCarPos(&p->m_track, m_iFrom, m_carAILine, p->m_pCar->m_modelToWorldMatrix, m_bMillionPlus);
+    CShapeFactory::GetShapeFactory().GetCarPos(&p->m_track, m_iSelFrom, m_carAILine, p->m_pCar->m_modelToWorldMatrix, m_bMillionPlus);
 
   repaint();
 }

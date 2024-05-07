@@ -264,11 +264,7 @@ void CMainWindow::OnLoadTrack()
   if (!pPreview->LoadTrack(sFilename)) {
     //load failed
     delete pPreview;
-  } else { //load successful
-    //update ui
-    sbSelChunksFrom->setValue(0);
-    sbSelChunksTo->setValue(0);
-    
+  } else { //load successful    
     //update variables
     m_sLastTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
 
@@ -355,8 +351,12 @@ void CMainWindow::OnTabChanged(int iIndex)
   p->m_previewAy[iIndex]->UpdateCar(carModel, aiLine, bMillionPlus);
   p->m_previewAy[iIndex]->AttachLast(p->m_pDisplaySettings->GetAttachLast());
   p->m_previewAy[iIndex]->SetScale(p->m_pDisplaySettings->GetScale());
+  BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(p->m_previewAy[iIndex]->m_iSelFrom));
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(p->m_previewAy[iIndex]->m_iSelTo));
+  BLOCK_SIG_AND_DO(ckTo, setChecked(p->m_previewAy[iIndex]->m_bToChecked));
 
   UpdateWindow();
+  UpdateGeometrySelection();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -636,6 +636,12 @@ void CMainWindow::UpdateWindow()
 
 void CMainWindow::UpdateGeometrySelection()
 {
+  if (GetCurrentPreview()) {
+    GetCurrentPreview()->m_iSelFrom = sbSelChunksFrom->value();
+    GetCurrentPreview()->m_iSelTo = sbSelChunksTo->value();
+    GetCurrentPreview()->m_bToChecked = ckTo->isChecked();
+    GetCurrentPreview()->UpdateGeometrySelection();
+  }
   emit UpdateGeometrySelectionSig(sbSelChunksFrom->value(), sbSelChunksTo->value());
 }
 

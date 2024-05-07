@@ -27,11 +27,12 @@ public:
   bool SaveTrackAs();
   QString GetTitle(bool bFullPath);
   const QString &GetFilename() { return m_sTrackFile; };
+  void UpdateGeometrySelection();
 
   bool m_bUnsavedChanges;
-
-protected slots:
-  void UpdateGeometrySelection(int iFrom, int iTo);
+  int m_iSelFrom;
+  int m_iSelTo;
+  bool m_bToChecked;
 
 protected:
   void initializeGL();
@@ -42,7 +43,6 @@ protected:
 private:
   CTrackPreviewPrivate *p;
   uint32 m_uiShowModels;
-  int m_iFrom;
   eWhipModel m_carModel;
   eShapeSection m_carAILine;
   bool m_bMillionPlus;

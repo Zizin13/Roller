@@ -25,10 +25,10 @@ public:
   CShapeData *MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1);
   CShapeData *MakeAudioMarker(CShader *pShader);
   CShapeData *MakeStuntMarker(CShader *pShader);
-  CShapeData *MakeTrackSurface(CShader *pShader, CTexture *pTexture, CTrackData *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false);
+  CShapeData *MakeTrackSurface(CShader *pShader, CTrackData *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false);
   CShapeData *MakeAILine(CShader *pShader, CTrackData *pTrack, eShapeSection section, bool bAttachLast);
   CShapeData *MakeSelectedChunks(CShader *pShader, CTrackData *pTrack, int iStart, int iEnd);
-  void MakeSigns(CShader *pShader, CTexture *pBld, CTrackData *pTrack, std::vector<CShapeData*> &signAy);
+  void MakeSigns(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData*> &signAy);
   void MakeAudio(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &audioAy);
   void MakeStunts(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &stuntAy);
   //static CShapeData GenerateNormals(const CShapeData &data);

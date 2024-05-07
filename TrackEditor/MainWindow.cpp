@@ -67,7 +67,6 @@ public:
   CDisplaySettings *m_pDisplaySettings;
   QAction *m_pDebugAction;
   std::vector<CTrackPreview *> m_previewAy;
-  std::vector<CTrack *> m_trackAy;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -189,10 +188,6 @@ void CMainWindow::closeEvent(QCloseEvent *pEvent)
   SaveSettings();
 
   //cleanup
-  for (int i = 0; i < (int)p->m_trackAy.size(); ++i) {
-    delete p->m_trackAy[i];
-  }
-  p->m_trackAy.clear();
   for (int i = 0; i < (int)p->m_previewAy.size(); ++i) {
     delete p->m_previewAy[i];
   }
@@ -262,9 +257,9 @@ void CMainWindow::OnLoadTrack()
     return;
 
 
-  CTrack *pTrack = new CTrack;
-  if (!pTrack->LoadTrack(sFilename)) {
-    delete pTrack;
+  CTrackPreview *pPreview = new CTrackPreview(this);
+  if (!pPreview->LoadTrack(sFilename)) {
+    delete pPreview;
     //load failed
     m_sTrackFile = "";
   } else { //load successful
@@ -277,8 +272,6 @@ void CMainWindow::OnLoadTrack()
     m_sTrackFile = sFilename;
 
     //add to array and create preview window
-    p->m_trackAy.push_back(pTrack);
-    CTrackPreview *pPreview = new CTrackPreview(this);
     p->m_previewAy.push_back(pPreview);
     twViewer->addTab(pPreview, "Preview");
 
@@ -625,7 +618,7 @@ void CMainWindow::UpdateWindow()
   setWindowTitle(sTitle);
 
   if (GetCurrentTrack() && GetCurrentPreview()) {
-    GetCurrentPreview()->SetTrack(GetCurrentTrack());
+    GetCurrentPreview()->UpdateTrack();
 
     BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
     BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
@@ -692,8 +685,8 @@ int CMainWindow::GetSelTo()
 
 CTrack *CMainWindow::GetCurrentTrack()
 {
-  if (p->m_trackAy.empty()) return NULL;
-  return p->m_trackAy[0];
+  if (!GetCurrentPreview()) return NULL;
+  return GetCurrentPreview()->GetTrack();
 }
 
 //-------------------------------------------------------------------------------------------------

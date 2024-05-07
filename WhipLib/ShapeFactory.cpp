@@ -140,16 +140,20 @@ CShapeData *CShapeFactory::MakeModel(CShader *pShader, CTexture *pTexture, eWhip
   uint32 uiNumIndices;
   uint32 *indices = MakeModelIndices(uiNumIndices, model);
 
-  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
-  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
-  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+  CShapeData *pRet = NULL;
 
-  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture);
+  if (vertices && indices) {
+    CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
+    CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+    CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
-  if (vertices)
-    delete[] vertices;
-  if (indices)
-    delete[] indices;
+    pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture);
+
+    if (vertices)
+      delete[] vertices;
+    if (indices)
+      delete[] indices;
+  }
 
   return pRet;
 }
@@ -158,6 +162,9 @@ CShapeData *CShapeFactory::MakeModel(CShader *pShader, CTexture *pTexture, eWhip
 
 tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, eWhipModel model, int iSignSurfaceType)
 {
+  if (!pTexture)
+    return NULL;
+
   //first turn float array into vertex array
   uint32 uiNumCoords = GetCoordsCount(model) / 3;
   tVertex *coordAy = new tVertex[uiNumCoords];
@@ -913,12 +920,12 @@ uint32 *CShapeFactory::MakeIndicesSurfaceWireframe(uint32 &numIndices, CTrackDat
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeTrackSurface(CShader *pShader, CTexture *pTexture, CTrackData *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe)
+CShapeData *CShapeFactory::MakeTrackSurface(CShader *pShader, CTrackData *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = NULL;
   if (section != eShapeSection::ENVIRFLOOR)
-    vertices = MakeVerts(uiNumVerts, section, pTrack, pTexture);
+    vertices = MakeVerts(uiNumVerts, section, pTrack, pTrack->m_pTex);
   else
     vertices = MakeVertsEnvirFloor(uiNumVerts, pTrack);
   uint32 uiNumIndices;
@@ -947,7 +954,7 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShader *pShader, CTexture *pTexture
   CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
   CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
-  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture, drawType);
+  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
 
   if (vertices)
     delete[] vertices;
@@ -1030,14 +1037,17 @@ CShapeData *CShapeFactory::MakeSelectedChunks(CShader *pShader, CTrackData *pTra
 
 //-------------------------------------------------------------------------------------------------
 
-void CShapeFactory::MakeSigns(CShader *pShader, CTexture *pBld, CTrackData *pTrack, std::vector<CShapeData *> &signAy)
+void CShapeFactory::MakeSigns(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &signAy)
 {
   for (int i = 0; i < (int)pTrack->m_chunkAy.size(); ++i) {
     if (pTrack->m_chunkAy[i].iSignType < 0 || pTrack->m_chunkAy[i].iSignType >= m_signAyCount)
       continue; //no signs in this chunk
 
     //make sign
-    CShapeData *pNewSign = MakeModel(pShader, pBld, m_signAy[pTrack->m_chunkAy[i].iSignType], pTrack->m_chunkAy[i].iSignTexture);
+    CShapeData *pNewSign = MakeModel(pShader, pTrack->m_pBld, m_signAy[pTrack->m_chunkAy[i].iSignType], pTrack->m_chunkAy[i].iSignTexture);
+    if (!pNewSign)
+      continue;
+
     uint32 uiSignSurfaceType = CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[i].iSignTexture);
 
     //position sign

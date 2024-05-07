@@ -15,12 +15,14 @@ public:
   CTrackPreview(QWidget *pParent);
   ~CTrackPreview();
 
-  void SetTrack(CTrack *pTrack);
+  bool LoadTrack(const QString &sFilename);
+  void UpdateTrack();
   void ShowModels(uint32 uiShowModels);
   void UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
   void SetScale(int iScale);
   void AttachLast(bool bAttachLast);
   void ReloadCar();
+  CTrack *GetTrack();
 
 protected slots:
   void UpdateGeometrySelection(int iFrom, int iTo);

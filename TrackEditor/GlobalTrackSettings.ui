@@ -91,25 +91,52 @@
        </item>
        <item>
         <layout class="QGridLayout" name="gridLayout_7">
-         <item row="0" column="0">
-          <widget class="QLabel" name="lblTex">
+         <item row="1" column="0">
+          <widget class="QLabel" name="lblNoTex">
+           <property name="styleSheet">
+            <string notr="true">QLabel { color: red; }</string>
+           </property>
            <property name="text">
-            <string>Texture File</string>
+            <string>No *.DRH files found!</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="0">
+         <item row="3" column="0">
           <widget class="QLabel" name="lblBld">
            <property name="text">
             <string>Building File</string>
            </property>
           </widget>
          </item>
-         <item row="0" column="2">
-          <widget class="QLineEdit" name="leTex"/>
+         <item row="2" column="0">
+          <widget class="QLabel" name="lblTex">
+           <property name="text">
+            <string>Texture File</string>
+           </property>
+          </widget>
          </item>
-         <item row="1" column="2">
-          <widget class="QLineEdit" name="leBld"/>
+         <item row="0" column="0">
+          <widget class="QLabel" name="lblPalNotFound">
+           <property name="styleSheet">
+            <string notr="true">QLabel { color: red; }</string>
+           </property>
+           <property name="text">
+            <string>PALETTE.PAL not found!</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QComboBox" name="cbBld"/>
+         </item>
+         <item row="2" column="1">
+          <widget class="QComboBox" name="cbTex">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>

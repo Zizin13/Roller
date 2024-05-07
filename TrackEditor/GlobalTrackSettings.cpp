@@ -2,6 +2,8 @@
 #include "Track.h"
 #include "MainWindow.h"
 #include "QtHelpers.h"
+#include "qdiriterator.h"
+#include "qfileinfo.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -51,8 +53,8 @@ CGlobalTrackSettings::CGlobalTrackSettings(QWidget *pParent)
   connect(pbRevertInfo, &QPushButton::clicked, this, &CGlobalTrackSettings::OnCancelInfoClicked);
 
   connect(leFloorDepth, &QLineEdit::textChanged, this, &CGlobalTrackSettings::UpdateInfoEditMode);
-  connect(leTex, &QLineEdit::textChanged, this, &CGlobalTrackSettings::UpdateInfoEditMode);
-  connect(leBld, &QLineEdit::textChanged, this, &CGlobalTrackSettings::UpdateInfoEditMode);
+  connect(cbTex, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdateInfoEditMode()));
+  connect(cbBld, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdateInfoEditMode()));
   connect(leTrackNum, &QLineEdit::textChanged, this, &CGlobalTrackSettings::UpdateInfoEditMode);
   connect(leImpossibleLaps, &QLineEdit::textChanged, this, &CGlobalTrackSettings::UpdateInfoEditMode);
   connect(leHardLaps, &QLineEdit::textChanged, this, &CGlobalTrackSettings::UpdateInfoEditMode);
@@ -103,8 +105,8 @@ void CGlobalTrackSettings::OnApplyInfoClicked()
   g_pMainWindow->GetCurrentTrack()->m_raceInfo.dTrackMapSize = leMapSize->text().toDouble();
   g_pMainWindow->GetCurrentTrack()->m_raceInfo.iTrackMapFidelity = leMapFidelity->text().toInt();
   g_pMainWindow->GetCurrentTrack()->m_raceInfo.dPreviewSize = lePreviewSize->text().toDouble();
-  g_pMainWindow->GetCurrentTrack()->m_sTextureFile = leTex->text().toLatin1().constData();
-  g_pMainWindow->GetCurrentTrack()->m_sBuildingFile = leBld->text().toLatin1().constData();
+  g_pMainWindow->GetCurrentTrack()->m_sTextureFile = cbTex->currentText().toLatin1().constData();
+  g_pMainWindow->GetCurrentTrack()->m_sBuildingFile = cbBld->currentText().toLatin1().constData();
   g_pMainWindow->GetCurrentTrack()->m_header.iFloorDepth = leFloorDepth->text().toInt();
 
   g_pMainWindow->SetUnsavedChanges(true);
@@ -127,8 +129,8 @@ void CGlobalTrackSettings::UpdateInfoEditMode()
   bool bEditMode = false;
   bool bMixedData = false;
   QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leFloorDepth, p->sFloorDepth);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leTex, p->sTex);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leBld, p->sBld);
+  if (cbTex->currentText().compare(p->sTex) != 0 || cbBld->currentText().compare(p->sBld) != 0)
+    bEditMode = true;
   QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leTrackNum, p->sTrackNumber);
   QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leImpossibleLaps, p->sImpossibleLaps);
   QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leHardLaps, p->sHardLaps);
@@ -169,9 +171,10 @@ void CGlobalTrackSettings::UpdateInfoSelection()
 
 void CGlobalTrackSettings::RevertInfo()
 {
+  UpdateTextures();
   QtHelpers::UpdateLEWithSelectionValue(leFloorDepth, p->sFloorDepth);
-  QtHelpers::UpdateLEWithSelectionValue(leTex, p->sTex);
-  QtHelpers::UpdateLEWithSelectionValue(leBld, p->sBld);
+  BLOCK_SIG_AND_DO(cbTex, setCurrentIndex(cbTex->findText(p->sTex)));
+  BLOCK_SIG_AND_DO(cbBld, setCurrentIndex(cbBld->findText(p->sBld)));
   QtHelpers::UpdateLEWithSelectionValue(leTrackNum, p->sTrackNumber);
   QtHelpers::UpdateLEWithSelectionValue(leImpossibleLaps, p->sImpossibleLaps);
   QtHelpers::UpdateLEWithSelectionValue(leHardLaps, p->sHardLaps);
@@ -185,6 +188,29 @@ void CGlobalTrackSettings::RevertInfo()
 
   pbApplyInfo->setEnabled(false);
   pbRevertInfo->setEnabled(false);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CGlobalTrackSettings::UpdateTextures()
+{
+  cbBld->clear();
+  cbTex->clear();
+  QDirIterator it(g_pMainWindow->GetCurrentTrack()->m_sTrackFileFolder.c_str(), QStringList() << "*.DRH", QDir::Files);
+  while (it.hasNext()) {
+    QString sNext = it.next();
+    int iPos = sNext.lastIndexOf('\\');
+    if (iPos < 0)
+      iPos = sNext.lastIndexOf('/');
+    sNext = sNext.right(sNext.size() - iPos - 1);
+    cbBld->addItem(sNext, sNext);
+    cbTex->addItem(sNext, sNext);
+  }
+  QFileInfo palFile(QString(g_pMainWindow->GetCurrentTrack()->m_sTrackFileFolder.c_str())
+                    + QDir::separator() + "PALETTE.PAL");
+
+  lblNoTex->setVisible(cbTex->count() == 0);
+  lblPalNotFound->setVisible(!palFile.exists());
 }
 
 //-------------------------------------------------------------------------------------------------

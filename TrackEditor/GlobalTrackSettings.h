@@ -22,6 +22,7 @@ protected slots:
 private:
   void UpdateInfoSelection();
   void RevertInfo();
+  void UpdateTextures();
 
   CGlobalTrackSettingsPrivate *p;
 };

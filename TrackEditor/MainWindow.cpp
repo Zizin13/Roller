@@ -90,13 +90,6 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   setupUi(this);
   p->m_logDialog.hide();
 
-  CTrack *pTrac = new CTrack;
-  p->m_trackAy.push_back(pTrac);
-
-  CTrackPreview *pPreview = new CTrackPreview(this);
-  p->m_previewAy.push_back(pPreview);
-  twViewer->addTab(pPreview, "Preview");
-
   //setup dock widgets
   p->m_pEditDataDockWidget = new QDockWidget("Debug Chunk Data", this);
   p->m_pEditDataDockWidget->setObjectName("EditChunkData");
@@ -244,14 +237,14 @@ void CMainWindow::OnNewTrack()
   if (!SaveChangesAndContinue())
     return;
 
-  sbSelChunksFrom->setValue(0);
-  sbSelChunksTo->setValue(0);
-  p->m_trackAy[0]->ClearData();
-  m_sTrackFile = "";
-  m_bUnsavedChanges = false;
-  m_bAlreadySaved = false;
-  LoadTextures();
-  UpdateWindow();
+  //sbSelChunksFrom->setValue(0);
+  //sbSelChunksTo->setValue(0);
+  //p->m_trackAy[0]->ClearData();
+  //m_sTrackFile = "";
+  //m_bUnsavedChanges = false;
+  //m_bAlreadySaved = false;
+  //LoadTextures();
+  //UpdateWindow();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -268,7 +261,10 @@ void CMainWindow::OnLoadTrack()
   if (sFilename.isEmpty())
     return;
 
-  if (!p->m_trackAy[0]->LoadTrack(sFilename)) {
+
+  CTrack *pTrack = new CTrack;
+  if (!pTrack->LoadTrack(sFilename)) {
+    delete pTrack;
     //load failed
     m_sTrackFile = "";
   } else { //load successful
@@ -279,6 +275,16 @@ void CMainWindow::OnLoadTrack()
     //update variables
     m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
     m_sTrackFile = sFilename;
+
+    //add to array and create preview window
+    p->m_trackAy.push_back(pTrack);
+    CTrackPreview *pPreview = new CTrackPreview(this);
+    p->m_previewAy.push_back(pPreview);
+    twViewer->addTab(pPreview, "Preview");
+
+    OnUpdatePreview();
+    OnSetScale(p->m_pDisplaySettings->GetScale());
+    OnAttachLast(p->m_pDisplaySettings->GetAttachLast());
   }
   m_bAlreadySaved = false;
   m_bUnsavedChanges = false;
@@ -291,8 +297,8 @@ void CMainWindow::OnLoadTrack()
 
 void CMainWindow::OnSaveTrack()
 {
-  if (!m_sTrackFile.isEmpty() && m_bAlreadySaved) {
-    m_bUnsavedChanges = !p->m_trackAy[0]->SaveTrack(m_sTrackFile);
+  if (!m_sTrackFile.isEmpty() && m_bAlreadySaved && GetCurrentTrack()) {
+    m_bUnsavedChanges = !GetCurrentTrack()->SaveTrack(m_sTrackFile);
     UpdateWindow();
   } else {
     OnSaveTrackAs();
@@ -306,7 +312,7 @@ void CMainWindow::OnSaveTrackAs()
   //save track
   QString sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
     this, "Save Track As", m_sTrackFilesFolder, "Track Files (*.TRK)"));
-  if (!p->m_trackAy[0]->SaveTrack(sFilename))
+  if (GetCurrentTrack() && !GetCurrentTrack()->SaveTrack(sFilename))
     return;
 
   //save successful, update app
@@ -369,15 +375,15 @@ void CMainWindow::OnToChecked(bool bChecked)
 
 void CMainWindow::OnDeleteChunkClicked()
 {
-  if (p->m_trackAy[0]->m_chunkAy.empty()) return;
-  if (sbSelChunksFrom->value() > sbSelChunksTo->value() || sbSelChunksTo->value() > p->m_trackAy[0]->m_chunkAy.size()) {
+  if (!GetCurrentTrack() || GetCurrentTrack()->m_chunkAy.empty()) return;
+  if (sbSelChunksFrom->value() > sbSelChunksTo->value() || sbSelChunksTo->value() > GetCurrentTrack()->m_chunkAy.size()) {
     assert(0);
     return;
   }
 
-  p->m_trackAy[0]->m_chunkAy.erase(
-    p->m_trackAy[0]->m_chunkAy.begin() + sbSelChunksFrom->value(),
-    p->m_trackAy[0]->m_chunkAy.begin() + sbSelChunksTo->value() + 1);
+  GetCurrentTrack()->m_chunkAy.erase(
+    GetCurrentTrack()->m_chunkAy.begin() + sbSelChunksFrom->value(),
+    GetCurrentTrack()->m_chunkAy.begin() + sbSelChunksTo->value() + 1);
 
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->LogMessage("Deleted geometry chunk");
@@ -390,10 +396,12 @@ void CMainWindow::OnDeleteChunkClicked()
 
 void CMainWindow::OnAddChunkClicked()
 {
+  if (!GetCurrentTrack()) return;
+
   CChunkEditValues editVals;
-  int iLastPos = (int)p->m_trackAy[0]->m_chunkAy.size() - 1;
-  p->m_trackAy[0]->GetGeometryValuesFromSelection(iLastPos, iLastPos, editVals);
-  p->m_trackAy[0]->InsertGeometryChunk(iLastPos, 1, editVals);
+  int iLastPos = (int)GetCurrentTrack()->m_chunkAy.size() - 1;
+  GetCurrentTrack()->GetGeometryValuesFromSelection(iLastPos, iLastPos, editVals);
+  GetCurrentTrack()->InsertGeometryChunk(iLastPos, 1, editVals);
 
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->LogMessage("Added geometry chunk");
@@ -407,26 +415,32 @@ void CMainWindow::OnAddChunkClicked()
 
 void CMainWindow::OnAttachLast(bool bChecked)
 {
-  p->m_previewAy[0]->AttachLast(bChecked);
+  if (!GetCurrentPreview()) return;
+
+  GetCurrentPreview()->AttachLast(bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CMainWindow::OnSetScale(int iValue)
 {
-  p->m_previewAy[0]->SetScale(iValue);
+  if (!GetCurrentPreview()) return;
+
+  GetCurrentPreview()->SetScale(iValue);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CMainWindow::OnUpdatePreview()
 {
+  if (!GetCurrentPreview()) return;
+
   eWhipModel carModel;
   eShapeSection aiLine;
   bool bMillionPlus;
   uint32 uiShowModels = p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus);
-  p->m_previewAy[0]->ShowModels(uiShowModels);
-  p->m_previewAy[0]->UpdateCar(carModel, aiLine, bMillionPlus);
+  GetCurrentPreview()->ShowModels(uiShowModels);
+  GetCurrentPreview()->UpdateCar(carModel, aiLine, bMillionPlus);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -566,7 +580,7 @@ void CMainWindow::SaveSettings()
 
 bool CMainWindow::SaveChangesAndContinue()
 {
-  if (!m_bUnsavedChanges)
+  if (!m_bUnsavedChanges || !GetCurrentTrack())
     return true;
 
   //init
@@ -587,7 +601,7 @@ bool CMainWindow::SaveChangesAndContinue()
       sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
         this, "Save Track As", m_sTrackFilesFolder, "Track Files (*.TRK)"));
     }
-    if (!p->m_trackAy[0]->SaveTrack(sFilename))
+    if (!GetCurrentTrack()->SaveTrack(sFilename))
       return false;
     m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
   }
@@ -610,11 +624,13 @@ void CMainWindow::UpdateWindow()
     sTitle = QString("* ") + sTitle;
   setWindowTitle(sTitle);
 
-  p->m_previewAy[0]->SetTrack(p->m_trackAy[0]);
+  if (GetCurrentTrack() && GetCurrentPreview()) {
+    GetCurrentPreview()->SetTrack(GetCurrentTrack());
 
-  BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)p->m_trackAy[0]->m_chunkAy.size() - 1));
-  BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0,   (int)p->m_trackAy[0]->m_chunkAy.size() - 1));
-  leChunkCount->setText(QString::number(p->m_trackAy[0]->m_chunkAy.size()));
+    BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
+    BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
+    leChunkCount->setText(QString::number(GetCurrentTrack()->m_chunkAy.size()));
+  }
   UpdateGeometrySelection();
   emit UpdateWindowSig();
 }
@@ -624,10 +640,12 @@ void CMainWindow::UpdateWindow()
 void CMainWindow::LoadTextures()
 {
   QString sDir = m_sTrackFilesFolder + QDir::separator();
-  p->m_trackAy[0]->LoadTextures(sDir.toLatin1().constData());
+  if (GetCurrentTrack())
+    GetCurrentTrack()->LoadTextures(sDir.toLatin1().constData());
 
   //make sure car textures are reloaded too
-  p->m_previewAy[0]->ReloadCar();
+  if (GetCurrentPreview())
+    GetCurrentPreview()->ReloadCar();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -641,8 +659,10 @@ void CMainWindow::UpdateGeometrySelection()
 
 void CMainWindow::InsertUIUpdate(int iInsertVal)
 {
-  BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)p->m_trackAy[0]->m_chunkAy.size() - 1));
-  BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0,   (int)p->m_trackAy[0]->m_chunkAy.size() - 1));
+  if (GetCurrentTrack()) {
+    BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
+    BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
+  }
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(sbSelChunksFrom->value() + iInsertVal - 1));
   BLOCK_SIG_AND_DO(ckTo, setChecked(iInsertVal > 1));
 }
@@ -672,7 +692,16 @@ int CMainWindow::GetSelTo()
 
 CTrack *CMainWindow::GetCurrentTrack()
 {
+  if (p->m_trackAy.empty()) return NULL;
   return p->m_trackAy[0];
+}
+
+//-------------------------------------------------------------------------------------------------
+
+CTrackPreview *CMainWindow::GetCurrentPreview()
+{
+  if (p->m_previewAy.empty()) return NULL;
+  return p->m_previewAy[0];
 }
 
 //-------------------------------------------------------------------------------------------------

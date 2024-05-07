@@ -5,6 +5,7 @@
 //-------------------------------------------------------------------------------------------------
 class CMainWindowPrivate;
 class CTrack;
+class CTrackPreview;
 //-------------------------------------------------------------------------------------------------
 
 class CMainWindow : public QMainWindow, private Ui::MainWindow
@@ -56,6 +57,7 @@ private:
   void SaveSettings();
   bool SaveChangesAndContinue();
   void UpdateGeometrySelection();
+  CTrackPreview *GetCurrentPreview();
 
   CMainWindowPrivate *p;
   bool m_bUnsavedChanges;

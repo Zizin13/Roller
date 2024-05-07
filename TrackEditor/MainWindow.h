@@ -42,6 +42,9 @@ protected slots:
   void OnToChecked(bool bChecked);
   void OnDeleteChunkClicked();
   void OnAddChunkClicked();
+  void OnAttachLast(bool bChecked);
+  void OnSetScale(int iValue);
+  void OnUpdatePreview();
 
 signals:
   void LogMsgSig(QString sMsg);

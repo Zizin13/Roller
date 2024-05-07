@@ -117,7 +117,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   p->m_pDisplaySettingsDockWidget = new QDockWidget("Display Settings", this);
   p->m_pDisplaySettingsDockWidget->setObjectName("DisplaySettings");
   p->m_pDisplaySettingsDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pDisplaySettings = new CDisplaySettings(p->m_pDisplaySettingsDockWidget, p->m_previewAy[0]);
+  p->m_pDisplaySettings = new CDisplaySettings(p->m_pDisplaySettingsDockWidget);
   p->m_pDisplaySettingsDockWidget->setWidget(p->m_pDisplaySettings);
 
   p->m_pEditGeometryDockWidget = new QDockWidget("Edit Chunk Data", this);
@@ -168,6 +168,10 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   connect(ckTo, &QCheckBox::toggled, this, &CMainWindow::OnToChecked);
   connect(pbDelete, &QPushButton::clicked, this, &CMainWindow::OnDeleteChunkClicked);
   connect(pbAddChunk, &QPushButton::clicked, this, &CMainWindow::OnAddChunkClicked);
+
+  connect(p->m_pDisplaySettings, &CDisplaySettings::UpdatePreviewSig, this, &CMainWindow::OnUpdatePreview);
+  connect(p->m_pDisplaySettings, &CDisplaySettings::SetScaleSig, this, &CMainWindow::OnSetScale);
+  connect(p->m_pDisplaySettings, &CDisplaySettings::AttachLastCheckedSig, this, &CMainWindow::OnAttachLast);
 
   //open window
   LoadSettings();
@@ -397,6 +401,32 @@ void CMainWindow::OnAddChunkClicked()
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(iLastPos + 1));
   BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(iLastPos + 1));
   p->m_pEditData->UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnAttachLast(bool bChecked)
+{
+  p->m_previewAy[0]->AttachLast(bChecked);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnSetScale(int iValue)
+{
+  p->m_previewAy[0]->SetScale(iValue);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnUpdatePreview()
+{
+  eWhipModel carModel;
+  eShapeSection aiLine;
+  bool bMillionPlus;
+  uint32 uiShowModels = p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus);
+  p->m_previewAy[0]->ShowModels(uiShowModels);
+  p->m_previewAy[0]->UpdateCar(carModel, aiLine, bMillionPlus);
 }
 
 //-------------------------------------------------------------------------------------------------

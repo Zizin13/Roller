@@ -4,8 +4,6 @@
 #include "ui_DisplaySettings.h"
 #include "Types.h"
 //-------------------------------------------------------------------------------------------------
-class CTrackPreview;
-//-------------------------------------------------------------------------------------------------
 #define SHOW_LLANE_SURF_MODEL      0x00000001
 #define SHOW_LLANE_WIRE_MODEL      0x00000002
 #define SHOW_RLANE_SURF_MODEL      0x00000004
@@ -45,7 +43,7 @@ class CDisplaySettings : public QWidget, private Ui::DisplaySettings
   Q_OBJECT
 
 public:
-  CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPreview);
+  CDisplaySettings(QWidget *pParent);
   ~CDisplaySettings();
 
   uint32 GetDisplaySettings(eWhipModel &carModel, eShapeSection &aiLine, bool &bMillionPlus);
@@ -59,13 +57,11 @@ protected slots:
   void UpdateAllSurface();
   void UpdateAllWireframe();
   void UpdatePreviewSelection();
-  void OnAttachLastChecked();
-  void OnSetScale(int iValue);
 
-private:
-  void UpdatePreview();
-
-  CTrackPreview *m_pTrackPreview;
+signals:
+  void AttachLastCheckedSig(bool bChecked);
+  void SetScaleSig(int iValue);
+  void UpdatePreviewSig();
 };
 
 //-------------------------------------------------------------------------------------------------

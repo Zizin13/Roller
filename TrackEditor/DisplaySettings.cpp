@@ -1,6 +1,5 @@
 #include "TrackEditor.h"
 #include "DisplaySettings.h"
-#include "TrackPreview.h"
 #include "QtHelpers.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -8,9 +7,8 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
-CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPreview)
+CDisplaySettings::CDisplaySettings(QWidget *pParent)
   : QWidget(pParent)
-  , m_pTrackPreview(pTrackPreview)
 {
   setupUi(this);
 
@@ -77,13 +75,11 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent, CTrackPreview *pTrackPrevie
   connect(cbTestCarType, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
   connect(cbTestCarPos, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
   connect(ckMillionPlus, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
-  connect(ckAttachLast, &QCheckBox::toggled, this, &CDisplaySettings::OnAttachLastChecked);
-  connect(sldScale, &QSlider::valueChanged, this, &CDisplaySettings::OnSetScale);
+  connect(ckAttachLast, &QCheckBox::toggled, this, &CDisplaySettings::AttachLastCheckedSig);
+  connect(sldScale, &QSlider::valueChanged, this, &CDisplaySettings::SetScaleSig);
 
   UpdateAllSurface();
   UpdateAllWireframe();
-  OnAttachLastChecked();
-  OnSetScale(sldScale->value());
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -192,9 +188,7 @@ bool CDisplaySettings::GetAttachLast()
 
 void CDisplaySettings::SetAttachLast(bool bAttachLast)
 {
-  BLOCK_SIG_AND_DO(ckAttachLast, setChecked(bAttachLast));
-
-  OnAttachLastChecked();
+  ckAttachLast->setChecked(bAttachLast);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -208,9 +202,7 @@ int CDisplaySettings::GetScale()
 
 void CDisplaySettings::SetScale(int iScale)
 {
-  BLOCK_SIG_AND_DO(sldScale, setValue(iScale));
-
-  OnSetScale(iScale);
+  sldScale->setValue(iScale);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -231,7 +223,7 @@ void CDisplaySettings::UpdateAllSurface()
   BLOCK_SIG_AND_DO(ckOWallFloorSurface, setChecked(ckAllSurface->isChecked()));
   BLOCK_SIG_AND_DO(ckEnvirFloorSurface, setChecked(ckAllSurface->isChecked()));
 
-  UpdatePreview();
+  UpdatePreviewSig();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -252,7 +244,7 @@ void CDisplaySettings::UpdateAllWireframe()
   BLOCK_SIG_AND_DO(ckOWallFloorWireframe, setChecked(ckAllWireframe->isChecked()));
   BLOCK_SIG_AND_DO(ckEnvirFloorWireframe, setChecked(ckAllWireframe->isChecked()));
 
-  UpdatePreview();
+  UpdatePreviewSig();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -291,33 +283,7 @@ void CDisplaySettings::UpdatePreviewSelection()
   BLOCK_SIG_AND_DO(ckAllSurface, setChecked(bAllSurfaceChecked));
   BLOCK_SIG_AND_DO(ckAllWireframe, setChecked(bAllWireframeChecked));
 
-  UpdatePreview();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CDisplaySettings::OnAttachLastChecked()
-{
-  m_pTrackPreview->AttachLast(ckAttachLast->isChecked());
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CDisplaySettings::OnSetScale(int iValue)
-{
-  m_pTrackPreview->SetScale(iValue);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CDisplaySettings::UpdatePreview()
-{
-  eWhipModel carModel;
-  eShapeSection aiLine;
-  bool bMillionPlus;
-  uint32 uiShowModels = GetDisplaySettings(carModel, aiLine, bMillionPlus);
-  m_pTrackPreview->ShowModels(uiShowModels);
-  m_pTrackPreview->UpdateCar(carModel, aiLine, bMillionPlus);
+  UpdatePreviewSig();
 }
 
 //-------------------------------------------------------------------------------------------------

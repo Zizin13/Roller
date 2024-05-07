@@ -65,6 +65,7 @@ private:
   QString m_sAppPath;
   QString m_sSettingsFile;
   float m_fDesktopScale;
+  int m_iNewTrackNum;
 };
 
 //-------------------------------------------------------------------------------------------------

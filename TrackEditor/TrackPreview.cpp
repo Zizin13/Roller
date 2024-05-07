@@ -263,7 +263,7 @@ public:
 
 //-------------------------------------------------------------------------------------------------
 
-CTrackPreview::CTrackPreview(QWidget *pParent)
+CTrackPreview::CTrackPreview(QWidget *pParent, const QString &sTrackFile)
   : QGLWidget(QGLFormat(QGL::SampleBuffers), pParent)
   , m_uiShowModels(0)
   , m_carModel(eWhipModel::CAR_ZIZIN)
@@ -271,14 +271,18 @@ CTrackPreview::CTrackPreview(QWidget *pParent)
   , m_bMillionPlus(false)
   , m_bAttachLast(false)
   , m_iScale(1)
-  , m_bUnsavedChanges(false)
+  , m_bUnsavedChanges(true)
   , m_bAlreadySaved(false)
-  , m_sTrackFile("")
+  , m_sTrackFile(sTrackFile)
   , m_iSelFrom(0)
   , m_iSelTo(0)
   , m_bToChecked(false)
 {
   p = new CTrackPreviewPrivate;
+
+  if (!sTrackFile.isEmpty()) {
+    p->m_track.m_sTrackFileFolder = sTrackFile.left(sTrackFile.lastIndexOf(QDir::separator()) + 1).toLatin1().constData();
+  }
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -297,7 +301,9 @@ CTrackPreview::~CTrackPreview()
 bool CTrackPreview::LoadTrack(const QString &sFilename)
 {
   m_sTrackFile = sFilename;
-  return p->m_track.LoadTrack(sFilename);
+  bool bSuccess = p->m_track.LoadTrack(sFilename);
+  if (bSuccess) m_bUnsavedChanges = false;
+  return bSuccess;
 }
 
 //-------------------------------------------------------------------------------------------------

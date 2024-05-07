@@ -25,6 +25,7 @@
 #include "qtextstream.h"
 #include "QtHelpers.h"
 #include "Logging.h"
+#include "NewTrackDialog.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
 #endif
@@ -76,6 +77,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   , m_sAppPath(sAppPath)
   , m_sLastTrackFilesFolder("")
   , m_fDesktopScale(fDesktopScale)
+  , m_iNewTrackNum(0)
 {
   //init
   Logging::SetWhipLibLoggingCallback(LogMessageCbStatic);
@@ -233,14 +235,17 @@ void CMainWindow::OnLogMsg(QString sMsg)
 
 void CMainWindow::OnNewTrack()
 {
-  //sbSelChunksFrom->setValue(0);
-  //sbSelChunksTo->setValue(0);
-  //p->m_trackAy[0]->ClearData();
-  //m_sTrackFile = "";
-  //m_bUnsavedChanges = false;
-  //m_bAlreadySaved = false;
-  //LoadTextures();
-  //UpdateWindow();
+  CNewTrackDialog dlg(this, ++m_iNewTrackNum);
+  if (dlg.exec()) {
+    CTrackPreview *pPreview = new CTrackPreview(this, dlg.GetFilename());
+    pPreview->GetTrack()->m_sBuildingFile = dlg.GetBld().toLatin1().constData();
+    pPreview->GetTrack()->m_sTextureFile = dlg.GetTex().toLatin1().constData();
+    m_sLastTrackFilesFolder = dlg.GetFilename().left(dlg.GetFilename().lastIndexOf(QDir::separator()));
+    //add to array and create preview window
+    p->m_previewAy.push_back(pPreview);
+    twViewer->addTab(pPreview, pPreview->GetTitle(false));
+    twViewer->setCurrentIndex((int)p->m_previewAy.size() - 1);
+  }
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -270,15 +275,9 @@ void CMainWindow::OnLoadTrack()
 
     //add to array and create preview window
     p->m_previewAy.push_back(pPreview);
-    twViewer->addTab(pPreview, "Preview");
-
-    OnUpdatePreview();
-    OnSetScale(p->m_pDisplaySettings->GetScale());
-    OnAttachLast(p->m_pDisplaySettings->GetAttachLast());
+    twViewer->addTab(pPreview, pPreview->GetTitle(false));
     twViewer->setCurrentIndex((int)p->m_previewAy.size() - 1);
   }
-  //update app
-  UpdateWindow();
 }
 
 //-------------------------------------------------------------------------------------------------

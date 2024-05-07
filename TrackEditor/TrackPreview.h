@@ -12,7 +12,7 @@ class CTrackPreview : public QGLWidget
   Q_OBJECT
 
 public:
-  CTrackPreview(QWidget *pParent);
+  CTrackPreview(QWidget *pParent, const QString &sTrackFile = "");
   ~CTrackPreview();
 
   bool LoadTrack(const QString &sFilename);

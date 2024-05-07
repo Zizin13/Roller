@@ -3,16 +3,13 @@
 //-------------------------------------------------------------------------------------------------
 #include "ui_EditStuntWidget.h"
 //-------------------------------------------------------------------------------------------------
-class CTrack;
-class CEditStuntWidgetPrivate;
-//-------------------------------------------------------------------------------------------------
 
 class CEditStuntWidget : public QWidget, private Ui::EditStuntWidget
 {
   Q_OBJECT
 
 public:
-  CEditStuntWidget(QWidget *pParent, CTrack *pTrack);
+  CEditStuntWidget(QWidget *pParent);
   ~CEditStuntWidget();
 
 protected slots:
@@ -27,9 +24,6 @@ protected slots:
   void ExpandContractChanged(int iVal);
   void BulgeChanged(int iVal);
   void StuntClicked();
-
-private:
-  CEditStuntWidgetPrivate *p;
 };
 
 //-------------------------------------------------------------------------------------------------

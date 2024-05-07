@@ -4,15 +4,13 @@
 #include "ui_GlobalTrackSettings.h"
 //-------------------------------------------------------------------------------------------------
 class CGlobalTrackSettingsPrivate;
-class CTrack;
-class CTexture;
 //-------------------------------------------------------------------------------------------------
 class CGlobalTrackSettings : public QWidget, private Ui::GlobalTrackSettings
 {
   Q_OBJECT
 
 public:
-  CGlobalTrackSettings(QWidget *pParent, CTrack *pTrack);
+  CGlobalTrackSettings(QWidget *pParent);
   ~CGlobalTrackSettings();
 
 protected slots:

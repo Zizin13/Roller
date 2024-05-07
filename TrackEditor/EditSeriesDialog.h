@@ -3,14 +3,12 @@
 //-------------------------------------------------------------------------------------------------
 #include "ui_EditSeriesDialog.h"
 //-------------------------------------------------------------------------------------------------
-class CTrack;
-//-------------------------------------------------------------------------------------------------
 class CEditSeriesDialog : public QWidget, private Ui::EditSeriesDialog
 {
   Q_OBJECT
 
 public:
-  CEditSeriesDialog(QWidget *pParent, CTrack *pTrack);
+  CEditSeriesDialog(QWidget *pParent);
   ~CEditSeriesDialog();
 
   int GetStartChunk();
@@ -30,7 +28,6 @@ private:
   int ToInt(QString sText);
   template <typename T> void ApplySeriesToGeometry(int iStartChunk, int iEndChunk, int iInterval, int iField, T tStartValue, T tEndValue, T tIncrement);
 
-  CTrack *m_pTrack;
   int m_iStartChunk;
   int m_iEndChunk;
   int m_iInterval;

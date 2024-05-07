@@ -11,9 +11,8 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
-CEditSeriesDialog::CEditSeriesDialog(QWidget *pParent, CTrack *pTrack)
+CEditSeriesDialog::CEditSeriesDialog(QWidget *pParent)
   : QWidget(pParent)
-  , m_pTrack(pTrack)
 {
   setupUi(this);
 
@@ -85,7 +84,7 @@ QString CEditSeriesDialog::GetIncrement()
 
 void CEditSeriesDialog::OnUpdateWindow()
 {
-  int iTrackSize = (int)m_pTrack->m_chunkAy.size();
+  int iTrackSize = (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size();
   sbStartChunk->setRange(0, iTrackSize - 1);
   sbEndChunk->setRange(0, iTrackSize - 1);
   sbInterval->setRange(1, iTrackSize - 1);
@@ -154,7 +153,7 @@ template <typename T> void CEditSeriesDialog::ApplySeriesToGeometry(int iStartCh
   for (int i = iStartChunk; i <= iEndChunk && (bDirection ? tValue <= tEndValue : tValue >= tEndValue); i += iInterval) {
     CChunkEditValues values;
     values.Set(iField, QString::number(tValue));
-    m_pTrack->ApplyGeometrySettings(i, i, values);
+    g_pMainWindow->GetCurrentTrack()->ApplyGeometrySettings(i, i, values);
     tValue += tIncrement;
   }
 }

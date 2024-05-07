@@ -3,7 +3,6 @@
 //-------------------------------------------------------------------------------------------------
 #include "ui_EditAudioWidget.h"
 //-------------------------------------------------------------------------------------------------
-class CTrack;
 class CEditAudioWidgetPrivate;
 //-------------------------------------------------------------------------------------------------
 
@@ -12,7 +11,7 @@ class CEditAudioWidget : public QWidget, private Ui::EditAudioWidget
   Q_OBJECT
 
 public:
-  CEditAudioWidget(QWidget *pParent, CTrack *pTrack);
+  CEditAudioWidget(QWidget *pParent);
   ~CEditAudioWidget();
 
 protected slots:

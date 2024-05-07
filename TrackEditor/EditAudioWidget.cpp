@@ -18,8 +18,6 @@ public:
   CEditAudioWidgetPrivate() {};
   ~CEditAudioWidgetPrivate() {};
 
-  CTrack *m_pTrack;
-
   QString audioAy[119] = {
     "<none>"   ,//ENGINE in sound.ini, appears to mean none in track data
     "ENGINE2"  ,
@@ -146,11 +144,10 @@ public:
 
 //-------------------------------------------------------------------------------------------------
 
-CEditAudioWidget::CEditAudioWidget(QWidget *pParent, CTrack *pTrack)
+CEditAudioWidget::CEditAudioWidget(QWidget *pParent)
   : QWidget(pParent)
 {
   p = new CEditAudioWidgetPrivate;
-  p->m_pTrack = pTrack;
 
   setupUi(this);
 
@@ -181,10 +178,10 @@ CEditAudioWidget::~CEditAudioWidget()
 void CEditAudioWidget::UpdateGeometrySelection(int iFrom, int iTo)
 {
   (void)(iTo);
-  if (!p->m_pTrack || iFrom >= (int)p->m_pTrack->m_chunkAy.size())
+  if (!g_pMainWindow->GetCurrentTrack() || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  bool bChunkHasAudio = p->m_pTrack->m_chunkAy[iFrom].iAudioTriggerSpeed != 0;
+  bool bChunkHasAudio = g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAudioTriggerSpeed != 0;
   sbSpeed->setEnabled(bChunkHasAudio);
   cbBelow->setEnabled(bChunkHasAudio);
   cbAbove->setEnabled(bChunkHasAudio);
@@ -195,11 +192,11 @@ void CEditAudioWidget::UpdateGeometrySelection(int iFrom, int iTo)
   pbAudio->setText(bChunkHasAudio ? "Delete Audio" : "Add Audio");
 
   BLOCK_SIG_AND_DO(sbSpeed, setMinimum(bChunkHasAudio ? 1 : 0));
-  BLOCK_SIG_AND_DO(sbSpeed, setValue(p->m_pTrack->m_chunkAy[iFrom].iAudioTriggerSpeed));
-  BLOCK_SIG_AND_DO(cbBelow, setCurrentIndex(cbBelow->findData(p->m_pTrack->m_chunkAy[iFrom].iAudioBelowTrigger)));
-  BLOCK_SIG_AND_DO(cbAbove, setCurrentIndex(cbAbove->findData(p->m_pTrack->m_chunkAy[iFrom].iAudioAboveTrigger)));
+  BLOCK_SIG_AND_DO(sbSpeed, setValue(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAudioTriggerSpeed));
+  BLOCK_SIG_AND_DO(cbBelow, setCurrentIndex(cbBelow->findData(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAudioBelowTrigger)));
+  BLOCK_SIG_AND_DO(cbAbove, setCurrentIndex(cbAbove->findData(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAudioAboveTrigger)));
 
-  int iSpeedMph = (int)(p->m_pTrack->m_chunkAy[iFrom].iAudioTriggerSpeed * TRIGGER_SPEED_TO_MPH);
+  int iSpeedMph = (int)(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAudioTriggerSpeed * TRIGGER_SPEED_TO_MPH);
   lblMph->setText("(" + QString::number(iSpeedMph) + " mph)");
 }
 
@@ -210,16 +207,16 @@ void CEditAudioWidget::SpeedChanged(int iVal)
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
 
-  if (!p->m_pTrack
-      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
-      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+  if (!g_pMainWindow->GetCurrentTrack()
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    p->m_pTrack->m_chunkAy[i].iAudioTriggerSpeed = iVal;
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAudioTriggerSpeed = iVal;
   }
 
-  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -231,16 +228,16 @@ void CEditAudioWidget::BelowChanged(int iIndex)
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
 
-  if (!p->m_pTrack
-      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
-      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+  if (!g_pMainWindow->GetCurrentTrack()
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    p->m_pTrack->m_chunkAy[i].iAudioBelowTrigger = cbBelow->itemData(iIndex).toInt();
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAudioBelowTrigger = cbBelow->itemData(iIndex).toInt();
   }
 
-  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -252,16 +249,16 @@ void CEditAudioWidget::AboveChanged(int iIndex)
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
 
-  if (!p->m_pTrack
-      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
-      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+  if (!g_pMainWindow->GetCurrentTrack()
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    p->m_pTrack->m_chunkAy[i].iSignType = cbAbove->itemData(iIndex).toInt();
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignType = cbAbove->itemData(iIndex).toInt();
   }
 
-  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }
@@ -273,20 +270,20 @@ void CEditAudioWidget::AudioClicked()
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
 
-  if (!p->m_pTrack
-      || iFrom >= (int)p->m_pTrack->m_chunkAy.size()
-      || iTo >= (int)p->m_pTrack->m_chunkAy.size())
+  if (!g_pMainWindow->GetCurrentTrack()
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  bool bHasAudio = p->m_pTrack->m_chunkAy[iFrom].iAudioTriggerSpeed != 0;
+  bool bHasAudio = g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAudioTriggerSpeed != 0;
   for (int i = iFrom; i <= iTo; ++i) {
-    p->m_pTrack->m_chunkAy[i].iAudioTriggerSpeed = bHasAudio ? 0 : DEFAULT_TRIGGER_SPEED;
-    p->m_pTrack->m_chunkAy[i].iAudioAboveTrigger = bHasAudio ? 0 : DEFAULT_AUDIO;
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAudioTriggerSpeed = bHasAudio ? 0 : DEFAULT_TRIGGER_SPEED;
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAudioAboveTrigger = bHasAudio ? 0 : DEFAULT_AUDIO;
     if (bHasAudio)
-      p->m_pTrack->m_chunkAy[i].iAudioBelowTrigger = 0;
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAudioBelowTrigger = 0;
   }
 
-  p->m_pTrack->UpdateChunkStrings();
+  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->UpdateWindow();
 }

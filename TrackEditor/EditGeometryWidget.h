@@ -3,16 +3,13 @@
 //-------------------------------------------------------------------------------------------------
 #include "ui_EditGeometryWidget.h"
 //-------------------------------------------------------------------------------------------------
-class CTrack;
-class CEditGeometryWidgetPrivate;
-//-------------------------------------------------------------------------------------------------
 
 class CEditGeometryWidget : public QWidget, private Ui::EditGeometryWidget
 {
   Q_OBJECT
 
 public:
-  CEditGeometryWidget(QWidget *pParent, CTrack *pTrack);
+  CEditGeometryWidget(QWidget *pParent);
   ~CEditGeometryWidget();
 
 protected slots:
@@ -61,9 +58,6 @@ protected slots:
   void RGripChanged(int iValue);
   void AISpeedChanged(int iValue);
   void AIAccuracyChanged(int iValue);
-
-private:
-  CEditGeometryWidgetPrivate *p;
 };
 
 //-------------------------------------------------------------------------------------------------

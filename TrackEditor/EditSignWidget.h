@@ -3,7 +3,6 @@
 //-------------------------------------------------------------------------------------------------
 #include "ui_EditSignWidget.h"
 //-------------------------------------------------------------------------------------------------
-class CTrack;
 class CEditSignWidgetPrivate;
 //-------------------------------------------------------------------------------------------------
 
@@ -12,7 +11,7 @@ class CEditSignWidget : public QWidget, private Ui::EditSignWidget
   Q_OBJECT
 
 public:
-  CEditSignWidget(QWidget *pParent, CTrack *pTrack);
+  CEditSignWidget(QWidget *pParent);
   ~CEditSignWidget();
 
 protected slots:

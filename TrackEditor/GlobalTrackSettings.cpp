@@ -11,14 +11,11 @@ class CGlobalTrackSettingsPrivate
 {
 public:
   CGlobalTrackSettingsPrivate()
-    : m_pTrack(NULL)
   {
   };
   ~CGlobalTrackSettingsPrivate()
   {
   };
-
-  CTrack *m_pTrack;
 
   //header values
   QString sFloorDepth;
@@ -42,11 +39,10 @@ public:
 };
 //-------------------------------------------------------------------------------------------------
 
-CGlobalTrackSettings::CGlobalTrackSettings(QWidget *pParent, CTrack *pTrack)
+CGlobalTrackSettings::CGlobalTrackSettings(QWidget *pParent)
   : QWidget(pParent)
 {
   p = new CGlobalTrackSettingsPrivate;
-  p->m_pTrack = pTrack;
   setupUi(this);
 
   connect(g_pMainWindow, &CMainWindow::UpdateWindowSig, this, &CGlobalTrackSettings::OnUpdateWindow);
@@ -83,7 +79,7 @@ CGlobalTrackSettings::~CGlobalTrackSettings()
 
 void CGlobalTrackSettings::OnUpdateWindow()
 {
-  if (!p->m_pTrack)
+  if (!g_pMainWindow->GetCurrentTrack())
     return;
 
   UpdateInfoSelection();
@@ -94,22 +90,22 @@ void CGlobalTrackSettings::OnUpdateWindow()
 
 void CGlobalTrackSettings::OnApplyInfoClicked()
 {
-  if (!p->m_pTrack)
+  if (!g_pMainWindow->GetCurrentTrack())
     return;
 
-  p->m_pTrack->m_raceInfo.iTrackNumber = leTrackNum->text().toInt();
-  p->m_pTrack->m_raceInfo.iImpossibleLaps = leImpossibleLaps->text().toInt();
-  p->m_pTrack->m_raceInfo.iHardLaps = leHardLaps->text().toInt();
-  p->m_pTrack->m_raceInfo.iTrickyLaps = leTrickyLaps->text().toInt();
-  p->m_pTrack->m_raceInfo.iMediumLaps = leMediumLaps->text().toInt();
-  p->m_pTrack->m_raceInfo.iEasyLaps = leEasyLaps->text().toInt();
-  p->m_pTrack->m_raceInfo.iGirlieLaps = leGirlieLaps->text().toInt();
-  p->m_pTrack->m_raceInfo.dTrackMapSize = leMapSize->text().toDouble();
-  p->m_pTrack->m_raceInfo.iTrackMapFidelity = leMapFidelity->text().toInt();
-  p->m_pTrack->m_raceInfo.dPreviewSize = lePreviewSize->text().toDouble();
-  p->m_pTrack->m_sTextureFile = leTex->text().toLatin1().constData();
-  p->m_pTrack->m_sBuildingFile = leBld->text().toLatin1().constData();
-  p->m_pTrack->m_header.iFloorDepth = leFloorDepth->text().toInt();
+  g_pMainWindow->GetCurrentTrack()->m_raceInfo.iTrackNumber = leTrackNum->text().toInt();
+  g_pMainWindow->GetCurrentTrack()->m_raceInfo.iImpossibleLaps = leImpossibleLaps->text().toInt();
+  g_pMainWindow->GetCurrentTrack()->m_raceInfo.iHardLaps = leHardLaps->text().toInt();
+  g_pMainWindow->GetCurrentTrack()->m_raceInfo.iTrickyLaps = leTrickyLaps->text().toInt();
+  g_pMainWindow->GetCurrentTrack()->m_raceInfo.iMediumLaps = leMediumLaps->text().toInt();
+  g_pMainWindow->GetCurrentTrack()->m_raceInfo.iEasyLaps = leEasyLaps->text().toInt();
+  g_pMainWindow->GetCurrentTrack()->m_raceInfo.iGirlieLaps = leGirlieLaps->text().toInt();
+  g_pMainWindow->GetCurrentTrack()->m_raceInfo.dTrackMapSize = leMapSize->text().toDouble();
+  g_pMainWindow->GetCurrentTrack()->m_raceInfo.iTrackMapFidelity = leMapFidelity->text().toInt();
+  g_pMainWindow->GetCurrentTrack()->m_raceInfo.dPreviewSize = lePreviewSize->text().toDouble();
+  g_pMainWindow->GetCurrentTrack()->m_sTextureFile = leTex->text().toLatin1().constData();
+  g_pMainWindow->GetCurrentTrack()->m_sBuildingFile = leBld->text().toLatin1().constData();
+  g_pMainWindow->GetCurrentTrack()->m_header.iFloorDepth = leFloorDepth->text().toInt();
 
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->LogMessage("Applied global track settings");
@@ -152,19 +148,19 @@ void CGlobalTrackSettings::UpdateInfoEditMode()
 
 void CGlobalTrackSettings::UpdateInfoSelection()
 {
-  p->sFloorDepth = QString::number(p->m_pTrack->m_header.iFloorDepth);
-  p->sTex = p->m_pTrack->m_sTextureFile.c_str();
-  p->sBld = p->m_pTrack->m_sBuildingFile.c_str();
-  p->sTrackNumber = QString::number(p->m_pTrack->m_raceInfo.iTrackNumber);
-  p->sImpossibleLaps = QString::number(p->m_pTrack->m_raceInfo.iImpossibleLaps);
-  p->sHardLaps = QString::number(p->m_pTrack->m_raceInfo.iHardLaps);
-  p->sTrickyLaps = QString::number(p->m_pTrack->m_raceInfo.iTrickyLaps);
-  p->sMediumLaps = QString::number(p->m_pTrack->m_raceInfo.iMediumLaps);
-  p->sEasyLaps = QString::number(p->m_pTrack->m_raceInfo.iEasyLaps);
-  p->sGirlieLaps = QString::number(p->m_pTrack->m_raceInfo.iGirlieLaps);
-  p->sTrackMapSize = QString::number(p->m_pTrack->m_raceInfo.dTrackMapSize, 'f', 2);
-  p->sTrackMapFidelity = QString::number(p->m_pTrack->m_raceInfo.iTrackMapFidelity);
-  p->sPreviewSize = QString::number(p->m_pTrack->m_raceInfo.dPreviewSize, 'f', 2);
+  p->sFloorDepth = QString::number(g_pMainWindow->GetCurrentTrack()->m_header.iFloorDepth);
+  p->sTex = g_pMainWindow->GetCurrentTrack()->m_sTextureFile.c_str();
+  p->sBld = g_pMainWindow->GetCurrentTrack()->m_sBuildingFile.c_str();
+  p->sTrackNumber = QString::number(g_pMainWindow->GetCurrentTrack()->m_raceInfo.iTrackNumber);
+  p->sImpossibleLaps = QString::number(g_pMainWindow->GetCurrentTrack()->m_raceInfo.iImpossibleLaps);
+  p->sHardLaps = QString::number(g_pMainWindow->GetCurrentTrack()->m_raceInfo.iHardLaps);
+  p->sTrickyLaps = QString::number(g_pMainWindow->GetCurrentTrack()->m_raceInfo.iTrickyLaps);
+  p->sMediumLaps = QString::number(g_pMainWindow->GetCurrentTrack()->m_raceInfo.iMediumLaps);
+  p->sEasyLaps = QString::number(g_pMainWindow->GetCurrentTrack()->m_raceInfo.iEasyLaps);
+  p->sGirlieLaps = QString::number(g_pMainWindow->GetCurrentTrack()->m_raceInfo.iGirlieLaps);
+  p->sTrackMapSize = QString::number(g_pMainWindow->GetCurrentTrack()->m_raceInfo.dTrackMapSize, 'f', 2);
+  p->sTrackMapFidelity = QString::number(g_pMainWindow->GetCurrentTrack()->m_raceInfo.iTrackMapFidelity);
+  p->sPreviewSize = QString::number(g_pMainWindow->GetCurrentTrack()->m_raceInfo.dPreviewSize, 'f', 2);
 
   RevertInfo();
 }

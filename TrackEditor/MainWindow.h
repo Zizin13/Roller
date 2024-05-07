@@ -4,7 +4,7 @@
 #include "ui_MainWindow.h"
 //-------------------------------------------------------------------------------------------------
 class CMainWindowPrivate;
-class CTexture;
+class CTrack;
 //-------------------------------------------------------------------------------------------------
 
 class CMainWindow : public QMainWindow, private Ui::MainWindow
@@ -24,6 +24,7 @@ public:
   int GetSelFrom();
   int GetSelTo();
   float GetDesktopScale() { return m_fDesktopScale; };
+  CTrack *GetCurrentTrack();
 
 protected:
   void closeEvent(QCloseEvent *pEvent);

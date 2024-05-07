@@ -194,7 +194,7 @@ public:
 
   void ClearData();
   bool LoadTrack(const std::string &sFilename);
-  bool LoadTextures(const std::string &sDir);
+  bool LoadTextures();
   void GetTrackData(std::vector<uint8_t> &data);
   void GenerateTrackMath();
   bool ShouldShowChunkSection(int i, eShapeSection section);
@@ -205,6 +205,7 @@ public:
 
   tTrackHeader m_header;
   CChunkAy m_chunkAy;
+  std::string m_sTrackFileFolder;
   std::string m_sTextureFile;
   std::string m_sBuildingFile;
   tRaceInfo m_raceInfo;

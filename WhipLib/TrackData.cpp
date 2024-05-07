@@ -163,6 +163,13 @@ bool CTrackData::LoadTrack(const std::string &sFilename)
     return false;
   }
 
+  m_sTrackFileFolder = sFilename;
+  size_t pos = sFilename.find_last_of('/');
+  if (pos == std::string::npos)
+    pos = sFilename.find_last_of('\\');
+  if (pos != std::string::npos && pos < sFilename.size())
+    m_sTrackFileFolder = sFilename.substr(0, pos + 1);
+
   //open file
   std::ifstream file(sFilename.c_str(), std::ios::binary);
   if (!file.is_open()) {
@@ -211,7 +218,7 @@ bool CTrackData::LoadTrack(const std::string &sFilename)
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrackData::LoadTextures(const std::string &sDir)
+bool CTrackData::LoadTextures()
 {
   bool bSuccess = true;
 
@@ -233,9 +240,9 @@ bool CTrackData::LoadTextures(const std::string &sDir)
   m_pBld = new CTexture;
 
   //load textures
-  std::string sPal = sDir + "PALETTE.PAL";
-  std::string sTex = sDir + m_sTextureFile;
-  std::string sBld = sDir + m_sBuildingFile;
+  std::string sPal = m_sTrackFileFolder + "PALETTE.PAL";
+  std::string sTex = m_sTrackFileFolder + m_sTextureFile;
+  std::string sBld = m_sTrackFileFolder + m_sBuildingFile;
 
   bSuccess &= m_pPal->LoadPalette(sPal);
   bSuccess &= m_pTex->LoadTexture(sTex, m_pPal);

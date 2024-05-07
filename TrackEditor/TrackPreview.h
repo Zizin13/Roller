@@ -21,8 +21,13 @@ public:
   void UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
   void SetScale(int iScale);
   void AttachLast(bool bAttachLast);
-  void ReloadCar();
   CTrack *GetTrack();
+  bool SaveChangesAndContinue();
+  bool SaveTrack();
+  bool SaveTrackAs();
+  QString GetTitle(bool bFullPath);
+
+  bool m_bUnsavedChanges;
 
 protected slots:
   void UpdateGeometrySelection(int iFrom, int iTo);
@@ -42,6 +47,8 @@ private:
   bool m_bMillionPlus;
   bool m_bAttachLast;
   int m_iScale;
+  bool m_bAlreadySaved;
+  QString m_sTrackFile;
 };
 
 //-------------------------------------------------------------------------------------------------

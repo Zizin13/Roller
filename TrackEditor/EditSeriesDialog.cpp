@@ -84,6 +84,9 @@ QString CEditSeriesDialog::GetIncrement()
 
 void CEditSeriesDialog::OnUpdateWindow()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   int iTrackSize = (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size();
   sbStartChunk->setRange(0, iTrackSize - 1);
   sbEndChunk->setRange(0, iTrackSize - 1);
@@ -148,6 +151,9 @@ int CEditSeriesDialog::ToInt(QString sText)
 
 template <typename T> void CEditSeriesDialog::ApplySeriesToGeometry(int iStartChunk, int iEndChunk, int iInterval, int iField, T tStartValue, T tEndValue, T tIncrement)
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   T tValue = tStartValue;
   bool bDirection = tIncrement >= 0;
   for (int i = iStartChunk; i <= iEndChunk && (bDirection ? tValue <= tEndValue : tValue >= tEndValue); i += iInterval) {

@@ -19,13 +19,13 @@ public:
   void LogMessage(const QString &sMsg);
   void SetUnsavedChanges(bool bUnsavedChanges);
   void UpdateWindow();
-  void LoadTextures();
   void InsertUIUpdate(int iInsertVal);
-  const QString &GetTrackFilesFolder();
   int GetSelFrom();
   int GetSelTo();
   float GetDesktopScale() { return m_fDesktopScale; };
   CTrack *GetCurrentTrack();
+
+  QString m_sLastTrackFilesFolder;
 
 protected:
   void closeEvent(QCloseEvent *pEvent);
@@ -38,6 +38,8 @@ protected slots:
   void OnSaveTrackAs();
   void OnDebug();
   void OnAbout();
+  void OnTabCloseRequested(int iIndex);
+  void OnTabChanged(int iIndex);
   void OnSelChunksFromChanged(int iValue);
   void OnSelChunksToChanged(int iValue);
   void OnToChecked(bool bChecked);
@@ -60,12 +62,8 @@ private:
   CTrackPreview *GetCurrentPreview();
 
   CMainWindowPrivate *p;
-  bool m_bUnsavedChanges;
-  bool m_bAlreadySaved;
   QString m_sAppPath;
   QString m_sSettingsFile;
-  QString m_sTrackFile;
-  QString m_sTrackFilesFolder;
   float m_fDesktopScale;
 };
 

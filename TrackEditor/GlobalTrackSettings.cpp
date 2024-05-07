@@ -109,7 +109,7 @@ void CGlobalTrackSettings::OnApplyInfoClicked()
 
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->LogMessage("Applied global track settings");
-  g_pMainWindow->LoadTextures();
+  g_pMainWindow->GetCurrentTrack()->LoadTextures();
   g_pMainWindow->UpdateWindow();
 }
 

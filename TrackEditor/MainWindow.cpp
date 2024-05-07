@@ -73,11 +73,8 @@ public:
 
 CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   : QMainWindow(NULL)
-  , m_bUnsavedChanges(false)
-  , m_bAlreadySaved(false)
   , m_sAppPath(sAppPath)
-  , m_sTrackFile("")
-  , m_sTrackFilesFolder("")
+  , m_sLastTrackFilesFolder("")
   , m_fDesktopScale(fDesktopScale)
 {
   //init
@@ -88,6 +85,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   m_sSettingsFile = QDir::toNativeSeparators(m_sSettingsFile);
   setupUi(this);
   p->m_logDialog.hide();
+  twViewer->setTabsClosable(true);
 
   //setup dock widgets
   p->m_pEditDataDockWidget = new QDockWidget("Debug Chunk Data", this);
@@ -154,6 +152,8 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   connect(actSaveAs, &QAction::triggered, this, &CMainWindow::OnSaveTrackAs);
   connect(p->m_pDebugAction, &QAction::triggered, this, &CMainWindow::OnDebug);
   connect(actAbout, &QAction::triggered, this, &CMainWindow::OnAbout);
+  connect(twViewer, &QTabWidget::tabCloseRequested, this, &CMainWindow::OnTabCloseRequested);
+  connect(twViewer, &QTabWidget::currentChanged, this, &CMainWindow::OnTabChanged);
 
   connect(sbSelChunksFrom, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksFromChanged(int)));
   connect(sbSelChunksTo, SIGNAL(valueChanged(int)), this, SLOT(OnSelChunksToChanged(int)));
@@ -188,10 +188,12 @@ void CMainWindow::closeEvent(QCloseEvent *pEvent)
   SaveSettings();
 
   //cleanup
+  twViewer->blockSignals(true);
   for (int i = 0; i < (int)p->m_previewAy.size(); ++i) {
     delete p->m_previewAy[i];
   }
   p->m_previewAy.clear();
+  twViewer->blockSignals(false);
 
   QMainWindow::closeEvent(pEvent);
 
@@ -214,7 +216,8 @@ void CMainWindow::LogMessage(const QString &sMsg)
 
 void CMainWindow::SetUnsavedChanges(bool bUnsavedChanges)
 {
-  m_bUnsavedChanges = bUnsavedChanges;
+  if (GetCurrentPreview())
+    GetCurrentPreview()->m_bUnsavedChanges = bUnsavedChanges;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -229,9 +232,6 @@ void CMainWindow::OnLogMsg(QString sMsg)
 
 void CMainWindow::OnNewTrack()
 {
-  if (!SaveChangesAndContinue())
-    return;
-
   //sbSelChunksFrom->setValue(0);
   //sbSelChunksTo->setValue(0);
   //p->m_trackAy[0]->ClearData();
@@ -246,30 +246,24 @@ void CMainWindow::OnNewTrack()
 
 void CMainWindow::OnLoadTrack()
 {
-  //check for unsaved data
-  if (!SaveChangesAndContinue())
-    return;
-
   //load track
   QString sFilename = QDir::toNativeSeparators(QFileDialog::getOpenFileName(
-    this, "Load Track", m_sTrackFilesFolder, QString("Track Files (*.TRK)")));
+    this, "Load Track", m_sLastTrackFilesFolder, QString("Track Files (*.TRK)")));
   if (sFilename.isEmpty())
     return;
 
 
   CTrackPreview *pPreview = new CTrackPreview(this);
   if (!pPreview->LoadTrack(sFilename)) {
-    delete pPreview;
     //load failed
-    m_sTrackFile = "";
+    delete pPreview;
   } else { //load successful
     //update ui
     sbSelChunksFrom->setValue(0);
     sbSelChunksTo->setValue(0);
     
     //update variables
-    m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
-    m_sTrackFile = sFilename;
+    m_sLastTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
 
     //add to array and create preview window
     p->m_previewAy.push_back(pPreview);
@@ -279,10 +273,7 @@ void CMainWindow::OnLoadTrack()
     OnSetScale(p->m_pDisplaySettings->GetScale());
     OnAttachLast(p->m_pDisplaySettings->GetAttachLast());
   }
-  m_bAlreadySaved = false;
-  m_bUnsavedChanges = false;
   //update app
-  LoadTextures();
   UpdateWindow();
 }
 
@@ -290,30 +281,16 @@ void CMainWindow::OnLoadTrack()
 
 void CMainWindow::OnSaveTrack()
 {
-  if (!m_sTrackFile.isEmpty() && m_bAlreadySaved && GetCurrentTrack()) {
-    m_bUnsavedChanges = !GetCurrentTrack()->SaveTrack(m_sTrackFile);
-    UpdateWindow();
-  } else {
-    OnSaveTrackAs();
-  }
+  if (GetCurrentPreview())
+    GetCurrentPreview()->SaveTrack();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CMainWindow::OnSaveTrackAs()
 {
-  //save track
-  QString sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
-    this, "Save Track As", m_sTrackFilesFolder, "Track Files (*.TRK)"));
-  if (GetCurrentTrack() && !GetCurrentTrack()->SaveTrack(sFilename))
-    return;
-
-  //save successful, update app
-  m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
-  m_sTrackFile = sFilename;
-  m_bUnsavedChanges = false;
-  m_bAlreadySaved = true;
-  UpdateWindow();
+  if (GetCurrentPreview())
+    GetCurrentPreview()->SaveTrackAs();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -331,6 +308,45 @@ void CMainWindow::OnDebug()
 void CMainWindow::OnAbout()
 {
   QMessageBox::information(this, "Git Gud", "YOU NEED MORE PRACTICE");
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnTabCloseRequested(int iIndex)
+{
+  if (iIndex > p->m_previewAy.size()) return;
+
+  bool bChangeCurrentIndex = iIndex == twViewer->currentIndex();
+
+  twViewer->blockSignals(true);
+  if (p->m_previewAy[iIndex]->SaveChangesAndContinue()) {
+    delete p->m_previewAy[iIndex];
+    p->m_previewAy.erase(p->m_previewAy.begin() + iIndex);
+  }
+  twViewer->blockSignals(false);
+
+  if (bChangeCurrentIndex) {
+    OnTabChanged(twViewer->currentIndex());
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnTabChanged(int iIndex)
+{
+  if (iIndex > p->m_previewAy.size()) return;
+
+  eWhipModel carModel;
+  eShapeSection aiLine;
+  bool bMillionPlus;
+  uint32 uiShowModels = p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus);
+  p->m_previewAy[iIndex]->makeCurrent();
+  p->m_previewAy[iIndex]->ShowModels(uiShowModels);
+  p->m_previewAy[iIndex]->UpdateCar(carModel, aiLine, bMillionPlus);
+  p->m_previewAy[iIndex]->AttachLast(p->m_pDisplaySettings->GetAttachLast());
+  p->m_previewAy[iIndex]->SetScale(p->m_pDisplaySettings->GetScale());
+
+  UpdateWindow();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -378,7 +394,7 @@ void CMainWindow::OnDeleteChunkClicked()
     GetCurrentTrack()->m_chunkAy.begin() + sbSelChunksFrom->value(),
     GetCurrentTrack()->m_chunkAy.begin() + sbSelChunksTo->value() + 1);
 
-  g_pMainWindow->SetUnsavedChanges(true);
+  GetCurrentPreview()->m_bUnsavedChanges = true;
   g_pMainWindow->LogMessage("Deleted geometry chunk");
   g_pMainWindow->UpdateWindow();
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(sbSelChunksFrom->value()));
@@ -396,7 +412,7 @@ void CMainWindow::OnAddChunkClicked()
   GetCurrentTrack()->GetGeometryValuesFromSelection(iLastPos, iLastPos, editVals);
   GetCurrentTrack()->InsertGeometryChunk(iLastPos, 1, editVals);
 
-  g_pMainWindow->SetUnsavedChanges(true);
+  GetCurrentPreview()->m_bUnsavedChanges = true;
   g_pMainWindow->LogMessage("Added geometry chunk");
   g_pMainWindow->UpdateWindow();
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(iLastPos + 1));
@@ -441,7 +457,7 @@ void CMainWindow::OnUpdatePreview()
 void CMainWindow::LoadSettings()
 {
   QSettings settings(m_sSettingsFile, QSettings::IniFormat);
-  m_sTrackFilesFolder = settings.value("track_folder", m_sTrackFilesFolder).toString();
+  m_sLastTrackFilesFolder = settings.value("track_folder", m_sLastTrackFilesFolder).toString();
 
   if (settings.contains("window_geometry") && settings.contains("window_state")) {
     QByteArray geometry = saveGeometry();
@@ -543,7 +559,7 @@ void CMainWindow::LoadSettings()
 void CMainWindow::SaveSettings()
 {
   QSettings settings(m_sSettingsFile, QSettings::IniFormat);
-  settings.setValue("track_folder", m_sTrackFilesFolder);
+  settings.setValue("track_folder", m_sLastTrackFilesFolder);
 
   eWhipModel carModel;
   eShapeSection aiLine;
@@ -573,36 +589,12 @@ void CMainWindow::SaveSettings()
 
 bool CMainWindow::SaveChangesAndContinue()
 {
-  if (!m_bUnsavedChanges || !GetCurrentTrack())
-    return true;
+  bool bRet = true;
+  for (int i = 0; i < p->m_previewAy.size(); ++i)
+    bRet &= p->m_previewAy[i]->SaveChangesAndContinue();
 
-  //init
-  QMessageBox saveDiscardCancelBox(QMessageBox::Warning, "Unsaved Changes",
-                                   "There are unsaved changes to the current track. Save them?",
-                                   QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
-                                   this);
-  int iButton = saveDiscardCancelBox.exec();
-
-  //cancel
-  if (iButton == QMessageBox::Cancel || iButton == QMessageBox::NoButton)
-    return false;
-
-  //save
-  QString sFilename = m_sTrackFile;
-  if (iButton == QMessageBox::Save) {
-    if (sFilename.isEmpty()) {
-      sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
-        this, "Save Track As", m_sTrackFilesFolder, "Track Files (*.TRK)"));
-    }
-    if (!GetCurrentTrack()->SaveTrack(sFilename))
-      return false;
-    m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
-  }
-
-  m_sTrackFile = sFilename;
-  m_bUnsavedChanges = false;
   UpdateWindow();
-  return true;
+  return bRet;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -611,13 +603,15 @@ void CMainWindow::UpdateWindow()
 {
   //update title bar
   QString sTitle = "Track Editor";
-  if (!m_sTrackFile.isEmpty())
-    sTitle = sTitle + QString(" - ") + m_sTrackFile;
-  if (m_bUnsavedChanges)
-    sTitle = QString("* ") + sTitle;
-  setWindowTitle(sTitle);
+  QString sCurrentTab = "";
+  for (int i = 0; i < (int)p->m_previewAy.size(); ++i) {
+    if (i == twViewer->currentIndex())
+      sCurrentTab = p->m_previewAy[i]->GetTitle(true) + " - ";
+    twViewer->setTabText(i, p->m_previewAy[i]->GetTitle(false));
+  }
+  setWindowTitle(sCurrentTab + sTitle);
 
-  if (GetCurrentTrack() && GetCurrentPreview()) {
+  if (GetCurrentPreview()) {
     GetCurrentPreview()->UpdateTrack();
 
     BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
@@ -626,19 +620,6 @@ void CMainWindow::UpdateWindow()
   }
   UpdateGeometrySelection();
   emit UpdateWindowSig();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::LoadTextures()
-{
-  QString sDir = m_sTrackFilesFolder + QDir::separator();
-  if (GetCurrentTrack())
-    GetCurrentTrack()->LoadTextures(sDir.toLatin1().constData());
-
-  //make sure car textures are reloaded too
-  if (GetCurrentPreview())
-    GetCurrentPreview()->ReloadCar();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -658,13 +639,6 @@ void CMainWindow::InsertUIUpdate(int iInsertVal)
   }
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(sbSelChunksFrom->value() + iInsertVal - 1));
   BLOCK_SIG_AND_DO(ckTo, setChecked(iInsertVal > 1));
-}
-
-//-------------------------------------------------------------------------------------------------
-
-const QString &CMainWindow::GetTrackFilesFolder()
-{
-  return m_sTrackFilesFolder;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -693,8 +667,8 @@ CTrack *CMainWindow::GetCurrentTrack()
 
 CTrackPreview *CMainWindow::GetCurrentPreview()
 {
-  if (p->m_previewAy.empty()) return NULL;
-  return p->m_previewAy[0];
+  if (p->m_previewAy.empty() || twViewer->currentIndex() >= (int)p->m_previewAy.size()) return NULL;
+  return p->m_previewAy[twViewer->currentIndex()];
 }
 
 //-------------------------------------------------------------------------------------------------

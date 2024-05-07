@@ -298,6 +298,9 @@ void CEditDataWidget::OnCancelClicked()
 
 void CEditDataWidget::OnEditLSurface()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   int iValue = leLeftSurfaceType->text().toInt();
 
   CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, iValue);
@@ -314,6 +317,9 @@ void CEditDataWidget::OnEditLSurface()
 
 void CEditDataWidget::OnEditCSurface()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   int iValue = leCenterSurfaceType->text().toInt();
 
   CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, iValue);
@@ -330,6 +336,9 @@ void CEditDataWidget::OnEditCSurface()
 
 void CEditDataWidget::OnEditRSurface()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   int iValue = leRightSurfaceType->text().toInt();
 
   CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, iValue);
@@ -346,6 +355,9 @@ void CEditDataWidget::OnEditRSurface()
 
 void CEditDataWidget::OnEditLWall()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   int iValue = leLWallType->text().toInt();
 
   CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, iValue);
@@ -362,6 +374,9 @@ void CEditDataWidget::OnEditLWall()
 
 void CEditDataWidget::OnEditRWall()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   int iValue = leRWallType->text().toInt();
 
   CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, iValue);
@@ -378,6 +393,9 @@ void CEditDataWidget::OnEditRWall()
 
 void CEditDataWidget::OnEditRoof()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   int iValue = leRoofType->text().toInt();
 
   CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, iValue);
@@ -394,6 +412,9 @@ void CEditDataWidget::OnEditRoof()
 
 void CEditDataWidget::OnEditLUOuterWall()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   int iValue = leLUOuterWallType->text().toInt();
 
   CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, iValue);
@@ -410,6 +431,9 @@ void CEditDataWidget::OnEditLUOuterWall()
 
 void CEditDataWidget::OnEditLLOuterWall()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   int iValue = leLLOuterWallType->text().toInt();
 
   CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, iValue);
@@ -426,6 +450,9 @@ void CEditDataWidget::OnEditLLOuterWall()
 
 void CEditDataWidget::OnEditOuterFloor()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   int iValue = leOuterFloorType->text().toInt();
 
   CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, iValue);
@@ -442,6 +469,9 @@ void CEditDataWidget::OnEditOuterFloor()
 
 void CEditDataWidget::OnEditRLOuterWall()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   int iValue = leRLOuterWallType->text().toInt();
 
   CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, iValue);
@@ -458,6 +488,9 @@ void CEditDataWidget::OnEditRLOuterWall()
 
 void CEditDataWidget::OnEditRUOuterWall()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   int iValue = leRUOuterWallType->text().toInt();
 
   CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, iValue);
@@ -474,6 +507,9 @@ void CEditDataWidget::OnEditRUOuterWall()
 
 void CEditDataWidget::OnEditEnvirFloor()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   int iValue = leEnvironmentFloorType->text().toInt();
 
   CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, iValue);
@@ -585,6 +621,9 @@ void CEditDataWidget::UpdateGeometryEditMode()
 
 void CEditDataWidget::OnSignClicked()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   QString sValue = leSign->text();
   int iValue = sValue.toInt();
   unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
@@ -615,6 +654,9 @@ void CEditDataWidget::OnSignClicked()
 
 void CEditDataWidget::OnBackClicked()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   QString sValue = leBack->text();
   int iValue = sValue.toInt();
   unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
@@ -645,6 +687,9 @@ void CEditDataWidget::OnBackClicked()
 
 void CEditDataWidget::OnApplySignToggled(bool bChecked)
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   int iValue = leSign->text().toInt();
   unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
   if (bChecked) {
@@ -663,6 +708,9 @@ void CEditDataWidget::OnApplySignToggled(bool bChecked)
 
 void CEditDataWidget::OnApplyBackToggled(bool bChecked)
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   int iValue = leBack->text().toInt();
   unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
   if (bChecked) {
@@ -717,6 +765,9 @@ void CEditDataWidget::OnSignTypeLEChanged()
 
 void CEditDataWidget::OnSignLEChanged()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   QtHelpers::UpdateSignButtonDisplay(pbSign, ckApplySign, leSign, g_pMainWindow->GetCurrentTrack()->m_pBld);
   UpdateGeometryEditMode();
 }
@@ -725,6 +776,9 @@ void CEditDataWidget::OnSignLEChanged()
 
 void CEditDataWidget::OnBackLEChanged()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   QtHelpers::UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack, g_pMainWindow->GetCurrentTrack()->m_pTex);
   UpdateGeometryEditMode();
 }
@@ -829,6 +883,9 @@ void CEditDataWidget::OnEnvirFloorChanged()
 
 void CEditDataWidget::UpdateGeometrySelection(int iFrom, int iTo)
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   //update values in edit window
   g_pMainWindow->GetCurrentTrack()->GetGeometryValuesFromSelection(iFrom, iTo, p->editVals);
 
@@ -840,6 +897,9 @@ void CEditDataWidget::UpdateGeometrySelection(int iFrom, int iTo)
 
 void CEditDataWidget::RevertGeometry()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   bool bMixedData = false;
   bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLShoulderWidth, p->editVals.sLeftShoulderWidth);
   bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leLLaneWidth, p->editVals.sLeftLaneWidth);
@@ -947,6 +1007,9 @@ void CEditDataWidget::RevertGeometry()
 
 void CEditDataWidget::UpdateTextures(QLineEdit *pLineEdit, QLabel *pTex1, QLabel *pTex2)
 {
+  if (!g_pMainWindow->GetCurrentTrack() || !g_pMainWindow->GetCurrentTrack()->m_pTex)
+    return;
+
   //textures
   QPixmap pixmap;
   int iIndex;

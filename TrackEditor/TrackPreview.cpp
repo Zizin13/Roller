@@ -15,6 +15,8 @@
 #include "Texture.h"
 #include "qevent.h"
 #include "qdir.h"
+#include "qmessagebox.h"
+#include "qfiledialog.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -273,6 +275,9 @@ CTrackPreview::CTrackPreview(QWidget *pParent)
   , m_bMillionPlus(false)
   , m_bAttachLast(false)
   , m_iScale(1)
+  , m_bUnsavedChanges(false)
+  , m_bAlreadySaved(false)
+  , m_sTrackFile("")
 {
   p = new CTrackPreviewPrivate;
 
@@ -294,6 +299,7 @@ CTrackPreview::~CTrackPreview()
 
 bool CTrackPreview::LoadTrack(const QString &sFilename)
 {
+  m_sTrackFile = sFilename;
   return p->m_track.LoadTrack(sFilename);
 }
 
@@ -387,7 +393,7 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
     p->m_pCar = NULL;
   }
 
-  if (&p->m_track && p->m_track.m_pPal && !g_pMainWindow->GetTrackFilesFolder().isEmpty()) {
+  if (&p->m_track && p->m_track.m_pPal && !p->m_track.m_sTrackFileFolder.empty()) {
     QString sTexName;
     switch (carModel) {
       case CAR_F1WACK:
@@ -418,8 +424,8 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
         sTexName = "XREISE.BM";
         break;
     }
-    QString sPal = g_pMainWindow->GetTrackFilesFolder() + QDir::separator() + "PALETTE.PAL";
-    QString sTex = g_pMainWindow->GetTrackFilesFolder() + QDir::separator() + sTexName;
+    QString sPal = QString(p->m_track.m_sTrackFileFolder.c_str()) + QDir::separator() + "PALETTE.PAL";
+    QString sTex = QString(p->m_track.m_sTrackFileFolder.c_str()) + QDir::separator() + sTexName;
     p->m_carTex.LoadTexture(sTex.toLatin1().constData(), p->m_track.m_pPal);
     p->m_pCar = CShapeFactory::GetShapeFactory().MakeModel(p->m_pShader, &p->m_carTex, carModel);
   }
@@ -552,16 +558,89 @@ void CTrackPreview::paintGL()
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackPreview::ReloadCar()
+CTrack *CTrackPreview::GetTrack()
 {
-  UpdateCar(m_carModel, m_carAILine, m_bMillionPlus);
+  return &p->m_track;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-CTrack *CTrackPreview::GetTrack()
+bool CTrackPreview::SaveChangesAndContinue()
 {
-  return &p->m_track;
+  if (!m_bUnsavedChanges)
+    return true;
+
+  //init
+  QMessageBox saveDiscardCancelBox(QMessageBox::Warning, "Unsaved Changes",
+                                   "There are unsaved changes to the current track. Save them?",
+                                   QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
+                                   this);
+  int iButton = saveDiscardCancelBox.exec();
+
+  //cancel
+  if (iButton == QMessageBox::Cancel || iButton == QMessageBox::NoButton)
+    return false;
+
+  //save
+  QString sFilename = m_sTrackFile;
+  if (iButton == QMessageBox::Save) {
+    if (sFilename.isEmpty()) {
+      sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
+        this, "Save Track As", p->m_track.m_sTrackFileFolder.c_str(), "Track Files (*.TRK)"));
+    }
+    if (!p->m_track.SaveTrack(sFilename))
+      return false;
+    g_pMainWindow->m_sLastTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
+  }
+
+  m_sTrackFile = sFilename;
+  m_bUnsavedChanges = false;
+
+  return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CTrackPreview::SaveTrack()
+{
+  if (m_bAlreadySaved) {
+    m_bUnsavedChanges = !p->m_track.SaveTrack(m_sTrackFile);
+    g_pMainWindow->UpdateWindow();
+    return true;
+  } else {
+    return SaveTrackAs();
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CTrackPreview::SaveTrackAs()
+{
+  //save track
+  QString sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
+    this, "Save Track As", p->m_track.m_sTrackFileFolder.c_str(), "Track Files (*.TRK)"));
+  if (!p->m_track.SaveTrack(sFilename))
+    return false;
+
+  //save successful, update app
+  g_pMainWindow->m_sLastTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
+  m_sTrackFile = sFilename;
+  m_bUnsavedChanges = false;
+  m_bAlreadySaved = true;
+  g_pMainWindow->UpdateWindow();
+  return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+QString CTrackPreview::GetTitle(bool bFullPath)
+{
+  QString sTitle = m_sTrackFile;
+  if (!bFullPath)
+    sTitle = m_sTrackFile.right(m_sTrackFile.size() - m_sTrackFile.lastIndexOf(QDir::separator()) - 1);
+  if (m_bUnsavedChanges)
+    sTitle = QString("*") + sTitle;
+  return sTitle;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -587,6 +666,7 @@ void CTrackPreview::initializeGL()
 
   //p->m_pAxes = DebugShapes::MakeAxes(p->m_pShader);
   UpdateCar(m_carModel, m_carAILine, m_bMillionPlus);
+  p->m_track.LoadTextures();
 }
 
 //-------------------------------------------------------------------------------------------------

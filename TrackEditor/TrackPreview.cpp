@@ -23,10 +23,6 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
-Camera camera;
-
-//-------------------------------------------------------------------------------------------------
-
 class CTrackPreviewPrivate
 {
 public:
@@ -262,6 +258,7 @@ public:
 
   CShapeData *m_pCar;
   CTexture m_carTex;
+  Camera m_camera;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -464,7 +461,7 @@ void CTrackPreview::paintGL()
   glViewport(0, 0, width(), height());
 
   glm::mat4 viewToProjectionMatrix = glm::perspective(glm::radians(60.0f), ((float)width()) / height(), 0.1f, 200.0f);
-  glm::mat4 worldToViewMatrix = camera.GetWorldToViewMatrix();
+  glm::mat4 worldToViewMatrix = p->m_camera.GetWorldToViewMatrix();
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
   if (m_uiShowModels & SHOW_ENVIRFLOOR_SURF_MODEL && p->m_pEnvirFloorSurf)
@@ -674,7 +671,7 @@ void CTrackPreview::initializeGL()
 void CTrackPreview::mouseMoveEvent(QMouseEvent *pEvent)
 {
   setFocus();
-  camera.MouseUpdate(glm::vec2(pEvent->x(), pEvent->y()));
+  p->m_camera.MouseUpdate(glm::vec2(pEvent->x(), pEvent->y()));
   repaint();
 }
 
@@ -684,22 +681,22 @@ void CTrackPreview::keyPressEvent(QKeyEvent *pEvent)
 {
   switch (pEvent->key()) {
     case Qt::Key::Key_W:
-      camera.MoveForward();
+      p->m_camera.MoveForward();
       break;
     case Qt::Key::Key_S:
-      camera.MoveBackward();
+      p->m_camera.MoveBackward();
       break;
     case Qt::Key::Key_A:
-      camera.StrafeLeft();
+      p->m_camera.StrafeLeft();
       break;
     case Qt::Key::Key_D:
-      camera.StrafeRight();
+      p->m_camera.StrafeRight();
       break;
     case Qt::Key::Key_R:
-      camera.MoveUp();
+      p->m_camera.MoveUp();
       break;
     case Qt::Key::Key_F:
-      camera.MoveDown();
+      p->m_camera.MoveDown();
       break;
   }
   repaint();

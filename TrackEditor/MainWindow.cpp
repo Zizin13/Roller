@@ -190,6 +190,7 @@ void CMainWindow::closeEvent(QCloseEvent *pEvent)
   //cleanup
   twViewer->blockSignals(true);
   for (int i = 0; i < (int)p->m_previewAy.size(); ++i) {
+    p->m_previewAy[i]->makeCurrent();
     delete p->m_previewAy[i];
   }
   p->m_previewAy.clear();
@@ -272,6 +273,7 @@ void CMainWindow::OnLoadTrack()
     OnUpdatePreview();
     OnSetScale(p->m_pDisplaySettings->GetScale());
     OnAttachLast(p->m_pDisplaySettings->GetAttachLast());
+    twViewer->setCurrentIndex((int)p->m_previewAy.size() - 1);
   }
   //update app
   UpdateWindow();
@@ -320,6 +322,7 @@ void CMainWindow::OnTabCloseRequested(int iIndex)
 
   twViewer->blockSignals(true);
   if (p->m_previewAy[iIndex]->SaveChangesAndContinue()) {
+    p->m_previewAy[iIndex]->makeCurrent();
     delete p->m_previewAy[iIndex];
     p->m_previewAy.erase(p->m_previewAy.begin() + iIndex);
   }

@@ -568,8 +568,9 @@ bool CTrackPreview::SaveChangesAndContinue()
     return true;
 
   //init
+  QString sTrackName = m_sTrackFile.right(m_sTrackFile.size() - m_sTrackFile.lastIndexOf(QDir::separator()) - 1);
   QMessageBox saveDiscardCancelBox(QMessageBox::Warning, "Unsaved Changes",
-                                   "There are unsaved changes to the current track. Save them?",
+                                   "There are unsaved changes to " + sTrackName + ". Save them ? ",
                                    QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel,
                                    this);
   int iButton = saveDiscardCancelBox.exec();

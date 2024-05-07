@@ -52,8 +52,7 @@ public:
   {};
   ~CMainWindowPrivate() 
   {};
-
-  CTrack m_track;
+  
   CLogDialog m_logDialog;
 
   QDockWidget *m_pEditDataDockWidget;
@@ -67,10 +66,8 @@ public:
   QDockWidget *m_pEditStuntDockWidget;
   CDisplaySettings *m_pDisplaySettings;
   QAction *m_pDebugAction;
-
-  CPalette m_palette;
-  CTexture m_tex;
-  CTexture m_bld;
+  std::vector<CTrackPreview *> m_previewAy;
+  std::vector<CTrack *> m_trackAy;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -92,50 +89,56 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   m_sSettingsFile = QDir::toNativeSeparators(m_sSettingsFile);
   setupUi(this);
   p->m_logDialog.hide();
-  txData->setFont(QFont("Courier", 8));
+
+  CTrack *pTrac = new CTrack;
+  p->m_trackAy.push_back(pTrac);
+
+  CTrackPreview *pPreview = new CTrackPreview(this);
+  p->m_previewAy.push_back(pPreview);
+  twViewer->addTab(pPreview, "Preview");
 
   //setup dock widgets
   p->m_pEditDataDockWidget = new QDockWidget("Debug Chunk Data", this);
   p->m_pEditDataDockWidget->setObjectName("EditChunkData");
   p->m_pEditDataDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pEditData = new CEditDataWidget(p->m_pEditDataDockWidget, &p->m_track, &p->m_tex, &p->m_bld, &p->m_palette);
+  p->m_pEditData = new CEditDataWidget(p->m_pEditDataDockWidget, p->m_trackAy[0]);
   p->m_pEditDataDockWidget->setWidget(p->m_pEditData);
 
   p->m_pGlobalSettingsDockWidget = new QDockWidget("Global Track Settings", this);
   p->m_pGlobalSettingsDockWidget->setObjectName("GlobalTrackSettings");
   p->m_pGlobalSettingsDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pGlobalSettingsDockWidget->setWidget(new CGlobalTrackSettings(p->m_pGlobalSettingsDockWidget, &p->m_track));
+  p->m_pGlobalSettingsDockWidget->setWidget(new CGlobalTrackSettings(p->m_pGlobalSettingsDockWidget, p->m_trackAy[0]));
 
   p->m_pEditSeriesDockWidget = new QDockWidget("Edit Series...", this);
   p->m_pEditSeriesDockWidget->setObjectName("EditSeries");
   p->m_pEditSeriesDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pEditSeriesDockWidget->setWidget(new CEditSeriesDialog(p->m_pEditSeriesDockWidget, &p->m_track));
+  p->m_pEditSeriesDockWidget->setWidget(new CEditSeriesDialog(p->m_pEditSeriesDockWidget, p->m_trackAy[0]));
 
   p->m_pDisplaySettingsDockWidget = new QDockWidget("Display Settings", this);
   p->m_pDisplaySettingsDockWidget->setObjectName("DisplaySettings");
   p->m_pDisplaySettingsDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pDisplaySettings = new CDisplaySettings(p->m_pDisplaySettingsDockWidget, openGLWidget);
+  p->m_pDisplaySettings = new CDisplaySettings(p->m_pDisplaySettingsDockWidget, p->m_previewAy[0]);
   p->m_pDisplaySettingsDockWidget->setWidget(p->m_pDisplaySettings);
 
   p->m_pEditGeometryDockWidget = new QDockWidget("Edit Chunk Data", this);
   p->m_pEditGeometryDockWidget->setObjectName("EditGeometry");
   p->m_pEditGeometryDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pEditGeometryDockWidget->setWidget(new CEditGeometryWidget(p->m_pEditGeometryDockWidget, &p->m_track, &p->m_tex, &p->m_palette));
+  p->m_pEditGeometryDockWidget->setWidget(new CEditGeometryWidget(p->m_pEditGeometryDockWidget, p->m_trackAy[0]));
 
   p->m_pEditSignDockWidget = new QDockWidget("Edit Signs", this);
   p->m_pEditSignDockWidget->setObjectName("EditSigns");
   p->m_pEditSignDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pEditSignDockWidget->setWidget(new CEditSignWidget(p->m_pEditSignDockWidget, &p->m_track, &p->m_bld, &p->m_palette));
+  p->m_pEditSignDockWidget->setWidget(new CEditSignWidget(p->m_pEditSignDockWidget, p->m_trackAy[0]));
 
   p->m_pEditAudioDockWidget = new QDockWidget("Edit Audio", this);
   p->m_pEditAudioDockWidget->setObjectName("EditAudio");
   p->m_pEditAudioDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pEditAudioDockWidget->setWidget(new CEditAudioWidget(p->m_pEditAudioDockWidget, &p->m_track));
+  p->m_pEditAudioDockWidget->setWidget(new CEditAudioWidget(p->m_pEditAudioDockWidget, p->m_trackAy[0]));
 
   p->m_pEditStuntDockWidget = new QDockWidget("Edit Stunts", this);
   p->m_pEditStuntDockWidget->setObjectName("EditStunts");
   p->m_pEditStuntDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pEditStuntDockWidget->setWidget(new CEditStuntWidget(p->m_pEditStuntDockWidget, &p->m_track));
+  p->m_pEditStuntDockWidget->setWidget(new CEditStuntWidget(p->m_pEditStuntDockWidget, p->m_trackAy[0]));
 
   //setup view menu
   menuView->addAction(p->m_pEditGeometryDockWidget->toggleViewAction());
@@ -189,7 +192,15 @@ void CMainWindow::closeEvent(QCloseEvent *pEvent)
   SaveSettings();
 
   //cleanup
-  openGLWidget->Shutdown();
+  for (int i = 0; i < (int)p->m_trackAy.size(); ++i) {
+    delete p->m_trackAy[i];
+  }
+  p->m_trackAy.clear();
+  p->m_previewAy[0]->Shutdown();
+  for (int i = 0; i < (int)p->m_previewAy.size(); ++i) {
+    delete p->m_previewAy[i];
+  }
+  p->m_previewAy.clear();
 
   QMainWindow::closeEvent(pEvent);
 
@@ -232,7 +243,7 @@ void CMainWindow::OnNewTrack()
 
   sbSelChunksFrom->setValue(0);
   sbSelChunksTo->setValue(0);
-  p->m_track.ClearData();
+  p->m_trackAy[0]->ClearData();
   m_sTrackFile = "";
   m_bUnsavedChanges = false;
   m_bAlreadySaved = false;
@@ -254,7 +265,7 @@ void CMainWindow::OnLoadTrack()
   if (sFilename.isEmpty())
     return;
 
-  if (!p->m_track.LoadTrack(sFilename)) {
+  if (!p->m_trackAy[0]->LoadTrack(sFilename)) {
     //load failed
     m_sTrackFile = "";
   } else { //load successful
@@ -278,7 +289,7 @@ void CMainWindow::OnLoadTrack()
 void CMainWindow::OnSaveTrack()
 {
   if (!m_sTrackFile.isEmpty() && m_bAlreadySaved) {
-    m_bUnsavedChanges = !p->m_track.SaveTrack(m_sTrackFile);
+    m_bUnsavedChanges = !p->m_trackAy[0]->SaveTrack(m_sTrackFile);
     UpdateWindow();
   } else {
     OnSaveTrackAs();
@@ -292,7 +303,7 @@ void CMainWindow::OnSaveTrackAs()
   //save track
   QString sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
     this, "Save Track As", m_sTrackFilesFolder, "Track Files (*.TRK)"));
-  if (!p->m_track.SaveTrack(sFilename))
+  if (!p->m_trackAy[0]->SaveTrack(sFilename))
     return;
 
   //save successful, update app
@@ -355,15 +366,15 @@ void CMainWindow::OnToChecked(bool bChecked)
 
 void CMainWindow::OnDeleteChunkClicked()
 {
-  if (p->m_track.m_chunkAy.empty()) return;
-  if (sbSelChunksFrom->value() > sbSelChunksTo->value() || sbSelChunksTo->value() > p->m_track.m_chunkAy.size()) {
+  if (p->m_trackAy[0]->m_chunkAy.empty()) return;
+  if (sbSelChunksFrom->value() > sbSelChunksTo->value() || sbSelChunksTo->value() > p->m_trackAy[0]->m_chunkAy.size()) {
     assert(0);
     return;
   }
 
-  p->m_track.m_chunkAy.erase(
-    p->m_track.m_chunkAy.begin() + sbSelChunksFrom->value(),
-    p->m_track.m_chunkAy.begin() + sbSelChunksTo->value() + 1);
+  p->m_trackAy[0]->m_chunkAy.erase(
+    p->m_trackAy[0]->m_chunkAy.begin() + sbSelChunksFrom->value(),
+    p->m_trackAy[0]->m_chunkAy.begin() + sbSelChunksTo->value() + 1);
 
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->LogMessage("Deleted geometry chunk");
@@ -377,9 +388,9 @@ void CMainWindow::OnDeleteChunkClicked()
 void CMainWindow::OnAddChunkClicked()
 {
   CChunkEditValues editVals;
-  int iLastPos = (int)p->m_track.m_chunkAy.size() - 1;
-  p->m_track.GetGeometryValuesFromSelection(iLastPos, iLastPos, editVals);
-  p->m_track.InsertGeometryChunk(iLastPos, 1, editVals);
+  int iLastPos = (int)p->m_trackAy[0]->m_chunkAy.size() - 1;
+  p->m_trackAy[0]->GetGeometryValuesFromSelection(iLastPos, iLastPos, editVals);
+  p->m_trackAy[0]->InsertGeometryChunk(iLastPos, 1, editVals);
 
   g_pMainWindow->SetUnsavedChanges(true);
   g_pMainWindow->LogMessage("Added geometry chunk");
@@ -547,7 +558,7 @@ bool CMainWindow::SaveChangesAndContinue()
       sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
         this, "Save Track As", m_sTrackFilesFolder, "Track Files (*.TRK)"));
     }
-    if (!p->m_track.SaveTrack(sFilename))
+    if (!p->m_trackAy[0]->SaveTrack(sFilename))
       return false;
     m_sTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
   }
@@ -570,24 +581,11 @@ void CMainWindow::UpdateWindow()
     sTitle = QString("* ") + sTitle;
   setWindowTitle(sTitle);
 
-  //update view pane
-  txData->clear();
-  
-  //stuff data
-  std::vector<uint8_t> trackData;
-  p->m_track.GetTrackData(trackData);
-  QString sText;
-  QTextStream stream(&sText);
-  for (int i = 0; i < trackData.size(); ++i) {
-    stream << (char)trackData[i];
-  }
-  txData->insertPlainText(sText);
+  p->m_previewAy[0]->SetTrack(p->m_trackAy[0]);
 
-  openGLWidget->SetTrack(&p->m_track, &p->m_tex, &p->m_bld, &p->m_palette);
-
-  BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)p->m_track.m_chunkAy.size() - 1));
-  BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0,   (int)p->m_track.m_chunkAy.size() - 1));
-  leChunkCount->setText(QString::number(p->m_track.m_chunkAy.size()));
+  BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)p->m_trackAy[0]->m_chunkAy.size() - 1));
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0,   (int)p->m_trackAy[0]->m_chunkAy.size() - 1));
+  leChunkCount->setText(QString::number(p->m_trackAy[0]->m_chunkAy.size()));
   UpdateGeometrySelection();
   emit UpdateWindowSig();
 }
@@ -596,29 +594,17 @@ void CMainWindow::UpdateWindow()
 
 void CMainWindow::LoadTextures()
 {
-  //load textures
-  QString sPal = m_sTrackFilesFolder + QDir::separator() + "PALETTE.PAL";
-  QString sTex = m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sTextureFile.c_str());
-  QString sBld = m_sTrackFilesFolder + QDir::separator() + QString(p->m_track.m_sBuildingFile.c_str());
-  bool bPalLoaded = p->m_palette.LoadPalette(sPal.toLatin1().constData());
-  bool bTexLoaded = p->m_tex.LoadTexture(sTex.toLatin1().constData(), &p->m_palette);
-  bool bBldLoaded = p->m_bld.LoadTexture(sBld.toLatin1().constData(), &p->m_palette);
+  QString sDir = m_sTrackFilesFolder + QDir::separator();
+  p->m_trackAy[0]->LoadTextures(sDir.toLatin1().constData());
 
   //make sure car textures are reloaded too
-  openGLWidget->ReloadCar();
+  p->m_previewAy[0]->ReloadCar();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CMainWindow::UpdateGeometrySelection()
 {
-  int iStart = 0, iEnd = 0;
-  p->m_track.GetGeometryCursorPos(sbSelChunksFrom->value(), sbSelChunksTo->value(), iStart, iEnd);
-  QTextCursor c = txData->textCursor();
-  c.setPosition(iStart);
-  c.setPosition(iEnd, QTextCursor::KeepAnchor);
-  txData->setTextCursor(c);
-
   emit UpdateGeometrySelectionSig(sbSelChunksFrom->value(), sbSelChunksTo->value());
 }
 
@@ -626,8 +612,8 @@ void CMainWindow::UpdateGeometrySelection()
 
 void CMainWindow::InsertUIUpdate(int iInsertVal)
 {
-  BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)p->m_track.m_chunkAy.size() - 1));
-  BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0,   (int)p->m_track.m_chunkAy.size() - 1));
+  BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)p->m_trackAy[0]->m_chunkAy.size() - 1));
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0,   (int)p->m_trackAy[0]->m_chunkAy.size() - 1));
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(sbSelChunksFrom->value() + iInsertVal - 1));
   BLOCK_SIG_AND_DO(ckTo, setChecked(iInsertVal > 1));
 }

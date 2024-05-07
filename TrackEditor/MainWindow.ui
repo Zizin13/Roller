@@ -126,63 +126,20 @@
         </property>
        </spacer>
       </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Click to pan. WASD to move. R/F up/down.</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item>
      <widget class="QTabWidget" name="twViewer">
       <property name="currentIndex">
-       <number>0</number>
+       <number>-1</number>
       </property>
-      <widget class="QWidget" name="tabPreview">
-       <attribute name="title">
-        <string>Preview</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="previewLayout">
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Click to pan. WASD to move. R/F up/down.</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="CTrackPreview" name="openGLWidget">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="tabData">
-       <attribute name="title">
-        <string>Data</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
-         <widget class="QPlainTextEdit" name="txData">
-          <property name="enabled">
-           <bool>true</bool>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">selection-background-color: rgb(0,170,255)</string>
-          </property>
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::NoTextInteraction</set>
-          </property>
-          <property name="centerOnScroll">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
      </widget>
     </item>
    </layout>
@@ -323,13 +280,6 @@
    </property>
   </action>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>CTrackPreview</class>
-   <extends>QOpenGLWidget</extends>
-   <header>TrackPreview.h</header>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="resource.qrc"/>
  </resources>

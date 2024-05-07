@@ -6,8 +6,6 @@
 //-------------------------------------------------------------------------------------------------
 class CTrackPreviewPrivate;
 class CTrack;
-class CTexture;
-class CPalette;
 //-------------------------------------------------------------------------------------------------
 class CTrackPreview : public QGLWidget
 {
@@ -17,7 +15,7 @@ public:
   CTrackPreview(QWidget *pParent);
   ~CTrackPreview();
 
-  void SetTrack(CTrack *pTrack, CTexture *pTex, CTexture *pBld, CPalette *pPal);
+  void SetTrack(CTrack *pTrack);
   void ShowModels(uint32 uiShowModels);
   void UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
   void SetScale(int iScale);

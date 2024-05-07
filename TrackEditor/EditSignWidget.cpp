@@ -18,8 +18,6 @@ public:
   ~CEditSignWidgetPrivate() {};
 
   CTrack *m_pTrack;
-  CTexture *m_pBld;
-  CPalette *m_pPal;
 
   QString signAy[17] = { "TOWER"
                        , "TOWER 2"
@@ -43,13 +41,11 @@ public:
 
 //-------------------------------------------------------------------------------------------------
 
-CEditSignWidget::CEditSignWidget(QWidget *pParent, CTrack *pTrack, CTexture *pBld, CPalette *pPal)
+CEditSignWidget::CEditSignWidget(QWidget *pParent, CTrack *pTrack)
   : QWidget(pParent)
 {
   p = new CEditSignWidgetPrivate;
   p->m_pTrack = pTrack;
-  p->m_pBld = pBld;
-  p->m_pPal = pPal;
 
   setupUi(this);
 
@@ -115,7 +111,7 @@ void CEditSignWidget::UpdateGeometrySelection(int iFrom, int iTo)
   leUnk->setVisible(bUnk);
   lblUnk->setVisible(bUnk);
   
-  QtHelpers::UpdateTextures(lblTex, NULL, p->m_pBld, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iSignTexture);
+  QtHelpers::UpdateTextures(lblTex, NULL, p->m_pTrack->m_pBld, p->m_pTrack->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iSignTexture);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -256,7 +252,7 @@ void CEditSignWidget::EditClicked()
       || iTo >= (int)p->m_pTrack->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, p->m_pBld, p->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iSignTexture);
+  CEditSurfaceDialog dlg(this, p->m_pTrack->m_pBld, p->m_pTrack->m_pPal, p->m_pTrack->m_chunkAy[iFrom].iSignTexture);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       p->m_pTrack->m_chunkAy[i].iSignTexture = dlg.GetValue();

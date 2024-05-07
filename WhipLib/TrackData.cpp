@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include "Texture.h"
+#include "Palette.h"
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
@@ -114,6 +115,9 @@ void tGeometryChunk::Clear()
 CTrackData::CTrackData()
   : m_iAILineHeight(100)
   , m_fScale(1000.0f)
+  , m_pPal(NULL)
+  , m_pTex(NULL)
+  , m_pBld(NULL)
 {
   ClearData();
 }
@@ -122,7 +126,18 @@ CTrackData::CTrackData()
 
 CTrackData::~CTrackData()
 {
-
+  if (m_pTex) {
+    delete m_pTex;
+    m_pTex = NULL;
+  }
+  if (m_pBld) {
+    delete m_pBld;
+    m_pBld = NULL;
+  }
+  if (m_pPal) {
+    delete m_pPal;
+    m_pPal = NULL;
+  }
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -190,6 +205,41 @@ bool CTrackData::LoadTrack(const std::string &sFilename)
   file.close();
 
   Logging::LogMessage("%s track file: %s", bSuccess ? "Loaded" : "Failed to load", sFilename.c_str());
+
+  return bSuccess;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CTrackData::LoadTextures(const std::string &sDir)
+{
+  bool bSuccess = true;
+
+  if (m_pTex) {
+    delete m_pTex;
+    m_pTex = NULL;
+  }
+  if (m_pBld) {
+    delete m_pBld;
+    m_pBld = NULL;
+  }
+  if (m_pPal) {
+    delete m_pPal;
+    m_pPal = NULL;
+  }
+
+  m_pPal = new CPalette;
+  m_pTex = new CTexture;
+  m_pBld = new CTexture;
+
+  //load textures
+  std::string sPal = sDir + "PALETTE.PAL";
+  std::string sTex = sDir + m_sTextureFile;
+  std::string sBld = sDir + m_sBuildingFile;
+
+  bSuccess &= m_pPal->LoadPalette(sPal);
+  bSuccess &= m_pTex->LoadTexture(sTex, m_pPal);
+  bSuccess &= m_pBld->LoadTexture(sBld, m_pPal);
 
   return bSuccess;
 }

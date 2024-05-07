@@ -182,6 +182,9 @@ enum eFileSection
   MAP
 };
 //-------------------------------------------------------------------------------------------------
+class CTexture;
+class CPalette;
+//-------------------------------------------------------------------------------------------------
 
 class CTrackData
 {
@@ -191,6 +194,7 @@ public:
 
   void ClearData();
   bool LoadTrack(const std::string &sFilename);
+  bool LoadTextures(const std::string &sDir);
   void GetTrackData(std::vector<uint8_t> &data);
   void GenerateTrackMath();
   bool ShouldShowChunkSection(int i, eShapeSection section);
@@ -206,6 +210,10 @@ public:
   tRaceInfo m_raceInfo;
   int m_iAILineHeight;
   float m_fScale;
+
+  CPalette *m_pPal;
+  CTexture *m_pTex;
+  CTexture *m_pBld;
 
 protected:
   bool IsNumber(const std::string &str);

@@ -344,8 +344,10 @@ void CMainWindow::OnPaste()
   }
   GetCurrentTrack()->UpdateChunkStrings();
 
-  BLOCK_SIG_AND_DO(ckTo, setChecked(true));
-  BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(sbSelChunksFrom->value() + (int)p->m_clipBoard.size() - 1));
+  int iSelect = sbSelChunksFrom->value() + (int)p->m_clipBoard.size();
+  BLOCK_SIG_AND_DO(ckTo, setChecked(false));
+  BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(iSelect));
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(iSelect));
   GetCurrentPreview()->m_bUnsavedChanges = true;
   LogMessage("Pasted " + QString::number(p->m_clipBoard.size()) + " geometry chunks");
   g_pMainWindow->UpdateWindow();

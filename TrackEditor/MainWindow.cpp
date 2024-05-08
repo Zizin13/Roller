@@ -340,15 +340,15 @@ void CMainWindow::OnPaste()
     OnDeleteChunkClicked();
 
   for (int i = 0; i < (int)p->m_clipBoard.size(); ++i) {
-    GetCurrentTrack()->m_chunkAy.insert(GetCurrentTrack()->m_chunkAy.begin() + i, p->m_clipBoard[i]);
+    GetCurrentTrack()->m_chunkAy.insert(GetCurrentTrack()->m_chunkAy.begin() + i + sbSelChunksFrom->value(), p->m_clipBoard[i]);
   }
   GetCurrentTrack()->UpdateChunkStrings();
 
+  BLOCK_SIG_AND_DO(ckTo, setChecked(true));
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(sbSelChunksFrom->value() + (int)p->m_clipBoard.size() - 1));
   GetCurrentPreview()->m_bUnsavedChanges = true;
   LogMessage("Pasted " + QString::number(p->m_clipBoard.size()) + " geometry chunks");
   g_pMainWindow->UpdateWindow();
-  //BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(iLastPos + 1));
-  //BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(iLastPos + 1));
   p->m_pEditData->UpdateGeometryEditMode();
 }
 
@@ -474,7 +474,9 @@ void CMainWindow::OnDeleteChunkClicked()
   g_pMainWindow->LogMessage("Deleted geometry chunk");
   g_pMainWindow->UpdateWindow();
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(sbSelChunksFrom->value()));
+  BLOCK_SIG_AND_DO(ckTo, setChecked(false));
   p->m_pEditData->UpdateGeometryEditMode();
+  UpdateGeometrySelection();
 }
 
 //-------------------------------------------------------------------------------------------------

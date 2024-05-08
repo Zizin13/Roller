@@ -253,7 +253,7 @@ void CMainWindow::OnNewTrack()
     //add to array and create preview window
     p->m_previewAy.push_back(pPreview);
     twViewer->addTab(pPreview, pPreview->GetTitle(false));
-    //twViewer->setCurrentIndex((int)p->m_previewAy.size() - 1);
+    twViewer->setCurrentIndex((int)p->m_previewAy.size() - 1);
   }
 }
 

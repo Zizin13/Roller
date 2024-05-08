@@ -961,6 +961,9 @@ CShapeData *CShapeFactory::MakeEnvirFloor(CShader *pShader, CTrackData *pTrack, 
   uint32 uiNumVerts;
   struct tVertex *vertices = NULL;
   vertices = MakeVertsEnvirFloor(uiNumVerts, pTrack, pTrack->m_pTex, iIndex);
+  if (!vertices)
+    return NULL;
+
   uint32 uiNumIndices;
   uint32 *indices = NULL;
   GLenum drawType = GL_TRIANGLES;
@@ -970,7 +973,7 @@ CShapeData *CShapeFactory::MakeEnvirFloor(CShader *pShader, CTrackData *pTrack, 
   CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
   CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
-  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
+  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
 
   if (vertices)
     delete[] vertices;

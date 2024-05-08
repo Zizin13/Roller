@@ -363,16 +363,12 @@ void CTrackPreview::UpdateGeometrySelection()
 {
   if (p->m_pSelection)
     delete p->m_pSelection;
-  if (&p->m_track) {
-    p->m_pSelection = CShapeFactory::GetShapeFactory().MakeSelectedChunks(p->m_pShader, &p->m_track, m_iSelFrom, m_iSelTo);
-  }
+  p->m_pSelection = CShapeFactory::GetShapeFactory().MakeSelectedChunks(p->m_pShader, &p->m_track, m_iSelFrom, m_iSelTo);
   if (p->m_pEnvirFloor)
     delete p->m_pEnvirFloor;
-  if (&p->m_track) {
-    p->m_pEnvirFloor = CShapeFactory::GetShapeFactory().MakeEnvirFloor(p->m_pShader, &p->m_track, m_iSelFrom);
-  }
+  p->m_pEnvirFloor = CShapeFactory::GetShapeFactory().MakeEnvirFloor(p->m_pShader, &p->m_track, m_iSelFrom);
 
-  if (p->m_pCar && &p->m_track)
+  if (p->m_pCar)
     CShapeFactory::GetShapeFactory().GetCarPos(&p->m_track, m_iSelFrom, m_carAILine, p->m_pCar->m_modelToWorldMatrix, m_bMillionPlus);
 
   repaint();

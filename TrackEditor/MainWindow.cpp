@@ -68,6 +68,7 @@ public:
   CDisplaySettings *m_pDisplaySettings;
   QAction *m_pDebugAction;
   std::vector<CTrackPreview *> m_previewAy;
+  CChunkAy m_clipBoard;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -148,9 +149,6 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
 
   actUndo->setVisible(false);
   actRedo->setVisible(false);
-  actCut->setVisible(false);
-  actCopy->setVisible(false);
-  actPaste->setVisible(false);
 
   //signals
   connect(this, &CMainWindow::LogMsgSig, this, &CMainWindow::OnLogMsg, Qt::QueuedConnection);
@@ -158,6 +156,9 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   connect(actLoad, &QAction::triggered, this, &CMainWindow::OnLoadTrack);
   connect(actSave, &QAction::triggered, this, &CMainWindow::OnSaveTrack);
   connect(actSaveAs, &QAction::triggered, this, &CMainWindow::OnSaveTrackAs);
+  connect(actCut, &QAction::triggered, this, &CMainWindow::OnCut);
+  connect(actCopy, &QAction::triggered, this, &CMainWindow::OnCopy);
+  connect(actPaste, &QAction::triggered, this, &CMainWindow::OnPaste);
   connect(actDelete, &QAction::triggered, this, &CMainWindow::OnDeleteChunkClicked);
   connect(actSelectAll, &QAction::triggered, this, &CMainWindow::OnSelectAll);
   connect(p->m_pDebugAction, &QAction::triggered, this, &CMainWindow::OnDebug);
@@ -252,7 +253,7 @@ void CMainWindow::OnNewTrack()
     //add to array and create preview window
     p->m_previewAy.push_back(pPreview);
     twViewer->addTab(pPreview, pPreview->GetTitle(false));
-    twViewer->setCurrentIndex((int)p->m_previewAy.size() - 1);
+    //twViewer->setCurrentIndex((int)p->m_previewAy.size() - 1);
   }
 }
 
@@ -302,6 +303,53 @@ void CMainWindow::OnSaveTrackAs()
 {
   if (GetCurrentPreview())
     GetCurrentPreview()->SaveTrackAs();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnCut()
+{
+  OnCopy();
+  OnDeleteChunkClicked();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnCopy()
+{
+  if (sbSelChunksTo->value() >= (int)GetCurrentTrack()->m_chunkAy.size() 
+      || sbSelChunksFrom->value() >= (int)GetCurrentTrack()->m_chunkAy.size())
+    return;
+
+  p->m_clipBoard.clear();
+  for (int i = sbSelChunksFrom->value(); i <= sbSelChunksTo->value(); ++i) {
+    p->m_clipBoard.push_back(GetCurrentTrack()->m_chunkAy[i]);
+  }
+  LogMessage("Copied " + QString::number(sbSelChunksTo->value() + 1 - sbSelChunksFrom->value()) + " geometry chunks");
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnPaste()
+{
+  if (sbSelChunksTo->value() > (int)GetCurrentTrack()->m_chunkAy.size()
+      || sbSelChunksFrom->value() > (int)GetCurrentTrack()->m_chunkAy.size())
+    return;
+
+  if (sbSelChunksTo->value() != sbSelChunksFrom->value())
+    OnDeleteChunkClicked();
+
+  for (int i = 0; i < (int)p->m_clipBoard.size(); ++i) {
+    GetCurrentTrack()->m_chunkAy.insert(GetCurrentTrack()->m_chunkAy.begin() + i, p->m_clipBoard[i]);
+  }
+  GetCurrentTrack()->UpdateChunkStrings();
+
+  GetCurrentPreview()->m_bUnsavedChanges = true;
+  LogMessage("Pasted " + QString::number(p->m_clipBoard.size()) + " geometry chunks");
+  g_pMainWindow->UpdateWindow();
+  //BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(iLastPos + 1));
+  //BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(iLastPos + 1));
+  p->m_pEditData->UpdateGeometryEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -582,9 +582,6 @@ bool CTrackData::ShouldShowChunkSection(int i, eShapeSection section)
           || m_chunkAy[i].iRightWallType == -1
           || (!ShouldDrawSurfaceType(m_chunkAy[i].iLeftWallType) && !ShouldDrawSurfaceType(m_chunkAy[i].iRightWallType))))
     return false;
-  if (section == eShapeSection::ENVIRFLOOR
-      && !ShouldDrawSurfaceType(m_chunkAy[i].iEnvironmentFloorType))
-    return false;
   if (section == eShapeSection::OWALLFLOOR
       && (m_chunkAy[i].iOuterFloorType == -2
           || !ShouldDrawSurfaceType(m_chunkAy[i].iOuterFloorType)))

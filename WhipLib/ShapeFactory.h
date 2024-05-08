@@ -26,6 +26,7 @@ public:
   CShapeData *MakeAudioMarker(CShader *pShader);
   CShapeData *MakeStuntMarker(CShader *pShader);
   CShapeData *MakeTrackSurface(CShader *pShader, CTrackData *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false);
+  CShapeData *MakeEnvirFloor(CShader *pShader, CTrackData *pTrack, int iIndex);
   CShapeData *MakeAILine(CShader *pShader, CTrackData *pTrack, eShapeSection section, bool bAttachLast);
   CShapeData *MakeSelectedChunks(CShader *pShader, CTrackData *pTrack, int iStart, int iEnd);
   void MakeSigns(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData*> &signAy);
@@ -58,7 +59,7 @@ private:
   int GetAnmsCount(eWhipModel model);
 
   tVertex *MakeVerts(uint32 &numVertices, eShapeSection section, CTrackData *pTrack, CTexture *pTexture);
-  tVertex *MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTrack);
+  tVertex *MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTrack, CTexture *pTexture, int iIndex);
 
   uint32 *MakeIndicesEnvirFloor(uint32 &numIndices);
   uint32 *MakeIndicesCenterline(uint32 &numIndices, CTrackData *pTrack);

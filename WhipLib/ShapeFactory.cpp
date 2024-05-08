@@ -924,22 +924,12 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShader *pShader, CTrackData *pTrack
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = NULL;
-  if (section != eShapeSection::ENVIRFLOOR)
-    vertices = MakeVerts(uiNumVerts, section, pTrack, pTrack->m_pTex);
-  else
-    vertices = MakeVertsEnvirFloor(uiNumVerts, pTrack);
+  vertices = MakeVerts(uiNumVerts, section, pTrack, pTrack->m_pTex);
   uint32 uiNumIndices;
   uint32 *indices = NULL;
   GLenum drawType = GL_TRIANGLES;
   if (!bWireframe) {
-    if (section == DRIVING_SURFACE) {
-      indices = MakeIndicesSurface(uiNumIndices, pTrack, bAttachLast);
-    } else {
-      if (section != eShapeSection::ENVIRFLOOR)
-        indices = MakeIndicesSingleSection(uiNumIndices, section, pTrack, bAttachLast);
-      else
-        indices = MakeIndicesEnvirFloor(uiNumIndices);
-    }
+    indices = MakeIndicesSingleSection(uiNumIndices, section, pTrack, bAttachLast);
   } else {
     indices = MakeIndicesSingleSectionWireframe(uiNumIndices, pTrack, bAttachLast);
     drawType = GL_LINES;
@@ -949,6 +939,32 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShader *pShader, CTrackData *pTrack
       vertices[i].color = CTexture::RandomColor();
     }
   }
+
+  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
+  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+
+  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
+
+  if (vertices)
+    delete[] vertices;
+  if (indices)
+    delete[] indices;
+
+  return pRet;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+CShapeData *CShapeFactory::MakeEnvirFloor(CShader *pShader, CTrackData *pTrack, int iIndex)
+{
+  uint32 uiNumVerts;
+  struct tVertex *vertices = NULL;
+  vertices = MakeVertsEnvirFloor(uiNumVerts, pTrack, pTrack->m_pTex, iIndex);
+  uint32 uiNumIndices;
+  uint32 *indices = NULL;
+  GLenum drawType = GL_TRIANGLES;
+  indices = MakeIndicesEnvirFloor(uiNumIndices);
 
   CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
   CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
@@ -1421,7 +1437,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
 
 //-------------------------------------------------------------------------------------------------
 
-tVertex *CShapeFactory::MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTrack)
+tVertex *CShapeFactory::MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTrack, CTexture *pTexture, int iIndex)
 {
   if (pTrack->m_chunkAy.empty()) {
     numVertices = 0;
@@ -1452,10 +1468,9 @@ tVertex *CShapeFactory::MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTr
   vertices[1].position = glm::vec3(fMinX - fPadding, fEnvirFloorDepth, fMaxZ + fPadding);
   vertices[2].position = glm::vec3(fMaxX + fPadding, fEnvirFloorDepth, fMinZ - fPadding);
   vertices[3].position = glm::vec3(fMaxX + fPadding, fEnvirFloorDepth, fMaxZ + fPadding);
-  vertices[0].color = glm::vec3(0.235f, 0.317f, 0.157f);
-  vertices[1].color = glm::vec3(0.235f, 0.317f, 0.157f);
-  vertices[2].color = glm::vec3(0.235f, 0.317f, 0.157f);
-  vertices[3].color = glm::vec3(0.235f, 0.317f, 0.157f);
+  pTexture->GetTextureCoordinates(
+    CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iIndex].iEnvironmentFloorType) & SURFACE_TEXTURE_INDEX,
+    vertices[0], vertices[1], vertices[2], vertices[3]);
   vertices[0].flags.x = 1.0f;
   vertices[1].flags.x = 1.0f;
   vertices[2].flags.x = 1.0f;

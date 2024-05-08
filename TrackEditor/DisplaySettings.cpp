@@ -64,8 +64,7 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent)
   connect(ckRLOWallWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckOWallFloorSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckOWallFloorWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
-  connect(ckEnvirFloorSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
-  connect(ckEnvirFloorWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
+  connect(ckEnvironment, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckHighlightSelection, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckAILines, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckSigns, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
@@ -117,8 +116,7 @@ uint32 CDisplaySettings::GetDisplaySettings(eWhipModel &carModel, eShapeSection 
   if (ckRLOWallWireframe->isChecked())    uiShowModels |= SHOW_RLOWALL_WIRE_MODEL;
   if (ckOWallFloorSurface->isChecked())   uiShowModels |= SHOW_OWALLFLOOR_SURF_MODEL;
   if (ckOWallFloorWireframe->isChecked()) uiShowModels |= SHOW_OWALLFLOOR_WIRE_MODEL;
-  if (ckEnvirFloorSurface->isChecked())   uiShowModels |= SHOW_ENVIRFLOOR_SURF_MODEL;
-  if (ckEnvirFloorWireframe->isChecked()) uiShowModels |= SHOW_ENVIRFLOOR_WIRE_MODEL;
+  if (ckEnvironment->isChecked())         uiShowModels |= SHOW_ENVIRONMENT;
   if (ckHighlightSelection->isChecked())  uiShowModels |= SHOW_SELECTION_HIGHLIGHT;
   if (ckAILines->isChecked())             uiShowModels |= SHOW_AILINE_MODELS;
   if (ckTestCar->isChecked())             uiShowModels |= SHOW_TEST_CAR;
@@ -161,8 +159,7 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels, eWhipModel carMod
   BLOCK_SIG_AND_DO(ckRLOWallWireframe, setChecked(   uiShowModels & SHOW_RLOWALL_WIRE_MODEL));
   BLOCK_SIG_AND_DO(ckOWallFloorSurface, setChecked(  uiShowModels & SHOW_OWALLFLOOR_SURF_MODEL));
   BLOCK_SIG_AND_DO(ckOWallFloorWireframe, setChecked(uiShowModels & SHOW_OWALLFLOOR_WIRE_MODEL));
-  BLOCK_SIG_AND_DO(ckEnvirFloorSurface, setChecked(  uiShowModels & SHOW_ENVIRFLOOR_SURF_MODEL));
-  BLOCK_SIG_AND_DO(ckEnvirFloorWireframe, setChecked(uiShowModels & SHOW_ENVIRFLOOR_WIRE_MODEL));
+  BLOCK_SIG_AND_DO(ckEnvironment, setChecked(        uiShowModels & SHOW_ENVIRONMENT));
   BLOCK_SIG_AND_DO(ckHighlightSelection, setChecked( uiShowModels & SHOW_SELECTION_HIGHLIGHT));
   BLOCK_SIG_AND_DO(ckAILines, setChecked(            uiShowModels & SHOW_AILINE_MODELS));
   BLOCK_SIG_AND_DO(ckTestCar, setChecked(            uiShowModels & SHOW_TEST_CAR));
@@ -221,7 +218,6 @@ void CDisplaySettings::UpdateAllSurface()
   BLOCK_SIG_AND_DO(ckRUOWallSurface, setChecked(ckAllSurface->isChecked()));
   BLOCK_SIG_AND_DO(ckRLOWallSurface, setChecked(ckAllSurface->isChecked()));
   BLOCK_SIG_AND_DO(ckOWallFloorSurface, setChecked(ckAllSurface->isChecked()));
-  BLOCK_SIG_AND_DO(ckEnvirFloorSurface, setChecked(ckAllSurface->isChecked()));
 
   UpdatePreviewSig();
 }
@@ -242,7 +238,6 @@ void CDisplaySettings::UpdateAllWireframe()
   BLOCK_SIG_AND_DO(ckRUOWallWireframe, setChecked(ckAllWireframe->isChecked()));
   BLOCK_SIG_AND_DO(ckRLOWallWireframe, setChecked(ckAllWireframe->isChecked()));
   BLOCK_SIG_AND_DO(ckOWallFloorWireframe, setChecked(ckAllWireframe->isChecked()));
-  BLOCK_SIG_AND_DO(ckEnvirFloorWireframe, setChecked(ckAllWireframe->isChecked()));
 
   UpdatePreviewSig();
 }
@@ -277,8 +272,6 @@ void CDisplaySettings::UpdatePreviewSelection()
   bAllWireframeChecked &= ckRLOWallWireframe->isChecked();
   bAllSurfaceChecked &= ckOWallFloorSurface->isChecked();
   bAllWireframeChecked &= ckOWallFloorWireframe->isChecked();
-  bAllSurfaceChecked &= ckEnvirFloorSurface->isChecked();
-  bAllWireframeChecked &= ckEnvirFloorWireframe->isChecked();
 
   BLOCK_SIG_AND_DO(ckAllSurface, setChecked(bAllSurfaceChecked));
   BLOCK_SIG_AND_DO(ckAllWireframe, setChecked(bAllWireframeChecked));

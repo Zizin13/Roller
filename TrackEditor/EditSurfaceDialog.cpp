@@ -357,11 +357,11 @@ void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
   int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
 
   if (bChecked) {
-    if (iIndex >= m_pTexture->m_iNumTiles)
+    if (m_pTexture && iIndex >= m_pTexture->m_iNumTiles)
       m_uiSignedBitValue = 0;
     m_uiSignedBitValue |= SURFACE_FLAG_APPLY_TEXTURE;
-  } else {
-    if (iIndex >= (int)m_pPalette->m_paletteAy.size())
+  } else if (m_pPalette) {
+    if (m_pPalette && iIndex >= (int)m_pPalette->m_paletteAy.size())
       m_uiSignedBitValue = 0;
     m_uiSignedBitValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
   }
@@ -374,7 +374,7 @@ void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
 void CEditSurfaceDialog::OnTextureClicked()
 {
   int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
-  if (m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE) {
+  if (m_pTexture && m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE) {
     CTilePicker dlg(this, iIndex, m_pTexture);
     if (dlg.exec()) {
       iIndex = dlg.GetSelected();
@@ -466,7 +466,7 @@ void CEditSurfaceDialog::UpdateDialog()
   leValue->setText(QString::number(iValue).leftJustified(10, ' ') + szBuf);
 
   //textures
-  if (m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE) {
+  if (m_pTexture && m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE) {
     int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
     if (iIndex < m_pTexture->m_iNumTiles) {
       QPixmap pixmap;
@@ -485,7 +485,7 @@ void CEditSurfaceDialog::UpdateDialog()
         lblTexture2->setPixmap(QPixmap());
       }
     }
-  } else {
+  } else if (m_pPalette) {
     int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
     if (iIndex < (int)m_pPalette->m_paletteAy.size()) {
       QPixmap pixmap;

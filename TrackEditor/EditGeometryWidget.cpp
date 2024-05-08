@@ -67,6 +67,7 @@ CEditGeometryWidget::CEditGeometryWidget(QWidget *pParent)
   connect(pbEditRLOWall,    &QPushButton::clicked, this, &CEditGeometryWidget::EditRLOWall);
   connect(pbEditRUOWall,    &QPushButton::clicked, this, &CEditGeometryWidget::EditRUOWall);
   connect(pbEditOFloor,     &QPushButton::clicked, this, &CEditGeometryWidget::EditOFloor);
+  connect(pbEditEnvirFloor, &QPushButton::clicked, this, &CEditGeometryWidget::EditEnvirFloor);
 
   connect(sldCGrip        , SIGNAL(valueChanged(int)), this, SLOT(CGripChanged(int)));
   connect(sldLShoulderGrip, SIGNAL(valueChanged(int)), this, SLOT(LGripChanged(int)));
@@ -138,6 +139,7 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
   QtHelpers::UpdateTextures(lblRLOWallTex1, lblRLOWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRLOuterWallType);
   QtHelpers::UpdateTextures(lblRUOWallTex1, lblRUOWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRUOuterWallType);
   QtHelpers::UpdateTextures(lblOFloorTex1, lblOFloorTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType);
+  QtHelpers::UpdateTextures(lblEnvirFloorTex, NULL, NULL, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iEnvironmentFloorType);
 
   //update roof disabled text
   lblRoofDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::ROOF) && CTrackData::ShouldDrawSurfaceType(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRoofType));
@@ -1019,6 +1021,32 @@ void CEditGeometryWidget::EditOFloor()
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
       g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iOuterFloorType = dlg.GetValue();
+    }
+  }
+  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
+  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditGeometryWidget::EditEnvirFloor()
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+
+  if (!g_pMainWindow->GetCurrentTrack()
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+    return;
+
+  CEditSurfaceDialog dlg(this, 
+                         NULL, 
+                         g_pMainWindow->GetCurrentTrack()->m_pPal, 
+                         g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iEnvironmentFloorType);
+  if (dlg.exec()) {
+    for (int i = iFrom; i <= iTo; ++i) {
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iEnvironmentFloorType = dlg.GetValue();
     }
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();

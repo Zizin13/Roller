@@ -42,8 +42,6 @@ public:
     , m_pRWallWire(NULL)
     , m_pRoofSurf(NULL)
     , m_pRoofWire(NULL)
-    , m_pEnvirFloorSurf(NULL)
-    , m_pEnvirFloorWire(NULL)
     , m_pOWallFloorSurf(NULL)
     , m_pOWallFloorWire(NULL)
     , m_pLLOWallSurf(NULL)
@@ -59,6 +57,7 @@ public:
     , m_pAILine2(NULL)
     , m_pAILine3(NULL)
     , m_pAILine4(NULL)
+    , m_pEnvirFloor(NULL)
     , m_pAxes(NULL)
     , m_pCar(NULL)
   {};
@@ -136,14 +135,6 @@ public:
       delete m_pRoofWire;
       m_pRoofWire = NULL;
     }
-    if (m_pEnvirFloorSurf) {
-      delete m_pEnvirFloorSurf;
-      m_pEnvirFloorSurf = NULL;
-    }
-    if (m_pEnvirFloorWire) {
-      delete m_pEnvirFloorWire;
-      m_pEnvirFloorWire = NULL;
-    }
     if (m_pOWallFloorSurf) {
       delete m_pOWallFloorSurf;
       m_pOWallFloorSurf = NULL;
@@ -200,6 +191,10 @@ public:
       delete m_pAILine4;
       m_pAILine4 = NULL;
     }
+    if (m_pEnvirFloor) {
+      delete m_pEnvirFloor;
+      m_pEnvirFloor = NULL;
+    }
     if (m_pSelection) {
       delete m_pSelection;
       m_pSelection = NULL;
@@ -232,8 +227,6 @@ public:
   CShapeData *m_pRWallWire;
   CShapeData *m_pRoofSurf;
   CShapeData *m_pRoofWire;
-  CShapeData *m_pEnvirFloorSurf;
-  CShapeData *m_pEnvirFloorWire;
   CShapeData *m_pOWallFloorSurf;
   CShapeData *m_pOWallFloorWire;
   CShapeData *m_pLLOWallSurf;
@@ -249,6 +242,7 @@ public:
   CShapeData *m_pAILine2;
   CShapeData *m_pAILine3;
   CShapeData *m_pAILine4;
+  CShapeData *m_pEnvirFloor;
   CShapeData *m_pAxes;
   std::vector<CShapeData *> m_signAy;
   std::vector<CShapeData *> m_audioAy;
@@ -331,8 +325,6 @@ void CTrackPreview::UpdateTrack()
     p->m_pRWallWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_track, eShapeSection::RWALL, m_bAttachLast, true);
     p->m_pRoofSurf       = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_track, eShapeSection::ROOF, m_bAttachLast);
     p->m_pRoofWire       = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_track, eShapeSection::ROOF, m_bAttachLast, true);
-    p->m_pEnvirFloorSurf = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_track, eShapeSection::ENVIRFLOOR, m_bAttachLast);
-    p->m_pEnvirFloorWire = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_track, eShapeSection::ENVIRFLOOR, m_bAttachLast, true);
     p->m_pOWallFloorSurf = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_track, eShapeSection::OWALLFLOOR, m_bAttachLast);
     p->m_pOWallFloorWire = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_track, eShapeSection::OWALLFLOOR, m_bAttachLast, true);
     p->m_pLLOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pShader, &p->m_track, eShapeSection::LLOWALL, m_bAttachLast);
@@ -373,6 +365,11 @@ void CTrackPreview::UpdateGeometrySelection()
     delete p->m_pSelection;
   if (&p->m_track) {
     p->m_pSelection = CShapeFactory::GetShapeFactory().MakeSelectedChunks(p->m_pShader, &p->m_track, m_iSelFrom, m_iSelTo);
+  }
+  if (p->m_pEnvirFloor)
+    delete p->m_pEnvirFloor;
+  if (&p->m_track) {
+    p->m_pEnvirFloor = CShapeFactory::GetShapeFactory().MakeEnvirFloor(p->m_pShader, &p->m_track, m_iSelFrom);
   }
 
   if (p->m_pCar && &p->m_track)
@@ -457,7 +454,7 @@ void CTrackPreview::AttachLast(bool bAttachLast)
 
 void CTrackPreview::paintGL()
 {
-  if (m_uiShowModels & SHOW_ENVIRFLOOR_SURF_MODEL)
+  if (m_uiShowModels & SHOW_ENVIRONMENT)
     glClearColor(0.031f, 0.301f, 1.0f, 1.0f);
   else
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -468,10 +465,8 @@ void CTrackPreview::paintGL()
   glm::mat4 worldToViewMatrix = p->m_camera.GetWorldToViewMatrix();
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
-  if (m_uiShowModels & SHOW_ENVIRFLOOR_SURF_MODEL && p->m_pEnvirFloorSurf)
-    p->m_pEnvirFloorSurf->Draw(worldToProjectionMatrix);
-  if (m_uiShowModels & SHOW_ENVIRFLOOR_WIRE_MODEL && p->m_pEnvirFloorWire)
-    p->m_pEnvirFloorWire->Draw(worldToProjectionMatrix);
+  if (m_uiShowModels & SHOW_ENVIRONMENT && p->m_pEnvirFloor)
+    p->m_pEnvirFloor->Draw(worldToProjectionMatrix);
   //environment floor should never clip through track even when it is higher than it
   //so we draw it first then clear depth buffer bit
   glClear(GL_DEPTH_BUFFER_BIT);

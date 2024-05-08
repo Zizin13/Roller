@@ -17,16 +17,13 @@ typedef unsigned __int64 uint64;
 
 enum eShapeSection
 {
-  DRIVING_SURFACE = 0,
-  CENTER,
-  LLANE,
+  LLANE = 0,
   RLANE,
   LSHOULDER,
   RSHOULDER,
   LWALL,
   RWALL,
   ROOF,
-  ENVIRFLOOR,
   OWALLFLOOR,
   LLOWALL,
   RLOWALL,

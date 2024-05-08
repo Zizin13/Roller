@@ -195,7 +195,8 @@ public:
   void ClearData();
   bool LoadTrack(const std::string &sFilename);
   bool LoadTextures();
-  void GetTrackData(std::vector<uint8_t> &data);
+  bool ProcessTrackData(const uint8 *pData, size_t length);
+  void GetTrackData(std::vector<uint8> &data);
   void GenerateTrackMath();
   bool ShouldShowChunkSection(int i, eShapeSection section);
 
@@ -218,9 +219,8 @@ public:
 
 protected:
   bool IsNumber(const std::string &str);
-  bool ProcessTrackData(const uint8_t *pData, size_t length);
   void ProcessSign(const std::vector<std::string> &lineAy, eFileSection &section);
-  void WriteToVector(std::vector<uint8_t> &data, const char *szText);
+  void WriteToVector(std::vector<uint8> &data, const char *szText);
 
   void GetCenter(int i, glm::vec3 prevCenter,
                  glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched,
@@ -237,6 +237,11 @@ protected:
                glm::vec3 &lloWall, eShapeSection wallSection);
   void GetAILine(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                glm::vec3 &aiLine, eShapeSection lineSection, int iHeight);
+
+private:
+  std::string m_sLastLoadedTex;
+  std::string m_sLastLoadedBld;
+  std::string m_sLastLoadedPal;
 };
 
 //-------------------------------------------------------------------------------------------------

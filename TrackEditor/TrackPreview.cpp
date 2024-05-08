@@ -243,14 +243,15 @@ public:
   CShapeData *m_pAILine3;
   CShapeData *m_pAILine4;
   CShapeData *m_pEnvirFloor;
+  CShapeData *m_pCar;
   CShapeData *m_pAxes;
   std::vector<CShapeData *> m_signAy;
   std::vector<CShapeData *> m_audioAy;
   std::vector<CShapeData *> m_stuntAy;
+
   CShader *m_pShader;
   CTrack m_track;
-
-  CShapeData *m_pCar;
+  CHistoryAy m_historyAy;
   CTexture m_carTex;
   Camera m_camera;
 };
@@ -271,6 +272,8 @@ CTrackPreview::CTrackPreview(QWidget *pParent, const QString &sTrackFile)
   , m_iSelFrom(0)
   , m_iSelTo(0)
   , m_bToChecked(false)
+  , m_sLastCarTex("")
+  , m_iHistoryIndex(0)
 {
   p = new CTrackPreviewPrivate;
 
@@ -296,7 +299,11 @@ bool CTrackPreview::LoadTrack(const QString &sFilename)
 {
   m_sTrackFile = sFilename;
   bool bSuccess = p->m_track.LoadTrack(sFilename);
-  if (bSuccess) m_bUnsavedChanges = false;
+  if (bSuccess) {
+    p->m_historyAy.clear();
+    SaveHistory(sFilename + " loaded");
+    m_bUnsavedChanges = false;
+  }
   return bSuccess;
 }
 
@@ -376,6 +383,68 @@ void CTrackPreview::UpdateGeometrySelection()
 
 //-------------------------------------------------------------------------------------------------
 
+void CTrackPreview::SaveHistory(const QString &sDescription)
+{
+  g_pMainWindow->LogMessage(sDescription);
+
+  tTrackHistory history;
+  history.sDescription = sDescription.toLatin1().constData();
+  p->m_track.GetTrackData(history.byteAy);
+
+  while (m_iHistoryIndex < (int)p->m_historyAy.size() - 1) {
+    p->m_historyAy.pop_back();
+  }
+
+  p->m_historyAy.push_back(history);
+  m_iHistoryIndex = (int)p->m_historyAy.size() - 1;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::Undo()
+{
+  if (p->m_historyAy.empty()) return;
+
+  m_iHistoryIndex--;
+  if (m_iHistoryIndex < 0)
+    m_iHistoryIndex = 0;
+
+  tTrackHistory *pHistory = &p->m_historyAy[m_iHistoryIndex];
+  LoadHistory(pHistory);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::Redo()
+{
+  if (p->m_historyAy.empty()) return;
+
+  m_iHistoryIndex++;
+  if (m_iHistoryIndex >= (int)p->m_historyAy.size())
+    m_iHistoryIndex = (int)p->m_historyAy.size() - 1;
+
+  tTrackHistory *pHistory = &p->m_historyAy[m_iHistoryIndex];
+  LoadHistory(pHistory);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::LoadHistory(const tTrackHistory *pHistory)
+{
+  int iSize = (int)pHistory->byteAy.size();
+  uint8 *byData = new uint8[iSize];
+  for (int i = 0; i < iSize; ++i)
+    byData[i] = pHistory->byteAy[i];
+
+  p->m_track.ClearData();
+  p->m_track.ProcessTrackData(byData, iSize);
+  p->m_track.UpdateChunkStrings();
+
+  delete[] byData;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus)
 {
   m_carModel = carModel;
@@ -387,7 +456,7 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
     p->m_pCar = NULL;
   }
 
-  if (&p->m_track && p->m_track.m_pPal && !p->m_track.m_sTrackFileFolder.empty()) {
+  if (p->m_track.m_pPal && !p->m_track.m_sTrackFileFolder.empty()) {
     QString sTexName;
     switch (carModel) {
       case CAR_F1WACK:
@@ -420,11 +489,14 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
     }
     QString sPal = QString(p->m_track.m_sTrackFileFolder.c_str()) + QDir::separator() + "PALETTE.PAL";
     QString sTex = QString(p->m_track.m_sTrackFileFolder.c_str()) + QDir::separator() + sTexName;
-    p->m_carTex.LoadTexture(sTex.toLatin1().constData(), p->m_track.m_pPal);
+    if (m_sLastCarTex.compare(sTex) != 0) {
+      if (p->m_carTex.LoadTexture(sTex.toLatin1().constData(), p->m_track.m_pPal))
+        m_sLastCarTex = sTex;
+    }
     p->m_pCar = CShapeFactory::GetShapeFactory().MakeModel(p->m_pShader, &p->m_carTex, carModel);
   }
 
-  if (p->m_pCar && &p->m_track)
+  if (p->m_pCar)
     CShapeFactory::GetShapeFactory().GetCarPos(&p->m_track, m_iSelFrom, m_carAILine, p->m_pCar->m_modelToWorldMatrix, m_bMillionPlus);
 
   repaint();

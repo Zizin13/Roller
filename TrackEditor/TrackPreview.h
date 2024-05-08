@@ -4,6 +4,13 @@
 #include <QtOpenGL\qgl.h>
 #include "Types.h"
 //-------------------------------------------------------------------------------------------------
+struct tTrackHistory
+{
+  std::string sDescription;
+  std::vector<uint8> byteAy;
+};
+typedef std::vector<tTrackHistory> CHistoryAy;
+//-------------------------------------------------------------------------------------------------
 class CTrackPreviewPrivate;
 class CTrack;
 //-------------------------------------------------------------------------------------------------
@@ -28,6 +35,9 @@ public:
   QString GetTitle(bool bFullPath);
   const QString &GetFilename() { return m_sTrackFile; };
   void UpdateGeometrySelection();
+  void SaveHistory(const QString &sDescription);
+  void Undo();
+  void Redo();
 
   bool m_bUnsavedChanges;
   int m_iSelFrom;
@@ -41,6 +51,8 @@ protected:
   void keyPressEvent(QKeyEvent *pEvent);
 
 private:
+  void LoadHistory(const tTrackHistory *pHistory);
+
   CTrackPreviewPrivate *p;
   uint32 m_uiShowModels;
   eWhipModel m_carModel;
@@ -50,6 +62,8 @@ private:
   int m_iScale;
   bool m_bAlreadySaved;
   QString m_sTrackFile;
+  QString m_sLastCarTex;
+  int m_iHistoryIndex;
 };
 
 //-------------------------------------------------------------------------------------------------

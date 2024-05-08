@@ -36,6 +36,8 @@ protected slots:
   void OnLoadTrack();
   void OnSaveTrack();
   void OnSaveTrackAs();
+  void OnUndo();
+  void OnRedo();
   void OnCut();
   void OnCopy();
   void OnPaste();

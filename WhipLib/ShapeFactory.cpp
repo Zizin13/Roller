@@ -1201,7 +1201,7 @@ void CShapeFactory::MakeStunts(CShader *pShader, CTrackData *pTrack, std::vector
 
 void CShapeFactory::GetCarPos(CTrackData *pTrack, int iChunk, eShapeSection aiLineSection, glm::mat4 &modelToWorldMatrix, bool bMillionPlus)
 {
-  if (pTrack->m_chunkAy.empty() || iChunk > (int)pTrack->m_chunkAy.size())
+  if (pTrack->m_chunkAy.empty() || iChunk > (int)pTrack->m_chunkAy.size() - 1)
     return;
 
   glm::vec3 carLine;

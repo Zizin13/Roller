@@ -11,7 +11,7 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
-int Unmangler::GetUnmangledLength(const uint8_t *pSource, int iSourceLen)
+int Unmangler::GetUnmangledLength(const uint8 *pSource, int iSourceLen)
 {
   if (iSourceLen < 4)
     return -1;
@@ -21,7 +21,7 @@ int Unmangler::GetUnmangledLength(const uint8_t *pSource, int iSourceLen)
 
 //-------------------------------------------------------------------------------------------------
 
-bool Unmangler::UnmangleFile(const uint8_t *pSource, int iSourceLen, uint8_t *pDestination, int iDestLength)
+bool Unmangler::UnmangleFile(const uint8 *pSource, int iSourceLen, uint8 *pDestination, int iDestLength)
 {
   // start positions
   int iInputPos = 4;
@@ -32,7 +32,7 @@ bool Unmangler::UnmangleFile(const uint8_t *pSource, int iSourceLen, uint8_t *pD
   
     if (iValue <= 0x3F) // 0x00 to 0x3F: read bytes from input
     {
-      uint8_t* pTempArray = new uint8_t[iValue];
+      uint8* pTempArray = new uint8[iValue];
       memcpy(pTempArray, &pSource[iInputPos + 1], iValue);
       memcpy(&pDestination[iOutputPos], pTempArray, iValue);
       iInputPos += iValue + 1;
@@ -51,8 +51,8 @@ bool Unmangler::UnmangleFile(const uint8_t *pSource, int iSourceLen, uint8_t *pD
       short sDelta = *(short*)(pDestination + iOutputPos - 2) - *(short*)(pDestination + iOutputPos - 4);
       for (int i = 0; i < ((iValue & 0x0F) + 2); i++) {
         short sNewShort = (*(short *)(pDestination + iOutputPos - 2)) + sDelta;
-        pDestination[iOutputPos] = (uint8_t)(sNewShort & 0xFF);
-        pDestination[iOutputPos + 1] = (uint8_t)((sNewShort >> 8) & 0xFF);
+        pDestination[iOutputPos] = (uint8)(sNewShort & 0xFF);
+        pDestination[iOutputPos + 1] = (uint8)((sNewShort >> 8) & 0xFF);
         iOutputPos += 2;
       }
       iInputPos++;
@@ -112,7 +112,7 @@ bool Unmangler::UnmangleFile(const uint8_t *pSource, int iSourceLen, uint8_t *pD
 
 
 // find next string of repeating bytes with length of at least 3, starting in the next 0x3F bytes
-std::vector<int> FindMaxRepeats(const std::vector<uint8_t> &inputData, int startPos)
+std::vector<int> FindMaxRepeats(const std::vector<uint8> &inputData, int startPos)
 {
   int offset = 0, length = 0;
   for (int i = std::max(startPos, 1); (i < (int)inputData.size()) && (i < startPos + 0x3F); i++) {
@@ -137,7 +137,7 @@ std::vector<int> FindMaxRepeats(const std::vector<uint8_t> &inputData, int start
 
 //-------------------------------------------------------------------------------------------------
 
-void Unmangler::MangleFile(const std::vector<uint8_t> &source, std::vector<uint8_t> &destination)
+void Unmangler::MangleFile(const std::vector<uint8> &source, std::vector<uint8> &destination)
 {
   destination.push_back(0);
   destination.push_back(0);
@@ -161,13 +161,13 @@ void Unmangler::MangleFile(const std::vector<uint8_t> &source, std::vector<uint8
         }
         iInputPos += iOffset;
       }
-      uint8_t byVal = (uint8_t)(iLength - 3) + 0x60;
+      uint8 byVal = (uint8)(iLength - 3) + 0x60;
       destination.push_back(byVal);
       iInputPos += iLength;
     } else // no repeating bytes
     {
       int iNextLength = std::min((int)source.size() - iInputPos, 0x3F);
-      destination.push_back((uint8_t)iNextLength);
+      destination.push_back((uint8)iNextLength);
       for (int i = iInputPos; i < iInputPos + iNextLength; ++i)
         destination.push_back(source[i]);
       iInputPos += iNextLength;

@@ -254,7 +254,7 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length)
   for (int i = 0; i < m_iNumTiles; ++i) {
     tTile *pTile = &m_pTileAy[i];
     for (int j = 0; j < iPixelsPerTile; ++j) {
-      unsigned char byPaletteIndex = pData[i * iPixelsPerTile + j];
+      uint8 byPaletteIndex = pData[i * iPixelsPerTile + j];
       if (m_pPalette->m_paletteAy.size() > byPaletteIndex) {
         pTile->data[j % TILE_WIDTH][j / TILE_WIDTH] = glm::vec<4, uint8>(m_pPalette->m_paletteAy[byPaletteIndex].r,
                                                                          m_pPalette->m_paletteAy[byPaletteIndex].g,

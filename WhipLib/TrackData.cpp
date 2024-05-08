@@ -149,6 +149,9 @@ void CTrackData::ClearData()
   m_chunkAy.clear();
   m_sTextureFile = "";
   m_sBuildingFile = "";
+  m_sLastLoadedTex = "";
+  m_sLastLoadedBld = "";
+  m_sLastLoadedPal = "";
   memset(&m_raceInfo, 0, sizeof(m_raceInfo));
 }
 
@@ -191,12 +194,12 @@ bool CTrackData::LoadTrack(const std::string &sFilename)
   file.read(szBuf, length);
 
   bool bSuccess = false;
-  int iUnmangledLength = Unmangler::GetUnmangledLength((uint8_t *)szBuf, (int)length);
+  int iUnmangledLength = Unmangler::GetUnmangledLength((uint8 *)szBuf, (int)length);
   //unmangle
   if (iUnmangledLength > 0 && iUnmangledLength < MAX_MANGLED_LENGTH) {
     Logging::LogMessage("Track file %s is mangled", sFilename.c_str());
-    uint8_t *szUnmangledData = new uint8_t[iUnmangledLength];
-    bSuccess = Unmangler::UnmangleFile((uint8_t *)szBuf, (int)length, szUnmangledData, iUnmangledLength);
+    uint8 *szUnmangledData = new uint8[iUnmangledLength];
+    bSuccess = Unmangler::UnmangleFile((uint8 *)szBuf, (int)length, szUnmangledData, iUnmangledLength);
     Logging::LogMessage("%s track file %s", bSuccess ? "Unmangled" : "Failed to unmangle", sFilename.c_str());
 
     if (bSuccess)
@@ -204,7 +207,7 @@ bool CTrackData::LoadTrack(const std::string &sFilename)
 
     delete[] szUnmangledData;
   } else {
-    bSuccess = ProcessTrackData((uint8_t *)szBuf, length);
+    bSuccess = ProcessTrackData((uint8 *)szBuf, length);
   }
 
   //cleanup
@@ -222,31 +225,42 @@ bool CTrackData::LoadTextures()
 {
   bool bSuccess = true;
 
-  if (m_pTex) {
-    delete m_pTex;
-    m_pTex = NULL;
-  }
-  if (m_pBld) {
-    delete m_pBld;
-    m_pBld = NULL;
-  }
-  if (m_pPal) {
-    delete m_pPal;
-    m_pPal = NULL;
-  }
-
-  m_pPal = new CPalette;
-  m_pTex = new CTexture;
-  m_pBld = new CTexture;
-
-  //load textures
   std::string sPal = m_sTrackFileFolder + "PALETTE.PAL";
   std::string sTex = m_sTrackFileFolder + m_sTextureFile;
   std::string sBld = m_sTrackFileFolder + m_sBuildingFile;
 
-  bSuccess &= m_pPal->LoadPalette(sPal);
-  bSuccess &= m_pTex->LoadTexture(sTex, m_pPal);
-  bSuccess &= m_pBld->LoadTexture(sBld, m_pPal);
+  if (m_sLastLoadedPal.compare(sPal) != 0) {
+    if (m_pPal) {
+      delete m_pPal;
+      m_pPal = NULL;
+    }
+    m_pPal = new CPalette;
+    bSuccess &= m_pPal->LoadPalette(sPal);
+    if (bSuccess)
+      m_sLastLoadedPal = sPal;
+  }
+
+  if (m_sLastLoadedTex.compare(sTex) != 0) {
+    if (m_pTex) {
+      delete m_pTex;
+      m_pTex = NULL;
+    }
+    m_pTex = new CTexture;
+    bSuccess &= m_pTex->LoadTexture(sTex, m_pPal);
+    if (bSuccess)
+      m_sLastLoadedTex = sTex;
+  }
+
+  if (m_sLastLoadedBld.compare(sBld) != 0) {
+    if (m_pBld) {
+      delete m_pBld;
+      m_pBld = NULL;
+    }
+    m_pBld = new CTexture;
+    bSuccess &= m_pBld->LoadTexture(sBld, m_pPal);
+    if (bSuccess)
+      m_sLastLoadedBld = sBld;
+  }
 
   return bSuccess;
 }
@@ -262,7 +276,7 @@ bool CTrackData::IsNumber(const std::string &str)
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrackData::ProcessTrackData(const uint8_t *pData, size_t length)
+bool CTrackData::ProcessTrackData(const uint8 *pData, size_t length)
 {
   bool bSuccess = true;
   int iChunkLine = 0;
@@ -644,7 +658,7 @@ void CTrackData::ProcessSign(const std::vector<std::string> &lineAy, eFileSectio
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetTrackData(std::vector<uint8_t> &data)
+void CTrackData::GetTrackData(std::vector<uint8> &data)
 {
   //write header
   char szBuf[1024];
@@ -748,11 +762,11 @@ void CTrackData::GetTrackData(std::vector<uint8_t> &data)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::WriteToVector(std::vector<uint8_t> &data, const char *szText)
+void CTrackData::WriteToVector(std::vector<uint8> &data, const char *szText)
 {
   int iLength = (int)strlen(szText);
   for (int i = 0; i < iLength; ++i) {
-    uint8_t val = (uint8_t)szText[i];
+    uint8 val = (uint8)szText[i];
     data.push_back(val);
   }
 }

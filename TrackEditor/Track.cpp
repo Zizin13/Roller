@@ -43,11 +43,11 @@ bool CTrack::SaveTrack(const QString &sFilename)
   if (sFilename.isEmpty())
     return false;
 
-  std::vector<uint8_t> data;
-  std::vector<uint8_t> mangledData;
+  std::vector<uint8> data;
+  std::vector<uint8> mangledData;
   GetTrackData(data);
 
-  std::vector<uint8_t> *pOutData;
+  std::vector<uint8> *pOutData;
   //if (bIsMangled) {
   //  MangleFile(data, mangledData);
   //  pOutData = &mangledData;

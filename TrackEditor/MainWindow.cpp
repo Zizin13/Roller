@@ -147,15 +147,14 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   p->m_pDebugAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_G));
   menuView->addAction(p->m_pDebugAction);
 
-  actUndo->setVisible(false);
-  actRedo->setVisible(false);
-
   //signals
   connect(this, &CMainWindow::LogMsgSig, this, &CMainWindow::OnLogMsg, Qt::QueuedConnection);
   connect(actNew, &QAction::triggered, this, &CMainWindow::OnNewTrack);
   connect(actLoad, &QAction::triggered, this, &CMainWindow::OnLoadTrack);
   connect(actSave, &QAction::triggered, this, &CMainWindow::OnSaveTrack);
   connect(actSaveAs, &QAction::triggered, this, &CMainWindow::OnSaveTrackAs);
+  connect(actUndo, &QAction::triggered, this, &CMainWindow::OnUndo);
+  connect(actRedo, &QAction::triggered, this, &CMainWindow::OnRedo);
   connect(actCut, &QAction::triggered, this, &CMainWindow::OnCut);
   connect(actCopy, &QAction::triggered, this, &CMainWindow::OnCopy);
   connect(actPaste, &QAction::triggered, this, &CMainWindow::OnPaste);
@@ -249,6 +248,7 @@ void CMainWindow::OnNewTrack()
     CTrackPreview *pPreview = new CTrackPreview(this, dlg.GetFilename());
     pPreview->GetTrack()->m_sBuildingFile = dlg.GetBld().toLatin1().constData();
     pPreview->GetTrack()->m_sTextureFile = dlg.GetTex().toLatin1().constData();
+    pPreview->SaveHistory("New track created");
     m_sLastTrackFilesFolder = dlg.GetFilename().left(dlg.GetFilename().lastIndexOf(QDir::separator()));
     //add to array and create preview window
     p->m_previewAy.push_back(pPreview);
@@ -307,6 +307,27 @@ void CMainWindow::OnSaveTrackAs()
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::OnUndo()
+{
+  if (GetCurrentPreview()) {
+    GetCurrentPreview()->Undo();
+  }
+  UpdateWindow();
+  p->m_pEditData->UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnRedo()
+{
+  if (GetCurrentPreview())
+    GetCurrentPreview()->Redo();
+  UpdateWindow();
+  p->m_pEditData->UpdateGeometryEditMode();
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CMainWindow::OnCut()
 {
   OnCopy();
@@ -349,7 +370,7 @@ void CMainWindow::OnPaste()
   BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(iSelect));
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(iSelect));
   GetCurrentPreview()->m_bUnsavedChanges = true;
-  LogMessage("Pasted " + QString::number(p->m_clipBoard.size()) + " geometry chunks");
+  GetCurrentPreview()->SaveHistory("Pasted " + QString::number(p->m_clipBoard.size()) + " geometry chunks");
   g_pMainWindow->UpdateWindow();
   p->m_pEditData->UpdateGeometryEditMode();
 }
@@ -473,7 +494,7 @@ void CMainWindow::OnDeleteChunkClicked()
     GetCurrentTrack()->m_chunkAy.begin() + sbSelChunksTo->value() + 1);
 
   GetCurrentPreview()->m_bUnsavedChanges = true;
-  g_pMainWindow->LogMessage("Deleted geometry chunk");
+  GetCurrentPreview()->SaveHistory("Deleted geometry chunk");
   g_pMainWindow->UpdateWindow();
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(sbSelChunksFrom->value()));
   BLOCK_SIG_AND_DO(ckTo, setChecked(false));
@@ -493,7 +514,7 @@ void CMainWindow::OnAddChunkClicked()
   GetCurrentTrack()->InsertGeometryChunk(iLastPos, 1, editVals);
 
   GetCurrentPreview()->m_bUnsavedChanges = true;
-  g_pMainWindow->LogMessage("Added geometry chunk");
+  GetCurrentPreview()->SaveHistory("Added geometry chunk");
   g_pMainWindow->UpdateWindow();
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(iLastPos + 1));
   BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(iLastPos + 1));

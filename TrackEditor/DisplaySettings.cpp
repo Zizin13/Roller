@@ -20,6 +20,7 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent)
   ckTestCar->setChecked(true);
   ckAudio->setChecked(true);
   ckStunts->setChecked(true);
+  ckEnvironment->setChecked(true);
 
   cbTestCarType->addItem("F1WACK", (int)eWhipModel::CAR_F1WACK);
   cbTestCarType->addItem("AUTO", (int)eWhipModel::CAR_AUTO);

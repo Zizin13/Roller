@@ -146,12 +146,20 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   p->m_pDebugAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_G));
   menuView->addAction(p->m_pDebugAction);
 
+  actUndo->setVisible(false);
+  actRedo->setVisible(false);
+  actCut->setVisible(false);
+  actCopy->setVisible(false);
+  actPaste->setVisible(false);
+
   //signals
   connect(this, &CMainWindow::LogMsgSig, this, &CMainWindow::OnLogMsg, Qt::QueuedConnection);
   connect(actNew, &QAction::triggered, this, &CMainWindow::OnNewTrack);
   connect(actLoad, &QAction::triggered, this, &CMainWindow::OnLoadTrack);
   connect(actSave, &QAction::triggered, this, &CMainWindow::OnSaveTrack);
   connect(actSaveAs, &QAction::triggered, this, &CMainWindow::OnSaveTrackAs);
+  connect(actDelete, &QAction::triggered, this, &CMainWindow::OnDeleteChunkClicked);
+  connect(actSelectAll, &QAction::triggered, this, &CMainWindow::OnSelectAll);
   connect(p->m_pDebugAction, &QAction::triggered, this, &CMainWindow::OnDebug);
   connect(actAbout, &QAction::triggered, this, &CMainWindow::OnAbout);
   connect(twViewer, &QTabWidget::tabCloseRequested, this, &CMainWindow::OnTabCloseRequested);
@@ -298,6 +306,17 @@ void CMainWindow::OnSaveTrackAs()
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::OnSelectAll()
+{
+  BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(0));
+  BLOCK_SIG_AND_DO(ckTo, setChecked(true));
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setValue((int)GetCurrentTrack()->m_chunkAy.size() - 1));
+  UpdateGeometrySelection();
+  p->m_pEditData->OnCancelClicked();
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CMainWindow::OnDebug()
 {
   p->m_logDialog.raise();
@@ -310,7 +329,7 @@ void CMainWindow::OnDebug()
 
 void CMainWindow::OnAbout()
 {
-  QMessageBox::information(this, "Git Gud", "YOU NEED MORE PRACTICE");
+  QMessageBox::information(this, "Git Gud", "Click to pan. WASD to move. R/F up/down.");
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -36,6 +36,7 @@ protected slots:
   void OnLoadTrack();
   void OnSaveTrack();
   void OnSaveTrackAs();
+  void OnSelectAll();
   void OnDebug();
   void OnAbout();
   void OnTabCloseRequested(int iIndex);

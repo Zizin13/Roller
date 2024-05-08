@@ -126,13 +126,6 @@
         </property>
        </spacer>
       </item>
-      <item>
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Click to pan. WASD to move. R/F up/down.</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
     <item>
@@ -173,7 +166,21 @@
      <string>View</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actUndo"/>
+    <addaction name="actRedo"/>
+    <addaction name="separator"/>
+    <addaction name="actCut"/>
+    <addaction name="actCopy"/>
+    <addaction name="actPaste"/>
+    <addaction name="actDelete"/>
+    <addaction name="actSelectAll"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -277,6 +284,62 @@
    </property>
    <property name="text">
     <string>Display Settings</string>
+   </property>
+  </action>
+  <action name="actCut">
+   <property name="text">
+    <string>Cut</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actCopy">
+   <property name="text">
+    <string>Copy</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actPaste">
+   <property name="text">
+    <string>Paste</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="actDelete">
+   <property name="text">
+    <string>Delete</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+  </action>
+  <action name="actSelectAll">
+   <property name="text">
+    <string>Select All</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="actUndo">
+   <property name="text">
+    <string>Undo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Z, Ctrl+Alt+Backspace</string>
+   </property>
+  </action>
+  <action name="actRedo">
+   <property name="text">
+    <string>Redo</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Y, Ctrl+Shift+Z</string>
    </property>
   </action>
  </widget>

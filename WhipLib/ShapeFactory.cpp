@@ -1539,14 +1539,16 @@ uint32 *CShapeFactory::MakeIndicesSelectedChunks(uint32 &numIndices, int iStart,
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
-  if (iStart >= pTrack->m_chunkAy.size() - 1)
-    iStart = 0;
-  else
-    iStart++;
-  if (iEnd >= pTrack->m_chunkAy.size() - 1)
-    iEnd = 0;
-  else
-    iEnd++;
+  if (!(iStart == 0 && iEnd == pTrack->m_chunkAy.size() - 1)) {
+    if (iStart >= pTrack->m_chunkAy.size() - 1)
+      iStart = 0;
+    else
+      iStart++;
+    if (iEnd >= pTrack->m_chunkAy.size() - 1)
+      iEnd = 0;
+    else
+      iEnd++;
+  }
 
   int i = iStart;
   for (; i <= iEnd; i++) {

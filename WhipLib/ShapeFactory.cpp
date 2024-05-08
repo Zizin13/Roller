@@ -1446,28 +1446,12 @@ tVertex *CShapeFactory::MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTr
 
   numVertices = 4;
   tVertex *vertices = new tVertex[numVertices];
-  glm::vec3 prevCenter = glm::vec3(0, 0, 1);
-  float fMinX = 0.0f;
-  float fMaxX = 0.0f;
-  float fMinZ = 0.0f;
-  float fMaxZ = 0.0f;
-  for (uint32 i = 0; i < pTrack->m_chunkAy.size(); ++i) {
-    if (pTrack->m_chunkAy[i].math.center.x > fMaxX)
-      fMaxX = pTrack->m_chunkAy[i].math.center.x;
-    if (pTrack->m_chunkAy[i].math.center.x < fMinX)
-      fMinX = pTrack->m_chunkAy[i].math.center.x;
-    if (pTrack->m_chunkAy[i].math.center.z > fMaxZ)
-      fMaxZ = pTrack->m_chunkAy[i].math.center.z;
-    if (pTrack->m_chunkAy[i].math.center.z < fMinZ)
-      fMinZ = pTrack->m_chunkAy[i].math.center.z;
-  }
-
   float fEnvirFloorDepth = (float)pTrack->m_header.iFloorDepth / m_fScale * -1.0f;
-  float fPadding = 10.0f;
-  vertices[0].position = glm::vec3(fMinX - fPadding, fEnvirFloorDepth, fMinZ - fPadding);
-  vertices[1].position = glm::vec3(fMinX - fPadding, fEnvirFloorDepth, fMaxZ + fPadding);
-  vertices[2].position = glm::vec3(fMaxX + fPadding, fEnvirFloorDepth, fMinZ - fPadding);
-  vertices[3].position = glm::vec3(fMaxX + fPadding, fEnvirFloorDepth, fMaxZ + fPadding);
+  float fPadding = 1000.0f;
+  vertices[0].position = glm::vec3(-fPadding, fEnvirFloorDepth, -fPadding);
+  vertices[1].position = glm::vec3(-fPadding, fEnvirFloorDepth, +fPadding);
+  vertices[2].position = glm::vec3(+fPadding, fEnvirFloorDepth, -fPadding);
+  vertices[3].position = glm::vec3(+fPadding, fEnvirFloorDepth, +fPadding);
   pTexture->GetTextureCoordinates(
     CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iIndex].iEnvironmentFloorType) & SURFACE_TEXTURE_INDEX,
     vertices[0], vertices[1], vertices[2], vertices[3]);

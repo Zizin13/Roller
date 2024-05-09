@@ -293,6 +293,9 @@
    <property name="shortcut">
     <string>Ctrl+X</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::WindowShortcut</enum>
+   </property>
   </action>
   <action name="actCopy">
    <property name="text">
@@ -301,6 +304,9 @@
    <property name="shortcut">
     <string>Ctrl+C</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::WindowShortcut</enum>
+   </property>
   </action>
   <action name="actPaste">
    <property name="text">
@@ -308,6 +314,9 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+V</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::WindowShortcut</enum>
    </property>
   </action>
   <action name="actDelete">
@@ -331,7 +340,10 @@
     <string>Undo</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Z, Ctrl+Alt+Backspace</string>
+    <string>Ctrl+Z</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actRedo">
@@ -339,7 +351,10 @@
     <string>Redo</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+Y, Ctrl+Shift+Z</string>
+    <string>Ctrl+Y</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
  </widget>

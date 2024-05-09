@@ -355,7 +355,6 @@ void CMainWindow::OnCopy()
   for (int i = sbSelChunksFrom->value(); i <= sbSelChunksTo->value(); ++i) {
     p->m_clipBoard.push_back(GetCurrentTrack()->m_chunkAy[i]);
   }
-  LogMessage("Copied " + QString::number(sbSelChunksTo->value() + 1 - sbSelChunksFrom->value()) + " geometry chunks");
 }
 
 //-------------------------------------------------------------------------------------------------

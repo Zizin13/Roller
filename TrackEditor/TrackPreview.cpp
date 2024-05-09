@@ -739,6 +739,14 @@ void CTrackPreview::initializeGL()
 
 //-------------------------------------------------------------------------------------------------
 
+void CTrackPreview::mouseClickEvent(QMouseEvent *pEvent)
+{
+  (void)(pEvent);
+  setFocus();
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CTrackPreview::mouseMoveEvent(QMouseEvent *pEvent)
 {
   setFocus();

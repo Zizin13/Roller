@@ -48,6 +48,7 @@ public:
 protected:
   void initializeGL();
   void paintGL();
+  void mouseClickEvent(QMouseEvent *pEvent);
   void mouseMoveEvent(QMouseEvent *pEvent);
   void keyPressEvent(QKeyEvent *pEvent);
 

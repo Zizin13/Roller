@@ -5,6 +5,7 @@
 #include "MainWindow.h"
 #include "QtHelpers.h"
 #include "EditSurfaceDialog.h"
+#include "SignType.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -92,13 +93,15 @@ void CEditSignWidget::UpdateGeometrySelection(int iFrom, int iTo)
   BLOCK_SIG_AND_DO(leUnk     , setText(QString::number(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType)));
 
   bool bChunkHasSign = g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType != -1;
+  bool bCanHaveTexture = g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType < g_signAyCount
+    && g_signAy[g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType].bCanHaveTexture;
   dsbYaw    ->setEnabled(bChunkHasSign);
   dsbPitch  ->setEnabled(bChunkHasSign);
   dsbRoll   ->setEnabled(bChunkHasSign);
   sbHOffset ->setEnabled(bChunkHasSign);
   sbVOffset ->setEnabled(bChunkHasSign);
   cbType    ->setEnabled(bChunkHasSign);
-  pbEdit    ->setEnabled(bChunkHasSign);
+  pbEdit    ->setEnabled(bChunkHasSign && bCanHaveTexture);
   lblYaw    ->setEnabled(bChunkHasSign);
   lblPitch  ->setEnabled(bChunkHasSign);
   lblRoll   ->setEnabled(bChunkHasSign);
@@ -233,6 +236,12 @@ void CEditSignWidget::TypeChanged(int iIndex)
 
   for (int i = iFrom; i <= iTo; ++i) {
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignType = cbType->itemData(iIndex).toInt();
+    if (cbType->itemData(iIndex).toInt() < g_signAyCount
+        && !g_signAy[cbType->itemData(iIndex).toInt()].bCanHaveTexture) {
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignTexture = -1;
+    } else {
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignTexture = SURFACE_FLAG_APPLY_TEXTURE;
+    }
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();

@@ -80,6 +80,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   , m_sLastTrackFilesFolder("")
   , m_fDesktopScale(fDesktopScale)
   , m_iNewTrackNum(0)
+  , m_iHistoryMaxSize(DEFAULT_HISTORY_MAX_SIZE)
 {
   //init
   Logging::SetWhipLibLoggingCallback(LogMessageCbStatic);
@@ -667,6 +668,9 @@ void CMainWindow::LoadSettings()
     iScale = settings.value("scale", iScale).toInt();
     p->m_pDisplaySettings->SetScale(iScale);
   }
+  if (settings.contains("history_max_size")) {
+    m_iHistoryMaxSize = settings.value("history_max_size", DEFAULT_HISTORY_MAX_SIZE).toInt();
+  }
 
   show();
 }
@@ -700,6 +704,7 @@ void CMainWindow::SaveSettings()
   settings.setValue("wrong_way", bMillionPlus);
   settings.setValue("attach_last", p->m_pDisplaySettings->GetAttachLast());
   settings.setValue("scale", p->m_pDisplaySettings->GetScale());
+  settings.setValue("history_max_size", m_iHistoryMaxSize);
 }
 
 //-------------------------------------------------------------------------------------------------

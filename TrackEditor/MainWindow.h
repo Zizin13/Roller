@@ -23,6 +23,7 @@ public:
   int GetSelFrom();
   int GetSelTo();
   float GetDesktopScale() { return m_fDesktopScale; };
+  int GetHistoryMaxSize() { return m_iHistoryMaxSize; };
   CTrack *GetCurrentTrack();
 
   QString m_sLastTrackFilesFolder;
@@ -75,6 +76,7 @@ private:
   int m_iNewTrackNum;
   QString m_sHistoryDescription;
   QTimer *m_pSaveHistoryTimer;
+  int m_iHistoryMaxSize;
 };
 
 //-------------------------------------------------------------------------------------------------

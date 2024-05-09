@@ -4,6 +4,7 @@
 #include <QtOpenGL\qgl.h>
 #include "Types.h"
 //-------------------------------------------------------------------------------------------------
+#define DEFAULT_HISTORY_MAX_SIZE 1024
 struct tTrackHistory
 {
   std::string sDescription;

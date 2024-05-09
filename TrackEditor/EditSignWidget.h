@@ -25,9 +25,6 @@ protected slots:
   void EditClicked();
   void SignClicked();
   void UnkChanged(const QString &sText);
-
-private:
-  CEditSignWidgetPrivate *p;
 };
 
 //-------------------------------------------------------------------------------------------------

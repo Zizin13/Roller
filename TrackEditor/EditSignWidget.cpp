@@ -12,43 +12,13 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
-class CEditSignWidgetPrivate
-{
-public:
-  CEditSignWidgetPrivate() {};
-  ~CEditSignWidgetPrivate() {};
-
-  QString signAy[17] = { "TOWER"
-                       , "TOWER 2"
-                       , "SIGN 1"
-                       , "SIGN 2"
-                       , "BUILD"
-                       , "BUILD 1"
-                       , "BUILD 2"
-                       , "BUILD 3"
-                       , "HEELBAR"
-                       , "BALLOON"
-                       , "TREE"
-                       , "ADVERT"
-                       , "ADVERT 2"
-                       , "QUAD BLD"
-                       , "BLD 0"
-                       , "BIG BALL"
-                       , "BIG AD" };
-  size_t signAySize = sizeof(signAy) / sizeof(signAy[0]);
-};
-
-//-------------------------------------------------------------------------------------------------
-
 CEditSignWidget::CEditSignWidget(QWidget *pParent)
   : QWidget(pParent)
 {
-  p = new CEditSignWidgetPrivate;
-
   setupUi(this);
 
-  for (int i = 0; i < p->signAySize; ++i) {
-    cbType->addItem(p->signAy[i], i);
+  for (int i = 0; i < g_signAyCount; ++i) {
+    cbType->addItem(g_signAy[i].sDescription.c_str(), i);
   }
   lblUnk->hide();
   leUnk->hide();
@@ -70,10 +40,6 @@ CEditSignWidget::CEditSignWidget(QWidget *pParent)
 
 CEditSignWidget::~CEditSignWidget()
 {
-  if (p) {
-    delete p;
-    p = NULL;
-  }
 }
 
 //-------------------------------------------------------------------------------------------------

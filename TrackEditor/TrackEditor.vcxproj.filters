@@ -106,6 +106,12 @@
     <ClCompile Include="moc\moc_NewTrackDialog.cpp">
       <Filter>Qt Generated Files\Moc Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PreferencesDialog.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="moc\moc_PreferencesDialog.cpp">
+      <Filter>Qt Generated Files\Moc Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Track.h">
@@ -160,6 +166,9 @@
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_NewTrackDialog.h">
+      <Filter>Qt Generated Files\Ui Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_PreferencesDialog.h">
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -250,6 +259,12 @@
     </CustomBuild>
     <CustomBuild Include="NewTrackDialog.ui">
       <Filter>Resources</Filter>
+    </CustomBuild>
+    <CustomBuild Include="PreferencesDialog.ui">
+      <Filter>Resources</Filter>
+    </CustomBuild>
+    <CustomBuild Include="PreferencesDialog.h">
+      <Filter>Headers</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

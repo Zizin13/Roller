@@ -26,6 +26,7 @@
 #include "QtHelpers.h"
 #include "Logging.h"
 #include "NewTrackDialog.h"
+#include "PreferencesDialog.h"
 #include "qtimer.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
@@ -43,6 +44,16 @@ static void LogMessageCbStatic(const char *szMsg, int iLen)
   (void)(iLen);
   g_pMainWindow->LogMessage(szMsg);
 }
+
+//-------------------------------------------------------------------------------------------------
+
+tPreferences::tPreferences()
+  : iHistoryMaxSize(DEFAULT_HISTORY_MAX_SIZE)
+  , bCopyRelativeYaw(true)
+  , bCopyRelativePitch(false)
+  , bCopyRelativeRoll(false)
+  , bPasteNoSurface(false)
+{ };
 
 //-------------------------------------------------------------------------------------------------
 
@@ -80,8 +91,6 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   , m_sLastTrackFilesFolder("")
   , m_fDesktopScale(fDesktopScale)
   , m_iNewTrackNum(0)
-  , m_iHistoryMaxSize(DEFAULT_HISTORY_MAX_SIZE)
-  , m_bCopyRelativeYaw(true)
 {
   //init
   Logging::SetWhipLibLoggingCallback(LogMessageCbStatic);
@@ -170,6 +179,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   connect(actDelete, &QAction::triggered, this, &CMainWindow::OnDeleteChunkClicked);
   connect(actSelectAll, &QAction::triggered, this, &CMainWindow::OnSelectAll);
   connect(p->m_pDebugAction, &QAction::triggered, this, &CMainWindow::OnDebug);
+  connect(actPreferences, &QAction::triggered, this, &CMainWindow::OnPreferences);
   connect(actAbout, &QAction::triggered, this, &CMainWindow::OnAbout);
   connect(twViewer, &QTabWidget::tabCloseRequested, this, &CMainWindow::OnTabCloseRequested);
   connect(twViewer, &QTabWidget::currentChanged, this, &CMainWindow::OnTabChanged);
@@ -360,7 +370,7 @@ void CMainWindow::OnCopy()
 
   for (int i = sbSelChunksFrom->value(); i <= sbSelChunksTo->value(); ++i) {
     p->m_clipBoard.push_back(GetCurrentTrack()->m_chunkAy[i]);
-    if (m_bCopyRelativeYaw)
+    if (m_preferences.bCopyRelativeYaw)
       p->m_clipBoard[p->m_clipBoard.size() - 1].dYaw = p->m_clipBoard[p->m_clipBoard.size() - 1].dYaw - GetCurrentTrack()->m_chunkAy[iPrevChunk].dYaw;
   }
 }
@@ -376,7 +386,7 @@ void CMainWindow::OnPaste()
   if (sbSelChunksTo->value() != sbSelChunksFrom->value())
     OnDeleteChunkClicked();
 
-  if (m_bCopyRelativeYaw) {
+  if (m_preferences.bCopyRelativeYaw) {
     int iPrevChunk = sbSelChunksFrom->value() - 1;
     if (iPrevChunk < 0)
       iPrevChunk = (int)GetCurrentTrack()->m_chunkAy.size() - 1;
@@ -412,6 +422,14 @@ void CMainWindow::OnSelectAll()
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue((int)GetCurrentTrack()->m_chunkAy.size() - 1));
   UpdateGeometrySelection();
   p->m_pEditData->OnCancelClicked();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnPreferences()
+{
+  CPreferencesDialog dlg(this);
+  dlg.exec();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -597,6 +615,7 @@ void CMainWindow::LoadSettings()
   QSettings settings(m_sSettingsFile, QSettings::IniFormat);
   m_sLastTrackFilesFolder = settings.value("track_folder", m_sLastTrackFilesFolder).toString();
 
+  //window geometry
   if (settings.contains("window_geometry") && settings.contains("window_state")) {
     QByteArray geometry = saveGeometry();
     QByteArray state = saveState();
@@ -609,6 +628,7 @@ void CMainWindow::LoadSettings()
     resize(QDesktopWidget().availableGeometry(this).size() * 0.8);
   }
 
+  //setup dock widgets
   if (settings.contains("show_edit_data")
       && settings.contains("show_global_settings")
       && settings.contains("show_edit_series")
@@ -667,33 +687,32 @@ void CMainWindow::LoadSettings()
     p->m_pEditAudioDockWidget->setVisible(false);
     p->m_pEditStuntDockWidget->setVisible(false);
   }
-  if (settings.contains("show_models")) {
-    eWhipModel carModel;
-    eShapeSection aiLine;
-    bool bMillionPlus;
-    uint32 uiShowModels = p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus);
-    uiShowModels = settings.value("show_models", uiShowModels).toUInt();
-    carModel = (eWhipModel)settings.value("car_model", (int)carModel).toInt();
-    aiLine = (eShapeSection)settings.value("car_pos", (int)aiLine).toInt();
-    bMillionPlus = settings.value("wrong_way", bMillionPlus).toBool();
-    p->m_pDisplaySettings->SetDisplaySettings(uiShowModels, carModel, aiLine, bMillionPlus);
-  }
-  if (settings.contains("attach_last")) {
-    bool bAttachLast = p->m_pDisplaySettings->GetAttachLast();
-    bAttachLast = settings.value("attach_last", bAttachLast).toBool();
-    p->m_pDisplaySettings->SetAttachLast(bAttachLast);
-  }
-  if (settings.contains("scale")) {
-    int iScale = p->m_pDisplaySettings->GetScale();
-    iScale = settings.value("scale", iScale).toInt();
-    p->m_pDisplaySettings->SetScale(iScale);
-  }
-  if (settings.contains("history_max_size")) {
-    m_iHistoryMaxSize = settings.value("history_max_size", DEFAULT_HISTORY_MAX_SIZE).toInt();
-  }
-  if (settings.contains("copy_relative_yaw")) {
-    m_bCopyRelativeYaw = settings.value("copy_relative_yaw", true).toBool();
-  }
+
+  //get default display settings
+  eWhipModel carModel;
+  eShapeSection aiLine;
+  bool bMillionPlus;
+  uint32 uiShowModels = p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus);
+  bool bAttachLast = p->m_pDisplaySettings->GetAttachLast();
+  int iScale = p->m_pDisplaySettings->GetScale();
+  //load display settings
+  uiShowModels = settings.value("show_models", uiShowModels).toUInt();
+  carModel = (eWhipModel)settings.value("car_model", (int)carModel).toInt();
+  aiLine = (eShapeSection)settings.value("car_pos", (int)aiLine).toInt();
+  bMillionPlus = settings.value("wrong_way", bMillionPlus).toBool();
+  bAttachLast = settings.value("attach_last", bAttachLast).toBool();
+  iScale = settings.value("scale", iScale).toInt();
+  //apply display settings
+  p->m_pDisplaySettings->SetDisplaySettings(uiShowModels, carModel, aiLine, bMillionPlus);
+  p->m_pDisplaySettings->SetAttachLast(bAttachLast);
+  p->m_pDisplaySettings->SetScale(iScale);
+
+  //preferences
+  m_preferences.iHistoryMaxSize = settings.value("history_max_size", m_preferences.iHistoryMaxSize).toInt();
+  m_preferences.bCopyRelativeYaw = settings.value("copy_relative_yaw", m_preferences.bCopyRelativeYaw).toBool();
+  m_preferences.bCopyRelativePitch = settings.value("copy_relative_pitch", m_preferences.bCopyRelativePitch).toBool();
+  m_preferences.bCopyRelativeRoll = settings.value("copy_relative_roll", m_preferences.bCopyRelativeRoll).toBool();
+  m_preferences.bPasteNoSurface = settings.value("paste_no_surface", m_preferences.bPasteNoSurface).toBool();
 
   show();
 }
@@ -727,8 +746,11 @@ void CMainWindow::SaveSettings()
   settings.setValue("wrong_way", bMillionPlus);
   settings.setValue("attach_last", p->m_pDisplaySettings->GetAttachLast());
   settings.setValue("scale", p->m_pDisplaySettings->GetScale());
-  settings.setValue("history_max_size", m_iHistoryMaxSize);
-  settings.setValue("copy_relative_yaw", m_bCopyRelativeYaw);
+  settings.setValue("history_max_size", m_preferences.iHistoryMaxSize);
+  settings.setValue("copy_relative_yaw", m_preferences.bCopyRelativeYaw);
+  settings.setValue("copy_relative_pitch", m_preferences.bCopyRelativePitch);
+  settings.setValue("copy_relative_roll", m_preferences.bCopyRelativeRoll);
+  settings.setValue("paste_no_surface", m_preferences.bPasteNoSurface);
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -1443,7 +1443,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
 
 tVertex *CShapeFactory::MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTrack, CTexture *pTexture, int iIndex)
 {
-  if (pTrack->m_chunkAy.empty()) {
+  if (pTrack->m_chunkAy.empty() || iIndex >= pTrack->m_chunkAy.size()) {
     numVertices = 0;
     return NULL;
   }

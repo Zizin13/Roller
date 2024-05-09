@@ -395,7 +395,7 @@ void CTrackPreview::SaveHistory(const QString &sDescription)
 
   p->m_historyAy.push_back(history);
 
-  while (p->m_historyAy.size() > g_pMainWindow->GetHistoryMaxSize()) {
+  while ((int)p->m_historyAy.size() > g_pMainWindow->m_preferences.iHistoryMaxSize) {
     p->m_historyAy.erase(p->m_historyAy.begin());
   }
 

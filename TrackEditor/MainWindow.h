@@ -7,6 +7,16 @@ class CMainWindowPrivate;
 class CTrack;
 class CTrackPreview;
 //-------------------------------------------------------------------------------------------------
+struct tPreferences
+{
+  tPreferences();
+  int iHistoryMaxSize;
+  bool bCopyRelativeYaw;
+  bool bCopyRelativePitch;
+  bool bCopyRelativeRoll;
+  bool bPasteNoSurface;
+};
+//-------------------------------------------------------------------------------------------------
 
 class CMainWindow : public QMainWindow, private Ui::MainWindow
 {
@@ -23,10 +33,10 @@ public:
   int GetSelFrom();
   int GetSelTo();
   float GetDesktopScale() { return m_fDesktopScale; };
-  int GetHistoryMaxSize() { return m_iHistoryMaxSize; };
   CTrack *GetCurrentTrack();
 
   QString m_sLastTrackFilesFolder;
+  tPreferences m_preferences;
 
 protected:
   void closeEvent(QCloseEvent *pEvent);
@@ -43,6 +53,7 @@ protected slots:
   void OnCopy();
   void OnPaste();
   void OnSelectAll();
+  void OnPreferences();
   void OnDebug();
   void OnAbout();
   void OnTabCloseRequested(int iIndex);
@@ -76,8 +87,6 @@ private:
   int m_iNewTrackNum;
   QString m_sHistoryDescription;
   QTimer *m_pSaveHistoryTimer;
-  int m_iHistoryMaxSize;
-  bool m_bCopyRelativeYaw;
 };
 
 //-------------------------------------------------------------------------------------------------

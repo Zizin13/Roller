@@ -77,6 +77,7 @@ private:
   QString m_sHistoryDescription;
   QTimer *m_pSaveHistoryTimer;
   int m_iHistoryMaxSize;
+  bool m_bCopyRelativeYaw;
 };
 
 //-------------------------------------------------------------------------------------------------

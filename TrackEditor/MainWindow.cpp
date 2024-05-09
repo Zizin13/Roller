@@ -81,6 +81,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   , m_fDesktopScale(fDesktopScale)
   , m_iNewTrackNum(0)
   , m_iHistoryMaxSize(DEFAULT_HISTORY_MAX_SIZE)
+  , m_bCopyRelativeYaw(true)
 {
   //init
   Logging::SetWhipLibLoggingCallback(LogMessageCbStatic);
@@ -352,8 +353,15 @@ void CMainWindow::OnCopy()
     return;
 
   p->m_clipBoard.clear();
+
+  int iPrevChunk = sbSelChunksFrom->value() - 1;
+  if (iPrevChunk < 0)
+    iPrevChunk = (int)GetCurrentTrack()->m_chunkAy.size() - 1;
+
   for (int i = sbSelChunksFrom->value(); i <= sbSelChunksTo->value(); ++i) {
     p->m_clipBoard.push_back(GetCurrentTrack()->m_chunkAy[i]);
+    if (m_bCopyRelativeYaw)
+      p->m_clipBoard[p->m_clipBoard.size() - 1].dYaw = p->m_clipBoard[p->m_clipBoard.size() - 1].dYaw - GetCurrentTrack()->m_chunkAy[iPrevChunk].dYaw;
   }
 }
 
@@ -368,6 +376,16 @@ void CMainWindow::OnPaste()
   if (sbSelChunksTo->value() != sbSelChunksFrom->value())
     OnDeleteChunkClicked();
 
+  if (m_bCopyRelativeYaw) {
+    int iPrevChunk = sbSelChunksFrom->value() - 1;
+    if (iPrevChunk < 0)
+      iPrevChunk = (int)GetCurrentTrack()->m_chunkAy.size() - 1;
+
+    for (int i = 0; i < (int)p->m_clipBoard.size(); ++i) {
+      p->m_clipBoard[i].dYaw = p->m_clipBoard[i].dYaw + GetCurrentTrack()->m_chunkAy[iPrevChunk].dYaw;
+    }
+  }
+
   for (int i = 0; i < (int)p->m_clipBoard.size(); ++i) {
     GetCurrentTrack()->m_chunkAy.insert(GetCurrentTrack()->m_chunkAy.begin() + i + sbSelChunksFrom->value(), p->m_clipBoard[i]);
   }
@@ -375,6 +393,8 @@ void CMainWindow::OnPaste()
 
   int iSelect = sbSelChunksFrom->value() + (int)p->m_clipBoard.size();
   BLOCK_SIG_AND_DO(ckTo, setChecked(false));
+  BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
   BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(iSelect));
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(iSelect));
   GetCurrentPreview()->m_bUnsavedChanges = true;
@@ -448,12 +468,13 @@ void CMainWindow::OnTabChanged(int iIndex)
   p->m_previewAy[iIndex]->UpdateCar(carModel, aiLine, bMillionPlus);
   p->m_previewAy[iIndex]->AttachLast(p->m_pDisplaySettings->GetAttachLast());
   p->m_previewAy[iIndex]->SetScale(p->m_pDisplaySettings->GetScale());
+  BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
   BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(p->m_previewAy[iIndex]->m_iSelFrom));
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(p->m_previewAy[iIndex]->m_iSelTo));
   BLOCK_SIG_AND_DO(ckTo, setChecked(p->m_previewAy[iIndex]->m_bToChecked));
 
   UpdateWindow();
-  UpdateGeometrySelection();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -670,6 +691,9 @@ void CMainWindow::LoadSettings()
   if (settings.contains("history_max_size")) {
     m_iHistoryMaxSize = settings.value("history_max_size", DEFAULT_HISTORY_MAX_SIZE).toInt();
   }
+  if (settings.contains("copy_relative_yaw")) {
+    m_bCopyRelativeYaw = settings.value("copy_relative_yaw", true).toBool();
+  }
 
   show();
 }
@@ -704,6 +728,7 @@ void CMainWindow::SaveSettings()
   settings.setValue("attach_last", p->m_pDisplaySettings->GetAttachLast());
   settings.setValue("scale", p->m_pDisplaySettings->GetScale());
   settings.setValue("history_max_size", m_iHistoryMaxSize);
+  settings.setValue("copy_relative_yaw", m_bCopyRelativeYaw);
 }
 
 //-------------------------------------------------------------------------------------------------

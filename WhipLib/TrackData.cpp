@@ -669,11 +669,23 @@ void CTrackData::GetTrackData(std::vector<uint8> &data)
   CSignMap signMap;
   CSignMap backsMap;
   CStuntMap stuntMap;
+  int iSignIndex = 0;
   for (int i = 0; i < m_chunkAy.size(); ++i) {
     WriteToVector(data, m_chunkAy[i].sString.c_str());
     WriteToVector(data, "\r\n");
-    if (m_chunkAy[i].iSignTexture >= 0) {
-      signMap[(int)signMap.size()] = m_chunkAy[i].iSignTexture;
+    if (m_chunkAy[i].iSignType >= 0 && m_chunkAy[i].iSignType < 256) { //signable chunks
+      if (m_chunkAy[i].iSignType != 1      //TOWER 2
+          && m_chunkAy[i].iSignType != 4   //BUILD
+          && m_chunkAy[i].iSignType != 5   //BUILD1
+          && m_chunkAy[i].iSignType != 6   //BUILD2
+          && m_chunkAy[i].iSignType != 8   //HEELBAR
+          && m_chunkAy[i].iSignType != 10  //TREE
+          && m_chunkAy[i].iSignType != 13  //QUADBLD
+          && m_chunkAy[i].iSignType != 14  //BLD0
+          ) { //these signable chunks don't have textures
+        signMap[iSignIndex] = m_chunkAy[i].iSignTexture;
+      }
+      iSignIndex++;
     }
     if (m_chunkAy[i].iBackTexture >= 0) {
       backsMap[i] = m_chunkAy[i].iBackTexture;

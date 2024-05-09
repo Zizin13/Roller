@@ -385,8 +385,6 @@ void CTrackPreview::UpdateGeometrySelection()
 
 void CTrackPreview::SaveHistory(const QString &sDescription)
 {
-  g_pMainWindow->LogMessage(sDescription);
-
   tTrackHistory history;
   history.sDescription = sDescription.toLatin1().constData();
   p->m_track.GetTrackData(history.byteAy);

@@ -526,7 +526,7 @@ void CTrackPreview::AttachLast(bool bAttachLast)
 void CTrackPreview::paintGL()
 {
   if (m_uiShowModels & SHOW_ENVIRONMENT)
-    glClearColor(0.031f, 0.301f, 1.0f, 1.0f);
+    glClearColor(0.03125f, 0.296875f, 0.984375f, 1.0f);
   else
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);

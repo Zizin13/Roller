@@ -129,7 +129,7 @@ void CEditSeriesDialog::Validate()
       iIncrement = (iEndValue - iStartValue) / (GetEndChunk() - GetStartChunk());
     ApplySeriesToGeometry(GetStartChunk(), GetEndChunk(), GetInterval(), GetField(), iStartValue, iEndValue, iIncrement);
   }
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Edited geometry chunks in series");
   g_pMainWindow->UpdateWindow();
 }
 

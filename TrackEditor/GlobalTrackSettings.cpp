@@ -109,8 +109,7 @@ void CGlobalTrackSettings::OnApplyInfoClicked()
   g_pMainWindow->GetCurrentTrack()->m_sBuildingFile = cbBld->currentText().toLatin1().constData();
   g_pMainWindow->GetCurrentTrack()->m_header.iFloorDepth = leFloorDepth->text().toInt();
 
-  g_pMainWindow->SetUnsavedChanges(true);
-  g_pMainWindow->LogMessage("Applied global track settings");
+  g_pMainWindow->SaveHistory("Applied global track settings");
   g_pMainWindow->GetCurrentTrack()->LoadTextures();
   g_pMainWindow->UpdateWindow();
 }

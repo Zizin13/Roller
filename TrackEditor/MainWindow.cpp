@@ -26,6 +26,7 @@
 #include "QtHelpers.h"
 #include "Logging.h"
 #include "NewTrackDialog.h"
+#include "qtimer.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
 #endif
@@ -147,6 +148,12 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   p->m_pDebugAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_G));
   menuView->addAction(p->m_pDebugAction);
 
+  //setup history timer
+  m_pSaveHistoryTimer = new QTimer(this);
+  m_pSaveHistoryTimer->setSingleShot(true);
+  m_pSaveHistoryTimer->setInterval(250);
+  connect(m_pSaveHistoryTimer, &QTimer::timeout, this, &CMainWindow::OnSaveHistoryTimer, Qt::QueuedConnection);
+
   //signals
   connect(this, &CMainWindow::LogMsgSig, this, &CMainWindow::OnLogMsg, Qt::QueuedConnection);
   connect(actNew, &QAction::triggered, this, &CMainWindow::OnNewTrack);
@@ -225,10 +232,11 @@ void CMainWindow::LogMessage(const QString &sMsg)
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::SetUnsavedChanges(bool bUnsavedChanges)
+void CMainWindow::SaveHistory(const QString &sDescription)
 {
-  if (GetCurrentPreview())
-    GetCurrentPreview()->m_bUnsavedChanges = bUnsavedChanges;
+  GetCurrentPreview()->m_bUnsavedChanges = true;
+  m_sHistoryDescription = sDescription;
+  m_pSaveHistoryTimer->start();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -551,6 +559,14 @@ void CMainWindow::OnUpdatePreview()
   uint32 uiShowModels = p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus);
   GetCurrentPreview()->ShowModels(uiShowModels);
   GetCurrentPreview()->UpdateCar(carModel, aiLine, bMillionPlus);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnSaveHistoryTimer()
+{
+  if (GetCurrentPreview())
+    GetCurrentPreview()->SaveHistory(m_sHistoryDescription);
 }
 
 //-------------------------------------------------------------------------------------------------

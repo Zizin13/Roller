@@ -202,7 +202,7 @@ void CEditGeometryWidget::YawChanged(double dValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed yaw");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -223,7 +223,7 @@ void CEditGeometryWidget::PitchChanged(double dValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed pitch");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -244,7 +244,7 @@ void CEditGeometryWidget::RollChanged(double dValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed roll");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -265,7 +265,7 @@ void CEditGeometryWidget::LengthChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed length");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -286,7 +286,7 @@ void CEditGeometryWidget::LLaneWidthChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed left lane width");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -307,7 +307,7 @@ void CEditGeometryWidget::RLaneWidthChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed right lane width");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -328,7 +328,7 @@ void CEditGeometryWidget::LShoulderWidthChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed left shoulder width");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -349,7 +349,7 @@ void CEditGeometryWidget::RShoulderWidthChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed right shoulder width");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -370,7 +370,7 @@ void CEditGeometryWidget::LShoulderHeightChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed left shoulder height");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -391,7 +391,7 @@ void CEditGeometryWidget::RShoulderHeightChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed right shoulder height");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -412,7 +412,7 @@ void CEditGeometryWidget::WallHeightChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed wall height");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -433,7 +433,7 @@ void CEditGeometryWidget::LLOWallHOffsetChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed llowall width");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -454,7 +454,7 @@ void CEditGeometryWidget::LLOWallHeightChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed llowall height");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -475,7 +475,7 @@ void CEditGeometryWidget::LUOWallHOffsetChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed luowall width");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -496,7 +496,7 @@ void CEditGeometryWidget::LUOWallHeightChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed luowall height");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -517,7 +517,7 @@ void CEditGeometryWidget::RLOWallHOffsetChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed rlowall width");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -538,7 +538,7 @@ void CEditGeometryWidget::RLOWallHeightChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed rlowall height");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -559,7 +559,7 @@ void CEditGeometryWidget::RUOWallHOffsetChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed ruowall width");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -580,7 +580,7 @@ void CEditGeometryWidget::RUOWallHeightChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed ruowall height");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -601,7 +601,7 @@ void CEditGeometryWidget::LOuterFloorHOffsetChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed lofloor horiz offset");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -622,7 +622,7 @@ void CEditGeometryWidget::ROuterFloorHOffsetChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed rofloor horiz offset");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -643,7 +643,7 @@ void CEditGeometryWidget::LOuterFloorHeightChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed lofloor height");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -664,7 +664,7 @@ void CEditGeometryWidget::ROuterFloorHeightChanged(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed rofloor height");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -685,7 +685,7 @@ void CEditGeometryWidget::AILine1Changed(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed ai line 1");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -706,7 +706,7 @@ void CEditGeometryWidget::AILine2Changed(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed ai line 2");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -727,7 +727,7 @@ void CEditGeometryWidget::AILine3Changed(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed ai line 3");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -748,7 +748,7 @@ void CEditGeometryWidget::AILine4Changed(int iValue)
   }
 
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed ai line 4");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -771,7 +771,7 @@ void CEditGeometryWidget::EditCSurface()
     }
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed center surface");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -794,7 +794,7 @@ void CEditGeometryWidget::EditLShoulder()
     }
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed left shoulder surface");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -817,7 +817,7 @@ void CEditGeometryWidget::EditRShoulder()
     }
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed right shoulder surface");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -840,7 +840,7 @@ void CEditGeometryWidget::EditLWall()
     }
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed left wall surface");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -863,7 +863,7 @@ void CEditGeometryWidget::EditRWall()
     }
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed right wall surface");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -886,7 +886,7 @@ void CEditGeometryWidget::EditBack()
     }
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed wall back surfaces");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -909,7 +909,7 @@ void CEditGeometryWidget::EditRoof()
     }
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed roof surface");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -932,7 +932,7 @@ void CEditGeometryWidget::EditLUOWall()
     }
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed luowall surface");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -955,7 +955,7 @@ void CEditGeometryWidget::EditLLOWall()
     }
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed llowall surface");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -978,7 +978,7 @@ void CEditGeometryWidget::EditRLOWall()
     }
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed rlowall surface");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -1001,7 +1001,7 @@ void CEditGeometryWidget::EditRUOWall()
     }
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed ruowall surface");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -1024,7 +1024,7 @@ void CEditGeometryWidget::EditOFloor()
     }
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed ofloor surface");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -1050,7 +1050,7 @@ void CEditGeometryWidget::EditEnvirFloor()
     }
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed environment floor surface");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -1070,7 +1070,7 @@ void CEditGeometryWidget::CGripChanged(int iValue)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iTrackGrip = iValue;
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed center grip");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -1090,7 +1090,7 @@ void CEditGeometryWidget::LGripChanged(int iValue)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftShoulderGrip = iValue;
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed left shoulder grip");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -1110,7 +1110,7 @@ void CEditGeometryWidget::RGripChanged(int iValue)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightShoulderGrip = iValue;
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed right shoulder grip");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -1130,7 +1130,7 @@ void CEditGeometryWidget::AISpeedChanged(int iValue)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAIMaxSpeed = iValue * 10;
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed ai speed");
   g_pMainWindow->UpdateWindow();
 }
 
@@ -1150,7 +1150,7 @@ void CEditGeometryWidget::AIAccuracyChanged(int iValue)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAIAccuracy = iValue;
   }
   g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Changed ai accuracy");
   g_pMainWindow->UpdateWindow();
 }
 

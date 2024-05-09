@@ -17,7 +17,7 @@ public:
   ~CMainWindow();
 
   void LogMessage(const QString &sMsg);
-  void SetUnsavedChanges(bool bUnsavedChanges);
+  void SaveHistory(const QString &sDescription);
   void UpdateWindow();
   void InsertUIUpdate(int iInsertVal);
   int GetSelFrom();
@@ -54,6 +54,7 @@ protected slots:
   void OnAttachLast(bool bChecked);
   void OnSetScale(int iValue);
   void OnUpdatePreview();
+  void OnSaveHistoryTimer();
 
 signals:
   void LogMsgSig(QString sMsg);
@@ -72,6 +73,8 @@ private:
   QString m_sSettingsFile;
   float m_fDesktopScale;
   int m_iNewTrackNum;
+  QString m_sHistoryDescription;
+  QTimer *m_pSaveHistoryTimer;
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -217,7 +217,7 @@ void CEditDataWidget::OnInsertBeforeClicked()
 
   g_pMainWindow->GetCurrentTrack()->InsertGeometryChunk(g_pMainWindow->GetSelFrom(), sbInsert->value(), editVals);
 
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Inserted geometry chunks");
   g_pMainWindow->InsertUIUpdate(sbInsert->value());
   g_pMainWindow->UpdateWindow();
 }
@@ -250,7 +250,7 @@ void CEditDataWidget::OnInsertAfterClicked()
 
   g_pMainWindow->GetCurrentTrack()->InsertGeometryChunk(g_pMainWindow->GetSelTo() + 1, sbInsert->value(), editVals);
 
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Inserted geometry chunks");
   g_pMainWindow->InsertUIUpdate(sbInsert->value());
   g_pMainWindow->UpdateWindow();
 }
@@ -282,7 +282,7 @@ void CEditDataWidget::OnApplyClicked()
     , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntBulge->text());
 
   g_pMainWindow->GetCurrentTrack()->ApplyGeometrySettings(g_pMainWindow->GetSelFrom(), g_pMainWindow->GetSelTo(), editVals);
-  g_pMainWindow->SetUnsavedChanges(true);
+  g_pMainWindow->SaveHistory("Edited geometry chunks");
   g_pMainWindow->UpdateWindow();
 }
 

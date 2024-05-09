@@ -455,8 +455,6 @@ void CMainWindow::OnTabCloseRequested(int iIndex)
 {
   if (iIndex > p->m_previewAy.size()) return;
 
-  bool bChangeCurrentIndex = iIndex == twViewer->currentIndex();
-
   twViewer->blockSignals(true);
   if (p->m_previewAy[iIndex]->SaveChangesAndContinue()) {
     p->m_previewAy[iIndex]->makeCurrent();
@@ -465,10 +463,7 @@ void CMainWindow::OnTabCloseRequested(int iIndex)
   }
   twViewer->blockSignals(false);
 
-  if (bChangeCurrentIndex) {
-    OnTabChanged(twViewer->currentIndex());
-  }
-  UpdateWindow();
+  OnTabChanged(twViewer->currentIndex());
 }
 
 //-------------------------------------------------------------------------------------------------

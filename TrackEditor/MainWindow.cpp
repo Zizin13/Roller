@@ -372,6 +372,10 @@ void CMainWindow::OnCopy()
     p->m_clipBoard.push_back(GetCurrentTrack()->m_chunkAy[i]);
     if (m_preferences.bCopyRelativeYaw)
       p->m_clipBoard[p->m_clipBoard.size() - 1].dYaw = p->m_clipBoard[p->m_clipBoard.size() - 1].dYaw - GetCurrentTrack()->m_chunkAy[iPrevChunk].dYaw;
+    if (m_preferences.bCopyRelativePitch)
+      p->m_clipBoard[p->m_clipBoard.size() - 1].dPitch = p->m_clipBoard[p->m_clipBoard.size() - 1].dPitch - GetCurrentTrack()->m_chunkAy[iPrevChunk].dPitch;
+    if (m_preferences.bCopyRelativeRoll)
+      p->m_clipBoard[p->m_clipBoard.size() - 1].dRoll = p->m_clipBoard[p->m_clipBoard.size() - 1].dRoll - GetCurrentTrack()->m_chunkAy[iPrevChunk].dRoll;
   }
 }
 
@@ -386,13 +390,30 @@ void CMainWindow::OnPaste()
   if (sbSelChunksTo->value() != sbSelChunksFrom->value())
     OnDeleteChunkClicked();
 
-  if (m_preferences.bCopyRelativeYaw) {
-    int iPrevChunk = sbSelChunksFrom->value() - 1;
-    if (iPrevChunk < 0)
-      iPrevChunk = (int)GetCurrentTrack()->m_chunkAy.size() - 1;
+  int iPrevChunk = sbSelChunksFrom->value() - 1;
+  if (iPrevChunk < 0)
+    iPrevChunk = (int)GetCurrentTrack()->m_chunkAy.size() - 1;
 
-    for (int i = 0; i < (int)p->m_clipBoard.size(); ++i) {
+  for (int i = 0; i < (int)p->m_clipBoard.size(); ++i) {
+    if (m_preferences.bCopyRelativeYaw)
       p->m_clipBoard[i].dYaw = p->m_clipBoard[i].dYaw + GetCurrentTrack()->m_chunkAy[iPrevChunk].dYaw;
+    if (m_preferences.bCopyRelativePitch)
+      p->m_clipBoard[i].dPitch = p->m_clipBoard[i].dPitch + GetCurrentTrack()->m_chunkAy[iPrevChunk].dPitch;
+    if (m_preferences.bCopyRelativeRoll)
+      p->m_clipBoard[i].dRoll = p->m_clipBoard[i].dRoll + GetCurrentTrack()->m_chunkAy[iPrevChunk].dRoll;
+    if (m_preferences.bPasteNoSurface) {
+      p->m_clipBoard[i].iLeftSurfaceType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iLeftSurfaceType;
+      p->m_clipBoard[i].iCenterSurfaceType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iCenterSurfaceType;
+      p->m_clipBoard[i].iRightSurfaceType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iRightSurfaceType;
+      p->m_clipBoard[i].iLeftWallType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iLeftWallType;
+      p->m_clipBoard[i].iRightWallType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iRightWallType;
+      p->m_clipBoard[i].iRoofType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iRoofType;
+      p->m_clipBoard[i].iLUOuterWallType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iLUOuterWallType;
+      p->m_clipBoard[i].iLLOuterWallType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iLLOuterWallType;
+      p->m_clipBoard[i].iOuterFloorType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iOuterFloorType;
+      p->m_clipBoard[i].iRLOuterWallType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iRLOuterWallType;
+      p->m_clipBoard[i].iRUOuterWallType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iRUOuterWallType;
+      p->m_clipBoard[i].iEnvironmentFloorType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iEnvironmentFloorType;
     }
   }
 

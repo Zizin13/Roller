@@ -53,6 +53,7 @@ protected slots:
   void OnCopy();
   void OnPaste();
   void OnSelectAll();
+  void OnDeselect();
   void OnPreferences();
   void OnDebug();
   void OnAbout();

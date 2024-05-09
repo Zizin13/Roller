@@ -159,6 +159,11 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   p->m_pDebugAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_G));
   menuView->addAction(p->m_pDebugAction);
 
+  //deselect action, will be cleaned up by qt parent
+  QAction *pDeselectAction = new QAction(this);
+  pDeselectAction->setShortcut(QKeySequence(Qt::Key_Escape));
+  addAction(pDeselectAction);
+
   //setup history timer
   m_pSaveHistoryTimer = new QTimer(this);
   m_pSaveHistoryTimer->setSingleShot(true);
@@ -178,6 +183,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   connect(actPaste, &QAction::triggered, this, &CMainWindow::OnPaste);
   connect(actDelete, &QAction::triggered, this, &CMainWindow::OnDeleteChunkClicked);
   connect(actSelectAll, &QAction::triggered, this, &CMainWindow::OnSelectAll);
+  connect(pDeselectAction, &QAction::triggered, this, &CMainWindow::OnDeselect);
   connect(p->m_pDebugAction, &QAction::triggered, this, &CMainWindow::OnDebug);
   connect(actPreferences, &QAction::triggered, this, &CMainWindow::OnPreferences);
   connect(actAbout, &QAction::triggered, this, &CMainWindow::OnAbout);
@@ -443,6 +449,13 @@ void CMainWindow::OnSelectAll()
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue((int)GetCurrentTrack()->m_chunkAy.size() - 1));
   UpdateGeometrySelection();
   p->m_pEditData->OnCancelClicked();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnDeselect()
+{
+  ckTo->setChecked(false);
 }
 
 //-------------------------------------------------------------------------------------------------

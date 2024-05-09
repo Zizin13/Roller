@@ -69,7 +69,10 @@ CEditSignWidget::CEditSignWidget(QWidget *pParent)
 
 CEditSignWidget::~CEditSignWidget()
 {
-
+  if (p) {
+    delete p;
+    p = NULL;
+  }
 }
 
 //-------------------------------------------------------------------------------------------------

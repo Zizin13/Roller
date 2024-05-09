@@ -170,7 +170,10 @@ CEditAudioWidget::CEditAudioWidget(QWidget *pParent)
 
 CEditAudioWidget::~CEditAudioWidget()
 {
-
+  if (p) {
+    delete p;
+    p = NULL;
+  }
 }
 
 //-------------------------------------------------------------------------------------------------

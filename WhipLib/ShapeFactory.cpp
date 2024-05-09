@@ -773,20 +773,21 @@ int CShapeFactory::GetAnmsCount(eWhipModel model)
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 *CShapeFactory::MakeIndicesCenterline(uint32 &numIndices, CTrackData *pTrack)
+uint32 *CShapeFactory::MakeIndicesCenterline(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast)
 {
   if (pTrack->m_chunkAy.empty()) {
     numIndices = 0;
     return NULL;
   }
 
-  numIndices = (uint32)pTrack->m_chunkAy.size() * 2;
+  numIndices = (uint32)pTrack->m_chunkAy.size() * 2 - (bAttachLast ? 0 : 2);
   uint32 *indices = new uint32[numIndices];
 
-  for (uint32 i = 1; i < numIndices + 1; i++) {
-    indices[i - 1] = i / 2;
+  for (uint32 i = 0; i < numIndices; i++) {
+    indices[i] = (i + 1) / 2;
   }
-  indices[numIndices - 1] = 0;
+  if (bAttachLast)
+    indices[numIndices - 1] = 0;
 
   return indices;
 }
@@ -990,7 +991,7 @@ CShapeData *CShapeFactory::MakeAILine(CShader *pShader, CTrackData *pTrack, eSha
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVerts(uiNumVerts, section, pTrack, NULL);
   uint32 uiNumIndices;
-  uint32 *indices = MakeIndicesCenterline(uiNumIndices, pTrack);
+  uint32 *indices = MakeIndicesCenterline(uiNumIndices, pTrack, bAttachLast);
   GLenum drawType = GL_LINES;
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {

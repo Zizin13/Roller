@@ -62,7 +62,7 @@ private:
   tVertex *MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTrack, CTexture *pTexture, int iIndex);
 
   uint32 *MakeIndicesEnvirFloor(uint32 &numIndices);
-  uint32 *MakeIndicesCenterline(uint32 &numIndices, CTrackData *pTrack);
+  uint32 *MakeIndicesCenterline(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast);
   uint32 *MakeIndicesSurface(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast);
   uint32 *MakeIndicesSurfaceWireframe(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast);
   uint32 *MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section, CTrackData *pTrack, bool bAttachLast);

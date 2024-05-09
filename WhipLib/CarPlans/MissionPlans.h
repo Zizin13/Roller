@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_xmissionCoords[] = {
+static float g_xmissionCoords[] = {
 -295.769012f,
 172.238998f,
 409.457001f,
@@ -270,9 +270,9 @@ float g_xmissionCoords[] = {
 -7.485000f,
 371.348999f,
 };
-int g_xmissionCoordsCount = sizeof(g_xmissionCoords) / sizeof(float); 
+static int g_xmissionCoordsCount = sizeof(g_xmissionCoords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_xmissionPols[] = {
+static tPolygon g_xmissionPols[] = {
 {7,26,21,2,293,255,255,0,0},
 {2,21,24,5,33070,255,255,0,0},
 {0,1,3,4,33030,32,0,0,0},
@@ -321,9 +321,9 @@ tPolygon g_xmissionPols[] = {
 {19,0,75,74,259,255,255,0,0},
 {0,19,20,1,259,255,255,0,0},
 };
-int g_xmissionPolsCount = sizeof(g_xmissionPols)/sizeof(tPolygon);
+static int g_xmissionPolsCount = sizeof(g_xmissionPols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_xmissionBacks[] = {
+static uint32 g_xmissionBacks[] = {
 0,
 0,
 0,
@@ -372,17 +372,17 @@ uint32 g_xmissionBacks[] = {
 0,
 0,
 };
-int g_xmissionBacksCount = sizeof(g_xmissionBacks) / sizeof(uint32); 
+static int g_xmissionBacksCount = sizeof(g_xmissionBacks) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-uint32 g_xmissionPlaces[] = {
+static uint32 g_xmissionPlaces[] = {
 3,
 22,
 56,
 50,
 };
-int g_xmissionPlacesCount = sizeof(g_xmissionPlaces) / sizeof(uint32); 
+static int g_xmissionPlacesCount = sizeof(g_xmissionPlaces) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-tAnimation g_xmissionAnms[] = {
+static tAnimation g_xmissionAnms[] = {
 {5,{5395,5394,5385,5386,5376,0,0,0,0,0,0,0,0,0,0,0,}},
 {5,{5389,5390,5387,5388,5378,0,0,0,0,0,0,0,0,0,0,0,}},
 {5,{1299,1298,1289,1290,1280,0,0,0,0,0,0,0,0,0,0,0,}},
@@ -393,6 +393,6 @@ tAnimation g_xmissionAnms[] = {
 {2,{288,272,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 {2,{285,284,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 };
-int g_xmissionAnmsCount = sizeof(g_xmissionAnms) / sizeof(tAnimation); 
+static int g_xmissionAnmsCount = sizeof(g_xmissionAnms) / sizeof(tAnimation); 
 //-------------------------------------------------------------------------------------------------
 #endif

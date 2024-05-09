@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_xzizinCoords[] = {
+static float g_xzizinCoords[] = {
 -287.526001f,
 172.475998f,
 410.200012f,
@@ -264,9 +264,9 @@ float g_xzizinCoords[] = {
 249.106003f,
 293.975006f,
 };
-int g_xzizinCoordsCount = sizeof(g_xzizinCoords) / sizeof(float); 
+static int g_xzizinCoordsCount = sizeof(g_xzizinCoords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_xzizinPols[] = {
+static tPolygon g_xzizinPols[] = {
 {7,26,21,2,293,255,255,0,0},
 {2,21,24,5,33070,255,255,0,0},
 {0,1,3,4,33030,33,0,0,0},
@@ -318,9 +318,9 @@ tPolygon g_xzizinPols[] = {
 {82,38,39,83,41233,255,255,0,0},
 {40,84,85,41,41233,255,255,0,0},
 };
-int g_xzizinPolsCount = sizeof(g_xzizinPols)/sizeof(tPolygon);
+static int g_xzizinPolsCount = sizeof(g_xzizinPols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_xzizinBacks[] = {
+static uint32 g_xzizinBacks[] = {
 0,
 0,
 0,
@@ -372,17 +372,17 @@ uint32 g_xzizinBacks[] = {
 0,
 0,
 };
-int g_xzizinBacksCount = sizeof(g_xzizinBacks) / sizeof(uint32); 
+static int g_xzizinBacksCount = sizeof(g_xzizinBacks) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-uint32 g_xzizinPlaces[] = {
+static uint32 g_xzizinPlaces[] = {
 3,
 22,
 56,
 50,
 };
-int g_xzizinPlacesCount = sizeof(g_xzizinPlaces) / sizeof(uint32); 
+static int g_xzizinPlacesCount = sizeof(g_xzizinPlaces) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-tAnimation g_xzizinAnms[] = {
+static tAnimation g_xzizinAnms[] = {
 {5,{5394,5394,5385,5386,5376,0,0,0,0,0,0,0,0,0,0,0,}},
 {5,{5389,5390,5387,5388,5378,0,0,0,0,0,0,0,0,0,0,0,}},
 {5,{1298,1299,1289,1290,1280,0,0,0,0,0,0,0,0,0,0,0,}},
@@ -392,6 +392,6 @@ tAnimation g_xzizinAnms[] = {
 {2,{279,271,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 {2,{288,272,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 };
-int g_xzizinAnmsCount = sizeof(g_xzizinAnms) / sizeof(tAnimation); 
+static int g_xzizinAnmsCount = sizeof(g_xzizinAnms) / sizeof(tAnimation); 
 //-------------------------------------------------------------------------------------------------
 #endif

@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_buildCoords[] = {
+static float g_buildCoords[] = {
 2683.095947f,
 -2933.002930f,
 -10.578000f,
@@ -48,24 +48,24 @@ float g_buildCoords[] = {
 2930.677979f,
 8558.987305f,
 };
-int g_buildCoordsCount = sizeof(g_buildCoords) / sizeof(float); 
+static int g_buildCoordsCount = sizeof(g_buildCoords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_buildPols[] = {
+static tPolygon g_buildPols[] = {
 {2,3,0,1,277,0,0,0,0},
 {12,5,4,11,276,0,0,0,0},
 {3,13,6,7,276,0,0,0,0},
 {9,2,1,8,276,0,0,0,0},
 {13,12,11,10,277,0,0,0,0},
 };
-int g_buildPolsCount = sizeof(g_buildPols)/sizeof(tPolygon);
+static int g_buildPolsCount = sizeof(g_buildPols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_buildBacks[] = {
+static uint32 g_buildBacks[] = {
 0,
 0,
 0,
 0,
 0,
 };
-int g_buildBacksCount = sizeof(g_buildBacks) / sizeof(uint32); 
+static int g_buildBacksCount = sizeof(g_buildBacks) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
 #endif

@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_xdesilvaCoords[] = {
+static float g_xdesilvaCoords[] = {
 -295.769012f,
 172.238998f,
 409.457001f,
@@ -270,9 +270,9 @@ float g_xdesilvaCoords[] = {
 -7.485000f,
 371.348999f,
 };
-int g_xdesilvaCoordsCount = sizeof(g_xdesilvaCoords) / sizeof(float); 
+static int g_xdesilvaCoordsCount = sizeof(g_xdesilvaCoords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_xdesilvaPols[] = {
+static tPolygon g_xdesilvaPols[] = {
 {7,26,21,2,293,255,255,0,0},
 {2,21,24,5,33070,255,255,0,0},
 {0,1,3,4,33030,33,0,0,0},
@@ -324,9 +324,9 @@ tPolygon g_xdesilvaPols[] = {
 {39,41,83,82,41233,255,255,0,0},
 {86,87,84,85,8465,18,0,0,0},
 };
-int g_xdesilvaPolsCount = sizeof(g_xdesilvaPols)/sizeof(tPolygon);
+static int g_xdesilvaPolsCount = sizeof(g_xdesilvaPols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_xdesilvaBacks[] = {
+static uint32 g_xdesilvaBacks[] = {
 0,
 0,
 0,
@@ -378,17 +378,17 @@ uint32 g_xdesilvaBacks[] = {
 0,
 0,
 };
-int g_xdesilvaBacksCount = sizeof(g_xdesilvaBacks) / sizeof(uint32); 
+static int g_xdesilvaBacksCount = sizeof(g_xdesilvaBacks) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-uint32 g_xdesilvaPlaces[] = {
+static uint32 g_xdesilvaPlaces[] = {
 3,
 22,
 56,
 50,
 };
-int g_xdesilvaPlacesCount = sizeof(g_xdesilvaPlaces) / sizeof(uint32); 
+static int g_xdesilvaPlacesCount = sizeof(g_xdesilvaPlaces) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-tAnimation g_xdesilvaAnms[] = {
+static tAnimation g_xdesilvaAnms[] = {
 {5,{5395,5394,5386,5385,5376,0,0,0,0,0,0,0,0,0,0,0,}},
 {5,{5389,5390,5388,5387,5378,0,0,0,0,0,0,0,0,0,0,0,}},
 {5,{5394,5395,5386,5385,5376,0,0,0,0,0,0,0,0,0,0,0,}},
@@ -398,6 +398,6 @@ tAnimation g_xdesilvaAnms[] = {
 {2,{279,271,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 {2,{288,272,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 };
-int g_xdesilvaAnmsCount = sizeof(g_xdesilvaAnms) / sizeof(tAnimation); 
+static int g_xdesilvaAnmsCount = sizeof(g_xdesilvaAnms) / sizeof(tAnimation); 
 //-------------------------------------------------------------------------------------------------
 #endif

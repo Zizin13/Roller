@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_build3Coords[] = {
+static float g_build3Coords[] = {
 -817.400024f,
 7712.063965f,
 497.572998f,
@@ -30,27 +30,27 @@ float g_build3Coords[] = {
 7712.063965f,
 0.000000f,
 };
-int g_build3CoordsCount = sizeof(g_build3Coords) / sizeof(float); 
+static int g_build3CoordsCount = sizeof(g_build3Coords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_build3Pols[] = {
+static tPolygon g_build3Pols[] = {
 {0,4,5,1,512,0,0,0,0},
 {2,6,7,3,512,0,0,0,0},
 {4,7,6,5,512,0,0,0,0},
 };
-int g_build3PolsCount = sizeof(g_build3Pols)/sizeof(tPolygon);
+static int g_build3PolsCount = sizeof(g_build3Pols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_build3Backs[] = {
+static uint32 g_build3Backs[] = {
 0,
 0,
 0,
 };
-int g_build3BacksCount = sizeof(g_build3Backs) / sizeof(uint32); 
+static int g_build3BacksCount = sizeof(g_build3Backs) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-tAnimation g_build3Anms[] = {
+static tAnimation g_build3Anms[] = {
 {0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 {0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 {0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 };
-int g_build3AnmsCount = sizeof(g_build3Anms) / sizeof(tAnimation); 
+static int g_build3AnmsCount = sizeof(g_build3Anms) / sizeof(tAnimation); 
 //-------------------------------------------------------------------------------------------------
 #endif

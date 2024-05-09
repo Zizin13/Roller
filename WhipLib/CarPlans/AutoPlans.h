@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_xautoCoords[] = {
+static float g_xautoCoords[] = {
 -287.526001f,
 172.475998f,
 410.200012f,
@@ -264,9 +264,9 @@ float g_xautoCoords[] = {
 249.106003f,
 293.975006f,
 };
-int g_xautoCoordsCount = sizeof(g_xautoCoords) / sizeof(float); 
+static int g_xautoCoordsCount = sizeof(g_xautoCoords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_xautoPols[] = {
+static tPolygon g_xautoPols[] = {
 {7,26,21,2,293,255,255,0,0},
 {2,21,24,5,33070,255,255,0,0},
 {0,1,3,4,33030,33,0,0,0},
@@ -318,9 +318,9 @@ tPolygon g_xautoPols[] = {
 {82,38,39,83,41233,255,255,0,0},
 {40,84,85,41,41233,255,255,0,0},
 };
-int g_xautoPolsCount = sizeof(g_xautoPols)/sizeof(tPolygon);
+static int g_xautoPolsCount = sizeof(g_xautoPols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_xautoBacks[] = {
+static uint32 g_xautoBacks[] = {
 0,
 0,
 0,
@@ -372,17 +372,17 @@ uint32 g_xautoBacks[] = {
 0,
 0,
 };
-int g_xautoBacksCount = sizeof(g_xautoBacks) / sizeof(uint32); 
+static int g_xautoBacksCount = sizeof(g_xautoBacks) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-uint32 g_xautoPlaces[] = {
+static uint32 g_xautoPlaces[] = {
 3,
 22,
 56,
 50,
 };
-int g_xautoPlacesCount = sizeof(g_xautoPlaces) / sizeof(uint32); 
+static int g_xautoPlacesCount = sizeof(g_xautoPlaces) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-tAnimation g_xautoAnms[] = {
+static tAnimation g_xautoAnms[] = {
 {5,{13586,13587,13577,13578,13568,0,0,0,0,0,0,0,0,0,0,0,}},
 {5,{13582,13581,13579,13580,13570,0,0,0,0,0,0,0,0,0,0,0,}},
 {5,{9490,9491,9481,9482,9472,0,0,0,0,0,0,0,0,0,0,0,}},
@@ -392,6 +392,6 @@ tAnimation g_xautoAnms[] = {
 {2,{279,271,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 {2,{288,272,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 };
-int g_xautoAnmsCount = sizeof(g_xautoAnms) / sizeof(tAnimation); 
+static int g_xautoAnmsCount = sizeof(g_xautoAnms) / sizeof(tAnimation); 
 //-------------------------------------------------------------------------------------------------
 #endif

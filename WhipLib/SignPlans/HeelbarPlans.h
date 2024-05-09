@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_heelbarCoords[] = {
+static float g_heelbarCoords[] = {
 -630.487976f,
 -794.494995f,
 -194.395996f,
@@ -30,24 +30,24 @@ float g_heelbarCoords[] = {
 794.494995f,
 1101.625977f,
 };
-int g_heelbarCoordsCount = sizeof(g_heelbarCoords) / sizeof(float); 
+static int g_heelbarCoordsCount = sizeof(g_heelbarCoords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_heelbarPols[] = {
+static tPolygon g_heelbarPols[] = {
 {2,3,0,1,264,0,0,0,0},
 {6,2,1,5,264,0,0,0,0},
 {2,6,7,3,47,0,0,0,0},
 {3,7,4,0,264,0,0,0,0},
 {7,6,5,4,264,0,0,0,0},
 };
-int g_heelbarPolsCount = sizeof(g_heelbarPols)/sizeof(tPolygon);
+static int g_heelbarPolsCount = sizeof(g_heelbarPols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_heelbarBacks[] = {
+static uint32 g_heelbarBacks[] = {
 0,
 0,
 0,
 0,
 0,
 };
-int g_heelbarBacksCount = sizeof(g_heelbarBacks) / sizeof(uint32); 
+static int g_heelbarBacksCount = sizeof(g_heelbarBacks) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
 #endif

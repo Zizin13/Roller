@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_towerCoords[] = {
+static float g_towerCoords[] = {
 -1030.883057f,
 -997.656006f,
 -432.277008f,
@@ -30,32 +30,32 @@ float g_towerCoords[] = {
 997.656006f,
 8214.199219f,
 };
-int g_towerCoordsCount = sizeof(g_towerCoords) / sizeof(float); 
+static int g_towerCoordsCount = sizeof(g_towerCoords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_towerPols[] = {
+static tPolygon g_towerPols[] = {
 {2,3,0,1,512,0,0,0,0},
 {6,2,1,5,512,0,0,0,0},
 {2,6,7,3,47,0,0,0,0},
 {3,7,4,0,512,0,0,0,0},
 {7,6,5,4,512,0,0,0,0},
 };
-int g_towerPolsCount = sizeof(g_towerPols)/sizeof(tPolygon);
+static int g_towerPolsCount = sizeof(g_towerPols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_towerBacks[] = {
+static uint32 g_towerBacks[] = {
 0,
 0,
 0,
 0,
 0,
 };
-int g_towerBacksCount = sizeof(g_towerBacks) / sizeof(uint32); 
+static int g_towerBacksCount = sizeof(g_towerBacks) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-tAnimation g_towerAnms[] = {
+static tAnimation g_towerAnms[] = {
 {0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 {0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 {0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 {0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 };
-int g_towerAnmsCount = sizeof(g_towerAnms) / sizeof(tAnimation); 
+static int g_towerAnmsCount = sizeof(g_towerAnms) / sizeof(tAnimation); 
 //-------------------------------------------------------------------------------------------------
 #endif

@@ -305,19 +305,19 @@ int main(int argc, char *argv[])
 
   if (!coordsFloats.empty()) {
     printf("writing _%s_coords\n", sCarNameLower.c_str());
-    out << "float g_" << sCarNameLower << "Coords[] = {\n";
+    out << "static float g_" << sCarNameLower << "Coords[] = {\n";
     for (int i = 0; i < coordsFloats.size(); ++i) {
       out << std::to_string(coordsFloats[i]) << "f,\n";
     }
     out << "};\n";
-    out << "int g_" << sCarNameLower << "CoordsCount = sizeof(g_" << sCarNameLower << "Coords) / sizeof(float); \n";
+    out << "static int g_" << sCarNameLower << "CoordsCount = sizeof(g_" << sCarNameLower << "Coords) / sizeof(float); \n";
     out << "//-------------------------------------------------------------------------------------------------\n";
   }
 
 
   if (!pols.empty()) {
     printf("writing _%s_pols\n", sCarNameLower.c_str());
-    out << "tPolygon g_" << sCarNameLower << "Pols[] = {\n";
+    out << "static tPolygon g_" << sCarNameLower << "Pols[] = {\n";
     for (int i = 0; i < pols.size(); ++i) {
       out << "{"
         << (int)pols[i].byVert1 << ","
@@ -331,38 +331,38 @@ int main(int argc, char *argv[])
         << (int)pols[i].byUnknown4 << "},\n";
     }
     out << "};\n";
-    out << "int g_" << sCarNameLower << "PolsCount = sizeof(g_" << sCarNameLower << "Pols)/sizeof(tPolygon);\n";
+    out << "static int g_" << sCarNameLower << "PolsCount = sizeof(g_" << sCarNameLower << "Pols)/sizeof(tPolygon);\n";
     out << "//-------------------------------------------------------------------------------------------------\n";
   }
 
 
   if (!backsUInts.empty()) {
     printf("writing _%s_backs\n", sCarNameLower.c_str());
-    out << "uint32 g_" << sCarNameLower << "Backs[] = {\n";
+    out << "static uint32 g_" << sCarNameLower << "Backs[] = {\n";
     for (int i = 0; i < backsUInts.size(); ++i) {
       out << backsUInts[i] << ",\n";
     }
     out << "};\n";
-    out << "int g_" << sCarNameLower << "BacksCount = sizeof(g_" << sCarNameLower << "Backs) / sizeof(uint32); \n";
+    out << "static int g_" << sCarNameLower << "BacksCount = sizeof(g_" << sCarNameLower << "Backs) / sizeof(uint32); \n";
     out << "//-------------------------------------------------------------------------------------------------\n";
   }
 
 
   if (!placesUInts.empty()) {
     printf("writing _%s_places\n", sCarNameLower.c_str());
-    out << "uint32 g_" << sCarNameLower << "Places[] = {\n";
+    out << "static uint32 g_" << sCarNameLower << "Places[] = {\n";
     for (int i = 0; i < placesUInts.size(); ++i) {
       out << placesUInts[i] << ",\n";
     }
     out << "};\n";
-    out << "int g_" << sCarNameLower << "PlacesCount = sizeof(g_" << sCarNameLower << "Places) / sizeof(uint32); \n";
+    out << "static int g_" << sCarNameLower << "PlacesCount = sizeof(g_" << sCarNameLower << "Places) / sizeof(uint32); \n";
     out << "//-------------------------------------------------------------------------------------------------\n";
   }
 
 
   if (!anms.empty()) {
     printf("writing _%s_anms\n", sCarNameLower.c_str());
-    out << "tAnimation g_" << sCarNameLower << "Anms[] = {\n";
+    out << "static tAnimation g_" << sCarNameLower << "Anms[] = {\n";
     for (int i = 0; i < anms.size(); ++i) {
       out << "{" << anms[i].uiCount << ",{";
       for (int j = 0; j < 16; ++j) {
@@ -371,7 +371,7 @@ int main(int argc, char *argv[])
       out << "}},\n";
     }
     out << "};\n";
-    out << "int g_" << sCarNameLower << "AnmsCount = sizeof(g_" << sCarNameLower << "Anms) / sizeof(tAnimation); \n";
+    out << "static int g_" << sCarNameLower << "AnmsCount = sizeof(g_" << sCarNameLower << "Anms) / sizeof(tAnimation); \n";
     out << "//-------------------------------------------------------------------------------------------------\n";
   }
   

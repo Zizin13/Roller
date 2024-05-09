@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_sign01Coords[] = {
+static float g_sign01Coords[] = {
 0.000000f,
 -246.666000f,
 362.433014f,
@@ -30,23 +30,23 @@ float g_sign01Coords[] = {
 -33.169998f,
 362.416992f,
 };
-int g_sign01CoordsCount = sizeof(g_sign01Coords) / sizeof(float); 
+static int g_sign01CoordsCount = sizeof(g_sign01Coords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_sign01Pols[] = {
+static tPolygon g_sign01Pols[] = {
 {3,2,1,0,8704,0,0,0,0},
 {4,7,6,5,8468,0,0,0,0},
 };
-int g_sign01PolsCount = sizeof(g_sign01Pols)/sizeof(tPolygon);
+static int g_sign01PolsCount = sizeof(g_sign01Pols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_sign01Backs[] = {
+static uint32 g_sign01Backs[] = {
 0,
 0,
 };
-int g_sign01BacksCount = sizeof(g_sign01Backs) / sizeof(uint32); 
+static int g_sign01BacksCount = sizeof(g_sign01Backs) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-tAnimation g_sign01Anms[] = {
+static tAnimation g_sign01Anms[] = {
 {0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 };
-int g_sign01AnmsCount = sizeof(g_sign01Anms) / sizeof(tAnimation); 
+static int g_sign01AnmsCount = sizeof(g_sign01Anms) / sizeof(tAnimation); 
 //-------------------------------------------------------------------------------------------------
 #endif

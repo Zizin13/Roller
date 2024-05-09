@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_tower2Coords[] = {
+static float g_tower2Coords[] = {
 -1030.883057f,
 -997.656006f,
 0.047000f,
@@ -30,24 +30,24 @@ float g_tower2Coords[] = {
 997.656006f,
 8646.523438f,
 };
-int g_tower2CoordsCount = sizeof(g_tower2Coords) / sizeof(float); 
+static int g_tower2CoordsCount = sizeof(g_tower2Coords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_tower2Pols[] = {
+static tPolygon g_tower2Pols[] = {
 {0,1,2,3,278,0,0,0,0},
 {1,5,6,2,278,0,0,0,0},
 {7,3,2,6,278,0,0,0,0},
 {4,0,3,7,278,0,0,0,0},
 {5,4,7,6,278,0,0,0,0},
 };
-int g_tower2PolsCount = sizeof(g_tower2Pols)/sizeof(tPolygon);
+static int g_tower2PolsCount = sizeof(g_tower2Pols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_tower2Backs[] = {
+static uint32 g_tower2Backs[] = {
 0,
 0,
 0,
 0,
 0,
 };
-int g_tower2BacksCount = sizeof(g_tower2Backs) / sizeof(uint32); 
+static int g_tower2BacksCount = sizeof(g_tower2Backs) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
 #endif

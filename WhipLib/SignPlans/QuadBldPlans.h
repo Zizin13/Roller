@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_quadbldCoords[] = {
+static float g_quadbldCoords[] = {
 -564.952026f,
 691.538025f,
 14.749000f,
@@ -102,9 +102,9 @@ float g_quadbldCoords[] = {
 -2328.528076f,
 6191.704102f,
 };
-int g_quadbldCoordsCount = sizeof(g_quadbldCoords) / sizeof(float); 
+static int g_quadbldCoordsCount = sizeof(g_quadbldCoords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_quadbldPols[] = {
+static tPolygon g_quadbldPols[] = {
 {2,3,0,1,282,0,0,0,0},
 {6,2,1,5,282,0,0,0,0},
 {2,6,7,3,68,0,0,0,0},
@@ -126,9 +126,9 @@ tPolygon g_quadbldPols[] = {
 {27,31,28,24,281,0,0,0,0},
 {31,30,29,28,281,0,0,0,0},
 };
-int g_quadbldPolsCount = sizeof(g_quadbldPols)/sizeof(tPolygon);
+static int g_quadbldPolsCount = sizeof(g_quadbldPols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_quadbldBacks[] = {
+static uint32 g_quadbldBacks[] = {
 0,
 0,
 0,
@@ -150,6 +150,6 @@ uint32 g_quadbldBacks[] = {
 0,
 0,
 };
-int g_quadbldBacksCount = sizeof(g_quadbldBacks) / sizeof(uint32); 
+static int g_quadbldBacksCount = sizeof(g_quadbldBacks) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
 #endif

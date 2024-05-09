@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_xreiseCoords[] = {
+static float g_xreiseCoords[] = {
 -295.769012f,
 172.238998f,
 409.457001f,
@@ -270,9 +270,9 @@ float g_xreiseCoords[] = {
 -7.485000f,
 371.348999f,
 };
-int g_xreiseCoordsCount = sizeof(g_xreiseCoords) / sizeof(float); 
+static int g_xreiseCoordsCount = sizeof(g_xreiseCoords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_xreisePols[] = {
+static tPolygon g_xreisePols[] = {
 {7,26,21,2,293,255,255,0,0},
 {2,21,24,5,33284,255,255,0,0},
 {0,1,3,4,33030,33,0,0,0},
@@ -324,9 +324,9 @@ tPolygon g_xreisePols[] = {
 {39,41,83,82,41233,255,255,0,0},
 {86,87,84,85,41233,18,0,0,0},
 };
-int g_xreisePolsCount = sizeof(g_xreisePols)/sizeof(tPolygon);
+static int g_xreisePolsCount = sizeof(g_xreisePols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_xreiseBacks[] = {
+static uint32 g_xreiseBacks[] = {
 0,
 0,
 0,
@@ -378,17 +378,17 @@ uint32 g_xreiseBacks[] = {
 0,
 0,
 };
-int g_xreiseBacksCount = sizeof(g_xreiseBacks) / sizeof(uint32); 
+static int g_xreiseBacksCount = sizeof(g_xreiseBacks) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-uint32 g_xreisePlaces[] = {
+static uint32 g_xreisePlaces[] = {
 3,
 22,
 56,
 50,
 };
-int g_xreisePlacesCount = sizeof(g_xreisePlaces) / sizeof(uint32); 
+static int g_xreisePlacesCount = sizeof(g_xreisePlaces) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-tAnimation g_xreiseAnms[] = {
+static tAnimation g_xreiseAnms[] = {
 {5,{7442,7443,7433,7434,7424,0,0,0,0,0,0,0,0,0,0,0,}},
 {5,{7437,7438,7435,7436,7426,0,0,0,0,0,0,0,0,0,0,0,}},
 {5,{3346,3347,3337,3338,3328,0,0,0,0,0,0,0,0,0,0,0,}},
@@ -400,6 +400,6 @@ tAnimation g_xreiseAnms[] = {
 {2,{288,272,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 {2,{285,284,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 };
-int g_xreiseAnmsCount = sizeof(g_xreiseAnms) / sizeof(tAnimation); 
+static int g_xreiseAnmsCount = sizeof(g_xreiseAnms) / sizeof(tAnimation); 
 //-------------------------------------------------------------------------------------------------
 #endif

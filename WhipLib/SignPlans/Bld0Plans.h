@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_bld0Coords[] = {
+static float g_bld0Coords[] = {
 -676.145020f,
 -698.687988f,
 5.928000f,
@@ -42,9 +42,9 @@ float g_bld0Coords[] = {
 279.234985f,
 6319.097168f,
 };
-int g_bld0CoordsCount = sizeof(g_bld0Coords) / sizeof(float); 
+static int g_bld0CoordsCount = sizeof(g_bld0Coords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_bld0Pols[] = {
+static tPolygon g_bld0Pols[] = {
 {0,1,2,3,276,0,0,0,0},
 {1,5,6,2,276,0,0,0,0},
 {4,0,3,7,276,0,0,0,0},
@@ -55,9 +55,9 @@ tPolygon g_bld0Pols[] = {
 {7,3,9,11,4373,0,0,0,0},
 {6,7,11,10,277,0,0,0,0},
 };
-int g_bld0PolsCount = sizeof(g_bld0Pols)/sizeof(tPolygon);
+static int g_bld0PolsCount = sizeof(g_bld0Pols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_bld0Backs[] = {
+static uint32 g_bld0Backs[] = {
 0,
 0,
 0,
@@ -68,6 +68,6 @@ uint32 g_bld0Backs[] = {
 0,
 0,
 };
-int g_bld0BacksCount = sizeof(g_bld0Backs) / sizeof(uint32); 
+static int g_bld0BacksCount = sizeof(g_bld0Backs) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
 #endif

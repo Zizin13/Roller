@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_xglobalCoords[] = {
+static float g_xglobalCoords[] = {
 -287.526001f,
 172.475998f,
 410.200012f,
@@ -264,9 +264,9 @@ float g_xglobalCoords[] = {
 249.106003f,
 293.975006f,
 };
-int g_xglobalCoordsCount = sizeof(g_xglobalCoords) / sizeof(float); 
+static int g_xglobalCoordsCount = sizeof(g_xglobalCoords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_xglobalPols[] = {
+static tPolygon g_xglobalPols[] = {
 {7,26,21,2,293,255,255,0,0},
 {2,21,24,5,33070,255,255,0,0},
 {0,1,3,4,33030,33,0,0,0},
@@ -318,9 +318,9 @@ tPolygon g_xglobalPols[] = {
 {82,38,39,83,41233,255,255,0,0},
 {40,84,85,41,41233,255,255,0,0},
 };
-int g_xglobalPolsCount = sizeof(g_xglobalPols)/sizeof(tPolygon);
+static int g_xglobalPolsCount = sizeof(g_xglobalPols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_xglobalBacks[] = {
+static uint32 g_xglobalBacks[] = {
 0,
 0,
 0,
@@ -372,17 +372,17 @@ uint32 g_xglobalBacks[] = {
 0,
 0,
 };
-int g_xglobalBacksCount = sizeof(g_xglobalBacks) / sizeof(uint32); 
+static int g_xglobalBacksCount = sizeof(g_xglobalBacks) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-uint32 g_xglobalPlaces[] = {
+static uint32 g_xglobalPlaces[] = {
 3,
 22,
 56,
 50,
 };
-int g_xglobalPlacesCount = sizeof(g_xglobalPlaces) / sizeof(uint32); 
+static int g_xglobalPlacesCount = sizeof(g_xglobalPlaces) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-tAnimation g_xglobalAnms[] = {
+static tAnimation g_xglobalAnms[] = {
 {5,{5394,5395,5386,5385,5376,0,0,0,0,0,0,0,0,0,0,0,}},
 {5,{5389,5390,5387,5388,5378,0,0,0,0,0,0,0,0,0,0,0,}},
 {5,{1298,1299,1289,1290,1280,0,0,0,0,0,0,0,0,0,0,0,}},
@@ -392,6 +392,6 @@ tAnimation g_xglobalAnms[] = {
 {2,{279,271,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 {2,{288,272,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 };
-int g_xglobalAnmsCount = sizeof(g_xglobalAnms) / sizeof(tAnimation); 
+static int g_xglobalAnmsCount = sizeof(g_xglobalAnms) / sizeof(tAnimation); 
 //-------------------------------------------------------------------------------------------------
 #endif

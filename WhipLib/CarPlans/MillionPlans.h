@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_xmillionCoords[] = {
+static float g_xmillionCoords[] = {
 -287.230988f,
 172.298996f,
 409.779999f,
@@ -264,9 +264,9 @@ float g_xmillionCoords[] = {
 248.850998f,
 293.674011f,
 };
-int g_xmillionCoordsCount = sizeof(g_xmillionCoords) / sizeof(float); 
+static int g_xmillionCoordsCount = sizeof(g_xmillionCoords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_xmillionPols[] = {
+static tPolygon g_xmillionPols[] = {
 {7,26,21,2,293,255,255,0,0},
 {2,21,24,5,33070,255,255,0,0},
 {0,1,3,4,33030,32,0,0,0},
@@ -315,9 +315,9 @@ tPolygon g_xmillionPols[] = {
 {23,4,18,37,273,255,255,0,0},
 {19,0,4,23,33029,255,255,0,0},
 };
-int g_xmillionPolsCount = sizeof(g_xmillionPols)/sizeof(tPolygon);
+static int g_xmillionPolsCount = sizeof(g_xmillionPols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_xmillionBacks[] = {
+static uint32 g_xmillionBacks[] = {
 0,
 0,
 0,
@@ -366,17 +366,17 @@ uint32 g_xmillionBacks[] = {
 0,
 0,
 };
-int g_xmillionBacksCount = sizeof(g_xmillionBacks) / sizeof(uint32); 
+static int g_xmillionBacksCount = sizeof(g_xmillionBacks) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-uint32 g_xmillionPlaces[] = {
+static uint32 g_xmillionPlaces[] = {
 3,
 22,
 56,
 50,
 };
-int g_xmillionPlacesCount = sizeof(g_xmillionPlaces) / sizeof(uint32); 
+static int g_xmillionPlacesCount = sizeof(g_xmillionPlaces) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-tAnimation g_xmillionAnms[] = {
+static tAnimation g_xmillionAnms[] = {
 {5,{5395,5394,5385,5386,5376,0,0,0,0,0,0,0,0,0,0,0,}},
 {5,{5389,5390,5387,5388,5378,0,0,0,0,0,0,0,0,0,0,0,}},
 {5,{1299,1298,1289,1290,1280,0,0,0,0,0,0,0,0,0,0,0,}},
@@ -387,6 +387,6 @@ tAnimation g_xmillionAnms[] = {
 {2,{288,272,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 {2,{285,284,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 };
-int g_xmillionAnmsCount = sizeof(g_xmillionAnms) / sizeof(tAnimation); 
+static int g_xmillionAnmsCount = sizeof(g_xmillionAnms) / sizeof(tAnimation); 
 //-------------------------------------------------------------------------------------------------
 #endif

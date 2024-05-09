@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_advert2Coords[] = {
+static float g_advert2Coords[] = {
 0.000000f,
 1520.671997f,
 -152.619003f,
@@ -18,21 +18,21 @@ float g_advert2Coords[] = {
 1520.671997f,
 2899.875000f,
 };
-int g_advert2CoordsCount = sizeof(g_advert2Coords) / sizeof(float); 
+static int g_advert2CoordsCount = sizeof(g_advert2Coords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_advert2Pols[] = {
+static tPolygon g_advert2Pols[] = {
 {2,3,0,1,8704,0,0,0,0},
 };
-int g_advert2PolsCount = sizeof(g_advert2Pols)/sizeof(tPolygon);
+static int g_advert2PolsCount = sizeof(g_advert2Pols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_advert2Backs[] = {
+static uint32 g_advert2Backs[] = {
 0,
 };
-int g_advert2BacksCount = sizeof(g_advert2Backs) / sizeof(uint32); 
+static int g_advert2BacksCount = sizeof(g_advert2Backs) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-tAnimation g_advert2Anms[] = {
+static tAnimation g_advert2Anms[] = {
 {0,{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 };
-int g_advert2AnmsCount = sizeof(g_advert2Anms) / sizeof(tAnimation); 
+static int g_advert2AnmsCount = sizeof(g_advert2Anms) / sizeof(tAnimation); 
 //-------------------------------------------------------------------------------------------------
 #endif

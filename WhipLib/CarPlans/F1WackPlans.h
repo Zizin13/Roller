@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_f1wackCoords[] = {
+static float g_f1wackCoords[] = {
 -606.012024f,
 196.944000f,
 193.804001f,
@@ -366,9 +366,9 @@ float g_f1wackCoords[] = {
 115.341003f,
 140.222000f,
 };
-int g_f1wackCoordsCount = sizeof(g_f1wackCoords) / sizeof(float); 
+static int g_f1wackCoordsCount = sizeof(g_f1wackCoords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_f1wackPols[] = {
+static tPolygon g_f1wackPols[] = {
 {0,1,2,3,8308,255,255,0,0},
 {4,7,6,5,8308,255,255,0,0},
 {8,11,10,9,8306,255,255,0,0},
@@ -450,9 +450,9 @@ tPolygon g_f1wackPols[] = {
 {116,119,115,112,111,255,255,0,0},
 {118,119,116,117,229,255,255,0,0},
 };
-int g_f1wackPolsCount = sizeof(g_f1wackPols)/sizeof(tPolygon);
+static int g_f1wackPolsCount = sizeof(g_f1wackPols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_f1wackBacks[] = {
+static uint32 g_f1wackBacks[] = {
 0,
 0,
 0,
@@ -534,14 +534,14 @@ uint32 g_f1wackBacks[] = {
 0,
 0,
 };
-int g_f1wackBacksCount = sizeof(g_f1wackBacks) / sizeof(uint32); 
+static int g_f1wackBacksCount = sizeof(g_f1wackBacks) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-uint32 g_f1wackPlaces[] = {
+static uint32 g_f1wackPlaces[] = {
 24,
 28,
 64,
 42,
 };
-int g_f1wackPlacesCount = sizeof(g_f1wackPlaces) / sizeof(uint32); 
+static int g_f1wackPlacesCount = sizeof(g_f1wackPlaces) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
 #endif

@@ -4,7 +4,7 @@
 #include "Polygon.h"
 #include "Animation.h"
 //-------------------------------------------------------------------------------------------------
-float g_xpulseCoords[] = {
+static float g_xpulseCoords[] = {
 -287.526001f,
 172.475998f,
 410.200012f,
@@ -264,9 +264,9 @@ float g_xpulseCoords[] = {
 249.106003f,
 293.975006f,
 };
-int g_xpulseCoordsCount = sizeof(g_xpulseCoords) / sizeof(float); 
+static int g_xpulseCoordsCount = sizeof(g_xpulseCoords) / sizeof(float); 
 //-------------------------------------------------------------------------------------------------
-tPolygon g_xpulsePols[] = {
+static tPolygon g_xpulsePols[] = {
 {7,26,21,2,293,255,255,0,0},
 {2,21,24,5,33070,255,255,0,0},
 {0,1,3,4,33030,33,0,0,0},
@@ -318,9 +318,9 @@ tPolygon g_xpulsePols[] = {
 {82,38,39,83,41233,255,255,0,0},
 {40,84,85,41,41233,255,255,0,0},
 };
-int g_xpulsePolsCount = sizeof(g_xpulsePols)/sizeof(tPolygon);
+static int g_xpulsePolsCount = sizeof(g_xpulsePols)/sizeof(tPolygon);
 //-------------------------------------------------------------------------------------------------
-uint32 g_xpulseBacks[] = {
+static uint32 g_xpulseBacks[] = {
 0,
 0,
 0,
@@ -372,17 +372,17 @@ uint32 g_xpulseBacks[] = {
 0,
 0,
 };
-int g_xpulseBacksCount = sizeof(g_xpulseBacks) / sizeof(uint32); 
+static int g_xpulseBacksCount = sizeof(g_xpulseBacks) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-uint32 g_xpulsePlaces[] = {
+static uint32 g_xpulsePlaces[] = {
 3,
 22,
 56,
 50,
 };
-int g_xpulsePlacesCount = sizeof(g_xpulsePlaces) / sizeof(uint32); 
+static int g_xpulsePlacesCount = sizeof(g_xpulsePlaces) / sizeof(uint32); 
 //-------------------------------------------------------------------------------------------------
-tAnimation g_xpulseAnms[] = {
+static tAnimation g_xpulseAnms[] = {
 {5,{5394,5395,5385,5386,5376,0,0,0,0,0,0,0,0,0,0,0,}},
 {5,{5389,5390,5387,5388,5378,0,0,0,0,0,0,0,0,0,0,0,}},
 {5,{1298,1299,1289,1290,1280,0,0,0,0,0,0,0,0,0,0,0,}},
@@ -392,6 +392,6 @@ tAnimation g_xpulseAnms[] = {
 {2,{271,279,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 {2,{272,288,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
 };
-int g_xpulseAnmsCount = sizeof(g_xpulseAnms) / sizeof(tAnimation); 
+static int g_xpulseAnmsCount = sizeof(g_xpulseAnms) / sizeof(tAnimation); 
 //-------------------------------------------------------------------------------------------------
 #endif

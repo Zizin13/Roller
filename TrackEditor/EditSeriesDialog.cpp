@@ -88,8 +88,6 @@ void CEditSeriesDialog::OnUpdateWindow()
     return;
 
   int iTrackSize = (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size();
-  sbStartChunk->setRange(0, iTrackSize - 1);
-  sbEndChunk->setRange(0, iTrackSize - 1);
   sbInterval->setRange(1, iTrackSize - 1);
 }
 
@@ -97,8 +95,8 @@ void CEditSeriesDialog::OnUpdateWindow()
 
 void CEditSeriesDialog::Validate()
 {
-  m_iStartChunk = ToInt(sbStartChunk->text());
-  m_iEndChunk = ToInt(sbEndChunk->text());
+  m_iStartChunk = g_pMainWindow->GetSelFrom();
+  m_iEndChunk = g_pMainWindow->GetSelTo();
   m_iInterval = ToInt(sbInterval->text());
   m_iField = cbField->currentIndex();
   m_sStartValue = leStartValue->text();

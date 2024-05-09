@@ -9,6 +9,7 @@
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
 #include "Logging.h"
+#include "SignType.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -674,15 +675,8 @@ void CTrackData::GetTrackData(std::vector<uint8> &data)
     WriteToVector(data, m_chunkAy[i].sString.c_str());
     WriteToVector(data, "\r\n");
     if (m_chunkAy[i].iSignType >= 0 && m_chunkAy[i].iSignType < 256) { //signable chunks
-      if (m_chunkAy[i].iSignType != 1      //TOWER 2
-          && m_chunkAy[i].iSignType != 4   //BUILD
-          && m_chunkAy[i].iSignType != 5   //BUILD1
-          && m_chunkAy[i].iSignType != 6   //BUILD2
-          && m_chunkAy[i].iSignType != 8   //HEELBAR
-          && m_chunkAy[i].iSignType != 10  //TREE
-          && m_chunkAy[i].iSignType != 13  //QUADBLD
-          && m_chunkAy[i].iSignType != 14  //BLD0
-          ) { //these signable chunks don't have textures
+      if (m_chunkAy[i].iSignType < g_signAyCount 
+          && g_signAy[m_chunkAy[i].iSignType].bCanHaveTexture) { //these signable chunks don't have textures
         signMap[iSignIndex] = m_chunkAy[i].iSignTexture;
       }
       iSignIndex++;

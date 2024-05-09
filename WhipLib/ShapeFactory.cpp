@@ -189,7 +189,9 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
     if (uiUseTex & SURFACE_FLAG_ANMS_LOOKUP && GetAnms(model)) {
       uiUseTex = GetAnms(model)[uiUseTex & SURFACE_TEXTURE_INDEX].framesAy[0];
     }
-    if (iSignSurfaceType > 0) {
+    if (iSignSurfaceType > 0 
+        && GetSignTypeFromModel(model).bCanHaveTexture) {
+
       uint32 uiSignSurfaceType = CTrackData::GetSignedBitValueFromInt(iSignSurfaceType);
       uiUseTex = uiSignSurfaceType;
     }

@@ -190,12 +190,13 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
       uiUseTex = GetAnms(model)[uiUseTex & SURFACE_TEXTURE_INDEX].framesAy[0];
     }
     if (IsSign(model)) {
-      if (GetSignTypeFromModel(model).bCanHaveTexture
-          && GetPols(model)[i].uiTex & SURFACE_FLAG_ANMS_LOOKUP) {
-        uint32 uiSignSurfaceType = CTrackData::GetSignedBitValueFromInt(iSignSurfaceType);
-        uiUseTex = uiSignSurfaceType;
-      } else {
-        uiUseTex &= ~SURFACE_FLAG_APPLY_TEXTURE;
+      if (GetSignTypeFromModel(model).bCanHaveTexture) {
+        if (GetPols(model)[i].uiTex &SURFACE_FLAG_ANMS_LOOKUP) {
+          uint32 uiSignSurfaceType = CTrackData::GetSignedBitValueFromInt(iSignSurfaceType);
+          uiUseTex = uiSignSurfaceType;
+        } else {
+          uiUseTex &= ~SURFACE_FLAG_APPLY_TEXTURE;
+        }
       }
     }
     pTexture->GetTextureCoordinates(uiUseTex,

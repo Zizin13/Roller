@@ -45,4 +45,15 @@ static const tSignType &GetSignTypeFromModel(eWhipModel model)
 }
 
 //-------------------------------------------------------------------------------------------------
+
+static const bool IsSign(eWhipModel model)
+{
+  for (int i = 0; i < g_signAyCount; ++i) {
+    if (g_signAy[i].modelType == model)
+      return true;
+  }
+  return false;
+}
+
+//-------------------------------------------------------------------------------------------------
 #endif

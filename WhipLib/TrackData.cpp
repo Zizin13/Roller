@@ -701,7 +701,20 @@ void CTrackData::GetTrackData(std::vector<uint8> &data)
       }
       iSignIndex++;
     }
-    if (m_chunkAy[i].iBackTexture >= 0) {
+    if (m_chunkAy[i].iBackTexture >= 0 
+        && (GetSignedBitValueFromInt(m_chunkAy[i].iLeftSurfaceType) & SURFACE_FLAG_BACK ||
+            GetSignedBitValueFromInt(m_chunkAy[i].iCenterSurfaceType) & SURFACE_FLAG_BACK ||
+            GetSignedBitValueFromInt(m_chunkAy[i].iRightSurfaceType) & SURFACE_FLAG_BACK ||
+            GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_BACK ||
+            GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType) & SURFACE_FLAG_BACK ||
+            GetSignedBitValueFromInt(m_chunkAy[i].iRoofType) & SURFACE_FLAG_BACK ||
+            GetSignedBitValueFromInt(m_chunkAy[i].iLUOuterWallType) & SURFACE_FLAG_BACK ||
+            GetSignedBitValueFromInt(m_chunkAy[i].iLLOuterWallType) & SURFACE_FLAG_BACK ||
+            GetSignedBitValueFromInt(m_chunkAy[i].iOuterFloorType) & SURFACE_FLAG_BACK ||
+            GetSignedBitValueFromInt(m_chunkAy[i].iRLOuterWallType) & SURFACE_FLAG_BACK ||
+            GetSignedBitValueFromInt(m_chunkAy[i].iRUOuterWallType) & SURFACE_FLAG_BACK ||
+            GetSignedBitValueFromInt(m_chunkAy[i].iEnvironmentFloorType) & SURFACE_FLAG_BACK ||
+            GetSignedBitValueFromInt(m_chunkAy[i].iSignTexture) & SURFACE_FLAG_BACK)) {
       backsMap[i] = m_chunkAy[i].iBackTexture;
     }
     if (m_chunkAy[i].stunt.iScaleFactor != 0

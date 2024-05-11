@@ -694,7 +694,7 @@ void CTrackData::GetTrackData(std::vector<uint8> &data)
     GenerateChunkString(m_chunkAy[i], szGenerate, sizeof(szGenerate));
     WriteToVector(data, szGenerate);
     WriteToVector(data, "\r\n");
-    if (m_chunkAy[i].iSignType >= 0 && m_chunkAy[i].iSignType < 256) { //signable chunks
+    if (m_chunkAy[i].iSignType >= 0 && m_chunkAy[i].iSignType < 256 && m_chunkAy[i].iSignTexture > 0) { //signable chunks
       if (m_chunkAy[i].iSignType < g_signAyCount 
           && g_signAy[m_chunkAy[i].iSignType].bCanHaveTexture) { //these signable chunks don't have textures
         signMap[iSignIndex] = m_chunkAy[i].iSignTexture;

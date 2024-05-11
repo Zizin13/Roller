@@ -26,18 +26,6 @@ CTrack::~CTrack()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrack::LoadTrack(const QString &sFilename)
-{
-  bool bSuccess = CTrackData::LoadTrack(sFilename.toLatin1().constData());
-
-  //generate strings
-  UpdateChunkStrings();
-
-  return bSuccess;
-}
-
-//-------------------------------------------------------------------------------------------------
-
 bool CTrack::SaveTrack(const QString &sFilename)
 {
   if (sFilename.isEmpty())
@@ -66,30 +54,6 @@ bool CTrack::SaveTrack(const QString &sFilename)
   }
 
   return true;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrack::GetGeometryCursorPos(int iStartIndex, int iEndIndex, int &iStartCursorPos, int &iEndCursorPos)
-{
-  char szBuf[1024];
-  snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d\r\n", (int)m_chunkAy.size(), m_header.iHeaderUnk1, m_header.iHeaderUnk2, m_header.iFloorDepth);
-  QString sHeader = szBuf;
-
-  iStartCursorPos = sHeader.size();
-  iEndCursorPos = sHeader.size();
-  if (m_chunkAy.empty()) return;
-  if (iEndIndex < iStartIndex || iEndIndex > m_chunkAy.size()) {
-    assert(0);
-    return;
-  }
-
-  for (int i = 0; i <= iEndIndex; ++i) {
-    if (i <= iStartIndex)
-      iStartCursorPos = iEndCursorPos;
-    iEndCursorPos += (int)m_chunkAy[i].sString.size() - 2;
-  }
-  --iEndCursorPos;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -510,7 +474,6 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex, const CChunkE
     if (!editVals.sStuntExpandsContracts.isEmpty()) m_chunkAy[i].stunt.iSmallerExpandsLargerContracts = editVals.sStuntExpandsContracts.toInt();
     if (!editVals.sStuntBulge.isEmpty()) m_chunkAy[i].stunt.iBulge = editVals.sStuntBulge.toInt();
   }
-  UpdateChunkStrings();
   g_pMainWindow->LogMessage("Applied changes to " + QString::number(iEndIndex - iStartIndex + 1) + " geometry chunks");
 }
 
@@ -607,100 +570,7 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount, const CChunkEditValues 
     else
       m_chunkAy.insert(m_chunkAy.begin() + iIndex, newChunk);
   }
-  UpdateChunkStrings();
   g_pMainWindow->LogMessage("Inserted " + QString::number(iCount) + " geometry chunks");
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrack::UpdateChunkStrings()
-{
-  for (int i = 0; i < m_chunkAy.size(); ++i) {
-    GenerateChunkString(m_chunkAy[i]);
-  }
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrack::GenerateChunkString(tGeometryChunk &chunk)
-{
-  char szGenerate[1024];
-  snprintf(szGenerate, sizeof(szGenerate),
-           "%5d %6d %6d %6d %6d %6d %6d %11.5lf %11.5lf %11.5lf %5d %5d %5d %5d %3d %3d %3d %4d %5d %3d %3d %3d\r\n" //line 1
-           "%6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %4d %6d %6d %6.1lf %6.1lf %6.1lf\r\n"   //line 2
-           "%5d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d"                             //line 3
-           " %3d %3d %3d %d %d %d %d %d %d %d %d %d %d %d %3d %3d %3d\r\n"       //line 3 continued
-           , chunk.iLeftShoulderWidth
-           , chunk.iLeftLaneWidth
-           , chunk.iRightLaneWidth
-           , chunk.iRightShoulderWidth
-           , chunk.iLeftShoulderHeight
-           , chunk.iRightShoulderHeight
-           , chunk.iLength
-           , chunk.dYaw
-           , chunk.dPitch
-           , chunk.dRoll
-           , chunk.iAILine1
-           , chunk.iAILine2
-           , chunk.iAILine3
-           , chunk.iAILine4
-           , chunk.iTrackGrip
-           , chunk.iLeftShoulderGrip
-           , chunk.iRightShoulderGrip
-           , chunk.iAIMaxSpeed
-           , chunk.iAIAccuracy
-           , chunk.iAudioAboveTrigger
-           , chunk.iAudioTriggerSpeed
-           , chunk.iAudioBelowTrigger
-           , chunk.iLeftSurfaceType
-           , chunk.iCenterSurfaceType
-           , chunk.iRightSurfaceType
-           , chunk.iLeftWallType
-           , chunk.iRightWallType
-           , chunk.iRoofType
-           , chunk.iLUOuterWallType
-           , chunk.iLLOuterWallType
-           , chunk.iOuterFloorType
-           , chunk.iRLOuterWallType
-           , chunk.iRUOuterWallType
-           , chunk.iEnvironmentFloorType
-           , chunk.iSignType
-           , chunk.iSignHorizOffset
-           , chunk.iSignVertOffset
-           , chunk.dSignYaw
-           , chunk.dSignPitch
-           , chunk.dSignRoll
-           , chunk.iLUOuterWallHOffset
-           , chunk.iLLOuterWallHOffset
-           , chunk.iLOuterFloorHOffset
-           , chunk.iROuterFloorHOffset
-           , chunk.iRLOuterWallHOffset
-           , chunk.iRUOuterWallHOffset
-           , chunk.iLUOuterWallHeight
-           , chunk.iLLOuterWallHeight
-           , chunk.iLOuterFloorHeight
-           , chunk.iROuterFloorHeight
-           , chunk.iRLOuterWallHeight
-           , chunk.iRUOuterWallHeight
-           , chunk.iRoofHeight
-           , chunk.iDrawOrder1
-           , chunk.iDrawOrder2
-           , chunk.iDrawOrder3
-           , chunk.iUnk37
-           , chunk.iUnk38
-           , chunk.iUnk39
-           , chunk.iUnk40
-           , chunk.iUnk41
-           , chunk.iUnk42
-           , chunk.iUnk43
-           , chunk.iUnk44
-           , chunk.iUnk45
-           , chunk.iUnk46
-           , chunk.iUnk47
-           , chunk.iUnk48
-           , chunk.iUnk49
-           , chunk.iUnk50);
-  chunk.sString = szGenerate;
 }
 
 //-------------------------------------------------------------------------------------------------

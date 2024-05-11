@@ -66,7 +66,6 @@ struct tGeometryChunk
 {
   void Clear();
 
-  std::string sString;
   //line 1
   int iLeftShoulderWidth;
   int iLeftLaneWidth;
@@ -203,6 +202,7 @@ public:
   static unsigned int GetSignedBitValueFromInt(int iValue);
   static int GetIntValueFromSignedBit(unsigned int uiValue);
   static bool ShouldDrawSurfaceType(int iSurfaceType);
+  static double ConstrainAngle(double dAngle);
 
   tTrackHeader m_header;
   CChunkAy m_chunkAy;
@@ -221,6 +221,7 @@ protected:
   bool IsNumber(const std::string &str);
   void ProcessSign(const std::vector<std::string> &lineAy, eFileSection &section);
   void WriteToVector(std::vector<uint8> &data, const char *szText);
+  void GenerateChunkString(tGeometryChunk &chunk, char *szBuf, int iSize);
 
   void GetCenter(int i, glm::vec3 prevCenter,
                  glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched,

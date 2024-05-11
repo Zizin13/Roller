@@ -99,7 +99,6 @@ void CEditSignWidget::YawChanged(double dVal)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].dSignYaw = dVal;
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed sign yaw");
   g_pMainWindow->UpdateWindow();
 }
@@ -120,7 +119,6 @@ void CEditSignWidget::PitchChanged(double dVal)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].dSignPitch = dVal;
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed sign pitch");
   g_pMainWindow->UpdateWindow();
 }
@@ -141,7 +139,6 @@ void CEditSignWidget::RollChanged(double dVal)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].dSignRoll = dVal;
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed sign roll");
   g_pMainWindow->UpdateWindow();
 }
@@ -162,7 +159,6 @@ void CEditSignWidget::HOffsetChanged(int iVal)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignHorizOffset = iVal;
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed sign horiz offset");
   g_pMainWindow->UpdateWindow();
 }
@@ -183,7 +179,6 @@ void CEditSignWidget::VOffsetChanged(int iVal)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignVertOffset = iVal;
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed sign vert offset");
   g_pMainWindow->UpdateWindow();
 }
@@ -210,7 +205,6 @@ void CEditSignWidget::TypeChanged(int iIndex)
     }
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed sign type");
   g_pMainWindow->UpdateWindow();
 }
@@ -234,7 +228,6 @@ void CEditSignWidget::EditClicked()
     }
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed sign texture");
   g_pMainWindow->UpdateWindow();
 }
@@ -259,7 +252,6 @@ void CEditSignWidget::SignClicked()
     }
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory(bHasSign ? "Removed sign" : "Added sign");
   g_pMainWindow->UpdateWindow();
 }
@@ -280,7 +272,6 @@ void CEditSignWidget::UnkChanged(const QString &sText)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignType = sText.toInt();
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed unk sign value");
   g_pMainWindow->UpdateWindow();
 }

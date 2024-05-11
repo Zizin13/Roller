@@ -421,12 +421,14 @@ void CMainWindow::OnPaste()
       p->m_clipBoard[i].iRUOuterWallType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iRUOuterWallType;
       p->m_clipBoard[i].iEnvironmentFloorType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iEnvironmentFloorType;
     }
+    p->m_clipBoard[i].dYaw = CTrack::ConstrainAngle(p->m_clipBoard[i].dYaw);
+    p->m_clipBoard[i].dPitch = CTrack::ConstrainAngle(p->m_clipBoard[i].dPitch);
+    p->m_clipBoard[i].dRoll = CTrack::ConstrainAngle(p->m_clipBoard[i].dRoll);
   }
 
   for (int i = 0; i < (int)p->m_clipBoard.size(); ++i) {
     GetCurrentTrack()->m_chunkAy.insert(GetCurrentTrack()->m_chunkAy.begin() + i + sbSelChunksFrom->value(), p->m_clipBoard[i]);
   }
-  GetCurrentTrack()->UpdateChunkStrings();
 
   int iSelect = sbSelChunksFrom->value() + (int)p->m_clipBoard.size();
   BLOCK_SIG_AND_DO(ckTo, setChecked(false));

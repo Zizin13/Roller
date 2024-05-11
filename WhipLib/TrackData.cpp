@@ -28,7 +28,6 @@
 
 void tGeometryChunk::Clear()
 {
-  sString = "";
   //line 1
   iLeftShoulderWidth = 0;
   iLeftLaneWidth = 0;
@@ -342,9 +341,9 @@ bool CTrackData::ProcessTrackData(const uint8 *pData, size_t length)
             currChunk.iLeftShoulderHeight   = std::stoi(lineAy[4]);
             currChunk.iRightShoulderHeight  = std::stoi(lineAy[5]);
             currChunk.iLength               = std::stoi(lineAy[6]);
-            currChunk.dYaw                  = std::stod(lineAy[7]);
-            currChunk.dPitch                = std::stod(lineAy[8]);
-            currChunk.dRoll                 = std::stod(lineAy[9]);
+            currChunk.dYaw                  = ConstrainAngle(std::stod(lineAy[7]));
+            currChunk.dPitch                = ConstrainAngle(std::stod(lineAy[8]));
+            currChunk.dRoll                 = ConstrainAngle(std::stod(lineAy[9]));
             currChunk.iAILine1              = std::stoi(lineAy[10]);
             currChunk.iAILine2              = std::stoi(lineAy[11]);
             currChunk.iAILine3              = std::stoi(lineAy[12]);
@@ -383,9 +382,9 @@ bool CTrackData::ProcessTrackData(const uint8 *pData, size_t length)
           currChunk.iSignType             = std::stoi(lineAy[12]);
           currChunk.iSignHorizOffset      = std::stoi(lineAy[13]);
           currChunk.iSignVertOffset       = std::stoi(lineAy[14]);
-          currChunk.dSignYaw              = std::stod(lineAy[15]);
-          currChunk.dSignPitch            = std::stod(lineAy[16]);
-          currChunk.dSignRoll             = std::stod(lineAy[17]);
+          currChunk.dSignYaw              = ConstrainAngle(std::stod(lineAy[15]));
+          currChunk.dSignPitch            = ConstrainAngle(std::stod(lineAy[16]));
+          currChunk.dSignRoll             = ConstrainAngle(std::stod(lineAy[17]));
           //inc chunk index
           ++iChunkLine;
         } else if (iChunkLine == 2) {
@@ -570,6 +569,16 @@ bool CTrackData::ShouldDrawSurfaceType(int iSurfaceType)
   //    && !(uiSurfaceType & SURFACE_FLAG_APPLY_TEXTURE))
   //  return false;
   return true;
+} 
+
+//-------------------------------------------------------------------------------------------------
+
+double CTrackData::ConstrainAngle(double dAngle)
+{
+  dAngle = fmod(dAngle, 360);
+  if (dAngle < 0)
+    dAngle += 360;
+  return dAngle;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -672,7 +681,18 @@ void CTrackData::GetTrackData(std::vector<uint8> &data)
   CStuntMap stuntMap;
   int iSignIndex = 0;
   for (int i = 0; i < m_chunkAy.size(); ++i) {
-    WriteToVector(data, m_chunkAy[i].sString.c_str());
+    //fix angles
+    m_chunkAy[i].dYaw = ConstrainAngle(m_chunkAy[i].dYaw);
+    m_chunkAy[i].dPitch = ConstrainAngle(m_chunkAy[i].dPitch);
+    m_chunkAy[i].dRoll = ConstrainAngle(m_chunkAy[i].dRoll);
+    m_chunkAy[i].dSignYaw = ConstrainAngle(m_chunkAy[i].dSignYaw);
+    m_chunkAy[i].dSignPitch = ConstrainAngle(m_chunkAy[i].dSignPitch);
+    m_chunkAy[i].dSignRoll = ConstrainAngle(m_chunkAy[i].dSignRoll);
+
+    //write chunk data
+    char szGenerate[1024];
+    GenerateChunkString(m_chunkAy[i], szGenerate, sizeof(szGenerate));
+    WriteToVector(data, szGenerate);
     WriteToVector(data, "\r\n");
     if (m_chunkAy[i].iSignType >= 0 && m_chunkAy[i].iSignType < 256) { //signable chunks
       if (m_chunkAy[i].iSignType < g_signAyCount 
@@ -775,6 +795,87 @@ void CTrackData::WriteToVector(std::vector<uint8> &data, const char *szText)
     uint8 val = (uint8)szText[i];
     data.push_back(val);
   }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::GenerateChunkString(tGeometryChunk &chunk, char *szBuf, int iSize)
+{
+  snprintf(szBuf, iSize,
+           "%5d %6d %6d %6d %6d %6d %6d %11.5lf %11.5lf %11.5lf %5d %5d %5d %5d %3d %3d %3d %4d %5d %3d %3d %3d\r\n" //line 1
+           "%6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %4d %6d %6d %6.1lf %6.1lf %6.1lf\r\n"   //line 2
+           "%5d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d %6d"                             //line 3
+           " %3d %3d %3d %d %d %d %d %d %d %d %d %d %d %d %3d %3d %3d\r\n"       //line 3 continued
+           , chunk.iLeftShoulderWidth
+           , chunk.iLeftLaneWidth
+           , chunk.iRightLaneWidth
+           , chunk.iRightShoulderWidth
+           , chunk.iLeftShoulderHeight
+           , chunk.iRightShoulderHeight
+           , chunk.iLength
+           , chunk.dYaw
+           , chunk.dPitch
+           , chunk.dRoll
+           , chunk.iAILine1
+           , chunk.iAILine2
+           , chunk.iAILine3
+           , chunk.iAILine4
+           , chunk.iTrackGrip
+           , chunk.iLeftShoulderGrip
+           , chunk.iRightShoulderGrip
+           , chunk.iAIMaxSpeed
+           , chunk.iAIAccuracy
+           , chunk.iAudioAboveTrigger
+           , chunk.iAudioTriggerSpeed
+           , chunk.iAudioBelowTrigger
+           , chunk.iLeftSurfaceType
+           , chunk.iCenterSurfaceType
+           , chunk.iRightSurfaceType
+           , chunk.iLeftWallType
+           , chunk.iRightWallType
+           , chunk.iRoofType
+           , chunk.iLUOuterWallType
+           , chunk.iLLOuterWallType
+           , chunk.iOuterFloorType
+           , chunk.iRLOuterWallType
+           , chunk.iRUOuterWallType
+           , chunk.iEnvironmentFloorType
+           , chunk.iSignType
+           , chunk.iSignHorizOffset
+           , chunk.iSignVertOffset
+           , chunk.dSignYaw
+           , chunk.dSignPitch
+           , chunk.dSignRoll
+           , chunk.iLUOuterWallHOffset
+           , chunk.iLLOuterWallHOffset
+           , chunk.iLOuterFloorHOffset
+           , chunk.iROuterFloorHOffset
+           , chunk.iRLOuterWallHOffset
+           , chunk.iRUOuterWallHOffset
+           , chunk.iLUOuterWallHeight
+           , chunk.iLLOuterWallHeight
+           , chunk.iLOuterFloorHeight
+           , chunk.iROuterFloorHeight
+           , chunk.iRLOuterWallHeight
+           , chunk.iRUOuterWallHeight
+           , chunk.iRoofHeight
+           , chunk.iDrawOrder1
+           , chunk.iDrawOrder2
+           , chunk.iDrawOrder3
+           , chunk.iUnk37
+           , chunk.iUnk38
+           , chunk.iUnk39
+           , chunk.iUnk40
+           , chunk.iUnk41
+           , chunk.iUnk42
+           , chunk.iUnk43
+           , chunk.iUnk44
+           , chunk.iUnk45
+           , chunk.iUnk46
+           , chunk.iUnk47
+           , chunk.iUnk48
+           , chunk.iUnk49
+           , chunk.iUnk50);
 }
 
 //-------------------------------------------------------------------------------------------------

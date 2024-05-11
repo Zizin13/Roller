@@ -298,7 +298,7 @@ CTrackPreview::~CTrackPreview()
 bool CTrackPreview::LoadTrack(const QString &sFilename)
 {
   m_sTrackFile = sFilename;
-  bool bSuccess = p->m_track.LoadTrack(sFilename);
+  bool bSuccess = p->m_track.LoadTrack(sFilename.toLatin1().constData());
   if (bSuccess) {
     p->m_historyAy.clear();
     SaveHistory(sFilename + " loaded");
@@ -441,7 +441,6 @@ void CTrackPreview::LoadHistory(const tTrackHistory *pHistory)
 
   p->m_track.ClearData();
   p->m_track.ProcessTrackData(byData, iSize);
-  p->m_track.UpdateChunkStrings();
 
   delete[] byData;
 }

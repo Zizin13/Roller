@@ -90,7 +90,6 @@ void CEditStuntWidget::ScaleFactChanged(int iVal)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].stunt.iScaleFactor = iVal;
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed stunt scale factor");
   g_pMainWindow->UpdateWindow();
 }
@@ -111,7 +110,6 @@ void CEditStuntWidget::AngleChanged(int iVal)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].stunt.iAngle = iVal;
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed stunt angle");
   g_pMainWindow->UpdateWindow();
 }
@@ -132,7 +130,6 @@ void CEditStuntWidget::UnknownChanged(int iVal)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].stunt.iUnknown = iVal;
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed stunt unknown val");
   g_pMainWindow->UpdateWindow();
 }
@@ -153,7 +150,6 @@ void CEditStuntWidget::TimingGroupChanged(int iVal)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].stunt.iTimingGroup = iVal;
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed stunt timing group");
   g_pMainWindow->UpdateWindow();
 }
@@ -174,7 +170,6 @@ void CEditStuntWidget::HeightChanged(int iVal)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].stunt.iHeight = iVal;
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed stunt height");
   g_pMainWindow->UpdateWindow();
 }
@@ -195,7 +190,6 @@ void CEditStuntWidget::TimeBulgingChanged(int iVal)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].stunt.iTimeBulging = iVal;
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed stunt time bulging");
   g_pMainWindow->UpdateWindow();
 }
@@ -216,7 +210,6 @@ void CEditStuntWidget::TimeFlatChanged(int iVal)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].stunt.iTimeFlat = iVal;
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed stunt time flat");
   g_pMainWindow->UpdateWindow();
 }
@@ -237,7 +230,6 @@ void CEditStuntWidget::ExpandContractChanged(int iVal)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].stunt.iSmallerExpandsLargerContracts = iVal;
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed stunt expand/contract");
   g_pMainWindow->UpdateWindow();
 }
@@ -258,7 +250,6 @@ void CEditStuntWidget::BulgeChanged(int iVal)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].stunt.iBulge = iVal;
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed stunt bulge");
   g_pMainWindow->UpdateWindow();
 }
@@ -298,7 +289,6 @@ void CEditStuntWidget::StuntClicked()
     }
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory(bChunkHasStunt ? "Removed stunt" : "Added stunt");
   g_pMainWindow->UpdateWindow();
 }

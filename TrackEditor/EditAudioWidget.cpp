@@ -219,7 +219,6 @@ void CEditAudioWidget::SpeedChanged(int iVal)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAudioTriggerSpeed = iVal;
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed audio trigger speed");
   g_pMainWindow->UpdateWindow();
 }
@@ -240,7 +239,6 @@ void CEditAudioWidget::BelowChanged(int iIndex)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAudioBelowTrigger = cbBelow->itemData(iIndex).toInt();
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed audio file below trigger speed");
   g_pMainWindow->UpdateWindow();
 }
@@ -261,7 +259,6 @@ void CEditAudioWidget::AboveChanged(int iIndex)
     g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignType = cbAbove->itemData(iIndex).toInt();
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory("Changed audio file above trigger speed");
   g_pMainWindow->UpdateWindow();
 }
@@ -286,7 +283,6 @@ void CEditAudioWidget::AudioClicked()
       g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAudioBelowTrigger = 0;
   }
 
-  g_pMainWindow->GetCurrentTrack()->UpdateChunkStrings();
   g_pMainWindow->SaveHistory(bHasAudio ? "Removed audio trigger" : "Added audio trigger");
   g_pMainWindow->UpdateWindow();
 }

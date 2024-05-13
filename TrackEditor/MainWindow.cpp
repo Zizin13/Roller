@@ -447,7 +447,7 @@ void CMainWindow::OnPaste()
 void CMainWindow::OnSelectAll()
 {
   BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(0));
-  BLOCK_SIG_AND_DO(ckTo, setChecked(true));
+  ckTo->setChecked(true);
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue((int)GetCurrentTrack()->m_chunkAy.size() - 1));
   UpdateGeometrySelection();
   p->m_pEditData->OnCancelClicked();

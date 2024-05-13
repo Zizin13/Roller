@@ -1548,19 +1548,43 @@ uint32 *CShapeFactory::MakeIndicesSelectedChunks(uint32 &numIndices, int iStart,
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
-  if (!(iStart == 0 && iEnd == pTrack->m_chunkAy.size() - 1)) {
-    if (iStart >= pTrack->m_chunkAy.size() - 1)
-      iStart = 0;
-    else
-      iStart++;
-    if (iEnd >= pTrack->m_chunkAy.size() - 1)
-      iEnd = 0;
-    else
-      iEnd++;
-  }
+  bool bDrawChunk0 = (iEnd == pTrack->m_chunkAy.size() - 1);
+  iStart++;
+  iEnd++;
+  if (iEnd > pTrack->m_chunkAy.size() - 1)
+    iEnd = pTrack->m_chunkAy.size() - 1;
 
   int i = iStart;
   for (; i <= iEnd; i++) {
+    indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 1;
+    indices[i * uiNumIndicesPerChunk + 3] = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 4] = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 5] = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 6] = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 7] = (i * uiNumVertsPerChunk) + 0;
+
+    indices[i * uiNumIndicesPerChunk + 8] = (i * uiNumVertsPerChunk) + 4;
+    indices[i * uiNumIndicesPerChunk + 9] = (i * uiNumVertsPerChunk) + 5;
+    indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumVertsPerChunk) + 5;
+    indices[i * uiNumIndicesPerChunk + 11] = (i * uiNumVertsPerChunk) + 7;
+    indices[i * uiNumIndicesPerChunk + 12] = (i * uiNumVertsPerChunk) + 7;
+    indices[i * uiNumIndicesPerChunk + 13] = (i * uiNumVertsPerChunk) + 6;
+    indices[i * uiNumIndicesPerChunk + 14] = (i * uiNumVertsPerChunk) + 6;
+    indices[i * uiNumIndicesPerChunk + 15] = (i * uiNumVertsPerChunk) + 4;
+
+    indices[i * uiNumIndicesPerChunk + 16] = (i * uiNumVertsPerChunk) + 4;
+    indices[i * uiNumIndicesPerChunk + 17] = (i * uiNumVertsPerChunk) + 0;
+    indices[i * uiNumIndicesPerChunk + 18] = (i * uiNumVertsPerChunk) + 6;
+    indices[i * uiNumIndicesPerChunk + 19] = (i * uiNumVertsPerChunk) + 2;
+    indices[i * uiNumIndicesPerChunk + 20] = (i * uiNumVertsPerChunk) + 7;
+    indices[i * uiNumIndicesPerChunk + 21] = (i * uiNumVertsPerChunk) + 3;
+    indices[i * uiNumIndicesPerChunk + 22] = (i * uiNumVertsPerChunk) + 5;
+    indices[i * uiNumIndicesPerChunk + 23] = (i * uiNumVertsPerChunk) + 1;
+  }
+  if (bDrawChunk0) {
+    int i = 0;
     indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 0;
     indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 1;
     indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 1;

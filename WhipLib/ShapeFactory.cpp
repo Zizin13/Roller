@@ -344,15 +344,14 @@ tVertex *CShapeFactory::MakeVertsStuntMarker(uint32 &uiNumVerts)
   uiNumVerts = 8;
   tVertex *vertices = new tVertex[uiNumVerts];
 
-  glm::vec3 color = glm::vec3(1, 0, 0);
-  vertices[0].position = glm::vec3(+300.0f / m_fScale, +400.0f / m_fScale, +0.0f);
-  vertices[1].position = glm::vec3(+400.0f / m_fScale, +300.0f / m_fScale, +0.0f);
+  glm::vec3 color = glm::vec3(0, 1, 0);
+  vertices[0].position = glm::vec3(+0.0f / m_fScale, +100.0f / m_fScale, +0.0f);
+  vertices[1].position = glm::vec3(+100.0f / m_fScale, +0.0f / m_fScale, +0.0f);
   vertices[2].position = glm::vec3(+400.0f / m_fScale, -300.0f / m_fScale, +0.0f);
   vertices[3].position = glm::vec3(+300.0f / m_fScale, -400.0f / m_fScale, +0.0f);
-  vertices[4].position = glm::vec3(-300.0f / m_fScale, -400.0f / m_fScale, +0.0f);
-  vertices[5].position = glm::vec3(-400.0f / m_fScale, -300.0f / m_fScale, +0.0f);
-  vertices[6].position = glm::vec3(-400.0f / m_fScale, +300.0f / m_fScale, +0.0f);
-  vertices[7].position = glm::vec3(-300.0f / m_fScale, +400.0f / m_fScale, +0.0f);
+  vertices[4].position = glm::vec3(+0.0f / m_fScale, -100.0f / m_fScale, +0.0f);
+  vertices[5].position = glm::vec3(-300.0f / m_fScale, -400.0f / m_fScale, +0.0f);
+  vertices[6].position = glm::vec3(-400.0f / m_fScale, -300.0f / m_fScale, +0.0f);
 
   vertices[0].color = color;
   vertices[1].color = color;
@@ -361,7 +360,6 @@ tVertex *CShapeFactory::MakeVertsStuntMarker(uint32 &uiNumVerts)
   vertices[4].color = color;
   vertices[5].color = color;
   vertices[6].color = color;
-  vertices[7].color = color;
 
   vertices[0].flags.x = 1.0f;
   vertices[1].flags.x = 1.0f;
@@ -370,7 +368,6 @@ tVertex *CShapeFactory::MakeVertsStuntMarker(uint32 &uiNumVerts)
   vertices[4].flags.x = 1.0f;
   vertices[5].flags.x = 1.0f;
   vertices[6].flags.x = 1.0f;
-  vertices[7].flags.x = 1.0f;
 
   return vertices;
 }
@@ -384,17 +381,17 @@ uint32 *CShapeFactory::MakeIndicesStuntMarker(uint32 &uiNumIndices)
   memset(indices, 0, uiNumIndices * sizeof(uint32));
 
   indices[0]  = 4;
-  indices[1]  = 1;
-  indices[2]  = 0;
+  indices[1]  = 3;
+  indices[2]  = 2;
   indices[3]  = 4;
-  indices[4]  = 0;
-  indices[5]  = 5;
-  indices[6]  = 6;
-  indices[7]  = 3;
-  indices[8]  = 2;
+  indices[4]  = 2;
+  indices[5]  = 1;
+  indices[6]  = 5;
+  indices[7]  = 1;
+  indices[8]  = 0;
   indices[9]  = 6;
-  indices[10] = 2;
-  indices[11] = 7;
+  indices[10] = 5;
+  indices[11] = 0;
 
   return indices;
 }

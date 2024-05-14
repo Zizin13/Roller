@@ -1089,26 +1089,22 @@ void CShapeFactory::MakeSigns(CShader *pShader, CTrackData *pTrack, std::vector<
 
     glm::mat4 scaleMatWidth = glm::scale(glm::vec3(fLen, fLen, fLen));
     glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
-    glm::vec3 widthVec = glm::vec3(scaleMatWidth * pTrack->m_chunkAy[i].math.rollMat * glm::vec4(pTrack->m_chunkAy[i].math.pitchAxis, 1.0f));
+    glm::vec3 widthVec = glm::vec3(scaleMatWidth * glm::vec4(pTrack->m_chunkAy[i].math.pitchAxis, 1.0f));
     glm::vec3 normal = glm::normalize(glm::cross(pTrack->m_chunkAy[i].math.nextChunkPitched, pTrack->m_chunkAy[i].math.pitchAxis));
-    glm::vec3 heightVec = glm::vec3(scaleMatHeight * pTrack->m_chunkAy[i].math.rollMat * glm::vec4(normal, 1.0f));
+    glm::vec3 heightVec = glm::vec3(scaleMatHeight * glm::vec4(normal, 1.0f));
     glm::vec3 signPos = widthVec + heightVec;
     glm::vec3 signPosTranslated = glm::vec3(translateMat * glm::vec4(signPos, 1.0f));
 
-    if (m_signAy[pTrack->m_chunkAy[i].iSignType] == eWhipModel::SIGN_BALLOON || m_signAy[pTrack->m_chunkAy[i].iSignType] == eWhipModel::SIGN_BALLOON2)       {
-      pNewSign->m_modelToWorldMatrix = glm::translate(signPosTranslated) *
-        pTrack->m_chunkAy[i].math.rollMat * pTrack->m_chunkAy[i].math.pitchMat * pTrack->m_chunkAy[i].math.yawMat *
-        glm::rotate(glm::radians(-90.0f), glm::vec3(0, 0, 1)) * //sign starts on its side
-        glm::rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0)); //track starts facing z positive, sign starts facing x positive
-    } else {
-      glm::mat4 signYawMat = glm::rotate(glm::radians((float)pTrack->m_chunkAy[i].dSignYaw * -1.0f), normal);// glm::vec3(0, 1, 0));
-      glm::mat4 signPitchMat = glm::rotate(glm::radians((float)pTrack->m_chunkAy[i].dSignPitch * -1.0f), pTrack->m_chunkAy[i].math.pitchAxis); //glm::vec3(1, 0, 0));
-      glm::mat4 signRollMat = glm::rotate(glm::radians((float)pTrack->m_chunkAy[i].dSignRoll * -1.0f), glm::normalize(pTrack->m_chunkAy[i].math.nextChunkPitched));// glm::vec3(0, 0, 1));
-      pNewSign->m_modelToWorldMatrix = glm::translate(signPosTranslated) * signRollMat * signPitchMat * signYawMat *
-        pTrack->m_chunkAy[i].math.rollMat * pTrack->m_chunkAy[i].math.pitchMat * pTrack->m_chunkAy[i].math.yawMat *
-        glm::rotate(glm::radians(-90.0f), glm::vec3(0, 0, 1)) * //sign starts on its side
-        glm::rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0)); //track starts facing z positive, sign starts facing x positive
-    }
+    bool bBillboarded = (m_signAy[pTrack->m_chunkAy[i].iSignType] == eWhipModel::SIGN_BALLOON
+                         || m_signAy[pTrack->m_chunkAy[i].iSignType] == eWhipModel::SIGN_BALLOON2);
+
+    glm::mat4 signYawMat = glm::rotate(glm::radians((float)pTrack->m_chunkAy[i].dSignYaw * -1.0f), normal);// glm::vec3(0, 1, 0));
+    glm::mat4 signPitchMat = glm::rotate(glm::radians((float)pTrack->m_chunkAy[i].dSignPitch * -1.0f), pTrack->m_chunkAy[i].math.pitchAxis); //glm::vec3(1, 0, 0));
+    glm::mat4 signRollMat = glm::rotate(glm::radians((float)pTrack->m_chunkAy[i].dSignRoll * -1.0f), glm::normalize(pTrack->m_chunkAy[i].math.nextChunkPitched));// glm::vec3(0, 0, 1));
+    pNewSign->m_modelToWorldMatrix = glm::translate(signPosTranslated) * 
+      signRollMat * signPitchMat * (bBillboarded ? pTrack->m_chunkAy[i].math.yawMat : signYawMat) *
+      glm::rotate(glm::radians(-90.0f), glm::vec3(0, 0, 1)) * //sign starts on its side
+      glm::rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0)); //track starts facing z positive, sign starts facing x positive
     
     //add sign to array
     signAy.push_back(pNewSign);
@@ -1552,7 +1548,7 @@ uint32 *CShapeFactory::MakeIndicesSelectedChunks(uint32 &numIndices, int iStart,
   iStart++;
   iEnd++;
   if (iEnd > pTrack->m_chunkAy.size() - 1)
-    iEnd = pTrack->m_chunkAy.size() - 1;
+    iEnd = (int)pTrack->m_chunkAy.size() - 1;
 
   int i = iStart;
   for (; i <= iEnd; i++) {

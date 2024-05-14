@@ -23,13 +23,13 @@
      <number>6</number>
     </property>
     <property name="leftMargin">
-     <number>0</number>
+     <number>6</number>
     </property>
     <property name="topMargin">
      <number>6</number>
     </property>
     <property name="rightMargin">
-     <number>0</number>
+     <number>6</number>
     </property>
     <property name="bottomMargin">
      <number>0</number>
@@ -133,6 +133,16 @@
        </spacer>
       </item>
      </layout>
+    </item>
+    <item>
+     <widget class="QLabel" name="lblChunkWarning">
+      <property name="styleSheet">
+       <string notr="true">QLabel { color: red }</string>
+      </property>
+      <property name="text">
+       <string>Warning: Tracks with 500 or more chunks are likely to crash Whiplash</string>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QTabWidget" name="twViewer">

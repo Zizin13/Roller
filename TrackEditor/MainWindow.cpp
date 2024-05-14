@@ -101,6 +101,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   setupUi(this);
   p->m_logDialog.hide();
   twViewer->setTabsClosable(true);
+  lblChunkWarning->hide();
 
   //setup dock widgets
   p->m_pEditDataDockWidget = new QDockWidget("Debug Chunk Data", this);
@@ -816,6 +817,7 @@ void CMainWindow::UpdateWindow()
     BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
     BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
     leChunkCount->setText(QString::number(GetCurrentTrack()->m_chunkAy.size()));
+    lblChunkWarning->setVisible(GetCurrentTrack()->m_chunkAy.size() >= 500);
   }
   UpdateGeometrySelection();
   emit UpdateWindowSig();

@@ -1077,8 +1077,9 @@ void CShapeFactory::MakeSigns(CShader *pShader, CTrackData *pTrack, std::vector<
     uint32 uiSignSurfaceType = CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[i].iSignTexture);
 
     //position sign
-    float fLen = (float)pTrack->m_chunkAy[i].iSignHorizOffset * 15.0f / m_fScale * -1.0f;
-    float fHeight = (float)pTrack->m_chunkAy[i].iSignVertOffset * 15.0f / m_fScale * -1.0f;
+    bool bReversedOffsets = pTrack->m_chunkAy[i].dPitch >= 90.0f && pTrack->m_chunkAy[i].dPitch < 270.0f;
+    float fLen = (float)pTrack->m_chunkAy[i].iSignHorizOffset * 15.0f / m_fScale * (bReversedOffsets ? 1.0f : -1.0f);
+    float fHeight = (float)pTrack->m_chunkAy[i].iSignVertOffset * 15.0f / m_fScale * (bReversedOffsets ? 1.0f : -1.0f);
 
     glm::vec3 center; //sign origin is midpoint of centerline
     if (i + 1 < pTrack->m_chunkAy.size())

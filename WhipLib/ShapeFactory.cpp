@@ -1066,11 +1066,11 @@ CShapeData *CShapeFactory::MakeSelectedChunks(CShader *pShader, CTrackData *pTra
 void CShapeFactory::MakeSigns(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &signAy)
 {
   for (int i = 0; i < (int)pTrack->m_chunkAy.size(); ++i) {
-    if (pTrack->m_chunkAy[i].iSignType < 0 || pTrack->m_chunkAy[i].iSignType >= m_signAyCount)
+    if (pTrack->m_chunkAy[i].iSignType < 0 || pTrack->m_chunkAy[i].iSignType >= g_signAyCount)
       continue; //no signs in this chunk
 
     //make sign
-    CShapeData *pNewSign = MakeModel(pShader, pTrack->m_pBld, m_signAy[pTrack->m_chunkAy[i].iSignType], pTrack->m_chunkAy[i].iSignTexture);
+    CShapeData *pNewSign = MakeModel(pShader, pTrack->m_pBld, g_signAy[pTrack->m_chunkAy[i].iSignType].modelType, pTrack->m_chunkAy[i].iSignTexture);
     if (!pNewSign)
       continue;
 
@@ -1096,8 +1096,8 @@ void CShapeFactory::MakeSigns(CShader *pShader, CTrackData *pTrack, std::vector<
     glm::vec3 signPos = widthVec + heightVec;
     glm::vec3 signPosTranslated = glm::vec3(translateMat * glm::vec4(signPos, 1.0f));
 
-    bool bBillboarded = (m_signAy[pTrack->m_chunkAy[i].iSignType] == eWhipModel::SIGN_BALLOON
-                         || m_signAy[pTrack->m_chunkAy[i].iSignType] == eWhipModel::SIGN_BALLOON2);
+    bool bBillboarded = (g_signAy[pTrack->m_chunkAy[i].iSignType].modelType == eWhipModel::SIGN_BALLOON
+                         || g_signAy[pTrack->m_chunkAy[i].iSignType].modelType == eWhipModel::SIGN_BALLOON2);
 
     glm::mat4 signYawMat = glm::rotate(glm::radians((float)pTrack->m_chunkAy[i].dSignYaw * -1.0f), normal);// glm::vec3(0, 1, 0));
     glm::mat4 signPitchMat = glm::rotate(glm::radians((float)pTrack->m_chunkAy[i].dSignPitch * -1.0f), pTrack->m_chunkAy[i].math.pitchAxis); //glm::vec3(1, 0, 0));

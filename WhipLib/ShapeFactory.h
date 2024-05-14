@@ -71,27 +71,6 @@ private:
 
   void ApplyVerticesSingleSection(int i, tVertex *vertices, const glm::vec3 &v0, const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3);
 
-  eWhipModel m_signAy[17] = {
-    eWhipModel::SIGN_TOWER,
-    eWhipModel::SIGN_TOWER2,
-    eWhipModel::SIGN_SIGN01,
-    eWhipModel::SIGN_SIGN02,
-    eWhipModel::SIGN_BUILD,
-    eWhipModel::SIGN_BUILD1,
-    eWhipModel::SIGN_BUILD2,
-    eWhipModel::SIGN_BUILD3,
-    eWhipModel::SIGN_HEELBAR,
-    eWhipModel::SIGN_BALLOON,
-    eWhipModel::SIGN_TREE,
-    eWhipModel::SIGN_ADVERT,
-    eWhipModel::SIGN_ADVERT2,
-    eWhipModel::SIGN_QUADBLD,
-    eWhipModel::SIGN_BLD0,
-    eWhipModel::SIGN_BALLOON2,
-    eWhipModel::SIGN_ADVERT3,
-  };
-  int m_signAyCount = sizeof(m_signAy) / sizeof(m_signAy[0]);
-
   static CShapeFactory s_shapeFactory;
 };
 

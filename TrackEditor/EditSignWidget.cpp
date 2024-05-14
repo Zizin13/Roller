@@ -61,7 +61,9 @@ void CEditSignWidget::UpdateGeometrySelection(int iFrom, int iTo)
   bool bChunkHasSign = g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType != -1;
   bool bCanHaveTexture = g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType < g_signAyCount
     && g_signAy[g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType].bCanHaveTexture;
-  dsbYaw    ->setEnabled(bChunkHasSign);
+  bool bBillboarded = (g_signAy[g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType].modelType == eWhipModel::SIGN_BALLOON
+                       || g_signAy[g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType].modelType == eWhipModel::SIGN_BALLOON2);
+  dsbYaw    ->setEnabled(bChunkHasSign && !bBillboarded);
   dsbPitch  ->setEnabled(bChunkHasSign);
   dsbRoll   ->setEnabled(bChunkHasSign);
   sbHOffset ->setEnabled(bChunkHasSign);

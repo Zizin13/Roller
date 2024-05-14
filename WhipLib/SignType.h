@@ -23,7 +23,7 @@ static tSignType g_signAy[17] = {
   { eWhipModel::SIGN_BUILD3,  "BUILD 3"  , true , false},
   { eWhipModel::SIGN_HEELBAR, "HEELBAR"  , false, false},
   { eWhipModel::SIGN_BALLOON, "BALLOON"  , true , true },
-  { eWhipModel::SIGN_TREE,    "TREE"     , false, false},
+  { eWhipModel::SIGN_TREE,    "TREE"     , false, true },
   { eWhipModel::SIGN_ADVERT,  "ADVERT"   , true , false},
   { eWhipModel::SIGN_ADVERT2, "ADVERT 2" , true , false},
   { eWhipModel::SIGN_QUADBLD, "QUAD BLD" , false, false},

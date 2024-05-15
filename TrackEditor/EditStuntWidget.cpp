@@ -61,7 +61,6 @@ void CEditStuntWidget::UpdateGeometrySelection(int iFrom, int iTo)
     || g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].stunt.iFlags != 0;
 
   pbStunt->setText(bChunkHasStunt ? "Delete Stunt" : "Add Stunt");
-  pbStunt         ->setEnabled(iFrom > 0 && iFrom < ((int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size() - 2));
   sbChunkCount    ->setEnabled(bChunkHasStunt);
   sbNumTicks      ->setEnabled(bChunkHasStunt);
   sbTickStartIdx  ->setEnabled(bChunkHasStunt);

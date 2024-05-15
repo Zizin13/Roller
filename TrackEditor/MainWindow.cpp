@@ -524,6 +524,7 @@ void CMainWindow::OnTabChanged(int iIndex)
   p->m_previewAy[iIndex]->UpdateCar(carModel, aiLine, bMillionPlus);
   p->m_previewAy[iIndex]->AttachLast(p->m_pDisplaySettings->GetAttachLast());
   p->m_previewAy[iIndex]->SetScale(p->m_pDisplaySettings->GetScale());
+  p->m_previewAy[iIndex]->SetStuntPos(p->m_pDisplaySettings->GetStuntPos());
   BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
   BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
   BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(p->m_previewAy[iIndex]->m_iSelFrom));
@@ -733,6 +734,7 @@ void CMainWindow::LoadSettings()
   uint32 uiShowModels = p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus);
   bool bAttachLast = p->m_pDisplaySettings->GetAttachLast();
   int iScale = p->m_pDisplaySettings->GetScale();
+  eStuntPos stuntPos = p->m_pDisplaySettings->GetStuntPos();
   //load display settings
   uiShowModels = settings.value("show_models", uiShowModels).toUInt();
   carModel = (eWhipModel)settings.value("car_model", (int)carModel).toInt();
@@ -740,10 +742,12 @@ void CMainWindow::LoadSettings()
   bMillionPlus = settings.value("wrong_way", bMillionPlus).toBool();
   bAttachLast = settings.value("attach_last", bAttachLast).toBool();
   iScale = settings.value("scale", iScale).toInt();
+  stuntPos = (eStuntPos)settings.value("stunt_pos", (int)stuntPos).toInt();
   //apply display settings
   p->m_pDisplaySettings->SetDisplaySettings(uiShowModels, carModel, aiLine, bMillionPlus);
   p->m_pDisplaySettings->SetAttachLast(bAttachLast);
   p->m_pDisplaySettings->SetScale(iScale);
+  p->m_pDisplaySettings->SetStuntPos(stuntPos);
 
   //preferences
   m_preferences.iHistoryMaxSize = settings.value("history_max_size", m_preferences.iHistoryMaxSize).toInt();
@@ -784,6 +788,7 @@ void CMainWindow::SaveSettings()
   settings.setValue("wrong_way", bMillionPlus);
   settings.setValue("attach_last", p->m_pDisplaySettings->GetAttachLast());
   settings.setValue("scale", p->m_pDisplaySettings->GetScale());
+  settings.setValue("stunt_pos", (int)p->m_pDisplaySettings->GetStuntPos());
   settings.setValue("history_max_size", m_preferences.iHistoryMaxSize);
   settings.setValue("copy_relative_yaw", m_preferences.bCopyRelativeYaw);
   settings.setValue("copy_relative_pitch", m_preferences.bCopyRelativePitch);

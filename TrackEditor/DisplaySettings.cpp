@@ -39,6 +39,11 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent)
   cbTestCarPos->addItem("AILINE 4", (int)eShapeSection::AILINE4);
   cbTestCarPos->setCurrentIndex(cbTestCarPos->findData((int)eShapeSection::AILINE1));
 
+  cbStuntPos->addItem("Static: Inactive", (int)eStuntPos::STUNT_POS_STATIC_INACTIVE);
+  cbStuntPos->addItem("Static: Active", (int)eStuntPos::STUNT_POS_STATIC_ACTIVE);
+  cbStuntPos->addItem("Static: Start Pos", (int)eStuntPos::STUNT_POS_STATIC_START);
+  cbStuntPos->setCurrentIndex(cbStuntPos->findData((int)eStuntPos::STUNT_POS_STATIC_INACTIVE));
+
   connect(ckAllSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAllSurface);
   connect(ckAllWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAllWireframe);
   connect(ckLLaneSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
@@ -77,6 +82,7 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent)
   connect(ckMillionPlus, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckAttachLast, &QCheckBox::toggled, this, &CDisplaySettings::AttachLastCheckedSig);
   connect(sldScale, &QSlider::valueChanged, this, &CDisplaySettings::SetScaleSig);
+  connect(cbStuntPos, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
 
   UpdateAllSurface();
   UpdateAllWireframe();
@@ -201,6 +207,20 @@ int CDisplaySettings::GetScale()
 void CDisplaySettings::SetScale(int iScale)
 {
   sldScale->setValue(iScale);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+eStuntPos CDisplaySettings::GetStuntPos()
+{
+  return (eStuntPos)cbStuntPos->currentData().toInt();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CDisplaySettings::SetStuntPos(eStuntPos stuntPos)
+{
+  cbStuntPos->setCurrentIndex(cbStuntPos->findData((int)stuntPos));
 }
 
 //-------------------------------------------------------------------------------------------------

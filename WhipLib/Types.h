@@ -70,6 +70,15 @@ enum eWhipModel
 
 //-------------------------------------------------------------------------------------------------
 
+enum eStuntPos
+{
+  STUNT_POS_STATIC_INACTIVE = 0,
+  STUNT_POS_STATIC_ACTIVE,
+  STUNT_POS_STATIC_START
+};
+
+//-------------------------------------------------------------------------------------------------
+
 #define STUNT_FLAG_LSHOULDER  0x01
 #define STUNT_FLAG_LWALL      0x02
 #define STUNT_FLAG_LLANE      0x04

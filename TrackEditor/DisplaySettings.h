@@ -46,11 +46,13 @@ public:
   ~CDisplaySettings();
 
   uint32 GetDisplaySettings(eWhipModel &carModel, eShapeSection &aiLine, bool &bMillionPlus);
-  void SetDisplaySettings(uint32 uiShowModels,eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
+  void SetDisplaySettings(uint32 uiShowModels, eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
   bool GetAttachLast();
   void SetAttachLast(bool bAttachLast);
   int GetScale();
   void SetScale(int iScale);
+  eStuntPos GetStuntPos();
+  void SetStuntPos(eStuntPos stuntPos);
 
 protected slots:
   void UpdateAllSurface();

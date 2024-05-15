@@ -17,7 +17,8 @@ protected slots:
   void ChunkCountChanged(int iVal);
   void NumTicksChanged(int iVal);
   void TickStartIdxChanged(int iVal);
-  void TimingGroupChanged(int iVal);
+  void Group1Toggled(bool bChecked);
+  void Group2Toggled(bool bChecked);
   void HeightChanged(int iVal);
   void TimeBulgingChanged(int iVal);
   void TimeFlatChanged(int iVal);

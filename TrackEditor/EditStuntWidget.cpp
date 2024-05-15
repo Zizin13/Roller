@@ -61,6 +61,7 @@ void CEditStuntWidget::UpdateGeometrySelection(int iFrom, int iTo)
     || g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].stunt.iFlags != 0;
 
   pbStunt->setText(bChunkHasStunt ? "Delete Stunt" : "Add Stunt");
+  pbStunt         ->setEnabled(iFrom > 0 && iFrom < ((int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size() - 2));
   sbChunkCount    ->setEnabled(bChunkHasStunt);
   sbNumTicks      ->setEnabled(bChunkHasStunt);
   sbTickStartIdx  ->setEnabled(bChunkHasStunt);
@@ -76,9 +77,12 @@ void CEditStuntWidget::UpdateGeometrySelection(int iFrom, int iTo)
   ck3RLane        ->setEnabled(bChunkHasStunt);
   ck4RShoulder    ->setEnabled(bChunkHasStunt);
   ck5RWall        ->setEnabled(bChunkHasStunt);
-    
+
+  int iChunksAfter = (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size() - iFrom - 2;
+  BLOCK_SIG_AND_DO(sbChunkCount    , setRange(0, std::min(iFrom, iChunksAfter)));
   BLOCK_SIG_AND_DO(sbChunkCount    , setValue(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].stunt.iChunkCount));
   BLOCK_SIG_AND_DO(sbNumTicks      , setValue(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].stunt.iNumTicks));
+  BLOCK_SIG_AND_DO(sbTickStartIdx  , setRange(0, sbNumTicks->value() - 1));
   BLOCK_SIG_AND_DO(sbTickStartIdx  , setValue(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].stunt.iTickStartIdx));
   BLOCK_SIG_AND_DO(rbGroup1        , setChecked(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].stunt.iTimingGroup == 1));
   BLOCK_SIG_AND_DO(rbGroup2        , setChecked(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].stunt.iTimingGroup != 1));
@@ -368,7 +372,6 @@ void CEditStuntWidget::UpdateDialog()
   leFlags->setFont(QFont("Courier", 8));
   leFlags->setText(QString::number(iValue).leftJustified(4, ' ') + szBuf);
 
-  sbTickStartIdx->setRange(0, sbNumTicks->value() - 1);
   lblLengthPercent->setText("(" + QString::number(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].stunt.iRampSideLength * 100 / 1024) + "%)");
   lblTicksTimeS->setText("(" + QString::number(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].stunt.iNumTicks * 2.768 / 100, 'f', 2) + " s)");
   lblBulgeTimeS->setText("(" + QString::number(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].stunt.iTimeBulging * 2.768 / 100, 'f', 2) + " s)");

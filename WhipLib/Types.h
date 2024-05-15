@@ -69,4 +69,13 @@ enum eWhipModel
 };
 
 //-------------------------------------------------------------------------------------------------
+
+#define STUNT_FLAG_LSHOULDER  0x01
+#define STUNT_FLAG_LWALL      0x02
+#define STUNT_FLAG_LLANE      0x04
+#define STUNT_FLAG_RLANE      0x08
+#define STUNT_FLAG_RSHOULDER  0x10
+#define STUNT_FLAG_RWALL      0x20
+
+//-------------------------------------------------------------------------------------------------
 #endif

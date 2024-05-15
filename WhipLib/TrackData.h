@@ -17,15 +17,15 @@ struct tTrackHeader
 //-------------------------------------------------------------------------------------------------
 struct tStunt
 {
-  int iScaleFactor;
-  int iAngle;
-  int iUnknown; //todo
+  int iChunkCount;
+  int iNumTicks;
+  int iTickStartIdx;
   int iTimingGroup;
   int iHeight;
   int iTimeBulging;
   int iTimeFlat;
-  int iSmallerExpandsLargerContracts;
-  int iBulge;
+  int iRampSideLength;
+  int iFlags;
 };
 //-------------------------------------------------------------------------------------------------
 struct tChunkMath

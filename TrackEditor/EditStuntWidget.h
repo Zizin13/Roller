@@ -14,16 +14,19 @@ public:
 
 protected slots:
   void UpdateGeometrySelection(int iFrom, int iTo);
-  void ScaleFactChanged(int iVal);
-  void AngleChanged(int iVal);
-  void UnknownChanged(int iVal);
+  void ChunkCountChanged(int iVal);
+  void NumTicksChanged(int iVal);
+  void TickStartIdxChanged(int iVal);
   void TimingGroupChanged(int iVal);
   void HeightChanged(int iVal);
   void TimeBulgingChanged(int iVal);
   void TimeFlatChanged(int iVal);
-  void ExpandContractChanged(int iVal);
-  void BulgeChanged(int iVal);
+  void LengthChanged(int iVal);
+  void FlagsChanged();
   void StuntClicked();
+
+private:
+  void UpdateDialog();
 };
 
 //-------------------------------------------------------------------------------------------------

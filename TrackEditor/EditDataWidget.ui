@@ -1717,7 +1717,7 @@ height</string>
           <widget class="QLineEdit" name="leStuntTimeBulging"/>
          </item>
          <item row="5" column="2">
-          <widget class="QLineEdit" name="leStuntBulge"/>
+          <widget class="QLineEdit" name="leStuntFlags"/>
          </item>
          <item row="0" column="0">
           <widget class="QLabel" name="lblStuntScaleFact">
@@ -1747,7 +1747,7 @@ height</string>
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLabel" name="lblStuntAngle">
+          <widget class="QLabel" name="lblNumTicks">
            <property name="toolTip">
             <string>Lower is flatter, higher becomes trapezoid with longer top</string>
            </property>
@@ -1784,9 +1784,9 @@ height</string>
           </widget>
          </item>
          <item row="4" column="2">
-          <widget class="QLabel" name="lblStuntBulge">
+          <widget class="QLabel" name="lblStuntFlags">
            <property name="text">
-            <string>Bulge</string>
+            <string>Flags</string>
            </property>
           </widget>
          </item>
@@ -1808,7 +1808,7 @@ height</string>
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QLineEdit" name="leStuntAngle">
+          <widget class="QLineEdit" name="leNumTicks">
            <property name="toolTip">
             <string>Lower is flatter, higher becomes trapezoid with longer top</string>
            </property>

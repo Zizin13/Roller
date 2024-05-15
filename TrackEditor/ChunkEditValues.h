@@ -80,15 +80,15 @@ public:
                   , const QString &sCopyUnk50
                   , const QString &sCopySignTexture
                   , const QString &sCopyBackTexture
-                  , const QString &sCopyStuntScaleFactor
-                  , const QString &sCopyStuntAngle
-                  , const QString &sCopyStuntUnknown
+                  , const QString &sCopyStuntChunkCount
+                  , const QString &sCopyNumTicks
+                  , const QString &sCopyTickStartIdx
                   , const QString &sCopyStuntTimingGroup
                   , const QString &sCopyStuntHeight
                   , const QString &sCopyStuntTimeBulging
                   , const QString &sCopyStuntTimeFlat
-                  , const QString &sCopyStuntExpandsContracts
-                  , const QString &sCopyStuntBulge);
+                  , const QString &sCopyStuntRampSideLength
+                  , const QString &sCopyStuntFlags);
   ~CChunkEditValues();
 
   void Clear();
@@ -166,15 +166,15 @@ public:
   QString sUnk50;
   QString sSignTexture;
   QString sBackTexture;
-  QString sStuntScaleFactor;
-  QString sStuntAngle;
-  QString sStuntUnknown;
+  QString sStuntChunkCount;
+  QString sNumTicks;
+  QString sTickStartIdx;
   QString sStuntTimingGroup;
   QString sStuntHeight;
   QString sStuntTimeBulging;
   QString sStuntTimeFlat;
-  QString sStuntExpandsContracts;
-  QString sStuntBulge;
+  QString sStuntRampSideLength;
+  QString sStuntFlags;
 };
 
 //-------------------------------------------------------------------------------------------------

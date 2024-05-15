@@ -451,15 +451,15 @@ bool CTrackData::ProcessTrackData(const uint8 *pData, size_t length)
           tStunt stunt;
           memset(&stunt, 0, sizeof(stunt));
           int iGeometryIndex                    = std::stoi(lineAy[0]);
-          stunt.iScaleFactor                    = std::stoi(lineAy[1]);
-          stunt.iAngle                          = std::stoi(lineAy[2]);
-          stunt.iUnknown                        = std::stoi(lineAy[3]);
+          stunt.iChunkCount                    = std::stoi(lineAy[1]);
+          stunt.iNumTicks                          = std::stoi(lineAy[2]);
+          stunt.iTickStartIdx                        = std::stoi(lineAy[3]);
           stunt.iTimingGroup                    = std::stoi(lineAy[4]);
           stunt.iHeight                         = std::stoi(lineAy[5]);
           stunt.iTimeBulging                    = std::stoi(lineAy[6]);
           stunt.iTimeFlat                       = std::stoi(lineAy[7]);
-          stunt.iSmallerExpandsLargerContracts  = std::stoi(lineAy[8]);
-          stunt.iBulge                          = std::stoi(lineAy[9]);
+          stunt.iRampSideLength  = std::stoi(lineAy[8]);
+          stunt.iFlags                          = std::stoi(lineAy[9]);
           if (iGeometryIndex < m_chunkAy.size()) {
             memcpy(&m_chunkAy[iGeometryIndex].stunt, &stunt, sizeof(stunt));
           }
@@ -718,15 +718,15 @@ void CTrackData::GetTrackData(std::vector<uint8> &data)
             GetSignedBitValueFromInt(m_chunkAy[i].iSignTexture) & SURFACE_FLAG_BACK)) {
       backsMap[i] = m_chunkAy[i].iBackTexture;
     }
-    if (m_chunkAy[i].stunt.iScaleFactor != 0
-        || m_chunkAy[i].stunt.iAngle != 0
-        || m_chunkAy[i].stunt.iUnknown != 0
+    if (m_chunkAy[i].stunt.iChunkCount != 0
+        || m_chunkAy[i].stunt.iNumTicks != 0
+        || m_chunkAy[i].stunt.iTickStartIdx != 0
         || m_chunkAy[i].stunt.iTimingGroup != 0
         || m_chunkAy[i].stunt.iHeight != 0
         || m_chunkAy[i].stunt.iTimeBulging != 0
         || m_chunkAy[i].stunt.iTimeFlat != 0
-        || m_chunkAy[i].stunt.iSmallerExpandsLargerContracts != 0
-        || m_chunkAy[i].stunt.iBulge != 0) {
+        || m_chunkAy[i].stunt.iRampSideLength != 0
+        || m_chunkAy[i].stunt.iFlags != 0) {
       stuntMap[i] = &m_chunkAy[i].stunt;
     }
   }
@@ -745,9 +745,9 @@ void CTrackData::GetTrackData(std::vector<uint8> &data)
   for (CStuntMap::iterator it = stuntMap.begin(); it != stuntMap.end(); ++it) {
     memset(szBuf, 0, sizeof(szBuf));
     snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d %6d %6d %6d %6d %6d %6d\r\n",
-             it->first, it->second->iScaleFactor, it->second->iAngle, it->second->iUnknown,
+             it->first, it->second->iChunkCount, it->second->iNumTicks, it->second->iTickStartIdx,
              it->second->iTimingGroup, it->second->iHeight, it->second->iTimeBulging,
-             it->second->iTimeFlat, it->second->iSmallerExpandsLargerContracts, it->second->iBulge);
+             it->second->iTimeFlat, it->second->iRampSideLength, it->second->iFlags);
     WriteToVector(data, szBuf);
   }
   WriteToVector(data, "\r\n");

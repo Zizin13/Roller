@@ -365,6 +365,9 @@ void CMainWindow::OnCut()
 
 void CMainWindow::OnCopy()
 {
+  if (!GetCurrentTrack())
+    return;
+
   if (sbSelChunksTo->value() >= (int)GetCurrentTrack()->m_chunkAy.size() 
       || sbSelChunksFrom->value() >= (int)GetCurrentTrack()->m_chunkAy.size())
     return;
@@ -390,6 +393,9 @@ void CMainWindow::OnCopy()
 
 void CMainWindow::OnPaste()
 {
+  if (!GetCurrentTrack())
+    return;
+
   if (sbSelChunksTo->value() > (int)GetCurrentTrack()->m_chunkAy.size()
       || sbSelChunksFrom->value() > (int)GetCurrentTrack()->m_chunkAy.size())
     return;

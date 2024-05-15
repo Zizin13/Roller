@@ -1141,15 +1141,15 @@ void CShapeFactory::MakeAudio(CShader *pShader, CTrackData *pTrack, std::vector<
 void CShapeFactory::MakeStunts(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &stuntAy)
 {
   for (int i = 0; i < (int)pTrack->m_chunkAy.size(); ++i) {
-    bool bChunkHasStunt = pTrack->m_chunkAy[i].stunt.iScaleFactor != 0
-      || pTrack->m_chunkAy[i].stunt.iAngle != 0
-      || pTrack->m_chunkAy[i].stunt.iUnknown != 0
+    bool bChunkHasStunt = pTrack->m_chunkAy[i].stunt.iChunkCount != 0
+      || pTrack->m_chunkAy[i].stunt.iNumTicks != 0
+      || pTrack->m_chunkAy[i].stunt.iTickStartIdx != 0
       || pTrack->m_chunkAy[i].stunt.iTimingGroup != 0
       || pTrack->m_chunkAy[i].stunt.iHeight != 0
       || pTrack->m_chunkAy[i].stunt.iTimeBulging != 0
       || pTrack->m_chunkAy[i].stunt.iTimeFlat != 0
-      || pTrack->m_chunkAy[i].stunt.iSmallerExpandsLargerContracts != 0
-      || pTrack->m_chunkAy[i].stunt.iBulge != 0;
+      || pTrack->m_chunkAy[i].stunt.iRampSideLength != 0
+      || pTrack->m_chunkAy[i].stunt.iFlags != 0;
     if (!bChunkHasStunt)
       continue; //no stunt in this chunk
 

@@ -44,126 +44,8 @@
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="13" column="0">
-        <widget class="QCheckBox" name="ck4RShoulder">
-         <property name="text">
-          <string>Right Shoulder</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="3">
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QPushButton" name="pbStunt">
-           <property name="text">
-            <string>Add Stunt</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLabel" name="lblChunkCount">
-         <property name="toolTip">
-          <string>Increases the length and height of the &quot;ramp&quot;. 1 is a bump, 4 starts breaking textures, 6 is huge vertical wall</string>
-         </property>
-         <property name="text">
-          <string>Ramp Chunk Count</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QSpinBox" name="sbNumTicks">
-         <property name="minimum">
-          <number>0</number>
-         </property>
-         <property name="maximum">
-          <number>65535</number>
-         </property>
-         <property name="singleStep">
-          <number>1</number>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="lblHeight">
-         <property name="text">
-          <string>Height Delta per Tick</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="1">
-        <widget class="QSlider" name="sldLength">
-         <property name="minimum">
-          <number>0</number>
-         </property>
-         <property name="maximum">
-          <number>150</number>
-         </property>
-         <property name="value">
-          <number>100</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="lblTickStartIdx">
-         <property name="text">
-          <string>Tick Start Index</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="lblTimeBulging">
-         <property name="text">
-          <string>Time Bulging</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0">
-        <widget class="QLabel" name="lblTimeFlat">
-         <property name="text">
-          <string>Time Flat</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QSpinBox" name="sbChunkCount">
-         <property name="minimum">
-          <number>0</number>
-         </property>
-         <property name="maximum">
-          <number>65535</number>
-         </property>
-         <property name="singleStep">
-          <number>1</number>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="lblFlags">
-         <property name="text">
-          <string>Rising Sections</string>
-         </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QSpinBox" name="sbTimeBulging">
+       <item row="7" column="1">
+        <widget class="QSpinBox" name="sbTimeFlat">
          <property name="minimum">
           <number>0</number>
          </property>
@@ -188,47 +70,6 @@
          </property>
         </widget>
        </item>
-       <item row="12" column="0">
-        <widget class="QCheckBox" name="ck5RWall">
-         <property name="text">
-          <string>Right Wall</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QSpinBox" name="sbHeight">
-         <property name="minimum">
-          <number>-65535</number>
-         </property>
-         <property name="maximum">
-          <number>65535</number>
-         </property>
-         <property name="singleStep">
-          <number>1</number>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="0">
-        <widget class="QLabel" name="lblLength">
-         <property name="text">
-          <string>Ramp Chunk Length</string>
-         </property>
-        </widget>
-       </item>
-       <item row="13" column="1">
-        <widget class="QCheckBox" name="ck0LShoulder">
-         <property name="text">
-          <string>Left Shoulder</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="lblNumTicks">
-         <property name="text">
-          <string>Num Ticks</string>
-         </property>
-        </widget>
-       </item>
        <item row="12" column="1">
         <widget class="QCheckBox" name="ck1LWall">
          <property name="text">
@@ -236,37 +77,33 @@
          </property>
         </widget>
        </item>
-       <item row="11" column="1">
-        <widget class="QCheckBox" name="ck2LLane">
-         <property name="text">
-          <string>Left Lane</string>
-         </property>
-        </widget>
-       </item>
-       <item row="11" column="0">
-        <widget class="QCheckBox" name="ck3RLane">
-         <property name="text">
-          <string>Right Lane</string>
-         </property>
-        </widget>
-       </item>
-       <item row="8" column="2">
-        <widget class="QLabel" name="lblLengthPercent">
-         <property name="text">
-          <string>100%</string>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="1">
-        <widget class="QSpinBox" name="sbTimeFlat">
+       <item row="2" column="1">
+        <widget class="QSpinBox" name="sbNumTicks">
          <property name="minimum">
-          <number>0</number>
+          <number>1</number>
          </property>
          <property name="maximum">
           <number>65535</number>
          </property>
          <property name="singleStep">
           <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="lblChunkCount">
+         <property name="toolTip">
+          <string>Increases the length and height of the &quot;ramp&quot;. 1 is a bump, 4 starts breaking textures, 6 is huge vertical wall</string>
+         </property>
+         <property name="text">
+          <string>Ramp Chunk Count</string>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="1">
+        <widget class="QCheckBox" name="ck2LLane">
+         <property name="text">
+          <string>Left Lane</string>
          </property>
         </widget>
        </item>
@@ -283,10 +120,10 @@
          </property>
         </spacer>
        </item>
-       <item row="4" column="0">
-        <widget class="QLabel" name="lblTimingGroup">
+       <item row="9" column="0">
+        <widget class="QLabel" name="lblFlags">
          <property name="text">
-          <string>Timing Group</string>
+          <string>Rising Sections</string>
          </property>
         </widget>
        </item>
@@ -311,7 +148,201 @@
          </item>
         </layout>
        </item>
+       <item row="0" column="0" colspan="4">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QPushButton" name="pbStunt">
+           <property name="text">
+            <string>Add Stunt</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="lblTimeFlat">
+         <property name="text">
+          <string>Time Flat</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QSlider" name="sldLength">
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>150</number>
+         </property>
+         <property name="value">
+          <number>100</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="11" column="0">
+        <widget class="QCheckBox" name="ck3RLane">
+         <property name="text">
+          <string>Right Lane</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="0">
+        <widget class="QCheckBox" name="ck4RShoulder">
+         <property name="text">
+          <string>Right Shoulder</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QSpinBox" name="sbChunkCount">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="12" column="0">
+        <widget class="QCheckBox" name="ck5RWall">
+         <property name="text">
+          <string>Right Wall</string>
+         </property>
+        </widget>
+       </item>
+       <item row="13" column="1">
+        <widget class="QCheckBox" name="ck0LShoulder">
+         <property name="text">
+          <string>Left Shoulder</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QSpinBox" name="sbTimeBulging">
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="9" column="1">
+        <widget class="QLineEdit" name="leFlags">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="lblTimeBulging">
+         <property name="text">
+          <string>Time at Peak</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="lblTickStartIdx">
+         <property name="text">
+          <string>Tick Start Index</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="lblNumTicks">
+         <property name="text">
+          <string>Num Ticks</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="lblTimingGroup">
+         <property name="text">
+          <string>Timing Group</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QSpinBox" name="sbHeight">
+         <property name="minimum">
+          <number>0</number>
+         </property>
+         <property name="maximum">
+          <number>65535</number>
+         </property>
+         <property name="singleStep">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="lblLength">
+         <property name="text">
+          <string>Ramp Chunk Length</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="lblHeight">
+         <property name="text">
+          <string>Height Delta per Tick</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QLabel" name="lblTicksTimeS">
+         <property name="text">
+          <string>(0.00 s)</string>
+         </property>
+        </widget>
+       </item>
        <item row="6" column="2">
+        <widget class="QLabel" name="lblBulgeTimeS">
+         <property name="text">
+          <string>(0.00 s)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="2">
+        <widget class="QLabel" name="lblFlatTimeS">
+         <property name="text">
+          <string>(0.00 s)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="2">
+        <widget class="QLabel" name="lblLengthPercent">
+         <property name="text">
+          <string>(100%)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
         <spacer name="horizontalSpacer_2">
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -323,16 +354,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item row="9" column="1">
-        <widget class="QLineEdit" name="leFlags">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>

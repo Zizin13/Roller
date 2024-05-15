@@ -369,7 +369,10 @@ void CEditStuntWidget::UpdateDialog()
   leFlags->setText(QString::number(iValue).leftJustified(4, ' ') + szBuf);
 
   sbTickStartIdx->setRange(0, sbNumTicks->value() - 1);
-  lblLengthPercent->setText(QString::number(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].stunt.iRampSideLength * 100 / 1024) + "%");
+  lblLengthPercent->setText("(" + QString::number(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].stunt.iRampSideLength * 100 / 1024) + "%)");
+  lblTicksTimeS->setText("(" + QString::number(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].stunt.iNumTicks * 2.768 / 100, 'f', 2) + " s)");
+  lblBulgeTimeS->setText("(" + QString::number(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].stunt.iTimeBulging * 2.768 / 100, 'f', 2) + " s)");
+  lblFlatTimeS->setText("(" + QString::number(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].stunt.iTimeFlat * 2.768 / 100, 'f', 2) + " s)");
 }
 
 //-------------------------------------------------------------------------------------------------

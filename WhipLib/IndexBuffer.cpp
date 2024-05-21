@@ -6,12 +6,13 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
-CIndexBuffer::CIndexBuffer(const uint32 *pData, uint32 uiCount)
+CIndexBuffer::CIndexBuffer(const uint32 *pData, uint32 uiCount, GLenum usage)
   : m_uiCount(uiCount)
+  , m_usage(usage)
 {
   GLCALL(glGenBuffers(1, &m_uiId));
   GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_uiId));
-  GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, uiCount * sizeof(uint32), pData, GL_STATIC_DRAW));
+  GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, uiCount * sizeof(uint32), pData, usage));
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -33,6 +34,20 @@ void CIndexBuffer::Bind() const
 void CIndexBuffer::Unbind() const
 {
   GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CIndexBuffer::Update(const uint32 *pData, uint32 uiCount)
+{
+  if (uiCount != m_uiCount) {
+    assert(0);
+    Logging::LogMessage("Error updating index buffer: count has changed");
+    return;
+  }
+
+  Bind();
+  GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, uiCount * sizeof(uint32), pData, m_usage));
 }
 
 //-------------------------------------------------------------------------------------------------

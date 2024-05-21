@@ -24,10 +24,10 @@ public:
   void Draw(const glm::mat4 &worldToProjectionMatrix);
 
   glm::mat4 m_modelToWorldMatrix;
+  CIndexBuffer *m_pIndexBuf;
+  CVertexBuffer *m_pVertexBuf;
 
 private:
-  CVertexBuffer *m_pVertexBuf;
-  CIndexBuffer *m_pIndexBuf;
   CVertexArray *m_pVertexArray;
   GLenum m_drawType;
   CShader *m_pShader; //owned by renderer

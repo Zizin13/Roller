@@ -924,78 +924,84 @@ uint32 *CShapeFactory::MakeIndicesSurfaceWireframe(uint32 &numIndices, CTrackDat
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeTrackSurface(CShader *pShader, CTrackData *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe)
+CShapeData *CShapeFactory::MakeTrackSurface(CShapeData *pShape, CShader *pShader, CTrackData *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = NULL;
   vertices = MakeVerts(uiNumVerts, section, pTrack, pTrack->m_pTex);
-  uint32 uiNumIndices;
-  uint32 *indices = NULL;
-  GLenum drawType = GL_TRIANGLES;
-  if (!bWireframe) {
-    indices = MakeIndicesSingleSection(uiNumIndices, section, pTrack, bAttachLast);
-  } else {
-    indices = MakeIndicesSingleSectionWireframe(uiNumIndices, pTrack, bAttachLast);
-    drawType = GL_LINES;
-
+  if (bWireframe) {
     for (uint32 i = 0; i < uiNumVerts; ++i) {
       vertices[i].flags.x = 1.0f; //use color rather than tex
       vertices[i].color = CTexture::RandomColor();
     }
   }
 
-  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
-  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
-  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+  if (!pShape) {
+    uint32 uiNumIndices;
+    uint32 *indices = NULL;
+    GLenum drawType = GL_TRIANGLES;
+    if (!bWireframe) {
+      indices = MakeIndicesSingleSection(uiNumIndices, section, pTrack, bAttachLast);
+    } else {
+      indices = MakeIndicesSingleSectionWireframe(uiNumIndices, pTrack, bAttachLast);
+      drawType = GL_LINES;
+    }
 
-  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
+    CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts, GL_DYNAMIC_DRAW);
+    CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+    CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+
+    pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
+
+    if (indices)
+      delete[] indices;
+  } else {
+    pShape->m_pVertexBuf->Update(vertices, uiNumVerts);
+  }
 
   if (vertices)
     delete[] vertices;
-  if (indices)
-    delete[] indices;
 
-  return pRet;
+  return pShape;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeEnvirFloor(CShader *pShader, CTrackData *pTrack, int iIndex)
+CShapeData *CShapeFactory::MakeEnvirFloor(CShapeData *pShape, CShader *pShader, CTrackData *pTrack, int iIndex)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = NULL;
   vertices = MakeVertsEnvirFloor(uiNumVerts, pTrack, pTrack->m_pTex, iIndex);
-  if (!vertices)
-    return NULL;
 
-  uint32 uiNumIndices;
-  uint32 *indices = NULL;
-  GLenum drawType = GL_TRIANGLES;
-  indices = MakeIndicesEnvirFloor(uiNumIndices);
+  if (!pShape) {
+    uint32 uiNumIndices;
+    uint32 *indices = NULL;
+    GLenum drawType = GL_TRIANGLES;
+    indices = MakeIndicesEnvirFloor(uiNumIndices);
 
-  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
-  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
-  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+    CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts, GL_DYNAMIC_DRAW);
+    CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+    CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+    pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
 
-  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
+    if (indices)
+      delete[] indices;
+  } else {
+    pShape->m_pVertexBuf->Update(vertices, uiNumVerts);
+  }
 
   if (vertices)
     delete[] vertices;
-  if (indices)
-    delete[] indices;
 
-  return pRet;
+  return pShape;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeAILine(CShader *pShader, CTrackData *pTrack, eShapeSection section, bool bAttachLast)
+CShapeData *CShapeFactory::MakeAILine(CShapeData *pShape, CShader *pShader, CTrackData *pTrack, eShapeSection section, bool bAttachLast)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVerts(uiNumVerts, section, pTrack, NULL);
-  uint32 uiNumIndices;
-  uint32 *indices = MakeIndicesCenterline(uiNumIndices, pTrack, bAttachLast);
-  GLenum drawType = GL_LINES;
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {
     vertices[i].flags.x = 1.0f; //use color rather than tex
@@ -1015,47 +1021,62 @@ CShapeData *CShapeFactory::MakeAILine(CShader *pShader, CTrackData *pTrack, eSha
     }
   }
 
-  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
-  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
-  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+  if (!pShape) {
+    uint32 uiNumIndices;
+    uint32 *indices = MakeIndicesCenterline(uiNumIndices, pTrack, bAttachLast);
+    GLenum drawType = GL_LINES;
 
-  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
+    CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts, GL_DYNAMIC_DRAW);
+    CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+    CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+
+    pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
+
+    if (indices)
+      delete[] indices;
+  } else {
+    pShape->m_pVertexBuf->Update(vertices, uiNumVerts);
+  }
 
   if (vertices)
     delete[] vertices;
-  if (indices)
-    delete[] indices;
 
-  return pRet;
+  return pShape;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeSelectedChunks(CShader *pShader, CTrackData *pTrack, int iStart, int iEnd)
+CShapeData *CShapeFactory::MakeSelectedChunks(CShapeData *pShape, CShader *pShader, CTrackData *pTrack, int iStart, int iEnd)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVerts(uiNumVerts, eShapeSection::SELECTED, pTrack, NULL);
-  uint32 uiNumIndices;
-  uint32 *indices = MakeIndicesSelectedChunks(uiNumIndices, iStart, iEnd, pTrack);
-  GLenum drawType = GL_LINES;
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {
     vertices[i].flags.x = 1.0f; //use color rather than tex
     vertices[i].color = CTexture::RandomColor();
   }
 
-  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
-  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
-  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+  uint32 uiNumIndices;
+  uint32 *indices = MakeIndicesSelectedChunks(uiNumIndices, iStart, iEnd, pTrack);
+  GLenum drawType = GL_LINES;
 
-  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
+  if (!pShape) {
+    CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts, GL_DYNAMIC_DRAW);
+    CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices, GL_DYNAMIC_DRAW);
+    CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+
+    pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
+    if (indices)
+      delete[] indices;
+  } else {
+    pShape->m_pVertexBuf->Update(vertices, uiNumVerts);
+    pShape->m_pIndexBuf->Update(indices, uiNumIndices);
+  }
 
   if (vertices)
     delete[] vertices;
-  if (indices)
-    delete[] indices;
 
-  return pRet;
+  return pShape;
 }
 
 //-------------------------------------------------------------------------------------------------

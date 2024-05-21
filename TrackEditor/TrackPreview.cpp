@@ -266,7 +266,6 @@ CTrackPreview::CTrackPreview(QWidget *pParent, const QString &sTrackFile)
   , m_bMillionPlus(false)
   , m_bAttachLast(false)
   , m_iScale(1)
-  , m_stuntPos(eStuntPos::STUNT_POS_STATIC_INACTIVE)
   , m_bUnsavedChanges(true)
   , m_bAlreadySaved(false)
   , m_sTrackFile(sTrackFile)
@@ -518,14 +517,6 @@ void CTrackPreview::SetScale(int iScale)
 void CTrackPreview::AttachLast(bool bAttachLast)
 {
   m_bAttachLast = bAttachLast;
-  UpdateTrack();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrackPreview::SetStuntPos(eStuntPos stuntPos)
-{
-  m_stuntPos = stuntPos;
   UpdateTrack();
 }
 

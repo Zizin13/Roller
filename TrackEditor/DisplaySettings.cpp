@@ -39,11 +39,6 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent)
   cbTestCarPos->addItem("AILINE 4", (int)eShapeSection::AILINE4);
   cbTestCarPos->setCurrentIndex(cbTestCarPos->findData((int)eShapeSection::AILINE1));
 
-  cbStuntPos->addItem("Static: Inactive", (int)eStuntPos::STUNT_POS_STATIC_INACTIVE);
-  cbStuntPos->addItem("Static: Active", (int)eStuntPos::STUNT_POS_STATIC_ACTIVE);
-  cbStuntPos->addItem("Static: Start Pos", (int)eStuntPos::STUNT_POS_STATIC_START);
-  cbStuntPos->setCurrentIndex(cbStuntPos->findData((int)eStuntPos::STUNT_POS_STATIC_INACTIVE));
-
   connect(ckAllSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAllSurface);
   connect(ckAllWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAllWireframe);
   connect(ckLLaneSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
@@ -76,13 +71,13 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent)
   connect(ckSigns, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckAudio, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckStunts, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
+  connect(ckAnimateStunts, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckTestCar, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(cbTestCarType, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
   connect(cbTestCarPos, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
   connect(ckMillionPlus, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckAttachLast, &QCheckBox::toggled, this, &CDisplaySettings::AttachLastCheckedSig);
   connect(sldScale, &QSlider::valueChanged, this, &CDisplaySettings::SetScaleSig);
-  connect(cbStuntPos, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
 
   UpdateAllSurface();
   UpdateAllWireframe();
@@ -130,6 +125,7 @@ uint32 CDisplaySettings::GetDisplaySettings(eWhipModel &carModel, eShapeSection 
   if (ckSigns->isChecked())               uiShowModels |= SHOW_SIGNS;
   if (ckAudio->isChecked())               uiShowModels |= SHOW_AUDIO;
   if (ckStunts->isChecked())              uiShowModels |= SHOW_STUNTS;
+  if (ckAnimateStunts->isChecked())       uiShowModels |= ANIMATE_STUNTS;
 
   carModel = (eWhipModel)cbTestCarType->currentData().toInt();
   aiLine = (eShapeSection)cbTestCarPos->currentData().toInt();
@@ -173,6 +169,7 @@ void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels, eWhipModel carMod
   BLOCK_SIG_AND_DO(ckSigns, setChecked(              uiShowModels & SHOW_SIGNS));
   BLOCK_SIG_AND_DO(ckAudio, setChecked(              uiShowModels & SHOW_AUDIO));
   BLOCK_SIG_AND_DO(ckStunts, setChecked(             uiShowModels & SHOW_STUNTS));
+  BLOCK_SIG_AND_DO(ckAnimateStunts, setChecked(      uiShowModels & ANIMATE_STUNTS));
 
   BLOCK_SIG_AND_DO(cbTestCarType, setCurrentIndex(cbTestCarType->findData((int)carModel)));
   BLOCK_SIG_AND_DO(cbTestCarPos, setCurrentIndex(cbTestCarPos->findData((int)aiLine)));
@@ -207,20 +204,6 @@ int CDisplaySettings::GetScale()
 void CDisplaySettings::SetScale(int iScale)
 {
   sldScale->setValue(iScale);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-eStuntPos CDisplaySettings::GetStuntPos()
-{
-  return (eStuntPos)cbStuntPos->currentData().toInt();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CDisplaySettings::SetStuntPos(eStuntPos stuntPos)
-{
-  cbStuntPos->setCurrentIndex(cbStuntPos->findData((int)stuntPos));
 }
 
 //-------------------------------------------------------------------------------------------------

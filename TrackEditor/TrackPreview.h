@@ -29,7 +29,6 @@ public:
   void UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
   void SetScale(int iScale);
   void AttachLast(bool bAttachLast);
-  void SetStuntPos(eStuntPos stuntPos);
   CTrack *GetTrack();
   bool SaveChangesAndContinue();
   bool SaveTrack();
@@ -63,7 +62,6 @@ private:
   bool m_bMillionPlus;
   bool m_bAttachLast;
   int m_iScale;
-  eStuntPos m_stuntPos;
   bool m_bAlreadySaved;
   QString m_sTrackFile;
   QString m_sLastCarTex;

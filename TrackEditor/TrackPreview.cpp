@@ -80,6 +80,24 @@ public:
       delete m_pAxes;
       m_pAxes = NULL;
     }
+  };
+  void DeleteModels()
+  {
+    for (std::vector<CShapeData *>::iterator it = m_signAy.begin(); it != m_signAy.end(); ++it) {
+      delete *it;
+    }
+    m_signAy.clear();
+    for (std::vector<CShapeData *>::iterator it = m_audioAy.begin(); it != m_audioAy.end(); ++it) {
+      delete *it;
+    }
+    m_audioAy.clear();
+    for (std::vector<CShapeData *>::iterator it = m_stuntAy.begin(); it != m_stuntAy.end(); ++it) {
+      delete *it;
+    }
+    m_stuntAy.clear();
+  }
+  void DeleteTrackModels()
+  {
     if (m_pLLaneSurf) {
       delete m_pLLaneSurf;
       m_pLLaneSurf = NULL;
@@ -196,21 +214,6 @@ public:
       delete m_pSelection;
       m_pSelection = NULL;
     }
-  };
-  void DeleteModels()
-  {
-    for (std::vector<CShapeData *>::iterator it = m_signAy.begin(); it != m_signAy.end(); ++it) {
-      delete *it;
-    }
-    m_signAy.clear();
-    for (std::vector<CShapeData *>::iterator it = m_audioAy.begin(); it != m_audioAy.end(); ++it) {
-      delete *it;
-    }
-    m_audioAy.clear();
-    for (std::vector<CShapeData *>::iterator it = m_stuntAy.begin(); it != m_stuntAy.end(); ++it) {
-      delete *it;
-    }
-    m_stuntAy.clear();
   }
 
   CShapeData *m_pLLaneSurf;
@@ -424,6 +427,13 @@ void CTrackPreview::Redo()
 
   tTrackHistory *pHistory = &p->m_historyAy[m_iHistoryIndex];
   LoadHistory(pHistory);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::DeleteTrackModels()
+{
+  p->DeleteTrackModels();
 }
 
 //-------------------------------------------------------------------------------------------------

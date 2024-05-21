@@ -34,6 +34,7 @@ public:
   int GetSelTo();
   float GetDesktopScale() { return m_fDesktopScale; };
   CTrack *GetCurrentTrack();
+  CTrackPreview *GetCurrentPreview();
 
   QString m_sLastTrackFilesFolder;
   tPreferences m_preferences;
@@ -79,7 +80,6 @@ private:
   void SaveSettings();
   bool SaveChangesAndContinue();
   void UpdateGeometrySelection();
-  CTrackPreview *GetCurrentPreview();
 
   CMainWindowPrivate *p;
   QString m_sAppPath;

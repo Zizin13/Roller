@@ -39,6 +39,7 @@ public:
   void SaveHistory(const QString &sDescription);
   void Undo();
   void Redo();
+  void DeleteTrackModels();
 
   bool m_bUnsavedChanges;
   int m_iSelFrom;

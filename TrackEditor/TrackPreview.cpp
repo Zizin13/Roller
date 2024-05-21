@@ -441,6 +441,8 @@ void CTrackPreview::DeleteTrackModels()
 
 void CTrackPreview::LoadHistory(const tTrackHistory *pHistory)
 {
+  DeleteTrackModels();
+
   int iSize = (int)pHistory->byteAy.size();
   uint8 *byData = new uint8[iSize];
   for (int i = 0; i < iSize; ++i)

@@ -26,6 +26,7 @@ struct tStunt
   int iTimeFlat;
   int iRampSideLength;
   int iFlags;
+  int iTickCurrIdx;
 };
 //-------------------------------------------------------------------------------------------------
 struct tChunkMath
@@ -39,13 +40,17 @@ struct tChunkMath
   glm::vec3 rShoulder;
   glm::vec3 lWall;
   glm::vec3 rWall;
+  bool bLWallAttachToLane;
   glm::vec3 lWallBottomAttach;
+  bool bRWallAttachToLane;
   glm::vec3 rWallBottomAttach;
   glm::vec3 lFloor;
   glm::vec3 rFloor;
   glm::vec3 lloWall;
   glm::vec3 rloWall;
+  bool bLloWallAttachToShoulder;
   glm::vec3 lloWallBottomAttach;
+  bool bRloWallAttachToShoulder;
   glm::vec3 rloWallBottomAttach;
   glm::vec3 luoWall;
   glm::vec3 ruoWall;
@@ -194,7 +199,11 @@ public:
   bool ProcessTrackData(const uint8 *pData, size_t length);
   void GetTrackData(std::vector<uint8> &data);
   void GenerateTrackMath();
+  void ResetStunts();
+  void UpdateTrack();
   bool ShouldShowChunkSection(int i, eShapeSection section);
+  bool HasPitchedStunt();
+  bool UseCenterStunt(int i);
 
   static unsigned int GetSignedBitValueFromInt(int iValue);
   static int GetIntValueFromSignedBit(unsigned int uiValue);

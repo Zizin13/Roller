@@ -320,6 +320,7 @@ void CTrackPreview::UpdateTrack()
   if (!p->m_track.m_chunkAy.empty()) {
     p->m_track.m_fScale = 10000.0f / m_iScale;
     p->m_track.GenerateTrackMath();
+    p->m_track.UpdateTrack(); //todo: delete
 
     p->m_pLLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLLaneSurf, p->m_pShader, &p->m_track, eShapeSection::LLANE, m_bAttachLast);
     p->m_pLLaneWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLLaneWire, p->m_pShader, &p->m_track, eShapeSection::LLANE, m_bAttachLast, true);

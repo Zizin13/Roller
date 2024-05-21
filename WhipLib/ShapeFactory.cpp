@@ -1281,7 +1281,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         break;
       case RLANE:
         ApplyVerticesSingleSection(i, vertices, 
-                                   pTrack->m_chunkAy[i].math.center, 
+                                   pTrack->m_chunkAy[i].math.center,
                                    pTrack->m_chunkAy[i].math.rLane, 
                                    pTrack->m_chunkAy[iChunkIndex].math.center,
                                    pTrack->m_chunkAy[iChunkIndex].math.rLane);

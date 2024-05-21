@@ -883,9 +883,9 @@ void CTrackData::GenerateTrackMath()
     return;
   }
 
+  ResetStunts();
+
   m_chunkAy[m_chunkAy.size() - 1].math.center = glm::vec3(0, 0, 1);
-  bool bPrevLWallAttachToLane = false;
-  bool bPrevRWallAttachToLane = false;
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
     int iPrevIndex = (int)m_chunkAy.size() - 1;
     if (i > 0)
@@ -931,11 +931,10 @@ void CTrackData::GenerateTrackMath()
                 m_chunkAy[i].math.nextChunkPitched,
                 m_chunkAy[i].math.rShoulder, false);
     //left wall
-    bool bLWallAttachToLane = CTrackData::GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_WALL_31;
+    m_chunkAy[i].math.bLWallAttachToLane = CTrackData::GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_WALL_31;
     if (m_chunkAy[i].iLeftWallType == -1)
-      bLWallAttachToLane = bPrevLWallAttachToLane;
-    bPrevLWallAttachToLane =bLWallAttachToLane;
-    m_chunkAy[i].math.lWallBottomAttach = bLWallAttachToLane ? m_chunkAy[i].math.lLane : m_chunkAy[i].math.lShoulder;
+      m_chunkAy[i].math.bLWallAttachToLane = m_chunkAy[iPrevIndex].math.bLWallAttachToLane;
+    m_chunkAy[i].math.lWallBottomAttach = m_chunkAy[i].math.bLWallAttachToLane ? m_chunkAy[i].math.lLane : m_chunkAy[i].math.lShoulder;
     GetWall(i,
             m_chunkAy[i].math.lWallBottomAttach,
             m_chunkAy[i].math.pitchAxis,
@@ -943,11 +942,10 @@ void CTrackData::GenerateTrackMath()
             m_chunkAy[i].math.nextChunkPitched,
             m_chunkAy[i].math.lWall, eShapeSection::LWALL);
     //right wall
-    bool bRWallAttachToLane = CTrackData::GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType) & SURFACE_FLAG_WALL_31;
+    m_chunkAy[i].math.bRWallAttachToLane = CTrackData::GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType) & SURFACE_FLAG_WALL_31;
     if (m_chunkAy[i].iRightWallType == -1)
-      bRWallAttachToLane = bPrevRWallAttachToLane;
-    bPrevRWallAttachToLane = bRWallAttachToLane;
-    m_chunkAy[i].math.rWallBottomAttach = bRWallAttachToLane ? m_chunkAy[i].math.rLane : m_chunkAy[i].math.rShoulder;
+      m_chunkAy[i].math.bRWallAttachToLane = m_chunkAy[iPrevIndex].math.bRWallAttachToLane;
+    m_chunkAy[i].math.rWallBottomAttach = m_chunkAy[i].math.bRWallAttachToLane ? m_chunkAy[i].math.rLane : m_chunkAy[i].math.rShoulder;
     GetWall(i,
             m_chunkAy[i].math.rWallBottomAttach,
             m_chunkAy[i].math.pitchAxis,
@@ -986,6 +984,7 @@ void CTrackData::GenerateTrackMath()
                     lShoulderNoHeight, true, true);
         m_chunkAy[i].math.lloWallBottomAttach = lShoulderNoHeight;
       } else {
+        m_chunkAy[i].math.bLloWallAttachToShoulder = true;
         m_chunkAy[i].math.lloWallBottomAttach = m_chunkAy[i].math.lShoulder;
       }
     }
@@ -1007,6 +1006,7 @@ void CTrackData::GenerateTrackMath()
                     m_chunkAy[i].math.nextChunkPitched, rShoulderNoHeight, false, true);
         m_chunkAy[i].math.rloWallBottomAttach = rShoulderNoHeight;
       } else {
+        m_chunkAy[i].math.bRloWallAttachToShoulder = true;
         m_chunkAy[i].math.rloWallBottomAttach = m_chunkAy[i].math.rShoulder;
       }
     }
@@ -1085,6 +1085,277 @@ void CTrackData::GenerateTrackMath()
               m_chunkAy[i].math.carLine4,
               eShapeSection::AILINE4, 0);
   }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::ResetStunts()
+{
+  CStuntMap::iterator it = m_stuntMap.begin();
+  for (; it != m_stuntMap.end(); ++it) {
+    it->second.iTickCurrIdx = 0;
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::UpdateTrack()
+{
+  CStuntMap::iterator it = m_stuntMap.begin();
+  for (; it != m_stuntMap.end(); ++it) {
+    int iStart = it->first - it->second.iChunkCount + 1;
+    int iEnd = it->first + it->second.iChunkCount;
+
+    if (iStart < 0)
+      iStart = 0;
+    if (iEnd > (int)m_chunkAy.size() - 1)
+      iEnd = (int)m_chunkAy.size() - 1;
+
+    int iHeight = it->second.iHeight * it->second.iNumTicks;
+    float fTheta = atan((float)iHeight / (float)m_chunkAy[iStart].iLength);
+    
+    //ramp before stunt
+    for (int i = iStart; i < it->first + 1; ++i) {
+      int iPrevIndex = (int)m_chunkAy.size() - 1;
+      if (i > 0)
+        iPrevIndex = i - 1;
+      glm::vec3 prevCenter = m_chunkAy[iPrevIndex].math.center;
+      glm::vec3 nextChunkBase = glm::vec3(0, 0, 1);
+      glm::mat4 yawMat = m_chunkAy[i].math.yawMat;
+      glm::vec3 nextChunkYawed = glm::vec3(yawMat * glm::vec4(nextChunkBase, 1.0f));
+      glm::vec3 pitchAxis = glm::normalize(glm::cross(nextChunkYawed, glm::vec3(0.0f, 1.0f, 0.0f)));
+      glm::mat4 pitchMat = glm::rotate(fTheta, pitchAxis);
+      glm::vec3 nextChunkPitched = glm::vec3(pitchMat * glm::vec4(nextChunkYawed, 1.0f));
+      glm::mat4 translateMat = glm::mat4(1);
+      if (i > 0)
+        translateMat = glm::translate(prevCenter);
+      float fLen = (float)m_chunkAy[i].iLength / m_fScale * ((float)it->second.iRampSideLength / 1024.0f);
+      glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
+      m_chunkAy[i].math.center = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
+      if (it->second.iFlags & STUNT_FLAG_LLANE)
+        GetLane(i, m_chunkAy[i].math.center, pitchAxis, m_chunkAy[i].math.rollMat, m_chunkAy[i].math.lLane, true);
+      if (it->second.iFlags & STUNT_FLAG_RLANE)
+        GetLane(i, m_chunkAy[i].math.center, pitchAxis, m_chunkAy[i].math.rollMat, m_chunkAy[i].math.rLane, false);
+      if (it->second.iFlags & STUNT_FLAG_LSHOULDER)
+        GetShoulder(i, m_chunkAy[i].math.lLane,
+                    m_chunkAy[i].math.pitchAxis,
+                    m_chunkAy[i].math.rollMat,
+                    m_chunkAy[i].math.nextChunkPitched,
+                    m_chunkAy[i].math.lShoulder, true);
+      if (it->second.iFlags & STUNT_FLAG_RSHOULDER)
+        GetShoulder(i,
+                    m_chunkAy[i].math.rLane,
+                    m_chunkAy[i].math.pitchAxis,
+                    m_chunkAy[i].math.rollMat,
+                    m_chunkAy[i].math.nextChunkPitched,
+                    m_chunkAy[i].math.rShoulder, false);
+      m_chunkAy[i].math.lWallBottomAttach = m_chunkAy[i].math.bLWallAttachToLane ? m_chunkAy[i].math.lLane : m_chunkAy[i].math.lShoulder;
+      if (it->second.iFlags & STUNT_FLAG_LWALL)
+        GetWall(i,
+                m_chunkAy[i].math.lWallBottomAttach,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.lWall, eShapeSection::LWALL);
+      m_chunkAy[i].math.rWallBottomAttach = m_chunkAy[i].math.bRWallAttachToLane ? m_chunkAy[i].math.rLane : m_chunkAy[i].math.rShoulder;
+      if (it->second.iFlags & STUNT_FLAG_RWALL)
+        GetWall(i,
+                m_chunkAy[i].math.rWallBottomAttach,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.rWall, eShapeSection::RWALL);
+      //ailines
+      GetAILine(i,
+                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.aiLine1,
+                eShapeSection::AILINE1, m_iAILineHeight);
+      GetAILine(i,
+                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.aiLine2,
+                eShapeSection::AILINE2, m_iAILineHeight);
+      GetAILine(i,
+                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.aiLine3, eShapeSection::AILINE3, m_iAILineHeight);
+      GetAILine(i,
+                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.aiLine4,
+                eShapeSection::AILINE4, m_iAILineHeight);
+      //car positions are ai lines with 0 height
+      GetAILine(i,
+                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.carLine1,
+                eShapeSection::AILINE1, 0);
+      GetAILine(i,
+                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.carLine2,
+                eShapeSection::AILINE2, 0);
+      GetAILine(i,
+                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.carLine3,
+                eShapeSection::AILINE3, 0);
+      GetAILine(i,
+                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.carLine4,
+                eShapeSection::AILINE4, 0);
+    }
+    //ramp after stunt
+    for (int i = iEnd; i > it->first; --i) {
+      int iPrevIndex = 0;
+      if (i < (int)m_chunkAy.size() - 1)
+        iPrevIndex = i + 1;
+      glm::vec3 prevCenter = m_chunkAy[iPrevIndex].math.center;
+      glm::vec3 nextChunkBase = glm::vec3(0, 0, 1);
+      glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw + 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+      glm::vec3 nextChunkYawed = glm::vec3(yawMat * glm::vec4(nextChunkBase, 1.0f));
+      glm::vec3 pitchAxis = glm::normalize(glm::cross(nextChunkYawed, glm::vec3(0.0f, 1.0f, 0.0f)));
+      glm::mat4 pitchMat = glm::rotate(fTheta, pitchAxis);
+      glm::vec3 nextChunkPitched = glm::vec3(pitchMat * glm::vec4(nextChunkYawed, 1.0f));
+      glm::mat4 translateMat = glm::mat4(1);
+      if (i > 0)
+        translateMat = glm::translate(prevCenter);
+      float fLen = (float)m_chunkAy[i].iLength / m_fScale * ((float)it->second.iRampSideLength / 1024.0f);
+      glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
+      m_chunkAy[i].math.center = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
+      if (it->second.iFlags & STUNT_FLAG_LLANE)
+        GetLane(i, m_chunkAy[i].math.center, pitchAxis, m_chunkAy[i].math.rollMat, m_chunkAy[i].math.lLane, false);
+      if (it->second.iFlags & STUNT_FLAG_RLANE)
+        GetLane(i, m_chunkAy[i].math.center, pitchAxis, m_chunkAy[i].math.rollMat, m_chunkAy[i].math.rLane, true);
+      if (it->second.iFlags & STUNT_FLAG_LSHOULDER)
+        GetShoulder(i, m_chunkAy[i].math.lLane,
+                    m_chunkAy[i].math.pitchAxis,
+                    m_chunkAy[i].math.rollMat,
+                    m_chunkAy[i].math.nextChunkPitched,
+                    m_chunkAy[i].math.lShoulder, true);
+      if (it->second.iFlags & STUNT_FLAG_RSHOULDER)
+        GetShoulder(i,
+                    m_chunkAy[i].math.rLane,
+                    m_chunkAy[i].math.pitchAxis,
+                    m_chunkAy[i].math.rollMat,
+                    m_chunkAy[i].math.nextChunkPitched,
+                    m_chunkAy[i].math.rShoulder, false);
+      m_chunkAy[i].math.lWallBottomAttach = m_chunkAy[i].math.bLWallAttachToLane ? m_chunkAy[i].math.lLane : m_chunkAy[i].math.lShoulder;
+      if (it->second.iFlags & STUNT_FLAG_LWALL)
+        GetWall(i,
+                m_chunkAy[i].math.lWallBottomAttach,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.lWall, eShapeSection::LWALL);
+      m_chunkAy[i].math.rWallBottomAttach = m_chunkAy[i].math.bRWallAttachToLane ? m_chunkAy[i].math.rLane : m_chunkAy[i].math.rShoulder;
+      if (it->second.iFlags & STUNT_FLAG_RWALL)
+        GetWall(i,
+                m_chunkAy[i].math.rWallBottomAttach,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.rWall, eShapeSection::RWALL);
+      //ailines
+      GetAILine(i,
+                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.aiLine1,
+                eShapeSection::AILINE1, m_iAILineHeight);
+      GetAILine(i,
+                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.aiLine2,
+                eShapeSection::AILINE2, m_iAILineHeight);
+      GetAILine(i,
+                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.aiLine3, eShapeSection::AILINE3, m_iAILineHeight);
+      GetAILine(i,
+                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.aiLine4,
+                eShapeSection::AILINE4, m_iAILineHeight);
+      //car positions are ai lines with 0 height
+      GetAILine(i,
+                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.carLine1,
+                eShapeSection::AILINE1, 0);
+      GetAILine(i,
+                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.carLine2,
+                eShapeSection::AILINE2, 0);
+      GetAILine(i,
+                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.carLine3,
+                eShapeSection::AILINE3, 0);
+      GetAILine(i,
+                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.pitchAxis,
+                m_chunkAy[i].math.rollMat,
+                m_chunkAy[i].math.nextChunkPitched,
+                m_chunkAy[i].math.carLine4,
+                eShapeSection::AILINE4, 0);
+    }
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CTrackData::HasPitchedStunt()
+{
+  CStuntMap::iterator it = m_stuntMap.begin();
+  for (; it != m_stuntMap.end(); ++it) {
+    int iStart = it->first - it->second.iChunkCount;
+    int iEnd = it->first + it->second.iChunkCount;
+
+    if (iStart < 0)
+      iStart = 0;
+    if (iEnd > (int)m_chunkAy.size() - 1)
+      iEnd = (int)m_chunkAy.size() - 1;
+
+    for (int i = iStart; i <= iEnd; ++i) {
+      if (m_chunkAy[i].dPitch > 5.0 && m_chunkAy[i].dPitch < 355.0)
+        return true;
+    }
+  }
+
+  return false;
 }
 
 //-------------------------------------------------------------------------------------------------

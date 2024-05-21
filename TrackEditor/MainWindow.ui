@@ -145,6 +145,16 @@
      </widget>
     </item>
     <item>
+     <widget class="QLabel" name="lblStuntWarning">
+      <property name="styleSheet">
+       <string notr="true">QLabel { color: red }</string>
+      </property>
+      <property name="text">
+       <string>Warning: Detected stunt affecting chunk with base pitch greater than 5 degrees</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QTabWidget" name="twViewer">
       <property name="currentIndex">
        <number>-1</number>

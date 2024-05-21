@@ -94,9 +94,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>0</y>
+        <y>-1352</y>
         <width>619</width>
-        <height>2141</height>
+        <height>1946</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -1694,155 +1694,6 @@ height</string>
             </size>
            </property>
           </spacer>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="Line" name="line_5">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Stunt</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QGridLayout" name="gridLayout_6">
-         <item row="3" column="2">
-          <widget class="QLineEdit" name="leStuntTimeBulging"/>
-         </item>
-         <item row="5" column="2">
-          <widget class="QLineEdit" name="leStuntFlags"/>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="lblStuntScaleFact">
-           <property name="toolTip">
-            <string>Increases the length and height of the &quot;ramp&quot;. 1 is a bump, 4 starts breaking textures, 6 is huge vertical wall</string>
-           </property>
-           <property name="text">
-            <string>Scale Factor</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="lblStuntTimeFlat">
-           <property name="text">
-            <string>Time Flat</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLineEdit" name="leStuntHeight"/>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLineEdit" name="leStuntScaleFact">
-           <property name="toolTip">
-            <string>Increases the length and height of the &quot;ramp&quot;. 1 is a bump, 4 starts breaking textures, 6 is huge vertical wall</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLabel" name="lblNumTicks">
-           <property name="toolTip">
-            <string>Lower is flatter, higher becomes trapezoid with longer top</string>
-           </property>
-           <property name="text">
-            <string>Angle</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="lblStuntTimingGroup">
-           <property name="toolTip">
-            <string>With otherwise identical config, two bumps with same number move together, with 1 and 2 move oppositely</string>
-           </property>
-           <property name="text">
-            <string>Timing Group</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLabel" name="lblStuntExpandContract">
-           <property name="text">
-            <string>Smaller Expands Larger Contracts</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="1">
-          <widget class="QLineEdit" name="leStuntExpandContract"/>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLineEdit" name="leStuntTimingGroup">
-           <property name="toolTip">
-            <string>With otherwise identical config, two bumps with same number move together, with 1 and 2 move oppositely</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="2">
-          <widget class="QLabel" name="lblStuntFlags">
-           <property name="text">
-            <string>Flags</string>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLineEdit" name="leStuntTimeFlat"/>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="lblStuntHeight">
-           <property name="text">
-            <string>Height</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2">
-          <widget class="QLabel" name="lblStuntUnk">
-           <property name="text">
-            <string>Unknown</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="leNumTicks">
-           <property name="toolTip">
-            <string>Lower is flatter, higher becomes trapezoid with longer top</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2">
-          <widget class="QLineEdit" name="leStuntUnk"/>
-         </item>
-         <item row="2" column="2">
-          <widget class="QLabel" name="lblStuntTimeBulging">
-           <property name="text">
-            <string>Time Bulging</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1">
-          <spacer name="verticalSpacer">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="6" column="2">
-          <widget class="QPushButton" name="pbDeleteStunt">
-           <property name="text">
-            <string>Delete</string>
-           </property>
-          </widget>
          </item>
         </layout>
        </item>

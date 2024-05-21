@@ -1140,32 +1140,25 @@ void CShapeFactory::MakeAudio(CShader *pShader, CTrackData *pTrack, std::vector<
 
 void CShapeFactory::MakeStunts(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &stuntAy)
 {
-  for (int i = 0; i < (int)pTrack->m_chunkAy.size(); ++i) {
-    bool bChunkHasStunt = pTrack->m_chunkAy[i].stunt.iChunkCount != 0
-      || pTrack->m_chunkAy[i].stunt.iNumTicks != 0
-      || pTrack->m_chunkAy[i].stunt.iTickStartIdx != 0
-      || pTrack->m_chunkAy[i].stunt.iTimingGroup != 0
-      || pTrack->m_chunkAy[i].stunt.iHeight != 0
-      || pTrack->m_chunkAy[i].stunt.iTimeBulging != 0
-      || pTrack->m_chunkAy[i].stunt.iTimeFlat != 0
-      || pTrack->m_chunkAy[i].stunt.iRampSideLength != 0
-      || pTrack->m_chunkAy[i].stunt.iFlags != 0;
-    if (!bChunkHasStunt)
-      continue; //no stunt in this chunk
+  for (CStuntMap::iterator it = pTrack->m_stuntMap.begin(); it != pTrack->m_stuntMap.end(); ++it) {
+    if (it->first < 0 || it->first >= pTrack->m_chunkAy.size()) {
+      assert(0);
+      continue;
+    }
 
     //make marker
     CShapeData *pNewMarker = MakeStuntMarker(pShader);
 
     float fHeight = (float)1000.0f / m_fScale * -1.0f;
-    glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[i].math.center);
+    glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[it->first].math.center);
     glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
-    glm::vec3 normal = glm::normalize(glm::cross(pTrack->m_chunkAy[i].math.nextChunkPitched, pTrack->m_chunkAy[i].math.pitchAxis));
-    glm::vec3 heightVec = glm::vec3(scaleMatHeight * pTrack->m_chunkAy[i].math.rollMat * glm::vec4(normal, 1.0f));
+    glm::vec3 normal = glm::normalize(glm::cross(pTrack->m_chunkAy[it->first].math.nextChunkPitched, pTrack->m_chunkAy[it->first].math.pitchAxis));
+    glm::vec3 heightVec = glm::vec3(scaleMatHeight * pTrack->m_chunkAy[it->first].math.rollMat * glm::vec4(normal, 1.0f));
     glm::vec3 markerPos = heightVec;
     glm::vec3 markerPosTranslated = glm::vec3(translateMat * glm::vec4(markerPos, 1.0f));
 
     pNewMarker->m_modelToWorldMatrix = glm::translate(markerPosTranslated) *
-      pTrack->m_chunkAy[i].math.rollMat * pTrack->m_chunkAy[i].math.pitchMat * pTrack->m_chunkAy[i].math.yawMat;
+      pTrack->m_chunkAy[it->first].math.rollMat * pTrack->m_chunkAy[it->first].math.pitchMat * pTrack->m_chunkAy[it->first].math.yawMat;
 
     //add sign to array
     stuntAy.push_back(pNewMarker);

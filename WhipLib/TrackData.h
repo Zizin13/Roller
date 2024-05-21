@@ -144,16 +144,13 @@ struct tGeometryChunk
   int iSignTexture;
   int iBackTexture;
 
-  //stunt
-  tStunt stunt;
-
   //math
   tChunkMath math;
 };
 typedef std::vector<tGeometryChunk> CChunkAy;
 //-------------------------------------------------------------------------------------------------
 typedef std::map<int, int> CSignMap;
-typedef std::map<int, tStunt *> CStuntMap;
+typedef std::map<int, tStunt> CStuntMap;
 //-------------------------------------------------------------------------------------------------
 struct tRaceInfo
 {
@@ -206,6 +203,7 @@ public:
 
   tTrackHeader m_header;
   CChunkAy m_chunkAy;
+  CStuntMap m_stuntMap;
   std::string m_sTrackFileFolder;
   std::string m_sTextureFile;
   std::string m_sBuildingFile;

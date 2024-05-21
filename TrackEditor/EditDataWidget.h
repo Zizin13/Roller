@@ -40,7 +40,6 @@ protected slots:
   void OnBackClicked();
   void OnApplySignToggled(bool bChecked);
   void OnApplyBackToggled(bool bChecked);
-  void OnDeleteStuntClicked();
   void OnSignTypeChanged(int iIndex);
   void OnSignTypeLEChanged();
   void OnSignLEChanged();

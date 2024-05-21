@@ -155,17 +155,6 @@ CEditDataWidget::CEditDataWidget(QWidget *pParent)
   connect(pbBack, &QPushButton::clicked, this, &CEditDataWidget::OnBackClicked);
   connect(ckApplySign, &QCheckBox::toggled, this, &CEditDataWidget::OnApplySignToggled);
   connect(ckApplyBack, &QCheckBox::toggled, this, &CEditDataWidget::OnApplyBackToggled);
-
-  connect(leStuntScaleFact, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
-  connect(leNumTicks, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
-  connect(leStuntUnk, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
-  connect(leStuntTimingGroup, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
-  connect(leStuntHeight, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
-  connect(leStuntTimeBulging, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
-  connect(leStuntTimeFlat, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
-  connect(leStuntExpandContract, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
-  connect(leStuntFlags, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
-  connect(pbDeleteStunt, &QPushButton::clicked, this, &CEditDataWidget::OnDeleteStuntClicked);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -211,9 +200,7 @@ void CEditDataWidget::OnInsertBeforeClicked()
     , leRoofHeight->text(), leDrawOrder1->text(), leDrawOrder2->text(), leDrawOrder3->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
-    , pbSign->property("value").toString(), pbBack->property("value").toString()
-    , leStuntScaleFact->text(), leNumTicks->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
-    , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntFlags->text());
+    , pbSign->property("value").toString(), pbBack->property("value").toString());
 
   g_pMainWindow->GetCurrentTrack()->InsertGeometryChunk(g_pMainWindow->GetSelFrom(), sbInsert->value(), editVals);
 
@@ -244,9 +231,7 @@ void CEditDataWidget::OnInsertAfterClicked()
     , leRoofHeight->text(), leDrawOrder1->text(), leDrawOrder2->text(), leDrawOrder3->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
-    , leSign->text(), leBack->text()
-    , leStuntScaleFact->text(), leNumTicks->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
-    , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntFlags->text());
+    , leSign->text(), leBack->text());
 
   g_pMainWindow->GetCurrentTrack()->InsertGeometryChunk(g_pMainWindow->GetSelTo() + 1, sbInsert->value(), editVals);
 
@@ -277,9 +262,7 @@ void CEditDataWidget::OnApplyClicked()
     , leRoofHeight->text(), leDrawOrder1->text(), leDrawOrder2->text(), leDrawOrder3->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
-    , leSign->text(), leBack->text()
-    , leStuntScaleFact->text(), leNumTicks->text(), leStuntUnk->text(), leStuntTimingGroup->text(), leStuntHeight->text(), leStuntTimeBulging->text()
-    , leStuntTimeFlat->text(), leStuntExpandContract->text(), leStuntFlags->text());
+    , leSign->text(), leBack->text());
 
   g_pMainWindow->GetCurrentTrack()->ApplyGeometrySettings(g_pMainWindow->GetSelFrom(), g_pMainWindow->GetSelTo(), editVals);
   g_pMainWindow->SaveHistory("Edited geometry chunks");
@@ -601,15 +584,6 @@ void CEditDataWidget::UpdateGeometryEditMode()
   QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk50, p->editVals.sUnk50);
   QtHelpers::UpdateSignEditMode(bEditMode, bMixedData, leSign, widgetSign, p->editVals.sSignTexture);
   QtHelpers::UpdateSignEditMode(bEditMode, bMixedData, leBack, widgetBack, p->editVals.sBackTexture);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntScaleFact, p->editVals.sStuntChunkCount);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leNumTicks, p->editVals.sNumTicks);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntUnk, p->editVals.sTickStartIdx);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntTimingGroup, p->editVals.sStuntTimingGroup);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntHeight, p->editVals.sStuntHeight);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntTimeBulging, p->editVals.sStuntTimeBulging);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntTimeFlat, p->editVals.sStuntTimeFlat);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntExpandContract, p->editVals.sStuntRampSideLength);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leStuntFlags, p->editVals.sStuntFlags);
 
   pbApply->setEnabled(bEditMode);
   pbCancel->setEnabled(bEditMode);
@@ -722,23 +696,6 @@ void CEditDataWidget::OnApplyBackToggled(bool bChecked)
   QString sNewValue = QString::number(iValue);
   leBack->setText(sNewValue);
   QtHelpers::UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack, g_pMainWindow->GetCurrentTrack()->m_pTex);
-  UpdateGeometryEditMode();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CEditDataWidget::OnDeleteStuntClicked()
-{
-  BLOCK_SIG_AND_DO(leStuntScaleFact, setText("0"));
-  BLOCK_SIG_AND_DO(leNumTicks, setText("0"));
-  BLOCK_SIG_AND_DO(leStuntUnk, setText("0"));
-  BLOCK_SIG_AND_DO(leStuntTimingGroup, setText("0"));
-  BLOCK_SIG_AND_DO(leStuntHeight, setText("0"));
-  BLOCK_SIG_AND_DO(leStuntTimeBulging, setText("0"));
-  BLOCK_SIG_AND_DO(leStuntTimeFlat, setText("0"));
-  BLOCK_SIG_AND_DO(leStuntExpandContract, setText("0"));
-  BLOCK_SIG_AND_DO(leStuntFlags, setText("0"));
-
   UpdateGeometryEditMode();
 }
 
@@ -974,15 +931,6 @@ void CEditDataWidget::RevertGeometry()
   bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk50, p->editVals.sUnk50);
   bMixedData |= QtHelpers::UpdateSignWithSelectionValue(pbSign, ckApplySign, leSign, p->editVals.sSignTexture, g_pMainWindow->GetCurrentTrack()->m_pBld);
   bMixedData |= QtHelpers::UpdateSignWithSelectionValue(pbBack, ckApplyBack, leBack, p->editVals.sBackTexture, g_pMainWindow->GetCurrentTrack()->m_pTex);
-  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntScaleFact, p->editVals.sStuntChunkCount);
-  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leNumTicks, p->editVals.sNumTicks);
-  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntUnk, p->editVals.sTickStartIdx);
-  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntTimingGroup, p->editVals.sStuntTimingGroup);
-  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntHeight, p->editVals.sStuntHeight);
-  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntTimeBulging, p->editVals.sStuntTimeBulging);
-  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntTimeFlat, p->editVals.sStuntTimeFlat);
-  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntExpandContract, p->editVals.sStuntRampSideLength);
-  bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leStuntFlags, p->editVals.sStuntFlags);
 
   UpdateTextures(leLeftSurfaceType, lblLSurfaceTex1, lblLSurfaceTex2);
   UpdateTextures(leCenterSurfaceType, lblCSurfaceTex1, lblCSurfaceTex2);

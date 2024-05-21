@@ -356,34 +356,6 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex, CChu
     sVal = QString::number(m_chunkAy[i].iBackTexture);
     if (editVals.sBackTexture.isEmpty()) editVals.sBackTexture = sVal;
     else if (editVals.sBackTexture.compare(sVal) != 0) editVals.sBackTexture = MIXED_DATA;
-
-    sVal = QString::number(m_chunkAy[i].stunt.iChunkCount);
-    if (editVals.sStuntChunkCount.isEmpty()) editVals.sStuntChunkCount = sVal;
-    else if (editVals.sStuntChunkCount.compare(sVal) != 0) editVals.sStuntChunkCount = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].stunt.iNumTicks);
-    if (editVals.sNumTicks.isEmpty()) editVals.sNumTicks = sVal;
-    else if (editVals.sNumTicks.compare(sVal) != 0) editVals.sNumTicks = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].stunt.iTickStartIdx);
-    if (editVals.sTickStartIdx.isEmpty()) editVals.sTickStartIdx = sVal;
-    else if (editVals.sTickStartIdx.compare(sVal) != 0) editVals.sTickStartIdx = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].stunt.iTimingGroup);
-    if (editVals.sStuntTimingGroup.isEmpty()) editVals.sStuntTimingGroup = sVal;
-    else if (editVals.sStuntTimingGroup.compare(sVal) != 0) editVals.sStuntTimingGroup = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].stunt.iHeight);
-    if (editVals.sStuntHeight.isEmpty()) editVals.sStuntHeight = sVal;
-    else if (editVals.sStuntHeight.compare(sVal) != 0) editVals.sStuntHeight = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].stunt.iTimeBulging);
-    if (editVals.sStuntTimeBulging.isEmpty()) editVals.sStuntTimeBulging = sVal;
-    else if (editVals.sStuntTimeBulging.compare(sVal) != 0) editVals.sStuntTimeBulging = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].stunt.iTimeFlat);
-    if (editVals.sStuntTimeFlat.isEmpty()) editVals.sStuntTimeFlat = sVal;
-    else if (editVals.sStuntTimeFlat.compare(sVal) != 0) editVals.sStuntTimeFlat = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].stunt.iRampSideLength);
-    if (editVals.sStuntRampSideLength.isEmpty()) editVals.sStuntRampSideLength = sVal;
-    else if (editVals.sStuntRampSideLength.compare(sVal) != 0) editVals.sStuntRampSideLength = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].stunt.iFlags);
-    if (editVals.sStuntFlags.isEmpty()) editVals.sStuntFlags = sVal;
-    else if (editVals.sStuntFlags.compare(sVal) != 0) editVals.sStuntFlags = MIXED_DATA;
   }
 }
 
@@ -464,15 +436,6 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex, const CChunkE
     if (!editVals.sUnk50.isEmpty()) m_chunkAy[i].iUnk50 = editVals.sUnk50.toInt();
     if (!editVals.sSignTexture.isEmpty()) m_chunkAy[i].iSignTexture = editVals.sSignTexture.toInt();
     if (!editVals.sBackTexture.isEmpty()) m_chunkAy[i].iBackTexture = editVals.sBackTexture.toInt();
-    if (!editVals.sStuntChunkCount.isEmpty()) m_chunkAy[i].stunt.iChunkCount = editVals.sStuntChunkCount.toInt();
-    if (!editVals.sNumTicks.isEmpty()) m_chunkAy[i].stunt.iNumTicks = editVals.sNumTicks.toInt();
-    if (!editVals.sTickStartIdx.isEmpty()) m_chunkAy[i].stunt.iTickStartIdx = editVals.sTickStartIdx.toInt();
-    if (!editVals.sStuntTimingGroup.isEmpty()) m_chunkAy[i].stunt.iTimingGroup = editVals.sStuntTimingGroup.toInt();
-    if (!editVals.sStuntHeight.isEmpty()) m_chunkAy[i].stunt.iHeight = editVals.sStuntHeight.toInt();
-    if (!editVals.sStuntTimeBulging.isEmpty()) m_chunkAy[i].stunt.iTimeBulging = editVals.sStuntTimeBulging.toInt();
-    if (!editVals.sStuntTimeFlat.isEmpty()) m_chunkAy[i].stunt.iTimeFlat = editVals.sStuntTimeFlat.toInt();
-    if (!editVals.sStuntRampSideLength.isEmpty()) m_chunkAy[i].stunt.iRampSideLength = editVals.sStuntRampSideLength.toInt();
-    if (!editVals.sStuntFlags.isEmpty()) m_chunkAy[i].stunt.iFlags = editVals.sStuntFlags.toInt();
   }
   g_pMainWindow->LogMessage("Applied changes to " + QString::number(iEndIndex - iStartIndex + 1) + " geometry chunks");
 }
@@ -555,16 +518,7 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount, const CChunkEditValues 
     newChunk.iUnk49 = editVals.sUnk49.toInt();
     newChunk.iUnk50 = editVals.sUnk50.toInt();
     newChunk.iSignTexture = editVals.sSignTexture.toInt();
-    newChunk.iBackTexture = editVals.sBackTexture.toInt();
-    newChunk.stunt.iChunkCount = editVals.sStuntChunkCount.toInt();
-    newChunk.stunt.iNumTicks = editVals.sNumTicks.toInt();
-    newChunk.stunt.iTickStartIdx = editVals.sTickStartIdx.toInt();
-    newChunk.stunt.iTimingGroup = editVals.sStuntTimingGroup.toInt();
-    newChunk.stunt.iHeight = editVals.sStuntHeight.toInt();
-    newChunk.stunt.iTimeBulging = editVals.sStuntTimeBulging.toInt();
-    newChunk.stunt.iTimeFlat = editVals.sStuntTimeFlat.toInt();
-    newChunk.stunt.iRampSideLength = editVals.sStuntRampSideLength.toInt();
-    newChunk.stunt.iFlags = editVals.sStuntFlags.toInt();
+    newChunk.iBackTexture = editVals.sBackTexture.toInt();\
     if (m_chunkAy.empty())
       m_chunkAy.push_back(newChunk);
     else

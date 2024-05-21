@@ -105,9 +105,6 @@ void tGeometryChunk::Clear()
   //additional data
   iSignTexture = 0;
   iBackTexture = 0;
-
-  //stunt
-  memset(&stunt, 0, sizeof(stunt));
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -448,21 +445,19 @@ bool CTrackData::ProcessTrackData(const uint8 *pData, size_t length)
           }
         } else if (lineAy.size() == STUNTS_COUNT) {
           //process stunt
-          tStunt stunt;
-          memset(&stunt, 0, sizeof(stunt));
           int iGeometryIndex                    = std::stoi(lineAy[0]);
-          stunt.iChunkCount                    = std::stoi(lineAy[1]);
-          stunt.iNumTicks                          = std::stoi(lineAy[2]);
-          stunt.iTickStartIdx                        = std::stoi(lineAy[3]);
-          stunt.iTimingGroup                    = std::stoi(lineAy[4]);
-          stunt.iHeight                         = std::stoi(lineAy[5]);
-          stunt.iTimeBulging                    = std::stoi(lineAy[6]);
-          stunt.iTimeFlat                       = std::stoi(lineAy[7]);
-          stunt.iRampSideLength  = std::stoi(lineAy[8]);
-          stunt.iFlags                          = std::stoi(lineAy[9]);
-          if (iGeometryIndex < m_chunkAy.size()) {
-            memcpy(&m_chunkAy[iGeometryIndex].stunt, &stunt, sizeof(stunt));
-          }
+          tStunt *pStunt = &m_stuntMap[iGeometryIndex];
+          memset(pStunt, 0, sizeof(*pStunt));
+
+          pStunt->iChunkCount     = std::stoi(lineAy[1]);
+          pStunt->iNumTicks       = std::stoi(lineAy[2]);
+          pStunt->iTickStartIdx   = std::stoi(lineAy[3]);
+          pStunt->iTimingGroup    = std::stoi(lineAy[4]);
+          pStunt->iHeight         = std::stoi(lineAy[5]);
+          pStunt->iTimeBulging    = std::stoi(lineAy[6]);
+          pStunt->iTimeFlat       = std::stoi(lineAy[7]);
+          pStunt->iRampSideLength = std::stoi(lineAy[8]);
+          pStunt->iFlags          = std::stoi(lineAy[9]);
         } else {
           assert(0);
           Logging::LogMessage("Error loading file: stunts section ended before anticipated");
@@ -678,7 +673,6 @@ void CTrackData::GetTrackData(std::vector<uint8> &data)
   //write chunks
   CSignMap signMap;
   CSignMap backsMap;
-  CStuntMap stuntMap;
   int iSignIndex = 0;
   for (int i = 0; i < m_chunkAy.size(); ++i) {
     //fix angles
@@ -718,17 +712,6 @@ void CTrackData::GetTrackData(std::vector<uint8> &data)
             GetSignedBitValueFromInt(m_chunkAy[i].iSignTexture) & SURFACE_FLAG_BACK)) {
       backsMap[i] = m_chunkAy[i].iBackTexture;
     }
-    if (m_chunkAy[i].stunt.iChunkCount != 0
-        || m_chunkAy[i].stunt.iNumTicks != 0
-        || m_chunkAy[i].stunt.iTickStartIdx != 0
-        || m_chunkAy[i].stunt.iTimingGroup != 0
-        || m_chunkAy[i].stunt.iHeight != 0
-        || m_chunkAy[i].stunt.iTimeBulging != 0
-        || m_chunkAy[i].stunt.iTimeFlat != 0
-        || m_chunkAy[i].stunt.iRampSideLength != 0
-        || m_chunkAy[i].stunt.iFlags != 0) {
-      stuntMap[i] = &m_chunkAy[i].stunt;
-    }
   }
 
   //write signs
@@ -742,12 +725,12 @@ void CTrackData::GetTrackData(std::vector<uint8> &data)
   WriteToVector(data, szBuf);
 
   //write stunts
-  for (CStuntMap::iterator it = stuntMap.begin(); it != stuntMap.end(); ++it) {
+  for (CStuntMap::iterator it = m_stuntMap.begin(); it != m_stuntMap.end(); ++it) {
     memset(szBuf, 0, sizeof(szBuf));
     snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d %6d %6d %6d %6d %6d %6d\r\n",
-             it->first, it->second->iChunkCount, it->second->iNumTicks, it->second->iTickStartIdx,
-             it->second->iTimingGroup, it->second->iHeight, it->second->iTimeBulging,
-             it->second->iTimeFlat, it->second->iRampSideLength, it->second->iFlags);
+             it->first, it->second.iChunkCount, it->second.iNumTicks, it->second.iTickStartIdx,
+             it->second.iTimingGroup, it->second.iHeight, it->second.iTimeBulging,
+             it->second.iTimeFlat, it->second.iRampSideLength, it->second.iFlags);
     WriteToVector(data, szBuf);
   }
   WriteToVector(data, "\r\n");

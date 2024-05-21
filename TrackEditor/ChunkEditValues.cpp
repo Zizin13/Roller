@@ -83,16 +83,7 @@ CChunkEditValues::CChunkEditValues(const QString &sCopyLeftShoulderWidth
                 , const QString &sCopyUnk49
                 , const QString &sCopyUnk50
                 , const QString &sCopySignTexture
-                , const QString &sCopyBackTexture
-                , const QString &sCopyStuntChunkCount
-                , const QString &sCopyNumTicks
-                , const QString &sCopyTickStartIdx
-                , const QString &sCopyStuntTimingGroup
-                , const QString &sCopyStuntHeight
-                , const QString &sCopyStuntTimeBulging
-                , const QString &sCopyStuntTimeFlat
-                , const QString &sCopyStuntRampSideLength
-                , const QString &sCopyStuntFlags)
+                , const QString &sCopyBackTexture)
 {
   sLeftShoulderWidth = sCopyLeftShoulderWidth;
   sLeftLaneWidth = sCopyLeftLaneWidth;
@@ -166,15 +157,6 @@ CChunkEditValues::CChunkEditValues(const QString &sCopyLeftShoulderWidth
   sUnk50 = sCopyUnk50;
   sSignTexture = sCopySignTexture;
   sBackTexture = sCopyBackTexture;
-  sStuntChunkCount = sCopyStuntChunkCount;
-  sNumTicks = sCopyNumTicks;
-  sTickStartIdx = sCopyTickStartIdx;
-  sStuntTimingGroup = sCopyStuntTimingGroup;
-  sStuntHeight = sCopyStuntHeight;
-  sStuntTimeBulging = sCopyStuntTimeBulging;
-  sStuntTimeFlat = sCopyStuntTimeFlat;
-  sStuntRampSideLength = sCopyStuntRampSideLength;
-  sStuntFlags = sCopyStuntFlags;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -204,8 +186,6 @@ void CChunkEditValues::Clear()
   sUnk39 = ""; sUnk40 = ""; sUnk41 = ""; sUnk42 = ""; sUnk43 = ""; sUnk44 = "";
   sUnk45 = ""; sUnk46 = ""; sUnk47 = ""; sUnk48 = ""; sUnk49 = ""; sUnk50 = "";
   sSignTexture = ""; sBackTexture = "";
-  sStuntChunkCount = ""; sNumTicks = ""; sTickStartIdx = ""; sStuntTimingGroup = ""; sStuntHeight = ""; sStuntTimeBulging = "";
-  sStuntTimeFlat = ""; sStuntRampSideLength = ""; sStuntFlags = "";
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -285,15 +265,6 @@ void CChunkEditValues::Set(int index, QString value)
     case 69: sUnk50 = value; break;
     case 70: sSignTexture = value; break;
     case 71: sBackTexture = value; break;
-    case 72: sStuntChunkCount = value; break;
-    case 73: sNumTicks = value; break;
-    case 74: sTickStartIdx = value; break;
-    case 75: sStuntTimingGroup = value; break;
-    case 76: sStuntHeight = value; break;
-    case 77: sStuntTimeBulging = value; break;
-    case 78: sStuntTimeFlat = value; break;
-    case 79: sStuntRampSideLength = value; break;
-    case 80: sStuntFlags = value; break;
   }
 }
 

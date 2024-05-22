@@ -181,13 +181,10 @@ CEditAudioWidget::~CEditAudioWidget()
 void CEditAudioWidget::UpdateGeometrySelection(int iFrom, int iTo)
 {
   (void)(iTo);
-  if (!g_pMainWindow->GetCurrentTrack() || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+  if (!g_pMainWindow->GetCurrentTrack() || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
-
-  bool bChunkHasAudio = chunk.iAudioTriggerSpeed != 0;
+  bool bChunkHasAudio = g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAudioTriggerSpeed != 0;
   sbSpeed->setEnabled(bChunkHasAudio);
   cbBelow->setEnabled(bChunkHasAudio);
   cbAbove->setEnabled(bChunkHasAudio);
@@ -198,11 +195,11 @@ void CEditAudioWidget::UpdateGeometrySelection(int iFrom, int iTo)
   pbAudio->setText(bChunkHasAudio ? "Delete Audio" : "Add Audio");
 
   BLOCK_SIG_AND_DO(sbSpeed, setMinimum(bChunkHasAudio ? 1 : 0));
-  BLOCK_SIG_AND_DO(sbSpeed, setValue(chunk.iAudioTriggerSpeed));
-  BLOCK_SIG_AND_DO(cbBelow, setCurrentIndex(cbBelow->findData(chunk.iAudioBelowTrigger)));
-  BLOCK_SIG_AND_DO(cbAbove, setCurrentIndex(cbAbove->findData(chunk.iAudioAboveTrigger)));
+  BLOCK_SIG_AND_DO(sbSpeed, setValue(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAudioTriggerSpeed));
+  BLOCK_SIG_AND_DO(cbBelow, setCurrentIndex(cbBelow->findData(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAudioBelowTrigger)));
+  BLOCK_SIG_AND_DO(cbAbove, setCurrentIndex(cbAbove->findData(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAudioAboveTrigger)));
 
-  int iSpeedMph = (int)(chunk.iAudioTriggerSpeed * TRIGGER_SPEED_TO_MPH);
+  int iSpeedMph = (int)(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAudioTriggerSpeed * TRIGGER_SPEED_TO_MPH);
   lblMph->setText("(" + QString::number(iSpeedMph) + " mph)");
 }
 
@@ -214,15 +211,12 @@ void CEditAudioWidget::SpeedChanged(int iVal)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iAudioTriggerSpeed = iVal;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAudioTriggerSpeed = iVal;
   }
 
   g_pMainWindow->SaveHistory("Changed audio trigger speed");
@@ -237,15 +231,12 @@ void CEditAudioWidget::BelowChanged(int iIndex)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iAudioBelowTrigger = cbBelow->itemData(iIndex).toInt();
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAudioBelowTrigger = cbBelow->itemData(iIndex).toInt();
   }
 
   g_pMainWindow->SaveHistory("Changed audio file below trigger speed");
@@ -260,15 +251,12 @@ void CEditAudioWidget::AboveChanged(int iIndex)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iSignType = cbAbove->itemData(iIndex).toInt();
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignType = cbAbove->itemData(iIndex).toInt();
   }
 
   g_pMainWindow->SaveHistory("Changed audio file above trigger speed");
@@ -283,22 +271,16 @@ void CEditAudioWidget::AudioClicked()
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
-
-  bool bHasAudio = chunk.iAudioTriggerSpeed != 0;
+  bool bHasAudio = g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAudioTriggerSpeed != 0;
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iAudioTriggerSpeed = bHasAudio ? 0 : DEFAULT_TRIGGER_SPEED;
-    chunk.iAudioAboveTrigger = bHasAudio ? 0 : DEFAULT_AUDIO;
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAudioTriggerSpeed = bHasAudio ? 0 : DEFAULT_TRIGGER_SPEED;
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAudioAboveTrigger = bHasAudio ? 0 : DEFAULT_AUDIO;
     if (bHasAudio)
-      chunk.iAudioBelowTrigger = 0;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAudioBelowTrigger = 0;
   }
 
   g_pMainWindow->SaveHistory(bHasAudio ? "Removed audio trigger" : "Added audio trigger");

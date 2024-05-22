@@ -87,103 +87,99 @@ CEditGeometryWidget::~CEditGeometryWidget()
 void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
 {
   (void)(iTo);
-  if (!g_pMainWindow->GetCurrentTrack() || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+  if (!g_pMainWindow->GetCurrentTrack() || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
+  BLOCK_SIG_AND_DO(dsbYaw, setValue(               g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].dYaw));
+  BLOCK_SIG_AND_DO(dsbPitch, setValue(             g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].dPitch));
+  BLOCK_SIG_AND_DO(dsbRoll, setValue(              g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].dRoll));
+  BLOCK_SIG_AND_DO(sbLength, setValue(             g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLength));
+  BLOCK_SIG_AND_DO(sbLLaneWidth, setValue(         g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLeftLaneWidth));
+  BLOCK_SIG_AND_DO(sbRLaneWidth, setValue(         g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRightLaneWidth));
+  BLOCK_SIG_AND_DO(sbLShoulderWidth, setValue(     g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLeftShoulderWidth));
+  BLOCK_SIG_AND_DO(sbRShoulderWidth, setValue(     g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRightShoulderWidth));
+  BLOCK_SIG_AND_DO(sbLShoulderHeight, setValue(    g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLeftShoulderHeight));
+  BLOCK_SIG_AND_DO(sbRShoulderHeight, setValue(    g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRightShoulderHeight));
+  BLOCK_SIG_AND_DO(sbWallHeight, setValue(         g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRoofHeight));
+  BLOCK_SIG_AND_DO(sbLLOWallHOffset, setValue(     g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLLOuterWallHOffset));
+  BLOCK_SIG_AND_DO(sbLLOWallHeight, setValue(      g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLLOuterWallHeight));
+  BLOCK_SIG_AND_DO(sbLUOWallHOffset, setValue(     g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLUOuterWallHOffset));
+  BLOCK_SIG_AND_DO(sbLUOWallHeight, setValue(      g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLUOuterWallHeight));
+  BLOCK_SIG_AND_DO(sbRLOWallHOffset, setValue(     g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRLOuterWallHOffset));
+  BLOCK_SIG_AND_DO(sbRLOWallHeight, setValue(      g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRLOuterWallHeight));
+  BLOCK_SIG_AND_DO(sbRUOWallHOffset, setValue(     g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRUOuterWallHOffset));
+  BLOCK_SIG_AND_DO(sbRUOWallHeight, setValue(      g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRUOuterWallHeight));
+  BLOCK_SIG_AND_DO(sbLOuterFloorHOffset, setValue( g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLOuterFloorHOffset));
+  BLOCK_SIG_AND_DO(sbROuterFloorHOffset, setValue( g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iROuterFloorHOffset));
+  BLOCK_SIG_AND_DO(sbLOuterFloorHeight, setValue(  g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLOuterFloorHeight));
+  BLOCK_SIG_AND_DO(sbROuterFloorHeight, setValue(  g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iROuterFloorHeight));
+  BLOCK_SIG_AND_DO(sbAILine1, setValue(            g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAILine1));
+  BLOCK_SIG_AND_DO(sbAILine2, setValue(            g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAILine2));
+  BLOCK_SIG_AND_DO(sbAILine3, setValue(            g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAILine3));
+  BLOCK_SIG_AND_DO(sbAILine4, setValue(            g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAILine4));
+  BLOCK_SIG_AND_DO(sldCGrip, setValue(             g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iTrackGrip));
+  BLOCK_SIG_AND_DO(sldLShoulderGrip, setValue(     g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLeftShoulderGrip));
+  BLOCK_SIG_AND_DO(sldRShoulderGrip, setValue(     g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRightShoulderGrip);)
+  BLOCK_SIG_AND_DO(sldAISpeed, setValue(           g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAIMaxSpeed / 10));
+  BLOCK_SIG_AND_DO(sbAIAccuracy, setValue(         g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAIAccuracy));
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
+  lblCGrip->setText(        "(" + QString::number(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iTrackGrip) + ")");
+  lblLShoulderGrip->setText("(" + QString::number(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLeftShoulderGrip) + ")");
+  lblRShoulderGrip->setText("(" + QString::number(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRightShoulderGrip) + ")");
+  lblAISpeed->setText(      "(" + QString::number(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iAIMaxSpeed / 10) + "%)");
 
-  BLOCK_SIG_AND_DO(dsbYaw, setValue(               chunk.dYaw));
-  BLOCK_SIG_AND_DO(dsbPitch, setValue(             chunk.dPitch));
-  BLOCK_SIG_AND_DO(dsbRoll, setValue(              chunk.dRoll));
-  BLOCK_SIG_AND_DO(sbLength, setValue(             chunk.iLength));
-  BLOCK_SIG_AND_DO(sbLLaneWidth, setValue(         chunk.iLeftLaneWidth));
-  BLOCK_SIG_AND_DO(sbRLaneWidth, setValue(         chunk.iRightLaneWidth));
-  BLOCK_SIG_AND_DO(sbLShoulderWidth, setValue(     chunk.iLeftShoulderWidth));
-  BLOCK_SIG_AND_DO(sbRShoulderWidth, setValue(     chunk.iRightShoulderWidth));
-  BLOCK_SIG_AND_DO(sbLShoulderHeight, setValue(    chunk.iLeftShoulderHeight));
-  BLOCK_SIG_AND_DO(sbRShoulderHeight, setValue(    chunk.iRightShoulderHeight));
-  BLOCK_SIG_AND_DO(sbWallHeight, setValue(         chunk.iRoofHeight));
-  BLOCK_SIG_AND_DO(sbLLOWallHOffset, setValue(     chunk.iLLOuterWallHOffset));
-  BLOCK_SIG_AND_DO(sbLLOWallHeight, setValue(      chunk.iLLOuterWallHeight));
-  BLOCK_SIG_AND_DO(sbLUOWallHOffset, setValue(     chunk.iLUOuterWallHOffset));
-  BLOCK_SIG_AND_DO(sbLUOWallHeight, setValue(      chunk.iLUOuterWallHeight));
-  BLOCK_SIG_AND_DO(sbRLOWallHOffset, setValue(     chunk.iRLOuterWallHOffset));
-  BLOCK_SIG_AND_DO(sbRLOWallHeight, setValue(      chunk.iRLOuterWallHeight));
-  BLOCK_SIG_AND_DO(sbRUOWallHOffset, setValue(     chunk.iRUOuterWallHOffset));
-  BLOCK_SIG_AND_DO(sbRUOWallHeight, setValue(      chunk.iRUOuterWallHeight));
-  BLOCK_SIG_AND_DO(sbLOuterFloorHOffset, setValue( chunk.iLOuterFloorHOffset));
-  BLOCK_SIG_AND_DO(sbROuterFloorHOffset, setValue( chunk.iROuterFloorHOffset));
-  BLOCK_SIG_AND_DO(sbLOuterFloorHeight, setValue(  chunk.iLOuterFloorHeight));
-  BLOCK_SIG_AND_DO(sbROuterFloorHeight, setValue(  chunk.iROuterFloorHeight));
-  BLOCK_SIG_AND_DO(sbAILine1, setValue(            chunk.iAILine1));
-  BLOCK_SIG_AND_DO(sbAILine2, setValue(            chunk.iAILine2));
-  BLOCK_SIG_AND_DO(sbAILine3, setValue(            chunk.iAILine3));
-  BLOCK_SIG_AND_DO(sbAILine4, setValue(            chunk.iAILine4));
-  BLOCK_SIG_AND_DO(sldCGrip, setValue(             chunk.iTrackGrip));
-  BLOCK_SIG_AND_DO(sldLShoulderGrip, setValue(     chunk.iLeftShoulderGrip));
-  BLOCK_SIG_AND_DO(sldRShoulderGrip, setValue(     chunk.iRightShoulderGrip);)
-  BLOCK_SIG_AND_DO(sldAISpeed, setValue(           chunk.iAIMaxSpeed / 10));
-  BLOCK_SIG_AND_DO(sbAIAccuracy, setValue(         chunk.iAIAccuracy));
-
-  lblCGrip->setText(        "(" + QString::number(chunk.iTrackGrip) + ")");
-  lblLShoulderGrip->setText("(" + QString::number(chunk.iLeftShoulderGrip) + ")");
-  lblRShoulderGrip->setText("(" + QString::number(chunk.iRightShoulderGrip) + ")");
-  lblAISpeed->setText(      "(" + QString::number(chunk.iAIMaxSpeed / 10) + "%)");
-
-  QtHelpers::UpdateTextures(lblCTex1, lblCTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iCenterSurfaceType);
-  QtHelpers::UpdateTextures(lblLShoulderTex1, lblLShoulderTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iLeftSurfaceType);
-  QtHelpers::UpdateTextures(lblRShoulderTex1, lblRShoulderTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iRightSurfaceType);
-  QtHelpers::UpdateTextures(lblLWallTex1, lblLWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iLeftWallType);
-  QtHelpers::UpdateTextures(lblRWallTex1, lblRWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iRightWallType);
-  QtHelpers::UpdateTextures(lblBackTex1, lblBackTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iBackTexture);
-  QtHelpers::UpdateTextures(lblRoofTex1, lblRoofTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iRoofType);
-  QtHelpers::UpdateTextures(lblLLOWallTex1, lblLLOWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iLLOuterWallType);
-  QtHelpers::UpdateTextures(lblLUOWallTex1, lblLUOWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iLUOuterWallType);
-  QtHelpers::UpdateTextures(lblRLOWallTex1, lblRLOWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iRLOuterWallType);
-  QtHelpers::UpdateTextures(lblRUOWallTex1, lblRUOWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iRUOuterWallType);
-  QtHelpers::UpdateTextures(lblOFloorTex1, lblOFloorTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iOuterFloorType);
-  QtHelpers::UpdateTextures(lblEnvirFloorTex, NULL, NULL, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iEnvironmentFloorType);
+  QtHelpers::UpdateTextures(lblCTex1, lblCTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iCenterSurfaceType);
+  QtHelpers::UpdateTextures(lblLShoulderTex1, lblLShoulderTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLeftSurfaceType);
+  QtHelpers::UpdateTextures(lblRShoulderTex1, lblRShoulderTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRightSurfaceType);
+  QtHelpers::UpdateTextures(lblLWallTex1, lblLWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLeftWallType);
+  QtHelpers::UpdateTextures(lblRWallTex1, lblRWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRightWallType);
+  QtHelpers::UpdateTextures(lblBackTex1, lblBackTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iBackTexture);
+  QtHelpers::UpdateTextures(lblRoofTex1, lblRoofTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRoofType);
+  QtHelpers::UpdateTextures(lblLLOWallTex1, lblLLOWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLLOuterWallType);
+  QtHelpers::UpdateTextures(lblLUOWallTex1, lblLUOWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLUOuterWallType);
+  QtHelpers::UpdateTextures(lblRLOWallTex1, lblRLOWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRLOuterWallType);
+  QtHelpers::UpdateTextures(lblRUOWallTex1, lblRUOWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRUOuterWallType);
+  QtHelpers::UpdateTextures(lblOFloorTex1, lblOFloorTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType);
+  QtHelpers::UpdateTextures(lblEnvirFloorTex, NULL, NULL, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iEnvironmentFloorType);
 
   //update roof disabled text
-  lblRoofDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::ROOF) && CTrackData::ShouldDrawSurfaceType(chunk.iRoofType));
+  lblRoofDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::ROOF) && CTrackData::ShouldDrawSurfaceType(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRoofType));
 
   //update llowall disabled text
-  lblLLOWallDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::LLOWALL) && CTrackData::ShouldDrawSurfaceType(chunk.iLLOuterWallType));
-  if (chunk.iOuterFloorType == -1)
+  lblLLOWallDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::LLOWALL) && CTrackData::ShouldDrawSurfaceType(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLLOuterWallType));
+  if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType == -1)
     lblLLOWallDisabled->setText("(disabled by floor)");
-  else if (chunk.iOuterFloorType == -2)
+  else if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType == -2)
     lblLLOWallDisabled->setText("(disabled by center)");
   else
     lblLLOWallDisabled->setText("(disabled by other)");
 
   //update rlowall disabled text
-  lblRLOWallDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::RLOWALL) && CTrackData::ShouldDrawSurfaceType(chunk.iRLOuterWallType));
-  if (chunk.iOuterFloorType == -1)
+  lblRLOWallDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::RLOWALL) && CTrackData::ShouldDrawSurfaceType(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRLOuterWallType));
+  if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType == -1)
     lblRLOWallDisabled->setText("(disabled by floor)");
-  else if (chunk.iOuterFloorType == -2)
+  else if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType == -2)
     lblRLOWallDisabled->setText("(disabled by center)");
   else
     lblRLOWallDisabled->setText("(disabled by other)");
 
   //update luowall disabled text
-  lblLUOWallDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::LUOWALL) && CTrackData::ShouldDrawSurfaceType(chunk.iLUOuterWallType));
-  if (chunk.iLLOuterWallType == -1)
+  lblLUOWallDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::LUOWALL) && CTrackData::ShouldDrawSurfaceType(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLUOuterWallType));
+  if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLLOuterWallType == -1)
     lblLUOWallDisabled->setText("(disabled by lower wall)");
-  else if (chunk.iOuterFloorType == -1)
+  else if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType == -1)
     lblLUOWallDisabled->setText("(disabled by floor)");
-  else if (chunk.iOuterFloorType == -2)
+  else if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType == -2)
     lblLUOWallDisabled->setText("(disabled by center)");
   else
     lblLUOWallDisabled->setText("(disabled by other)");
 
   //update ruowall disabled text
-  lblRUOWallDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::RUOWALL) && CTrackData::ShouldDrawSurfaceType(chunk.iRUOuterWallType));
-  if (chunk.iRLOuterWallType == -1)
+  lblRUOWallDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::RUOWALL) && CTrackData::ShouldDrawSurfaceType(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRUOuterWallType));
+  if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRLOuterWallType == -1)
     lblRUOWallDisabled->setText("(disabled by lower wall)");
-  else if (chunk.iOuterFloorType == -1)
+  else if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType == -1)
     lblRUOWallDisabled->setText("(disabled by floor)");
-  else if (chunk.iOuterFloorType == -2)
+  else if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType == -2)
     lblRUOWallDisabled->setText("(disabled by center)");
   else
     lblRUOWallDisabled->setText("(disabled by other)");
@@ -197,15 +193,12 @@ void CEditGeometryWidget::YawChanged(double dValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.dYaw = dValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].dYaw = dValue;
   }
 
   g_pMainWindow->SaveHistory("Changed yaw");
@@ -220,15 +213,12 @@ void CEditGeometryWidget::PitchChanged(double dValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.dPitch = dValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].dPitch = dValue;
   }
 
   g_pMainWindow->SaveHistory("Changed pitch");
@@ -243,15 +233,12 @@ void CEditGeometryWidget::RollChanged(double dValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.dRoll = dValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].dRoll = dValue;
   }
 
   g_pMainWindow->SaveHistory("Changed roll");
@@ -266,15 +253,12 @@ void CEditGeometryWidget::LengthChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iLength = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLength = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed length");
@@ -289,15 +273,12 @@ void CEditGeometryWidget::LLaneWidthChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iLeftLaneWidth = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftLaneWidth = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed left lane width");
@@ -312,15 +293,12 @@ void CEditGeometryWidget::RLaneWidthChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iRightLaneWidth = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightLaneWidth = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed right lane width");
@@ -335,15 +313,12 @@ void CEditGeometryWidget::LShoulderWidthChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iLeftShoulderWidth = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftShoulderWidth = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed left shoulder width");
@@ -358,15 +333,12 @@ void CEditGeometryWidget::RShoulderWidthChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iRightShoulderWidth = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightShoulderWidth = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed right shoulder width");
@@ -381,15 +353,12 @@ void CEditGeometryWidget::LShoulderHeightChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iLeftShoulderHeight = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftShoulderHeight = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed left shoulder height");
@@ -404,15 +373,12 @@ void CEditGeometryWidget::RShoulderHeightChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iRightShoulderHeight = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightShoulderHeight = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed right shoulder height");
@@ -427,15 +393,12 @@ void CEditGeometryWidget::WallHeightChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iRoofHeight = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRoofHeight = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed wall height");
@@ -450,15 +413,12 @@ void CEditGeometryWidget::LLOWallHOffsetChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iLLOuterWallHOffset = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLLOuterWallHOffset = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed llowall width");
@@ -473,15 +433,12 @@ void CEditGeometryWidget::LLOWallHeightChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iLLOuterWallHeight = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLLOuterWallHeight = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed llowall height");
@@ -496,15 +453,12 @@ void CEditGeometryWidget::LUOWallHOffsetChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iLUOuterWallHOffset = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLUOuterWallHOffset = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed luowall width");
@@ -519,15 +473,12 @@ void CEditGeometryWidget::LUOWallHeightChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iLUOuterWallHeight = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLUOuterWallHeight = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed luowall height");
@@ -542,15 +493,12 @@ void CEditGeometryWidget::RLOWallHOffsetChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iRLOuterWallHOffset = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRLOuterWallHOffset = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed rlowall width");
@@ -565,15 +513,12 @@ void CEditGeometryWidget::RLOWallHeightChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iRLOuterWallHeight = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRLOuterWallHeight = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed rlowall height");
@@ -588,15 +533,12 @@ void CEditGeometryWidget::RUOWallHOffsetChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iRUOuterWallHOffset = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRUOuterWallHOffset = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed ruowall width");
@@ -611,15 +553,12 @@ void CEditGeometryWidget::RUOWallHeightChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iRUOuterWallHeight = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRUOuterWallHeight = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed ruowall height");
@@ -634,15 +573,12 @@ void CEditGeometryWidget::LOuterFloorHOffsetChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iLOuterFloorHOffset = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLOuterFloorHOffset = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed lofloor horiz offset");
@@ -657,15 +593,12 @@ void CEditGeometryWidget::ROuterFloorHOffsetChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iROuterFloorHOffset = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iROuterFloorHOffset = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed rofloor horiz offset");
@@ -680,15 +613,12 @@ void CEditGeometryWidget::LOuterFloorHeightChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iLOuterFloorHeight = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLOuterFloorHeight = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed lofloor height");
@@ -703,15 +633,12 @@ void CEditGeometryWidget::ROuterFloorHeightChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iROuterFloorHeight = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iROuterFloorHeight = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed rofloor height");
@@ -726,15 +653,12 @@ void CEditGeometryWidget::AILine1Changed(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iAILine1 = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAILine1 = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed ai line 1");
@@ -749,15 +673,12 @@ void CEditGeometryWidget::AILine2Changed(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iAILine2 = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAILine2 = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed ai line 2");
@@ -772,15 +693,12 @@ void CEditGeometryWidget::AILine3Changed(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iAILine3 = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAILine3 = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed ai line 3");
@@ -795,15 +713,12 @@ void CEditGeometryWidget::AILine4Changed(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iAILine4 = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAILine4 = iValue;
   }
 
   g_pMainWindow->SaveHistory("Changed ai line 4");
@@ -818,18 +733,14 @@ void CEditGeometryWidget::EditCSurface()
   int iTo = g_pMainWindow->GetSelTo();
   
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iCenterSurfaceType, true, "(also disables outer walls if floor is -2)");
+  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iCenterSurfaceType, true, "(also disables outer walls if floor is -2)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-      chunk.iCenterSurfaceType = dlg.GetValue();
-      g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iCenterSurfaceType = dlg.GetValue();
     }
   }
   g_pMainWindow->SaveHistory("Changed center surface");
@@ -844,18 +755,14 @@ void CEditGeometryWidget::EditLShoulder()
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iLeftSurfaceType, true, "(also disables outer walls if floor is -2)");
+  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLeftSurfaceType, true, "(also disables outer walls if floor is -2)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-      chunk.iLeftSurfaceType = dlg.GetValue();
-      g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftSurfaceType = dlg.GetValue();
     }
   }
   g_pMainWindow->SaveHistory("Changed left shoulder surface");
@@ -870,18 +777,14 @@ void CEditGeometryWidget::EditRShoulder()
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iRightSurfaceType, true, "(also disables outer walls if floor is -2)");
+  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRightSurfaceType, true, "(also disables outer walls if floor is -2)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-      chunk.iRightSurfaceType = dlg.GetValue();
-      g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightSurfaceType = dlg.GetValue();
     }
   }
   g_pMainWindow->SaveHistory("Changed right shoulder surface");
@@ -896,18 +799,14 @@ void CEditGeometryWidget::EditLWall()
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iLeftWallType, true, "(also disables roof)");
+  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLeftWallType, true, "(also disables roof)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-      chunk.iLeftWallType = dlg.GetValue();
-      g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftWallType = dlg.GetValue();
     }
   }
   g_pMainWindow->SaveHistory("Changed left wall surface");
@@ -922,18 +821,14 @@ void CEditGeometryWidget::EditRWall()
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iRightWallType, true, "(also disables roof)");
+  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRightWallType, true, "(also disables roof)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-      chunk.iRightWallType = dlg.GetValue();
-      g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightWallType = dlg.GetValue();
     }
   }
   g_pMainWindow->SaveHistory("Changed right wall surface");
@@ -948,18 +843,14 @@ void CEditGeometryWidget::EditBack()
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iBackTexture);
+  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iBackTexture);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-      chunk.iBackTexture = dlg.GetValue();
-      g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iBackTexture = dlg.GetValue();
     }
   }
   g_pMainWindow->SaveHistory("Changed wall back surfaces");
@@ -974,18 +865,14 @@ void CEditGeometryWidget::EditRoof()
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iRoofType, true);
+  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRoofType, true);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-      chunk.iRoofType = dlg.GetValue();
-      g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRoofType = dlg.GetValue();
     }
   }
   g_pMainWindow->SaveHistory("Changed roof surface");
@@ -1000,18 +887,14 @@ void CEditGeometryWidget::EditLUOWall()
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iLUOuterWallType, true);
+  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLUOuterWallType, true);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-      chunk.iLUOuterWallType = dlg.GetValue();
-      g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLUOuterWallType = dlg.GetValue();
     }
   }
   g_pMainWindow->SaveHistory("Changed luowall surface");
@@ -1026,18 +909,14 @@ void CEditGeometryWidget::EditLLOWall()
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iLLOuterWallType, true, "(also disables upper wall)");
+  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLLOuterWallType, true, "(also disables upper wall)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-      chunk.iLLOuterWallType = dlg.GetValue();
-      g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLLOuterWallType = dlg.GetValue();
     }
   }
   g_pMainWindow->SaveHistory("Changed llowall surface");
@@ -1052,18 +931,14 @@ void CEditGeometryWidget::EditRLOWall()
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iRLOuterWallType, true, "(also disables upper wall)");
+  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRLOuterWallType, true, "(also disables upper wall)");
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-      chunk.iRLOuterWallType = dlg.GetValue();
-      g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRLOuterWallType = dlg.GetValue();
     }
   }
   g_pMainWindow->SaveHistory("Changed rlowall surface");
@@ -1078,18 +953,14 @@ void CEditGeometryWidget::EditRUOWall()
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iRUOuterWallType, true);
+  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRUOuterWallType, true);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-      chunk.iRUOuterWallType = dlg.GetValue();
-      g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRUOuterWallType = dlg.GetValue();
     }
   }
   g_pMainWindow->SaveHistory("Changed ruowall surface");
@@ -1104,18 +975,14 @@ void CEditGeometryWidget::EditOFloor()
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iOuterFloorType, true, "(also disables outer walls)", true);
+  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType, true, "(also disables outer walls)", true);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-      chunk.iOuterFloorType = dlg.GetValue();
-      g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iOuterFloorType = dlg.GetValue();
     }
   }
   g_pMainWindow->SaveHistory("Changed ofloor surface");
@@ -1130,22 +997,17 @@ void CEditGeometryWidget::EditEnvirFloor()
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
-
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
 
   CEditSurfaceDialog dlg(this, 
                          NULL, 
                          g_pMainWindow->GetCurrentTrack()->m_pPal, 
-                         chunk.iEnvironmentFloorType);
+                         g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iEnvironmentFloorType);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-      chunk.iEnvironmentFloorType = dlg.GetValue();
-      g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iEnvironmentFloorType = dlg.GetValue();
     }
   }
   g_pMainWindow->SaveHistory("Changed environment floor surface");
@@ -1160,15 +1022,12 @@ void CEditGeometryWidget::CGripChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iTrackGrip = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iTrackGrip = iValue;
   }
   g_pMainWindow->SaveHistory("Changed center grip");
   g_pMainWindow->UpdateWindow();
@@ -1182,15 +1041,12 @@ void CEditGeometryWidget::LGripChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iLeftShoulderGrip = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftShoulderGrip = iValue;
   }
   g_pMainWindow->SaveHistory("Changed left shoulder grip");
   g_pMainWindow->UpdateWindow();
@@ -1204,15 +1060,12 @@ void CEditGeometryWidget::RGripChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iRightShoulderGrip = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightShoulderGrip = iValue;
   }
   g_pMainWindow->SaveHistory("Changed right shoulder grip");
   g_pMainWindow->UpdateWindow();
@@ -1226,15 +1079,12 @@ void CEditGeometryWidget::AISpeedChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iAIMaxSpeed = iValue * 10;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAIMaxSpeed = iValue * 10;
   }
   g_pMainWindow->SaveHistory("Changed ai speed");
   g_pMainWindow->UpdateWindow();
@@ -1248,15 +1098,12 @@ void CEditGeometryWidget::AIAccuracyChanged(int iValue)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iAIAccuracy = iValue;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAIAccuracy = iValue;
   }
   g_pMainWindow->SaveHistory("Changed ai accuracy");
   g_pMainWindow->UpdateWindow();

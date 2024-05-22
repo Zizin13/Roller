@@ -47,11 +47,11 @@ CEditStuntWidget::~CEditStuntWidget()
 void CEditStuntWidget::UpdateGeometrySelection(int iFrom, int iTo)
 {
   (void)(iTo);
-  if (!g_pMainWindow->GetCurrentTrack() || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+  if (!g_pMainWindow->GetCurrentTrack() || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tStunt stunt;
-  bool bChunkHasStunt = g_pMainWindow->GetCurrentTrack()->GetStunt(iFrom, stunt);
+  CStuntMap::iterator it = g_pMainWindow->GetCurrentTrack()->m_stuntMap.find(iFrom);
+  bool bChunkHasStunt = it != g_pMainWindow->GetCurrentTrack()->m_stuntMap.end();
 
   pbStunt->setText(bChunkHasStunt ? "Delete Stunt" : "Add Stunt");
   sbChunkCount    ->setEnabled(bChunkHasStunt);
@@ -71,24 +71,24 @@ void CEditStuntWidget::UpdateGeometrySelection(int iFrom, int iTo)
   ck5RWall        ->setEnabled(bChunkHasStunt);
 
   if (bChunkHasStunt) {
-    int iChunksAfter = g_pMainWindow->GetCurrentTrack()->GetChunkCount() - iFrom - 2;
+    int iChunksAfter = (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size() - iFrom - 2;
     BLOCK_SIG_AND_DO(sbChunkCount, setRange(0, std::min(iFrom, iChunksAfter)));
-    BLOCK_SIG_AND_DO(sbChunkCount, setValue(stunt.iChunkCount));
-    BLOCK_SIG_AND_DO(sbNumTicks, setValue(stunt.iNumTicks));
+    BLOCK_SIG_AND_DO(sbChunkCount, setValue(it->second.iChunkCount));
+    BLOCK_SIG_AND_DO(sbNumTicks, setValue(it->second.iNumTicks));
     BLOCK_SIG_AND_DO(sbTickStartIdx, setRange(0, sbNumTicks->value() - 1));
-    BLOCK_SIG_AND_DO(sbTickStartIdx, setValue(stunt.iTickStartIdx));
-    BLOCK_SIG_AND_DO(rbGroup1, setChecked(stunt.iTimingGroup == 1));
-    BLOCK_SIG_AND_DO(rbGroup2, setChecked(stunt.iTimingGroup != 1));
-    BLOCK_SIG_AND_DO(sbHeight, setValue(stunt.iHeight));
-    BLOCK_SIG_AND_DO(sbTimeBulging, setValue(stunt.iTimeBulging));
-    BLOCK_SIG_AND_DO(sbTimeFlat, setValue(stunt.iTimeFlat));
-    BLOCK_SIG_AND_DO(sldLength, setValue(stunt.iRampSideLength * 100 / STUNT_LENGTH_100_PERCENT));
-    BLOCK_SIG_AND_DO(ck0LShoulder, setChecked(stunt.iFlags & STUNT_FLAG_LSHOULDER));
-    BLOCK_SIG_AND_DO(ck1LWall, setChecked(stunt.iFlags & STUNT_FLAG_LWALL));
-    BLOCK_SIG_AND_DO(ck2LLane, setChecked(stunt.iFlags & STUNT_FLAG_LLANE));
-    BLOCK_SIG_AND_DO(ck3RLane, setChecked(stunt.iFlags & STUNT_FLAG_RLANE));
-    BLOCK_SIG_AND_DO(ck4RShoulder, setChecked(stunt.iFlags & STUNT_FLAG_RSHOULDER));
-    BLOCK_SIG_AND_DO(ck5RWall, setChecked(stunt.iFlags & STUNT_FLAG_RWALL));
+    BLOCK_SIG_AND_DO(sbTickStartIdx, setValue(it->second.iTickStartIdx));
+    BLOCK_SIG_AND_DO(rbGroup1, setChecked(it->second.iTimingGroup == 1));
+    BLOCK_SIG_AND_DO(rbGroup2, setChecked(it->second.iTimingGroup != 1));
+    BLOCK_SIG_AND_DO(sbHeight, setValue(it->second.iHeight));
+    BLOCK_SIG_AND_DO(sbTimeBulging, setValue(it->second.iTimeBulging));
+    BLOCK_SIG_AND_DO(sbTimeFlat, setValue(it->second.iTimeFlat));
+    BLOCK_SIG_AND_DO(sldLength, setValue(it->second.iRampSideLength * 100 / STUNT_LENGTH_100_PERCENT));
+    BLOCK_SIG_AND_DO(ck0LShoulder, setChecked(it->second.iFlags & STUNT_FLAG_LSHOULDER));
+    BLOCK_SIG_AND_DO(ck1LWall, setChecked(it->second.iFlags & STUNT_FLAG_LWALL));
+    BLOCK_SIG_AND_DO(ck2LLane, setChecked(it->second.iFlags & STUNT_FLAG_LLANE));
+    BLOCK_SIG_AND_DO(ck3RLane, setChecked(it->second.iFlags & STUNT_FLAG_RLANE));
+    BLOCK_SIG_AND_DO(ck4RShoulder, setChecked(it->second.iFlags & STUNT_FLAG_RSHOULDER));
+    BLOCK_SIG_AND_DO(ck5RWall, setChecked(it->second.iFlags & STUNT_FLAG_RWALL));
   }
 
   UpdateDialog();
@@ -103,12 +103,11 @@ void CEditStuntWidget::ChunkCountChanged(int iVal)
 
   int iFrom = g_pMainWindow->GetSelFrom();
 
-  tStunt stunt;
-  if (!g_pMainWindow->GetCurrentTrack()->GetStunt(iFrom, stunt))
+  CStuntMap::iterator it = g_pMainWindow->GetCurrentTrack()->m_stuntMap.find(iFrom);
+  if (it == g_pMainWindow->GetCurrentTrack()->m_stuntMap.end())
     return;
 
-  stunt.iChunkCount = iVal;
-  g_pMainWindow->GetCurrentTrack()->SetStunt(iFrom, stunt);
+  it->second.iChunkCount = iVal;
 
   g_pMainWindow->SaveHistory("Changed stunt chunk count");
   g_pMainWindow->UpdateWindow();
@@ -123,12 +122,11 @@ void CEditStuntWidget::NumTicksChanged(int iVal)
 
   int iFrom = g_pMainWindow->GetSelFrom();
 
-  tStunt stunt;
-  if (!g_pMainWindow->GetCurrentTrack()->GetStunt(iFrom, stunt))
+  CStuntMap::iterator it = g_pMainWindow->GetCurrentTrack()->m_stuntMap.find(iFrom);
+  if (it == g_pMainWindow->GetCurrentTrack()->m_stuntMap.end())
     return;
 
-  stunt.iNumTicks = iVal;
-  g_pMainWindow->GetCurrentTrack()->SetStunt(iFrom, stunt);
+  it->second.iNumTicks = iVal;
 
   g_pMainWindow->SaveHistory("Changed stunt num ticks");
   g_pMainWindow->UpdateWindow();
@@ -143,12 +141,11 @@ void CEditStuntWidget::TickStartIdxChanged(int iVal)
 
   int iFrom = g_pMainWindow->GetSelFrom();
 
-  tStunt stunt;
-  if (!g_pMainWindow->GetCurrentTrack()->GetStunt(iFrom, stunt))
+  CStuntMap::iterator it = g_pMainWindow->GetCurrentTrack()->m_stuntMap.find(iFrom);
+  if (it == g_pMainWindow->GetCurrentTrack()->m_stuntMap.end())
     return;
 
-  stunt.iTickStartIdx = iVal;
-  g_pMainWindow->GetCurrentTrack()->SetStunt(iFrom, stunt);
+  it->second.iTickStartIdx = iVal;
 
   g_pMainWindow->SaveHistory("Changed stunt tick start idx");
   g_pMainWindow->UpdateWindow();
@@ -163,12 +160,11 @@ void CEditStuntWidget::Group1Toggled(bool bChecked)
 
   int iFrom = g_pMainWindow->GetSelFrom();
 
-  tStunt stunt;
-  if (!g_pMainWindow->GetCurrentTrack()->GetStunt(iFrom, stunt))
+  CStuntMap::iterator it = g_pMainWindow->GetCurrentTrack()->m_stuntMap.find(iFrom);
+  if (it == g_pMainWindow->GetCurrentTrack()->m_stuntMap.end())
     return;
 
-  stunt.iTimingGroup = bChecked ? 1 : 0;
-  g_pMainWindow->GetCurrentTrack()->SetStunt(iFrom, stunt);
+  it->second.iTimingGroup = bChecked ? 1 : 0;
 
   g_pMainWindow->SaveHistory("Changed stunt timing group");
   g_pMainWindow->UpdateWindow();
@@ -183,12 +179,11 @@ void CEditStuntWidget::Group2Toggled(bool bChecked)
 
   int iFrom = g_pMainWindow->GetSelFrom();
 
-  tStunt stunt;
-  if (!g_pMainWindow->GetCurrentTrack()->GetStunt(iFrom, stunt))
+  CStuntMap::iterator it = g_pMainWindow->GetCurrentTrack()->m_stuntMap.find(iFrom);
+  if (it == g_pMainWindow->GetCurrentTrack()->m_stuntMap.end())
     return;
 
-  stunt.iTimingGroup = bChecked ? 0 : 1;
-  g_pMainWindow->GetCurrentTrack()->SetStunt(iFrom, stunt);
+  it->second.iTimingGroup = bChecked ? 0 : 1;
 
   g_pMainWindow->SaveHistory("Changed stunt timing group");
   g_pMainWindow->UpdateWindow();
@@ -203,12 +198,11 @@ void CEditStuntWidget::HeightChanged(int iVal)
 
   int iFrom = g_pMainWindow->GetSelFrom();
 
-  tStunt stunt;
-  if (!g_pMainWindow->GetCurrentTrack()->GetStunt(iFrom, stunt))
+  CStuntMap::iterator it = g_pMainWindow->GetCurrentTrack()->m_stuntMap.find(iFrom);
+  if (it == g_pMainWindow->GetCurrentTrack()->m_stuntMap.end())
     return;
 
-  stunt.iHeight = iVal;
-  g_pMainWindow->GetCurrentTrack()->SetStunt(iFrom, stunt);
+  it->second.iHeight = iVal;
 
   g_pMainWindow->SaveHistory("Changed stunt height");
   g_pMainWindow->UpdateWindow();
@@ -223,12 +217,11 @@ void CEditStuntWidget::TimeBulgingChanged(int iVal)
 
   int iFrom = g_pMainWindow->GetSelFrom();
 
-  tStunt stunt;
-  if (!g_pMainWindow->GetCurrentTrack()->GetStunt(iFrom, stunt))
+  CStuntMap::iterator it = g_pMainWindow->GetCurrentTrack()->m_stuntMap.find(iFrom);
+  if (it == g_pMainWindow->GetCurrentTrack()->m_stuntMap.end())
     return;
 
-  stunt.iTimeBulging = iVal;
-  g_pMainWindow->GetCurrentTrack()->SetStunt(iFrom, stunt);
+  it->second.iTimeBulging = iVal;
 
   g_pMainWindow->SaveHistory("Changed stunt time bulging");
   g_pMainWindow->UpdateWindow();
@@ -243,12 +236,11 @@ void CEditStuntWidget::TimeFlatChanged(int iVal)
 
   int iFrom = g_pMainWindow->GetSelFrom();
 
-  tStunt stunt;
-  if (!g_pMainWindow->GetCurrentTrack()->GetStunt(iFrom, stunt))
+  CStuntMap::iterator it = g_pMainWindow->GetCurrentTrack()->m_stuntMap.find(iFrom);
+  if (it == g_pMainWindow->GetCurrentTrack()->m_stuntMap.end())
     return;
 
-  stunt.iTimeFlat = iVal;
-  g_pMainWindow->GetCurrentTrack()->SetStunt(iFrom, stunt);
+  it->second.iTimeFlat = iVal;
 
   g_pMainWindow->SaveHistory("Changed stunt time flat");
   g_pMainWindow->UpdateWindow();
@@ -263,12 +255,11 @@ void CEditStuntWidget::LengthChanged(int iVal)
 
   int iFrom = g_pMainWindow->GetSelFrom();
 
-  tStunt stunt;
-  if (!g_pMainWindow->GetCurrentTrack()->GetStunt(iFrom, stunt))
+  CStuntMap::iterator it = g_pMainWindow->GetCurrentTrack()->m_stuntMap.find(iFrom);
+  if (it == g_pMainWindow->GetCurrentTrack()->m_stuntMap.end())
     return;
 
-  stunt.iRampSideLength = iVal * STUNT_LENGTH_100_PERCENT / 100;
-  g_pMainWindow->GetCurrentTrack()->SetStunt(iFrom, stunt);
+  it->second.iRampSideLength = iVal * STUNT_LENGTH_100_PERCENT / 100;
 
   g_pMainWindow->SaveHistory("Changed stunt ramp length");
   g_pMainWindow->UpdateWindow();
@@ -283,8 +274,8 @@ void CEditStuntWidget::FlagsChanged()
 
   int iFrom = g_pMainWindow->GetSelFrom();
 
-  tStunt stunt;
-  if (!g_pMainWindow->GetCurrentTrack()->GetStunt(iFrom, stunt))
+  CStuntMap::iterator it = g_pMainWindow->GetCurrentTrack()->m_stuntMap.find(iFrom);
+  if (it == g_pMainWindow->GetCurrentTrack()->m_stuntMap.end())
     return;
 
   uint8 byFlags = 0;
@@ -301,8 +292,7 @@ void CEditStuntWidget::FlagsChanged()
   if (ck5RWall->isChecked())
     byFlags |= STUNT_FLAG_RWALL;
 
-  stunt.iFlags = (int)byFlags;
-  g_pMainWindow->GetCurrentTrack()->SetStunt(iFrom, stunt);
+  it->second.iFlags = (int)byFlags;
 
   g_pMainWindow->SaveHistory("Changed stunt flags");
   g_pMainWindow->UpdateWindow();
@@ -318,23 +308,23 @@ void CEditStuntWidget::StuntClicked()
   int iFrom = g_pMainWindow->GetSelFrom();
   int iTo = g_pMainWindow->GetSelTo();
 
-  tStunt stunt;
-  bool bChunkHasStunt = g_pMainWindow->GetCurrentTrack()->GetStunt(iFrom, stunt);
+  CStuntMap::iterator it = g_pMainWindow->GetCurrentTrack()->m_stuntMap.find(iFrom);
+  bool bChunkHasStunt = it != g_pMainWindow->GetCurrentTrack()->m_stuntMap.end();
 
   if (!bChunkHasStunt) {
+    tStunt *pNewStunt = &g_pMainWindow->GetCurrentTrack()->m_stuntMap[iFrom];
     int iAllFlags = (STUNT_FLAG_LLANE | STUNT_FLAG_RLANE | STUNT_FLAG_LWALL | STUNT_FLAG_RWALL | STUNT_FLAG_LSHOULDER | STUNT_FLAG_RSHOULDER);
-    stunt.iChunkCount = bChunkHasStunt ? 0 : 1;
-    stunt.iNumTicks = bChunkHasStunt ? 0 : 30;
-    stunt.iTickStartIdx = 0;
-    stunt.iTimingGroup = bChunkHasStunt ? 0 : 1;
-    stunt.iHeight = bChunkHasStunt ? 0 : 10;
-    stunt.iTimeBulging = bChunkHasStunt ? 0 : 30;
-    stunt.iTimeFlat = bChunkHasStunt ? 0 : 30;
-    stunt.iRampSideLength = bChunkHasStunt ? 0 : STUNT_LENGTH_100_PERCENT;
-    stunt.iFlags = bChunkHasStunt ? 0 : iAllFlags;
-    g_pMainWindow->GetCurrentTrack()->SetStunt(iFrom, stunt);
+    pNewStunt->iChunkCount = bChunkHasStunt ? 0 : 1;
+    pNewStunt->iNumTicks = bChunkHasStunt ? 0 : 30;
+    pNewStunt->iTickStartIdx = 0;
+    pNewStunt->iTimingGroup = bChunkHasStunt ? 0 : 1;
+    pNewStunt->iHeight = bChunkHasStunt ? 0 : 10;
+    pNewStunt->iTimeBulging = bChunkHasStunt ? 0 : 30;
+    pNewStunt->iTimeFlat = bChunkHasStunt ? 0 : 30;
+    pNewStunt->iRampSideLength = bChunkHasStunt ? 0 : STUNT_LENGTH_100_PERCENT;
+    pNewStunt->iFlags = bChunkHasStunt ? 0 : iAllFlags;
   } else {
-    g_pMainWindow->GetCurrentTrack()->EraseStunt(iFrom);
+    g_pMainWindow->GetCurrentTrack()->m_stuntMap.erase(it);
   }
 
   g_pMainWindow->SaveHistory(bChunkHasStunt ? "Removed stunt" : "Added stunt");
@@ -349,11 +339,11 @@ void CEditStuntWidget::UpdateDialog()
     return;
 
   int iFrom = g_pMainWindow->GetSelFrom();
-  tStunt stunt;
-  if (!g_pMainWindow->GetCurrentTrack()->GetStunt(iFrom, stunt))
+  CStuntMap::iterator it = g_pMainWindow->GetCurrentTrack()->m_stuntMap.find(iFrom);
+  if (it == g_pMainWindow->GetCurrentTrack()->m_stuntMap.end())
     return;
 
-  int iValue = stunt.iFlags;
+  int iValue = it->second.iFlags;
   uint32 uiSignedBitValue = CTrackData::GetSignedBitValueFromInt(iValue);
   char szBuf[128];
   snprintf(szBuf, sizeof(szBuf), " (%#010x)", uiSignedBitValue);
@@ -361,10 +351,10 @@ void CEditStuntWidget::UpdateDialog()
   leFlags->setFont(QFont("Courier", 8));
   leFlags->setText(QString::number(iValue).leftJustified(4, ' ') + szBuf);
 
-  lblLengthPercent->setText("(" + QString::number(stunt.iRampSideLength * 100 / STUNT_LENGTH_100_PERCENT) + "%)");
-  lblTicksTimeS->setText("(" + QString::number(stunt.iNumTicks * 2.768 / 100, 'f', 2) + " s)");
-  lblBulgeTimeS->setText("(" + QString::number(stunt.iTimeBulging * 2.768 / 100, 'f', 2) + " s)");
-  lblFlatTimeS->setText("(" + QString::number(stunt.iTimeFlat * 2.768 / 100, 'f', 2) + " s)");
+  lblLengthPercent->setText("(" + QString::number(it->second.iRampSideLength * 100 / STUNT_LENGTH_100_PERCENT) + "%)");
+  lblTicksTimeS->setText("(" + QString::number(it->second.iNumTicks * 2.768 / 100, 'f', 2) + " s)");
+  lblBulgeTimeS->setText("(" + QString::number(it->second.iTimeBulging * 2.768 / 100, 'f', 2) + " s)");
+  lblFlatTimeS->setText("(" + QString::number(it->second.iTimeFlat * 2.768 / 100, 'f', 2) + " s)");
 }
 
 //-------------------------------------------------------------------------------------------------

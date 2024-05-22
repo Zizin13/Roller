@@ -47,24 +47,21 @@ CEditSignWidget::~CEditSignWidget()
 void CEditSignWidget::UpdateGeometrySelection(int iFrom, int iTo)
 {
   (void)(iTo);
-  if (!g_pMainWindow->GetCurrentTrack() || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+  if (!g_pMainWindow->GetCurrentTrack() || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
-
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
   
-  BLOCK_SIG_AND_DO(dsbYaw    , setValue(chunk.dSignYaw));
-  BLOCK_SIG_AND_DO(dsbPitch  , setValue(chunk.dSignPitch));
-  BLOCK_SIG_AND_DO(dsbRoll   , setValue(chunk.dSignRoll));
-  BLOCK_SIG_AND_DO(sbHOffset , setValue(chunk.iSignHorizOffset));
-  BLOCK_SIG_AND_DO(sbVOffset , setValue(chunk.iSignVertOffset));
-  BLOCK_SIG_AND_DO(cbType    , setCurrentIndex(cbType->findData(chunk.iSignType)));
-  BLOCK_SIG_AND_DO(leUnk     , setText(QString::number(chunk.iSignType)));
+  BLOCK_SIG_AND_DO(dsbYaw    , setValue(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].dSignYaw));
+  BLOCK_SIG_AND_DO(dsbPitch  , setValue(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].dSignPitch));
+  BLOCK_SIG_AND_DO(dsbRoll   , setValue(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].dSignRoll));
+  BLOCK_SIG_AND_DO(sbHOffset , setValue(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignHorizOffset));
+  BLOCK_SIG_AND_DO(sbVOffset , setValue(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignVertOffset));
+  BLOCK_SIG_AND_DO(cbType    , setCurrentIndex(cbType->findData(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType)));
+  BLOCK_SIG_AND_DO(leUnk     , setText(QString::number(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType)));
 
-  bool bChunkHasSign = chunk.iSignType != -1;
-  bool bCanHaveTexture = chunk.iSignType < g_signAyCount
-    && g_signAy[chunk.iSignType].bCanHaveTexture;
-  bool bBillboarded = g_signAy[chunk.iSignType].bBillboarded;
+  bool bChunkHasSign = g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType != -1;
+  bool bCanHaveTexture = g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType < g_signAyCount
+    && g_signAy[g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType].bCanHaveTexture;
+  bool bBillboarded = g_signAy[g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType].bBillboarded;
   dsbYaw    ->setEnabled(bChunkHasSign && !bBillboarded);
   dsbPitch  ->setEnabled(bChunkHasSign);
   dsbRoll   ->setEnabled(bChunkHasSign);
@@ -80,11 +77,11 @@ void CEditSignWidget::UpdateGeometrySelection(int iFrom, int iTo)
   lblType   ->setEnabled(bChunkHasSign);
   pbSign    ->setText(bChunkHasSign ? "Delete Sign" : "Add Sign");
 
-  bool bUnk = chunk.iSignType > 255;
+  bool bUnk = g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType > 255;
   leUnk->setVisible(bUnk);
   lblUnk->setVisible(bUnk);
   
-  QtHelpers::UpdateTextures(lblTex, NULL, g_pMainWindow->GetCurrentTrack()->m_pBld, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iSignTexture);
+  QtHelpers::UpdateTextures(lblTex, NULL, g_pMainWindow->GetCurrentTrack()->m_pBld, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignTexture);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -95,15 +92,12 @@ void CEditSignWidget::YawChanged(double dVal)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.dSignYaw = dVal;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].dSignYaw = dVal;
   }
 
   g_pMainWindow->SaveHistory("Changed sign yaw");
@@ -118,15 +112,12 @@ void CEditSignWidget::PitchChanged(double dVal)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.dSignPitch = dVal;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].dSignPitch = dVal;
   }
 
   g_pMainWindow->SaveHistory("Changed sign pitch");
@@ -141,15 +132,12 @@ void CEditSignWidget::RollChanged(double dVal)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.dSignRoll = dVal;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].dSignRoll = dVal;
   }
 
   g_pMainWindow->SaveHistory("Changed sign roll");
@@ -164,15 +152,12 @@ void CEditSignWidget::HOffsetChanged(int iVal)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iSignHorizOffset = iVal;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignHorizOffset = iVal;
   }
 
   g_pMainWindow->SaveHistory("Changed sign horiz offset");
@@ -187,15 +172,12 @@ void CEditSignWidget::VOffsetChanged(int iVal)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iSignVertOffset = iVal;
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignVertOffset = iVal;
   }
 
   g_pMainWindow->SaveHistory("Changed sign vert offset");
@@ -210,21 +192,18 @@ void CEditSignWidget::TypeChanged(int iIndex)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iSignType = cbType->itemData(iIndex).toInt();
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignType = cbType->itemData(iIndex).toInt();
     if (cbType->itemData(iIndex).toInt() < g_signAyCount
         && !g_signAy[cbType->itemData(iIndex).toInt()].bCanHaveTexture) {
-      chunk.iSignTexture = -1;
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignTexture = -1;
     } else {
-      chunk.iSignTexture = SURFACE_FLAG_APPLY_TEXTURE;
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignTexture = SURFACE_FLAG_APPLY_TEXTURE;
     }
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
   }
 
   g_pMainWindow->SaveHistory("Changed sign type");
@@ -239,18 +218,14 @@ void CEditSignWidget::EditClicked()
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pBld, g_pMainWindow->GetCurrentTrack()->m_pPal, chunk.iSignTexture);
+  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pBld, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignTexture);
   if (dlg.exec()) {
     for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-      chunk.iSignTexture = dlg.GetValue();
-      g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignTexture = dlg.GetValue();
     }
   }
 
@@ -266,20 +241,16 @@ void CEditSignWidget::SignClicked()
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  tGeometryChunk chunk;
-  g_pMainWindow->GetCurrentTrack()->GetChunk(iFrom, chunk);
-  bool bHasSign = chunk.iSignType != -1;
+  bool bHasSign = g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignType != -1;
   for (int i = iFrom; i <= iTo; ++i) {
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iSignType = bHasSign ? -1 : 9; //default sign type of balloon
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignType = bHasSign ? -1 : 9; //default sign type of balloon
     if (!bHasSign) {
-      chunk.iSignTexture = SURFACE_FLAG_APPLY_TEXTURE;
+      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignTexture = SURFACE_FLAG_APPLY_TEXTURE;
     }
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
   }
 
   g_pMainWindow->SaveHistory(bHasSign ? "Removed sign" : "Added sign");
@@ -294,15 +265,12 @@ void CEditSignWidget::UnkChanged(const QString &sText)
   int iTo = g_pMainWindow->GetSelTo();
 
   if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= g_pMainWindow->GetCurrentTrack()->GetChunkCount()
-      || iTo >= g_pMainWindow->GetCurrentTrack()->GetChunkCount())
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   for (int i = iFrom; i <= iTo; ++i) {
-    tGeometryChunk chunk;
-    g_pMainWindow->GetCurrentTrack()->GetChunk(i, chunk);
-    chunk.iSignType = sText.toInt();
-    g_pMainWindow->GetCurrentTrack()->SetChunk(i, chunk);
+    g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignType = sText.toInt();
   }
 
   g_pMainWindow->SaveHistory("Changed unk sign value");

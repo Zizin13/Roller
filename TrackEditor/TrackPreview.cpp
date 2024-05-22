@@ -318,7 +318,7 @@ void CTrackPreview::UpdateTrack(bool bDeleteModels)
     p->DeleteModels();
 
   CShapeFactory::GetShapeFactory().m_fScale = 10000.0f / m_iScale;
-  if (p->m_track.GetChunkCount() > 0) {
+  if (!p->m_track.m_chunkAy.empty()) {
     p->m_track.m_fScale = 10000.0f / m_iScale;
     p->m_pLLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLLaneSurf, p->m_pShader, &p->m_track, eShapeSection::LLANE, m_bAttachLast);
     p->m_pLLaneWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLLaneWire, p->m_pShader, &p->m_track, eShapeSection::LLANE, m_bAttachLast, true);
@@ -450,7 +450,6 @@ void CTrackPreview::LoadHistory(const tTrackHistory *pHistory)
 
   p->m_track.ClearData();
   p->m_track.ProcessTrackData(byData, iSize);
-  p->m_track.GenerateTrackMath();
 
   delete[] byData;
 }

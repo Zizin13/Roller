@@ -6,7 +6,6 @@
 #include <map>
 #include <string>
 #include "Types.h"
-#include <mutex>
 //-------------------------------------------------------------------------------------------------
 #define STUNT_LENGTH_100_PERCENT 1024
 //-------------------------------------------------------------------------------------------------
@@ -208,15 +207,6 @@ public:
   bool ShouldShowChunkSection(int i, eShapeSection section);
   bool HasPitchedStunt();
   bool UseCenterStunt(int i);
-  int GetChunkCount();
-  bool GetChunk(int i, tGeometryChunk &chunk);
-  bool SetChunk(int i, const tGeometryChunk &chunk);
-  bool GetStunt(int i, tStunt &stunt);
-  void SetStunt(int i, const tStunt &stunt);
-  void InsertChunks(int i, const CChunkAy &insertAy);
-  void InsertChunk(int i, const tGeometryChunk &chunk);
-  void EraseChunks(int iFrom, int iTo);
-  void EraseStunt(int i);
 
   static unsigned int GetSignedBitValueFromInt(int iValue);
   static int GetIntValueFromSignedBit(unsigned int uiValue);
@@ -224,6 +214,8 @@ public:
   static double ConstrainAngle(double dAngle);
 
   tTrackHeader m_header;
+  CChunkAy m_chunkAy;
+  CStuntMap m_stuntMap;
   std::string m_sTrackFileFolder;
   std::string m_sTextureFile;
   std::string m_sBuildingFile;
@@ -261,10 +253,6 @@ private:
   std::string m_sLastLoadedTex;
   std::string m_sLastLoadedBld;
   std::string m_sLastLoadedPal;
-
-  CChunkAy m_chunkAy;
-  CStuntMap m_stuntMap;
-  std::mutex m_dataMutex; //protects m_chunkAy and m_stuntMap
 };
 
 //-------------------------------------------------------------------------------------------------

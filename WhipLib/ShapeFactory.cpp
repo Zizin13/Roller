@@ -1142,7 +1142,7 @@ void CShapeFactory::MakeAudio(CShader *pShader, CTrackData *pTrack, std::vector<
     CShapeData *pNewMarker = MakeAudioMarker(pShader);
 
     float fHeight = (float)1000.0f / m_fScale * -1.0f;
-    glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[i].math.center);
+    glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[i].math.centerStunt);
     glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
     glm::vec3 normal = glm::normalize(glm::cross(pTrack->m_chunkAy[i].math.nextChunkPitched, pTrack->m_chunkAy[i].math.pitchAxis));
     glm::vec3 heightVec = glm::vec3(scaleMatHeight * pTrack->m_chunkAy[i].math.rollMat * glm::vec4(normal, 1.0f));
@@ -1171,7 +1171,7 @@ void CShapeFactory::MakeStunts(CShader *pShader, CTrackData *pTrack, std::vector
     CShapeData *pNewMarker = MakeStuntMarker(pShader);
 
     float fHeight = (float)1000.0f / m_fScale * -1.0f;
-    glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[it->first].math.center);
+    glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[it->first].math.centerStunt);
     glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
     glm::vec3 normal = glm::normalize(glm::cross(pTrack->m_chunkAy[it->first].math.nextChunkPitched, pTrack->m_chunkAy[it->first].math.pitchAxis));
     glm::vec3 heightVec = glm::vec3(scaleMatHeight * pTrack->m_chunkAy[it->first].math.rollMat * glm::vec4(normal, 1.0f));
@@ -1269,9 +1269,9 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
       case LLANE:
         ApplyVerticesSingleSection(i, vertices, 
                                    pTrack->m_chunkAy[i].math.lLane, 
-                                   pTrack->m_chunkAy[i].math.center, 
+                                   pTrack->UseCenterStunt(i) ? pTrack->m_chunkAy[i].math.centerStunt : pTrack->m_chunkAy[i].math.center, 
                                    pTrack->m_chunkAy[iChunkIndex].math.lLane,
-                                   pTrack->m_chunkAy[iChunkIndex].math.center);
+                                   pTrack->UseCenterStunt(iChunkIndex) ? pTrack->m_chunkAy[iChunkIndex].math.centerStunt : pTrack->m_chunkAy[iChunkIndex].math.center);
         if (pTexture)
           pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
                                 vertices[i * uiNumVertsPerChunk + 0],
@@ -1281,9 +1281,9 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         break;
       case RLANE:
         ApplyVerticesSingleSection(i, vertices, 
-                                   pTrack->m_chunkAy[i].math.center,
+                                   pTrack->UseCenterStunt(i) ? pTrack->m_chunkAy[i].math.centerStunt : pTrack->m_chunkAy[i].math.center,
                                    pTrack->m_chunkAy[i].math.rLane, 
-                                   pTrack->m_chunkAy[iChunkIndex].math.center,
+                                   pTrack->UseCenterStunt(iChunkIndex) ? pTrack->m_chunkAy[iChunkIndex].math.centerStunt : pTrack->m_chunkAy[iChunkIndex].math.center,
                                    pTrack->m_chunkAy[iChunkIndex].math.rLane);
         if (pTexture)
           pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),

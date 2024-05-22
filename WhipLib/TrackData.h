@@ -32,6 +32,7 @@ struct tStunt
 struct tChunkMath
 {
   glm::vec3 center;
+  glm::vec3 centerStunt;
   glm::vec3 pitchAxis;
   glm::vec3 nextChunkPitched;
   glm::vec3 lLane;

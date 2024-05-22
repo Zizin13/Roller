@@ -1084,6 +1084,8 @@ void CTrackData::GenerateTrackMath()
               m_chunkAy[i].math.nextChunkPitched,
               m_chunkAy[i].math.carLine4,
               eShapeSection::AILINE4, 0);
+
+    m_chunkAy[i].math.centerStunt = m_chunkAy[i].math.center;
   }
 }
 
@@ -1119,7 +1121,7 @@ void CTrackData::UpdateTrack()
       int iPrevIndex = (int)m_chunkAy.size() - 1;
       if (i > 0)
         iPrevIndex = i - 1;
-      glm::vec3 prevCenter = m_chunkAy[iPrevIndex].math.center;
+      glm::vec3 prevCenter = m_chunkAy[iPrevIndex].math.centerStunt;
       glm::vec3 nextChunkBase = glm::vec3(0, 0, 1);
       glm::mat4 yawMat = m_chunkAy[i].math.yawMat;
       glm::vec3 nextChunkYawed = glm::vec3(yawMat * glm::vec4(nextChunkBase, 1.0f));
@@ -1131,11 +1133,11 @@ void CTrackData::UpdateTrack()
         translateMat = glm::translate(prevCenter);
       float fLen = (float)m_chunkAy[i].iLength / m_fScale * ((float)it->second.iRampSideLength / 1024.0f);
       glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
-      m_chunkAy[i].math.center = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
-      if (it->second.iFlags & STUNT_FLAG_LLANE)
-        GetLane(i, m_chunkAy[i].math.center, pitchAxis, m_chunkAy[i].math.rollMat, m_chunkAy[i].math.lLane, true);
-      if (it->second.iFlags & STUNT_FLAG_RLANE)
-        GetLane(i, m_chunkAy[i].math.center, pitchAxis, m_chunkAy[i].math.rollMat, m_chunkAy[i].math.rLane, false);
+      m_chunkAy[i].math.centerStunt = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
+      if (it->second.iFlags & STUNT_FLAG_LLANE || it->second.iFlags & STUNT_FLAG_LSHOULDER)
+        GetLane(i, m_chunkAy[i].math.centerStunt, pitchAxis, m_chunkAy[i].math.rollMat, m_chunkAy[i].math.lLane, true);
+      if (it->second.iFlags & STUNT_FLAG_RLANE || it->second.iFlags & STUNT_FLAG_RSHOULDER)
+        GetLane(i, m_chunkAy[i].math.centerStunt, pitchAxis, m_chunkAy[i].math.rollMat, m_chunkAy[i].math.rLane, false);
       if (it->second.iFlags & STUNT_FLAG_LSHOULDER)
         GetShoulder(i, m_chunkAy[i].math.lLane,
                     m_chunkAy[i].math.pitchAxis,
@@ -1167,27 +1169,27 @@ void CTrackData::UpdateTrack()
                 m_chunkAy[i].math.rWall, eShapeSection::RWALL);
       //ailines
       GetAILine(i,
-                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.centerStunt,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
                 m_chunkAy[i].math.aiLine1,
                 eShapeSection::AILINE1, m_iAILineHeight);
       GetAILine(i,
-                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.centerStunt,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
                 m_chunkAy[i].math.aiLine2,
                 eShapeSection::AILINE2, m_iAILineHeight);
       GetAILine(i,
-                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.centerStunt,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
                 m_chunkAy[i].math.aiLine3, eShapeSection::AILINE3, m_iAILineHeight);
       GetAILine(i,
-                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.centerStunt,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
@@ -1195,28 +1197,28 @@ void CTrackData::UpdateTrack()
                 eShapeSection::AILINE4, m_iAILineHeight);
       //car positions are ai lines with 0 height
       GetAILine(i,
-                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.centerStunt,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
                 m_chunkAy[i].math.carLine1,
                 eShapeSection::AILINE1, 0);
       GetAILine(i,
-                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.centerStunt,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
                 m_chunkAy[i].math.carLine2,
                 eShapeSection::AILINE2, 0);
       GetAILine(i,
-                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.centerStunt,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
                 m_chunkAy[i].math.carLine3,
                 eShapeSection::AILINE3, 0);
       GetAILine(i,
-                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.centerStunt,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
@@ -1228,7 +1230,7 @@ void CTrackData::UpdateTrack()
       int iPrevIndex = 0;
       if (i < (int)m_chunkAy.size() - 1)
         iPrevIndex = i + 1;
-      glm::vec3 prevCenter = m_chunkAy[iPrevIndex].math.center;
+      glm::vec3 prevCenter = m_chunkAy[iPrevIndex].math.centerStunt;
       glm::vec3 nextChunkBase = glm::vec3(0, 0, 1);
       glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw + 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
       glm::vec3 nextChunkYawed = glm::vec3(yawMat * glm::vec4(nextChunkBase, 1.0f));
@@ -1240,11 +1242,11 @@ void CTrackData::UpdateTrack()
         translateMat = glm::translate(prevCenter);
       float fLen = (float)m_chunkAy[i].iLength / m_fScale * ((float)it->second.iRampSideLength / 1024.0f);
       glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
-      m_chunkAy[i].math.center = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
-      if (it->second.iFlags & STUNT_FLAG_LLANE)
-        GetLane(i, m_chunkAy[i].math.center, pitchAxis, m_chunkAy[i].math.rollMat, m_chunkAy[i].math.lLane, false);
-      if (it->second.iFlags & STUNT_FLAG_RLANE)
-        GetLane(i, m_chunkAy[i].math.center, pitchAxis, m_chunkAy[i].math.rollMat, m_chunkAy[i].math.rLane, true);
+      m_chunkAy[i].math.centerStunt = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
+      if (it->second.iFlags & STUNT_FLAG_LLANE || it->second.iFlags & STUNT_FLAG_LSHOULDER)
+        GetLane(i, m_chunkAy[i].math.centerStunt, pitchAxis, m_chunkAy[i].math.rollMat, m_chunkAy[i].math.lLane, false);
+      if (it->second.iFlags & STUNT_FLAG_RLANE || it->second.iFlags & STUNT_FLAG_RSHOULDER)
+        GetLane(i, m_chunkAy[i].math.centerStunt, pitchAxis, m_chunkAy[i].math.rollMat, m_chunkAy[i].math.rLane, true);
       if (it->second.iFlags & STUNT_FLAG_LSHOULDER)
         GetShoulder(i, m_chunkAy[i].math.lLane,
                     m_chunkAy[i].math.pitchAxis,
@@ -1276,27 +1278,27 @@ void CTrackData::UpdateTrack()
                 m_chunkAy[i].math.rWall, eShapeSection::RWALL);
       //ailines
       GetAILine(i,
-                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.centerStunt,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
                 m_chunkAy[i].math.aiLine1,
                 eShapeSection::AILINE1, m_iAILineHeight);
       GetAILine(i,
-                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.centerStunt,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
                 m_chunkAy[i].math.aiLine2,
                 eShapeSection::AILINE2, m_iAILineHeight);
       GetAILine(i,
-                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.centerStunt,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
                 m_chunkAy[i].math.aiLine3, eShapeSection::AILINE3, m_iAILineHeight);
       GetAILine(i,
-                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.centerStunt,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
@@ -1304,28 +1306,28 @@ void CTrackData::UpdateTrack()
                 eShapeSection::AILINE4, m_iAILineHeight);
       //car positions are ai lines with 0 height
       GetAILine(i,
-                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.centerStunt,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
                 m_chunkAy[i].math.carLine1,
                 eShapeSection::AILINE1, 0);
       GetAILine(i,
-                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.centerStunt,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
                 m_chunkAy[i].math.carLine2,
                 eShapeSection::AILINE2, 0);
       GetAILine(i,
-                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.centerStunt,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
                 m_chunkAy[i].math.carLine3,
                 eShapeSection::AILINE3, 0);
       GetAILine(i,
-                m_chunkAy[i].math.center,
+                m_chunkAy[i].math.centerStunt,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
@@ -1356,6 +1358,29 @@ bool CTrackData::HasPitchedStunt()
   }
 
   return false;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CTrackData::UseCenterStunt(int i)
+{
+  bool bUseCenterStunt = false;
+  CStuntMap::iterator it = m_stuntMap.begin();
+  for (; it != m_stuntMap.end(); ++it) {
+    int iStart = it->first - it->second.iChunkCount;
+    int iEnd = it->first + it->second.iChunkCount;
+
+    if (iStart < 0)
+      iStart = 0;
+    if (iEnd > (int)m_chunkAy.size() - 1)
+      iEnd = (int)m_chunkAy.size() - 1;
+
+    if (i >= iStart && i <= iEnd) {
+      //chunk is in stunt
+      bUseCenterStunt |= (it->second.iFlags & STUNT_FLAG_LLANE || it->second.iFlags & STUNT_FLAG_RLANE);
+    }
+  }
+  return bUseCenterStunt;
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -172,6 +172,12 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   m_pSaveHistoryTimer->setInterval(250);
   connect(m_pSaveHistoryTimer, &QTimer::timeout, this, &CMainWindow::OnSaveHistoryTimer, Qt::QueuedConnection);
 
+  //setup stunt timer
+  m_pStuntTimer = new QTimer(this);
+  m_pStuntTimer->setInterval(28);
+  connect(m_pStuntTimer, &QTimer::timeout, this, &CMainWindow::OnStuntTimer, Qt::QueuedConnection);
+  m_pStuntTimer->start();
+
   //signals
   connect(this, &CMainWindow::LogMsgSig, this, &CMainWindow::OnLogMsg, Qt::QueuedConnection);
   connect(actNew, &QAction::triggered, this, &CMainWindow::OnNewTrack);
@@ -652,6 +658,21 @@ void CMainWindow::OnSaveHistoryTimer()
 
 //-------------------------------------------------------------------------------------------------
 
+void CMainWindow::OnStuntTimer()
+{
+  eWhipModel carModel;
+  eShapeSection aiLine;
+  bool bMillionPlus;
+  if (p && p->m_pDisplaySettings && p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus) & ANIMATE_STUNTS) {
+    if (GetCurrentTrack())
+      GetCurrentTrack()->UpdateStunts();
+    if (GetCurrentPreview())
+      GetCurrentPreview()->UpdateTrack(false);
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CMainWindow::LoadSettings()
 {
   QSettings settings(m_sSettingsFile, QSettings::IniFormat);
@@ -820,6 +841,9 @@ void CMainWindow::UpdateWindow()
     twViewer->setTabText(i, p->m_previewAy[i]->GetTitle(false));
   }
   setWindowTitle(sCurrentTab + sTitle);
+
+  if (GetCurrentTrack())
+    GetCurrentTrack()->GenerateTrackMath();
 
   if (GetCurrentPreview()) {
     GetCurrentPreview()->UpdateTrack();

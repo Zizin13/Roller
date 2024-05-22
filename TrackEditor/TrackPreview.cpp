@@ -312,16 +312,14 @@ bool CTrackPreview::LoadTrack(const QString &sFilename)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackPreview::UpdateTrack()
+void CTrackPreview::UpdateTrack(bool bDeleteModels)
 {
-  p->DeleteModels();
+  if (bDeleteModels)
+    p->DeleteModels();
 
   CShapeFactory::GetShapeFactory().m_fScale = 10000.0f / m_iScale;
   if (!p->m_track.m_chunkAy.empty()) {
     p->m_track.m_fScale = 10000.0f / m_iScale;
-    p->m_track.GenerateTrackMath();
-    p->m_track.UpdateTrack(); //todo: delete
-
     p->m_pLLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLLaneSurf, p->m_pShader, &p->m_track, eShapeSection::LLANE, m_bAttachLast);
     p->m_pLLaneWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLLaneWire, p->m_pShader, &p->m_track, eShapeSection::LLANE, m_bAttachLast, true);
     p->m_pRLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pRLaneSurf, p->m_pShader, &p->m_track, eShapeSection::RLANE, m_bAttachLast);
@@ -350,12 +348,14 @@ void CTrackPreview::UpdateTrack()
     p->m_pAILine2        = CShapeFactory::GetShapeFactory().MakeAILine(p->m_pAILine2, p->m_pShader, &p->m_track, eShapeSection::AILINE2, m_bAttachLast);
     p->m_pAILine3        = CShapeFactory::GetShapeFactory().MakeAILine(p->m_pAILine3, p->m_pShader, &p->m_track, eShapeSection::AILINE3, m_bAttachLast);
     p->m_pAILine4        = CShapeFactory::GetShapeFactory().MakeAILine(p->m_pAILine4, p->m_pShader, &p->m_track, eShapeSection::AILINE4, m_bAttachLast);
-    CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, p->m_signAy);
-    CShapeFactory::GetShapeFactory().MakeAudio(p->m_pShader, &p->m_track, p->m_audioAy);
-    CShapeFactory::GetShapeFactory().MakeStunts(p->m_pShader, &p->m_track, p->m_stuntAy);
+    if (bDeleteModels) {
+      CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, p->m_signAy);
+      CShapeFactory::GetShapeFactory().MakeAudio(p->m_pShader, &p->m_track, p->m_audioAy);
+      CShapeFactory::GetShapeFactory().MakeStunts(p->m_pShader, &p->m_track, p->m_stuntAy);
 
-    UpdateCar(m_carModel, m_carAILine, m_bMillionPlus);
-    UpdateGeometrySelection();
+      UpdateCar(m_carModel, m_carAILine, m_bMillionPlus);
+      UpdateGeometrySelection();
+    }
   }
   repaint();
 }
@@ -518,6 +518,7 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
 void CTrackPreview::SetScale(int iScale)
 {
   m_iScale = iScale;
+  p->m_track.GenerateTrackMath();
   UpdateTrack();
 }
 

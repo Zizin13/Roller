@@ -24,7 +24,7 @@ public:
   ~CTrackPreview();
 
   bool LoadTrack(const QString &sFilename);
-  void UpdateTrack();
+  void UpdateTrack(bool bDeleteModels = true);
   void ShowModels(uint32 uiShowModels);
   void UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
   void SetScale(int iScale);

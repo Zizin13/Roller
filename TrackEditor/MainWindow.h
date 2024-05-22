@@ -69,6 +69,7 @@ protected slots:
   void OnSetScale(int iValue);
   void OnUpdatePreview();
   void OnSaveHistoryTimer();
+  void OnStuntTimer();
 
 signals:
   void LogMsgSig(QString sMsg);
@@ -88,6 +89,7 @@ private:
   int m_iNewTrackNum;
   QString m_sHistoryDescription;
   QTimer *m_pSaveHistoryTimer;
+  QTimer *m_pStuntTimer;
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -201,7 +201,7 @@ public:
   void GetTrackData(std::vector<uint8> &data);
   void GenerateTrackMath();
   void ResetStunts();
-  void UpdateTrack();
+  void UpdateStunts();
   bool ShouldShowChunkSection(int i, eShapeSection section);
   bool HasPitchedStunt();
   bool UseCenterStunt(int i);

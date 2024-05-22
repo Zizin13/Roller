@@ -1101,7 +1101,7 @@ void CTrackData::ResetStunts()
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::UpdateTrack()
+void CTrackData::UpdateStunts()
 {
   CStuntMap::iterator it = m_stuntMap.begin();
   for (; it != m_stuntMap.end(); ++it) {
@@ -1113,7 +1113,18 @@ void CTrackData::UpdateTrack()
     if (iEnd > (int)m_chunkAy.size() - 1)
       iEnd = (int)m_chunkAy.size() - 1;
 
-    int iHeight = it->second.iHeight * it->second.iNumTicks;
+    int iHeight = 0;
+    if (it->second.iTickCurrIdx < it->second.iNumTicks)
+      iHeight = it->second.iHeight * it->second.iTickCurrIdx;
+    else if (it->second.iTickCurrIdx < it->second.iNumTicks + it->second.iTimeBulging)
+      iHeight = it->second.iHeight * it->second.iNumTicks;
+    else if (it->second.iTickCurrIdx < it->second.iNumTicks + it->second.iTimeBulging + it->second.iNumTicks)
+      iHeight = it->second.iHeight * (it->second.iNumTicks - (it->second.iTickCurrIdx - it->second.iNumTicks - it->second.iTimeBulging));
+    else if (it->second.iTickCurrIdx < it->second.iNumTicks + it->second.iTimeBulging + it->second.iNumTicks + it->second.iTimeFlat)
+      iHeight = 0;
+    else
+      it->second.iTickCurrIdx = 0;
+    it->second.iTickCurrIdx++;
     float fTheta = atan((float)iHeight / (float)m_chunkAy[iStart].iLength);
     
     //ramp before stunt
@@ -1121,7 +1132,7 @@ void CTrackData::UpdateTrack()
       int iPrevIndex = (int)m_chunkAy.size() - 1;
       if (i > 0)
         iPrevIndex = i - 1;
-      glm::vec3 prevCenter = m_chunkAy[iPrevIndex].math.centerStunt;
+      glm::vec3 prevCenter = (i == iStart) ? m_chunkAy[iPrevIndex].math.center : m_chunkAy[iPrevIndex].math.centerStunt;
       glm::vec3 nextChunkBase = glm::vec3(0, 0, 1);
       glm::mat4 yawMat = m_chunkAy[i].math.yawMat;
       glm::vec3 nextChunkYawed = glm::vec3(yawMat * glm::vec4(nextChunkBase, 1.0f));
@@ -1134,19 +1145,22 @@ void CTrackData::UpdateTrack()
       float fLen = (float)m_chunkAy[i].iLength / m_fScale * ((float)it->second.iRampSideLength / 1024.0f);
       glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
       m_chunkAy[i].math.centerStunt = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
-      if (it->second.iFlags & STUNT_FLAG_LLANE || it->second.iFlags & STUNT_FLAG_LSHOULDER)
-        GetLane(i, m_chunkAy[i].math.centerStunt, pitchAxis, m_chunkAy[i].math.rollMat, m_chunkAy[i].math.lLane, true);
-      if (it->second.iFlags & STUNT_FLAG_RLANE || it->second.iFlags & STUNT_FLAG_RSHOULDER)
-        GetLane(i, m_chunkAy[i].math.centerStunt, pitchAxis, m_chunkAy[i].math.rollMat, m_chunkAy[i].math.rLane, false);
+      glm::vec3 lLaneStunt;
+      glm::vec3 rLaneStunt;
+      GetLane(i, m_chunkAy[i].math.centerStunt, pitchAxis, m_chunkAy[i].math.rollMat, lLaneStunt, true);
+      GetLane(i, m_chunkAy[i].math.centerStunt, pitchAxis, m_chunkAy[i].math.rollMat, rLaneStunt, false);
+      if (it->second.iFlags & STUNT_FLAG_LLANE)
+        m_chunkAy[i].math.lLane = lLaneStunt;
+      if (it->second.iFlags & STUNT_FLAG_RLANE)
+        m_chunkAy[i].math.rLane = rLaneStunt;
       if (it->second.iFlags & STUNT_FLAG_LSHOULDER)
-        GetShoulder(i, m_chunkAy[i].math.lLane,
+        GetShoulder(i, lLaneStunt,
                     m_chunkAy[i].math.pitchAxis,
                     m_chunkAy[i].math.rollMat,
                     m_chunkAy[i].math.nextChunkPitched,
                     m_chunkAy[i].math.lShoulder, true);
       if (it->second.iFlags & STUNT_FLAG_RSHOULDER)
-        GetShoulder(i,
-                    m_chunkAy[i].math.rLane,
+        GetShoulder(i, rLaneStunt,
                     m_chunkAy[i].math.pitchAxis,
                     m_chunkAy[i].math.rollMat,
                     m_chunkAy[i].math.nextChunkPitched,
@@ -1230,7 +1244,7 @@ void CTrackData::UpdateTrack()
       int iPrevIndex = 0;
       if (i < (int)m_chunkAy.size() - 1)
         iPrevIndex = i + 1;
-      glm::vec3 prevCenter = m_chunkAy[iPrevIndex].math.centerStunt;
+      glm::vec3 prevCenter = (i == iEnd) ? m_chunkAy[iPrevIndex].math.center : m_chunkAy[iPrevIndex].math.centerStunt;
       glm::vec3 nextChunkBase = glm::vec3(0, 0, 1);
       glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[i].dYaw + 180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
       glm::vec3 nextChunkYawed = glm::vec3(yawMat * glm::vec4(nextChunkBase, 1.0f));
@@ -1243,19 +1257,23 @@ void CTrackData::UpdateTrack()
       float fLen = (float)m_chunkAy[i].iLength / m_fScale * ((float)it->second.iRampSideLength / 1024.0f);
       glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
       m_chunkAy[i].math.centerStunt = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
-      if (it->second.iFlags & STUNT_FLAG_LLANE || it->second.iFlags & STUNT_FLAG_LSHOULDER)
-        GetLane(i, m_chunkAy[i].math.centerStunt, pitchAxis, m_chunkAy[i].math.rollMat, m_chunkAy[i].math.lLane, false);
-      if (it->second.iFlags & STUNT_FLAG_RLANE || it->second.iFlags & STUNT_FLAG_RSHOULDER)
-        GetLane(i, m_chunkAy[i].math.centerStunt, pitchAxis, m_chunkAy[i].math.rollMat, m_chunkAy[i].math.rLane, true);
+      glm::vec3 lLaneStunt;
+      glm::vec3 rLaneStunt;
+      GetLane(i, m_chunkAy[i].math.centerStunt, pitchAxis, m_chunkAy[i].math.rollMat, lLaneStunt, false);
+      GetLane(i, m_chunkAy[i].math.centerStunt, pitchAxis, m_chunkAy[i].math.rollMat, rLaneStunt, true);
+      if (it->second.iFlags & STUNT_FLAG_LLANE)
+        m_chunkAy[i].math.lLane = lLaneStunt;
+      if (it->second.iFlags & STUNT_FLAG_RLANE)
+        m_chunkAy[i].math.rLane = rLaneStunt;
       if (it->second.iFlags & STUNT_FLAG_LSHOULDER)
-        GetShoulder(i, m_chunkAy[i].math.lLane,
+        GetShoulder(i, lLaneStunt,
                     m_chunkAy[i].math.pitchAxis,
                     m_chunkAy[i].math.rollMat,
                     m_chunkAy[i].math.nextChunkPitched,
                     m_chunkAy[i].math.lShoulder, true);
       if (it->second.iFlags & STUNT_FLAG_RSHOULDER)
         GetShoulder(i,
-                    m_chunkAy[i].math.rLane,
+                    rLaneStunt,
                     m_chunkAy[i].math.pitchAxis,
                     m_chunkAy[i].math.rollMat,
                     m_chunkAy[i].math.nextChunkPitched,

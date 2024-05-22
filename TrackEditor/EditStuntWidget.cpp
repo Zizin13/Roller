@@ -82,7 +82,7 @@ void CEditStuntWidget::UpdateGeometrySelection(int iFrom, int iTo)
     BLOCK_SIG_AND_DO(sbHeight, setValue(it->second.iHeight));
     BLOCK_SIG_AND_DO(sbTimeBulging, setValue(it->second.iTimeBulging));
     BLOCK_SIG_AND_DO(sbTimeFlat, setValue(it->second.iTimeFlat));
-    BLOCK_SIG_AND_DO(sldLength, setValue(it->second.iRampSideLength * 100 / 1024));
+    BLOCK_SIG_AND_DO(sldLength, setValue(it->second.iRampSideLength * 100 / STUNT_LENGTH_100_PERCENT));
     BLOCK_SIG_AND_DO(ck0LShoulder, setChecked(it->second.iFlags & STUNT_FLAG_LSHOULDER));
     BLOCK_SIG_AND_DO(ck1LWall, setChecked(it->second.iFlags & STUNT_FLAG_LWALL));
     BLOCK_SIG_AND_DO(ck2LLane, setChecked(it->second.iFlags & STUNT_FLAG_LLANE));
@@ -259,7 +259,7 @@ void CEditStuntWidget::LengthChanged(int iVal)
   if (it == g_pMainWindow->GetCurrentTrack()->m_stuntMap.end())
     return;
 
-  it->second.iRampSideLength = iVal * 1024 / 100;
+  it->second.iRampSideLength = iVal * STUNT_LENGTH_100_PERCENT / 100;
 
   g_pMainWindow->SaveHistory("Changed stunt ramp length");
   g_pMainWindow->UpdateWindow();
@@ -321,7 +321,7 @@ void CEditStuntWidget::StuntClicked()
     pNewStunt->iHeight = bChunkHasStunt ? 0 : 10;
     pNewStunt->iTimeBulging = bChunkHasStunt ? 0 : 30;
     pNewStunt->iTimeFlat = bChunkHasStunt ? 0 : 30;
-    pNewStunt->iRampSideLength = bChunkHasStunt ? 0 : 1024;
+    pNewStunt->iRampSideLength = bChunkHasStunt ? 0 : STUNT_LENGTH_100_PERCENT;
     pNewStunt->iFlags = bChunkHasStunt ? 0 : iAllFlags;
   } else {
     g_pMainWindow->GetCurrentTrack()->m_stuntMap.erase(it);
@@ -351,7 +351,7 @@ void CEditStuntWidget::UpdateDialog()
   leFlags->setFont(QFont("Courier", 8));
   leFlags->setText(QString::number(iValue).leftJustified(4, ' ') + szBuf);
 
-  lblLengthPercent->setText("(" + QString::number(it->second.iRampSideLength * 100 / 1024) + "%)");
+  lblLengthPercent->setText("(" + QString::number(it->second.iRampSideLength * 100 / STUNT_LENGTH_100_PERCENT) + "%)");
   lblTicksTimeS->setText("(" + QString::number(it->second.iNumTicks * 2.768 / 100, 'f', 2) + " s)");
   lblBulgeTimeS->setText("(" + QString::number(it->second.iTimeBulging * 2.768 / 100, 'f', 2) + " s)");
   lblFlatTimeS->setText("(" + QString::number(it->second.iTimeFlat * 2.768 / 100, 'f', 2) + " s)");

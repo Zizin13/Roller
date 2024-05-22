@@ -1095,7 +1095,7 @@ void CTrackData::ResetStunts()
 {
   CStuntMap::iterator it = m_stuntMap.begin();
   for (; it != m_stuntMap.end(); ++it) {
-    it->second.iTickCurrIdx = 0;
+    it->second.iTickCurrIdx = it->second.iTickStartIdx;
   }
 }
 
@@ -1114,16 +1114,26 @@ void CTrackData::UpdateStunts()
       iEnd = (int)m_chunkAy.size() - 1;
 
     int iHeight = 0;
-    if (it->second.iTickCurrIdx < it->second.iNumTicks)
+    int iLengthPercent = STUNT_LENGTH_100_PERCENT; //100%
+    int iDifference = it->second.iRampSideLength - STUNT_LENGTH_100_PERCENT;
+    if (it->second.iTickCurrIdx < it->second.iNumTicks) {
       iHeight = it->second.iHeight * it->second.iTickCurrIdx;
-    else if (it->second.iTickCurrIdx < it->second.iNumTicks + it->second.iTimeBulging)
+      float fTickPercent = (float)it->second.iTickCurrIdx / (float)it->second.iNumTicks;
+      iLengthPercent = (int)((float)STUNT_LENGTH_100_PERCENT + (float)iDifference * fTickPercent);
+    } else if (it->second.iTickCurrIdx < it->second.iNumTicks + it->second.iTimeBulging) {
       iHeight = it->second.iHeight * it->second.iNumTicks;
-    else if (it->second.iTickCurrIdx < it->second.iNumTicks + it->second.iTimeBulging + it->second.iNumTicks)
-      iHeight = it->second.iHeight * (it->second.iNumTicks - (it->second.iTickCurrIdx - it->second.iNumTicks - it->second.iTimeBulging));
-    else if (it->second.iTickCurrIdx < it->second.iNumTicks + it->second.iTimeBulging + it->second.iNumTicks + it->second.iTimeFlat)
+      iLengthPercent = it->second.iRampSideLength;
+    } else if (it->second.iTickCurrIdx < it->second.iNumTicks + it->second.iTimeBulging + it->second.iNumTicks) {
+      int iTickUseIdx = (it->second.iNumTicks - (it->second.iTickCurrIdx - it->second.iNumTicks - it->second.iTimeBulging));
+      iHeight = it->second.iHeight * iTickUseIdx;
+      float fTickPercent = (float)iTickUseIdx / (float)it->second.iNumTicks;
+      iLengthPercent = (int)((float)STUNT_LENGTH_100_PERCENT + (float)iDifference * fTickPercent);
+    } else if (it->second.iTickCurrIdx < it->second.iNumTicks + it->second.iTimeBulging + it->second.iNumTicks + it->second.iTimeFlat) {
       iHeight = 0;
-    else
+      iLengthPercent = STUNT_LENGTH_100_PERCENT;
+    } else {
       it->second.iTickCurrIdx = 0;
+    }
     it->second.iTickCurrIdx++;
     float fTheta = atan((float)iHeight / (float)m_chunkAy[iStart].iLength);
     
@@ -1142,7 +1152,7 @@ void CTrackData::UpdateStunts()
       glm::mat4 translateMat = glm::mat4(1);
       if (i > 0)
         translateMat = glm::translate(prevCenter);
-      float fLen = (float)m_chunkAy[i].iLength / m_fScale * ((float)it->second.iRampSideLength / 1024.0f);
+      float fLen = (float)m_chunkAy[i].iLength / m_fScale * ((float)iLengthPercent / (float)STUNT_LENGTH_100_PERCENT);
       glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
       m_chunkAy[i].math.centerStunt = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
       glm::vec3 lLaneStunt;

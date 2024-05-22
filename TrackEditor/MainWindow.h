@@ -69,22 +69,18 @@ protected slots:
   void OnSetScale(int iValue);
   void OnUpdatePreview();
   void OnSaveHistoryTimer();
-  void OnUpdateTrack(bool bDeleteModels);
+  void OnStuntTimer();
 
 signals:
   void LogMsgSig(QString sMsg);
   void UpdateWindowSig();
   void UpdateGeometrySelectionSig(int iFrom, int iTo);
-  void UpdateTrackSig(bool bDeleteModels);
 
 private:
   void LoadSettings();
   void SaveSettings();
   bool SaveChangesAndContinue();
   void UpdateGeometrySelection();
-  void WhipLibThread();
-  void CloseThread();
-  void UpdateStunts();
 
   CMainWindowPrivate *p;
   QString m_sAppPath;
@@ -93,6 +89,7 @@ private:
   int m_iNewTrackNum;
   QString m_sHistoryDescription;
   QTimer *m_pSaveHistoryTimer;
+  QTimer *m_pStuntTimer;
 };
 
 //-------------------------------------------------------------------------------------------------

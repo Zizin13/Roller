@@ -17,7 +17,6 @@ typedef unsigned __int64 uint64;
 //-------------------------------------------------------------------------------------------------
 
 typedef std::lock_guard<std::mutex> CLockGuard;
-typedef std::lock_guard<std::recursive_mutex> CRLockGuard;
 
 //-------------------------------------------------------------------------------------------------
 

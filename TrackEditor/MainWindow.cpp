@@ -80,12 +80,7 @@ public:
   CDisplaySettings *m_pDisplaySettings;
   QAction *m_pDebugAction;
   std::vector<CTrackPreview *> m_previewAy;
-  std::recursive_mutex m_previewMutex;
   CChunkAy m_clipBoard;
-
-  std::thread m_thread;
-  volatile bool m_bContinue;
-  volatile bool m_bUpdateStunts;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -177,9 +172,14 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   m_pSaveHistoryTimer->setInterval(250);
   connect(m_pSaveHistoryTimer, &QTimer::timeout, this, &CMainWindow::OnSaveHistoryTimer, Qt::QueuedConnection);
 
+  //setup stunt timer
+  m_pStuntTimer = new QTimer(this);
+  m_pStuntTimer->setInterval(28);
+  connect(m_pStuntTimer, &QTimer::timeout, this, &CMainWindow::OnStuntTimer, Qt::QueuedConnection);
+  m_pStuntTimer->start();
+
   //signals
   connect(this, &CMainWindow::LogMsgSig, this, &CMainWindow::OnLogMsg, Qt::QueuedConnection);
-  connect(this, &CMainWindow::UpdateTrackSig, this, &CMainWindow::OnUpdateTrack, Qt::QueuedConnection);
   connect(actNew, &QAction::triggered, this, &CMainWindow::OnNewTrack);
   connect(actLoad, &QAction::triggered, this, &CMainWindow::OnLoadTrack);
   connect(actSave, &QAction::triggered, this, &CMainWindow::OnSaveTrack);
@@ -210,9 +210,6 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
 
   //open window
   LoadSettings();
-
-  p->m_bContinue = true;
-  p->m_thread = std::thread(&CMainWindow::WhipLibThread, this);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -225,8 +222,6 @@ CMainWindow::~CMainWindow()
 
 void CMainWindow::closeEvent(QCloseEvent *pEvent)
 {
-  CloseThread();
-
   if (!SaveChangesAndContinue()) {
     pEvent->ignore();
     return;
@@ -236,7 +231,6 @@ void CMainWindow::closeEvent(QCloseEvent *pEvent)
   SaveSettings();
 
   //cleanup
-  CRLockGuard lock(p->m_previewMutex);
   twViewer->blockSignals(true);
   for (int i = 0; i < (int)p->m_previewAy.size(); ++i) {
     p->m_previewAy[i]->makeCurrent();
@@ -250,30 +244,6 @@ void CMainWindow::closeEvent(QCloseEvent *pEvent)
   if (p) {
     delete p;
     p = NULL;
-  }
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::WhipLibThread()
-{
-  uint64 ullTimerMs, ullTimer28Ms = 0;
-  while (p->m_bContinue) {
-    ullTimerMs = GetTickCount64();
-    if (ullTimer28Ms <= ullTimerMs) {
-      UpdateStunts();
-      ullTimer28Ms = ullTimerMs + 28;
-    }
-  }
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::CloseThread()
-{
-  if (p->m_bContinue) {
-    p->m_bContinue = false;
-    p->m_thread.join();
   }
 }
 
@@ -307,7 +277,6 @@ void CMainWindow::OnLogMsg(QString sMsg)
 
 void CMainWindow::OnNewTrack()
 {
-  CRLockGuard lock(p->m_previewMutex);
   CNewTrackDialog dlg(this, ++m_iNewTrackNum);
   if (dlg.exec()) {
     CTrackPreview *pPreview = new CTrackPreview(this, dlg.GetFilename());
@@ -326,7 +295,6 @@ void CMainWindow::OnNewTrack()
 
 void CMainWindow::OnLoadTrack()
 {
-  CRLockGuard lock(p->m_previewMutex);
   //load track
   QString sFilename = QDir::toNativeSeparators(QFileDialog::getOpenFileName(
     this, "Load Track", m_sLastTrackFilesFolder, QString("Track Files (*.TRK)")));
@@ -542,7 +510,6 @@ void CMainWindow::OnAbout()
 
 void CMainWindow::OnTabCloseRequested(int iIndex)
 {
-  CRLockGuard lock(p->m_previewMutex);
   if (iIndex > p->m_previewAy.size()) return;
 
   twViewer->blockSignals(true);
@@ -560,7 +527,6 @@ void CMainWindow::OnTabCloseRequested(int iIndex)
 
 void CMainWindow::OnTabChanged(int iIndex)
 {
-  CRLockGuard lock(p->m_previewMutex);
   if (iIndex > p->m_previewAy.size()) return;
 
   eWhipModel carModel;
@@ -696,24 +662,16 @@ void CMainWindow::OnSaveHistoryTimer()
 
 //-------------------------------------------------------------------------------------------------
 
-void CMainWindow::OnUpdateTrack(bool bDeleteModels)
+void CMainWindow::OnStuntTimer()
 {
-  if (GetCurrentPreview())
-    GetCurrentPreview()->UpdateTrack(bDeleteModels);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::UpdateStunts()
-{
-  //eWhipModel carModel;
-  //eShapeSection aiLine;
-  //bool bMillionPlus;
-  //if (p && p->m_pDisplaySettings && p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus) & ANIMATE_STUNTS) {
-  if (p->m_bUpdateStunts) {
+  eWhipModel carModel;
+  eShapeSection aiLine;
+  bool bMillionPlus;
+  if (p && p->m_pDisplaySettings && p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus) & ANIMATE_STUNTS) {
     if (GetCurrentTrack())
       GetCurrentTrack()->UpdateStunts();
-    emit UpdateTrackSig(false);
+    if (GetCurrentPreview())
+      GetCurrentPreview()->UpdateTrack(false);
   }
 }
 
@@ -815,7 +773,6 @@ void CMainWindow::LoadSettings()
   p->m_pDisplaySettings->SetDisplaySettings(uiShowModels, carModel, aiLine, bMillionPlus);
   p->m_pDisplaySettings->SetAttachLast(bAttachLast);
   p->m_pDisplaySettings->SetScale(iScale);
-  p->m_bUpdateStunts = uiShowModels & ANIMATE_STUNTS;
 
   //preferences
   m_preferences.iHistoryMaxSize = settings.value("history_max_size", m_preferences.iHistoryMaxSize).toInt();
@@ -867,7 +824,6 @@ void CMainWindow::SaveSettings()
 
 bool CMainWindow::SaveChangesAndContinue()
 {
-  CRLockGuard lock(p->m_previewMutex);
   bool bRet = true;
   for (int i = 0; i < p->m_previewAy.size(); ++i)
     bRet &= p->m_previewAy[i]->SaveChangesAndContinue();
@@ -880,7 +836,6 @@ bool CMainWindow::SaveChangesAndContinue()
 
 void CMainWindow::UpdateWindow()
 {
-  CRLockGuard lock(p->m_previewMutex);
   //update title bar
   QString sTitle = "Track Editor";
   QString sCurrentTab = "";
@@ -958,7 +913,6 @@ CTrack *CMainWindow::GetCurrentTrack()
 
 CTrackPreview *CMainWindow::GetCurrentPreview()
 {
-  CRLockGuard lock(p->m_previewMutex);
   if (p->m_previewAy.empty() || twViewer->currentIndex() >= (int)p->m_previewAy.size()) return NULL;
   return p->m_previewAy[twViewer->currentIndex()];
 }

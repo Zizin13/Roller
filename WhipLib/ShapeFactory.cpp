@@ -778,12 +778,12 @@ int CShapeFactory::GetAnmsCount(eWhipModel model)
 
 uint32 *CShapeFactory::MakeIndicesCenterline(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast)
 {
-  if (pTrack->m_chunkAy.empty()) {
+  if (pTrack->GetChunkCount() == 0) {
     numIndices = 0;
     return NULL;
   }
 
-  numIndices = (uint32)pTrack->m_chunkAy.size() * 2 - (bAttachLast ? 0 : 2);
+  numIndices = (uint32)pTrack->GetChunkCount() * 2 - (bAttachLast ? 0 : 2);
   uint32 *indices = new uint32[numIndices];
 
   for (uint32 i = 0; i < numIndices; i++) {
@@ -799,19 +799,19 @@ uint32 *CShapeFactory::MakeIndicesCenterline(uint32 &numIndices, CTrackData *pTr
 
 uint32 *CShapeFactory::MakeIndicesSurface(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast)
 {
-  if (pTrack->m_chunkAy.empty()) {
+  if (pTrack->GetChunkCount() == 0) {
     numIndices = 0;
     return NULL;
   }
 
   uint32 uiNumVertsPerChunk = 5;
   uint32 uiNumIndicesPerChunk = 24;
-  numIndices = (uint32)pTrack->m_chunkAy.size() * uiNumIndicesPerChunk;
+  numIndices = (uint32)pTrack->GetChunkCount() * uiNumIndicesPerChunk;
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
-  uint32 i = 0;
-  for (; i < pTrack->m_chunkAy.size() - 1; i++) {
+  int i = 0;
+  for (; i < pTrack->GetChunkCount() - 1; i++) {
     indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 3;
     indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 1;
     indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 6;
@@ -872,19 +872,19 @@ uint32 *CShapeFactory::MakeIndicesSurface(uint32 &numIndices, CTrackData *pTrack
 
 uint32 *CShapeFactory::MakeIndicesSurfaceWireframe(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast)
 {
-  if (pTrack->m_chunkAy.empty()) {
+  if (pTrack->GetChunkCount() == 0) {
     numIndices = 0;
     return NULL;
   }
 
   uint32 uiNumVertsPerChunk = 5;
   uint32 uiNumIndicesPerChunk = 18;
-  numIndices = (uint32)pTrack->m_chunkAy.size() * uiNumIndicesPerChunk;
+  numIndices = (uint32)pTrack->GetChunkCount() * uiNumIndicesPerChunk;
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
-  uint32 i = 0;
-  for (; i < pTrack->m_chunkAy.size() - 1; i++) {
+  int i = 0;
+  for (; i < pTrack->GetChunkCount() - 1; i++) {
     indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 3;
     indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 1;
     indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 1;
@@ -1083,44 +1083,51 @@ CShapeData *CShapeFactory::MakeSelectedChunks(CShapeData *pShape, CShader *pShad
 
 void CShapeFactory::MakeSigns(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &signAy)
 {
-  for (int i = 0; i < (int)pTrack->m_chunkAy.size(); ++i) {
-    if (pTrack->m_chunkAy[i].iSignType < 0 || pTrack->m_chunkAy[i].iSignType >= g_signAyCount)
+  for (int i = 0; i < pTrack->GetChunkCount(); ++i) {
+    tGeometryChunk chunk;
+    pTrack->GetChunk(i, chunk);
+    if (chunk.iSignType < 0 || chunk.iSignType >= g_signAyCount)
       continue; //no signs in this chunk
 
     //make sign
-    CShapeData *pNewSign = MakeModel(pShader, pTrack->m_pBld, g_signAy[pTrack->m_chunkAy[i].iSignType].modelType, pTrack->m_chunkAy[i].iSignTexture);
+    CShapeData *pNewSign = MakeModel(pShader, pTrack->m_pBld, g_signAy[chunk.iSignType].modelType, chunk.iSignTexture);
     if (!pNewSign)
       continue;
 
-    uint32 uiSignSurfaceType = CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[i].iSignTexture);
+    uint32 uiSignSurfaceType = CTrackData::GetSignedBitValueFromInt(chunk.iSignTexture);
 
     //position sign
-    bool bReversedOffsets = pTrack->m_chunkAy[i].dPitch >= 90.0f && pTrack->m_chunkAy[i].dPitch < 270.0f;
-    float fLen = (float)pTrack->m_chunkAy[i].iSignHorizOffset * 15.0f / m_fScale * (bReversedOffsets ? 1.0f : -1.0f);
-    float fHeight = (float)pTrack->m_chunkAy[i].iSignVertOffset * 15.0f / m_fScale * (bReversedOffsets ? 1.0f : -1.0f);
+    bool bReversedOffsets = chunk.dPitch >= 90.0f && chunk.dPitch < 270.0f;
+    float fLen = (float)chunk.iSignHorizOffset * 15.0f / m_fScale * (bReversedOffsets ? 1.0f : -1.0f);
+    float fHeight = (float)chunk.iSignVertOffset * 15.0f / m_fScale * (bReversedOffsets ? 1.0f : -1.0f);
 
     glm::vec3 center; //sign origin is midpoint of centerline
-    if (i + 1 < pTrack->m_chunkAy.size())
-      center = (pTrack->m_chunkAy[i + 1].math.center - pTrack->m_chunkAy[i].math.center) * 0.5f;
-    else
-      center = (pTrack->m_chunkAy[i].math.center - pTrack->m_chunkAy[0].math.center) * 0.5f;
-    glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[i].math.center + center);
+    if (i + 1 < pTrack->GetChunkCount()) {
+      tGeometryChunk nextChunk;
+      pTrack->GetChunk(i + 1, nextChunk);
+      center = (nextChunk.math.center - chunk.math.center) * 0.5f;
+    } else {
+      tGeometryChunk nextChunk;
+      pTrack->GetChunk(0, nextChunk);
+      center = (chunk.math.center - nextChunk.math.center) * 0.5f;
+    }
+    glm::mat4 translateMat = glm::translate(chunk.math.center + center);
 
     glm::mat4 scaleMatWidth = glm::scale(glm::vec3(fLen, fLen, fLen));
     glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
-    glm::vec3 widthVec = glm::vec3(scaleMatWidth * glm::vec4(pTrack->m_chunkAy[i].math.pitchAxis, 1.0f));
-    glm::vec3 normal = glm::normalize(glm::cross(pTrack->m_chunkAy[i].math.nextChunkPitched, pTrack->m_chunkAy[i].math.pitchAxis));
+    glm::vec3 widthVec = glm::vec3(scaleMatWidth * glm::vec4(chunk.math.pitchAxis, 1.0f));
+    glm::vec3 normal = glm::normalize(glm::cross(chunk.math.nextChunkPitched, chunk.math.pitchAxis));
     glm::vec3 heightVec = glm::vec3(scaleMatHeight * glm::vec4(normal, 1.0f));
     glm::vec3 signPos = widthVec + heightVec;
     glm::vec3 signPosTranslated = glm::vec3(translateMat * glm::vec4(signPos, 1.0f));
 
-    bool bBillboarded = g_signAy[pTrack->m_chunkAy[i].iSignType].bBillboarded;
+    bool bBillboarded = g_signAy[chunk.iSignType].bBillboarded;
 
-    glm::mat4 signYawMat = glm::rotate(glm::radians((float)pTrack->m_chunkAy[i].dSignYaw * -1.0f), normal);// glm::vec3(0, 1, 0));
-    glm::mat4 signPitchMat = glm::rotate(glm::radians((float)pTrack->m_chunkAy[i].dSignPitch * -1.0f), pTrack->m_chunkAy[i].math.pitchAxis); //glm::vec3(1, 0, 0));
-    glm::mat4 signRollMat = glm::rotate(glm::radians((float)pTrack->m_chunkAy[i].dSignRoll * -1.0f), glm::normalize(pTrack->m_chunkAy[i].math.nextChunkPitched));// glm::vec3(0, 0, 1));
+    glm::mat4 signYawMat = glm::rotate(glm::radians((float)chunk.dSignYaw * -1.0f), normal);// glm::vec3(0, 1, 0));
+    glm::mat4 signPitchMat = glm::rotate(glm::radians((float)chunk.dSignPitch * -1.0f), chunk.math.pitchAxis); //glm::vec3(1, 0, 0));
+    glm::mat4 signRollMat = glm::rotate(glm::radians((float)chunk.dSignRoll * -1.0f), glm::normalize(chunk.math.nextChunkPitched));// glm::vec3(0, 0, 1));
     pNewSign->m_modelToWorldMatrix = glm::translate(signPosTranslated) * 
-      signRollMat * signPitchMat * (bBillboarded ? pTrack->m_chunkAy[i].math.yawMat : signYawMat) *
+      signRollMat * signPitchMat * (bBillboarded ? chunk.math.yawMat : signYawMat) *
       glm::rotate(glm::radians(-90.0f), glm::vec3(0, 0, 1)) * //sign starts on its side
       glm::rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0)); //track starts facing z positive, sign starts facing x positive
     
@@ -1133,8 +1140,10 @@ void CShapeFactory::MakeSigns(CShader *pShader, CTrackData *pTrack, std::vector<
 
 void CShapeFactory::MakeAudio(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &audioAy)
 {
-  for (int i = 0; i < (int)pTrack->m_chunkAy.size(); ++i) {
-    bool bChunkHasAudio = pTrack->m_chunkAy[i].iAudioTriggerSpeed != 0;
+  for (int i = 0; i < pTrack->GetChunkCount(); ++i) {
+    tGeometryChunk chunk;
+    pTrack->GetChunk(i, chunk);
+    bool bChunkHasAudio = chunk.iAudioTriggerSpeed != 0;
     if (!bChunkHasAudio)
       continue; //no audio in this chunk
 
@@ -1142,15 +1151,15 @@ void CShapeFactory::MakeAudio(CShader *pShader, CTrackData *pTrack, std::vector<
     CShapeData *pNewMarker = MakeAudioMarker(pShader);
 
     float fHeight = (float)1000.0f / m_fScale * -1.0f;
-    glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[i].math.centerStunt);
+    glm::mat4 translateMat = glm::translate(chunk.math.centerStunt);
     glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
-    glm::vec3 normal = glm::normalize(glm::cross(pTrack->m_chunkAy[i].math.nextChunkPitched, pTrack->m_chunkAy[i].math.pitchAxis));
-    glm::vec3 heightVec = glm::vec3(scaleMatHeight * pTrack->m_chunkAy[i].math.rollMat * glm::vec4(normal, 1.0f));
+    glm::vec3 normal = glm::normalize(glm::cross(chunk.math.nextChunkPitched, chunk.math.pitchAxis));
+    glm::vec3 heightVec = glm::vec3(scaleMatHeight * chunk.math.rollMat * glm::vec4(normal, 1.0f));
     glm::vec3 markerPos = heightVec;
     glm::vec3 markerPosTranslated = glm::vec3(translateMat * glm::vec4(markerPos, 1.0f));
 
     pNewMarker->m_modelToWorldMatrix = glm::translate(markerPosTranslated) *
-      pTrack->m_chunkAy[i].math.rollMat * pTrack->m_chunkAy[i].math.pitchMat * pTrack->m_chunkAy[i].math.yawMat;
+      chunk.math.rollMat * chunk.math.pitchMat * chunk.math.yawMat;
 
     //add sign to array
     audioAy.push_back(pNewMarker);
@@ -1161,25 +1170,27 @@ void CShapeFactory::MakeAudio(CShader *pShader, CTrackData *pTrack, std::vector<
 
 void CShapeFactory::MakeStunts(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &stuntAy)
 {
-  for (CStuntMap::iterator it = pTrack->m_stuntMap.begin(); it != pTrack->m_stuntMap.end(); ++it) {
-    if (it->first < 0 || it->first >= pTrack->m_chunkAy.size()) {
-      assert(0);
+  for (int i = 0; i < pTrack->GetChunkCount(); ++i) {
+    tStunt stunt;
+    if (!pTrack->GetStunt(i, stunt))
       continue;
-    }
+
+    tGeometryChunk chunk;
+    pTrack->GetChunk(i, chunk);
 
     //make marker
     CShapeData *pNewMarker = MakeStuntMarker(pShader);
 
     float fHeight = (float)1000.0f / m_fScale * -1.0f;
-    glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[it->first].math.centerStunt);
+    glm::mat4 translateMat = glm::translate(chunk.math.centerStunt);
     glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
-    glm::vec3 normal = glm::normalize(glm::cross(pTrack->m_chunkAy[it->first].math.nextChunkPitched, pTrack->m_chunkAy[it->first].math.pitchAxis));
-    glm::vec3 heightVec = glm::vec3(scaleMatHeight * pTrack->m_chunkAy[it->first].math.rollMat * glm::vec4(normal, 1.0f));
+    glm::vec3 normal = glm::normalize(glm::cross(chunk.math.nextChunkPitched, chunk.math.pitchAxis));
+    glm::vec3 heightVec = glm::vec3(scaleMatHeight * chunk.math.rollMat * glm::vec4(normal, 1.0f));
     glm::vec3 markerPos = heightVec;
     glm::vec3 markerPosTranslated = glm::vec3(translateMat * glm::vec4(markerPos, 1.0f));
 
     pNewMarker->m_modelToWorldMatrix = glm::translate(markerPosTranslated) *
-      pTrack->m_chunkAy[it->first].math.rollMat * pTrack->m_chunkAy[it->first].math.pitchMat * pTrack->m_chunkAy[it->first].math.yawMat;
+      chunk.math.rollMat * chunk.math.pitchMat * chunk.math.yawMat;
 
     //add sign to array
     stuntAy.push_back(pNewMarker);
@@ -1215,22 +1226,25 @@ void CShapeFactory::MakeStunts(CShader *pShader, CTrackData *pTrack, std::vector
 
 void CShapeFactory::GetCarPos(CTrackData *pTrack, int iChunk, eShapeSection aiLineSection, glm::mat4 &modelToWorldMatrix, bool bMillionPlus)
 {
-  if (pTrack->m_chunkAy.empty() || iChunk > (int)pTrack->m_chunkAy.size() - 1)
+  if (pTrack->GetChunkCount() == 0 || iChunk > pTrack->GetChunkCount() - 1)
     return;
+
+  tGeometryChunk chunk;
+  pTrack->GetChunk(iChunk, chunk);
 
   glm::vec3 carLine;
   switch (aiLineSection) {
     case eShapeSection::AILINE1:
-      carLine = pTrack->m_chunkAy[iChunk].math.carLine1;
+      carLine = chunk.math.carLine1;
       break;
     case eShapeSection::AILINE2:
-      carLine = pTrack->m_chunkAy[iChunk].math.carLine2;
+      carLine = chunk.math.carLine2;
       break;
     case eShapeSection::AILINE3:
-      carLine = pTrack->m_chunkAy[iChunk].math.carLine3;
+      carLine = chunk.math.carLine3;
       break;
     case eShapeSection::AILINE4:
-      carLine = pTrack->m_chunkAy[iChunk].math.carLine4;
+      carLine = chunk.math.carLine4;
       break;
     default:
       assert(0);
@@ -1240,7 +1254,7 @@ void CShapeFactory::GetCarPos(CTrackData *pTrack, int iChunk, eShapeSection aiLi
   if (bMillionPlus)
     fRotate = 90.0f;
   modelToWorldMatrix = glm::translate(carLine) *
-    pTrack->m_chunkAy[iChunk].math.rollMat * pTrack->m_chunkAy[iChunk].math.pitchMat * pTrack->m_chunkAy[iChunk].math.yawMat *
+    chunk.math.rollMat * chunk.math.pitchMat * chunk.math.yawMat *
     glm::rotate(glm::radians(fRotate), glm::vec3(0, 0, 1)) * //car starts on its side
     glm::rotate(glm::radians(fRotate), glm::vec3(0, 1, 0)); //track starts facing z positive, car starts facing x positive
 }
@@ -1249,7 +1263,7 @@ void CShapeFactory::GetCarPos(CTrackData *pTrack, int iChunk, eShapeSection aiLi
 
 tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CTrackData *pTrack, CTexture *pTexture)
 {
-  if (pTrack->m_chunkAy.empty()) {
+  if (pTrack->GetChunkCount() == 0) {
     numVertices = 0;
     return NULL;
   }
@@ -1258,22 +1272,27 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
   if (section == eShapeSection::SELECTED) uiNumVertsPerChunk = 8;
   if (section >= eShapeSection::AILINE1 && section <= eShapeSection::AILINE4) uiNumVertsPerChunk = 1;
 
-  numVertices = (uint32)pTrack->m_chunkAy.size() * uiNumVertsPerChunk;
+  numVertices = (uint32)pTrack->GetChunkCount() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
-  for (uint32 i = 0; i < pTrack->m_chunkAy.size(); ++i) {
-    int iChunkIndex = (int)pTrack->m_chunkAy.size() - 1;
+  for (int i = 0; i < pTrack->GetChunkCount(); ++i) {
+    int iChunkIndex = (int)pTrack->GetChunkCount() - 1;
     if (i > 0)
       iChunkIndex = i - 1;
+
+    tGeometryChunk chunk;
+    tGeometryChunk prevChunk;
+    pTrack->GetChunk(i, chunk);
+    pTrack->GetChunk(iChunkIndex, prevChunk);
 
     switch (section) {
       case LLANE:
         ApplyVerticesSingleSection(i, vertices, 
-                                   pTrack->m_chunkAy[i].math.lLane, 
-                                   pTrack->UseCenterStunt(i) ? pTrack->m_chunkAy[i].math.centerStunt : pTrack->m_chunkAy[i].math.center, 
-                                   pTrack->m_chunkAy[iChunkIndex].math.lLane,
-                                   pTrack->UseCenterStunt(iChunkIndex) ? pTrack->m_chunkAy[iChunkIndex].math.centerStunt : pTrack->m_chunkAy[iChunkIndex].math.center);
+                                   chunk.math.lLane, 
+                                   pTrack->UseCenterStunt(i) ? chunk.math.centerStunt : chunk.math.center, 
+                                   prevChunk.math.lLane,
+                                   pTrack->UseCenterStunt(iChunkIndex) ? prevChunk.math.centerStunt : prevChunk.math.center);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
+          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(prevChunk.iCenterSurfaceType),
                                 vertices[i * uiNumVertsPerChunk + 0],
                                 vertices[i * uiNumVertsPerChunk + 1],
                                 vertices[i * uiNumVertsPerChunk + 2],
@@ -1281,12 +1300,12 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         break;
       case RLANE:
         ApplyVerticesSingleSection(i, vertices, 
-                                   pTrack->UseCenterStunt(i) ? pTrack->m_chunkAy[i].math.centerStunt : pTrack->m_chunkAy[i].math.center,
-                                   pTrack->m_chunkAy[i].math.rLane, 
-                                   pTrack->UseCenterStunt(iChunkIndex) ? pTrack->m_chunkAy[iChunkIndex].math.centerStunt : pTrack->m_chunkAy[iChunkIndex].math.center,
-                                   pTrack->m_chunkAy[iChunkIndex].math.rLane);
+                                   pTrack->UseCenterStunt(i) ? chunk.math.centerStunt : chunk.math.center,
+                                   chunk.math.rLane, 
+                                   pTrack->UseCenterStunt(iChunkIndex) ? prevChunk.math.centerStunt : prevChunk.math.center,
+                                   prevChunk.math.rLane);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
+          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(prevChunk.iCenterSurfaceType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -1294,12 +1313,12 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         break;
       case LSHOULDER:
         ApplyVerticesSingleSection(i, vertices, 
-                                   pTrack->m_chunkAy[i].math.lShoulder, 
-                                   pTrack->m_chunkAy[i].math.lLane, 
-                                   pTrack->m_chunkAy[iChunkIndex].math.lShoulder,
-                                   pTrack->m_chunkAy[iChunkIndex].math.lLane);
+                                   chunk.math.lShoulder, 
+                                   chunk.math.lLane, 
+                                   prevChunk.math.lShoulder,
+                                   prevChunk.math.lLane);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftSurfaceType),
+          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(prevChunk.iLeftSurfaceType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -1307,12 +1326,12 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         break;
       case RSHOULDER:
         ApplyVerticesSingleSection(i, vertices, 
-                                   pTrack->m_chunkAy[i].math.rLane, 
-                                   pTrack->m_chunkAy[i].math.rShoulder, 
-                                   pTrack->m_chunkAy[iChunkIndex].math.rLane,
-                                   pTrack->m_chunkAy[iChunkIndex].math.rShoulder);
+                                   chunk.math.rLane, 
+                                   chunk.math.rShoulder, 
+                                   prevChunk.math.rLane,
+                                   prevChunk.math.rShoulder);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightSurfaceType),
+          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(prevChunk.iRightSurfaceType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -1320,12 +1339,12 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         break;
       case LWALL:
         ApplyVerticesSingleSection(i, vertices, 
-                                   pTrack->m_chunkAy[i].math.lWall, 
-                                   pTrack->m_chunkAy[i].math.lWallBottomAttach, 
-                                   pTrack->m_chunkAy[iChunkIndex].math.lWall,
-                                   pTrack->m_chunkAy[iChunkIndex].math.lWallBottomAttach);
+                                   chunk.math.lWall, 
+                                   chunk.math.lWallBottomAttach, 
+                                   prevChunk.math.lWall,
+                                   prevChunk.math.lWallBottomAttach);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType),
+          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(prevChunk.iLeftWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -1333,12 +1352,12 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         break;
       case RWALL:
         ApplyVerticesSingleSection(i, vertices, 
-                                   pTrack->m_chunkAy[i].math.rWallBottomAttach, 
-                                   pTrack->m_chunkAy[i].math.rWall, 
-                                   pTrack->m_chunkAy[iChunkIndex].math.rWallBottomAttach,
-                                   pTrack->m_chunkAy[iChunkIndex].math.rWall);
+                                   chunk.math.rWallBottomAttach, 
+                                   chunk.math.rWall, 
+                                   prevChunk.math.rWallBottomAttach,
+                                   prevChunk.math.rWall);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType),
+          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(prevChunk.iRightWallType),
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 3],
                               vertices[i * uiNumVertsPerChunk + 0],
@@ -1346,12 +1365,12 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         break;
       case ROOF:
         ApplyVerticesSingleSection(i, vertices, 
-                                   pTrack->m_chunkAy[i].math.rWall, 
-                                   pTrack->m_chunkAy[i].math.lWall, 
-                                   pTrack->m_chunkAy[iChunkIndex].math.rWall,
-                                   pTrack->m_chunkAy[iChunkIndex].math.lWall);
+                                   chunk.math.rWall, 
+                                   chunk.math.lWall, 
+                                   prevChunk.math.rWall,
+                                   prevChunk.math.lWall);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRoofType),
+          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(prevChunk.iRoofType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -1359,12 +1378,12 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         break;
       case OWALLFLOOR:
         ApplyVerticesSingleSection(i, vertices, 
-                                   pTrack->m_chunkAy[i].math.lFloor, 
-                                   pTrack->m_chunkAy[i].math.rFloor, 
-                                   pTrack->m_chunkAy[iChunkIndex].math.lFloor,
-                                   pTrack->m_chunkAy[iChunkIndex].math.rFloor);
+                                   chunk.math.lFloor, 
+                                   chunk.math.rFloor, 
+                                   prevChunk.math.lFloor,
+                                   prevChunk.math.rFloor);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iOuterFloorType),
+          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(prevChunk.iOuterFloorType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -1372,12 +1391,12 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         break;
       case LLOWALL:
         ApplyVerticesSingleSection(i, vertices, 
-                                   pTrack->m_chunkAy[i].math.lloWall, 
-                                   pTrack->m_chunkAy[i].math.lloWallBottomAttach, 
-                                   pTrack->m_chunkAy[iChunkIndex].math.lloWall,
-                                   pTrack->m_chunkAy[iChunkIndex].math.lloWallBottomAttach);
+                                   chunk.math.lloWall, 
+                                   chunk.math.lloWallBottomAttach, 
+                                   prevChunk.math.lloWall,
+                                   prevChunk.math.lloWallBottomAttach);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLLOuterWallType),
+          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(prevChunk.iLLOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -1385,12 +1404,12 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         break;
       case RLOWALL:
         ApplyVerticesSingleSection(i, vertices, 
-                                   pTrack->m_chunkAy[i].math.rloWallBottomAttach, 
-                                   pTrack->m_chunkAy[i].math.rloWall, 
-                                   pTrack->m_chunkAy[iChunkIndex].math.rloWallBottomAttach,
-                                   pTrack->m_chunkAy[iChunkIndex].math.rloWall);
+                                   chunk.math.rloWallBottomAttach, 
+                                   chunk.math.rloWall, 
+                                   prevChunk.math.rloWallBottomAttach,
+                                   prevChunk.math.rloWall);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRLOuterWallType),
+          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(prevChunk.iRLOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -1398,12 +1417,12 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         break;
       case LUOWALL:
         ApplyVerticesSingleSection(i, vertices, 
-                                   pTrack->m_chunkAy[i].math.luoWall, 
-                                   pTrack->m_chunkAy[i].math.lloWall, 
-                                   pTrack->m_chunkAy[iChunkIndex].math.luoWall,
-                                   pTrack->m_chunkAy[iChunkIndex].math.lloWall);
+                                   chunk.math.luoWall, 
+                                   chunk.math.lloWall, 
+                                   prevChunk.math.luoWall,
+                                   prevChunk.math.lloWall);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLUOuterWallType),
+          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(prevChunk.iLUOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -1411,38 +1430,38 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         break;
       case RUOWALL:
         ApplyVerticesSingleSection(i, vertices, 
-                                   pTrack->m_chunkAy[i].math.rloWall, 
-                                   pTrack->m_chunkAy[i].math.ruoWall, 
-                                   pTrack->m_chunkAy[iChunkIndex].math.rloWall,
-                                   pTrack->m_chunkAy[iChunkIndex].math.ruoWall);
+                                   chunk.math.rloWall, 
+                                   chunk.math.ruoWall, 
+                                   prevChunk.math.rloWall,
+                                   prevChunk.math.ruoWall);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRUOuterWallType),
+          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(prevChunk.iRUOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
                               vertices[i * uiNumVertsPerChunk + 1]);
         break;
       case SELECTED:
-        vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.luoWall;
-        vertices[i * uiNumVertsPerChunk + 1].position = pTrack->m_chunkAy[i].math.ruoWall;
-        vertices[i * uiNumVertsPerChunk + 2].position = pTrack->m_chunkAy[i].math.lloWallBottomAttach;
-        vertices[i * uiNumVertsPerChunk + 3].position = pTrack->m_chunkAy[i].math.rloWallBottomAttach;
-        vertices[i * uiNumVertsPerChunk + 4].position = pTrack->m_chunkAy[iChunkIndex].math.luoWall;
-        vertices[i * uiNumVertsPerChunk + 5].position = pTrack->m_chunkAy[iChunkIndex].math.ruoWall;
-        vertices[i * uiNumVertsPerChunk + 6].position = pTrack->m_chunkAy[iChunkIndex].math.lloWallBottomAttach;
-        vertices[i * uiNumVertsPerChunk + 7].position = pTrack->m_chunkAy[iChunkIndex].math.rloWallBottomAttach;
+        vertices[i * uiNumVertsPerChunk + 0].position = chunk.math.luoWall;
+        vertices[i * uiNumVertsPerChunk + 1].position = chunk.math.ruoWall;
+        vertices[i * uiNumVertsPerChunk + 2].position = chunk.math.lloWallBottomAttach;
+        vertices[i * uiNumVertsPerChunk + 3].position = chunk.math.rloWallBottomAttach;
+        vertices[i * uiNumVertsPerChunk + 4].position = prevChunk.math.luoWall;
+        vertices[i * uiNumVertsPerChunk + 5].position = prevChunk.math.ruoWall;
+        vertices[i * uiNumVertsPerChunk + 6].position = prevChunk.math.lloWallBottomAttach;
+        vertices[i * uiNumVertsPerChunk + 7].position = prevChunk.math.rloWallBottomAttach;
         break;
       case AILINE1:
-        vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.aiLine1;
+        vertices[i * uiNumVertsPerChunk + 0].position = chunk.math.aiLine1;
         break;
       case AILINE2:
-        vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.aiLine2;
+        vertices[i * uiNumVertsPerChunk + 0].position = chunk.math.aiLine2;
         break;
       case AILINE3:
-        vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.aiLine3;
+        vertices[i * uiNumVertsPerChunk + 0].position = chunk.math.aiLine3;
         break;
       case AILINE4:
-        vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.aiLine4;
+        vertices[i * uiNumVertsPerChunk + 0].position = chunk.math.aiLine4;
         break;
       default:
         assert(0); //shape not implemented
@@ -1456,10 +1475,13 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
 
 tVertex *CShapeFactory::MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTrack, CTexture *pTexture, int iIndex)
 {
-  if (pTrack->m_chunkAy.empty() || iIndex >= pTrack->m_chunkAy.size()) {
+  if (pTrack->GetChunkCount() == 0 || iIndex >= pTrack->GetChunkCount()) {
     numVertices = 0;
     return NULL;
   }
+
+  tGeometryChunk chunk;
+  pTrack->GetChunk(iIndex, chunk);
 
   numVertices = 4;
   tVertex *vertices = new tVertex[numVertices];
@@ -1470,7 +1492,7 @@ tVertex *CShapeFactory::MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTr
   vertices[2].position = glm::vec3(+fPadding, fEnvirFloorDepth, -fPadding);
   vertices[3].position = glm::vec3(+fPadding, fEnvirFloorDepth, +fPadding);
   pTexture->GetTextureCoordinates(
-    CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iIndex].iEnvironmentFloorType) & SURFACE_TEXTURE_INDEX,
+    CTrackData::GetSignedBitValueFromInt(chunk.iEnvironmentFloorType) & SURFACE_TEXTURE_INDEX,
     vertices[0], vertices[1], vertices[2], vertices[3]);
   vertices[0].flags.x = 1.0f;
   vertices[1].flags.x = 1.0f;
@@ -1502,19 +1524,19 @@ uint32 *CShapeFactory::MakeIndicesEnvirFloor(uint32 &numIndices)
 
 uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section, CTrackData *pTrack, bool bAttachLast)
 {
-  if (pTrack->m_chunkAy.empty()) {
+  if (pTrack->GetChunkCount() == 0) {
     numIndices = 0;
     return NULL;
   }
 
   uint32 uiNumVertsPerChunk = 4;
   uint32 uiNumIndicesPerChunk = 6;
-  numIndices = (uint32)pTrack->m_chunkAy.size() * uiNumIndicesPerChunk;
+  numIndices = (uint32)pTrack->GetChunkCount() * uiNumIndicesPerChunk;
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
-  uint32 i = 0;
-  for (; i < pTrack->m_chunkAy.size(); i++) {
+  int i = 0;
+  for (; i < pTrack->GetChunkCount(); i++) {
     //if (section == eShapeSection::LWALL || section == eShapeSection::RWALL) {
     //  //walls don't draw if forward section isn't drawn
     //  if (!ShouldMakeIndicesForChunk(i, section))
@@ -1522,7 +1544,7 @@ uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSectio
     //}
     if (i > 0 && !pTrack->ShouldShowChunkSection(i - 1, section))
       continue;
-    else if (i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), section))
+    else if (i == 0 && !pTrack->ShouldShowChunkSection((pTrack->GetChunkCount() - 1), section))
       continue;
     //else if (i == 0 && !ShouldMakeIndicesForChunk(((int)pTrack->m_chunkAy.size() - (int)i + 1), section))
     //  continue;
@@ -1544,22 +1566,22 @@ uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSectio
 
 uint32 *CShapeFactory::MakeIndicesSelectedChunks(uint32 &numIndices, int iStart, int iEnd, CTrackData *pTrack)
 {
-  if (pTrack->m_chunkAy.empty()) {
+  if (pTrack->GetChunkCount() == 0) {
     numIndices = 0;
     return NULL;
   }
 
   uint32 uiNumVertsPerChunk = 8;
   uint32 uiNumIndicesPerChunk = 24;
-  numIndices = (uint32)pTrack->m_chunkAy.size() * uiNumIndicesPerChunk;
+  numIndices = (uint32)pTrack->GetChunkCount() * uiNumIndicesPerChunk;
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
-  bool bDrawChunk0 = (iEnd == pTrack->m_chunkAy.size() - 1);
+  bool bDrawChunk0 = (iEnd == pTrack->GetChunkCount() - 1);
   iStart++;
   iEnd++;
-  if (iEnd > pTrack->m_chunkAy.size() - 1)
-    iEnd = (int)pTrack->m_chunkAy.size() - 1;
+  if (iEnd > pTrack->GetChunkCount() - 1)
+    iEnd = pTrack->GetChunkCount() - 1;
 
   int i = iStart;
   for (; i <= iEnd; i++) {
@@ -1627,19 +1649,19 @@ uint32 *CShapeFactory::MakeIndicesSelectedChunks(uint32 &numIndices, int iStart,
 
 uint32 *CShapeFactory::MakeIndicesSingleSectionWireframe(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast)
 {
-  if (pTrack->m_chunkAy.empty()) {
+  if (pTrack->GetChunkCount() == 0) {
     numIndices = 0;
     return NULL;
   }
 
   uint32 uiNumVertsPerChunk = 4;
   uint32 uiNumIndicesPerChunk = 8;
-  numIndices = (uint32)pTrack->m_chunkAy.size() * uiNumIndicesPerChunk;
+  numIndices = (uint32)pTrack->GetChunkCount() * uiNumIndicesPerChunk;
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
-  uint32 i = 0;
-  for (; i < pTrack->m_chunkAy.size(); i++) {
+  int i = 0;
+  for (; i < pTrack->GetChunkCount(); i++) {
     if (!bAttachLast && i == 0)
       continue;
 

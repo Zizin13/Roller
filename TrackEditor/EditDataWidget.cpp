@@ -174,7 +174,7 @@ void CEditDataWidget::OnUpdateWindow()
   if (!g_pMainWindow->GetCurrentTrack())
     return;
 
-  sbInsert->setRange(1, 65535 - (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size());
+  sbInsert->setRange(1, 65535 - g_pMainWindow->GetCurrentTrack()->GetChunkCount());
   UpdateGeometryEditMode();
 }
 

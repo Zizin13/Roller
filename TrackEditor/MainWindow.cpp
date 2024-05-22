@@ -375,24 +375,28 @@ void CMainWindow::OnCopy()
   if (!GetCurrentTrack())
     return;
 
-  if (sbSelChunksTo->value() >= (int)GetCurrentTrack()->m_chunkAy.size() 
-      || sbSelChunksFrom->value() >= (int)GetCurrentTrack()->m_chunkAy.size())
+  if (sbSelChunksTo->value() >= GetCurrentTrack()->GetChunkCount()
+      || sbSelChunksFrom->value() >= GetCurrentTrack()->GetChunkCount())
     return;
 
   p->m_clipBoard.clear();
 
   int iPrevChunk = sbSelChunksFrom->value() - 1;
   if (iPrevChunk < 0)
-    iPrevChunk = (int)GetCurrentTrack()->m_chunkAy.size() - 1;
+    iPrevChunk = GetCurrentTrack()->GetChunkCount() - 1;
 
   for (int i = sbSelChunksFrom->value(); i <= sbSelChunksTo->value(); ++i) {
-    p->m_clipBoard.push_back(GetCurrentTrack()->m_chunkAy[i]);
+    tGeometryChunk chunk;
+    tGeometryChunk prevChunk;
+    GetCurrentTrack()->GetChunk(i, chunk);
+    GetCurrentTrack()->GetChunk(iPrevChunk, prevChunk);
+    p->m_clipBoard.push_back(chunk);
     if (m_preferences.bCopyRelativeYaw)
-      p->m_clipBoard[p->m_clipBoard.size() - 1].dYaw = p->m_clipBoard[p->m_clipBoard.size() - 1].dYaw - GetCurrentTrack()->m_chunkAy[iPrevChunk].dYaw;
+      p->m_clipBoard[p->m_clipBoard.size() - 1].dYaw = p->m_clipBoard[p->m_clipBoard.size() - 1].dYaw - prevChunk.dYaw;
     if (m_preferences.bCopyRelativePitch)
-      p->m_clipBoard[p->m_clipBoard.size() - 1].dPitch = p->m_clipBoard[p->m_clipBoard.size() - 1].dPitch - GetCurrentTrack()->m_chunkAy[iPrevChunk].dPitch;
+      p->m_clipBoard[p->m_clipBoard.size() - 1].dPitch = p->m_clipBoard[p->m_clipBoard.size() - 1].dPitch - prevChunk.dPitch;
     if (m_preferences.bCopyRelativeRoll)
-      p->m_clipBoard[p->m_clipBoard.size() - 1].dRoll = p->m_clipBoard[p->m_clipBoard.size() - 1].dRoll - GetCurrentTrack()->m_chunkAy[iPrevChunk].dRoll;
+      p->m_clipBoard[p->m_clipBoard.size() - 1].dRoll = p->m_clipBoard[p->m_clipBoard.size() - 1].dRoll - prevChunk.dRoll;
   }
 }
 
@@ -403,8 +407,8 @@ void CMainWindow::OnPaste()
   if (!GetCurrentTrack())
     return;
 
-  if (sbSelChunksTo->value() > (int)GetCurrentTrack()->m_chunkAy.size()
-      || sbSelChunksFrom->value() > (int)GetCurrentTrack()->m_chunkAy.size())
+  if (sbSelChunksTo->value() > GetCurrentTrack()->GetChunkCount()
+      || sbSelChunksFrom->value() > GetCurrentTrack()->GetChunkCount())
     return;
 
   if (sbSelChunksTo->value() != sbSelChunksFrom->value())
@@ -412,28 +416,30 @@ void CMainWindow::OnPaste()
 
   int iPrevChunk = sbSelChunksFrom->value() - 1;
   if (iPrevChunk < 0)
-    iPrevChunk = (int)GetCurrentTrack()->m_chunkAy.size() - 1;
+    iPrevChunk = GetCurrentTrack()->GetChunkCount() - 1;\
+  tGeometryChunk prevChunk;
+  GetCurrentTrack()->GetChunk(iPrevChunk, prevChunk);
 
   for (int i = 0; i < (int)p->m_clipBoard.size(); ++i) {
     if (m_preferences.bCopyRelativeYaw)
-      p->m_clipBoard[i].dYaw = p->m_clipBoard[i].dYaw + GetCurrentTrack()->m_chunkAy[iPrevChunk].dYaw;
+      p->m_clipBoard[i].dYaw = p->m_clipBoard[i].dYaw + prevChunk.dYaw;
     if (m_preferences.bCopyRelativePitch)
-      p->m_clipBoard[i].dPitch = p->m_clipBoard[i].dPitch + GetCurrentTrack()->m_chunkAy[iPrevChunk].dPitch;
+      p->m_clipBoard[i].dPitch = p->m_clipBoard[i].dPitch + prevChunk.dPitch;
     if (m_preferences.bCopyRelativeRoll)
-      p->m_clipBoard[i].dRoll = p->m_clipBoard[i].dRoll + GetCurrentTrack()->m_chunkAy[iPrevChunk].dRoll;
+      p->m_clipBoard[i].dRoll = p->m_clipBoard[i].dRoll + prevChunk.dRoll;
     if (m_preferences.bPasteNoSurface) {
-      p->m_clipBoard[i].iLeftSurfaceType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iLeftSurfaceType;
-      p->m_clipBoard[i].iCenterSurfaceType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iCenterSurfaceType;
-      p->m_clipBoard[i].iRightSurfaceType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iRightSurfaceType;
-      p->m_clipBoard[i].iLeftWallType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iLeftWallType;
-      p->m_clipBoard[i].iRightWallType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iRightWallType;
-      p->m_clipBoard[i].iRoofType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iRoofType;
-      p->m_clipBoard[i].iLUOuterWallType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iLUOuterWallType;
-      p->m_clipBoard[i].iLLOuterWallType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iLLOuterWallType;
-      p->m_clipBoard[i].iOuterFloorType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iOuterFloorType;
-      p->m_clipBoard[i].iRLOuterWallType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iRLOuterWallType;
-      p->m_clipBoard[i].iRUOuterWallType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iRUOuterWallType;
-      p->m_clipBoard[i].iEnvironmentFloorType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iEnvironmentFloorType;
+      p->m_clipBoard[i].iLeftSurfaceType      = prevChunk.iLeftSurfaceType;
+      p->m_clipBoard[i].iCenterSurfaceType    = prevChunk.iCenterSurfaceType;
+      p->m_clipBoard[i].iRightSurfaceType     = prevChunk.iRightSurfaceType;
+      p->m_clipBoard[i].iLeftWallType         = prevChunk.iLeftWallType;
+      p->m_clipBoard[i].iRightWallType        = prevChunk.iRightWallType;
+      p->m_clipBoard[i].iRoofType             = prevChunk.iRoofType;
+      p->m_clipBoard[i].iLUOuterWallType      = prevChunk.iLUOuterWallType;
+      p->m_clipBoard[i].iLLOuterWallType      = prevChunk.iLLOuterWallType;
+      p->m_clipBoard[i].iOuterFloorType       = prevChunk.iOuterFloorType;
+      p->m_clipBoard[i].iRLOuterWallType      = prevChunk.iRLOuterWallType;
+      p->m_clipBoard[i].iRUOuterWallType      = prevChunk.iRUOuterWallType;
+      p->m_clipBoard[i].iEnvironmentFloorType = prevChunk.iEnvironmentFloorType;
     }
     p->m_clipBoard[i].dYaw = CTrack::ConstrainAngle(p->m_clipBoard[i].dYaw);
     p->m_clipBoard[i].dPitch = CTrack::ConstrainAngle(p->m_clipBoard[i].dPitch);
@@ -441,13 +447,13 @@ void CMainWindow::OnPaste()
   }
 
   for (int i = 0; i < (int)p->m_clipBoard.size(); ++i) {
-    GetCurrentTrack()->m_chunkAy.insert(GetCurrentTrack()->m_chunkAy.begin() + i + sbSelChunksFrom->value(), p->m_clipBoard[i]);
+    GetCurrentTrack()->InsertChunks(i + sbSelChunksFrom->value(), p->m_clipBoard);
   }
 
   int iSelect = sbSelChunksFrom->value() + (int)p->m_clipBoard.size();
   BLOCK_SIG_AND_DO(ckTo, setChecked(false));
-  BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
-  BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
+  BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, GetCurrentTrack()->GetChunkCount() - 1));
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0, GetCurrentTrack()->GetChunkCount() - 1));
   BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(iSelect));
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(iSelect));
   GetCurrentPreview()->m_bUnsavedChanges = true;
@@ -463,7 +469,7 @@ void CMainWindow::OnSelectAll()
 {
   BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(0));
   ckTo->setChecked(true);
-  BLOCK_SIG_AND_DO(sbSelChunksTo, setValue((int)GetCurrentTrack()->m_chunkAy.size() - 1));
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(GetCurrentTrack()->GetChunkCount() - 1));
   UpdateGeometrySelection();
   p->m_pEditData->OnCancelClicked();
 }
@@ -532,8 +538,8 @@ void CMainWindow::OnTabChanged(int iIndex)
   p->m_previewAy[iIndex]->UpdateCar(carModel, aiLine, bMillionPlus);
   p->m_previewAy[iIndex]->AttachLast(p->m_pDisplaySettings->GetAttachLast());
   p->m_previewAy[iIndex]->SetScale(p->m_pDisplaySettings->GetScale());
-  BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
-  BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
+  BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, GetCurrentTrack()->GetChunkCount() - 1));
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0, GetCurrentTrack()->GetChunkCount() - 1));
   BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(p->m_previewAy[iIndex]->m_iSelFrom));
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(p->m_previewAy[iIndex]->m_iSelTo));
   BLOCK_SIG_AND_DO(ckTo, setChecked(p->m_previewAy[iIndex]->m_bToChecked));
@@ -576,15 +582,13 @@ void CMainWindow::OnToChecked(bool bChecked)
 
 void CMainWindow::OnDeleteChunkClicked()
 {
-  if (!GetCurrentTrack() || GetCurrentTrack()->m_chunkAy.empty()) return;
-  if (sbSelChunksFrom->value() > sbSelChunksTo->value() || sbSelChunksTo->value() > GetCurrentTrack()->m_chunkAy.size()) {
+  if (!GetCurrentTrack() || GetCurrentTrack()->GetChunkCount() == 0) return;
+  if (sbSelChunksFrom->value() > sbSelChunksTo->value() || sbSelChunksTo->value() > GetCurrentTrack()->GetChunkCount()) {
     assert(0);
     return;
   }
 
-  GetCurrentTrack()->m_chunkAy.erase(
-    GetCurrentTrack()->m_chunkAy.begin() + sbSelChunksFrom->value(),
-    GetCurrentTrack()->m_chunkAy.begin() + sbSelChunksTo->value() + 1);
+  GetCurrentTrack()->EraseChunks(sbSelChunksFrom->value(), sbSelChunksTo->value() + 1);
 
   GetCurrentPreview()->m_bUnsavedChanges = true;
   GetCurrentPreview()->SaveHistory("Deleted geometry chunk");
@@ -603,7 +607,7 @@ void CMainWindow::OnAddChunkClicked()
   if (!GetCurrentTrack()) return;
 
   CChunkEditValues editVals;
-  int iLastPos = (int)GetCurrentTrack()->m_chunkAy.size() - 1;
+  int iLastPos = GetCurrentTrack()->GetChunkCount() - 1;
   GetCurrentTrack()->GetGeometryValuesFromSelection(iLastPos, iLastPos, editVals);
   GetCurrentTrack()->InsertGeometryChunk(iLastPos, 1, editVals);
 
@@ -848,10 +852,10 @@ void CMainWindow::UpdateWindow()
   if (GetCurrentPreview()) {
     GetCurrentPreview()->UpdateTrack();
 
-    BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
-    BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
-    leChunkCount->setText(QString::number(GetCurrentTrack()->m_chunkAy.size()));
-    lblChunkWarning->setVisible(GetCurrentTrack()->m_chunkAy.size() >= 500);
+    BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, GetCurrentTrack()->GetChunkCount() - 1));
+    BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0, GetCurrentTrack()->GetChunkCount() - 1));
+    leChunkCount->setText(QString::number(GetCurrentTrack()->GetChunkCount()));
+    lblChunkWarning->setVisible(GetCurrentTrack()->GetChunkCount() >= 500);
     lblStuntWarning->setVisible(GetCurrentTrack()->HasPitchedStunt());
   }
   UpdateGeometrySelection();
@@ -876,8 +880,8 @@ void CMainWindow::UpdateGeometrySelection()
 void CMainWindow::InsertUIUpdate(int iInsertVal)
 {
   if (GetCurrentTrack()) {
-    BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
-    BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
+    BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, GetCurrentTrack()->GetChunkCount() - 1));
+    BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0, GetCurrentTrack()->GetChunkCount() - 1));
   }
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(sbSelChunksFrom->value() + iInsertVal - 1));
   BLOCK_SIG_AND_DO(ckTo, setChecked(iInsertVal > 1));

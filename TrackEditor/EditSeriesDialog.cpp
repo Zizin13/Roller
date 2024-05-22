@@ -87,7 +87,7 @@ void CEditSeriesDialog::OnUpdateWindow()
   if (!g_pMainWindow->GetCurrentTrack())
     return;
 
-  int iTrackSize = (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size();
+  int iTrackSize = g_pMainWindow->GetCurrentTrack()->GetChunkCount();
   sbInterval->setRange(1, iTrackSize - 1);
 }
 

@@ -141,6 +141,7 @@ CTrackData::~CTrackData()
 
 void CTrackData::ClearData()
 {
+  CLockGuard lock(m_dataMutex);
   memset(&m_header, 0, sizeof(m_header));
   m_header.iFloorDepth = 2048;
   m_chunkAy.clear();
@@ -206,6 +207,7 @@ bool CTrackData::LoadTrack(const std::string &sFilename)
   } else {
     bSuccess = ProcessTrackData((uint8 *)szBuf, length);
   }
+  GenerateTrackMath();
 
   //cleanup
   delete[] szBuf;
@@ -275,6 +277,7 @@ bool CTrackData::IsNumber(const std::string &str)
 
 bool CTrackData::ProcessTrackData(const uint8 *pData, size_t length)
 {
+  CLockGuard lock(m_dataMutex);
   bool bSuccess = true;
   int iChunkLine = 0;
   struct tGeometryChunk currChunk;
@@ -523,8 +526,6 @@ bool CTrackData::ProcessTrackData(const uint8 *pData, size_t length)
     }
   }
 
-  GenerateTrackMath();
-
   return bSuccess;
 }
 
@@ -580,6 +581,7 @@ double CTrackData::ConstrainAngle(double dAngle)
 
 bool CTrackData::ShouldShowChunkSection(int i, eShapeSection section)
 {
+  CLockGuard lock(m_dataMutex);
   if ((section == eShapeSection::LLANE || section == eShapeSection::RLANE)
       && !ShouldDrawSurfaceType(m_chunkAy[i].iCenterSurfaceType))
     return false;
@@ -633,7 +635,7 @@ bool CTrackData::ShouldShowChunkSection(int i, eShapeSection section)
 }
 
 //-------------------------------------------------------------------------------------------------
-
+// ONLY call with m_dataMutex locked!
 void CTrackData::ProcessSign(const std::vector<std::string> &lineAy, eFileSection &section)
 {
   //helper function because this process must be done in two places
@@ -665,6 +667,7 @@ void CTrackData::ProcessSign(const std::vector<std::string> &lineAy, eFileSectio
 
 void CTrackData::GetTrackData(std::vector<uint8> &data)
 {
+  CLockGuard lock(m_dataMutex);
   //write header
   char szBuf[1024];
   snprintf(szBuf, sizeof(szBuf), " %4d %6d %6d %6d\r\n\r\n\r\n", (int)m_chunkAy.size(), m_header.iHeaderUnk1, m_header.iHeaderUnk2, m_header.iFloorDepth);
@@ -879,6 +882,7 @@ void CTrackData::GenerateChunkString(tGeometryChunk &chunk, char *szBuf, int iSi
 
 void CTrackData::GenerateTrackMath()
 {
+  CLockGuard lock(m_dataMutex);
   if (m_chunkAy.empty()) {
     return;
   }
@@ -1103,6 +1107,7 @@ void CTrackData::ResetStunts()
 
 void CTrackData::UpdateStunts()
 {
+  CLockGuard lock(m_dataMutex);
   CStuntMap::iterator it = m_stuntMap.begin();
   for (; it != m_stuntMap.end(); ++it) {
     int iStart = it->first - it->second.iChunkCount + 1;
@@ -1369,6 +1374,7 @@ void CTrackData::UpdateStunts()
 
 bool CTrackData::HasPitchedStunt()
 {
+  CLockGuard lock(m_dataMutex);
   CStuntMap::iterator it = m_stuntMap.begin();
   for (; it != m_stuntMap.end(); ++it) {
     int iStart = it->first - it->second.iChunkCount;
@@ -1392,6 +1398,7 @@ bool CTrackData::HasPitchedStunt()
 
 bool CTrackData::UseCenterStunt(int i)
 {
+  CLockGuard lock(m_dataMutex);
   bool bUseCenterStunt = false;
   CStuntMap::iterator it = m_stuntMap.begin();
   for (; it != m_stuntMap.end(); ++it) {
@@ -1413,6 +1420,94 @@ bool CTrackData::UseCenterStunt(int i)
 
 //-------------------------------------------------------------------------------------------------
 
+int CTrackData::GetChunkCount()
+{
+  CLockGuard lock(m_dataMutex);
+  return (int)m_chunkAy.size();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CTrackData::GetChunk(int i, tGeometryChunk &chunk)
+{
+  CLockGuard lock(m_dataMutex);
+  if (i < 0 || i > m_chunkAy.size() - 1)
+    return false;
+  chunk = m_chunkAy[i];
+  return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CTrackData::SetChunk(int i, const tGeometryChunk &chunk)
+{
+  CLockGuard lock(m_dataMutex);
+  if (i < 0 || i > m_chunkAy.size() - 1)
+    return false;
+  m_chunkAy[i] = chunk;
+  return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CTrackData::GetStunt(int i, tStunt &stunt)
+{
+  CLockGuard lock(m_dataMutex);
+  CStuntMap::iterator it = m_stuntMap.find(i);
+  if (it != m_stuntMap.end()) {
+    stunt = it->second;
+    return true;
+  }
+  return false;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::SetStunt(int i, const tStunt &stunt)
+{
+  CLockGuard lock(m_dataMutex);
+  m_stuntMap[i] = stunt;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::InsertChunks(int i, const CChunkAy &insertAy)
+{
+  CLockGuard lock(m_dataMutex);
+  m_chunkAy.insert(m_chunkAy.begin() + i, insertAy[i]);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::InsertChunk(int i, const tGeometryChunk &chunk)
+{
+  CLockGuard lock(m_dataMutex);
+  if (m_chunkAy.empty())
+    m_chunkAy.push_back(chunk);
+  else
+    m_chunkAy.insert(m_chunkAy.begin() + i, chunk);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::EraseChunks(int iFrom, int iTo)
+{
+  CLockGuard lock(m_dataMutex);
+  m_chunkAy.erase(m_chunkAy.begin() + iFrom, m_chunkAy.begin() + iTo);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackData::EraseStunt(int i)
+{
+  CLockGuard lock(m_dataMutex);
+  CStuntMap::iterator it = m_stuntMap.find(i);
+  if (it != m_stuntMap.end())
+    m_stuntMap.erase(it);
+}
+
+//-------------------------------------------------------------------------------------------------
+// ONLY call with m_dataMutex locked!
 void CTrackData::GetCenter(int i, glm::vec3 prevCenter,
                            glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched,
                            glm::mat4 &yawMat, glm::mat4 &pitchMat, glm::mat4 &rollMat)
@@ -1437,7 +1532,7 @@ void CTrackData::GetCenter(int i, glm::vec3 prevCenter,
 }
 
 //-------------------------------------------------------------------------------------------------
-
+// ONLY call with m_dataMutex locked!
 void CTrackData::GetLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat,
                           glm::vec3 &lane, bool bLeft)
 {
@@ -1452,7 +1547,7 @@ void CTrackData::GetLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4
 }
 
 //-------------------------------------------------------------------------------------------------
-
+// ONLY call with m_dataMutex locked!
 void CTrackData::GetShoulder(int i, glm::vec3 lLane, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                               glm::vec3 &shoulder, bool bLeft, bool bIgnoreHeight)
 {
@@ -1478,7 +1573,7 @@ void CTrackData::GetShoulder(int i, glm::vec3 lLane, glm::vec3 pitchAxis, glm::m
 }
 
 //-------------------------------------------------------------------------------------------------
-
+// ONLY call with m_dataMutex locked!
 void CTrackData::GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder,
                                glm::vec3 &lEnvirFloor, glm::vec3 &rEnvirFloor)
 {
@@ -1490,7 +1585,7 @@ void CTrackData::GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder,
 }
 
 //-------------------------------------------------------------------------------------------------
-
+// ONLY call with m_dataMutex locked!
 void CTrackData::GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
                                glm::vec3 &lFloor, glm::vec3 &rFloor)
 {
@@ -1514,7 +1609,7 @@ void CTrackData::GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, glm::vec
 }
 
 //-------------------------------------------------------------------------------------------------
-
+// ONLY call with m_dataMutex locked!
 void CTrackData::GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                             glm::vec3 &lloWall, eShapeSection wallSection)
 {
@@ -1558,7 +1653,7 @@ void CTrackData::GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm
 }
 
 //-------------------------------------------------------------------------------------------------
-
+// ONLY call with m_dataMutex locked!
 void CTrackData::GetAILine(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                            glm::vec3 &aiLine, eShapeSection lineSection, int iHeight)
 {

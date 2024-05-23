@@ -57,6 +57,8 @@ private:
   int GetPolsCount(eWhipModel model);
   tAnimation *GetAnms(eWhipModel model);
   int GetAnmsCount(eWhipModel model);
+  uint32 *GetBacks(eWhipModel model);
+  int GetBacksCount(eWhipModel model);
 
   tVertex *MakeVerts(uint32 &numVertices, eShapeSection section, CTrackData *pTrack, CTexture *pTexture);
   tVertex *MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTrack, CTexture *pTexture, int iIndex);

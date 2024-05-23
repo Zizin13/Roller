@@ -60,7 +60,7 @@ CShapeData::~CShapeData()
 
 //-------------------------------------------------------------------------------------------------
 
-void CShapeData::Draw(const glm::mat4 &worldToProjectionMatrix)
+void CShapeData::Draw(const glm::mat4 &worldToProjectionMatrix, const glm::vec3 cameraPosition)
 {
   if (!m_pShader || !m_pVertexArray || !m_pIndexBuf)
     return;
@@ -75,6 +75,8 @@ void CShapeData::Draw(const glm::mat4 &worldToProjectionMatrix)
 
   glm::mat4 fullTransformMatrix = worldToProjectionMatrix * m_modelToWorldMatrix;
   m_pShader->SetUniformMat4("modelToProjectionMatrix", fullTransformMatrix);
+  m_pShader->SetUniformMat4("modelToWorldMatrix", m_modelToWorldMatrix);
+  m_pShader->SetUniformVec3("eyePositionWorld", cameraPosition);
   GLCALL(glDrawElements(m_drawType, m_pIndexBuf->GetCount(), GL_UNSIGNED_INT, 0));
 }
 

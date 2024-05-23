@@ -23,7 +23,7 @@ public:
              GLenum drawType = GL_TRIANGLES);
   ~CShapeData();
 
-  void Draw(const glm::mat4 &worldToProjectionMatrix);
+  void Draw(const glm::mat4 &worldToProjectionMatrix, const glm::vec3 cameraPosition);
 
   glm::mat4 m_modelToWorldMatrix;
   CIndexBuffer *m_pIndexBuf;

@@ -207,6 +207,16 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
                                     vertices[i * 4 + 0],
                                     vertices[i * 4 + 2],
                                     vertices[i * 4 + 3]);
+
+    if (GetBacks(model)) {
+      uint32 uiBackTex = GetBacks(model)[i];
+      pTexture->GetTextureCoordinates(uiBackTex,
+                                      vertices[i * 4 + 1],
+                                      vertices[i * 4 + 0],
+                                      vertices[i * 4 + 2],
+                                      vertices[i * 4 + 3],
+                                      false, false, true);
+    }
   }
 
   delete[] coordAy;
@@ -771,6 +781,132 @@ int CShapeFactory::GetAnmsCount(eWhipModel model)
       return 0;
     case SIGN_BLD0:
       return 0;
+    default:
+      assert(0);
+      return NULL;
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+uint32 *CShapeFactory::GetBacks(eWhipModel model)
+{
+  switch (model) {
+    case CAR_F1WACK:
+      return g_f1wackBacks;
+    case CAR_AUTO:
+      return g_xautoBacks;
+    case CAR_DESILVA:
+      return g_xdesilvaBacks;
+    case CAR_PULSE:
+      return g_xpulseBacks;
+    case CAR_GLOBAL:
+      return g_xglobalBacks;
+    case CAR_MILLION:
+      return g_xmillionBacks;
+    case CAR_MISSION:
+      return g_xmissionBacks;
+    case CAR_ZIZIN:
+      return g_xzizinBacks;
+    case CAR_REISE:
+      return g_xreiseBacks;
+    case SIGN_TOWER:
+      return g_towerBacks;
+    case SIGN_TOWER2:
+      return g_tower2Backs;
+    case SIGN_SIGN01:
+      return g_sign01Backs;
+    case SIGN_SIGN02:
+      return g_sign02Backs;
+    case SIGN_BUILD:
+      return g_buildBacks;
+    case SIGN_BUILD1:
+      return g_build1Backs;
+    case SIGN_BUILD2:
+      return g_build2Backs;
+    case SIGN_BUILD3:
+      return g_build3Backs;
+    case SIGN_HEELBAR:
+      return g_heelbarBacks;
+    case SIGN_BALLOON:
+      return NULL;
+    case SIGN_BALLOON2:
+      return g_balloon2Backs;
+    case SIGN_TREE:
+      return g_treeBacks;
+    case SIGN_ADVERT:
+      return g_advertBacks;
+    case SIGN_ADVERT2:
+      return g_advert2Backs;
+    case SIGN_ADVERT3:
+      return g_advert3Backs;
+    case SIGN_QUADBLD:
+      return g_quadbldBacks;
+    case SIGN_BLD0:
+      return g_bld0Backs;
+    default:
+      assert(0);
+      return NULL;
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+int CShapeFactory::GetBacksCount(eWhipModel model)
+{
+  switch (model) {
+    case CAR_F1WACK:
+      return g_f1wackBacksCount;
+    case CAR_AUTO:
+      return g_xautoBacksCount;
+    case CAR_DESILVA:
+      return g_xdesilvaBacksCount;
+    case CAR_PULSE:
+      return g_xpulseBacksCount;
+    case CAR_GLOBAL:
+      return g_xglobalBacksCount;
+    case CAR_MILLION:
+      return g_xmillionBacksCount;
+    case CAR_MISSION:
+      return g_xmissionBacksCount;
+    case CAR_ZIZIN:
+      return g_xzizinBacksCount;
+    case CAR_REISE:
+      return g_xreiseBacksCount;
+    case SIGN_TOWER:
+      return g_towerBacksCount;
+    case SIGN_TOWER2:
+      return g_tower2BacksCount;
+    case SIGN_SIGN01:
+      return g_sign01BacksCount;
+    case SIGN_SIGN02:
+      return g_sign02BacksCount;
+    case SIGN_BUILD:
+      return g_buildBacksCount;
+    case SIGN_BUILD1:
+      return g_build1BacksCount;
+    case SIGN_BUILD2:
+      return g_build2BacksCount;
+    case SIGN_BUILD3:
+      return g_build3BacksCount;
+    case SIGN_HEELBAR:
+      return g_heelbarBacksCount;
+    case SIGN_BALLOON:
+      return 0;
+    case SIGN_BALLOON2:
+      return g_balloon2BacksCount;
+    case SIGN_TREE:
+      return g_treeBacksCount;
+    case SIGN_ADVERT:
+      return g_advertBacksCount;
+    case SIGN_ADVERT2:
+      return g_advert2BacksCount;
+    case SIGN_ADVERT3:
+      return g_advert3BacksCount;
+    case SIGN_QUADBLD:
+      return g_quadbldBacksCount;
+    case SIGN_BLD0:
+      return g_bld0BacksCount;
     default:
       assert(0);
       return NULL;

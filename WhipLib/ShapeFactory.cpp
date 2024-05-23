@@ -1479,12 +1479,31 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                    pTrack->m_chunkAy[i].math.lWallBottomAttach, 
                                    pTrack->m_chunkAy[iChunkIndex].math.lWall,
                                    pTrack->m_chunkAy[iChunkIndex].math.lWallBottomAttach);
-        if (pTexture)
+        if (pTexture) {
+          MakeNormals(vertices[i * uiNumVertsPerChunk + 2],
+                      vertices[i * uiNumVertsPerChunk + 0],
+                      vertices[i * uiNumVertsPerChunk + 3],
+                      vertices[i * uiNumVertsPerChunk + 1]);
           pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
                               vertices[i * uiNumVertsPerChunk + 1]);
+          if (pTrack->m_chunkAy[iChunkIndex].iBackTexture > 0
+              && (CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType) & SURFACE_FLAG_BACK)) {
+            pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iBackTexture),
+                                vertices[i * uiNumVertsPerChunk + 2],
+                                vertices[i * uiNumVertsPerChunk + 0],
+                                vertices[i * uiNumVertsPerChunk + 3],
+                                vertices[i * uiNumVertsPerChunk + 1], false, false, true);
+          } else {
+            pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType),
+                                vertices[i * uiNumVertsPerChunk + 2],
+                                vertices[i * uiNumVertsPerChunk + 0],
+                                vertices[i * uiNumVertsPerChunk + 3],
+                                vertices[i * uiNumVertsPerChunk + 1], false, false, true);
+          }
+        }
         break;
       case RWALL:
         ApplyVerticesSingleSection(i, vertices, 
@@ -1492,12 +1511,31 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                    pTrack->m_chunkAy[i].math.rWall, 
                                    pTrack->m_chunkAy[iChunkIndex].math.rWallBottomAttach,
                                    pTrack->m_chunkAy[iChunkIndex].math.rWall);
-        if (pTexture)
+        if (pTexture) {
+          MakeNormals(vertices[i * uiNumVertsPerChunk + 1],
+                      vertices[i * uiNumVertsPerChunk + 3],
+                      vertices[i * uiNumVertsPerChunk + 0],
+                      vertices[i * uiNumVertsPerChunk + 2]);
           pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType),
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 3],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 2]);
+          if (pTrack->m_chunkAy[iChunkIndex].iBackTexture > 0 
+              && (CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType) & SURFACE_FLAG_BACK)) {
+            pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iBackTexture),
+                                vertices[i * uiNumVertsPerChunk + 1],
+                                vertices[i * uiNumVertsPerChunk + 3],
+                                vertices[i * uiNumVertsPerChunk + 0],
+                                vertices[i * uiNumVertsPerChunk + 2], false, false, true);
+          } else {
+            pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType),
+                                vertices[i * uiNumVertsPerChunk + 1],
+                                vertices[i * uiNumVertsPerChunk + 3],
+                                vertices[i * uiNumVertsPerChunk + 0],
+                                vertices[i * uiNumVertsPerChunk + 2], false, false, true);
+          }
+        }
         break;
       case ROOF:
         ApplyVerticesSingleSection(i, vertices, 

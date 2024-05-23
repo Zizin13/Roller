@@ -32,7 +32,7 @@ public:
   void MakeSigns(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData*> &signAy);
   void MakeAudio(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &audioAy);
   void MakeStunts(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &stuntAy);
-  //static CShapeData GenerateNormals(const CShapeData &data);
+  CShapeData *MakeNormalsTest(const CShapeData &data, CShader *pShader);
   void GetCarPos(CTrackData *pTrack, int iChunk, eShapeSection aiLine, glm::mat4 &modelToWorldMatrix, bool bMillionPlus = false);
 
   float m_fScale;
@@ -70,6 +70,7 @@ private:
   uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast);
 
   void ApplyVerticesSingleSection(int i, tVertex *vertices, const glm::vec3 &v0, const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3);
+  void MakeNormals(tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight);
 
   static CShapeFactory s_shapeFactory;
 };

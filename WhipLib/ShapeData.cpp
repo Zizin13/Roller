@@ -25,6 +25,10 @@ CShapeData::CShapeData(CVertexBuffer *pVertexBuf,
   , m_pTexture(pTexture)
   , m_drawType(drawType)
   , m_modelToWorldMatrix(glm::mat4(1))
+  , m_vertices(NULL)
+  , m_uiNumVerts(0)
+  , m_indices(NULL)
+  , m_uiNumIndices(0)
 {
 }
 
@@ -32,6 +36,14 @@ CShapeData::CShapeData(CVertexBuffer *pVertexBuf,
 
 CShapeData::~CShapeData()
 {
+  if (m_vertices) {
+    delete[] m_vertices;
+    m_vertices = NULL;
+  }
+  if (m_indices) {
+    delete[] m_indices;
+    m_indices = NULL;
+  }
   if (m_pVertexBuf) {
     delete m_pVertexBuf;
     m_pVertexBuf = NULL;

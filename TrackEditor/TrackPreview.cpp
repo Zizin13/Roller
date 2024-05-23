@@ -60,6 +60,7 @@ public:
     , m_pEnvirFloor(NULL)
     , m_pAxes(NULL)
     , m_pCar(NULL)
+    , m_pTestNormals(NULL)
   {};
   ~CTrackPreviewPrivate()
   {
@@ -79,6 +80,10 @@ public:
     if (m_pAxes) {
       delete m_pAxes;
       m_pAxes = NULL;
+    }
+    if (m_pTestNormals) {
+      delete m_pTestNormals;
+      m_pTestNormals = NULL;
     }
   };
   void DeleteModels()
@@ -248,6 +253,7 @@ public:
   CShapeData *m_pEnvirFloor;
   CShapeData *m_pCar;
   CShapeData *m_pAxes;
+  CShapeData *m_pTestNormals;
   std::vector<CShapeData *> m_signAy;
   std::vector<CShapeData *> m_audioAy;
   std::vector<CShapeData *> m_stuntAy;
@@ -377,6 +383,8 @@ void CTrackPreview::UpdateGeometrySelection()
 
   if (p->m_pCar)
     CShapeFactory::GetShapeFactory().GetCarPos(&p->m_track, m_iSelFrom, m_carAILine, p->m_pCar->m_modelToWorldMatrix, m_bMillionPlus);
+  if (p->m_pTestNormals)
+    CShapeFactory::GetShapeFactory().GetCarPos(&p->m_track, m_iSelFrom, m_carAILine, p->m_pTestNormals->m_modelToWorldMatrix, m_bMillionPlus);
 
   repaint();
 }
@@ -466,6 +474,10 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
     delete p->m_pCar;
     p->m_pCar = NULL;
   }
+  if (p->m_pTestNormals) {
+    delete p->m_pTestNormals;
+    p->m_pTestNormals = NULL;
+  }
 
   if (p->m_track.m_pPal && !p->m_track.m_sTrackFileFolder.empty()) {
     QString sTexName;
@@ -505,10 +517,13 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
         m_sLastCarTex = sTex;
     }
     p->m_pCar = CShapeFactory::GetShapeFactory().MakeModel(p->m_pShader, &p->m_carTex, carModel);
+    p->m_pTestNormals = CShapeFactory::GetShapeFactory().MakeNormalsTest(*p->m_pCar, p->m_pShader);
   }
 
   if (p->m_pCar)
     CShapeFactory::GetShapeFactory().GetCarPos(&p->m_track, m_iSelFrom, m_carAILine, p->m_pCar->m_modelToWorldMatrix, m_bMillionPlus);
+  if (p->m_pTestNormals)
+    CShapeFactory::GetShapeFactory().GetCarPos(&p->m_track, m_iSelFrom, m_carAILine, p->m_pTestNormals->m_modelToWorldMatrix, m_bMillionPlus);
 
   repaint();
 }
@@ -630,6 +645,8 @@ void CTrackPreview::paintGL()
   }
   //if (p->m_pAxes)
   //  p->m_pAxes->Draw(worldToProjectionMatrix);
+  if (p->m_pTestNormals)
+    p->m_pTestNormals->Draw(worldToProjectionMatrix);
 }
 
 //-------------------------------------------------------------------------------------------------

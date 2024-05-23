@@ -148,11 +148,10 @@ CShapeData *CShapeFactory::MakeModel(CShader *pShader, CTexture *pTexture, eWhip
     CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
     pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture);
-
-    if (vertices)
-      delete[] vertices;
-    if (indices)
-      delete[] indices;
+    pRet->m_vertices = vertices;
+    pRet->m_uiNumVerts = uiNumVerts;
+    pRet->m_indices = indices;
+    pRet->m_uiNumIndices = uiNumIndices;
   }
 
   return pRet;
@@ -184,6 +183,10 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
     vertices[i * 4 + 1] = coordAy[GetPols(model)[i].byVert2];
     vertices[i * 4 + 2] = coordAy[GetPols(model)[i].byVert3];
     vertices[i * 4 + 3] = coordAy[GetPols(model)[i].byVert4];
+    MakeNormals(vertices[i * 4 + 1],
+                vertices[i * 4 + 0],
+                vertices[i * 4 + 2],
+                vertices[i * 4 + 3]);
 
     uint32 uiUseTex = GetPols(model)[i].uiTex;
     if (uiUseTex & SURFACE_FLAG_ANMS_LOOKUP && GetAnms(model)) {
@@ -1188,28 +1191,36 @@ void CShapeFactory::MakeStunts(CShader *pShader, CTrackData *pTrack, std::vector
 
 //-------------------------------------------------------------------------------------------------
 
-//CShapeData ShapeGenerator::GenerateNormals(const CShapeData &data)
-//{
-//  CShapeData ret;
-//  ret.numVertices = data.numVertices * 2;
-//  ret.vertices = new tVertex[ret.numVertices];
-//  glm::vec3 white(1.0f, 1.0f, 1.0f);
-//  for (int i = 0; i < data.numVertices; i++) {
-//    GLuint vertIndex = i * 2;
-//    tVertex &v1 = ret.vertices[vertIndex];
-//    tVertex &v2 = ret.vertices[vertIndex + 1];
-//    const tVertex &sourceVertex = data.vertices[i];
-//    v1.position = sourceVertex.position;
-//    v2.position = sourceVertex.position + sourceVertex.normal;
-//    v1.color = v2.color = white;
-//  }
-//
-//  ret.numIndices = ret.numVertices;
-//  ret.indices = new GLushort[ret.numIndices];
-//  for (int i = 0; i < ret.numIndices; i++)
-//    ret.indices[i] = i;
-//  return ret;
-//}*/
+CShapeData *CShapeFactory::MakeNormalsTest(const CShapeData &data, CShader *pShader)
+{
+  uint32 uiNumVerts = data.m_uiNumVerts * 2;
+  tVertex *vertices = new tVertex[uiNumVerts];
+  glm::vec3 white(1.0f, 1.0f, 1.0f);
+  for (int i = 0; i < (int)data.m_uiNumVerts; i++) {
+    GLuint vertIndex = i * 2;
+    tVertex &v1 = vertices[vertIndex];
+    tVertex &v2 = vertices[vertIndex + 1];
+    const tVertex &sourceVertex = data.m_vertices[i];
+    v1.position = sourceVertex.position;
+    v2.position = sourceVertex.position + sourceVertex.normal;
+    v1.color = v2.color = white;
+  }
+
+  uint32 uiNumIndices = uiNumVerts;
+  uint32 *indices = new uint32[uiNumIndices];
+  for (int i = 0; i < (int)uiNumIndices; i++)
+    indices[i] = i;
+
+  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
+  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
+  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, GL_LINES);
+  pRet->m_vertices = vertices;
+  pRet->m_uiNumVerts = uiNumVerts;
+  pRet->m_indices = indices;
+  pRet->m_uiNumIndices = uiNumIndices;
+  return pRet;
+}
 
 //-------------------------------------------------------------------------------------------------
 
@@ -1665,6 +1676,27 @@ void CShapeFactory::ApplyVerticesSingleSection(int i, tVertex *vertices, const g
   vertices[i * uiNumVertsPerChunk + 1].position = v1;
   vertices[i * uiNumVertsPerChunk + 2].position = v2;
   vertices[i * uiNumVertsPerChunk + 3].position = v3;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CShapeFactory::MakeNormals(tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight)
+{
+  glm::vec3 tl1 = bottomLeft.position - topLeft.position;
+  glm::vec3 tl2 = topRight.position - topLeft.position;
+  topLeft.normal = glm::normalize(glm::cross(tl1, tl2));
+
+  glm::vec3 tr1 = topLeft.position - topRight.position;
+  glm::vec3 tr2 = bottomRight.position - topRight.position;
+  topRight.normal = glm::normalize(glm::cross(tr1, tr2));
+
+  glm::vec3 bl1 = bottomRight.position - bottomLeft.position;
+  glm::vec3 bl2 = topLeft.position - bottomLeft.position;
+  bottomLeft.normal = glm::normalize(glm::cross(bl1, bl2));
+
+  glm::vec3 br1 = topRight.position - bottomRight.position;
+  glm::vec3 br2 = bottomLeft.position - bottomRight.position;
+  bottomRight.normal = glm::normalize(glm::cross(br1, br2));
 }
 
 //-------------------------------------------------------------------------------------------------

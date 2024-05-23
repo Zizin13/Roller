@@ -3,6 +3,8 @@
 //-------------------------------------------------------------------------------------------------
 #include <glew.h>
 #include "glm.hpp"
+#include "Vertex.h"
+#include "Types.h"
 //-------------------------------------------------------------------------------------------------
 class CShader;
 class CVertexBuffer;
@@ -26,6 +28,11 @@ public:
   glm::mat4 m_modelToWorldMatrix;
   CIndexBuffer *m_pIndexBuf;
   CVertexBuffer *m_pVertexBuf;
+
+  uint32 m_uiNumVerts;
+  tVertex *m_vertices;
+  uint32 m_uiNumIndices;
+  uint32 *m_indices;
 
 private:
   CVertexArray *m_pVertexArray;

@@ -210,12 +210,20 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
 
     if (GetBacks(model)) {
       uint32 uiBackTex = GetBacks(model)[i];
-      pTexture->GetTextureCoordinates(uiBackTex,
-                                      vertices[i * 4 + 1],
-                                      vertices[i * 4 + 0],
-                                      vertices[i * 4 + 2],
-                                      vertices[i * 4 + 3],
-                                      false, false, true);
+      if (uiBackTex)
+        pTexture->GetTextureCoordinates(uiBackTex,
+                                        vertices[i * 4 + 1],
+                                        vertices[i * 4 + 0],
+                                        vertices[i * 4 + 2],
+                                        vertices[i * 4 + 3],
+                                        false, false, true);
+      else
+        pTexture->GetTextureCoordinates(uiUseTex,
+                                        vertices[i * 4 + 1],
+                                        vertices[i * 4 + 0],
+                                        vertices[i * 4 + 2],
+                                        vertices[i * 4 + 3],
+                                        false, false, true);
     }
   }
 

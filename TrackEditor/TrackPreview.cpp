@@ -312,9 +312,9 @@ bool CTrackPreview::LoadTrack(const QString &sFilename)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackPreview::UpdateTrack(bool bDeleteModels)
+void CTrackPreview::UpdateTrack(bool bUpdatingStunt)
 {
-  if (bDeleteModels)
+  if (!bUpdatingStunt)
     p->DeleteModels();
 
   CShapeFactory::GetShapeFactory().m_fScale = 10000.0f / m_iScale;
@@ -334,21 +334,21 @@ void CTrackPreview::UpdateTrack(bool bDeleteModels)
     p->m_pRWallWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pRWallWire, p->m_pShader, &p->m_track, eShapeSection::RWALL, m_bAttachLast, true);
     p->m_pRoofSurf       = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pRoofSurf, p->m_pShader, &p->m_track, eShapeSection::ROOF, m_bAttachLast);
     p->m_pRoofWire       = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pRoofWire, p->m_pShader, &p->m_track, eShapeSection::ROOF, m_bAttachLast, true);
-    p->m_pOWallFloorSurf = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pOWallFloorSurf, p->m_pShader, &p->m_track, eShapeSection::OWALLFLOOR, m_bAttachLast);
-    p->m_pOWallFloorWire = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pOWallFloorWire, p->m_pShader, &p->m_track, eShapeSection::OWALLFLOOR, m_bAttachLast, true);
-    p->m_pLLOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLLOWallSurf, p->m_pShader, &p->m_track, eShapeSection::LLOWALL, m_bAttachLast);
-    p->m_pLLOWallWire    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLLOWallWire, p->m_pShader, &p->m_track, eShapeSection::LLOWALL, m_bAttachLast, true);
-    p->m_pRLOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pRLOWallSurf, p->m_pShader, &p->m_track, eShapeSection::RLOWALL, m_bAttachLast);
-    p->m_pRLOWallWire    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pRLOWallWire, p->m_pShader, &p->m_track, eShapeSection::RLOWALL, m_bAttachLast, true);
-    p->m_pLUOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLUOWallSurf, p->m_pShader, &p->m_track, eShapeSection::LUOWALL, m_bAttachLast);
-    p->m_pLUOWallWire    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLUOWallWire, p->m_pShader, &p->m_track, eShapeSection::LUOWALL, m_bAttachLast, true);
-    p->m_pRUOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pRUOWallSurf, p->m_pShader, &p->m_track, eShapeSection::RUOWALL, m_bAttachLast);
-    p->m_pRUOWallWire    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pRUOWallWire, p->m_pShader, &p->m_track, eShapeSection::RUOWALL, m_bAttachLast, true);
     p->m_pAILine1        = CShapeFactory::GetShapeFactory().MakeAILine(p->m_pAILine1, p->m_pShader, &p->m_track, eShapeSection::AILINE1, m_bAttachLast);
     p->m_pAILine2        = CShapeFactory::GetShapeFactory().MakeAILine(p->m_pAILine2, p->m_pShader, &p->m_track, eShapeSection::AILINE2, m_bAttachLast);
     p->m_pAILine3        = CShapeFactory::GetShapeFactory().MakeAILine(p->m_pAILine3, p->m_pShader, &p->m_track, eShapeSection::AILINE3, m_bAttachLast);
     p->m_pAILine4        = CShapeFactory::GetShapeFactory().MakeAILine(p->m_pAILine4, p->m_pShader, &p->m_track, eShapeSection::AILINE4, m_bAttachLast);
-    if (bDeleteModels) {
+    if (!bUpdatingStunt) {
+      p->m_pOWallFloorSurf = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pOWallFloorSurf, p->m_pShader, &p->m_track, eShapeSection::OWALLFLOOR, m_bAttachLast);
+      p->m_pOWallFloorWire = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pOWallFloorWire, p->m_pShader, &p->m_track, eShapeSection::OWALLFLOOR, m_bAttachLast, true);
+      p->m_pLLOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLLOWallSurf, p->m_pShader, &p->m_track, eShapeSection::LLOWALL, m_bAttachLast);
+      p->m_pLLOWallWire    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLLOWallWire, p->m_pShader, &p->m_track, eShapeSection::LLOWALL, m_bAttachLast, true);
+      p->m_pRLOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pRLOWallSurf, p->m_pShader, &p->m_track, eShapeSection::RLOWALL, m_bAttachLast);
+      p->m_pRLOWallWire    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pRLOWallWire, p->m_pShader, &p->m_track, eShapeSection::RLOWALL, m_bAttachLast, true);
+      p->m_pLUOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLUOWallSurf, p->m_pShader, &p->m_track, eShapeSection::LUOWALL, m_bAttachLast);
+      p->m_pLUOWallWire    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLUOWallWire, p->m_pShader, &p->m_track, eShapeSection::LUOWALL, m_bAttachLast, true);
+      p->m_pRUOWallSurf    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pRUOWallSurf, p->m_pShader, &p->m_track, eShapeSection::RUOWALL, m_bAttachLast);
+      p->m_pRUOWallWire    = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pRUOWallWire, p->m_pShader, &p->m_track, eShapeSection::RUOWALL, m_bAttachLast, true);
       CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, p->m_signAy);
       CShapeFactory::GetShapeFactory().MakeAudio(p->m_pShader, &p->m_track, p->m_audioAy);
       CShapeFactory::GetShapeFactory().MakeStunts(p->m_pShader, &p->m_track, p->m_stuntAy);

@@ -667,7 +667,7 @@ void CMainWindow::OnStuntTimer()
     if (GetCurrentTrack())
       GetCurrentTrack()->UpdateStunts();
     if (GetCurrentPreview())
-      GetCurrentPreview()->UpdateTrack(false);
+      GetCurrentPreview()->UpdateTrack(true);
   }
 }
 

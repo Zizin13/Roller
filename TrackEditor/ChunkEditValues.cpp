@@ -82,8 +82,7 @@ CChunkEditValues::CChunkEditValues(const QString &sCopyLeftShoulderWidth
                 , const QString &sCopyUnk48
                 , const QString &sCopyUnk49
                 , const QString &sCopyUnk50
-                , const QString &sCopySignTexture
-                , const QString &sCopyBackTexture)
+                , const QString &sCopySignTexture)
 {
   sLeftShoulderWidth = sCopyLeftShoulderWidth;
   sLeftLaneWidth = sCopyLeftLaneWidth;
@@ -156,7 +155,6 @@ CChunkEditValues::CChunkEditValues(const QString &sCopyLeftShoulderWidth
   sUnk49 = sCopyUnk49;
   sUnk50 = sCopyUnk50;
   sSignTexture = sCopySignTexture;
-  sBackTexture = sCopyBackTexture;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -185,7 +183,7 @@ void CChunkEditValues::Clear()
   sRoofHeight = ""; sDrawOrder1 = ""; sDrawOrder2 = ""; sDrawOrder3 = ""; sUnk37 = ""; sUnk38 = "";
   sUnk39 = ""; sUnk40 = ""; sUnk41 = ""; sUnk42 = ""; sUnk43 = ""; sUnk44 = "";
   sUnk45 = ""; sUnk46 = ""; sUnk47 = ""; sUnk48 = ""; sUnk49 = ""; sUnk50 = "";
-  sSignTexture = ""; sBackTexture = "";
+  sSignTexture = "";
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -264,7 +262,6 @@ void CChunkEditValues::Set(int index, QString value)
     case 68: sUnk49 = value; break;
     case 69: sUnk50 = value; break;
     case 70: sSignTexture = value; break;
-    case 71: sBackTexture = value; break;
   }
 }
 

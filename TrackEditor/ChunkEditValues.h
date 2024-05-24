@@ -78,8 +78,7 @@ public:
                   , const QString &sCopyUnk48
                   , const QString &sCopyUnk49
                   , const QString &sCopyUnk50
-                  , const QString &sCopySignTexture
-                  , const QString &sCopyBackTexture);
+                  , const QString &sCopySignTexture);
   ~CChunkEditValues();
 
   void Clear();
@@ -156,7 +155,6 @@ public:
   QString sUnk49;
   QString sUnk50;
   QString sSignTexture;
-  QString sBackTexture;
 };
 
 //-------------------------------------------------------------------------------------------------

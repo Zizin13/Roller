@@ -104,7 +104,6 @@ void tGeometryChunk::Clear()
 
   //additional data
   iSignTexture = 0;
-  iBackTexture = 0;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -328,7 +327,6 @@ bool CTrackData::ProcessTrackData(const uint8 *pData, size_t length)
           } else if (lineAy.size() == CHUNK_LINE_0_COUNT) {
             //start new chunk
             currChunk.Clear();
-            currChunk.iBackTexture = -1;
             currChunk.iSignTexture = -1;
             //process line 1
             currChunk.iLeftShoulderWidth    = std::stoi(lineAy[0]);
@@ -486,10 +484,8 @@ bool CTrackData::ProcessTrackData(const uint8 *pData, size_t length)
           }
         } else if (lineAy.size() == BACKS_COUNT) {
           //process backs
-          int iGeometryIndex = std::stoi(lineAy[0]);
-          if (iGeometryIndex < m_chunkAy.size()) {
-            m_chunkAy[iGeometryIndex].iBackTexture = std::stoi(lineAy[1]);
-          }
+          int iTexIndex = std::stoi(lineAy[0]);
+          m_backsMap[iTexIndex] = std::stoi(lineAy[1]);
         } else {
           assert(0);
           Logging::LogMessage("Error loading file: texture section ended before anticipated");
@@ -672,7 +668,6 @@ void CTrackData::GetTrackData(std::vector<uint8> &data)
 
   //write chunks
   CSignMap signMap;
-  CSignMap backsMap;
   int iSignIndex = 0;
   for (int i = 0; i < m_chunkAy.size(); ++i) {
     //fix angles
@@ -695,22 +690,6 @@ void CTrackData::GetTrackData(std::vector<uint8> &data)
         signMap[iSignIndex] = m_chunkAy[i].iSignTexture;
       }
       iSignIndex++;
-    }
-    if (m_chunkAy[i].iBackTexture >= 0 
-        && (GetSignedBitValueFromInt(m_chunkAy[i].iLeftSurfaceType) & SURFACE_FLAG_BACK ||
-            GetSignedBitValueFromInt(m_chunkAy[i].iCenterSurfaceType) & SURFACE_FLAG_BACK ||
-            GetSignedBitValueFromInt(m_chunkAy[i].iRightSurfaceType) & SURFACE_FLAG_BACK ||
-            GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_BACK ||
-            GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType) & SURFACE_FLAG_BACK ||
-            GetSignedBitValueFromInt(m_chunkAy[i].iRoofType) & SURFACE_FLAG_BACK ||
-            GetSignedBitValueFromInt(m_chunkAy[i].iLUOuterWallType) & SURFACE_FLAG_BACK ||
-            GetSignedBitValueFromInt(m_chunkAy[i].iLLOuterWallType) & SURFACE_FLAG_BACK ||
-            GetSignedBitValueFromInt(m_chunkAy[i].iOuterFloorType) & SURFACE_FLAG_BACK ||
-            GetSignedBitValueFromInt(m_chunkAy[i].iRLOuterWallType) & SURFACE_FLAG_BACK ||
-            GetSignedBitValueFromInt(m_chunkAy[i].iRUOuterWallType) & SURFACE_FLAG_BACK ||
-            GetSignedBitValueFromInt(m_chunkAy[i].iEnvironmentFloorType) & SURFACE_FLAG_BACK ||
-            GetSignedBitValueFromInt(m_chunkAy[i].iSignTexture) & SURFACE_FLAG_BACK)) {
-      backsMap[i] = m_chunkAy[i].iBackTexture;
     }
   }
 
@@ -747,7 +726,7 @@ void CTrackData::GetTrackData(std::vector<uint8> &data)
   WriteToVector(data, "\r\n");
   WriteToVector(data, "BACKS:");
   WriteToVector(data, "\r\n");
-  for (CSignMap::iterator it = backsMap.begin(); it != backsMap.end(); ++it) {
+  for (CSignMap::iterator it = m_backsMap.begin(); it != m_backsMap.end(); ++it) {
     memset(szBuf, 0, sizeof(szBuf));
     snprintf(szBuf, sizeof(szBuf), "%d %d\r\n", it->first, (int)it->second);
     WriteToVector(data, szBuf);

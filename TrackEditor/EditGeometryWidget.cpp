@@ -60,7 +60,6 @@ CEditGeometryWidget::CEditGeometryWidget(QWidget *pParent)
   connect(pbEditRShoulder,  &QPushButton::clicked, this, &CEditGeometryWidget::EditRShoulder);
   connect(pbEditLWall,      &QPushButton::clicked, this, &CEditGeometryWidget::EditLWall);
   connect(pbEditRWall,      &QPushButton::clicked, this, &CEditGeometryWidget::EditRWall);
-  connect(pbEditBack,       &QPushButton::clicked, this, &CEditGeometryWidget::EditBack);
   connect(pbEditRoofTex,    &QPushButton::clicked, this, &CEditGeometryWidget::EditRoof);
   connect(pbEditLUOWall,    &QPushButton::clicked, this, &CEditGeometryWidget::EditLUOWall);
   connect(pbEditLLOWall,    &QPushButton::clicked, this, &CEditGeometryWidget::EditLLOWall);
@@ -132,7 +131,6 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
   QtHelpers::UpdateTextures(lblRShoulderTex1, lblRShoulderTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRightSurfaceType);
   QtHelpers::UpdateTextures(lblLWallTex1, lblLWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLeftWallType);
   QtHelpers::UpdateTextures(lblRWallTex1, lblRWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRightWallType);
-  QtHelpers::UpdateTextures(lblBackTex1, lblBackTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iBackTexture);
   QtHelpers::UpdateTextures(lblRoofTex1, lblRoofTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRoofType);
   QtHelpers::UpdateTextures(lblLLOWallTex1, lblLLOWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLLOuterWallType);
   QtHelpers::UpdateTextures(lblLUOWallTex1, lblLUOWallTex2, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLUOuterWallType);
@@ -832,28 +830,6 @@ void CEditGeometryWidget::EditRWall()
     }
   }
   g_pMainWindow->SaveHistory("Changed right wall surface");
-  g_pMainWindow->UpdateWindow();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CEditGeometryWidget::EditBack()
-{
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iBackTexture);
-  if (dlg.exec()) {
-    for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iBackTexture = dlg.GetValue();
-    }
-  }
-  g_pMainWindow->SaveHistory("Changed wall back surfaces");
   g_pMainWindow->UpdateWindow();
 }
 

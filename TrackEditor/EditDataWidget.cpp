@@ -150,11 +150,8 @@ CEditDataWidget::CEditDataWidget(QWidget *pParent)
   connect(leUnk49, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
   connect(leUnk50, &QLineEdit::textChanged, this, &CEditDataWidget::UpdateGeometryEditMode);
   connect(leSign, &QLineEdit::textChanged, this, &CEditDataWidget::OnSignLEChanged);
-  connect(leBack, &QLineEdit::textChanged, this, &CEditDataWidget::OnBackLEChanged);
   connect(pbSign, &QPushButton::clicked, this, &CEditDataWidget::OnSignClicked);
-  connect(pbBack, &QPushButton::clicked, this, &CEditDataWidget::OnBackClicked);
   connect(ckApplySign, &QCheckBox::toggled, this, &CEditDataWidget::OnApplySignToggled);
-  connect(ckApplyBack, &QCheckBox::toggled, this, &CEditDataWidget::OnApplyBackToggled);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -200,7 +197,7 @@ void CEditDataWidget::OnInsertBeforeClicked()
     , leRoofHeight->text(), leDrawOrder1->text(), leDrawOrder2->text(), leDrawOrder3->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
-    , pbSign->property("value").toString(), pbBack->property("value").toString());
+    , pbSign->property("value").toString());
 
   g_pMainWindow->GetCurrentTrack()->InsertGeometryChunk(g_pMainWindow->GetSelFrom(), sbInsert->value(), editVals);
 
@@ -231,7 +228,7 @@ void CEditDataWidget::OnInsertAfterClicked()
     , leRoofHeight->text(), leDrawOrder1->text(), leDrawOrder2->text(), leDrawOrder3->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
-    , leSign->text(), leBack->text());
+    , leSign->text());
 
   g_pMainWindow->GetCurrentTrack()->InsertGeometryChunk(g_pMainWindow->GetSelTo() + 1, sbInsert->value(), editVals);
 
@@ -262,7 +259,7 @@ void CEditDataWidget::OnApplyClicked()
     , leRoofHeight->text(), leDrawOrder1->text(), leDrawOrder2->text(), leDrawOrder3->text(), leUnk37->text(), leUnk38->text()
     , leUnk39->text(), leUnk40->text(), leUnk41->text(), leUnk42->text(), leUnk43->text(), leUnk44->text()
     , leUnk45->text(), leUnk46->text(), leUnk47->text(), leUnk48->text(), leUnk49->text(), leUnk50->text()
-    , leSign->text(), leBack->text());
+    , leSign->text());
 
   g_pMainWindow->GetCurrentTrack()->ApplyGeometrySettings(g_pMainWindow->GetSelFrom(), g_pMainWindow->GetSelTo(), editVals);
   g_pMainWindow->SaveHistory("Edited geometry chunks");
@@ -583,7 +580,6 @@ void CEditDataWidget::UpdateGeometryEditMode()
   QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk49, p->editVals.sUnk49);
   QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leUnk50, p->editVals.sUnk50);
   QtHelpers::UpdateSignEditMode(bEditMode, bMixedData, leSign, widgetSign, p->editVals.sSignTexture);
-  QtHelpers::UpdateSignEditMode(bEditMode, bMixedData, leBack, widgetBack, p->editVals.sBackTexture);
 
   pbApply->setEnabled(bEditMode);
   pbCancel->setEnabled(bEditMode);
@@ -626,39 +622,6 @@ void CEditDataWidget::OnSignClicked()
 
 //-------------------------------------------------------------------------------------------------
 
-void CEditDataWidget::OnBackClicked()
-{
-  if (!g_pMainWindow->GetCurrentTrack())
-    return;
-
-  QString sValue = leBack->text();
-  int iValue = sValue.toInt();
-  unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
-  int iBldIndex = uiSignedBitVal & SURFACE_TEXTURE_INDEX;
-
-  CTilePicker dlg(this, iBldIndex, g_pMainWindow->GetCurrentTrack()->m_pTex);
-  if (dlg.exec()) {
-    int iIndex = dlg.GetSelected();
-    if (iIndex >= 0) {
-      iBldIndex = iIndex;
-      uiSignedBitVal = iBldIndex;
-      if (ckApplyBack->isChecked()) {
-        uiSignedBitVal |= SURFACE_FLAG_APPLY_TEXTURE;
-      } else {
-        uiSignedBitVal &= ~SURFACE_FLAG_APPLY_TEXTURE;
-      }
-    }
-    iValue = CTrack::GetIntValueFromSignedBit(uiSignedBitVal);
-    sValue = QString::number(iValue);
-  }
-
-  leBack->setText(sValue);
-  QtHelpers::UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack, g_pMainWindow->GetCurrentTrack()->m_pTex);
-  UpdateGeometryEditMode();
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CEditDataWidget::OnApplySignToggled(bool bChecked)
 {
   if (!g_pMainWindow->GetCurrentTrack())
@@ -675,27 +638,6 @@ void CEditDataWidget::OnApplySignToggled(bool bChecked)
   QString sNewValue = QString::number(iValue);
   leSign->setText(sNewValue);
   QtHelpers::UpdateSignButtonDisplay(pbSign, ckApplySign, leSign, g_pMainWindow->GetCurrentTrack()->m_pBld);
-  UpdateGeometryEditMode();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CEditDataWidget::OnApplyBackToggled(bool bChecked)
-{
-  if (!g_pMainWindow->GetCurrentTrack())
-    return;
-
-  int iValue = leBack->text().toInt();
-  unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
-  if (bChecked) {
-    uiSignedBitVal |= SURFACE_FLAG_APPLY_TEXTURE;
-  } else {
-    uiSignedBitVal &= ~SURFACE_FLAG_APPLY_TEXTURE;
-  }
-  iValue = CTrack::GetIntValueFromSignedBit(uiSignedBitVal);
-  QString sNewValue = QString::number(iValue);
-  leBack->setText(sNewValue);
-  QtHelpers::UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack, g_pMainWindow->GetCurrentTrack()->m_pTex);
   UpdateGeometryEditMode();
 }
 
@@ -726,17 +668,6 @@ void CEditDataWidget::OnSignLEChanged()
     return;
 
   QtHelpers::UpdateSignButtonDisplay(pbSign, ckApplySign, leSign, g_pMainWindow->GetCurrentTrack()->m_pBld);
-  UpdateGeometryEditMode();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CEditDataWidget::OnBackLEChanged()
-{
-  if (!g_pMainWindow->GetCurrentTrack())
-    return;
-
-  QtHelpers::UpdateSignButtonDisplay(pbBack, ckApplyBack, leBack, g_pMainWindow->GetCurrentTrack()->m_pTex);
   UpdateGeometryEditMode();
 }
 
@@ -930,7 +861,6 @@ void CEditDataWidget::RevertGeometry()
   bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk49, p->editVals.sUnk49);
   bMixedData |= QtHelpers::UpdateLEWithSelectionValue(leUnk50, p->editVals.sUnk50);
   bMixedData |= QtHelpers::UpdateSignWithSelectionValue(pbSign, ckApplySign, leSign, p->editVals.sSignTexture, g_pMainWindow->GetCurrentTrack()->m_pBld);
-  bMixedData |= QtHelpers::UpdateSignWithSelectionValue(pbBack, ckApplyBack, leBack, p->editVals.sBackTexture, g_pMainWindow->GetCurrentTrack()->m_pTex);
 
   UpdateTextures(leLeftSurfaceType, lblLSurfaceTex1, lblLSurfaceTex2);
   UpdateTextures(leCenterSurfaceType, lblCSurfaceTex1, lblCSurfaceTex2);

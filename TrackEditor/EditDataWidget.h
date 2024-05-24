@@ -37,13 +37,10 @@ protected slots:
   void OnEditRUOuterWall();
   void OnEditEnvirFloor();
   void OnSignClicked();
-  void OnBackClicked();
   void OnApplySignToggled(bool bChecked);
-  void OnApplyBackToggled(bool bChecked);
   void OnSignTypeChanged(int iIndex);
   void OnSignTypeLEChanged();
   void OnSignLEChanged();
-  void OnBackLEChanged();
   void OnLSurfaceLEChanged();
   void OnCSurfaceLEChanged();
   void OnRSurfaceLEChanged();

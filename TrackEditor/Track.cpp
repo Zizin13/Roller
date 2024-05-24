@@ -354,9 +354,6 @@ void CTrack::GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex, CChu
     sVal = QString::number(m_chunkAy[i].iSignTexture);
     if (editVals.sSignTexture.isEmpty()) editVals.sSignTexture = sVal;
     else if (editVals.sSignTexture.compare(sVal) != 0) editVals.sSignTexture = MIXED_DATA;
-    sVal = QString::number(m_chunkAy[i].iBackTexture);
-    if (editVals.sBackTexture.isEmpty()) editVals.sBackTexture = sVal;
-    else if (editVals.sBackTexture.compare(sVal) != 0) editVals.sBackTexture = MIXED_DATA;
   }
 }
 
@@ -436,7 +433,6 @@ void CTrack::ApplyGeometrySettings(int iStartIndex, int iEndIndex, const CChunkE
     if (!editVals.sUnk49.isEmpty()) m_chunkAy[i].iUnk49 = editVals.sUnk49.toInt();
     if (!editVals.sUnk50.isEmpty()) m_chunkAy[i].iUnk50 = editVals.sUnk50.toInt();
     if (!editVals.sSignTexture.isEmpty()) m_chunkAy[i].iSignTexture = editVals.sSignTexture.toInt();
-    if (!editVals.sBackTexture.isEmpty()) m_chunkAy[i].iBackTexture = editVals.sBackTexture.toInt();
   }
   g_pMainWindow->LogMessage("Applied changes to " + QString::number(iEndIndex - iStartIndex + 1) + " geometry chunks");
 }
@@ -519,7 +515,6 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount, const CChunkEditValues 
     newChunk.iUnk49 = editVals.sUnk49.toInt();
     newChunk.iUnk50 = editVals.sUnk50.toInt();
     newChunk.iSignTexture = editVals.sSignTexture.toInt();
-    newChunk.iBackTexture = editVals.sBackTexture.toInt();\
     if (m_chunkAy.empty())
       m_chunkAy.push_back(newChunk);
     else

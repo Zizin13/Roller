@@ -150,7 +150,6 @@ struct tGeometryChunk
 
   //additional data
   int iSignTexture;
-  int iBackTexture;
 
   //math
   tChunkMath math;
@@ -216,6 +215,7 @@ public:
   tTrackHeader m_header;
   CChunkAy m_chunkAy;
   CStuntMap m_stuntMap;
+  CSignMap m_backsMap;
   std::string m_sTrackFileFolder;
   std::string m_sTextureFile;
   std::string m_sBuildingFile;

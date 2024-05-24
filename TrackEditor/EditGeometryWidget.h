@@ -46,7 +46,6 @@ protected slots:
   void EditRShoulder();
   void EditLWall();
   void EditRWall();
-  void EditBack();
   void EditRoof();
   void EditLUOWall();
   void EditLLOWall();

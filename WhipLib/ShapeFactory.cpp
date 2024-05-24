@@ -439,6 +439,7 @@ float *CShapeFactory::GetCoords(eWhipModel model)
     case CAR_ZIZIN:
       return g_xzizinCoords;
     case CAR_REISE:
+    case CAR_DEATH:
       return g_xreiseCoords;
     case SIGN_TOWER:
       return g_towerCoords;
@@ -502,6 +503,7 @@ int CShapeFactory::GetCoordsCount(eWhipModel model)
     case CAR_ZIZIN:
       return g_xzizinCoordsCount;
     case CAR_REISE:
+    case CAR_DEATH:
       return g_xreiseCoordsCount;
     case SIGN_TOWER:
       return g_towerCoordsCount;
@@ -565,6 +567,7 @@ tPolygon *CShapeFactory::GetPols(eWhipModel model)
     case CAR_ZIZIN:
       return g_xzizinPols;
     case CAR_REISE:
+    case CAR_DEATH:
       return g_xreisePols;
     case SIGN_TOWER:
       return g_towerPols;
@@ -628,6 +631,7 @@ int CShapeFactory::GetPolsCount(eWhipModel model)
     case CAR_ZIZIN:
       return g_xzizinPolsCount;
     case CAR_REISE:
+    case CAR_DEATH:
       return g_xreisePolsCount;
     case SIGN_TOWER:
       return g_towerPolsCount;
@@ -691,6 +695,7 @@ tAnimation *CShapeFactory::GetAnms(eWhipModel model)
     case CAR_ZIZIN:
       return g_xzizinAnms;
     case CAR_REISE:
+    case CAR_DEATH:
       return g_xreiseAnms;
     case SIGN_TOWER:
       return g_towerAnms;
@@ -754,6 +759,7 @@ int CShapeFactory::GetAnmsCount(eWhipModel model)
     case CAR_ZIZIN:
       return g_xzizinAnmsCount;
     case CAR_REISE:
+    case CAR_DEATH:
       return g_xreiseAnmsCount;
     case SIGN_TOWER:
       return g_towerAnmsCount;
@@ -817,6 +823,7 @@ uint32 *CShapeFactory::GetBacks(eWhipModel model)
     case CAR_ZIZIN:
       return g_xzizinBacks;
     case CAR_REISE:
+    case CAR_DEATH:
       return g_xreiseBacks;
     case SIGN_TOWER:
       return g_towerBacks;
@@ -880,6 +887,7 @@ int CShapeFactory::GetBacksCount(eWhipModel model)
     case CAR_ZIZIN:
       return g_xzizinBacksCount;
     case CAR_REISE:
+    case CAR_DEATH:
       return g_xreiseBacksCount;
     case SIGN_TOWER:
       return g_towerBacksCount;

@@ -498,6 +498,9 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
       case CAR_REISE:
         sTexName = "XREISE.BM";
         break;
+      case CAR_DEATH:
+        sTexName = "DEATH.BM";
+        break;
     }
     QString sPal = QString(p->m_track.m_sTrackFileFolder.c_str()) + QDir::separator() + "PALETTE.PAL";
     QString sTex = QString(p->m_track.m_sTrackFileFolder.c_str()) + QDir::separator() + sTexName;

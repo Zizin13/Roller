@@ -175,7 +175,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   //setup stunt timer
   m_pStuntTimer = new QTimer(this);
   m_pStuntTimer->setInterval(28);
-  connect(m_pStuntTimer, &QTimer::timeout, this, &CMainWindow::OnStuntTimer, Qt::QueuedConnection);
+  connect(m_pStuntTimer, &QTimer::timeout, this, &CMainWindow::OnStuntTimer);
   m_pStuntTimer->start();
 
   //signals
@@ -452,7 +452,6 @@ void CMainWindow::OnPaste()
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(iSelect));
   GetCurrentPreview()->m_bUnsavedChanges = true;
   GetCurrentPreview()->SaveHistory("Pasted " + QString::number(p->m_clipBoard.size()) + " geometry chunks");
-  GetCurrentPreview()->DeleteTrackModels();
   g_pMainWindow->UpdateWindow();
   p->m_pEditData->UpdateGeometryEditMode();
 }
@@ -588,7 +587,6 @@ void CMainWindow::OnDeleteChunkClicked()
 
   GetCurrentPreview()->m_bUnsavedChanges = true;
   GetCurrentPreview()->SaveHistory("Deleted geometry chunk");
-  GetCurrentPreview()->DeleteTrackModels();
   g_pMainWindow->UpdateWindow();
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(sbSelChunksFrom->value()));
   BLOCK_SIG_AND_DO(ckTo, setChecked(false));
@@ -609,7 +607,6 @@ void CMainWindow::OnAddChunkClicked()
 
   GetCurrentPreview()->m_bUnsavedChanges = true;
   GetCurrentPreview()->SaveHistory("Added geometry chunk");
-  GetCurrentPreview()->DeleteTrackModels();
   g_pMainWindow->UpdateWindow();
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(iLastPos + 1));
   BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(iLastPos + 1));

@@ -88,21 +88,6 @@ public:
   };
   void DeleteModels()
   {
-    for (std::vector<CShapeData *>::iterator it = m_signAy.begin(); it != m_signAy.end(); ++it) {
-      delete *it;
-    }
-    m_signAy.clear();
-    for (std::vector<CShapeData *>::iterator it = m_audioAy.begin(); it != m_audioAy.end(); ++it) {
-      delete *it;
-    }
-    m_audioAy.clear();
-    for (std::vector<CShapeData *>::iterator it = m_stuntAy.begin(); it != m_stuntAy.end(); ++it) {
-      delete *it;
-    }
-    m_stuntAy.clear();
-  }
-  void DeleteTrackModels()
-  {
     if (m_pLLaneSurf) {
       delete m_pLLaneSurf;
       m_pLLaneSurf = NULL;
@@ -219,6 +204,18 @@ public:
       delete m_pSelection;
       m_pSelection = NULL;
     }
+    for (std::vector<CShapeData *>::iterator it = m_signAy.begin(); it != m_signAy.end(); ++it) {
+      delete *it;
+    }
+    m_signAy.clear();
+    for (std::vector<CShapeData *>::iterator it = m_audioAy.begin(); it != m_audioAy.end(); ++it) {
+      delete *it;
+    }
+    m_audioAy.clear();
+    for (std::vector<CShapeData *>::iterator it = m_stuntAy.begin(); it != m_stuntAy.end(); ++it) {
+      delete *it;
+    }
+    m_stuntAy.clear();
   }
 
   CShapeData *m_pLLaneSurf;
@@ -325,7 +322,6 @@ void CTrackPreview::UpdateTrack(bool bUpdatingStunt)
 
   CShapeFactory::GetShapeFactory().m_fScale = 10000.0f / m_iScale;
   if (!p->m_track.m_chunkAy.empty()) {
-    p->m_track.m_fScale = 10000.0f / m_iScale;
     p->m_pLLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLLaneSurf, p->m_pShader, &p->m_track, eShapeSection::LLANE, m_bAttachLast);
     p->m_pLLaneWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLLaneWire, p->m_pShader, &p->m_track, eShapeSection::LLANE, m_bAttachLast, true);
     p->m_pRLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pRLaneSurf, p->m_pShader, &p->m_track, eShapeSection::RLANE, m_bAttachLast);
@@ -440,16 +436,9 @@ void CTrackPreview::Redo()
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackPreview::DeleteTrackModels()
-{
-  p->DeleteTrackModels();
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CTrackPreview::LoadHistory(const tTrackHistory *pHistory)
 {
-  DeleteTrackModels();
+  p->DeleteModels();
 
   int iSize = (int)pHistory->byteAy.size();
   uint8 *byData = new uint8[iSize];
@@ -533,6 +522,7 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
 void CTrackPreview::SetScale(int iScale)
 {
   m_iScale = iScale;
+  p->m_track.m_fScale = 10000.0f / m_iScale;
   p->m_track.GenerateTrackMath();
   UpdateTrack();
 }

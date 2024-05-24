@@ -526,7 +526,6 @@ void CTrack::InsertGeometryChunk(int iIndex, int iCount, const CChunkEditValues 
       m_chunkAy.insert(m_chunkAy.begin() + iIndex, newChunk);
   }
   g_pMainWindow->LogMessage("Inserted " + QString::number(iCount) + " geometry chunks");
-  g_pMainWindow->GetCurrentPreview()->DeleteTrackModels();
 }
 
 //-------------------------------------------------------------------------------------------------

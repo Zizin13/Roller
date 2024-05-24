@@ -267,7 +267,7 @@ public:
 CTrackPreview::CTrackPreview(QWidget *pParent, const QString &sTrackFile)
   : QGLWidget(QGLFormat(QGL::SampleBuffers), pParent)
   , m_uiShowModels(0)
-  , m_carModel(eWhipModel::CAR_ZIZIN)
+  , m_carModel(eWhipModel::CAR_XZIZIN)
   , m_carAILine(eShapeSection::AILINE1)
   , m_bMillionPlus(false)
   , m_bAttachLast(false)
@@ -474,29 +474,53 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
       case CAR_F1WACK:
         sTexName = "RED28.BM";
         break;
-      case CAR_AUTO:
+      case CAR_XAUTO:
         sTexName = "XAUTO.BM";
         break;
-      case CAR_DESILVA:
+      case CAR_XDESILVA:
         sTexName = "XDESILVA.BM";
         break;
-      case CAR_PULSE:
+      case CAR_XPULSE:
         sTexName = "XPULSE.BM";
         break;
-      case CAR_GLOBAL:
+      case CAR_XGLOBAL:
         sTexName = "XGLOBAL.BM";
         break;
-      case CAR_MILLION:
+      case CAR_XMILLION:
         sTexName = "XMILLION.BM";
         break;
-      case CAR_MISSION:
+      case CAR_XMISSION:
         sTexName = "XMISSION.BM";
         break;
-      case CAR_ZIZIN:
+      case CAR_XZIZIN:
         sTexName = "XZIZIN.BM";
         break;
-      case CAR_REISE:
+      case CAR_XREISE:
         sTexName = "XREISE.BM";
+        break;
+      case CAR_YAUTO:
+        sTexName = "YAUTO.BM";
+        break;
+      case CAR_YDESILVA:
+        sTexName = "YDESILVA.BM";
+        break;
+      case CAR_YPULSE:
+        sTexName = "YPULSE.BM";
+        break;
+      case CAR_YGLOBAL:
+        sTexName = "YGLOBAL.BM";
+        break;
+      case CAR_YMILLION:
+        sTexName = "YMILLION.BM";
+        break;
+      case CAR_YMISSION:
+        sTexName = "YMISSION.BM";
+        break;
+      case CAR_YZIZIN:
+        sTexName = "YZIZIN.BM";
+        break;
+      case CAR_YREISE:
+        sTexName = "YREISE.BM";
         break;
       case CAR_DEATH:
         sTexName = "DEATH.BM";

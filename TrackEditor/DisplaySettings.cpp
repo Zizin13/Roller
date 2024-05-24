@@ -23,16 +23,24 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent)
   ckEnvironment->setChecked(true);
 
   cbTestCarType->addItem("F1WACK", (int)eWhipModel::CAR_F1WACK);
-  cbTestCarType->addItem("AUTO", (int)eWhipModel::CAR_AUTO);
-  cbTestCarType->addItem("DESILVA", (int)eWhipModel::CAR_DESILVA);
-  cbTestCarType->addItem("PULSE", (int)eWhipModel::CAR_PULSE);
-  cbTestCarType->addItem("GLOBAL", (int)eWhipModel::CAR_GLOBAL);
-  cbTestCarType->addItem("MILLION", (int)eWhipModel::CAR_MILLION);
-  cbTestCarType->addItem("MISSION", (int)eWhipModel::CAR_MISSION);
-  cbTestCarType->addItem("ZIZIN", (int)eWhipModel::CAR_ZIZIN);
-  cbTestCarType->addItem("REISE", (int)eWhipModel::CAR_REISE);
+  cbTestCarType->addItem("XAUTO", (int)eWhipModel::CAR_XAUTO);
+  cbTestCarType->addItem("XDESILVA", (int)eWhipModel::CAR_XDESILVA);
+  cbTestCarType->addItem("XPULSE", (int)eWhipModel::CAR_XPULSE);
+  cbTestCarType->addItem("XGLOBAL", (int)eWhipModel::CAR_XGLOBAL);
+  cbTestCarType->addItem("XMILLION", (int)eWhipModel::CAR_XMILLION);
+  cbTestCarType->addItem("XMISSION", (int)eWhipModel::CAR_XMISSION);
+  cbTestCarType->addItem("XZIZIN", (int)eWhipModel::CAR_XZIZIN);
+  cbTestCarType->addItem("XREISE", (int)eWhipModel::CAR_XREISE);
+  cbTestCarType->addItem("YAUTO", (int)eWhipModel::CAR_YAUTO);
+  cbTestCarType->addItem("YDESILVA", (int)eWhipModel::CAR_YDESILVA);
+  cbTestCarType->addItem("YPULSE", (int)eWhipModel::CAR_YPULSE);
+  cbTestCarType->addItem("YGLOBAL", (int)eWhipModel::CAR_YGLOBAL);
+  cbTestCarType->addItem("YMILLION", (int)eWhipModel::CAR_YMILLION);
+  cbTestCarType->addItem("YMISSION", (int)eWhipModel::CAR_YMISSION);
+  cbTestCarType->addItem("YZIZIN", (int)eWhipModel::CAR_YZIZIN);
+  cbTestCarType->addItem("YREISE", (int)eWhipModel::CAR_YREISE);
   cbTestCarType->addItem("DEATH", (int)eWhipModel::CAR_DEATH);
-  cbTestCarType->setCurrentIndex(cbTestCarType->findData((int)eWhipModel::CAR_ZIZIN));
+  cbTestCarType->setCurrentIndex(cbTestCarType->findData((int)eWhipModel::CAR_XZIZIN));
 
   cbTestCarPos->addItem("AILINE 1", (int)eShapeSection::AILINE1);
   cbTestCarPos->addItem("AILINE 2", (int)eShapeSection::AILINE2);

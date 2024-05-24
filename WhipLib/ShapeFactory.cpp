@@ -424,21 +424,29 @@ float *CShapeFactory::GetCoords(eWhipModel model)
   switch (model) {
     case CAR_F1WACK:
       return g_f1wackCoords;
-    case CAR_AUTO:
+    case CAR_XAUTO:
+    case CAR_YAUTO:
       return g_xautoCoords;
-    case CAR_DESILVA:
+    case CAR_XDESILVA:
+    case CAR_YDESILVA:
       return g_xdesilvaCoords;
-    case CAR_PULSE:
+    case CAR_XPULSE:
+    case CAR_YPULSE:
       return g_xpulseCoords;
-    case CAR_GLOBAL:
+    case CAR_XGLOBAL:
+    case CAR_YGLOBAL:
       return g_xglobalCoords;
-    case CAR_MILLION:
+    case CAR_XMILLION:
+    case CAR_YMILLION:
       return g_xmillionCoords;
-    case CAR_MISSION:
+    case CAR_XMISSION:
+    case CAR_YMISSION:
       return g_xmissionCoords;
-    case CAR_ZIZIN:
+    case CAR_XZIZIN:
+    case CAR_YZIZIN:
       return g_xzizinCoords;
-    case CAR_REISE:
+    case CAR_XREISE:
+    case CAR_YREISE:
     case CAR_DEATH:
       return g_xreiseCoords;
     case SIGN_TOWER:
@@ -488,21 +496,29 @@ int CShapeFactory::GetCoordsCount(eWhipModel model)
   switch (model) {
     case CAR_F1WACK:
       return g_f1wackCoordsCount;
-    case CAR_AUTO:
+    case CAR_XAUTO:
+    case CAR_YAUTO:
       return g_xautoCoordsCount;
-    case CAR_DESILVA:
+    case CAR_XDESILVA:
+    case CAR_YDESILVA:
       return g_xdesilvaCoordsCount;
-    case CAR_PULSE:
+    case CAR_XPULSE:
+    case CAR_YPULSE:
       return g_xpulseCoordsCount;
-    case CAR_GLOBAL:
+    case CAR_XGLOBAL:
+    case CAR_YGLOBAL:
       return g_xglobalCoordsCount;
-    case CAR_MILLION:
+    case CAR_XMILLION:
+    case CAR_YMILLION:
       return g_xmillionCoordsCount;
-    case CAR_MISSION:
+    case CAR_XMISSION:
+    case CAR_YMISSION:
       return g_xmissionCoordsCount;
-    case CAR_ZIZIN:
+    case CAR_XZIZIN:
+    case CAR_YZIZIN:
       return g_xzizinCoordsCount;
-    case CAR_REISE:
+    case CAR_XREISE:
+    case CAR_YREISE:
     case CAR_DEATH:
       return g_xreiseCoordsCount;
     case SIGN_TOWER:
@@ -552,21 +568,29 @@ tPolygon *CShapeFactory::GetPols(eWhipModel model)
   switch (model) {
     case CAR_F1WACK:
       return g_f1wackPols;
-    case CAR_AUTO:
+    case CAR_XAUTO:
+    case CAR_YAUTO:
       return g_xautoPols;
-    case CAR_DESILVA:
+    case CAR_XDESILVA:
+    case CAR_YDESILVA:
       return g_xdesilvaPols;
-    case CAR_PULSE:
+    case CAR_XPULSE:
+    case CAR_YPULSE:
       return g_xpulsePols;
-    case CAR_GLOBAL:
+    case CAR_XGLOBAL:
+    case CAR_YGLOBAL:
       return g_xglobalPols;
-    case CAR_MILLION:
+    case CAR_XMILLION:
+    case CAR_YMILLION:
       return g_xmillionPols;
-    case CAR_MISSION:
+    case CAR_XMISSION:
+    case CAR_YMISSION:
       return g_xmissionPols;
-    case CAR_ZIZIN:
+    case CAR_XZIZIN:
+    case CAR_YZIZIN:
       return g_xzizinPols;
-    case CAR_REISE:
+    case CAR_XREISE:
+    case CAR_YREISE:
     case CAR_DEATH:
       return g_xreisePols;
     case SIGN_TOWER:
@@ -616,21 +640,29 @@ int CShapeFactory::GetPolsCount(eWhipModel model)
   switch (model) {
     case CAR_F1WACK:
       return g_f1wackPolsCount;
-    case CAR_AUTO:
+    case CAR_XAUTO:
+    case CAR_YAUTO:
       return g_xautoPolsCount;
-    case CAR_DESILVA:
+    case CAR_XDESILVA:
+    case CAR_YDESILVA:
       return g_xdesilvaPolsCount;
-    case CAR_PULSE:
+    case CAR_XPULSE:
+    case CAR_YPULSE:
       return g_xpulsePolsCount;
-    case CAR_GLOBAL:
+    case CAR_XGLOBAL:
+    case CAR_YGLOBAL:
       return g_xglobalPolsCount;
-    case CAR_MILLION:
+    case CAR_XMILLION:
+    case CAR_YMILLION:
       return g_xmillionPolsCount;
-    case CAR_MISSION:
+    case CAR_XMISSION:
+    case CAR_YMISSION:
       return g_xmissionPolsCount;
-    case CAR_ZIZIN:
+    case CAR_XZIZIN:
+    case CAR_YZIZIN:
       return g_xzizinPolsCount;
-    case CAR_REISE:
+    case CAR_XREISE:
+    case CAR_YREISE:
     case CAR_DEATH:
       return g_xreisePolsCount;
     case SIGN_TOWER:
@@ -680,21 +712,29 @@ tAnimation *CShapeFactory::GetAnms(eWhipModel model)
   switch (model) {
     case CAR_F1WACK:
       return NULL;
-    case CAR_AUTO:
+    case CAR_XAUTO:
+    case CAR_YAUTO:
       return g_xautoAnms;
-    case CAR_DESILVA:
+    case CAR_XDESILVA:
+    case CAR_YDESILVA:
       return g_xdesilvaAnms;
-    case CAR_PULSE:
+    case CAR_XPULSE:
+    case CAR_YPULSE:
       return g_xpulseAnms;
-    case CAR_GLOBAL:
+    case CAR_XGLOBAL:
+    case CAR_YGLOBAL:
       return g_xglobalAnms;
-    case CAR_MILLION:
+    case CAR_XMILLION:
+    case CAR_YMILLION:
       return g_xmillionAnms;
-    case CAR_MISSION:
+    case CAR_XMISSION:
+    case CAR_YMISSION:
       return g_xmissionAnms;
-    case CAR_ZIZIN:
+    case CAR_XZIZIN:
+    case CAR_YZIZIN:
       return g_xzizinAnms;
-    case CAR_REISE:
+    case CAR_XREISE:
+    case CAR_YREISE:
     case CAR_DEATH:
       return g_xreiseAnms;
     case SIGN_TOWER:
@@ -744,21 +784,29 @@ int CShapeFactory::GetAnmsCount(eWhipModel model)
   switch (model) {
     case CAR_F1WACK:
       return 0;
-    case CAR_AUTO:
+    case CAR_XAUTO:
+    case CAR_YAUTO:
       return g_xautoAnmsCount;
-    case CAR_DESILVA:
+    case CAR_XDESILVA:
+    case CAR_YDESILVA:
       return g_xdesilvaAnmsCount;
-    case CAR_PULSE:
+    case CAR_XPULSE:
+    case CAR_YPULSE:
       return g_xpulseAnmsCount;
-    case CAR_GLOBAL:
+    case CAR_XGLOBAL:
+    case CAR_YGLOBAL:
       return g_xglobalAnmsCount;
-    case CAR_MILLION:
+    case CAR_XMILLION:
+    case CAR_YMILLION:
       return g_xmillionAnmsCount;
-    case CAR_MISSION:
+    case CAR_XMISSION:
+    case CAR_YMISSION:
       return g_xmissionAnmsCount;
-    case CAR_ZIZIN:
+    case CAR_XZIZIN:
+    case CAR_YZIZIN:
       return g_xzizinAnmsCount;
-    case CAR_REISE:
+    case CAR_XREISE:
+    case CAR_YREISE:
     case CAR_DEATH:
       return g_xreiseAnmsCount;
     case SIGN_TOWER:
@@ -808,21 +856,29 @@ uint32 *CShapeFactory::GetBacks(eWhipModel model)
   switch (model) {
     case CAR_F1WACK:
       return g_f1wackBacks;
-    case CAR_AUTO:
+    case CAR_XAUTO:
+    case CAR_YAUTO:
       return g_xautoBacks;
-    case CAR_DESILVA:
+    case CAR_XDESILVA:
+    case CAR_YDESILVA:
       return g_xdesilvaBacks;
-    case CAR_PULSE:
+    case CAR_XPULSE:
+    case CAR_YPULSE:
       return g_xpulseBacks;
-    case CAR_GLOBAL:
+    case CAR_XGLOBAL:
+    case CAR_YGLOBAL:
       return g_xglobalBacks;
-    case CAR_MILLION:
+    case CAR_XMILLION:
+    case CAR_YMILLION:
       return g_xmillionBacks;
-    case CAR_MISSION:
+    case CAR_XMISSION:
+    case CAR_YMISSION:
       return g_xmissionBacks;
-    case CAR_ZIZIN:
+    case CAR_XZIZIN:
+    case CAR_YZIZIN:
       return g_xzizinBacks;
-    case CAR_REISE:
+    case CAR_XREISE:
+    case CAR_YREISE:
     case CAR_DEATH:
       return g_xreiseBacks;
     case SIGN_TOWER:
@@ -872,21 +928,29 @@ int CShapeFactory::GetBacksCount(eWhipModel model)
   switch (model) {
     case CAR_F1WACK:
       return g_f1wackBacksCount;
-    case CAR_AUTO:
+    case CAR_XAUTO:
+    case CAR_YAUTO:
       return g_xautoBacksCount;
-    case CAR_DESILVA:
+    case CAR_XDESILVA:
+    case CAR_YDESILVA:
       return g_xdesilvaBacksCount;
-    case CAR_PULSE:
+    case CAR_XPULSE:
+    case CAR_YPULSE:
       return g_xpulseBacksCount;
-    case CAR_GLOBAL:
+    case CAR_XGLOBAL:
+    case CAR_YGLOBAL:
       return g_xglobalBacksCount;
-    case CAR_MILLION:
+    case CAR_XMILLION:
+    case CAR_YMILLION:
       return g_xmillionBacksCount;
-    case CAR_MISSION:
+    case CAR_XMISSION:
+    case CAR_YMISSION:
       return g_xmissionBacksCount;
-    case CAR_ZIZIN:
+    case CAR_XZIZIN:
+    case CAR_YZIZIN:
       return g_xzizinBacksCount;
-    case CAR_REISE:
+    case CAR_XREISE:
+    case CAR_YREISE:
     case CAR_DEATH:
       return g_xreiseBacksCount;
     case SIGN_TOWER:

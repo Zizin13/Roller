@@ -137,6 +137,8 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
   bool bTransparent = uiSurfaceType & SURFACE_FLAG_TRANSPARENT;
   bool bPartialTrans = uiSurfaceType & SURFACE_FLAG_PARTIAL_TRANS;
   bool bApplyTexture = uiSurfaceType & SURFACE_FLAG_APPLY_TEXTURE;
+  if (bApplyTexture)
+    bTransparent = false; //applying texture overrides transparency
   uint32 uiTexIndex = uiSurfaceType & SURFACE_TEXTURE_INDEX;
 
   //right lane takes the second texture on center surface

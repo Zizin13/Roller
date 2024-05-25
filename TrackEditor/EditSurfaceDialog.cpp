@@ -26,6 +26,11 @@ CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, CPa
   lblDisableEffects->setVisible(bShowDisable);
   ckDisableAttach->setVisible(bShowDisableAttach);
   lblDisableEffects->setText(sDisableEffects);
+  cbTransparency->addItem("Invisible",   eTransparencyType::INVISIBLE);
+  cbTransparency->addItem("Light Tint",  eTransparencyType::LIGHT_TINT);
+  cbTransparency->addItem("Medium Tint", eTransparencyType::MEDIUM_TINT);
+  cbTransparency->addItem("Dark Tint",   eTransparencyType::DARK_TINT);
+  cbTransparency->addItem("Light Blue",  eTransparencyType::LIGHT_BLUE);
 
   UpdateDialog();
 
@@ -211,10 +216,15 @@ void CEditSurfaceDialog::On22WallChecked(bool bChecked)
 
 void CEditSurfaceDialog::On21TransparentChecked(bool bChecked)
 {
-  if (bChecked)
+  if (bChecked) {
     m_uiSignedBitValue |= SURFACE_FLAG_TRANSPARENT;
-  else
+    m_uiSignedBitValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
+    int iIndex = 1;
+    m_uiSignedBitValue &= ~SURFACE_TEXTURE_INDEX;
+    m_uiSignedBitValue |= iIndex;
+  } else {
     m_uiSignedBitValue &= ~SURFACE_FLAG_TRANSPARENT;
+  }
   UpdateDialog();
 }
 
@@ -360,6 +370,7 @@ void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
     if (m_pTexture && iIndex >= m_pTexture->m_iNumTiles)
       m_uiSignedBitValue = 0;
     m_uiSignedBitValue |= SURFACE_FLAG_APPLY_TEXTURE;
+    m_uiSignedBitValue &= ~SURFACE_FLAG_TRANSPARENT;
   } else if (m_pPalette) {
     if (m_pPalette && iIndex >= (int)m_pPalette->m_paletteAy.size())
       m_uiSignedBitValue = 0;
@@ -467,6 +478,10 @@ void CEditSurfaceDialog::UpdateDialog()
 
   //textures
   if (m_pTexture && m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE) {
+    pbTexture1->show();
+    lblTexture2->show();
+    lblTransparency->hide();
+    cbTransparency->hide();
     int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
     if (iIndex < m_pTexture->m_iNumTiles) {
       QPixmap pixmap;
@@ -485,7 +500,18 @@ void CEditSurfaceDialog::UpdateDialog()
         lblTexture2->setPixmap(QPixmap());
       }
     }
+  } else if (m_uiSignedBitValue & SURFACE_FLAG_TRANSPARENT) {
+    pbTexture1->hide();
+    lblTexture2->hide();
+    lblTransparency->show();
+    cbTransparency->show();
+    int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
+    BLOCK_SIG_AND_DO(cbTransparency, setCurrentIndex(iIndex));
   } else if (m_pPalette) {
+    pbTexture1->show();
+    lblTexture2->show();
+    lblTransparency->hide();
+    cbTransparency->hide();
     int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
     if (iIndex < (int)m_pPalette->m_paletteAy.size()) {
       QPixmap pixmap;

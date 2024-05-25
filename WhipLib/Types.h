@@ -79,6 +79,17 @@ enum eWhipModel
 
 //-------------------------------------------------------------------------------------------------
 
+enum eTransparencyType
+{
+  INVISIBLE = 0,
+  LIGHT_TINT,
+  MEDIUM_TINT,
+  DARK_TINT,
+  LIGHT_BLUE
+};
+
+//-------------------------------------------------------------------------------------------------
+
 #define STUNT_FLAG_LSHOULDER  0x01
 #define STUNT_FLAG_LWALL      0x02
 #define STUNT_FLAG_LLANE      0x04

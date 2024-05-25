@@ -109,6 +109,10 @@ tVertex *CShapeFactory::MakeVertsAxes(uint32 &uiNumVerts)
   vertices[1].flags.x = 1.0f;
   vertices[2].flags.x = 1.0f;
   vertices[3].flags.x = 1.0f;
+  vertices[0].flags.y = 1.0f;
+  vertices[1].flags.y = 1.0f;
+  vertices[2].flags.y = 1.0f;
+  vertices[3].flags.y = 1.0f;
 
   return vertices;
 }
@@ -304,6 +308,12 @@ tVertex *CShapeFactory::MakeVertsAudioMarker(uint32 &uiNumVerts)
   vertices[3].flags.x = 1.0f;
   vertices[4].flags.x = 1.0f;
   vertices[5].flags.x = 1.0f;
+  vertices[0].flags.y = 1.0f;
+  vertices[1].flags.y = 1.0f;
+  vertices[2].flags.y = 1.0f;
+  vertices[3].flags.y = 1.0f;
+  vertices[4].flags.y = 1.0f;
+  vertices[5].flags.y = 1.0f;
 
   return vertices;
 }
@@ -388,6 +398,14 @@ tVertex *CShapeFactory::MakeVertsStuntMarker(uint32 &uiNumVerts)
   vertices[4].flags.x = 1.0f;
   vertices[5].flags.x = 1.0f;
   vertices[6].flags.x = 1.0f;
+
+  vertices[0].flags.y = 1.0f;
+  vertices[1].flags.y = 1.0f;
+  vertices[2].flags.y = 1.0f;
+  vertices[3].flags.y = 1.0f;
+  vertices[4].flags.y = 1.0f;
+  vertices[5].flags.y = 1.0f;
+  vertices[6].flags.y = 1.0f;
 
   return vertices;
 }
@@ -1150,6 +1168,7 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShapeData *pShape, CShader *pShader
   if (bWireframe) {
     for (uint32 i = 0; i < uiNumVerts; ++i) {
       vertices[i].flags.x = 1.0f; //use color rather than tex
+      vertices[i].flags.y = 1.0f; //alpha val for color
       vertices[i].color = CTexture::RandomColor();
     }
   }
@@ -1223,6 +1242,7 @@ CShapeData *CShapeFactory::MakeAILine(CShapeData *pShape, CShader *pShader, CTra
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {
     vertices[i].flags.x = 1.0f; //use color rather than tex
+    vertices[i].flags.y = 1.0f; //alpha val for color
     switch (section) {
       case eShapeSection::AILINE1:
         vertices[i].color = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -1271,6 +1291,7 @@ CShapeData *CShapeFactory::MakeSelectedChunks(CShapeData *pShape, CShader *pShad
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {
     vertices[i].flags.x = 1.0f; //use color rather than tex
+    vertices[i].flags.y = 1.0f; //alpha val for color
     vertices[i].color = CTexture::RandomColor();
   }
 
@@ -1742,6 +1763,10 @@ tVertex *CShapeFactory::MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTr
   vertices[1].flags.x = 1.0f;
   vertices[2].flags.x = 1.0f;
   vertices[3].flags.x = 1.0f;
+  vertices[0].flags.y = 1.0f;
+  vertices[1].flags.y = 1.0f;
+  vertices[2].flags.y = 1.0f;
+  vertices[3].flags.y = 1.0f;
 
   return vertices;
 }

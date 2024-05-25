@@ -137,8 +137,6 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
   bool bTransparent = uiSurfaceType & SURFACE_FLAG_TRANSPARENT;
   bool bPartialTrans = uiSurfaceType & SURFACE_FLAG_PARTIAL_TRANS;
   bool bApplyTexture = uiSurfaceType & SURFACE_FLAG_APPLY_TEXTURE;
-  if (bApplyTexture)
-    bTransparent = false; //applying texture overrides transparency
   uint32 uiTexIndex = uiSurfaceType & SURFACE_TEXTURE_INDEX;
 
   //right lane takes the second texture on center surface
@@ -147,127 +145,140 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
   if (bRightLane && uiSurfaceType & SURFACE_FLAG_TEXTURE_PAIR)
     uiTexIndex++;
 
-  if (!bBack) {
-    if (!bFlipHoriz && !bFlipVert)
-      topLeft.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    else if (bFlipHoriz && !bFlipVert)
-      topLeft.texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
-    else if (!bFlipHoriz && bFlipVert)
-      topLeft.texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    else if (bFlipHoriz && bFlipVert)
-      topLeft.texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+  if (bApplyTexture) {
+    if (!bBack) {
+      if (!bFlipHoriz && !bFlipVert)
+        topLeft.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
+      else if (bFlipHoriz && !bFlipVert)
+        topLeft.texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+      else if (!bFlipHoriz && bFlipVert)
+        topLeft.texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
+      else if (bFlipHoriz && bFlipVert)
+        topLeft.texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
 
-    if (!bFlipHoriz && !bFlipVert)
-      topRight.texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
-    else if (bFlipHoriz && !bFlipVert)
-      topRight.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    else if (!bFlipHoriz && bFlipVert)
-      topRight.texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
-    else if (bFlipHoriz && bFlipVert)
-      topRight.texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
+      if (!bFlipHoriz && !bFlipVert)
+        topRight.texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+      else if (bFlipHoriz && !bFlipVert)
+        topRight.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
+      else if (!bFlipHoriz && bFlipVert)
+        topRight.texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+      else if (bFlipHoriz && bFlipVert)
+        topRight.texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
 
-    if (!bFlipHoriz && !bFlipVert)
-      bottomLeft.texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    else if (bFlipHoriz && !bFlipVert)
-      bottomLeft.texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
-    else if (!bFlipHoriz && bFlipVert)
-      bottomLeft.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    else if (bFlipHoriz && bFlipVert)
-      bottomLeft.texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+      if (!bFlipHoriz && !bFlipVert)
+        bottomLeft.texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
+      else if (bFlipHoriz && !bFlipVert)
+        bottomLeft.texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+      else if (!bFlipHoriz && bFlipVert)
+        bottomLeft.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
+      else if (bFlipHoriz && bFlipVert)
+        bottomLeft.texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
 
-    if (!bFlipHoriz && !bFlipVert)
-      bottomRight.texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
-    else if (bFlipHoriz && !bFlipVert)
-      bottomRight.texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    else if (!bFlipHoriz && bFlipVert)
-      bottomRight.texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
-    else if (bFlipHoriz && bFlipVert)
-      bottomRight.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
-  } else {
-    if (!bFlipHoriz && !bFlipVert)
-      topLeft.backTexCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    else if (bFlipHoriz && !bFlipVert)
-      topLeft.backTexCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
-    else if (!bFlipHoriz && bFlipVert)
-      topLeft.backTexCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    else if (bFlipHoriz && bFlipVert)
-      topLeft.backTexCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+      if (!bFlipHoriz && !bFlipVert)
+        bottomRight.texCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+      else if (bFlipHoriz && !bFlipVert)
+        bottomRight.texCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
+      else if (!bFlipHoriz && bFlipVert)
+        bottomRight.texCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+      else if (bFlipHoriz && bFlipVert)
+        bottomRight.texCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
+    } else {
+      if (!bFlipHoriz && !bFlipVert)
+        topLeft.backTexCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
+      else if (bFlipHoriz && !bFlipVert)
+        topLeft.backTexCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+      else if (!bFlipHoriz && bFlipVert)
+        topLeft.backTexCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
+      else if (bFlipHoriz && bFlipVert)
+        topLeft.backTexCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
 
-    if (!bFlipHoriz && !bFlipVert)
-      topRight.backTexCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
-    else if (bFlipHoriz && !bFlipVert)
-      topRight.backTexCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    else if (!bFlipHoriz && bFlipVert)
-      topRight.backTexCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
-    else if (bFlipHoriz && bFlipVert)
-      topRight.backTexCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
+      if (!bFlipHoriz && !bFlipVert)
+        topRight.backTexCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+      else if (bFlipHoriz && !bFlipVert)
+        topRight.backTexCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
+      else if (!bFlipHoriz && bFlipVert)
+        topRight.backTexCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+      else if (bFlipHoriz && bFlipVert)
+        topRight.backTexCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
 
-    if (!bFlipHoriz && !bFlipVert)
-      bottomLeft.backTexCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    else if (bFlipHoriz && !bFlipVert)
-      bottomLeft.backTexCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
-    else if (!bFlipHoriz && bFlipVert)
-      bottomLeft.backTexCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    else if (bFlipHoriz && bFlipVert)
-      bottomLeft.backTexCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+      if (!bFlipHoriz && !bFlipVert)
+        bottomLeft.backTexCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
+      else if (bFlipHoriz && !bFlipVert)
+        bottomLeft.backTexCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+      else if (!bFlipHoriz && bFlipVert)
+        bottomLeft.backTexCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
+      else if (bFlipHoriz && bFlipVert)
+        bottomLeft.backTexCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
 
-    if (!bFlipHoriz && !bFlipVert)
-      bottomRight.backTexCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
-    else if (bFlipHoriz && !bFlipVert)
-      bottomRight.backTexCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    else if (!bFlipHoriz && bFlipVert)
-      bottomRight.backTexCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
-    else if (bFlipHoriz && bFlipVert)
-      bottomRight.backTexCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
-  }
-
-  float fAlphaVal = 0.8f;
-  if (!bBack) {
-    if (bTransparent) {
+      if (!bFlipHoriz && !bFlipVert)
+        bottomRight.backTexCoords = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+      else if (bFlipHoriz && !bFlipVert)
+        bottomRight.backTexCoords = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
+      else if (!bFlipHoriz && bFlipVert)
+        bottomRight.backTexCoords = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+      else if (bFlipHoriz && bFlipVert)
+        bottomRight.backTexCoords = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
+    }
+  } else if (bTransparent) {
+    float fAlphaVal = 0.0f;
+    glm::vec3 color = glm::vec3(0);
+    switch (uiTexIndex) {
+      case 0:
+        break;
+      case 1:
+        fAlphaVal = 0.25f;
+        break;
+      case 2:
+        fAlphaVal = 0.5f;
+        break;
+      case 3:
+        fAlphaVal = 0.75f;
+        break;
+      case 4:
+        fAlphaVal = 0.25f;
+        color = glm::vec3(0, 0, 1);
+        break;
+    }
+    //alpha
+    topLeft.flags.y = fAlphaVal;
+    topRight.flags.y = fAlphaVal;
+    bottomLeft.flags.y = fAlphaVal;
+    bottomRight.flags.y = fAlphaVal;
+    if (!bBack) {
       //use color
       topLeft.flags.x = 1.0f;
       topRight.flags.x = 1.0f;
       bottomLeft.flags.x = 1.0f;
       bottomRight.flags.x = 1.0f;
-      //alpha
-      topLeft.flags.y = fAlphaVal;
-      topRight.flags.y = fAlphaVal;
-      bottomLeft.flags.y = fAlphaVal;
-      bottomRight.flags.y = fAlphaVal;
       //color
-      topLeft.color = glm::vec3(0);
-      topRight.color = glm::vec3(0);
-      bottomLeft.color = glm::vec3(0);
-      bottomRight.color = glm::vec3(0);
-    }
-  } else {
-    if (bTransparent) {
+      topLeft.color = color;
+      topRight.color = color;
+      bottomLeft.color = color;
+      bottomRight.color = color;
+    } else {
       //use color
       topLeft.flags.z = 1.0f;
       topRight.flags.z = 1.0f;
       bottomLeft.flags.z = 1.0f;
       bottomRight.flags.z = 1.0f;
-      //alpha
-      topLeft.flags.w = fAlphaVal;
-      topRight.flags.w = fAlphaVal;
-      bottomLeft.flags.w = fAlphaVal;
-      bottomRight.flags.w = fAlphaVal;
       //color
-      topLeft.backColor = glm::vec3(0);
-      topRight.backColor = glm::vec3(0);
-      bottomLeft.backColor = glm::vec3(0);
-      bottomRight.backColor = glm::vec3(0);
+      topLeft.backColor = color;
+      topRight.backColor = color;
+      bottomLeft.backColor = color;
+      bottomRight.backColor = color;
     }
-  }
-
-  if (!bBack) {
-    if (!bApplyTexture) {
+  } else {
+    //alpha
+    topLeft.flags.y = 1;
+    topRight.flags.y = 1;
+    bottomLeft.flags.y = 1;
+    bottomRight.flags.y = 1;
+    if (!bBack) {
       //use color
       topLeft.flags.x = 1.0f;
       topRight.flags.x = 1.0f;
       bottomLeft.flags.x = 1.0f;
       bottomRight.flags.x = 1.0f;
-
       //color
       if (uiTexIndex < m_pPalette->m_paletteAy.size()) {
         topLeft.color = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
@@ -275,15 +286,12 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
         bottomLeft.color = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
         bottomRight.color = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
       }
-    }
-  } else {
-    if (!bApplyTexture) {
+    } else {
       //use color
       topLeft.flags.z = 1.0f;
       topRight.flags.z = 1.0f;
       bottomLeft.flags.z = 1.0f;
       bottomRight.flags.z = 1.0f;
-
       //color
       if (uiTexIndex < m_pPalette->m_paletteAy.size()) {
         topLeft.backColor = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);

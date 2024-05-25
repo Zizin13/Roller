@@ -202,7 +202,6 @@ void QtHelpers::UpdateTextures(QLabel *pLblTex1, QLabel *pLblTex2, CTexture *pTe
         pixmap.convertFromImage(QtHelpers::GetQImageFromColor(pPal->m_paletteAy[iIndex]));
         if (pLblTex1)
           pLblTex1->setPixmap(pixmap);
-      } else {
       }
     }
   }

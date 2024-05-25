@@ -22,18 +22,16 @@ void main()
   if (s > 0 || vtfNormalModel == vec3(0, 0, 0)) {
     if (vtfFlags.x != 0) {
       daColor = vec4(vtfColor, 1);
+      daColor.a = vtfFlags.y;
     } else {
       daColor = texture(textureSlot, vtfTexCoords);
     }
-    if (vtfFlags.y > 0)
-      daColor.a = vtfFlags.y;
   } else {
     if (vtfFlags.z != 0) {
       daColor = vec4(vtfBackColor, 1);
+      daColor.a = vtfFlags.y;
     } else {
       daColor = texture(textureSlot, vtfBackTexCoords);
     }
-    if (vtfFlags.a > 0)
-      daColor.a = vtfFlags.a;
   }
 }

@@ -769,7 +769,7 @@ void CTrackPreview::initializeGL()
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_ALPHA_TEST);
-  glAlphaFunc(GL_GREATER, 0.7f);
+  glAlphaFunc(GL_GREATER, 0.24f);
   glLineWidth(3.0f);
 
   if (!p->m_pShader)

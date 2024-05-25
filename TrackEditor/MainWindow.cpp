@@ -27,6 +27,7 @@
 #include "Logging.h"
 #include "NewTrackDialog.h"
 #include "PreferencesDialog.h"
+#include "AssignBacksDialog.h"
 #include "qtimer.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
@@ -155,6 +156,8 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   menuView->addAction(p->m_pEditSeriesDockWidget->toggleViewAction());
   menuView->addAction(p->m_pGlobalSettingsDockWidget->toggleViewAction());
   menuView->addAction(p->m_pDisplaySettingsDockWidget->toggleViewAction());
+  QAction *pBacksAction = new QAction("Assign Backs...", menuView);
+  menuView->addAction(pBacksAction);
   menuView->addSeparator();
   menuView->addAction(p->m_pEditDataDockWidget->toggleViewAction());
   p->m_pDebugAction = new QAction("Debug Log", menuView);
@@ -192,6 +195,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   connect(actDelete, &QAction::triggered, this, &CMainWindow::OnDeleteChunkClicked);
   connect(actSelectAll, &QAction::triggered, this, &CMainWindow::OnSelectAll);
   connect(pDeselectAction, &QAction::triggered, this, &CMainWindow::OnDeselect);
+  connect(pBacksAction, &QAction::triggered, this, &CMainWindow::OnBacks);
   connect(p->m_pDebugAction, &QAction::triggered, this, &CMainWindow::OnDebug);
   connect(actPreferences, &QAction::triggered, this, &CMainWindow::OnPreferences);
   connect(actAbout, &QAction::triggered, this, &CMainWindow::OnAbout);
@@ -472,6 +476,16 @@ void CMainWindow::OnSelectAll()
 void CMainWindow::OnDeselect()
 {
   ckTo->setChecked(false);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnBacks()
+{
+  if (GetCurrentTrack()) {
+    CAssignBacksDialog dlg(this, GetCurrentTrack());
+    dlg.exec();
+  }
 }
 
 //-------------------------------------------------------------------------------------------------

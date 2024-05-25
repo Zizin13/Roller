@@ -112,6 +112,18 @@
     <ClCompile Include="moc\moc_PreferencesDialog.cpp">
       <Filter>Qt Generated Files\Moc Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AssignBacksDialog.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="BackWidget.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="moc\moc_AssignBacksDialog.cpp">
+      <Filter>Qt Generated Files\Moc Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="moc\moc_BackWidget.cpp">
+      <Filter>Qt Generated Files\Moc Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Track.h">
@@ -169,6 +181,12 @@
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_PreferencesDialog.h">
+      <Filter>Qt Generated Files\Ui Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_AssignBacksDialog.h">
+      <Filter>Qt Generated Files\Ui Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_BackWidget.h">
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -265,6 +283,18 @@
     </CustomBuild>
     <CustomBuild Include="PreferencesDialog.h">
       <Filter>Headers</Filter>
+    </CustomBuild>
+    <CustomBuild Include="BackWidget.h">
+      <Filter>Headers</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AssignBacksDialog.h">
+      <Filter>Headers</Filter>
+    </CustomBuild>
+    <CustomBuild Include="BackWidget.ui">
+      <Filter>Resources</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AssignBacksDialog.ui">
+      <Filter>Resources</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

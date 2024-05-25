@@ -26,11 +26,9 @@ CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, CPa
   lblDisableEffects->setVisible(bShowDisable);
   ckDisableAttach->setVisible(bShowDisableAttach);
   lblDisableEffects->setText(sDisableEffects);
-  cbTransparency->addItem("Invisible",   eTransparencyType::INVISIBLE);
-  cbTransparency->addItem("Light Tint",  eTransparencyType::LIGHT_TINT);
-  cbTransparency->addItem("Medium Tint", eTransparencyType::MEDIUM_TINT);
-  cbTransparency->addItem("Dark Tint",   eTransparencyType::DARK_TINT);
-  cbTransparency->addItem("Light Blue",  eTransparencyType::LIGHT_BLUE);
+  for (int i = 0; i < g_transparencyAyCount; ++i) {
+    cbTransparency->addItem(g_transparencyAy[i].c_str());
+  }
 
   UpdateDialog();
 
@@ -60,7 +58,8 @@ CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, CPa
   connect(ck10PartialTrans,     &QCheckBox::toggled, this, &CEditSurfaceDialog::On10PartialTransChecked);
   connect(ck9AnmsLookup,        &QCheckBox::toggled, this, &CEditSurfaceDialog::On9AnmsLookupChecked);
   connect(ck8ApplyTexture,      &QCheckBox::toggled, this, &CEditSurfaceDialog::On8ApplyTextureChecked);
-  connect(pbTexture1, &QPushButton::clicked, this, &CEditSurfaceDialog::OnTextureClicked);
+  connect(pbTexture1,           &QPushButton::clicked, this, &CEditSurfaceDialog::OnTextureClicked);
+  connect(cbTransparency, SIGNAL(currentIndexChanged(int)), this, SLOT(OnTransparencyTypeChanged(int)));
 
   connect(pbCancel, &QPushButton::clicked, this, &CEditSurfaceDialog::reject);
   connect(pbApply, &QPushButton::clicked, this, &CEditSurfaceDialog::accept);
@@ -400,6 +399,16 @@ void CEditSurfaceDialog::OnTextureClicked()
       m_uiSignedBitValue |= iIndex;
     }
   }
+
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::OnTransparencyTypeChanged(int iIndex)
+{
+  m_uiSignedBitValue &= ~SURFACE_TEXTURE_INDEX;
+  m_uiSignedBitValue |= iIndex;
 
   UpdateDialog();
 }

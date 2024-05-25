@@ -45,6 +45,7 @@ protected slots:
   void On9AnmsLookupChecked(bool bChecked);
   void On8ApplyTextureChecked(bool bChecked);
   void OnTextureClicked();
+  void OnTransparencyTypeChanged(int iIndex);
 
 private:
   void UpdateDialog();

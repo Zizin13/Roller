@@ -2,6 +2,7 @@
 #define _WHIPLIB_TYPES_H
 //-------------------------------------------------------------------------------------------------
 #include <stddef.h>
+#include <string>
 //-------------------------------------------------------------------------------------------------
 
 typedef signed char      int8;
@@ -79,14 +80,14 @@ enum eWhipModel
 
 //-------------------------------------------------------------------------------------------------
 
-enum eTransparencyType
-{
-  INVISIBLE = 0,
-  LIGHT_TINT,
-  MEDIUM_TINT,
-  DARK_TINT,
-  LIGHT_BLUE
+static std::string g_transparencyAy[5] = {
+  "Invisible",
+  "Light Tint",
+  "Medium Tint",
+  "Dark Tint",
+  "Light Blue",
 };
+static int g_transparencyAyCount = 5;
 
 //-------------------------------------------------------------------------------------------------
 

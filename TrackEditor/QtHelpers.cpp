@@ -162,52 +162,48 @@ void QtHelpers::UpdateSignEditMode(bool &bEdited, bool &bMixedData, QLineEdit *p
 
 //-------------------------------------------------------------------------------------------------
 
-void QtHelpers::UpdateTextures(QLabel *pTex1, QLabel *pTex2, CTexture *pTex, CPalette *pPal, int iSurface)
+void QtHelpers::UpdateTextures(QLabel *pLblTex1, QLabel *pLblTex2, CTexture *pTex, CPalette *pPal, int iSurface)
 {
   QPixmap pixmap;
   unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iSurface);
   int iIndex = (int)(uiSignedBitVal & SURFACE_TEXTURE_INDEX);
   QSize size((int)(TILE_WIDTH * g_pMainWindow->GetDesktopScale() / 200.0),
              (int)(TILE_HEIGHT * g_pMainWindow->GetDesktopScale() / 200.0));
-  if (pTex1)
-    pTex1->setMinimumSize(size);
-  if (pTex2)
-    pTex2->setMinimumSize(size);
-  if (iSurface == -1) {
-    if (pTex1)
-      pTex1->setPixmap(QPixmap());
-    if (pTex2)
-      pTex2->setPixmap(QPixmap());
-  } else {
+  if (pLblTex1) {
+    pLblTex1->setMinimumSize(size);
+    pLblTex1->setText("");
+    pLblTex1->setPixmap(QPixmap());
+  }
+  if (pLblTex2) {
+    pLblTex2->setMinimumSize(size);
+    pLblTex2->setText("");
+    pLblTex2->setPixmap(QPixmap());
+  }
+  if (iSurface != -1) {
     if (pTex && uiSignedBitVal & SURFACE_FLAG_APPLY_TEXTURE) {
       if (iIndex < pTex->m_iNumTiles) {
         pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTex->m_pTileAy[iIndex], true));
-        if (pTex1)
-          pTex1->setPixmap(pixmap);
+        if (pLblTex1)
+          pLblTex1->setPixmap(pixmap);
 
         if (uiSignedBitVal & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
           if (uiSignedBitVal & SURFACE_FLAG_PAIR_NEXT_TEX)
             pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTex->m_pTileAy[iIndex + 1], true));
-          if (pTex2)
-            pTex2->setPixmap(pixmap);
-        } else {
-          if (pTex2)
-            pTex2->setPixmap(QPixmap());
+          if (pLblTex2)
+            pLblTex2->setPixmap(pixmap);
         }
       }
+    } else if (uiSignedBitVal & SURFACE_FLAG_TRANSPARENT) {
+      if (iIndex < g_transparencyAyCount)
+        pLblTex1->setText(g_transparencyAy[iIndex].c_str());
     } else {
       if (pPal && iIndex < (int)pPal->m_paletteAy.size()) {
         QPixmap pixmap;
         pixmap.convertFromImage(QtHelpers::GetQImageFromColor(pPal->m_paletteAy[iIndex]));
-        if (pTex1)
-          pTex1->setPixmap(pixmap);
+        if (pLblTex1)
+          pLblTex1->setPixmap(pixmap);
       } else {
-        if (pTex1)
-          pTex1->setPixmap(QPixmap());
       }
-
-      if (pTex2)
-        pTex2->setPixmap(QPixmap());
     }
   }
 }

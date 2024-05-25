@@ -551,7 +551,7 @@ int CTrackData::GetIntValueFromSignedBit(unsigned int uiValue)
 
 bool CTrackData::ShouldDrawSurfaceType(int iSurfaceType)
 {
-  if (iSurfaceType == -1)
+  if (iSurfaceType == -1 || iSurfaceType == 0)
     return false;
   uint32 uiSurfaceType = CTrackData::GetSignedBitValueFromInt(iSurfaceType);
   if (uiSurfaceType & SURFACE_FLAG_NON_SOLID)

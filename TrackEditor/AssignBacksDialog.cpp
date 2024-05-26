@@ -12,10 +12,12 @@
 
 CAssignBacksDialog::CAssignBacksDialog(QWidget *pParent, CTrack *pTrack)
   : QDialog(pParent)
+  , m_pTrack(pTrack)
 {
   setupUi(this);
   resize(QDesktopWidget().availableGeometry(this).size().width() * 0.1, QDesktopWidget().availableGeometry(this).size().height() * 0.8);
   connect(pbCancel, &QPushButton::clicked, this, &CAssignBacksDialog::reject);
+  connect(pbApply, &QPushButton::clicked, this, &CAssignBacksDialog::OnApplyClicked);
   
   if (pTrack && pTrack->m_pTex) {
     lblNotLoaded->setVisible(pTrack->m_pTex->m_iNumTiles == 0);
@@ -28,8 +30,9 @@ CAssignBacksDialog::CAssignBacksDialog(QWidget *pParent, CTrack *pTrack)
       if (it != pTrack->m_backsMap.end())
         iBack = it->second;
 
-      CBackWidget *pBackWidget = new CBackWidget(this, i, pTrack->m_pTex, iBack);
+      CBackWidget *pBackWidget = new CBackWidget(this, i, pTrack->m_pTex, pTrack->m_pPal, iBack);
       backsLayout->addWidget(pBackWidget);
+      m_backWidgetAy.push_back(pBackWidget); //don't need to delete these, they will be cleaned up by the layout
     }
   }
 }
@@ -39,6 +42,18 @@ CAssignBacksDialog::CAssignBacksDialog(QWidget *pParent, CTrack *pTrack)
 CAssignBacksDialog::~CAssignBacksDialog()
 {
 
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CAssignBacksDialog::OnApplyClicked()
+{
+  m_pTrack->m_backsMap.clear();
+  for (CBackWidgetAy::iterator it = m_backWidgetAy.begin(); it != m_backWidgetAy.end(); ++it) {
+    m_pTrack->m_backsMap[(*it)->GetIndex()] = (*it)->GetBack();
+  }
+
+  accept();
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -1305,8 +1305,6 @@ CShapeData *CShapeFactory::MakeSelectedChunks(CShapeData *pShape, CShader *pShad
     CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
     pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
-    if (indices)
-      delete[] indices;
   } else {
     pShape->m_pVertexBuf->Update(vertices, uiNumVerts);
     pShape->m_pIndexBuf->Update(indices, uiNumIndices);
@@ -1314,6 +1312,8 @@ CShapeData *CShapeFactory::MakeSelectedChunks(CShapeData *pShape, CShader *pShad
 
   if (vertices)
     delete[] vertices;
+  if (indices)
+    delete[] indices;
 
   return pShape;
 }
@@ -1591,10 +1591,10 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
             CSignMap::iterator it = pTrack->m_backsMap.find(uiTexIdx);
             if (it != pTrack->m_backsMap.end())
               pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(it->second),
-                                  vertices[i * uiNumVertsPerChunk + 1],
-                                  vertices[i * uiNumVertsPerChunk + 3],
                                   vertices[i * uiNumVertsPerChunk + 0],
-                                  vertices[i * uiNumVertsPerChunk + 2], false, false, true);
+                                  vertices[i * uiNumVertsPerChunk + 2],
+                                  vertices[i * uiNumVertsPerChunk + 1],
+                                  vertices[i * uiNumVertsPerChunk + 3], false, false, true);
           }
         }
         break;
@@ -1624,10 +1624,10 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
             CSignMap::iterator it = pTrack->m_backsMap.find(uiTexIdx);
             if (it != pTrack->m_backsMap.end())
               pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(it->second),
-                                  vertices[i * uiNumVertsPerChunk + 2],
-                                  vertices[i * uiNumVertsPerChunk + 0],
                                   vertices[i * uiNumVertsPerChunk + 3],
-                                  vertices[i * uiNumVertsPerChunk + 1], false, false, true);
+                                  vertices[i * uiNumVertsPerChunk + 1],
+                                  vertices[i * uiNumVertsPerChunk + 2],
+                                  vertices[i * uiNumVertsPerChunk + 0], false, false, true);
           }
         }
         break;

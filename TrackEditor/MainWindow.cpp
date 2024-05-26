@@ -484,7 +484,13 @@ void CMainWindow::OnBacks()
 {
   if (GetCurrentTrack()) {
     CAssignBacksDialog dlg(this, GetCurrentTrack());
-    dlg.exec();
+    if (dlg.exec()) {
+      if (GetCurrentPreview()) {
+        GetCurrentPreview()->m_bUnsavedChanges = true;
+        GetCurrentPreview()->SaveHistory("Assigned backs");
+      }
+      UpdateWindow();
+    }
   }
 }
 

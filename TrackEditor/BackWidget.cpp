@@ -4,16 +4,19 @@
 #include "Palette.h"
 #include "QtHelpers.h"
 #include "TrackData.h"
+#include "EditSurfaceDialog.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
   #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
 //-------------------------------------------------------------------------------------------------
 
-CBackWidget::CBackWidget(QWidget *pParent, int iIndex, CTexture *pTexture, int iBack)
+CBackWidget::CBackWidget(QWidget *pParent, int iIndex, CTexture *pTexture, CPalette *pPal, int iBack)
   : QWidget(pParent)
   , m_iBack(iBack)
+  , m_iIndex(iIndex)
   , m_pTexture(pTexture)
+  , m_pPalette(pPal)
 {
   setupUi(this);
   lblIndex->setText(QString::number(iIndex));
@@ -21,6 +24,8 @@ CBackWidget::CBackWidget(QWidget *pParent, int iIndex, CTexture *pTexture, int i
   QPixmap pixmap;
   pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTexture->m_pTileAy[iIndex]));
   lblTex->setPixmap(pixmap);
+
+  connect(pbBack, &QPushButton::clicked, this, &CBackWidget::OnBackClicked);
 
   UpdateWidget();
 }
@@ -34,9 +39,27 @@ CBackWidget::~CBackWidget()
 
 //-------------------------------------------------------------------------------------------------
 
+int CBackWidget::GetIndex()
+{
+  return m_iIndex;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 int CBackWidget::GetBack()
 {
   return m_iBack;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CBackWidget::OnBackClicked()
+{
+  CEditSurfaceDialog dlg(this, m_pTexture, m_pPalette, m_iBack, true);
+  if (dlg.exec())
+    m_iBack = dlg.GetValue();
+
+  UpdateWidget();
 }
 
 //-------------------------------------------------------------------------------------------------

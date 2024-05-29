@@ -864,18 +864,18 @@ void CTrackData::GenerateTrackMath()
 
   ResetStunts();
 
-  m_chunkAy[0].math.center = glm::vec3(0, 0, 1);
+  m_chunkAy[0].math.center = glm::vec3(0, 0, 0);
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
-    int iNextIndex = i + 1;
-    if (iNextIndex >= m_chunkAy.size())
-      iNextIndex = 0;
+    glm::vec3 nextCenter;
     GetCenter(i, m_chunkAy[i].math.center,
-              m_chunkAy[iNextIndex].math.center,
+              nextCenter,
               m_chunkAy[i].math.pitchAxis,
               m_chunkAy[i].math.nextChunkPitched,
               m_chunkAy[i].math.yawMat,
               m_chunkAy[i].math.pitchMat,
               m_chunkAy[i].math.rollMat);
+    if (i + 1 < m_chunkAy.size())
+      m_chunkAy[i + 1].math.center = nextCenter;
   }
   for (uint32 i = 0; i < m_chunkAy.size(); ++i) {
     int iPrevIndex = (int)m_chunkAy.size() - 1;

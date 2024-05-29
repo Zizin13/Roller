@@ -950,22 +950,10 @@ void CTrackData::GenerateTrackMath()
     //outer wall roll mat
     glm::mat4 oWallRollMat = m_chunkAy[i].iOuterFloorType < 0 ? m_chunkAy[i].math.rollMat : rollMatNoRoll;
     //llowall
-    bool bLLOWallNonSolid = CTrackData::GetSignedBitValueFromInt(m_chunkAy[i].iLLOuterWallType) & SURFACE_FLAG_NON_SOLID;
     m_chunkAy[i].math.lloWallBottomAttach = m_chunkAy[i].math.lFloor;
     if (m_chunkAy[i].iOuterFloorType < 0) {
-      if (bLLOWallNonSolid) {
-        glm::vec3 lShoulderNoHeight;
-        GetShoulder(i,
-                    m_chunkAy[i].math.lLane,
-                    m_chunkAy[i].math.pitchAxis,
-                    m_chunkAy[i].math.rollMat,
-                    m_chunkAy[i].math.nextChunkPitched,
-                    lShoulderNoHeight, true, true);
-        m_chunkAy[i].math.lloWallBottomAttach = lShoulderNoHeight;
-      } else {
-        m_chunkAy[i].math.bLloWallAttachToShoulder = true;
-        m_chunkAy[i].math.lloWallBottomAttach = m_chunkAy[i].math.lShoulder;
-      }
+      m_chunkAy[i].math.bLloWallAttachToShoulder = true;
+      m_chunkAy[i].math.lloWallBottomAttach = m_chunkAy[i].math.lShoulder;
     }
     GetWall(i,
             m_chunkAy[i].math.lloWallBottomAttach,
@@ -973,21 +961,10 @@ void CTrackData::GenerateTrackMath()
             m_chunkAy[i].math.nextChunkPitched,
             m_chunkAy[i].math.lloWall, eShapeSection::LLOWALL);
     //rlowall
-    bool bRLOWallNonSolid = CTrackData::GetSignedBitValueFromInt(m_chunkAy[i].iRLOuterWallType) & SURFACE_FLAG_NON_SOLID;
     m_chunkAy[i].math.rloWallBottomAttach = m_chunkAy[i].math.rFloor;
     if (m_chunkAy[i].iOuterFloorType < 0) {
-      if (bRLOWallNonSolid) {
-        glm::vec3 rShoulderNoHeight;
-        GetShoulder(i,
-                    m_chunkAy[i].math.rLane,
-                    m_chunkAy[i].math.pitchAxis,
-                    m_chunkAy[i].math.rollMat,
-                    m_chunkAy[i].math.nextChunkPitched, rShoulderNoHeight, false, true);
-        m_chunkAy[i].math.rloWallBottomAttach = rShoulderNoHeight;
-      } else {
-        m_chunkAy[i].math.bRloWallAttachToShoulder = true;
-        m_chunkAy[i].math.rloWallBottomAttach = m_chunkAy[i].math.rShoulder;
-      }
+      m_chunkAy[i].math.bRloWallAttachToShoulder = true;
+      m_chunkAy[i].math.rloWallBottomAttach = m_chunkAy[i].math.rShoulder;
     }
     GetWall(i,
             m_chunkAy[i].math.rloWallBottomAttach,

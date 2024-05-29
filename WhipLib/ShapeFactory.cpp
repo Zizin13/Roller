@@ -72,6 +72,9 @@ CShapeData *CShapeFactory::MakeAxes(CShader *pShader)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVertsAxes(uiNumVerts);
+  if (!vertices)
+    return NULL;
+
   uint32 uiNumIndices;
   uint32 *indices = MakeIndicesAxes(uiNumIndices);
   GLenum drawType = GL_LINES;
@@ -1165,6 +1168,9 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShapeData *pShape, CShader *pShader
   uint32 uiNumVerts;
   struct tVertex *vertices = NULL;
   vertices = MakeVerts(uiNumVerts, section, pTrack, pTrack->m_pTex);
+  if (!vertices)
+    return NULL;
+
   if (bWireframe) {
     for (uint32 i = 0; i < uiNumVerts; ++i) {
       vertices[i].flags.x = 1.0f; //use color rather than tex
@@ -1209,6 +1215,8 @@ CShapeData *CShapeFactory::MakeEnvirFloor(CShapeData *pShape, CShader *pShader, 
   uint32 uiNumVerts;
   struct tVertex *vertices = NULL;
   vertices = MakeVertsEnvirFloor(uiNumVerts, pTrack, pTrack->m_pTex, iIndex);
+  if (!vertices)
+    return NULL;
 
   if (!pShape) {
     uint32 uiNumIndices;
@@ -1239,6 +1247,8 @@ CShapeData *CShapeFactory::MakeAILine(CShapeData *pShape, CShader *pShader, CTra
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVerts(uiNumVerts, section, pTrack, NULL);
+  if (!vertices)
+    return NULL;
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {
     vertices[i].flags.x = 1.0f; //use color rather than tex
@@ -1288,6 +1298,8 @@ CShapeData *CShapeFactory::MakeSelectedChunks(CShapeData *pShape, CShader *pShad
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVerts(uiNumVerts, eShapeSection::SELECTED, pTrack, NULL);
+  if (!vertices)
+    return NULL;
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {
     vertices[i].flags.x = 1.0f; //use color rather than tex

@@ -52,11 +52,8 @@
     <ClCompile Include="moc\moc_DebugSlider.cpp">
       <Filter>Qt Generated Files\Moc Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EditDataWidget.cpp">
+    <ClCompile Include="DebugChunkData.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="moc\moc_EditDataWidget.cpp">
-      <Filter>Qt Generated Files\Moc Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GlobalTrackSettings.cpp">
       <Filter>Source</Filter>
@@ -121,6 +118,9 @@
     <ClCompile Include="moc\moc_BackWidget.cpp">
       <Filter>Qt Generated Files\Moc Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="moc\moc_DebugChunkData.cpp">
+      <Filter>Qt Generated Files\Moc Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Track.h">
@@ -145,9 +145,6 @@
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_EditSeriesDialog.h">
-      <Filter>Qt Generated Files\Ui Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\ui_EditDataWidget.h">
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_GlobalTrackSettings.h">
@@ -181,6 +178,9 @@
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_BackWidget.h">
+      <Filter>Qt Generated Files\Ui Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_DebugChunkData.h">
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -224,10 +224,10 @@
     <CustomBuild Include="DebugSlider.h">
       <Filter>Headers</Filter>
     </CustomBuild>
-    <CustomBuild Include="EditDataWidget.ui">
+    <CustomBuild Include="DebugChunkData.ui">
       <Filter>Resources</Filter>
     </CustomBuild>
-    <CustomBuild Include="EditDataWidget.h">
+    <CustomBuild Include="DebugChunkData.h">
       <Filter>Headers</Filter>
     </CustomBuild>
     <CustomBuild Include="GlobalTrackSettings.ui">

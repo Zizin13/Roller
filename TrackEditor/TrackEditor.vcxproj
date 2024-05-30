@@ -159,7 +159,7 @@ exit 1</Command>
     <ClCompile Include="DebugSlider.cpp" />
     <ClCompile Include="DisplaySettings.cpp" />
     <ClCompile Include="EditAudioWidget.cpp" />
-    <ClCompile Include="EditDataWidget.cpp" />
+    <ClCompile Include="DebugChunkData.cpp" />
     <ClCompile Include="EditGeometryWidget.cpp" />
     <ClCompile Include="EditSeriesDialog.cpp" />
     <ClCompile Include="EditSignWidget.cpp" />
@@ -168,10 +168,10 @@ exit 1</Command>
     <ClCompile Include="GlobalTrackSettings.cpp" />
     <ClCompile Include="moc\moc_AssignBacksDialog.cpp" />
     <ClCompile Include="moc\moc_BackWidget.cpp" />
+    <ClCompile Include="moc\moc_DebugChunkData.cpp" />
     <ClCompile Include="moc\moc_DebugSlider.cpp" />
     <ClCompile Include="moc\moc_DisplaySettings.cpp" />
     <ClCompile Include="moc\moc_EditAudioWidget.cpp" />
-    <ClCompile Include="moc\moc_EditDataWidget.cpp" />
     <ClCompile Include="moc\moc_EditGeometryWidget.cpp" />
     <ClCompile Include="moc\moc_EditSignWidget.cpp" />
     <ClCompile Include="moc\moc_EditStuntWidget.cpp" />
@@ -281,7 +281,7 @@ exit 1</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
-    <CustomBuild Include="EditDataWidget.h">
+    <CustomBuild Include="DebugChunkData.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MOC'ing %(Filename).h...</Message>
@@ -374,9 +374,9 @@ exit 1</Command>
     <ClInclude Include="QtHelpers.h" />
     <ClInclude Include="ui\ui_AssignBacksDialog.h" />
     <ClInclude Include="ui\ui_BackWidget.h" />
+    <ClInclude Include="ui\ui_DebugChunkData.h" />
     <ClInclude Include="ui\ui_DisplaySettings.h" />
     <ClInclude Include="ui\ui_EditAudioWidget.h" />
-    <ClInclude Include="ui\ui_EditDataWidget.h" />
     <ClInclude Include="ui\ui_EditGeometryWidget.h" />
     <ClInclude Include="ui\ui_EditSignWidget.h" />
     <ClInclude Include="ui\ui_EditStuntWidget.h" />
@@ -479,7 +479,7 @@ exit 1</Command>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="EditDataWidget.ui">
+    <CustomBuild Include="DebugChunkData.ui">
       <FileType>Document</FileType>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\uic.exe "%(FullPath)" -o "%(RootDir)%(Directory)ui\ui_%(Filename).h"</Command>

@@ -13,7 +13,7 @@
 #include "EditSurfaceDialog.h"
 #include "EditSeriesDialog.h"
 #include "TrackPreview.h"
-#include "EditDataWidget.h"
+#include "DebugChunkData.h"
 #include "GlobalTrackSettings.h"
 #include "qdockwidget.h"
 #include "DisplaySettings.h"
@@ -68,8 +68,8 @@ public:
   
   CLogDialog m_logDialog;
 
-  QDockWidget *m_pEditDataDockWidget;
-  CEditDataWidget *m_pEditData;
+  QDockWidget *m_pDebugDataDockWidget;
+  CDebugChunkData *m_pDebugData;
   QDockWidget *m_pGlobalSettingsDockWidget;
   QDockWidget *m_pEditSeriesDockWidget;
   QDockWidget *m_pDisplaySettingsDockWidget;
@@ -105,11 +105,11 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   lblStuntWarning->hide();
 
   //setup dock widgets
-  p->m_pEditDataDockWidget = new QDockWidget("Debug Chunk Data", this);
-  p->m_pEditDataDockWidget->setObjectName("EditChunkData");
-  p->m_pEditDataDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  p->m_pEditData = new CEditDataWidget(p->m_pEditDataDockWidget);
-  p->m_pEditDataDockWidget->setWidget(p->m_pEditData);
+  p->m_pDebugDataDockWidget = new QDockWidget("Debug Chunk Data", this);
+  p->m_pDebugDataDockWidget->setObjectName("EditChunkData");
+  p->m_pDebugDataDockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+  p->m_pDebugData = new CDebugChunkData(p->m_pDebugDataDockWidget);
+  p->m_pDebugDataDockWidget->setWidget(p->m_pDebugData);
 
   p->m_pGlobalSettingsDockWidget = new QDockWidget("Global Track Settings", this);
   p->m_pGlobalSettingsDockWidget->setObjectName("GlobalTrackSettings");
@@ -158,7 +158,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   QAction *pBacksAction = new QAction("Assign Backs...", menuView);
   menuView->addAction(pBacksAction);
   menuView->addSeparator();
-  menuView->addAction(p->m_pEditDataDockWidget->toggleViewAction());
+  menuView->addAction(p->m_pDebugDataDockWidget->toggleViewAction());
   p->m_pDebugAction = new QAction("Debug Log", menuView);
   p->m_pDebugAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_G));
   menuView->addAction(p->m_pDebugAction);
@@ -732,7 +732,7 @@ void CMainWindow::LoadSettings()
     bShowEditSign = settings.value("show_edit_sign", bShowEditSign).toBool();
     bShowEditAudio = settings.value("show_edit_audio", bShowEditAudio).toBool();
     bShowEditStunt = settings.value("show_edit_stunt", bShowEditStunt).toBool();
-    p->m_pEditDataDockWidget->setVisible(bShowEditData);
+    p->m_pDebugDataDockWidget->setVisible(bShowEditData);
     p->m_pGlobalSettingsDockWidget->setVisible(bShowGlobalSettings);
     p->m_pEditSeriesDockWidget->setVisible(bShowEditSeries);
     p->m_pDisplaySettingsDockWidget->setVisible(bShowDisplaySettings);
@@ -740,7 +740,7 @@ void CMainWindow::LoadSettings()
     p->m_pEditSignDockWidget->setVisible(bShowEditSign);
     p->m_pEditAudioDockWidget->setVisible(bShowEditAudio);
     p->m_pEditStuntDockWidget->setVisible(bShowEditStunt);
-    restoreDockWidget(p->m_pEditDataDockWidget);
+    restoreDockWidget(p->m_pDebugDataDockWidget);
     restoreDockWidget(p->m_pGlobalSettingsDockWidget);
     restoreDockWidget(p->m_pEditSeriesDockWidget);
     restoreDockWidget(p->m_pDisplaySettingsDockWidget);
@@ -749,7 +749,7 @@ void CMainWindow::LoadSettings()
     restoreDockWidget(p->m_pEditAudioDockWidget);
     restoreDockWidget(p->m_pEditStuntDockWidget);
   } else {
-    addDockWidget(Qt::LeftDockWidgetArea, p->m_pEditDataDockWidget);
+    addDockWidget(Qt::LeftDockWidgetArea, p->m_pDebugDataDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, p->m_pGlobalSettingsDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, p->m_pEditSeriesDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, p->m_pDisplaySettingsDockWidget);
@@ -757,7 +757,7 @@ void CMainWindow::LoadSettings()
     addDockWidget(Qt::RightDockWidgetArea, p->m_pEditSignDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, p->m_pEditAudioDockWidget);
     addDockWidget(Qt::RightDockWidgetArea, p->m_pEditStuntDockWidget);
-    p->m_pEditDataDockWidget->setVisible(false);
+    p->m_pDebugDataDockWidget->setVisible(false);
     p->m_pGlobalSettingsDockWidget->setVisible(false);
     p->m_pEditSeriesDockWidget->setVisible(false);
     p->m_pDisplaySettingsDockWidget->setVisible(false);
@@ -811,7 +811,7 @@ void CMainWindow::SaveSettings()
   QByteArray state = saveState();
   settings.setValue("window_geometry", geometry);
   settings.setValue("window_state", state);
-  settings.setValue("show_edit_data", p->m_pEditDataDockWidget->isVisible());
+  settings.setValue("show_debug_data", p->m_pDebugDataDockWidget->isVisible());
   settings.setValue("show_global_settings", p->m_pGlobalSettingsDockWidget->isVisible());
   settings.setValue("show_edit_series", p->m_pEditSeriesDockWidget->isVisible());
   settings.setValue("show_display_settings", p->m_pDisplaySettingsDockWidget->isVisible());

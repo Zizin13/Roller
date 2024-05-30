@@ -1,17 +1,17 @@
-#ifndef _TRACKEDITOR_EDITDATAWIDGET_H
-#define _TRACKEDITOR_EDITDATAWIDGET_H
+#ifndef _TRACKEDITOR_DEBUGCHUNKDATA_H
+#define _TRACKEDITOR_DEBUGCHUNKDATA_H
 //-------------------------------------------------------------------------------------------------
-#include "ui_EditDataWidget.h"
+#include "ui_DebugChunkData.h"
 //-------------------------------------------------------------------------------------------------
 class CTrack;
 //-------------------------------------------------------------------------------------------------
-class CEditDataWidget : public QWidget, private Ui::EditDataWidget
+class CDebugChunkData : public QWidget, private Ui::DebugChunkData
 {
   Q_OBJECT
 
 public:
-  CEditDataWidget(QWidget *pParent);
-  ~CEditDataWidget();
+  CDebugChunkData(QWidget *pParent);
+  ~CDebugChunkData();
 
 protected slots:
   void UpdateGeometrySelection(int iFrom, int iTo);

@@ -16,9 +16,6 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 #define HEADER_ELEMENT_COUNT 4
-#define CHUNK_LINE_0_COUNT 22
-#define CHUNK_LINE_1_COUNT 18
-#define CHUNK_LINE_2_COUNT 30
 #define SIGNS_COUNT 2
 #define STUNTS_COUNT 10
 #define BACKS_COUNT 2
@@ -314,7 +311,9 @@ bool CTrackData::ProcessTrackData(const uint8 *pData, size_t length)
         break;
       case GEOMETRY:
         if (iChunkLine == 0) {
-          if (lineAy.size() == SIGNS_COUNT) {
+          if (lineAy.empty()) {
+            //do nothing
+          } else if (lineAy.size() == SIGNS_COUNT) {
             if (m_chunkAy.size() != m_header.iNumChunks) {
               Logging::LogMessage("Warning loading file: number of chunks loaded (%d) does not match header (%d)", (int)m_chunkAy.size(), m_header.iNumChunks);
             }
@@ -324,101 +323,91 @@ bool CTrackData::ProcessTrackData(const uint8 *pData, size_t length)
             // so we must detect the beginning of the next section
             section = SIGNS;
             ProcessSign(lineAy, section);
-          } else if (lineAy.size() == CHUNK_LINE_0_COUNT) {
+          } else {
             //start new chunk
             currChunk.Clear();
             currChunk.iSignTexture = -1;
             //process line 1
-            currChunk.iLeftShoulderWidth    = std::stoi(lineAy[0]);
-            currChunk.iLeftLaneWidth        = std::stoi(lineAy[1]);
-            currChunk.iRightLaneWidth       = std::stoi(lineAy[2]);
-            currChunk.iRightShoulderWidth   = std::stoi(lineAy[3]);
-            currChunk.iLeftShoulderHeight   = std::stoi(lineAy[4]);
-            currChunk.iRightShoulderHeight  = std::stoi(lineAy[5]);
-            currChunk.iLength               = std::stoi(lineAy[6]);
-            currChunk.dYaw                  = ConstrainAngle(std::stod(lineAy[7]));
-            currChunk.dPitch                = ConstrainAngle(std::stod(lineAy[8]));
-            currChunk.dRoll                 = ConstrainAngle(std::stod(lineAy[9]));
-            currChunk.iAILine1              = std::stoi(lineAy[10]);
-            currChunk.iAILine2              = std::stoi(lineAy[11]);
-            currChunk.iAILine3              = std::stoi(lineAy[12]);
-            currChunk.iAILine4              = std::stoi(lineAy[13]);
-            currChunk.iTrackGrip            = std::stoi(lineAy[14]);
-            currChunk.iLeftShoulderGrip     = std::stoi(lineAy[15]);
-            currChunk.iRightShoulderGrip    = std::stoi(lineAy[16]);
-            currChunk.iAIMaxSpeed           = std::stoi(lineAy[17]);
-            currChunk.iAIAccuracy           = std::stoi(lineAy[18]);
-            currChunk.iAudioAboveTrigger    = std::stoi(lineAy[19]);
-            currChunk.iAudioTriggerSpeed    = std::stoi(lineAy[20]);
-            currChunk.iAudioBelowTrigger    = std::stoi(lineAy[21]);
+            if (lineAy.size() > 0) currChunk.iLeftShoulderWidth    = std::stoi(lineAy[0]);
+            if (lineAy.size() > 1) currChunk.iLeftLaneWidth        = std::stoi(lineAy[1]);
+            if (lineAy.size() > 2) currChunk.iRightLaneWidth       = std::stoi(lineAy[2]);
+            if (lineAy.size() > 3) currChunk.iRightShoulderWidth   = std::stoi(lineAy[3]);
+            if (lineAy.size() > 4) currChunk.iLeftShoulderHeight   = std::stoi(lineAy[4]);
+            if (lineAy.size() > 5) currChunk.iRightShoulderHeight  = std::stoi(lineAy[5]);
+            if (lineAy.size() > 6) currChunk.iLength               = std::stoi(lineAy[6]);
+            if (lineAy.size() > 7) currChunk.dYaw                  = ConstrainAngle(std::stod(lineAy[7]));
+            if (lineAy.size() > 8) currChunk.dPitch                = ConstrainAngle(std::stod(lineAy[8]));
+            if (lineAy.size() > 9) currChunk.dRoll                 = ConstrainAngle(std::stod(lineAy[9]));
+            if (lineAy.size() > 10) currChunk.iAILine1              = std::stoi(lineAy[10]);
+            if (lineAy.size() > 11) currChunk.iAILine2              = std::stoi(lineAy[11]);
+            if (lineAy.size() > 12) currChunk.iAILine3              = std::stoi(lineAy[12]);
+            if (lineAy.size() > 13) currChunk.iAILine4              = std::stoi(lineAy[13]);
+            if (lineAy.size() > 14) currChunk.iTrackGrip            = std::stoi(lineAy[14]);
+            if (lineAy.size() > 15) currChunk.iLeftShoulderGrip     = std::stoi(lineAy[15]);
+            if (lineAy.size() > 16) currChunk.iRightShoulderGrip    = std::stoi(lineAy[16]);
+            if (lineAy.size() > 17) currChunk.iAIMaxSpeed           = std::stoi(lineAy[17]);
+            if (lineAy.size() > 18) currChunk.iAIAccuracy           = std::stoi(lineAy[18]);
+            if (lineAy.size() > 19) currChunk.iAudioAboveTrigger    = std::stoi(lineAy[19]);
+            if (lineAy.size() > 20) currChunk.iAudioTriggerSpeed    = std::stoi(lineAy[20]);
+            if (lineAy.size() > 21) currChunk.iAudioBelowTrigger    = std::stoi(lineAy[21]);
             //inc chunk index
             ++iChunkLine;
           }
           //TODO: what about invalid number of chunks?
         } else if (iChunkLine == 1) {
-          if (lineAy.size() != CHUNK_LINE_1_COUNT) {
-            assert(0);
-            Logging::LogMessage("Error loading file: invalid line before chunk completion");
-            bSuccess = false;
-          }
           //process line 2
-          currChunk.iLeftSurfaceType      = std::stoi(lineAy[0]);
-          currChunk.iCenterSurfaceType    = std::stoi(lineAy[1]);
-          currChunk.iRightSurfaceType     = std::stoi(lineAy[2]);
-          currChunk.iLeftWallType         = std::stoi(lineAy[3]);
-          currChunk.iRightWallType        = std::stoi(lineAy[4]);
-          currChunk.iRoofType             = std::stoi(lineAy[5]);
-          currChunk.iLUOuterWallType      = std::stoi(lineAy[6]);
-          currChunk.iLLOuterWallType      = std::stoi(lineAy[7]);
-          currChunk.iOuterFloorType       = std::stoi(lineAy[8]);
-          currChunk.iRLOuterWallType      = std::stoi(lineAy[9]);
-          currChunk.iRUOuterWallType      = std::stoi(lineAy[10]);
-          currChunk.iEnvironmentFloorType = std::stoi(lineAy[11]);
-          currChunk.iSignType             = std::stoi(lineAy[12]);
-          currChunk.iSignHorizOffset      = std::stoi(lineAy[13]);
-          currChunk.iSignVertOffset       = std::stoi(lineAy[14]);
-          currChunk.dSignYaw              = ConstrainAngle(std::stod(lineAy[15]));
-          currChunk.dSignPitch            = ConstrainAngle(std::stod(lineAy[16]));
-          currChunk.dSignRoll             = ConstrainAngle(std::stod(lineAy[17]));
+          if (lineAy.size() > 0) currChunk.iLeftSurfaceType      = std::stoi(lineAy[0]);
+          if (lineAy.size() > 1) currChunk.iCenterSurfaceType    = std::stoi(lineAy[1]);
+          if (lineAy.size() > 2) currChunk.iRightSurfaceType     = std::stoi(lineAy[2]);
+          if (lineAy.size() > 3) currChunk.iLeftWallType         = std::stoi(lineAy[3]);
+          if (lineAy.size() > 4) currChunk.iRightWallType        = std::stoi(lineAy[4]);
+          if (lineAy.size() > 5) currChunk.iRoofType             = std::stoi(lineAy[5]);
+          if (lineAy.size() > 6) currChunk.iLUOuterWallType      = std::stoi(lineAy[6]);
+          if (lineAy.size() > 7) currChunk.iLLOuterWallType      = std::stoi(lineAy[7]);
+          if (lineAy.size() > 8) currChunk.iOuterFloorType       = std::stoi(lineAy[8]);
+          if (lineAy.size() > 9) currChunk.iRLOuterWallType      = std::stoi(lineAy[9]);
+          if (lineAy.size() > 10) currChunk.iRUOuterWallType      = std::stoi(lineAy[10]);
+          if (lineAy.size() > 11) currChunk.iEnvironmentFloorType = std::stoi(lineAy[11]);
+          if (lineAy.size() > 12) currChunk.iSignType             = std::stoi(lineAy[12]);
+          if (lineAy.size() > 13) currChunk.iSignHorizOffset      = std::stoi(lineAy[13]);
+          if (lineAy.size() > 14) currChunk.iSignVertOffset       = std::stoi(lineAy[14]);
+          if (lineAy.size() > 15) currChunk.dSignYaw              = ConstrainAngle(std::stod(lineAy[15]));
+          if (lineAy.size() > 16) currChunk.dSignPitch            = ConstrainAngle(std::stod(lineAy[16]));
+          if (lineAy.size() > 17) currChunk.dSignRoll             = ConstrainAngle(std::stod(lineAy[17]));
           //inc chunk index
           ++iChunkLine;
         } else if (iChunkLine == 2) {
-          if (lineAy.size() != CHUNK_LINE_2_COUNT) {
-            assert(0);
-            Logging::LogMessage("Error loading file: invalid line before chunk completion");
-            bSuccess = false;
-          }
           //process line 3
-          currChunk.iLUOuterWallHOffset = std::stoi(lineAy[0]);
-          currChunk.iLLOuterWallHOffset = std::stoi(lineAy[1]);
-          currChunk.iLOuterFloorHOffset = std::stoi(lineAy[2]);
-          currChunk.iROuterFloorHOffset = std::stoi(lineAy[3]);
-          currChunk.iRLOuterWallHOffset = std::stoi(lineAy[4]);
-          currChunk.iRUOuterWallHOffset = std::stoi(lineAy[5]);
-          currChunk.iLUOuterWallHeight  = std::stoi(lineAy[6]);
-          currChunk.iLLOuterWallHeight  = std::stoi(lineAy[7]);
-          currChunk.iLOuterFloorHeight  = std::stoi(lineAy[8]);
-          currChunk.iROuterFloorHeight  = std::stoi(lineAy[9]);
-          currChunk.iRLOuterWallHeight  = std::stoi(lineAy[10]);
-          currChunk.iRUOuterWallHeight  = std::stoi(lineAy[11]);
-          currChunk.iRoofHeight         = std::stoi(lineAy[12]);
-          currChunk.iDrawOrder1         = std::stoi(lineAy[13]);
-          currChunk.iDrawOrder2         = std::stoi(lineAy[14]);
-          currChunk.iDrawOrder3         = std::stoi(lineAy[15]);
-          currChunk.iUnk37              = std::stoi(lineAy[16]);
-          currChunk.iUnk38              = std::stoi(lineAy[17]);
-          currChunk.iUnk39              = std::stoi(lineAy[18]);
-          currChunk.iUnk40              = std::stoi(lineAy[19]);
-          currChunk.iUnk41              = std::stoi(lineAy[20]);
-          currChunk.iUnk42              = std::stoi(lineAy[21]);
-          currChunk.iUnk43              = std::stoi(lineAy[22]);
-          currChunk.iUnk44              = std::stoi(lineAy[23]);
-          currChunk.iUnk45              = std::stoi(lineAy[24]);
-          currChunk.iUnk46              = std::stoi(lineAy[25]);
-          currChunk.iUnk47              = std::stoi(lineAy[26]);
-          currChunk.iUnk48              = std::stoi(lineAy[27]);
-          currChunk.iUnk49              = std::stoi(lineAy[28]);
-          currChunk.iUnk50              = std::stoi(lineAy[29]);
+          if (lineAy.size() > 0) currChunk.iLUOuterWallHOffset = std::stoi(lineAy[0]);
+          if (lineAy.size() > 1) currChunk.iLLOuterWallHOffset = std::stoi(lineAy[1]);
+          if (lineAy.size() > 2) currChunk.iLOuterFloorHOffset = std::stoi(lineAy[2]);
+          if (lineAy.size() > 3) currChunk.iROuterFloorHOffset = std::stoi(lineAy[3]);
+          if (lineAy.size() > 4) currChunk.iRLOuterWallHOffset = std::stoi(lineAy[4]);
+          if (lineAy.size() > 5) currChunk.iRUOuterWallHOffset = std::stoi(lineAy[5]);
+          if (lineAy.size() > 6) currChunk.iLUOuterWallHeight  = std::stoi(lineAy[6]);
+          if (lineAy.size() > 7) currChunk.iLLOuterWallHeight  = std::stoi(lineAy[7]);
+          if (lineAy.size() > 8) currChunk.iLOuterFloorHeight  = std::stoi(lineAy[8]);
+          if (lineAy.size() > 9) currChunk.iROuterFloorHeight  = std::stoi(lineAy[9]);
+          if (lineAy.size() > 10) currChunk.iRLOuterWallHeight  = std::stoi(lineAy[10]);
+          if (lineAy.size() > 11) currChunk.iRUOuterWallHeight  = std::stoi(lineAy[11]);
+          if (lineAy.size() > 12) currChunk.iRoofHeight         = std::stoi(lineAy[12]);
+          if (lineAy.size() > 13) currChunk.iDrawOrder1         = std::stoi(lineAy[13]);
+          if (lineAy.size() > 14) currChunk.iDrawOrder2         = std::stoi(lineAy[14]);
+          if (lineAy.size() > 15) currChunk.iDrawOrder3         = std::stoi(lineAy[15]);
+          if (lineAy.size() > 16) currChunk.iUnk37              = std::stoi(lineAy[16]);
+          if (lineAy.size() > 17) currChunk.iUnk38              = std::stoi(lineAy[17]);
+          if (lineAy.size() > 18) currChunk.iUnk39              = std::stoi(lineAy[18]);
+          if (lineAy.size() > 19) currChunk.iUnk40              = std::stoi(lineAy[19]);
+          if (lineAy.size() > 20) currChunk.iUnk41              = std::stoi(lineAy[20]);
+          if (lineAy.size() > 21) currChunk.iUnk42              = std::stoi(lineAy[21]);
+          if (lineAy.size() > 22) currChunk.iUnk43              = std::stoi(lineAy[22]);
+          if (lineAy.size() > 23) currChunk.iUnk44              = std::stoi(lineAy[23]);
+          if (lineAy.size() > 24) currChunk.iUnk45              = std::stoi(lineAy[24]);
+          if (lineAy.size() > 25) currChunk.iUnk46              = std::stoi(lineAy[25]);
+          if (lineAy.size() > 26) currChunk.iUnk47              = std::stoi(lineAy[26]);
+          if (lineAy.size() > 27) currChunk.iUnk48              = std::stoi(lineAy[27]);
+          if (lineAy.size() > 28) currChunk.iUnk49              = std::stoi(lineAy[28]);
+          if (lineAy.size() > 29) currChunk.iUnk50              = std::stoi(lineAy[29]);
           //chunk is complete, add to array and reset index
           m_chunkAy.push_back(currChunk);
           iChunkLine = 0;

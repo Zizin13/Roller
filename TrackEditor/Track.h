@@ -20,9 +20,6 @@ public:
   ~CTrack();
   
   bool SaveTrack(const QString &sFilename);
-  void GetGeometryValuesFromSelection(int iStartIndex, int iEndIndex, CChunkEditValues &editVals);
-  void ApplyGeometrySettings(int iStartIndex, int iEndIndex, const CChunkEditValues &editVals);
-  void InsertGeometryChunk(int iIndex, int iCount, const CChunkEditValues &editVals);
 };
 
 //-------------------------------------------------------------------------------------------------

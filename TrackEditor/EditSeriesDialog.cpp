@@ -3,7 +3,6 @@
 #include "Texture.h"
 #include "Track.h"
 #include "MainWindow.h"
-#include "ChunkEditValues.h"
 #include <qmessagebox.h>
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -155,9 +154,79 @@ template <typename T> void CEditSeriesDialog::ApplySeriesToGeometry(int iStartCh
   T tValue = tStartValue;
   bool bDirection = tIncrement >= 0;
   for (int i = iStartChunk; i <= iEndChunk && (bDirection ? tValue <= tEndValue : tValue >= tEndValue); i += iInterval) {
-    CChunkEditValues values;
-    values.Set(iField, QString::number(tValue));
-    g_pMainWindow->GetCurrentTrack()->ApplyGeometrySettings(i, i, values);
+    switch (iField) {
+      case 0: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftShoulderWidth = tValue; break;
+      case 1: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftLaneWidth = tValue; break;
+      case 2: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightLaneWidth = tValue; break;
+      case 3: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightShoulderWidth = tValue; break;
+      case 4: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftShoulderHeight = tValue; break;
+      case 5: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightShoulderHeight = tValue; break;
+      case 6: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLength = tValue; break;
+      case 7: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].dYaw = tValue; break;
+      case 8: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].dPitch = tValue; break;
+      case 9: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].dRoll = tValue; break;
+      case 10: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAILine1 = tValue; break;
+      case 11: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAILine2 = tValue; break;
+      case 12: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAILine3 = tValue; break;
+      case 13: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAILine4 = tValue; break;
+      case 14: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iTrackGrip = tValue; break;
+      case 15: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftShoulderGrip = tValue; break;
+      case 16: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightShoulderGrip = tValue; break;
+      case 17: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAIMaxSpeed = tValue; break;
+      case 18: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAIAccuracy = tValue; break;
+      case 19: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAudioAboveTrigger = tValue; break;
+      case 20: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAudioTriggerSpeed = tValue; break;
+      case 21: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iAudioBelowTrigger = tValue; break;
+      case 22: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftSurfaceType = tValue; break;
+      case 23: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iCenterSurfaceType = tValue; break;
+      case 24: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightSurfaceType = tValue; break;
+      case 25: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftWallType = tValue; break;
+      case 26: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightWallType = tValue; break;
+      case 27: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRoofType = tValue; break;
+      case 28: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLUOuterWallType = tValue; break;
+      case 29: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLLOuterWallType = tValue; break;
+      case 30: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iOuterFloorType = tValue; break;
+      case 31: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRLOuterWallType = tValue; break;
+      case 32: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRUOuterWallType = tValue; break;
+      case 33: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iEnvironmentFloorType = tValue; break;
+      case 34: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignType = tValue; break;
+      case 35: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignHorizOffset = tValue; break;
+      case 36: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignVertOffset = tValue; break;
+      case 37: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].dSignYaw = tValue; break;
+      case 38: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].dSignPitch = tValue; break;
+      case 39: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].dSignRoll = tValue; break;
+      case 40: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLUOuterWallHOffset = tValue; break;
+      case 41: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLLOuterWallHOffset = tValue; break;
+      case 42: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLOuterFloorHOffset = tValue; break;
+      case 43: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iROuterFloorHOffset = tValue; break;
+      case 44: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRLOuterWallHOffset = tValue; break;
+      case 45: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRUOuterWallHOffset = tValue; break;
+      case 46: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLUOuterWallHeight = tValue; break;
+      case 47: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLLOuterWallHeight = tValue; break;
+      case 48: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLOuterFloorHeight = tValue; break;
+      case 49: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iROuterFloorHeight = tValue; break;
+      case 50: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRLOuterWallHeight = tValue; break;
+      case 51: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRUOuterWallHeight = tValue; break;
+      case 52: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRoofHeight = tValue; break;
+      case 53: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iDrawOrder1 = tValue; break;
+      case 54: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iDrawOrder2 = tValue; break;
+      case 55: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iDrawOrder3 = tValue; break;
+      case 56: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iUnk37 = tValue; break;
+      case 57: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iUnk38 = tValue; break;
+      case 58: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iUnk39 = tValue; break;
+      case 59: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iUnk40 = tValue; break;
+      case 60: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iUnk41 = tValue; break;
+      case 61: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iUnk42 = tValue; break;
+      case 62: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iUnk43 = tValue; break;
+      case 63: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iUnk44 = tValue; break;
+      case 64: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iUnk45 = tValue; break;
+      case 65: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iUnk46 = tValue; break;
+      case 66: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iUnk47 = tValue; break;
+      case 67: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iUnk48 = tValue; break;
+      case 68: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iUnk49 = tValue; break;
+      case 69: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iUnk50 = tValue; break;
+      case 70: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignTexture = tValue; break;
+    }
     tValue += tIncrement;
   }
 }

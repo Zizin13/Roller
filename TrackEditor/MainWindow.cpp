@@ -12,7 +12,6 @@
 #include "TilePicker.h"
 #include "EditSurfaceDialog.h"
 #include "EditSeriesDialog.h"
-#include "ChunkEditValues.h"
 #include "TrackPreview.h"
 #include "EditDataWidget.h"
 #include "GlobalTrackSettings.h"
@@ -351,7 +350,6 @@ void CMainWindow::OnUndo()
     GetCurrentPreview()->Undo();
   }
   UpdateWindow();
-  p->m_pEditData->UpdateGeometryEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -361,7 +359,6 @@ void CMainWindow::OnRedo()
   if (GetCurrentPreview())
     GetCurrentPreview()->Redo();
   UpdateWindow();
-  p->m_pEditData->UpdateGeometryEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -457,7 +454,6 @@ void CMainWindow::OnPaste()
   GetCurrentPreview()->m_bUnsavedChanges = true;
   GetCurrentPreview()->SaveHistory("Pasted " + QString::number(p->m_clipBoard.size()) + " geometry chunks");
   g_pMainWindow->UpdateWindow();
-  p->m_pEditData->UpdateGeometryEditMode();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -468,7 +464,6 @@ void CMainWindow::OnSelectAll()
   ckTo->setChecked(true);
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue((int)GetCurrentTrack()->m_chunkAy.size() - 1));
   UpdateGeometrySelection();
-  p->m_pEditData->OnCancelClicked();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -578,7 +573,6 @@ void CMainWindow::OnSelChunksToChanged(int iValue)
     BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(iValue));
   }
   UpdateGeometrySelection();
-  p->m_pEditData->OnCancelClicked();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -610,7 +604,6 @@ void CMainWindow::OnDeleteChunkClicked()
   g_pMainWindow->UpdateWindow();
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(sbSelChunksFrom->value()));
   BLOCK_SIG_AND_DO(ckTo, setChecked(false));
-  p->m_pEditData->UpdateGeometryEditMode();
   UpdateGeometrySelection();
 }
 
@@ -620,17 +613,23 @@ void CMainWindow::OnAddChunkClicked()
 {
   if (!GetCurrentTrack()) return;
 
-  CChunkEditValues editVals;
-  int iLastPos = (int)GetCurrentTrack()->m_chunkAy.size() - 1;
-  GetCurrentTrack()->GetGeometryValuesFromSelection(iLastPos, iLastPos, editVals);
-  GetCurrentTrack()->InsertGeometryChunk(iLastPos, 1, editVals);
+  int iSelPos = sbSelChunksFrom->value();
+  tGeometryChunk newChunk;
+  if (iSelPos < GetCurrentTrack()->m_chunkAy.size())
+    newChunk = GetCurrentTrack()->m_chunkAy[iSelPos];
+  else
+    memset(&newChunk, 0, sizeof(newChunk));
+
+  if (GetCurrentTrack()->m_chunkAy.empty())
+    GetCurrentTrack()->m_chunkAy.push_back(newChunk);
+  else
+    GetCurrentTrack()->m_chunkAy.insert(GetCurrentTrack()->m_chunkAy.begin() + iSelPos + 1, newChunk);
 
   GetCurrentPreview()->m_bUnsavedChanges = true;
   GetCurrentPreview()->SaveHistory("Added geometry chunk");
   g_pMainWindow->UpdateWindow();
-  BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(iLastPos + 1));
-  BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(iLastPos + 1));
-  p->m_pEditData->UpdateGeometryEditMode();
+  BLOCK_SIG_AND_DO(sbSelChunksTo, setValue(iSelPos + 1));
+  BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(iSelPos + 1));
 }
 
 //-------------------------------------------------------------------------------------------------

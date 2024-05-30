@@ -3,7 +3,6 @@
 //-------------------------------------------------------------------------------------------------
 #include "ui_EditDataWidget.h"
 //-------------------------------------------------------------------------------------------------
-class CEditDataWidgetPrivate;
 class CTrack;
 //-------------------------------------------------------------------------------------------------
 class CEditDataWidget : public QWidget, private Ui::EditDataWidget
@@ -14,51 +13,11 @@ public:
   CEditDataWidget(QWidget *pParent);
   ~CEditDataWidget();
 
-public slots:
-  void UpdateGeometryEditMode();
-  void OnCancelClicked();
-
 protected slots:
-  void OnUpdateWindow();
   void UpdateGeometrySelection(int iFrom, int iTo);
-  void OnInsertBeforeClicked();
-  void OnInsertAfterClicked();
-  void OnApplyClicked();
-  void OnEditLSurface();
-  void OnEditCSurface();
-  void OnEditRSurface();
-  void OnEditLWall();
-  void OnEditRWall();
-  void OnEditRoof();
-  void OnEditLUOuterWall();
-  void OnEditLLOuterWall();
-  void OnEditOuterFloor();
-  void OnEditRLOuterWall();
-  void OnEditRUOuterWall();
-  void OnEditEnvirFloor();
-  void OnSignClicked();
-  void OnApplySignToggled(bool bChecked);
-  void OnSignTypeChanged(int iIndex);
-  void OnSignTypeLEChanged();
-  void OnSignLEChanged();
-  void OnLSurfaceLEChanged();
-  void OnCSurfaceLEChanged();
-  void OnRSurfaceLEChanged();
-  void OnLWallLEChanged();
-  void OnRWallLEChanged();
-  void OnRoofLEChanged();
-  void OnLUOuterWallChanged();
-  void OnLLOuterWallChanged();
-  void OnOuterFloorChanged();
-  void OnRLOuterWallChanged();
-  void OnRUOuterWallChanged();
-  void OnEnvirFloorChanged();
 
 private:
-  void RevertGeometry();
   void UpdateTextures(QLineEdit *pLineEdit, QLabel *pTex1, QLabel *pTex2);
-
-  CEditDataWidgetPrivate *p;
 };
 
 //-------------------------------------------------------------------------------------------------

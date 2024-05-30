@@ -156,7 +156,6 @@ exit 1</Command>
   <ItemGroup>
     <ClCompile Include="AssignBacksDialog.cpp" />
     <ClCompile Include="BackWidget.cpp" />
-    <ClCompile Include="ChunkEditValues.cpp" />
     <ClCompile Include="DebugSlider.cpp" />
     <ClCompile Include="DisplaySettings.cpp" />
     <ClCompile Include="EditAudioWidget.cpp" />
@@ -272,7 +271,6 @@ exit 1</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe;%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
-    <ClInclude Include="ChunkEditValues.h" />
     <CustomBuild Include="TrackPreview.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">..\external\Qt5\bin\moc.exe "%(Filename).h" -o "moc\moc_%(Filename).cpp" -b "..\TrackEditor.h"</Command>

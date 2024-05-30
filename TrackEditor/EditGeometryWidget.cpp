@@ -3,7 +3,6 @@
 #include "Texture.h"
 #include "Palette.h"
 #include "MainWindow.h"
-#include "ChunkEditValues.h"
 #include "QtHelpers.h"
 #include "EditSurfaceDialog.h"
 //-------------------------------------------------------------------------------------------------

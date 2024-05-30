@@ -127,19 +127,20 @@ void CGlobalTrackSettings::UpdateInfoEditMode()
 {
   bool bEditMode = false;
   bool bMixedData = false;
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leFloorDepth, p->sFloorDepth);
-  if (cbTex->currentText().compare(p->sTex) != 0 || cbBld->currentText().compare(p->sBld) != 0)
-    bEditMode = true;
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leTrackNum, p->sTrackNumber);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leImpossibleLaps, p->sImpossibleLaps);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leHardLaps, p->sHardLaps);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leTrickyLaps, p->sTrickyLaps);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leMediumLaps, p->sMediumLaps);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leEasyLaps, p->sEasyLaps);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leGirlieLaps, p->sGirlieLaps);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leMapFidelity, p->sTrackMapFidelity);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, leMapSize, p->sTrackMapSize);
-  QtHelpers::UpdateLEEditMode(bEditMode, bMixedData, lePreviewSize, p->sPreviewSize);
+  if (leFloorDepth->text().compare(p->sFloorDepth) != 0
+      || cbTex->currentText().compare(p->sTex) != 0
+      || cbBld->currentText().compare(p->sBld) != 0
+      || leTrackNum->text().compare(p->sTrackNumber) != 0
+      || leImpossibleLaps->text().compare(p->sImpossibleLaps) != 0
+      || leHardLaps->text().compare(p->sHardLaps) != 0
+      || leTrickyLaps->text().compare(p->sTrickyLaps) != 0
+      || leMediumLaps->text().compare(p->sMediumLaps) != 0
+      || leEasyLaps->text().compare(p->sEasyLaps) != 0
+      || leGirlieLaps->text().compare(p->sGirlieLaps) != 0
+      || leMapFidelity->text().compare(p->sTrackMapFidelity) != 0
+      || leMapSize->text().compare(p->sTrackMapSize) != 0
+      || lePreviewSize->text().compare(p->sPreviewSize) != 0)
+  bEditMode = true;
 
   pbApplyInfo->setEnabled(bEditMode);
   pbRevertInfo->setEnabled(bEditMode);
@@ -171,19 +172,19 @@ void CGlobalTrackSettings::UpdateInfoSelection()
 void CGlobalTrackSettings::RevertInfo()
 {
   UpdateTextures();
-  QtHelpers::UpdateLEWithSelectionValue(leFloorDepth, p->sFloorDepth);
+  BLOCK_SIG_AND_DO(leFloorDepth, setText(p->sFloorDepth));
   BLOCK_SIG_AND_DO(cbTex, setCurrentIndex(cbTex->findText(p->sTex)));
   BLOCK_SIG_AND_DO(cbBld, setCurrentIndex(cbBld->findText(p->sBld)));
-  QtHelpers::UpdateLEWithSelectionValue(leTrackNum, p->sTrackNumber);
-  QtHelpers::UpdateLEWithSelectionValue(leImpossibleLaps, p->sImpossibleLaps);
-  QtHelpers::UpdateLEWithSelectionValue(leHardLaps, p->sHardLaps);
-  QtHelpers::UpdateLEWithSelectionValue(leTrickyLaps, p->sTrickyLaps);
-  QtHelpers::UpdateLEWithSelectionValue(leMediumLaps, p->sMediumLaps);
-  QtHelpers::UpdateLEWithSelectionValue(leEasyLaps, p->sEasyLaps);
-  QtHelpers::UpdateLEWithSelectionValue(leGirlieLaps, p->sGirlieLaps);
-  QtHelpers::UpdateLEWithSelectionValue(leMapSize, p->sTrackMapSize);
-  QtHelpers::UpdateLEWithSelectionValue(leMapFidelity, p->sTrackMapFidelity);
-  QtHelpers::UpdateLEWithSelectionValue(lePreviewSize, p->sPreviewSize);
+  BLOCK_SIG_AND_DO(leTrackNum, setText(p->sTrackNumber));
+  BLOCK_SIG_AND_DO(leImpossibleLaps, setText(p->sImpossibleLaps));
+  BLOCK_SIG_AND_DO(leHardLaps, setText(p->sHardLaps));
+  BLOCK_SIG_AND_DO(leTrickyLaps, setText(p->sTrickyLaps));
+  BLOCK_SIG_AND_DO(leMediumLaps, setText(p->sMediumLaps));
+  BLOCK_SIG_AND_DO(leEasyLaps, setText(p->sEasyLaps));
+  BLOCK_SIG_AND_DO(leGirlieLaps, setText(p->sGirlieLaps));
+  BLOCK_SIG_AND_DO(leMapSize, setText(p->sTrackMapSize));
+  BLOCK_SIG_AND_DO(leMapFidelity, setText(p->sTrackMapFidelity));
+  BLOCK_SIG_AND_DO(lePreviewSize, setText(p->sPreviewSize));
 
   pbApplyInfo->setEnabled(false);
   pbRevertInfo->setEnabled(false);

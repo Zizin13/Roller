@@ -9,7 +9,7 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Texture.h"
-#include "TrackData.h"
+#include "Track.h"
 #include "SignType.h"
 //-------------------------------------------------------------------------------------------------
 #include "AutoPlans.h"
@@ -202,7 +202,7 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
     if (IsSign(model)) {
       if (GetSignTypeFromModel(model).bCanHaveTexture) {
         if (GetPols(model)[i].uiTex &SURFACE_FLAG_ANMS_LOOKUP) {
-          uint32 uiSignSurfaceType = CTrackData::GetSignedBitValueFromInt(iSignSurfaceType);
+          uint32 uiSignSurfaceType = CTrack::GetSignedBitValueFromInt(iSignSurfaceType);
           uiUseTex = uiSignSurfaceType;
         } else {
           uiUseTex &= ~SURFACE_FLAG_APPLY_TEXTURE;
@@ -1015,7 +1015,7 @@ int CShapeFactory::GetBacksCount(eWhipModel model)
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 *CShapeFactory::MakeIndicesCenterline(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast)
+uint32 *CShapeFactory::MakeIndicesCenterline(uint32 &numIndices, CTrack *pTrack, bool bAttachLast)
 {
   if (pTrack->m_chunkAy.empty()) {
     numIndices = 0;
@@ -1036,7 +1036,7 @@ uint32 *CShapeFactory::MakeIndicesCenterline(uint32 &numIndices, CTrackData *pTr
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 *CShapeFactory::MakeIndicesSurface(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast)
+uint32 *CShapeFactory::MakeIndicesSurface(uint32 &numIndices, CTrack *pTrack, bool bAttachLast)
 {
   if (pTrack->m_chunkAy.empty()) {
     numIndices = 0;
@@ -1109,7 +1109,7 @@ uint32 *CShapeFactory::MakeIndicesSurface(uint32 &numIndices, CTrackData *pTrack
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 *CShapeFactory::MakeIndicesSurfaceWireframe(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast)
+uint32 *CShapeFactory::MakeIndicesSurfaceWireframe(uint32 &numIndices, CTrack *pTrack, bool bAttachLast)
 {
   if (pTrack->m_chunkAy.empty()) {
     numIndices = 0;
@@ -1163,7 +1163,7 @@ uint32 *CShapeFactory::MakeIndicesSurfaceWireframe(uint32 &numIndices, CTrackDat
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeTrackSurface(CShapeData *pShape, CShader *pShader, CTrackData *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe)
+CShapeData *CShapeFactory::MakeTrackSurface(CShapeData *pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = NULL;
@@ -1210,7 +1210,7 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShapeData *pShape, CShader *pShader
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeEnvirFloor(CShapeData *pShape, CShader *pShader, CTrackData *pTrack, int iIndex)
+CShapeData *CShapeFactory::MakeEnvirFloor(CShapeData *pShape, CShader *pShader, CTrack *pTrack, int iIndex)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = NULL;
@@ -1243,7 +1243,7 @@ CShapeData *CShapeFactory::MakeEnvirFloor(CShapeData *pShape, CShader *pShader, 
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeAILine(CShapeData *pShape, CShader *pShader, CTrackData *pTrack, eShapeSection section, bool bAttachLast)
+CShapeData *CShapeFactory::MakeAILine(CShapeData *pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVerts(uiNumVerts, section, pTrack, NULL);
@@ -1294,7 +1294,7 @@ CShapeData *CShapeFactory::MakeAILine(CShapeData *pShape, CShader *pShader, CTra
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeSelectedChunks(CShapeData *pShape, CShader *pShader, CTrackData *pTrack, int iStart, int iEnd)
+CShapeData *CShapeFactory::MakeSelectedChunks(CShapeData *pShape, CShader *pShader, CTrack *pTrack, int iStart, int iEnd)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVerts(uiNumVerts, eShapeSection::SELECTED, pTrack, NULL);
@@ -1332,7 +1332,7 @@ CShapeData *CShapeFactory::MakeSelectedChunks(CShapeData *pShape, CShader *pShad
 
 //-------------------------------------------------------------------------------------------------
 
-void CShapeFactory::MakeSigns(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &signAy)
+void CShapeFactory::MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &signAy)
 {
   for (int i = 0; i < (int)pTrack->m_chunkAy.size(); ++i) {
     if (pTrack->m_chunkAy[i].iSignType < 0 || pTrack->m_chunkAy[i].iSignType >= g_signAyCount)
@@ -1343,7 +1343,7 @@ void CShapeFactory::MakeSigns(CShader *pShader, CTrackData *pTrack, std::vector<
     if (!pNewSign)
       continue;
 
-    uint32 uiSignSurfaceType = CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[i].iSignTexture);
+    uint32 uiSignSurfaceType = CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[i].iSignTexture);
 
     //position sign
     bool bReversedOffsets = pTrack->m_chunkAy[i].dPitch >= 90.0f && pTrack->m_chunkAy[i].dPitch < 270.0f;
@@ -1382,7 +1382,7 @@ void CShapeFactory::MakeSigns(CShader *pShader, CTrackData *pTrack, std::vector<
 
 //-------------------------------------------------------------------------------------------------
 
-void CShapeFactory::MakeAudio(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &audioAy)
+void CShapeFactory::MakeAudio(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &audioAy)
 {
   for (int i = 0; i < (int)pTrack->m_chunkAy.size(); ++i) {
     bool bChunkHasAudio = pTrack->m_chunkAy[i].iAudioTriggerSpeed != 0;
@@ -1410,7 +1410,7 @@ void CShapeFactory::MakeAudio(CShader *pShader, CTrackData *pTrack, std::vector<
 
 //-------------------------------------------------------------------------------------------------
 
-void CShapeFactory::MakeStunts(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &stuntAy)
+void CShapeFactory::MakeStunts(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &stuntAy)
 {
   for (CStuntMap::iterator it = pTrack->m_stuntMap.begin(); it != pTrack->m_stuntMap.end(); ++it) {
     if (it->first < 0 || it->first >= pTrack->m_chunkAy.size()) {
@@ -1472,7 +1472,7 @@ CShapeData *CShapeFactory::MakeNormalsTest(const CShapeData &data, CShader *pSha
 
 //-------------------------------------------------------------------------------------------------
 
-void CShapeFactory::GetCarPos(CTrackData *pTrack, int iChunk, eShapeSection aiLineSection, glm::mat4 &modelToWorldMatrix, bool bMillionPlus)
+void CShapeFactory::GetCarPos(CTrack *pTrack, int iChunk, eShapeSection aiLineSection, glm::mat4 &modelToWorldMatrix, bool bMillionPlus)
 {
   if (pTrack->m_chunkAy.empty() || iChunk > (int)pTrack->m_chunkAy.size() - 1)
     return;
@@ -1506,7 +1506,7 @@ void CShapeFactory::GetCarPos(CTrackData *pTrack, int iChunk, eShapeSection aiLi
 
 //-------------------------------------------------------------------------------------------------
 
-tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CTrackData *pTrack, CTexture *pTexture)
+tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CTrack *pTrack, CTexture *pTexture)
 {
   if (pTrack->m_chunkAy.empty()) {
     numVertices = 0;
@@ -1532,7 +1532,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                    pTrack->m_chunkAy[iChunkIndex].math.lLane,
                                    pTrack->UseCenterStunt(iChunkIndex) ? pTrack->m_chunkAy[iChunkIndex].math.centerStunt : pTrack->m_chunkAy[iChunkIndex].math.center);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
                                 vertices[i * uiNumVertsPerChunk + 0],
                                 vertices[i * uiNumVertsPerChunk + 1],
                                 vertices[i * uiNumVertsPerChunk + 2],
@@ -1545,7 +1545,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                    pTrack->UseCenterStunt(iChunkIndex) ? pTrack->m_chunkAy[iChunkIndex].math.centerStunt : pTrack->m_chunkAy[iChunkIndex].math.center,
                                    pTrack->m_chunkAy[iChunkIndex].math.rLane);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -1558,7 +1558,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                    pTrack->m_chunkAy[iChunkIndex].math.lShoulder,
                                    pTrack->m_chunkAy[iChunkIndex].math.lLane);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftSurfaceType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftSurfaceType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -1571,7 +1571,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                    pTrack->m_chunkAy[iChunkIndex].math.rLane,
                                    pTrack->m_chunkAy[iChunkIndex].math.rShoulder);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightSurfaceType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightSurfaceType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -1588,21 +1588,21 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                       vertices[i * uiNumVertsPerChunk + 0],
                       vertices[i * uiNumVertsPerChunk + 3],
                       vertices[i * uiNumVertsPerChunk + 1]);
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
                               vertices[i * uiNumVertsPerChunk + 1]);
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
                               vertices[i * uiNumVertsPerChunk + 1], false, false, true);
-          if (CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType) & SURFACE_FLAG_BACK) {
-            uint32 uiTexIdx = CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType) & SURFACE_TEXTURE_INDEX;
+          if (CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType) & SURFACE_FLAG_BACK) {
+            uint32 uiTexIdx = CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType) & SURFACE_TEXTURE_INDEX;
             CSignMap::iterator it = pTrack->m_backsMap.find(uiTexIdx);
             if (it != pTrack->m_backsMap.end())
-              pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(it->second),
+              pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(it->second),
                                   vertices[i * uiNumVertsPerChunk + 0],
                                   vertices[i * uiNumVertsPerChunk + 2],
                                   vertices[i * uiNumVertsPerChunk + 1],
@@ -1621,21 +1621,21 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                       vertices[i * uiNumVertsPerChunk + 3],
                       vertices[i * uiNumVertsPerChunk + 0],
                       vertices[i * uiNumVertsPerChunk + 2]);
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType),
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 3],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 2]);
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType),
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 3],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 2], false, false, true);
-          if (CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType) & SURFACE_FLAG_BACK) {
-            uint32 uiTexIdx = CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType) & SURFACE_TEXTURE_INDEX;
+          if (CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType) & SURFACE_FLAG_BACK) {
+            uint32 uiTexIdx = CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType) & SURFACE_TEXTURE_INDEX;
             CSignMap::iterator it = pTrack->m_backsMap.find(uiTexIdx);
             if (it != pTrack->m_backsMap.end())
-              pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(it->second),
+              pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(it->second),
                                   vertices[i * uiNumVertsPerChunk + 3],
                                   vertices[i * uiNumVertsPerChunk + 1],
                                   vertices[i * uiNumVertsPerChunk + 2],
@@ -1650,7 +1650,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                    pTrack->m_chunkAy[iChunkIndex].math.rWall,
                                    pTrack->m_chunkAy[iChunkIndex].math.lWall);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRoofType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRoofType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -1663,7 +1663,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                    pTrack->m_chunkAy[iChunkIndex].math.lFloor,
                                    pTrack->m_chunkAy[iChunkIndex].math.rFloor);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iOuterFloorType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iOuterFloorType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
@@ -1676,7 +1676,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                    pTrack->m_chunkAy[iChunkIndex].math.lloWall,
                                    pTrack->m_chunkAy[iChunkIndex].math.lloWallBottomAttach);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLLOuterWallType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLLOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -1689,7 +1689,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                    pTrack->m_chunkAy[iChunkIndex].math.rloWallBottomAttach,
                                    pTrack->m_chunkAy[iChunkIndex].math.rloWall);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRLOuterWallType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRLOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -1702,7 +1702,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                    pTrack->m_chunkAy[iChunkIndex].math.luoWall,
                                    pTrack->m_chunkAy[iChunkIndex].math.lloWall);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLUOuterWallType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLUOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -1715,7 +1715,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                    pTrack->m_chunkAy[iChunkIndex].math.rloWall,
                                    pTrack->m_chunkAy[iChunkIndex].math.ruoWall);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRUOuterWallType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRUOuterWallType),
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
@@ -1753,7 +1753,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
 
 //-------------------------------------------------------------------------------------------------
 
-tVertex *CShapeFactory::MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTrack, CTexture *pTexture, int iIndex)
+tVertex *CShapeFactory::MakeVertsEnvirFloor(uint32 &numVertices, CTrack *pTrack, CTexture *pTexture, int iIndex)
 {
   if (pTrack->m_chunkAy.empty() || iIndex >= pTrack->m_chunkAy.size()) {
     numVertices = 0;
@@ -1769,7 +1769,7 @@ tVertex *CShapeFactory::MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTr
   vertices[2].position = glm::vec3(+fPadding, fEnvirFloorDepth, -fPadding);
   vertices[3].position = glm::vec3(+fPadding, fEnvirFloorDepth, +fPadding);
   pTexture->GetTextureCoordinates(
-    CTrackData::GetSignedBitValueFromInt(pTrack->m_chunkAy[iIndex].iEnvironmentFloorType) & SURFACE_TEXTURE_INDEX,
+    CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iIndex].iEnvironmentFloorType) & SURFACE_TEXTURE_INDEX,
     vertices[0], vertices[1], vertices[2], vertices[3]);
   vertices[0].flags.x = 1.0f;
   vertices[1].flags.x = 1.0f;
@@ -1803,7 +1803,7 @@ uint32 *CShapeFactory::MakeIndicesEnvirFloor(uint32 &numIndices)
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section, CTrackData *pTrack, bool bAttachLast)
+uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section, CTrack *pTrack, bool bAttachLast)
 {
   if (pTrack->m_chunkAy.empty()) {
     numIndices = 0;
@@ -1845,7 +1845,7 @@ uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSectio
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 *CShapeFactory::MakeIndicesSelectedChunks(uint32 &numIndices, int iStart, int iEnd, CTrackData *pTrack)
+uint32 *CShapeFactory::MakeIndicesSelectedChunks(uint32 &numIndices, int iStart, int iEnd, CTrack *pTrack)
 {
   if (pTrack->m_chunkAy.empty()) {
     numIndices = 0;
@@ -1928,7 +1928,7 @@ uint32 *CShapeFactory::MakeIndicesSelectedChunks(uint32 &numIndices, int iStart,
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 *CShapeFactory::MakeIndicesSingleSectionWireframe(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast)
+uint32 *CShapeFactory::MakeIndicesSingleSectionWireframe(uint32 &numIndices, CTrack *pTrack, bool bAttachLast)
 {
   if (pTrack->m_chunkAy.empty()) {
     numIndices = 0;

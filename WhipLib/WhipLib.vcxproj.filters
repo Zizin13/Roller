@@ -50,7 +50,7 @@
     <ClInclude Include="OpenGLDebug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TrackData.h">
+    <ClInclude Include="Track.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Palette.h">
@@ -172,7 +172,7 @@
     <ClCompile Include="VertexArray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TrackData.cpp">
+    <ClCompile Include="Track.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ShapeData.cpp">

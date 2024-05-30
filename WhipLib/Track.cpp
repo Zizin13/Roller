@@ -1,4 +1,4 @@
-#include "TrackData.h"
+#include "Track.h"
 #include "Unmangler.h"
 #include <assert.h>
 #include <fstream>
@@ -105,7 +105,7 @@ void tGeometryChunk::Clear()
 
 //-------------------------------------------------------------------------------------------------
 
-CTrackData::CTrackData()
+CTrack::CTrack()
   : m_iAILineHeight(100)
   , m_fScale(1000.0f)
   , m_pPal(NULL)
@@ -117,7 +117,7 @@ CTrackData::CTrackData()
 
 //-------------------------------------------------------------------------------------------------
 
-CTrackData::~CTrackData()
+CTrack::~CTrack()
 {
   if (m_pTex) {
     delete m_pTex;
@@ -135,7 +135,7 @@ CTrackData::~CTrackData()
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::ClearData()
+void CTrack::ClearData()
 {
   memset(&m_header, 0, sizeof(m_header));
   m_header.iFloorDepth = 2048;
@@ -150,7 +150,7 @@ void CTrackData::ClearData()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrackData::LoadTrack(const std::string &sFilename)
+bool CTrack::LoadTrack(const std::string &sFilename)
 {
   ClearData();
 
@@ -214,7 +214,7 @@ bool CTrackData::LoadTrack(const std::string &sFilename)
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrackData::LoadTextures()
+bool CTrack::LoadTextures()
 {
   bool bSuccess = true;
 
@@ -260,7 +260,7 @@ bool CTrackData::LoadTextures()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrackData::IsNumber(const std::string &str)
+bool CTrack::IsNumber(const std::string &str)
 {
   char *ptr;
   strtol(str.c_str(), &ptr, 10);
@@ -269,7 +269,7 @@ bool CTrackData::IsNumber(const std::string &str)
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrackData::ProcessTrackData(const uint8 *pData, size_t length)
+bool CTrack::ProcessTrackData(const uint8 *pData, size_t length)
 {
   bool bSuccess = true;
   int iChunkLine = 0;
@@ -515,7 +515,7 @@ bool CTrackData::ProcessTrackData(const uint8 *pData, size_t length)
 
 //-------------------------------------------------------------------------------------------------
 
-unsigned int CTrackData::GetSignedBitValueFromInt(int iValue)
+unsigned int CTrack::GetSignedBitValueFromInt(int iValue)
 {
   bool bNegative = iValue < 0;
   unsigned int uiRetVal = (unsigned int)abs(iValue);
@@ -526,7 +526,7 @@ unsigned int CTrackData::GetSignedBitValueFromInt(int iValue)
 
 //-------------------------------------------------------------------------------------------------
 
-int CTrackData::GetIntValueFromSignedBit(unsigned int uiValue)
+int CTrack::GetIntValueFromSignedBit(unsigned int uiValue)
 {
   bool bNegative = uiValue & 0x80000000;
   uiValue &= ~0x80000000;
@@ -538,11 +538,11 @@ int CTrackData::GetIntValueFromSignedBit(unsigned int uiValue)
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrackData::ShouldDrawSurfaceType(int iSurfaceType)
+bool CTrack::ShouldDrawSurfaceType(int iSurfaceType)
 {
   if (iSurfaceType == -1 || iSurfaceType == 0)
     return false;
-  uint32 uiSurfaceType = CTrackData::GetSignedBitValueFromInt(iSurfaceType);
+  uint32 uiSurfaceType = CTrack::GetSignedBitValueFromInt(iSurfaceType);
   if (uiSurfaceType & SURFACE_FLAG_NON_SOLID)
     return false;
   //if (!(uiSurfaceType & SURFACE_FLAG_TRANSPARENT)
@@ -553,7 +553,7 @@ bool CTrackData::ShouldDrawSurfaceType(int iSurfaceType)
 
 //-------------------------------------------------------------------------------------------------
 
-double CTrackData::ConstrainAngle(double dAngle)
+double CTrack::ConstrainAngle(double dAngle)
 {
   dAngle = fmod(dAngle, 360);
   if (dAngle < 0)
@@ -563,7 +563,7 @@ double CTrackData::ConstrainAngle(double dAngle)
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrackData::ShouldShowChunkSection(int i, eShapeSection section)
+bool CTrack::ShouldShowChunkSection(int i, eShapeSection section)
 {
   if ((section == eShapeSection::LLANE || section == eShapeSection::RLANE)
       && !ShouldDrawSurfaceType(m_chunkAy[i].iCenterSurfaceType))
@@ -619,7 +619,7 @@ bool CTrackData::ShouldShowChunkSection(int i, eShapeSection section)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::ProcessSign(const std::vector<std::string> &lineAy, eFileSection &section)
+void CTrack::ProcessSign(const std::vector<std::string> &lineAy, eFileSection &section)
 {
   //helper function because this process must be done in two places
   int iVal0 = std::stoi(lineAy[0]);
@@ -648,7 +648,7 @@ void CTrackData::ProcessSign(const std::vector<std::string> &lineAy, eFileSectio
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetTrackData(std::vector<uint8> &data)
+void CTrack::GetTrackData(std::vector<uint8> &data)
 {
   //write header
   char szBuf[1024];
@@ -753,7 +753,7 @@ void CTrackData::GetTrackData(std::vector<uint8> &data)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::WriteToVector(std::vector<uint8> &data, const char *szText)
+void CTrack::WriteToVector(std::vector<uint8> &data, const char *szText)
 {
   int iLength = (int)strlen(szText);
   for (int i = 0; i < iLength; ++i) {
@@ -764,7 +764,7 @@ void CTrackData::WriteToVector(std::vector<uint8> &data, const char *szText)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GenerateChunkString(tGeometryChunk &chunk, char *szBuf, int iSize)
+void CTrack::GenerateChunkString(tGeometryChunk &chunk, char *szBuf, int iSize)
 {
   snprintf(szBuf, iSize,
            "%5d %6d %6d %6d %6d %6d %6d %11.5lf %11.5lf %11.5lf %5d %5d %5d %5d %3d %3d %3d %4d %5d %3d %3d %3d\r\n" //line 1
@@ -845,7 +845,7 @@ void CTrackData::GenerateChunkString(tGeometryChunk &chunk, char *szBuf, int iSi
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GenerateTrackMath()
+void CTrack::GenerateTrackMath()
 {
   if (m_chunkAy.empty()) {
     return;
@@ -900,7 +900,7 @@ void CTrackData::GenerateTrackMath()
                 m_chunkAy[i].math.nextChunkPitched,
                 m_chunkAy[i].math.rShoulder, false);
     //left wall
-    m_chunkAy[i].math.bLWallAttachToLane = CTrackData::GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_WALL_31;
+    m_chunkAy[i].math.bLWallAttachToLane = CTrack::GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_WALL_31;
     if (m_chunkAy[i].iLeftWallType == -1)
       m_chunkAy[i].math.bLWallAttachToLane = m_chunkAy[iPrevIndex].math.bLWallAttachToLane;
     m_chunkAy[i].math.lWallBottomAttach = m_chunkAy[i].math.bLWallAttachToLane ? m_chunkAy[i].math.lLane : m_chunkAy[i].math.lShoulder;
@@ -911,7 +911,7 @@ void CTrackData::GenerateTrackMath()
             m_chunkAy[i].math.nextChunkPitched,
             m_chunkAy[i].math.lWall, eShapeSection::LWALL);
     //right wall
-    m_chunkAy[i].math.bRWallAttachToLane = CTrackData::GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType) & SURFACE_FLAG_WALL_31;
+    m_chunkAy[i].math.bRWallAttachToLane = CTrack::GetSignedBitValueFromInt(m_chunkAy[i].iRightWallType) & SURFACE_FLAG_WALL_31;
     if (m_chunkAy[i].iRightWallType == -1)
       m_chunkAy[i].math.bRWallAttachToLane = m_chunkAy[iPrevIndex].math.bRWallAttachToLane;
     m_chunkAy[i].math.rWallBottomAttach = m_chunkAy[i].math.bRWallAttachToLane ? m_chunkAy[i].math.rLane : m_chunkAy[i].math.rShoulder;
@@ -1037,7 +1037,7 @@ void CTrackData::GenerateTrackMath()
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::ResetStunts()
+void CTrack::ResetStunts()
 {
   CStuntMap::iterator it = m_stuntMap.begin();
   for (; it != m_stuntMap.end(); ++it) {
@@ -1047,7 +1047,7 @@ void CTrackData::ResetStunts()
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::UpdateStunts()
+void CTrack::UpdateStunts()
 {
   CStuntMap::iterator it = m_stuntMap.begin();
   for (; it != m_stuntMap.end(); ++it) {
@@ -1313,7 +1313,7 @@ void CTrackData::UpdateStunts()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrackData::HasPitchedStunt()
+bool CTrack::HasPitchedStunt()
 {
   CStuntMap::iterator it = m_stuntMap.begin();
   for (; it != m_stuntMap.end(); ++it) {
@@ -1336,7 +1336,7 @@ bool CTrackData::HasPitchedStunt()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrackData::UseCenterStunt(int i)
+bool CTrack::UseCenterStunt(int i)
 {
   bool bUseCenterStunt = false;
   CStuntMap::iterator it = m_stuntMap.begin();
@@ -1359,7 +1359,7 @@ bool CTrackData::UseCenterStunt(int i)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetCenter(int i, glm::vec3 prevCenter,
+void CTrack::GetCenter(int i, glm::vec3 prevCenter,
                            glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched,
                            glm::mat4 &yawMat, glm::mat4 &pitchMat, glm::mat4 &rollMat)
 {
@@ -1384,7 +1384,7 @@ void CTrackData::GetCenter(int i, glm::vec3 prevCenter,
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat,
+void CTrack::GetLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat,
                           glm::vec3 &lane, bool bLeft)
 {
   glm::mat4 translateMat = glm::translate(center); //translate to centerline
@@ -1399,7 +1399,7 @@ void CTrackData::GetLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetShoulder(int i, glm::vec3 lLane, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+void CTrack::GetShoulder(int i, glm::vec3 lLane, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                               glm::vec3 &shoulder, bool bLeft, bool bIgnoreHeight)
 {
   glm::mat4 translateMat = glm::translate(lLane); //translate to end of left lane
@@ -1425,7 +1425,7 @@ void CTrackData::GetShoulder(int i, glm::vec3 lLane, glm::vec3 pitchAxis, glm::m
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder,
+void CTrack::GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder,
                                glm::vec3 &lEnvirFloor, glm::vec3 &rEnvirFloor)
 {
   float fEnvirFloorDepth = (float)m_header.iFloorDepth / m_fScale * -1.0f;
@@ -1437,7 +1437,7 @@ void CTrackData::GetEnvirFloor(int i, glm::vec3 lShoulder, glm::vec3 rShoulder,
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
+void CTrack::GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, glm::vec3 pitchAxis, glm::vec3 nextChunkPitched,
                                glm::vec3 &lFloor, glm::vec3 &rFloor)
 {
   glm::mat4 translateMatL = glm::translate(lLane);
@@ -1461,7 +1461,7 @@ void CTrackData::GetOWallFloor(int i, glm::vec3 lLane, glm::vec3 rLane, glm::vec
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+void CTrack::GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                             glm::vec3 &lloWall, eShapeSection wallSection)
 {
   glm::mat4 translateMat = glm::translate(bottomAttach);
@@ -1505,7 +1505,7 @@ void CTrackData::GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackData::GetAILine(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
+void CTrack::GetAILine(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
                            glm::vec3 &aiLine, eShapeSection lineSection, int iHeight)
 {
   glm::mat4 translateMat = glm::translate(center);

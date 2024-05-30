@@ -133,7 +133,7 @@ void CDebugChunkData::UpdateTextures(QLineEdit *pLineEdit, QLabel *pTex1, QLabel
   if (pLineEdit->text().compare("-1") == 0) {
     pTex1->setPixmap(QPixmap());
     pTex2->setPixmap(QPixmap());
-  } else if (!pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) != 0) {
+  } else if (!pLineEdit->text().isEmpty()) {
     int iValue = pLineEdit->text().toInt();
     unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
     iIndex = CTrack::GetIntValueFromSignedBit(uiSignedBitVal & SURFACE_TEXTURE_INDEX);

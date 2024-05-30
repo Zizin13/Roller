@@ -7,7 +7,7 @@
 class CShapeData;
 class CShader;
 class CTexture;
-class CTrackData;
+class CTrack;
 struct tVertex;
 struct tAnimation;
 struct tPolygon;
@@ -25,15 +25,15 @@ public:
   CShapeData *MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1);
   CShapeData *MakeAudioMarker(CShader *pShader);
   CShapeData *MakeStuntMarker(CShader *pShader);
-  CShapeData *MakeTrackSurface(CShapeData *pShape, CShader *pShader, CTrackData *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false);
-  CShapeData *MakeEnvirFloor(CShapeData *pShape, CShader *pShader, CTrackData *pTrack, int iIndex);
-  CShapeData *MakeAILine(CShapeData *pShape, CShader *pShader, CTrackData *pTrack, eShapeSection section, bool bAttachLast);
-  CShapeData *MakeSelectedChunks(CShapeData *pShape, CShader *pShader, CTrackData *pTrack, int iStart, int iEnd);
-  void MakeSigns(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData*> &signAy);
-  void MakeAudio(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &audioAy);
-  void MakeStunts(CShader *pShader, CTrackData *pTrack, std::vector<CShapeData *> &stuntAy);
+  CShapeData *MakeTrackSurface(CShapeData *pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false);
+  CShapeData *MakeEnvirFloor(CShapeData *pShape, CShader *pShader, CTrack *pTrack, int iIndex);
+  CShapeData *MakeAILine(CShapeData *pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast);
+  CShapeData *MakeSelectedChunks(CShapeData *pShape, CShader *pShader, CTrack *pTrack, int iStart, int iEnd);
+  void MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CShapeData*> &signAy);
+  void MakeAudio(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &audioAy);
+  void MakeStunts(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &stuntAy);
   CShapeData *MakeNormalsTest(const CShapeData &data, CShader *pShader);
-  void GetCarPos(CTrackData *pTrack, int iChunk, eShapeSection aiLine, glm::mat4 &modelToWorldMatrix, bool bMillionPlus = false);
+  void GetCarPos(CTrack *pTrack, int iChunk, eShapeSection aiLine, glm::mat4 &modelToWorldMatrix, bool bMillionPlus = false);
 
   float m_fScale;
 
@@ -60,16 +60,16 @@ private:
   uint32 *GetBacks(eWhipModel model);
   int GetBacksCount(eWhipModel model);
 
-  tVertex *MakeVerts(uint32 &numVertices, eShapeSection section, CTrackData *pTrack, CTexture *pTexture);
-  tVertex *MakeVertsEnvirFloor(uint32 &numVertices, CTrackData *pTrack, CTexture *pTexture, int iIndex);
+  tVertex *MakeVerts(uint32 &numVertices, eShapeSection section, CTrack *pTrack, CTexture *pTexture);
+  tVertex *MakeVertsEnvirFloor(uint32 &numVertices, CTrack *pTrack, CTexture *pTexture, int iIndex);
 
   uint32 *MakeIndicesEnvirFloor(uint32 &numIndices);
-  uint32 *MakeIndicesCenterline(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast);
-  uint32 *MakeIndicesSurface(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast);
-  uint32 *MakeIndicesSurfaceWireframe(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast);
-  uint32 *MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section, CTrackData *pTrack, bool bAttachLast);
-  uint32 *MakeIndicesSelectedChunks(uint32 &numIndices, int iStart, int iEnd, CTrackData *pTrack);
-  uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices, CTrackData *pTrack, bool bAttachLast);
+  uint32 *MakeIndicesCenterline(uint32 &numIndices, CTrack *pTrack, bool bAttachLast);
+  uint32 *MakeIndicesSurface(uint32 &numIndices, CTrack *pTrack, bool bAttachLast);
+  uint32 *MakeIndicesSurfaceWireframe(uint32 &numIndices, CTrack *pTrack, bool bAttachLast);
+  uint32 *MakeIndicesSingleSection(uint32 &numIndices, eShapeSection section, CTrack *pTrack, bool bAttachLast);
+  uint32 *MakeIndicesSelectedChunks(uint32 &numIndices, int iStart, int iEnd, CTrack *pTrack);
+  uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices, CTrack *pTrack, bool bAttachLast);
 
   void ApplyVerticesSingleSection(int i, tVertex *vertices, const glm::vec3 &v0, const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3);
   void MakeNormals(tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight);

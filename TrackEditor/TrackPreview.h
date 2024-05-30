@@ -54,6 +54,7 @@ protected:
 
 private:
   void LoadHistory(const tTrackHistory *pHistory);
+  bool SaveTrack_Internal(const QString &sFilename);
 
   CTrackPreviewPrivate *p;
   uint32 m_uiShowModels;

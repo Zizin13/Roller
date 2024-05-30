@@ -23,9 +23,9 @@ void QtHelpers::UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCh
     pPushButton->setText("<none>");
     pCheckbox->setEnabled(false);
     pCheckbox->setChecked(false);
-  } else if (pLineEdit->text().isEmpty() && pLineEdit->placeholderText().compare(MIXED_DATA) == 0) {
+  } else if (pLineEdit->text().isEmpty()) {
     pPushButton->setIcon(QIcon());
-    pPushButton->setText(MIXED_DATA);
+    //pPushButton->setText(MIXED_DATA);
     pCheckbox->setEnabled(false);
     pCheckbox->setChecked(false);
   } else {

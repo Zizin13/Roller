@@ -17,6 +17,8 @@
 #include "qdir.h"
 #include "qmessagebox.h"
 #include "qfiledialog.h"
+#include "qfile.h"
+#include "qtextstream.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -699,7 +701,7 @@ bool CTrackPreview::SaveChangesAndContinue()
       sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
         this, "Save Track As", p->m_track.m_sTrackFileFolder.c_str(), "Track Files (*.TRK)"));
     }
-    if (!p->m_track.SaveTrack(sFilename))
+    if (!SaveTrack_Internal(sFilename))
       return false;
     g_pMainWindow->m_sLastTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
   }
@@ -715,7 +717,7 @@ bool CTrackPreview::SaveChangesAndContinue()
 bool CTrackPreview::SaveTrack()
 {
   if (m_bAlreadySaved) {
-    m_bUnsavedChanges = !p->m_track.SaveTrack(m_sTrackFile);
+    m_bUnsavedChanges = !SaveTrack_Internal(m_sTrackFile);
     g_pMainWindow->UpdateWindow();
     return true;
   } else {
@@ -730,7 +732,7 @@ bool CTrackPreview::SaveTrackAs()
   //save track
   QString sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
     this, "Save Track As", p->m_track.m_sTrackFileFolder.c_str(), "Track Files (*.TRK)"));
-  if (!p->m_track.SaveTrack(sFilename))
+  if (!SaveTrack_Internal(sFilename))
     return false;
 
   //save successful, update app
@@ -822,6 +824,38 @@ void CTrackPreview::keyPressEvent(QKeyEvent *pEvent)
       break;
   }
   repaint();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CTrackPreview::SaveTrack_Internal(const QString &sFilename)
+{
+  if (sFilename.isEmpty())
+    return false;
+
+  std::vector<uint8> data;
+  std::vector<uint8> mangledData;
+  p->m_track.GetTrackData(data);
+
+  std::vector<uint8> *pOutData;
+  //if (bIsMangled) {
+  //  MangleFile(data, mangledData);
+  //  pOutData = &mangledData;
+  //} else {
+  pOutData = &data;
+//}
+
+  QFile file(sFilename);
+  file.resize(0);
+  if (file.open(QIODevice::ReadWrite)) {
+    QTextStream stream(&file);
+    for (int i = 0; i < pOutData->size(); ++i) {
+      stream << (char)((*pOutData)[i]);
+    }
+    file.close();
+  }
+
+  return true;
 }
 
 //-------------------------------------------------------------------------------------------------

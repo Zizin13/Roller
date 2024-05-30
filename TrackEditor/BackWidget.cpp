@@ -3,7 +3,7 @@
 #include "Texture.h"
 #include "Palette.h"
 #include "QtHelpers.h"
-#include "TrackData.h"
+#include "Track.h"
 #include "EditSurfaceDialog.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -69,7 +69,7 @@ void CBackWidget::UpdateWidget()
   if (m_iBack < 0)
     return;
 
-  uint32 uiBackIndex = CTrackData::GetSignedBitValueFromInt(m_iBack);
+  uint32 uiBackIndex = CTrack::GetSignedBitValueFromInt(m_iBack);
   uiBackIndex &= SURFACE_TEXTURE_INDEX;
   if ((int)uiBackIndex < m_pTexture->m_iNumTiles) {
     QPixmap backPixmap;

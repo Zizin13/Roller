@@ -139,10 +139,10 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
   QtHelpers::UpdateTextures(lblEnvirFloorTex, NULL, NULL, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iEnvironmentFloorType);
 
   //update roof disabled text
-  lblRoofDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::ROOF) && CTrackData::ShouldDrawSurfaceType(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRoofType));
+  lblRoofDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::ROOF) && CTrack::ShouldDrawSurfaceType(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRoofType));
 
   //update llowall disabled text
-  lblLLOWallDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::LLOWALL) && CTrackData::ShouldDrawSurfaceType(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLLOuterWallType));
+  lblLLOWallDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::LLOWALL) && CTrack::ShouldDrawSurfaceType(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLLOuterWallType));
   if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType == -1)
     lblLLOWallDisabled->setText("(disabled by floor)");
   else if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType == -2)
@@ -151,7 +151,7 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
     lblLLOWallDisabled->setText("(disabled by other)");
 
   //update rlowall disabled text
-  lblRLOWallDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::RLOWALL) && CTrackData::ShouldDrawSurfaceType(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRLOuterWallType));
+  lblRLOWallDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::RLOWALL) && CTrack::ShouldDrawSurfaceType(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRLOuterWallType));
   if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType == -1)
     lblRLOWallDisabled->setText("(disabled by floor)");
   else if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType == -2)
@@ -160,7 +160,7 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
     lblRLOWallDisabled->setText("(disabled by other)");
 
   //update luowall disabled text
-  lblLUOWallDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::LUOWALL) && CTrackData::ShouldDrawSurfaceType(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLUOuterWallType));
+  lblLUOWallDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::LUOWALL) && CTrack::ShouldDrawSurfaceType(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLUOuterWallType));
   if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLLOuterWallType == -1)
     lblLUOWallDisabled->setText("(disabled by lower wall)");
   else if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType == -1)
@@ -171,7 +171,7 @@ void CEditGeometryWidget::UpdateGeometrySelection(int iFrom, int iTo)
     lblLUOWallDisabled->setText("(disabled by other)");
 
   //update ruowall disabled text
-  lblRUOWallDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::RUOWALL) && CTrackData::ShouldDrawSurfaceType(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRUOuterWallType));
+  lblRUOWallDisabled->setVisible(!g_pMainWindow->GetCurrentTrack()->ShouldShowChunkSection(iFrom, eShapeSection::RUOWALL) && CTrack::ShouldDrawSurfaceType(g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRUOuterWallType));
   if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRLOuterWallType == -1)
     lblRUOWallDisabled->setText("(disabled by lower wall)");
   else if (g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType == -1)

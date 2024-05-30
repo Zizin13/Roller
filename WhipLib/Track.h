@@ -1,5 +1,5 @@
-#ifndef _WHIPLIB_TRACKDATA_H
-#define _WHIPLIB_TRACKDATA_H
+#ifndef _WHIPLIB_Track_H
+#define _WHIPLIB_Track_H
 //-------------------------------------------------------------------------------------------------
 #include "glm.hpp"
 #include <vector>
@@ -189,11 +189,11 @@ class CTexture;
 class CPalette;
 //-------------------------------------------------------------------------------------------------
 
-class CTrackData
+class CTrack
 {
 public:
-  CTrackData();
-  ~CTrackData();
+  CTrack();
+  ~CTrack();
 
   void ClearData();
   bool LoadTrack(const std::string &sFilename);

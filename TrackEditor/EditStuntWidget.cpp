@@ -344,7 +344,7 @@ void CEditStuntWidget::UpdateDialog()
     return;
 
   int iValue = it->second.iFlags;
-  uint32 uiSignedBitValue = CTrackData::GetSignedBitValueFromInt(iValue);
+  uint32 uiSignedBitValue = CTrack::GetSignedBitValueFromInt(iValue);
   char szBuf[128];
   snprintf(szBuf, sizeof(szBuf), " (%#010x)", uiSignedBitValue);
 

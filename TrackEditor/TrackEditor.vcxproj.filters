@@ -4,9 +4,6 @@
     <ClCompile Include="TrackEditor.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Track.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="LogDialog.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -123,9 +120,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Track.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="TrackEditor.h">
       <Filter>Headers</Filter>
     </ClInclude>

@@ -11,9 +11,11 @@ struct tPreferences
 {
   tPreferences();
   int iHistoryMaxSize;
+  bool bPasteNewChunks;
   bool bCopyRelativeYaw;
   bool bCopyRelativePitch;
   bool bCopyRelativeRoll;
+  bool bPasteGeometry;
   bool bPasteSurfaceData;
   bool bPasteAIBehavior;
   bool bPasteDrawOrder;

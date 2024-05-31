@@ -13,6 +13,8 @@ public:
   ~CPreferencesDialog();
 
 protected slots:
+  void PasteNewToggled(bool bChecked);
+  void PasteDataToggled(bool bChecked);
   void DialogEdited();
 
 private:

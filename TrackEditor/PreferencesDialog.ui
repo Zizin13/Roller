@@ -73,13 +73,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <widget class="QCheckBox" name="ckRelRoll">
-        <property name="text">
-         <string>Relative Roll</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
        <widget class="QCheckBox" name="ckRelYaw">
         <property name="text">
@@ -90,10 +83,52 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="3">
-       <widget class="QCheckBox" name="ckNoSurface">
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="ckRelRoll">
         <property name="text">
-         <string>Paste only geometry (uses surface values from previous chunk)</string>
+         <string>Relative Roll</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="3">
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="ckPasteSurfaceData">
+        <property name="text">
+         <string>Paste Surface Data</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QCheckBox" name="ckPasteAIBehavior">
+        <property name="text">
+         <string>Paste AI behavior</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QCheckBox" name="ckPasteDrawOrder">
+        <property name="text">
+         <string>Paste Draw Order</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="ckPasteSigns">
+        <property name="text">
+         <string>Paste Signs</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="ckPasteAudio">
+        <property name="text">
+         <string>Paste Audio</string>
         </property>
        </widget>
       </item>

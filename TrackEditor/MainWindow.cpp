@@ -52,7 +52,11 @@ tPreferences::tPreferences()
   , bCopyRelativeYaw(true)
   , bCopyRelativePitch(false)
   , bCopyRelativeRoll(false)
-  , bPasteNoSurface(false)
+  , bPasteSurfaceData(true)
+  , bPasteAIBehavior(true)
+  , bPasteDrawOrder(true)
+  , bPasteSigns(true)
+  , bPasteAudio(true)
 { };
 
 //-------------------------------------------------------------------------------------------------
@@ -422,7 +426,11 @@ void CMainWindow::OnPaste()
       p->m_clipBoard[i].dPitch = p->m_clipBoard[i].dPitch + GetCurrentTrack()->m_chunkAy[iPrevChunk].dPitch;
     if (m_preferences.bCopyRelativeRoll)
       p->m_clipBoard[i].dRoll = p->m_clipBoard[i].dRoll + GetCurrentTrack()->m_chunkAy[iPrevChunk].dRoll;
-    if (m_preferences.bPasteNoSurface) {
+    p->m_clipBoard[i].dYaw = CTrack::ConstrainAngle(p->m_clipBoard[i].dYaw);
+    p->m_clipBoard[i].dPitch = CTrack::ConstrainAngle(p->m_clipBoard[i].dPitch);
+    p->m_clipBoard[i].dRoll = CTrack::ConstrainAngle(p->m_clipBoard[i].dRoll);
+
+    if (!m_preferences.bPasteSurfaceData) {
       p->m_clipBoard[i].iLeftSurfaceType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iLeftSurfaceType;
       p->m_clipBoard[i].iCenterSurfaceType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iCenterSurfaceType;
       p->m_clipBoard[i].iRightSurfaceType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iRightSurfaceType;
@@ -436,9 +444,47 @@ void CMainWindow::OnPaste()
       p->m_clipBoard[i].iRUOuterWallType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iRUOuterWallType;
       p->m_clipBoard[i].iEnvironmentFloorType = GetCurrentTrack()->m_chunkAy[iPrevChunk].iEnvironmentFloorType;
     }
-    p->m_clipBoard[i].dYaw = CTrack::ConstrainAngle(p->m_clipBoard[i].dYaw);
-    p->m_clipBoard[i].dPitch = CTrack::ConstrainAngle(p->m_clipBoard[i].dPitch);
-    p->m_clipBoard[i].dRoll = CTrack::ConstrainAngle(p->m_clipBoard[i].dRoll);
+    if (!m_preferences.bPasteAIBehavior) {
+      p->m_clipBoard[i].iAIAccuracy = GetCurrentTrack()->m_chunkAy[iPrevChunk].iAIAccuracy;
+      p->m_clipBoard[i].iAIMaxSpeed = GetCurrentTrack()->m_chunkAy[iPrevChunk].iAIMaxSpeed;
+      p->m_clipBoard[i].iAILine1 = GetCurrentTrack()->m_chunkAy[iPrevChunk].iAILine1;
+      p->m_clipBoard[i].iAILine2 = GetCurrentTrack()->m_chunkAy[iPrevChunk].iAILine2;
+      p->m_clipBoard[i].iAILine3 = GetCurrentTrack()->m_chunkAy[iPrevChunk].iAILine3;
+      p->m_clipBoard[i].iAILine4 = GetCurrentTrack()->m_chunkAy[iPrevChunk].iAILine4;
+    }
+    if (!m_preferences.bPasteDrawOrder) {
+      p->m_clipBoard[i].iDrawOrder1 = 0;
+      p->m_clipBoard[i].iDrawOrder2 = 0;
+      p->m_clipBoard[i].iDrawOrder3 = 0;
+      p->m_clipBoard[i].iUnk37 = 0;
+      p->m_clipBoard[i].iUnk38 = 0;
+      p->m_clipBoard[i].iUnk39 = 0;
+      p->m_clipBoard[i].iUnk40 = 0;
+      p->m_clipBoard[i].iUnk41 = 0;
+      p->m_clipBoard[i].iUnk42 = 0;
+      p->m_clipBoard[i].iUnk43 = 0;
+      p->m_clipBoard[i].iUnk44 = 0;
+      p->m_clipBoard[i].iUnk45 = 0;
+      p->m_clipBoard[i].iUnk46 = 0;
+      p->m_clipBoard[i].iUnk47 = 0;
+      p->m_clipBoard[i].iUnk48 = 0;
+      p->m_clipBoard[i].iUnk49 = 0;
+      p->m_clipBoard[i].iUnk50 = 0;
+    }
+    if (!m_preferences.bPasteAudio) {
+      p->m_clipBoard[i].iAudioAboveTrigger = 0;
+      p->m_clipBoard[i].iAudioTriggerSpeed = 0;
+      p->m_clipBoard[i].iAudioBelowTrigger = 0;
+    }
+    if (!m_preferences.bPasteSigns) {
+      p->m_clipBoard[i].iSignType = -1;
+      p->m_clipBoard[i].iSignHorizOffset = 0;
+      p->m_clipBoard[i].iSignVertOffset = 0;
+      p->m_clipBoard[i].dSignYaw = 0;
+      p->m_clipBoard[i].dSignPitch = 0;
+      p->m_clipBoard[i].dSignRoll = 0;
+      p->m_clipBoard[i].iSignTexture = 0;
+    }
   }
 
   for (int i = 0; i < (int)p->m_clipBoard.size(); ++i) {
@@ -791,7 +837,11 @@ void CMainWindow::LoadSettings()
   m_preferences.bCopyRelativeYaw = settings.value("copy_relative_yaw", m_preferences.bCopyRelativeYaw).toBool();
   m_preferences.bCopyRelativePitch = settings.value("copy_relative_pitch", m_preferences.bCopyRelativePitch).toBool();
   m_preferences.bCopyRelativeRoll = settings.value("copy_relative_roll", m_preferences.bCopyRelativeRoll).toBool();
-  m_preferences.bPasteNoSurface = settings.value("paste_no_surface", m_preferences.bPasteNoSurface).toBool();
+  m_preferences.bPasteSurfaceData = settings.value("paste_surface", m_preferences.bPasteSurfaceData).toBool();
+  m_preferences.bPasteAIBehavior = settings.value("paste_ai", m_preferences.bPasteAIBehavior).toBool();
+  m_preferences.bPasteDrawOrder = settings.value("paste_draw_order", m_preferences.bPasteDrawOrder).toBool();
+  m_preferences.bPasteSigns = settings.value("paste_signs", m_preferences.bPasteSigns).toBool();
+  m_preferences.bPasteAudio = settings.value("paste_audio", m_preferences.bPasteAudio).toBool();
 
   show();
 }
@@ -829,7 +879,11 @@ void CMainWindow::SaveSettings()
   settings.setValue("copy_relative_yaw", m_preferences.bCopyRelativeYaw);
   settings.setValue("copy_relative_pitch", m_preferences.bCopyRelativePitch);
   settings.setValue("copy_relative_roll", m_preferences.bCopyRelativeRoll);
-  settings.setValue("paste_no_surface", m_preferences.bPasteNoSurface);
+  settings.setValue("paste_surface", m_preferences.bPasteSurfaceData);
+  settings.setValue("paste_ai", m_preferences.bPasteAIBehavior);
+  settings.setValue("paste_draw_order", m_preferences.bPasteDrawOrder);
+  settings.setValue("paste_signs", m_preferences.bPasteSigns);
+  settings.setValue("paste_audio", m_preferences.bPasteAudio);
 }
 
 //-------------------------------------------------------------------------------------------------

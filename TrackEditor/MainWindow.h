@@ -14,7 +14,11 @@ struct tPreferences
   bool bCopyRelativeYaw;
   bool bCopyRelativePitch;
   bool bCopyRelativeRoll;
-  bool bPasteNoSurface;
+  bool bPasteSurfaceData;
+  bool bPasteAIBehavior;
+  bool bPasteDrawOrder;
+  bool bPasteSigns;
+  bool bPasteAudio;
 };
 //-------------------------------------------------------------------------------------------------
 

@@ -93,7 +93,7 @@ struct tGeometryChunk
   int iLeftShoulderGrip;
   int iRightShoulderGrip;
   int iAIMaxSpeed;
-  int iAIAccuracy; //todo
+  int iAIAccuracy;
   int iAudioAboveTrigger;
   int iAudioTriggerSpeed;
   int iAudioBelowTrigger;

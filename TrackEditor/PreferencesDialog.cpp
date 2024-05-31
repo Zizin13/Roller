@@ -16,14 +16,22 @@ CPreferencesDialog::CPreferencesDialog(QWidget *pParent)
   ckRelYaw->setChecked(g_pMainWindow->m_preferences.bCopyRelativeYaw);
   ckRelPitch->setChecked(g_pMainWindow->m_preferences.bCopyRelativePitch);
   ckRelRoll->setChecked(g_pMainWindow->m_preferences.bCopyRelativeRoll);
-  ckNoSurface->setChecked(g_pMainWindow->m_preferences.bPasteNoSurface);
+  ckPasteSurfaceData->setChecked(g_pMainWindow->m_preferences.bPasteSurfaceData);
+  ckPasteAIBehavior->setChecked(g_pMainWindow->m_preferences.bPasteAIBehavior);
+  ckPasteDrawOrder->setChecked(g_pMainWindow->m_preferences.bPasteDrawOrder);
+  ckPasteSigns->setChecked(g_pMainWindow->m_preferences.bPasteSigns);
+  ckPasteAudio->setChecked(g_pMainWindow->m_preferences.bPasteAudio);
 
-  connect(pbClose       , &QPushButton::clicked, this, &CPreferencesDialog::reject);
-  connect(sbMaxHistory  , SIGNAL(valueChanged(int)), this, SLOT(DialogEdited()));
-  connect(ckRelYaw      , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
-  connect(ckRelPitch    , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
-  connect(ckRelRoll     , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
-  connect(ckNoSurface   , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
+  connect(pbClose           , &QPushButton::clicked, this, &CPreferencesDialog::reject);
+  connect(sbMaxHistory      , SIGNAL(valueChanged(int)), this, SLOT(DialogEdited()));
+  connect(ckRelYaw          , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
+  connect(ckRelPitch        , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
+  connect(ckRelRoll         , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
+  connect(ckPasteSurfaceData, &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
+  connect(ckPasteAIBehavior , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
+  connect(ckPasteDrawOrder  , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
+  connect(ckPasteSigns      , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
+  connect(ckPasteAudio      , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
 
   UpdateText();
 }
@@ -43,7 +51,11 @@ void CPreferencesDialog::DialogEdited()
   g_pMainWindow->m_preferences.bCopyRelativeYaw = ckRelYaw->isChecked();
   g_pMainWindow->m_preferences.bCopyRelativePitch = ckRelPitch->isChecked();
   g_pMainWindow->m_preferences.bCopyRelativeRoll = ckRelRoll->isChecked();
-  g_pMainWindow->m_preferences.bPasteNoSurface = ckNoSurface->isChecked();
+  g_pMainWindow->m_preferences.bPasteSurfaceData = ckPasteSurfaceData->isChecked();
+  g_pMainWindow->m_preferences.bPasteAIBehavior = ckPasteAIBehavior->isChecked();
+  g_pMainWindow->m_preferences.bPasteDrawOrder = ckPasteDrawOrder->isChecked();
+  g_pMainWindow->m_preferences.bPasteSigns = ckPasteSigns->isChecked();
+  g_pMainWindow->m_preferences.bPasteAudio = ckPasteAudio->isChecked();
 
   UpdateText();
 }

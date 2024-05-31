@@ -137,7 +137,7 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
   bool bTransparent = uiSurfaceType & SURFACE_FLAG_TRANSPARENT;
   bool bPartialTrans = uiSurfaceType & SURFACE_FLAG_PARTIAL_TRANS;
   bool bApplyTexture = uiSurfaceType & SURFACE_FLAG_APPLY_TEXTURE;
-  uint32 uiTexIndex = uiSurfaceType & SURFACE_TEXTURE_INDEX;
+  uint32 uiTexIndex = uiSurfaceType & SURFACE_MASK_TEXTURE_INDEX;
 
   //right lane takes the second texture on center surface
   //both center lanes only draw one texture each when paired

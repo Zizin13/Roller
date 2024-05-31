@@ -219,7 +219,7 @@ void CEditSurfaceDialog::On21TransparentChecked(bool bChecked)
     m_uiSignedBitValue |= SURFACE_FLAG_TRANSPARENT;
     m_uiSignedBitValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
     int iIndex = 1;
-    m_uiSignedBitValue &= ~SURFACE_TEXTURE_INDEX;
+    m_uiSignedBitValue &= ~SURFACE_MASK_TEXTURE_INDEX;
     m_uiSignedBitValue |= iIndex;
   } else {
     m_uiSignedBitValue &= ~SURFACE_FLAG_TRANSPARENT;
@@ -363,7 +363,7 @@ void CEditSurfaceDialog::On9AnmsLookupChecked(bool bChecked)
 
 void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
 {
-  int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
+  int iIndex = m_uiSignedBitValue & SURFACE_MASK_TEXTURE_INDEX;
 
   if (bChecked) {
     if (m_pTexture && iIndex >= m_pTexture->m_iNumTiles)
@@ -383,19 +383,19 @@ void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
 
 void CEditSurfaceDialog::OnTextureClicked()
 {
-  int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
+  int iIndex = m_uiSignedBitValue & SURFACE_MASK_TEXTURE_INDEX;
   if (m_pTexture && m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE) {
     CTilePicker dlg(this, iIndex, m_pTexture);
     if (dlg.exec()) {
       iIndex = dlg.GetSelected();
-      m_uiSignedBitValue &= ~SURFACE_TEXTURE_INDEX;
+      m_uiSignedBitValue &= ~SURFACE_MASK_TEXTURE_INDEX;
       m_uiSignedBitValue |= iIndex;
     }
   } else {
     CTilePicker dlg(this, iIndex, m_pPalette);
     if (dlg.exec()) {
       iIndex = dlg.GetSelected();
-      m_uiSignedBitValue &= ~SURFACE_TEXTURE_INDEX;
+      m_uiSignedBitValue &= ~SURFACE_MASK_TEXTURE_INDEX;
       m_uiSignedBitValue |= iIndex;
     }
   }
@@ -407,7 +407,7 @@ void CEditSurfaceDialog::OnTextureClicked()
 
 void CEditSurfaceDialog::OnTransparencyTypeChanged(int iIndex)
 {
-  m_uiSignedBitValue &= ~SURFACE_TEXTURE_INDEX;
+  m_uiSignedBitValue &= ~SURFACE_MASK_TEXTURE_INDEX;
   m_uiSignedBitValue |= iIndex;
 
   UpdateDialog();
@@ -491,7 +491,7 @@ void CEditSurfaceDialog::UpdateDialog()
     lblTexture2->show();
     lblTransparency->hide();
     cbTransparency->hide();
-    int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
+    int iIndex = m_uiSignedBitValue & SURFACE_MASK_TEXTURE_INDEX;
     if (iIndex < m_pTexture->m_iNumTiles) {
       QPixmap pixmap;
       pixmap.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_pTileAy[iIndex]));
@@ -514,14 +514,14 @@ void CEditSurfaceDialog::UpdateDialog()
     lblTexture2->hide();
     lblTransparency->show();
     cbTransparency->show();
-    int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
+    int iIndex = m_uiSignedBitValue & SURFACE_MASK_TEXTURE_INDEX;
     BLOCK_SIG_AND_DO(cbTransparency, setCurrentIndex(iIndex));
   } else if (m_pPalette) {
     pbTexture1->show();
     lblTexture2->show();
     lblTransparency->hide();
     cbTransparency->hide();
-    int iIndex = m_uiSignedBitValue & SURFACE_TEXTURE_INDEX;
+    int iIndex = m_uiSignedBitValue & SURFACE_MASK_TEXTURE_INDEX;
     if (iIndex < (int)m_pPalette->m_paletteAy.size()) {
       QPixmap pixmap;
       pixmap.convertFromImage(QtHelpers::GetQImageFromColor(m_pPalette->m_paletteAy[iIndex]));

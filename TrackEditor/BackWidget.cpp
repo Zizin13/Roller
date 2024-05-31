@@ -70,7 +70,7 @@ void CBackWidget::UpdateWidget()
     return;
 
   uint32 uiBackIndex = CTrack::GetSignedBitValueFromInt(m_iBack);
-  uiBackIndex &= SURFACE_TEXTURE_INDEX;
+  uiBackIndex &= SURFACE_MASK_TEXTURE_INDEX;
   if ((int)uiBackIndex < m_pTexture->m_iNumTiles) {
     QPixmap backPixmap;
     backPixmap.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_pTileAy[uiBackIndex]));

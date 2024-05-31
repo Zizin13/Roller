@@ -197,7 +197,7 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
 
     uint32 uiUseTex = GetPols(model)[i].uiTex;
     if (uiUseTex & SURFACE_FLAG_ANMS_LOOKUP && GetAnms(model)) {
-      uiUseTex = GetAnms(model)[uiUseTex & SURFACE_TEXTURE_INDEX].framesAy[0];
+      uiUseTex = GetAnms(model)[uiUseTex & SURFACE_MASK_TEXTURE_INDEX].framesAy[0];
     }
     if (IsSign(model)) {
       if (GetSignTypeFromModel(model).bCanHaveTexture) {
@@ -1599,7 +1599,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                               vertices[i * uiNumVertsPerChunk + 3],
                               vertices[i * uiNumVertsPerChunk + 1], false, false, true);
           if (CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType) & SURFACE_FLAG_BACK) {
-            uint32 uiTexIdx = CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType) & SURFACE_TEXTURE_INDEX;
+            uint32 uiTexIdx = CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType) & SURFACE_MASK_TEXTURE_INDEX;
             CSignMap::iterator it = pTrack->m_backsMap.find(uiTexIdx);
             if (it != pTrack->m_backsMap.end())
               pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(it->second),
@@ -1632,7 +1632,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 2], false, false, true);
           if (CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType) & SURFACE_FLAG_BACK) {
-            uint32 uiTexIdx = CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType) & SURFACE_TEXTURE_INDEX;
+            uint32 uiTexIdx = CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType) & SURFACE_MASK_TEXTURE_INDEX;
             CSignMap::iterator it = pTrack->m_backsMap.find(uiTexIdx);
             if (it != pTrack->m_backsMap.end())
               pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(it->second),
@@ -1769,7 +1769,7 @@ tVertex *CShapeFactory::MakeVertsEnvirFloor(uint32 &numVertices, CTrack *pTrack,
   vertices[2].position = glm::vec3(+fPadding, fEnvirFloorDepth, -fPadding);
   vertices[3].position = glm::vec3(+fPadding, fEnvirFloorDepth, +fPadding);
   pTexture->GetTextureCoordinates(
-    CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iIndex].iEnvironmentFloorType) & SURFACE_TEXTURE_INDEX,
+    CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iIndex].iEnvironmentFloorType) & SURFACE_MASK_TEXTURE_INDEX,
     vertices[0], vertices[1], vertices[2], vertices[3]);
   vertices[0].flags.x = 1.0f;
   vertices[1].flags.x = 1.0f;

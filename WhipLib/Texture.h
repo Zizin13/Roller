@@ -33,7 +33,8 @@
 #define SURFACE_FLAG_PARTIAL_TRANS 0x00000400
 #define SURFACE_FLAG_ANMS_LOOKUP   0x00000200
 #define SURFACE_FLAG_APPLY_TEXTURE 0x00000100
-#define SURFACE_TEXTURE_INDEX      0x000000FF
+#define SURFACE_MASK_FLAGS         0xFFFFFF00
+#define SURFACE_MASK_TEXTURE_INDEX 0x000000FF
 //-------------------------------------------------------------------------------------------------
 class CPalette;
 struct tVertex;

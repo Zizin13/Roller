@@ -53,7 +53,9 @@ tPreferences::tPreferences()
   , bCopyRelativeYaw(true)
   , bCopyRelativePitch(false)
   , bCopyRelativeRoll(false)
+  , bPasteDirection(true)
   , bPasteGeometry(true)
+  , bPasteTextures(true)
   , bPasteSurfaceData(true)
   , bPasteAIBehavior(true)
   , bPasteDrawOrder(true)
@@ -437,6 +439,12 @@ void CMainWindow::OnPaste()
       p->m_clipBoard[i].dPitch = CTrack::ConstrainAngle(p->m_clipBoard[i].dPitch);
       p->m_clipBoard[i].dRoll = CTrack::ConstrainAngle(p->m_clipBoard[i].dRoll);
 
+      if (!m_preferences.bPasteDirection) {
+        p->m_clipBoard[i].iLength               = prevChunk.iLength;
+        p->m_clipBoard[i].dYaw                  = prevChunk.dYaw;
+        p->m_clipBoard[i].dPitch                = prevChunk.dPitch;
+        p->m_clipBoard[i].dRoll                 = prevChunk.dRoll;
+      }
       if (!m_preferences.bPasteGeometry) {
         p->m_clipBoard[i].iLeftShoulderWidth    = prevChunk.iLeftShoulderWidth;
         p->m_clipBoard[i].iLeftLaneWidth        = prevChunk.iLeftLaneWidth;
@@ -444,13 +452,6 @@ void CMainWindow::OnPaste()
         p->m_clipBoard[i].iRightShoulderWidth   = prevChunk.iRightShoulderWidth;
         p->m_clipBoard[i].iLeftShoulderHeight   = prevChunk.iLeftShoulderHeight;
         p->m_clipBoard[i].iRightShoulderHeight  = prevChunk.iRightShoulderHeight;
-        p->m_clipBoard[i].iLength               = prevChunk.iLength;
-        p->m_clipBoard[i].dYaw                  = prevChunk.dYaw;
-        p->m_clipBoard[i].dPitch                = prevChunk.dPitch;
-        p->m_clipBoard[i].dRoll                 = prevChunk.dRoll;
-        p->m_clipBoard[i].iTrackGrip            = prevChunk.iTrackGrip;
-        p->m_clipBoard[i].iLeftShoulderGrip     = prevChunk.iLeftShoulderGrip;
-        p->m_clipBoard[i].iRightShoulderGrip    = prevChunk.iRightShoulderGrip;
         p->m_clipBoard[i].iLUOuterWallHOffset   = prevChunk.iLUOuterWallHOffset;
         p->m_clipBoard[i].iLLOuterWallHOffset   = prevChunk.iLLOuterWallHOffset;
         p->m_clipBoard[i].iLOuterFloorHOffset   = prevChunk.iLOuterFloorHOffset;
@@ -467,6 +468,9 @@ void CMainWindow::OnPaste()
     
       }
       if (!m_preferences.bPasteSurfaceData) {
+        p->m_clipBoard[i].iTrackGrip            = prevChunk.iTrackGrip;
+        p->m_clipBoard[i].iLeftShoulderGrip     = prevChunk.iLeftShoulderGrip;
+        p->m_clipBoard[i].iRightShoulderGrip    = prevChunk.iRightShoulderGrip;
         p->m_clipBoard[i].iLeftSurfaceType      = prevChunk.iLeftSurfaceType;
         p->m_clipBoard[i].iCenterSurfaceType    = prevChunk.iCenterSurfaceType;
         p->m_clipBoard[i].iRightSurfaceType     = prevChunk.iRightSurfaceType;
@@ -547,6 +551,12 @@ void CMainWindow::OnPaste()
     //overwrite data in existing chunks
     int iTrackIdx = sbSelChunksFrom->value(), iClipboardIdx = 0;
     for (; iTrackIdx < sbSelChunksTo->value(); ++iTrackIdx) {
+      if (m_preferences.bPasteDirection) {
+        GetCurrentTrack()->m_chunkAy[iTrackIdx].iLength               = p->m_clipBoard[iClipboardIdx].iLength             ;
+        GetCurrentTrack()->m_chunkAy[iTrackIdx].dYaw                  = p->m_clipBoard[iClipboardIdx].dYaw                ;
+        GetCurrentTrack()->m_chunkAy[iTrackIdx].dPitch                = p->m_clipBoard[iClipboardIdx].dPitch              ;
+        GetCurrentTrack()->m_chunkAy[iTrackIdx].dRoll                 = p->m_clipBoard[iClipboardIdx].dRoll               ;
+      }
       if (m_preferences.bPasteGeometry) {
         GetCurrentTrack()->m_chunkAy[iTrackIdx].iLeftShoulderWidth    = p->m_clipBoard[iClipboardIdx].iLeftShoulderWidth  ;
         GetCurrentTrack()->m_chunkAy[iTrackIdx].iLeftLaneWidth        = p->m_clipBoard[iClipboardIdx].iLeftLaneWidth      ;
@@ -554,13 +564,6 @@ void CMainWindow::OnPaste()
         GetCurrentTrack()->m_chunkAy[iTrackIdx].iRightShoulderWidth   = p->m_clipBoard[iClipboardIdx].iRightShoulderWidth ;
         GetCurrentTrack()->m_chunkAy[iTrackIdx].iLeftShoulderHeight   = p->m_clipBoard[iClipboardIdx].iLeftShoulderHeight ;
         GetCurrentTrack()->m_chunkAy[iTrackIdx].iRightShoulderHeight  = p->m_clipBoard[iClipboardIdx].iRightShoulderHeight;
-        GetCurrentTrack()->m_chunkAy[iTrackIdx].iLength               = p->m_clipBoard[iClipboardIdx].iLength             ;
-        GetCurrentTrack()->m_chunkAy[iTrackIdx].dYaw                  = p->m_clipBoard[iClipboardIdx].dYaw                ;
-        GetCurrentTrack()->m_chunkAy[iTrackIdx].dPitch                = p->m_clipBoard[iClipboardIdx].dPitch              ;
-        GetCurrentTrack()->m_chunkAy[iTrackIdx].dRoll                 = p->m_clipBoard[iClipboardIdx].dRoll               ;
-        GetCurrentTrack()->m_chunkAy[iTrackIdx].iTrackGrip            = p->m_clipBoard[iClipboardIdx].iTrackGrip          ;
-        GetCurrentTrack()->m_chunkAy[iTrackIdx].iLeftShoulderGrip     = p->m_clipBoard[iClipboardIdx].iLeftShoulderGrip   ;
-        GetCurrentTrack()->m_chunkAy[iTrackIdx].iRightShoulderGrip    = p->m_clipBoard[iClipboardIdx].iRightShoulderGrip  ;
         GetCurrentTrack()->m_chunkAy[iTrackIdx].iLUOuterWallHOffset   = p->m_clipBoard[iClipboardIdx].iLUOuterWallHOffset ;
         GetCurrentTrack()->m_chunkAy[iTrackIdx].iLLOuterWallHOffset   = p->m_clipBoard[iClipboardIdx].iLLOuterWallHOffset ;
         GetCurrentTrack()->m_chunkAy[iTrackIdx].iLOuterFloorHOffset   = p->m_clipBoard[iClipboardIdx].iLOuterFloorHOffset ;
@@ -576,6 +579,9 @@ void CMainWindow::OnPaste()
         GetCurrentTrack()->m_chunkAy[iTrackIdx].iRoofHeight           = p->m_clipBoard[iClipboardIdx].iRoofHeight         ;
       }
       if (m_preferences.bPasteSurfaceData) {
+        GetCurrentTrack()->m_chunkAy[iTrackIdx].iTrackGrip            = p->m_clipBoard[iClipboardIdx].iTrackGrip          ;
+        GetCurrentTrack()->m_chunkAy[iTrackIdx].iLeftShoulderGrip     = p->m_clipBoard[iClipboardIdx].iLeftShoulderGrip   ;
+        GetCurrentTrack()->m_chunkAy[iTrackIdx].iRightShoulderGrip    = p->m_clipBoard[iClipboardIdx].iRightShoulderGrip  ;
         GetCurrentTrack()->m_chunkAy[iTrackIdx].iLeftSurfaceType      = p->m_clipBoard[iClipboardIdx].iLeftSurfaceType     ;
         GetCurrentTrack()->m_chunkAy[iTrackIdx].iCenterSurfaceType    = p->m_clipBoard[iClipboardIdx].iCenterSurfaceType   ;
         GetCurrentTrack()->m_chunkAy[iTrackIdx].iRightSurfaceType     = p->m_clipBoard[iClipboardIdx].iRightSurfaceType    ;
@@ -984,7 +990,9 @@ void CMainWindow::LoadSettings()
   m_preferences.bCopyRelativeYaw = settings.value("copy_relative_yaw", m_preferences.bCopyRelativeYaw).toBool();
   m_preferences.bCopyRelativePitch = settings.value("copy_relative_pitch", m_preferences.bCopyRelativePitch).toBool();
   m_preferences.bCopyRelativeRoll = settings.value("copy_relative_roll", m_preferences.bCopyRelativeRoll).toBool();
+  m_preferences.bPasteDirection = settings.value("paste_direction", m_preferences.bPasteDirection).toBool();
   m_preferences.bPasteGeometry = settings.value("paste_geometry", m_preferences.bPasteGeometry).toBool();
+  m_preferences.bPasteTextures = settings.value("paste_textures", m_preferences.bPasteTextures).toBool();
   m_preferences.bPasteSurfaceData = settings.value("paste_surface", m_preferences.bPasteSurfaceData).toBool();
   m_preferences.bPasteAIBehavior = settings.value("paste_ai", m_preferences.bPasteAIBehavior).toBool();
   m_preferences.bPasteDrawOrder = settings.value("paste_draw_order", m_preferences.bPasteDrawOrder).toBool();
@@ -1028,7 +1036,9 @@ void CMainWindow::SaveSettings()
   settings.setValue("copy_relative_yaw", m_preferences.bCopyRelativeYaw);
   settings.setValue("copy_relative_pitch", m_preferences.bCopyRelativePitch);
   settings.setValue("copy_relative_roll", m_preferences.bCopyRelativeRoll);
+  settings.setValue("paste_direction", m_preferences.bPasteDirection);
   settings.setValue("paste_geometry", m_preferences.bPasteGeometry);
+  settings.setValue("paste_textures", m_preferences.bPasteTextures);
   settings.setValue("paste_surface", m_preferences.bPasteSurfaceData);
   settings.setValue("paste_ai", m_preferences.bPasteAIBehavior);
   settings.setValue("paste_draw_order", m_preferences.bPasteDrawOrder);

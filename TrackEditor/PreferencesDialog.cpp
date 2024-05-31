@@ -19,7 +19,9 @@ CPreferencesDialog::CPreferencesDialog(QWidget *pParent)
   ckRelYaw->setChecked(g_pMainWindow->m_preferences.bCopyRelativeYaw);
   ckRelPitch->setChecked(g_pMainWindow->m_preferences.bCopyRelativePitch);
   ckRelRoll->setChecked(g_pMainWindow->m_preferences.bCopyRelativeRoll);
+  ckPasteDirection->setChecked(g_pMainWindow->m_preferences.bPasteDirection);
   ckPasteGeometry->setChecked(g_pMainWindow->m_preferences.bPasteGeometry);
+  ckPasteTextures->setChecked(g_pMainWindow->m_preferences.bPasteTextures);
   ckPasteSurfaceData->setChecked(g_pMainWindow->m_preferences.bPasteSurfaceData);
   ckPasteAIBehavior->setChecked(g_pMainWindow->m_preferences.bPasteAIBehavior);
   ckPasteDrawOrder->setChecked(g_pMainWindow->m_preferences.bPasteDrawOrder);
@@ -33,7 +35,9 @@ CPreferencesDialog::CPreferencesDialog(QWidget *pParent)
   connect(ckRelYaw          , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
   connect(ckRelPitch        , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
   connect(ckRelRoll         , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
+  connect(ckPasteDirection  , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
   connect(ckPasteGeometry   , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
+  connect(ckPasteTextures   , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
   connect(ckPasteSurfaceData, &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
   connect(ckPasteAIBehavior , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
   connect(ckPasteDrawOrder  , &QCheckBox::toggled, this, &CPreferencesDialog::DialogEdited);
@@ -75,7 +79,9 @@ void CPreferencesDialog::DialogEdited()
   g_pMainWindow->m_preferences.bCopyRelativeYaw = ckRelYaw->isChecked();
   g_pMainWindow->m_preferences.bCopyRelativePitch = ckRelPitch->isChecked();
   g_pMainWindow->m_preferences.bCopyRelativeRoll = ckRelRoll->isChecked();
+  g_pMainWindow->m_preferences.bPasteDirection = ckPasteDirection->isChecked();
   g_pMainWindow->m_preferences.bPasteGeometry = ckPasteGeometry->isChecked();
+  g_pMainWindow->m_preferences.bPasteTextures = ckPasteTextures->isChecked();
   g_pMainWindow->m_preferences.bPasteSurfaceData = ckPasteSurfaceData->isChecked();
   g_pMainWindow->m_preferences.bPasteAIBehavior = ckPasteAIBehavior->isChecked();
   g_pMainWindow->m_preferences.bPasteDrawOrder = ckPasteDrawOrder->isChecked();

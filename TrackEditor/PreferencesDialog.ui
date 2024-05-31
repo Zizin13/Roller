@@ -66,6 +66,41 @@
       <string>Copy/Paste Behavior</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
+      <item row="6" column="1">
+       <widget class="QCheckBox" name="ckPasteAudio">
+        <property name="text">
+         <string>Paste Audio</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QCheckBox" name="ckPasteAIBehavior">
+        <property name="text">
+         <string>Paste AI behavior</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="2">
+       <widget class="QCheckBox" name="ckPasteSigns">
+        <property name="text">
+         <string>Paste Signs</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="3">
+       <widget class="Line" name="line_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QCheckBox" name="ckRelRoll">
+        <property name="text">
+         <string>Relative Roll</string>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="1">
        <widget class="QCheckBox" name="ckRelPitch">
         <property name="text">
@@ -73,10 +108,17 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="2">
-       <widget class="QCheckBox" name="ckPasteAIBehavior">
+      <item row="3" column="0" colspan="3">
+       <widget class="Line" name="line">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QCheckBox" name="ckPasteDrawOrder">
         <property name="text">
-         <string>Paste AI behavior</string>
+         <string>Paste Draw Order</string>
         </property>
        </widget>
       </item>
@@ -90,38 +132,10 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
-       <widget class="QCheckBox" name="ckRelRoll">
-        <property name="text">
-         <string>Relative Roll</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0">
-       <widget class="QCheckBox" name="ckPasteDrawOrder">
-        <property name="text">
-         <string>Paste Draw Order</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QCheckBox" name="ckPasteGeometry">
-        <property name="text">
-         <string>Paste Geometry Data</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
        <widget class="QRadioButton" name="rbPasteNew">
         <property name="text">
          <string>Paste New Chunks</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2">
-       <widget class="QCheckBox" name="ckPasteSigns">
-        <property name="text">
-         <string>Paste Signs</string>
         </property>
        </widget>
       </item>
@@ -132,31 +146,31 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0" colspan="3">
-       <widget class="Line" name="line">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
       <item row="5" column="1">
-       <widget class="QCheckBox" name="ckPasteAudio">
-        <property name="text">
-         <string>Paste Audio</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
        <widget class="QCheckBox" name="ckPasteSurfaceData">
         <property name="text">
          <string>Paste Surface Data</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0" colspan="3">
-       <widget class="Line" name="line_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="ckPasteDirection">
+        <property name="text">
+         <string>Paste Directional Data</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QCheckBox" name="ckPasteGeometry">
+        <property name="text">
+         <string>Paste Geometry Sizes</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QCheckBox" name="ckPasteTextures">
+        <property name="text">
+         <string>Paste Texture Indexes</string>
         </property>
        </widget>
       </item>

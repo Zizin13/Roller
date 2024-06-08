@@ -222,12 +222,7 @@ void CEditSignWidget::EditClicked()
       || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pBld, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iSignTexture);
-  if (dlg.exec()) {
-    for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignTexture = dlg.GetValue();
-    }
-  }
+  CEditSurfaceDialog dlg(this, eSurfaceField::SURFACE_SIGN);
 
   g_pMainWindow->SaveHistory("Changed sign texture");
   g_pMainWindow->UpdateWindow();

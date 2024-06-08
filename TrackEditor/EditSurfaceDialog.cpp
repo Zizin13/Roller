@@ -5,21 +5,20 @@
 #include "TilePicker.h"
 #include "Track.h"
 #include "QtHelpers.h"
+#include "MainWindow.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
   #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
 //-------------------------------------------------------------------------------------------------
 
-CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, CPalette *pPalette, int iValue, 
+CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, eSurfaceField field, 
                                        bool bShowDisable, const QString &sDisableEffects, bool bShowDisableAttach)
   : QDialog(pParent)
-  , m_pTexture(pTexture)
-  , m_pPalette(pPalette)
+  , m_field(field)
   , m_bShowDisable(bShowDisable)
   , m_bShowDisableAttach(bShowDisableAttach)
 {
-  m_uiSignedBitValue = CTrack::GetSignedBitValueFromInt(iValue);
   setupUi(this);
 
   ckDisable->setVisible(bShowDisable);
@@ -62,7 +61,6 @@ CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, CPa
   connect(cbTransparency, SIGNAL(currentIndexChanged(int)), this, SLOT(OnTransparencyTypeChanged(int)));
 
   connect(pbCancel, &QPushButton::clicked, this, &CEditSurfaceDialog::reject);
-  connect(pbApply, &QPushButton::clicked, this, &CEditSurfaceDialog::accept);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -74,19 +72,25 @@ CEditSurfaceDialog::~CEditSurfaceDialog()
 
 //-------------------------------------------------------------------------------------------------
 
-int CEditSurfaceDialog::GetValue()
-{
-  return CTrack::GetIntValueFromSignedBit(m_uiSignedBitValue);
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CEditSurfaceDialog::OnDisableChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue = CTrack::GetSignedBitValueFromInt(-1);
-  else
-    m_uiSignedBitValue = 0;
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+
+  if (!g_pMainWindow->GetCurrentTrack()
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+    return;
+
+  for (int i = iFrom; i <= iTo; ++i) {
+    if (bChecked)
+      GetValue(i) = -1;
+    else
+      GetValue(i) = 0;
+  }
+
+  g_pMainWindow->SaveHistory("Changed surface");
+  g_pMainWindow->UpdateWindow();
   UpdateDialog();
 }
 
@@ -94,10 +98,23 @@ void CEditSurfaceDialog::OnDisableChecked(bool bChecked)
 
 void CEditSurfaceDialog::OnDisableAttachChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue = CTrack::GetSignedBitValueFromInt(-2);
-  else
-    m_uiSignedBitValue = 0;
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+
+  if (!g_pMainWindow->GetCurrentTrack()
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+    return;
+
+  for (int i = iFrom; i <= iTo; ++i) {
+    if (bChecked)
+      GetValue(i) = -2;
+    else
+      GetValue(i) = 0;
+  }
+
+  g_pMainWindow->SaveHistory("Changed surface");
+  g_pMainWindow->UpdateWindow();
   UpdateDialog();
 }
 
@@ -105,125 +122,104 @@ void CEditSurfaceDialog::OnDisableAttachChecked(bool bChecked)
 
 void CEditSurfaceDialog::On31WallChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_WALL_31;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_WALL_31;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_WALL_31, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On30BounceChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_BOUNCE_30;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_BOUNCE_30;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_BOUNCE_30, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On29EchoChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_ECHO;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_ECHO;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_ECHO, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On28Checked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_28;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_28;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_28, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On27PairNextChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_PAIR_NEXT_TEX;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_PAIR_NEXT_TEX;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_PAIR_NEXT_TEX, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On26Checked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_26;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_26;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_26, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On25PitChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_PIT;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_PIT;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_PIT, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On24YellowMapChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_YELLOW_MAP;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_YELLOW_MAP;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_YELLOW_MAP, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On23Checked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_23;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_23;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_23, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On22WallChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_WALL_22;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_WALL_22;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_WALL_22, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On21TransparentChecked(bool bChecked)
 {
-  if (bChecked) {
-    m_uiSignedBitValue |= SURFACE_FLAG_TRANSPARENT;
-    m_uiSignedBitValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
-    int iIndex = 1;
-    m_uiSignedBitValue &= ~SURFACE_MASK_TEXTURE_INDEX;
-    m_uiSignedBitValue |= iIndex;
-  } else {
-    m_uiSignedBitValue &= ~SURFACE_FLAG_TRANSPARENT;
+  UpdateDialog();
+
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+
+  if (!g_pMainWindow->GetCurrentTrack()
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+    return;
+
+  for (int i = iFrom; i <= iTo; ++i) {
+    uint32 uiValue = CTrack::GetSignedBitValueFromInt(GetValue(i));
+
+    if (bChecked) {
+      uiValue |= SURFACE_FLAG_TRANSPARENT;
+      uiValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
+      int iIndex = 1;
+      uiValue &= ~SURFACE_MASK_TEXTURE_INDEX;
+      uiValue |= iIndex;
+    } else {
+      uiValue &= ~SURFACE_FLAG_TRANSPARENT;
+    }
+
+    GetValue(i) = CTrack::GetIntValueFromSignedBit(uiValue);
   }
+
+  g_pMainWindow->SaveHistory("Changed surface");
+  g_pMainWindow->UpdateWindow();
   UpdateDialog();
 }
 
@@ -231,151 +227,119 @@ void CEditSurfaceDialog::On21TransparentChecked(bool bChecked)
 
 void CEditSurfaceDialog::On20BounceChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_BOUNCE_20;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_BOUNCE_20;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_BOUNCE_20, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On19NonMagneticChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_NON_MAGNETIC;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_NON_MAGNETIC;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_NON_MAGNETIC, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On18FlipVertChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_FLIP_VERT;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_FLIP_VERT;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_FLIP_VERT, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On17NonSolidChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_NON_SOLID;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_NON_SOLID;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_NON_SOLID, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On16TexturePairChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_TEXTURE_PAIR;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_TEXTURE_PAIR;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_TEXTURE_PAIR, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On15LiveryChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_ANMS_LIVERY;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_ANMS_LIVERY;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_ANMS_LIVERY, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On14Checked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_14;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_14;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_14, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On13MotionChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_ANMS_MOTION;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_ANMS_MOTION;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_ANMS_MOTION, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On12FlipHorizChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_FLIP_HORIZ;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_FLIP_HORIZ;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_FLIP_HORIZ, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On11BackChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_BACK;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_BACK;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_BACK, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On10PartialTransChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_PARTIAL_TRANS;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_PARTIAL_TRANS;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_PARTIAL_TRANS, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On9AnmsLookupChecked(bool bChecked)
 {
-  if (bChecked)
-    m_uiSignedBitValue |= SURFACE_FLAG_ANMS_LOOKUP;
-  else
-    m_uiSignedBitValue &= ~SURFACE_FLAG_ANMS_LOOKUP;
-  UpdateDialog();
+  UpdateValueHelper(SURFACE_FLAG_ANMS_LOOKUP, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
 {
-  int iIndex = m_uiSignedBitValue & SURFACE_MASK_TEXTURE_INDEX;
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
 
-  if (bChecked) {
-    if (m_pTexture && iIndex >= m_pTexture->m_iNumTiles)
-      m_uiSignedBitValue = 0;
-    m_uiSignedBitValue |= SURFACE_FLAG_APPLY_TEXTURE;
-    m_uiSignedBitValue &= ~SURFACE_FLAG_TRANSPARENT;
-  } else if (m_pPalette) {
-    if (m_pPalette && iIndex >= (int)m_pPalette->m_paletteAy.size())
-      m_uiSignedBitValue = 0;
-    m_uiSignedBitValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
+  if (!g_pMainWindow->GetCurrentTrack()
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+    return;
+
+  for (int i = iFrom; i <= iTo; ++i) {
+    uint32 uiValue = CTrack::GetSignedBitValueFromInt(GetValue(i));
+
+    int iIndex = uiValue & SURFACE_MASK_TEXTURE_INDEX;
+
+    if (bChecked) {
+      if (iIndex >= g_pMainWindow->GetCurrentTrack()->m_pTex->m_iNumTiles)
+        uiValue = 0;
+      uiValue |= SURFACE_FLAG_APPLY_TEXTURE;
+      uiValue &= ~SURFACE_FLAG_TRANSPARENT;
+    } else {
+      if (iIndex >= (int)g_pMainWindow->GetCurrentTrack()->m_pPal->m_paletteAy.size())
+        uiValue = 0;
+      uiValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
+    }
+
+    GetValue(i) = CTrack::GetIntValueFromSignedBit(uiValue);
   }
 
+  g_pMainWindow->SaveHistory("Changed surface");
+  g_pMainWindow->UpdateWindow();
   UpdateDialog();
 }
 
@@ -383,23 +347,43 @@ void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
 
 void CEditSurfaceDialog::OnTextureClicked()
 {
-  int iIndex = m_uiSignedBitValue & SURFACE_MASK_TEXTURE_INDEX;
-  if (m_pTexture && m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE) {
-    CTilePicker dlg(this, iIndex, m_pTexture);
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+
+  if (!g_pMainWindow->GetCurrentTrack()
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+    return;
+
+  uint32 uiFromValue = CTrack::GetSignedBitValueFromInt(GetValue(iFrom));
+  int iIndex = uiFromValue & SURFACE_MASK_TEXTURE_INDEX;
+  if (uiFromValue & SURFACE_FLAG_APPLY_TEXTURE) {
+    CTilePicker dlg(this, iIndex, g_pMainWindow->GetCurrentTrack()->m_pTex);
     if (dlg.exec()) {
       iIndex = dlg.GetSelected();
-      m_uiSignedBitValue &= ~SURFACE_MASK_TEXTURE_INDEX;
-      m_uiSignedBitValue |= iIndex;
     }
   } else {
-    CTilePicker dlg(this, iIndex, m_pPalette);
+    CTilePicker dlg(this, iIndex, g_pMainWindow->GetCurrentTrack()->m_pPal);
     if (dlg.exec()) {
       iIndex = dlg.GetSelected();
-      m_uiSignedBitValue &= ~SURFACE_MASK_TEXTURE_INDEX;
-      m_uiSignedBitValue |= iIndex;
     }
   }
 
+  for (int i = iFrom; i <= iTo; ++i) {
+    uint32 uiValue = CTrack::GetSignedBitValueFromInt(GetValue(i));
+    uiValue &= ~SURFACE_MASK_TEXTURE_INDEX;
+    uiValue |= iIndex;
+
+    if (uiFromValue & SURFACE_FLAG_APPLY_TEXTURE)
+      uiValue |= SURFACE_FLAG_APPLY_TEXTURE;
+    else
+      uiValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
+
+    GetValue(i) = CTrack::GetIntValueFromSignedBit(uiValue);
+  }
+
+  g_pMainWindow->SaveHistory("Changed surface");
+  g_pMainWindow->UpdateWindow();
   UpdateDialog();
 }
 
@@ -407,44 +391,119 @@ void CEditSurfaceDialog::OnTextureClicked()
 
 void CEditSurfaceDialog::OnTransparencyTypeChanged(int iIndex)
 {
-  m_uiSignedBitValue &= ~SURFACE_MASK_TEXTURE_INDEX;
-  m_uiSignedBitValue |= iIndex;
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
 
+  if (!g_pMainWindow->GetCurrentTrack()
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+    return;
+
+  for (int i = iFrom; i <= iTo; ++i) {
+    uint32 uiValue = CTrack::GetSignedBitValueFromInt(GetValue(i));
+
+    uiValue &= ~SURFACE_MASK_TEXTURE_INDEX;
+    uiValue |= iIndex;
+
+    GetValue(i) = CTrack::GetIntValueFromSignedBit(uiValue);
+  }
+
+  g_pMainWindow->SaveHistory("Changed surface");
+  g_pMainWindow->UpdateWindow();
   UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CEditSurfaceDialog::UpdateValueHelper(uint32 uiFlag, bool bChecked)
+{
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+
+  if (!g_pMainWindow->GetCurrentTrack()
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+    return;
+
+  for (int i = iFrom; i <= iTo; ++i) {
+    uint32 uiValue = CTrack::GetSignedBitValueFromInt(GetValue(i));
+
+    if (bChecked)
+      uiValue |= uiFlag;
+    else
+      uiValue &= ~uiFlag;
+
+    GetValue(i) = CTrack::GetIntValueFromSignedBit(uiValue);
+  }
+
+  g_pMainWindow->SaveHistory("Changed surface");
+  g_pMainWindow->UpdateWindow();
+  UpdateDialog();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+int &CEditSurfaceDialog::GetValue(int i)
+{
+  switch (m_field) {
+    case SURFACE_CENTER:    return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iCenterSurfaceType;     break;
+    case SURFACE_LSHOULDER: return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftSurfaceType;       break;
+    case SURFACE_RSHOULDER: return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightSurfaceType;      break;
+    case SURFACE_LWALL:     return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftWallType;          break;
+    case SURFACE_RWALL:     return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightWallType;         break;
+    case SURFACE_ROOF:      return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRoofType;              break;
+    case SURFACE_LUOWALL:   return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLUOuterWallType;       break;
+    case SURFACE_LLOWALL:   return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLLOuterWallType;       break;
+    case SURFACE_OFLOOR:    return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iOuterFloorType;        break;
+    case SURFACE_RLOWALL:   return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRLOuterWallType;       break;
+    case SURFACE_RUOWALL:   return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRUOuterWallType;       break;
+    case SURFACE_ENVFLOOR:  return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iEnvironmentFloorType;  break;
+    case SURFACE_SIGN:      return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignTexture;           break;
+    default: return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iEnvironmentFloorType;
+  }
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::UpdateDialog()
 {
-  int iValue = CTrack::GetIntValueFromSignedBit(m_uiSignedBitValue);
+  int iFrom = g_pMainWindow->GetSelFrom();
+  int iTo = g_pMainWindow->GetSelTo();
+
+  if (!g_pMainWindow->GetCurrentTrack()
+      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+    return;
+
+  int iValue = GetValue(iFrom);
+  uint32 uiValue = CTrack::GetSignedBitValueFromInt(iValue);
 
   BLOCK_SIG_AND_DO(ckDisable            , setChecked(iValue == -1));
   BLOCK_SIG_AND_DO(ckDisableAttach      , setChecked(iValue == -2));
-  BLOCK_SIG_AND_DO(ck31Wall             , setChecked(m_uiSignedBitValue & SURFACE_FLAG_WALL_31));
-  BLOCK_SIG_AND_DO(ck30Bounce           , setChecked(m_uiSignedBitValue & SURFACE_FLAG_BOUNCE_30));
-  BLOCK_SIG_AND_DO(ck29Echo             , setChecked(m_uiSignedBitValue & SURFACE_FLAG_ECHO));
-  BLOCK_SIG_AND_DO(ck28                 , setChecked(m_uiSignedBitValue & SURFACE_FLAG_28));
-  BLOCK_SIG_AND_DO(ck27PairNext         , setChecked(m_uiSignedBitValue & SURFACE_FLAG_PAIR_NEXT_TEX));
-  BLOCK_SIG_AND_DO(ck26                 , setChecked(m_uiSignedBitValue & SURFACE_FLAG_26));
-  BLOCK_SIG_AND_DO(ck25Pit              , setChecked(m_uiSignedBitValue & SURFACE_FLAG_PIT));
-  BLOCK_SIG_AND_DO(ck24Yellow           , setChecked(m_uiSignedBitValue & SURFACE_FLAG_YELLOW_MAP));
-  BLOCK_SIG_AND_DO(ck23                 , setChecked(m_uiSignedBitValue & SURFACE_FLAG_23));
-  BLOCK_SIG_AND_DO(ck22Wall             , setChecked(m_uiSignedBitValue & SURFACE_FLAG_WALL_22));
-  BLOCK_SIG_AND_DO(ck21Transparent      , setChecked(m_uiSignedBitValue & SURFACE_FLAG_TRANSPARENT));
-  BLOCK_SIG_AND_DO(ck20Bounce           , setChecked(m_uiSignedBitValue & SURFACE_FLAG_BOUNCE_20));
-  BLOCK_SIG_AND_DO(ck19NonMagnetic      , setChecked(m_uiSignedBitValue & SURFACE_FLAG_NON_MAGNETIC));
-  BLOCK_SIG_AND_DO(ck18FlipVertically   , setChecked(m_uiSignedBitValue & SURFACE_FLAG_FLIP_VERT));
-  BLOCK_SIG_AND_DO(ck17NonSolid         , setChecked(m_uiSignedBitValue & SURFACE_FLAG_NON_SOLID));
-  BLOCK_SIG_AND_DO(ck16TexturePair      , setChecked(m_uiSignedBitValue & SURFACE_FLAG_TEXTURE_PAIR));
-  BLOCK_SIG_AND_DO(ck15Livery           , setChecked(m_uiSignedBitValue & SURFACE_FLAG_ANMS_LIVERY));
-  BLOCK_SIG_AND_DO(ck14                 , setChecked(m_uiSignedBitValue & SURFACE_FLAG_14));
-  BLOCK_SIG_AND_DO(ck13Motion           , setChecked(m_uiSignedBitValue & SURFACE_FLAG_ANMS_MOTION));
-  BLOCK_SIG_AND_DO(ck12FlipHorizontally , setChecked(m_uiSignedBitValue & SURFACE_FLAG_FLIP_HORIZ));
-  BLOCK_SIG_AND_DO(ck11Back             , setChecked(m_uiSignedBitValue & SURFACE_FLAG_BACK));
-  BLOCK_SIG_AND_DO(ck10PartialTrans     , setChecked(m_uiSignedBitValue & SURFACE_FLAG_PARTIAL_TRANS));
-  BLOCK_SIG_AND_DO(ck9AnmsLookup        , setChecked(m_uiSignedBitValue & SURFACE_FLAG_ANMS_LOOKUP));
-  BLOCK_SIG_AND_DO(ck8ApplyTexture      , setChecked(m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE));
+  BLOCK_SIG_AND_DO(ck31Wall             , setChecked(uiValue & SURFACE_FLAG_WALL_31));
+  BLOCK_SIG_AND_DO(ck30Bounce           , setChecked(uiValue & SURFACE_FLAG_BOUNCE_30));
+  BLOCK_SIG_AND_DO(ck29Echo             , setChecked(uiValue & SURFACE_FLAG_ECHO));
+  BLOCK_SIG_AND_DO(ck28                 , setChecked(uiValue & SURFACE_FLAG_28));
+  BLOCK_SIG_AND_DO(ck27PairNext         , setChecked(uiValue & SURFACE_FLAG_PAIR_NEXT_TEX));
+  BLOCK_SIG_AND_DO(ck26                 , setChecked(uiValue & SURFACE_FLAG_26));
+  BLOCK_SIG_AND_DO(ck25Pit              , setChecked(uiValue & SURFACE_FLAG_PIT));
+  BLOCK_SIG_AND_DO(ck24Yellow           , setChecked(uiValue & SURFACE_FLAG_YELLOW_MAP));
+  BLOCK_SIG_AND_DO(ck23                 , setChecked(uiValue & SURFACE_FLAG_23));
+  BLOCK_SIG_AND_DO(ck22Wall             , setChecked(uiValue & SURFACE_FLAG_WALL_22));
+  BLOCK_SIG_AND_DO(ck21Transparent      , setChecked(uiValue & SURFACE_FLAG_TRANSPARENT));
+  BLOCK_SIG_AND_DO(ck20Bounce           , setChecked(uiValue & SURFACE_FLAG_BOUNCE_20));
+  BLOCK_SIG_AND_DO(ck19NonMagnetic      , setChecked(uiValue & SURFACE_FLAG_NON_MAGNETIC));
+  BLOCK_SIG_AND_DO(ck18FlipVertically   , setChecked(uiValue & SURFACE_FLAG_FLIP_VERT));
+  BLOCK_SIG_AND_DO(ck17NonSolid         , setChecked(uiValue & SURFACE_FLAG_NON_SOLID));
+  BLOCK_SIG_AND_DO(ck16TexturePair      , setChecked(uiValue & SURFACE_FLAG_TEXTURE_PAIR));
+  BLOCK_SIG_AND_DO(ck15Livery           , setChecked(uiValue & SURFACE_FLAG_ANMS_LIVERY));
+  BLOCK_SIG_AND_DO(ck14                 , setChecked(uiValue & SURFACE_FLAG_14));
+  BLOCK_SIG_AND_DO(ck13Motion           , setChecked(uiValue & SURFACE_FLAG_ANMS_MOTION));
+  BLOCK_SIG_AND_DO(ck12FlipHorizontally , setChecked(uiValue & SURFACE_FLAG_FLIP_HORIZ));
+  BLOCK_SIG_AND_DO(ck11Back             , setChecked(uiValue & SURFACE_FLAG_BACK));
+  BLOCK_SIG_AND_DO(ck10PartialTrans     , setChecked(uiValue & SURFACE_FLAG_PARTIAL_TRANS));
+  BLOCK_SIG_AND_DO(ck9AnmsLookup        , setChecked(uiValue & SURFACE_FLAG_ANMS_LOOKUP));
+  BLOCK_SIG_AND_DO(ck8ApplyTexture      , setChecked(uiValue & SURFACE_FLAG_APPLY_TEXTURE));
 
   bool bEnableSurface = true;
   if (m_bShowDisable)
@@ -480,27 +539,27 @@ void CEditSurfaceDialog::UpdateDialog()
 
   //qstring::number makes negative values 64-bit for some reason
   char szBuf[128];
-  snprintf(szBuf, sizeof(szBuf), " (%#010x)", m_uiSignedBitValue);
+  snprintf(szBuf, sizeof(szBuf), " (%#010x)", uiValue);
 
   leValue->setFont(QFont("Courier", 8));
   leValue->setText(QString::number(iValue).leftJustified(10, ' ') + szBuf);
 
   //textures
-  if (m_pTexture && m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE) {
+  if (uiValue & SURFACE_FLAG_APPLY_TEXTURE) {
     pbTexture1->show();
     lblTexture2->show();
     lblTransparency->hide();
     cbTransparency->hide();
-    int iIndex = m_uiSignedBitValue & SURFACE_MASK_TEXTURE_INDEX;
-    if (iIndex < m_pTexture->m_iNumTiles) {
+    int iIndex = uiValue & SURFACE_MASK_TEXTURE_INDEX;
+    if (iIndex < g_pMainWindow->GetCurrentTrack()->m_pTex->m_iNumTiles) {
       QPixmap pixmap;
-      pixmap.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_pTileAy[iIndex]));
+      pixmap.convertFromImage(QtHelpers::GetQImageFromTile(g_pMainWindow->GetCurrentTrack()->m_pTex->m_pTileAy[iIndex]));
       pbTexture1->setIcon(pixmap);
 
-      if (m_uiSignedBitValue & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
-        if (m_uiSignedBitValue & SURFACE_FLAG_PAIR_NEXT_TEX) {
+      if (uiValue & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
+        if (uiValue & SURFACE_FLAG_PAIR_NEXT_TEX) {
           QPixmap pixmap2;
-          pixmap2.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_pTileAy[iIndex + 1]));
+          pixmap2.convertFromImage(QtHelpers::GetQImageFromTile(g_pMainWindow->GetCurrentTrack()->m_pTex->m_pTileAy[iIndex + 1]));
           lblTexture2->setPixmap(pixmap2);
         } else {
           lblTexture2->setPixmap(pixmap);
@@ -509,22 +568,22 @@ void CEditSurfaceDialog::UpdateDialog()
         lblTexture2->setPixmap(QPixmap());
       }
     }
-  } else if (m_uiSignedBitValue & SURFACE_FLAG_TRANSPARENT) {
+  } else if (uiValue & SURFACE_FLAG_TRANSPARENT) {
     pbTexture1->hide();
     lblTexture2->hide();
     lblTransparency->show();
     cbTransparency->show();
-    int iIndex = m_uiSignedBitValue & SURFACE_MASK_TEXTURE_INDEX;
+    int iIndex = uiValue & SURFACE_MASK_TEXTURE_INDEX;
     BLOCK_SIG_AND_DO(cbTransparency, setCurrentIndex(iIndex));
-  } else if (m_pPalette) {
+  } else {
     pbTexture1->show();
     lblTexture2->show();
     lblTransparency->hide();
     cbTransparency->hide();
-    int iIndex = m_uiSignedBitValue & SURFACE_MASK_TEXTURE_INDEX;
-    if (iIndex < (int)m_pPalette->m_paletteAy.size()) {
+    int iIndex = uiValue & SURFACE_MASK_TEXTURE_INDEX;
+    if (iIndex < (int)g_pMainWindow->GetCurrentTrack()->m_pPal->m_paletteAy.size()) {
       QPixmap pixmap;
-      pixmap.convertFromImage(QtHelpers::GetQImageFromColor(m_pPalette->m_paletteAy[iIndex]));
+      pixmap.convertFromImage(QtHelpers::GetQImageFromColor(g_pMainWindow->GetCurrentTrack()->m_pPal->m_paletteAy[iIndex]));
       pbTexture1->setIcon(pixmap);
     } else {
       pbTexture1->setIcon(QPixmap());

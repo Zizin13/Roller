@@ -726,267 +726,96 @@ void CEditGeometryWidget::AILine4Changed(int iValue)
 
 void CEditGeometryWidget::EditCSurface()
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-  
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iCenterSurfaceType, true, "(also disables outer walls if floor is -2)");
-  if (dlg.exec()) {
-    for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iCenterSurfaceType = dlg.GetValue();
-    }
-  }
-  g_pMainWindow->SaveHistory("Changed center surface");
-  g_pMainWindow->UpdateWindow();
+  CEditSurfaceDialog dlg(this, eSurfaceField::SURFACE_CENTER, true, "(also disables outer walls if floor is -2)");
+  dlg.exec();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditGeometryWidget::EditLShoulder()
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLeftSurfaceType, true, "(also disables outer walls if floor is -2)");
-  if (dlg.exec()) {
-    for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftSurfaceType = dlg.GetValue();
-    }
-  }
-  g_pMainWindow->SaveHistory("Changed left shoulder surface");
-  g_pMainWindow->UpdateWindow();
+  CEditSurfaceDialog dlg(this, eSurfaceField::SURFACE_LSHOULDER, true, "(also disables outer walls if floor is -2)");
+  dlg.exec();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditGeometryWidget::EditRShoulder()
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRightSurfaceType, true, "(also disables outer walls if floor is -2)");
-  if (dlg.exec()) {
-    for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightSurfaceType = dlg.GetValue();
-    }
-  }
-  g_pMainWindow->SaveHistory("Changed right shoulder surface");
-  g_pMainWindow->UpdateWindow();
+  CEditSurfaceDialog dlg(this, eSurfaceField::SURFACE_RSHOULDER, true, "(also disables outer walls if floor is -2)");
+  dlg.exec();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditGeometryWidget::EditLWall()
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLeftWallType, true, "(also disables roof)");
-  if (dlg.exec()) {
-    for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftWallType = dlg.GetValue();
-    }
-  }
-  g_pMainWindow->SaveHistory("Changed left wall surface");
-  g_pMainWindow->UpdateWindow();
+  CEditSurfaceDialog dlg(this, eSurfaceField::SURFACE_LWALL, true, "(also disables roof)");
+  dlg.exec();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditGeometryWidget::EditRWall()
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRightWallType, true, "(also disables roof)");
-  if (dlg.exec()) {
-    for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightWallType = dlg.GetValue();
-    }
-  }
-  g_pMainWindow->SaveHistory("Changed right wall surface");
-  g_pMainWindow->UpdateWindow();
+  CEditSurfaceDialog dlg(this, eSurfaceField::SURFACE_RWALL, true, "(also disables roof)");
+  dlg.exec();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditGeometryWidget::EditRoof()
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRoofType, true);
-  if (dlg.exec()) {
-    for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRoofType = dlg.GetValue();
-    }
-  }
-  g_pMainWindow->SaveHistory("Changed roof surface");
-  g_pMainWindow->UpdateWindow();
+  CEditSurfaceDialog dlg(this, eSurfaceField::SURFACE_ROOF, true);
+  dlg.exec();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditGeometryWidget::EditLUOWall()
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLUOuterWallType, true);
-  if (dlg.exec()) {
-    for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLUOuterWallType = dlg.GetValue();
-    }
-  }
-  g_pMainWindow->SaveHistory("Changed luowall surface");
-  g_pMainWindow->UpdateWindow();
+  CEditSurfaceDialog dlg(this, eSurfaceField::SURFACE_LUOWALL, true);
+  dlg.exec();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditGeometryWidget::EditLLOWall()
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iLLOuterWallType, true, "(also disables upper wall)");
-  if (dlg.exec()) {
-    for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLLOuterWallType = dlg.GetValue();
-    }
-  }
-  g_pMainWindow->SaveHistory("Changed llowall surface");
-  g_pMainWindow->UpdateWindow();
+  CEditSurfaceDialog dlg(this, eSurfaceField::SURFACE_LLOWALL, true, "(also disables upper wall)");
+  dlg.exec();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditGeometryWidget::EditRLOWall()
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRLOuterWallType, true, "(also disables upper wall)");
-  if (dlg.exec()) {
-    for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRLOuterWallType = dlg.GetValue();
-    }
-  }
-  g_pMainWindow->SaveHistory("Changed rlowall surface");
-  g_pMainWindow->UpdateWindow();
+  CEditSurfaceDialog dlg(this, eSurfaceField::SURFACE_RLOWALL, true, "(also disables upper wall)");
+  dlg.exec();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditGeometryWidget::EditRUOWall()
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iRUOuterWallType, true);
-  if (dlg.exec()) {
-    for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRUOuterWallType = dlg.GetValue();
-    }
-  }
-  g_pMainWindow->SaveHistory("Changed ruowall surface");
-  g_pMainWindow->UpdateWindow();
+  CEditSurfaceDialog dlg(this, eSurfaceField::SURFACE_RUOWALL, true);
+  dlg.exec();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditGeometryWidget::EditOFloor()
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  CEditSurfaceDialog dlg(this, g_pMainWindow->GetCurrentTrack()->m_pTex, g_pMainWindow->GetCurrentTrack()->m_pPal, g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iOuterFloorType, true, "(also disables outer walls)", true);
-  if (dlg.exec()) {
-    for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iOuterFloorType = dlg.GetValue();
-    }
-  }
-  g_pMainWindow->SaveHistory("Changed ofloor surface");
-  g_pMainWindow->UpdateWindow();
+  CEditSurfaceDialog dlg(this, eSurfaceField::SURFACE_OFLOOR, true, "(also disables outer walls)", true);
+  dlg.exec();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CEditGeometryWidget::EditEnvirFloor()
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  CEditSurfaceDialog dlg(this, 
-                         NULL, 
-                         g_pMainWindow->GetCurrentTrack()->m_pPal, 
-                         g_pMainWindow->GetCurrentTrack()->m_chunkAy[iFrom].iEnvironmentFloorType);
-  if (dlg.exec()) {
-    for (int i = iFrom; i <= iTo; ++i) {
-      g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iEnvironmentFloorType = dlg.GetValue();
-    }
-  }
-  g_pMainWindow->SaveHistory("Changed environment floor surface");
-  g_pMainWindow->UpdateWindow();
+  CEditSurfaceDialog dlg(this, eSurfaceField::SURFACE_ENVFLOOR);
+  dlg.exec();
 }
 
 //-------------------------------------------------------------------------------------------------

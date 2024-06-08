@@ -2,20 +2,35 @@
 #define _TRACKEDITOR_EDITSURFACEDLG_H
 //-------------------------------------------------------------------------------------------------
 #include "ui_EditSurfaceDialog.h"
+#include "Types.h"
 //-------------------------------------------------------------------------------------------------
-class CTexture;
-class CPalette;
+enum eSurfaceField
+{
+  SURFACE_CENTER = 0,
+  SURFACE_LSHOULDER,
+  SURFACE_RSHOULDER,
+  SURFACE_LWALL,
+  SURFACE_RWALL,
+  SURFACE_ROOF,
+  SURFACE_LUOWALL,
+  SURFACE_LLOWALL,
+  SURFACE_OFLOOR,
+  SURFACE_RLOWALL,
+  SURFACE_RUOWALL,
+  SURFACE_ENVFLOOR,
+  SURFACE_SIGN
+};
+//-------------------------------------------------------------------------------------------------
+class CTrack;
 //-------------------------------------------------------------------------------------------------
 class CEditSurfaceDialog : public QDialog, private Ui::EditSurfaceDialog
 {
   Q_OBJECT
 
 public:
-  CEditSurfaceDialog(QWidget *pParent, CTexture *pTexture, CPalette *pPalette, int iValue, 
+  CEditSurfaceDialog(QWidget *pParent, eSurfaceField field,
                      bool bShowDisable = false, const QString &sDisableEffects = "", bool bShowDisableAttach = false);
   ~CEditSurfaceDialog();
-
-  int GetValue();
 
 protected slots:
   void OnDisableChecked(bool bChecked);
@@ -48,11 +63,11 @@ protected slots:
   void OnTransparencyTypeChanged(int iIndex);
 
 private:
+  void UpdateValueHelper(uint32 uiFlag, bool bChecked);
+  int &GetValue(int i);
   void UpdateDialog();
 
-  CTexture *m_pTexture;
-  CPalette *m_pPalette;
-  unsigned int m_uiSignedBitValue;
+  eSurfaceField m_field;
   bool m_bShowDisable;
   bool m_bShowDisableAttach;
 };

@@ -18,7 +18,8 @@ enum eSurfaceField
   SURFACE_RLOWALL,
   SURFACE_RUOWALL,
   SURFACE_ENVFLOOR,
-  SURFACE_SIGN
+  SURFACE_SIGN,
+  SURFACE_BACK
 };
 //-------------------------------------------------------------------------------------------------
 class CTrack;
@@ -30,6 +31,7 @@ class CEditSurfaceDialog : public QDialog, private Ui::EditSurfaceDialog
 public:
   CEditSurfaceDialog(QWidget *pParent, eSurfaceField field,
                      bool bShowDisable = false, const QString &sDisableEffects = "", bool bShowDisableAttach = false);
+  CEditSurfaceDialog(QWidget *pParent, int *piBack);
   ~CEditSurfaceDialog();
 
 protected slots:
@@ -70,6 +72,7 @@ private:
   eSurfaceField m_field;
   bool m_bShowDisable;
   bool m_bShowDisableAttach;
+  int *m_piBack;
 };
 
 //-------------------------------------------------------------------------------------------------

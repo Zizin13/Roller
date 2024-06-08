@@ -55,9 +55,8 @@ int CBackWidget::GetBack()
 
 void CBackWidget::OnBackClicked()
 {
-  //CEditSurfaceDialog dlg(this, m_pTexture, m_pPalette, m_iBack, true);
-  //if (dlg.exec())
-  //  m_iBack = dlg.GetValue();
+  CEditSurfaceDialog dlg(this, &m_iBack);
+  dlg.exec();
 
   UpdateWidget();
 }

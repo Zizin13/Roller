@@ -13,13 +13,24 @@
 //-------------------------------------------------------------------------------------------------
 
 CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, eSurfaceField field, 
-                                       bool bShowDisable, const QString &sDisableEffects, bool bShowDisableAttach)
+                                       bool bShowDisable, 
+                                       const QString &sDisableEffects, 
+                                       bool bShowDisableAttach,
+                                       bool bApplyCancel,
+                                       int iValue)
   : QDialog(pParent)
   , m_field(field)
   , m_bShowDisable(bShowDisable)
   , m_bShowDisableAttach(bShowDisableAttach)
+  , m_bApplyCancel(bApplyCancel)
 {
+  m_uiSignedBitValue = CTrack::GetSignedBitValueFromInt(iValue);
   setupUi(this);
+
+  if (!bApplyCancel) {
+    pbApply->hide();
+    pbCancel->setText("Close");
+  }
 
   ckDisable->setVisible(bShowDisable);
   lblDisableEffects->setVisible(bShowDisable);
@@ -61,6 +72,7 @@ CEditSurfaceDialog::CEditSurfaceDialog(QWidget *pParent, eSurfaceField field,
   connect(cbTransparency, SIGNAL(currentIndexChanged(int)), this, SLOT(OnTransparencyTypeChanged(int)));
 
   connect(pbCancel, &QPushButton::clicked, this, &CEditSurfaceDialog::reject);
+  connect(pbApply, &QPushButton::clicked, this, &CEditSurfaceDialog::accept);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -72,25 +84,39 @@ CEditSurfaceDialog::~CEditSurfaceDialog()
 
 //-------------------------------------------------------------------------------------------------
 
+int CEditSurfaceDialog::GetDialogValue()
+{
+  return CTrack::GetIntValueFromSignedBit(m_uiSignedBitValue);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CEditSurfaceDialog::OnDisableChecked(bool bChecked)
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  for (int i = iFrom; i <= iTo; ++i) {
+  if (m_bApplyCancel) {
     if (bChecked)
-      GetValue(i) = -1;
+      m_uiSignedBitValue = CTrack::GetSignedBitValueFromInt(-1);
     else
-      GetValue(i) = 0;
-  }
+      m_uiSignedBitValue = 0;
+  } else {
+    int iFrom = g_pMainWindow->GetSelFrom();
+    int iTo = g_pMainWindow->GetSelTo();
 
-  g_pMainWindow->SaveHistory("Changed surface");
-  g_pMainWindow->UpdateWindow();
+    if (!g_pMainWindow->GetCurrentTrack()
+        || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+        || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+      return;
+
+    for (int i = iFrom; i <= iTo; ++i) {
+      if (bChecked)
+        GetValue(i) = -1;
+      else
+        GetValue(i) = 0;
+    }
+
+    g_pMainWindow->SaveHistory("Changed surface");
+    g_pMainWindow->UpdateWindow();
+  }
   UpdateDialog();
 }
 
@@ -98,23 +124,30 @@ void CEditSurfaceDialog::OnDisableChecked(bool bChecked)
 
 void CEditSurfaceDialog::OnDisableAttachChecked(bool bChecked)
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  for (int i = iFrom; i <= iTo; ++i) {
+  if (m_bApplyCancel) {
     if (bChecked)
-      GetValue(i) = -2;
+      m_uiSignedBitValue = CTrack::GetSignedBitValueFromInt(-2);
     else
-      GetValue(i) = 0;
-  }
+      m_uiSignedBitValue = 0;
+  } else {
+    int iFrom = g_pMainWindow->GetSelFrom();
+    int iTo = g_pMainWindow->GetSelTo();
 
-  g_pMainWindow->SaveHistory("Changed surface");
-  g_pMainWindow->UpdateWindow();
+    if (!g_pMainWindow->GetCurrentTrack()
+        || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+        || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+      return;
+
+    for (int i = iFrom; i <= iTo; ++i) {
+      if (bChecked)
+        GetValue(i) = -2;
+      else
+        GetValue(i) = 0;
+    }
+
+    g_pMainWindow->SaveHistory("Changed surface");
+    g_pMainWindow->UpdateWindow();
+  }
   UpdateDialog();
 }
 
@@ -192,34 +225,44 @@ void CEditSurfaceDialog::On22WallChecked(bool bChecked)
 
 void CEditSurfaceDialog::On21TransparentChecked(bool bChecked)
 {
-  UpdateDialog();
-
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  for (int i = iFrom; i <= iTo; ++i) {
-    uint32 uiValue = CTrack::GetSignedBitValueFromInt(GetValue(i));
-
+  if (m_bApplyCancel) {
     if (bChecked) {
-      uiValue |= SURFACE_FLAG_TRANSPARENT;
-      uiValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
+      m_uiSignedBitValue |= SURFACE_FLAG_TRANSPARENT;
+      m_uiSignedBitValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
       int iIndex = 1;
-      uiValue &= ~SURFACE_MASK_TEXTURE_INDEX;
-      uiValue |= iIndex;
+      m_uiSignedBitValue &= ~SURFACE_MASK_TEXTURE_INDEX;
+      m_uiSignedBitValue |= iIndex;
     } else {
-      uiValue &= ~SURFACE_FLAG_TRANSPARENT;
+      m_uiSignedBitValue &= ~SURFACE_FLAG_TRANSPARENT;
+    }
+  } else {
+    int iFrom = g_pMainWindow->GetSelFrom();
+    int iTo = g_pMainWindow->GetSelTo();
+
+    if (!g_pMainWindow->GetCurrentTrack()
+        || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+        || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+      return;
+
+    for (int i = iFrom; i <= iTo; ++i) {
+      uint32 uiValue = CTrack::GetSignedBitValueFromInt(GetValue(i));
+
+      if (bChecked) {
+        uiValue |= SURFACE_FLAG_TRANSPARENT;
+        uiValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
+        int iIndex = 1;
+        uiValue &= ~SURFACE_MASK_TEXTURE_INDEX;
+        uiValue |= iIndex;
+      } else {
+        uiValue &= ~SURFACE_FLAG_TRANSPARENT;
+      }
+
+      GetValue(i) = CTrack::GetIntValueFromSignedBit(uiValue);
     }
 
-    GetValue(i) = CTrack::GetIntValueFromSignedBit(uiValue);
+    g_pMainWindow->SaveHistory("Changed surface");
+    g_pMainWindow->UpdateWindow();
   }
-
-  g_pMainWindow->SaveHistory("Changed surface");
-  g_pMainWindow->UpdateWindow();
   UpdateDialog();
 }
 
@@ -311,35 +354,53 @@ void CEditSurfaceDialog::On9AnmsLookupChecked(bool bChecked)
 
 void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+  if (!GetTexture())
     return;
 
-  for (int i = iFrom; i <= iTo; ++i) {
-    uint32 uiValue = CTrack::GetSignedBitValueFromInt(GetValue(i));
-
-    int iIndex = uiValue & SURFACE_MASK_TEXTURE_INDEX;
+  if (m_bApplyCancel) {
+    int iIndex = m_uiSignedBitValue & SURFACE_MASK_TEXTURE_INDEX;
 
     if (bChecked) {
-      if (iIndex >= g_pMainWindow->GetCurrentTrack()->m_pTex->m_iNumTiles)
-        uiValue = 0;
-      uiValue |= SURFACE_FLAG_APPLY_TEXTURE;
-      uiValue &= ~SURFACE_FLAG_TRANSPARENT;
+      if (iIndex >= GetTexture()->m_iNumTiles)
+        m_uiSignedBitValue = 0;
+      m_uiSignedBitValue |= SURFACE_FLAG_APPLY_TEXTURE;
+      m_uiSignedBitValue &= ~SURFACE_FLAG_TRANSPARENT;
     } else {
       if (iIndex >= (int)g_pMainWindow->GetCurrentTrack()->m_pPal->m_paletteAy.size())
-        uiValue = 0;
-      uiValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
+        m_uiSignedBitValue = 0;
+      m_uiSignedBitValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
+    }
+  } else {
+    int iFrom = g_pMainWindow->GetSelFrom();
+    int iTo = g_pMainWindow->GetSelTo();
+
+    if (!g_pMainWindow->GetCurrentTrack()
+        || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+        || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+      return;
+
+    for (int i = iFrom; i <= iTo; ++i) {
+      uint32 uiValue = CTrack::GetSignedBitValueFromInt(GetValue(i));
+
+      int iIndex = uiValue & SURFACE_MASK_TEXTURE_INDEX;
+
+      if (bChecked) {
+        if (iIndex >= GetTexture()->m_iNumTiles)
+          uiValue = 0;
+        uiValue |= SURFACE_FLAG_APPLY_TEXTURE;
+        uiValue &= ~SURFACE_FLAG_TRANSPARENT;
+      } else {
+        if (iIndex >= (int)g_pMainWindow->GetCurrentTrack()->m_pPal->m_paletteAy.size())
+          uiValue = 0;
+        uiValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
+      }
+
+      GetValue(i) = CTrack::GetIntValueFromSignedBit(uiValue);
     }
 
-    GetValue(i) = CTrack::GetIntValueFromSignedBit(uiValue);
+    g_pMainWindow->SaveHistory("Changed surface");
+    g_pMainWindow->UpdateWindow();
   }
-
-  g_pMainWindow->SaveHistory("Changed surface");
-  g_pMainWindow->UpdateWindow();
   UpdateDialog();
 }
 
@@ -347,43 +408,65 @@ void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
 
 void CEditSurfaceDialog::OnTextureClicked()
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
-
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+  if (!GetTexture())
     return;
 
-  uint32 uiFromValue = CTrack::GetSignedBitValueFromInt(GetValue(iFrom));
-  int iIndex = uiFromValue & SURFACE_MASK_TEXTURE_INDEX;
-  if (uiFromValue & SURFACE_FLAG_APPLY_TEXTURE) {
-    CTilePicker dlg(this, iIndex, g_pMainWindow->GetCurrentTrack()->m_pTex);
-    if (dlg.exec()) {
-      iIndex = dlg.GetSelected();
+  if (m_bApplyCancel) {
+    int iIndex = m_uiSignedBitValue & SURFACE_MASK_TEXTURE_INDEX;
+    if (m_uiSignedBitValue & SURFACE_FLAG_APPLY_TEXTURE) {
+      CTilePicker dlg(this, iIndex, GetTexture());
+      if (dlg.exec()) {
+        iIndex = dlg.GetSelected();
+        m_uiSignedBitValue &= ~SURFACE_MASK_TEXTURE_INDEX;
+        m_uiSignedBitValue |= iIndex;
+      }
+    } else {
+      CTilePicker dlg(this, iIndex, g_pMainWindow->GetCurrentTrack()->m_pPal);
+      if (dlg.exec()) {
+        iIndex = dlg.GetSelected();
+        m_uiSignedBitValue &= ~SURFACE_MASK_TEXTURE_INDEX;
+        m_uiSignedBitValue |= iIndex;
+      }
     }
   } else {
-    CTilePicker dlg(this, iIndex, g_pMainWindow->GetCurrentTrack()->m_pPal);
-    if (dlg.exec()) {
-      iIndex = dlg.GetSelected();
+    int iFrom = g_pMainWindow->GetSelFrom();
+    int iTo = g_pMainWindow->GetSelTo();
+
+    if (!g_pMainWindow->GetCurrentTrack()
+        || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+        || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+      return;
+
+    uint32 uiFromValue = CTrack::GetSignedBitValueFromInt(GetValue(iFrom));
+    int iIndex = uiFromValue & SURFACE_MASK_TEXTURE_INDEX;
+    if (uiFromValue & SURFACE_FLAG_APPLY_TEXTURE) {
+      CTilePicker dlg(this, iIndex, GetTexture());
+      if (dlg.exec()) {
+        iIndex = dlg.GetSelected();
+      }
+    } else {
+      CTilePicker dlg(this, iIndex, g_pMainWindow->GetCurrentTrack()->m_pPal);
+      if (dlg.exec()) {
+        iIndex = dlg.GetSelected();
+      }
     }
+
+    for (int i = iFrom; i <= iTo; ++i) {
+      uint32 uiValue = CTrack::GetSignedBitValueFromInt(GetValue(i));
+      uiValue &= ~SURFACE_MASK_TEXTURE_INDEX;
+      uiValue |= iIndex;
+
+      if (uiFromValue & SURFACE_FLAG_APPLY_TEXTURE)
+        uiValue |= SURFACE_FLAG_APPLY_TEXTURE;
+      else
+        uiValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
+
+      GetValue(i) = CTrack::GetIntValueFromSignedBit(uiValue);
+    }
+
+    g_pMainWindow->SaveHistory("Changed surface");
+    g_pMainWindow->UpdateWindow();
   }
-
-  for (int i = iFrom; i <= iTo; ++i) {
-    uint32 uiValue = CTrack::GetSignedBitValueFromInt(GetValue(i));
-    uiValue &= ~SURFACE_MASK_TEXTURE_INDEX;
-    uiValue |= iIndex;
-
-    if (uiFromValue & SURFACE_FLAG_APPLY_TEXTURE)
-      uiValue |= SURFACE_FLAG_APPLY_TEXTURE;
-    else
-      uiValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
-
-    GetValue(i) = CTrack::GetIntValueFromSignedBit(uiValue);
-  }
-
-  g_pMainWindow->SaveHistory("Changed surface");
-  g_pMainWindow->UpdateWindow();
   UpdateDialog();
 }
 
@@ -391,25 +474,30 @@ void CEditSurfaceDialog::OnTextureClicked()
 
 void CEditSurfaceDialog::OnTransparencyTypeChanged(int iIndex)
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
+  if (m_bApplyCancel) {
+    m_uiSignedBitValue &= ~SURFACE_MASK_TEXTURE_INDEX;
+    m_uiSignedBitValue |= iIndex;
+  } else {
+    int iFrom = g_pMainWindow->GetSelFrom();
+    int iTo = g_pMainWindow->GetSelTo();
 
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
+    if (!g_pMainWindow->GetCurrentTrack()
+        || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+        || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+      return;
 
-  for (int i = iFrom; i <= iTo; ++i) {
-    uint32 uiValue = CTrack::GetSignedBitValueFromInt(GetValue(i));
+    for (int i = iFrom; i <= iTo; ++i) {
+      uint32 uiValue = CTrack::GetSignedBitValueFromInt(GetValue(i));
 
-    uiValue &= ~SURFACE_MASK_TEXTURE_INDEX;
-    uiValue |= iIndex;
+      uiValue &= ~SURFACE_MASK_TEXTURE_INDEX;
+      uiValue |= iIndex;
 
-    GetValue(i) = CTrack::GetIntValueFromSignedBit(uiValue);
+      GetValue(i) = CTrack::GetIntValueFromSignedBit(uiValue);
+    }
+
+    g_pMainWindow->SaveHistory("Changed surface");
+    g_pMainWindow->UpdateWindow();
   }
-
-  g_pMainWindow->SaveHistory("Changed surface");
-  g_pMainWindow->UpdateWindow();
   UpdateDialog();
 }
 
@@ -417,27 +505,30 @@ void CEditSurfaceDialog::OnTransparencyTypeChanged(int iIndex)
 
 void CEditSurfaceDialog::UpdateValueHelper(uint32 uiFlag, bool bChecked)
 {
-  int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
+  if (m_bApplyCancel) {
+  } else {
+    int iFrom = g_pMainWindow->GetSelFrom();
+    int iTo = g_pMainWindow->GetSelTo();
 
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
+    if (!g_pMainWindow->GetCurrentTrack()
+        || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+        || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+      return;
 
-  for (int i = iFrom; i <= iTo; ++i) {
-    uint32 uiValue = CTrack::GetSignedBitValueFromInt(GetValue(i));
+    for (int i = iFrom; i <= iTo; ++i) {
+      uint32 uiValue = CTrack::GetSignedBitValueFromInt(GetValue(i));
 
-    if (bChecked)
-      uiValue |= uiFlag;
-    else
-      uiValue &= ~uiFlag;
+      if (bChecked)
+        uiValue |= uiFlag;
+      else
+        uiValue &= ~uiFlag;
 
-    GetValue(i) = CTrack::GetIntValueFromSignedBit(uiValue);
+      GetValue(i) = CTrack::GetIntValueFromSignedBit(uiValue);
+    }
+
+    g_pMainWindow->SaveHistory("Changed surface");
+    g_pMainWindow->UpdateWindow();
   }
-
-  g_pMainWindow->SaveHistory("Changed surface");
-  g_pMainWindow->UpdateWindow();
   UpdateDialog();
 }
 
@@ -445,6 +536,10 @@ void CEditSurfaceDialog::UpdateValueHelper(uint32 uiFlag, bool bChecked)
 
 int &CEditSurfaceDialog::GetValue(int i)
 {
+  if (!g_pMainWindow->GetCurrentTrack()
+      || i >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
+    return (int&)m_uiSignedBitValue;
+
   switch (m_field) {
     case SURFACE_CENTER:    return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iCenterSurfaceType;     break;
     case SURFACE_LSHOULDER: return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftSurfaceType;       break;
@@ -463,19 +558,28 @@ int &CEditSurfaceDialog::GetValue(int i)
   }
 }
 
+//-------------------------------------------------------------------------------------------------w
+
+CTexture *CEditSurfaceDialog::GetTexture()
+{
+  if (g_pMainWindow->GetCurrentTrack()) {
+    if (m_field == SURFACE_SIGN)
+      return g_pMainWindow->GetCurrentTrack()->m_pBld;
+    else
+      return g_pMainWindow->GetCurrentTrack()->m_pTex;
+  }
+  return NULL;
+}
+
 //-------------------------------------------------------------------------------------------------
 
 void CEditSurfaceDialog::UpdateDialog()
 {
   int iFrom = g_pMainWindow->GetSelFrom();
-  int iTo = g_pMainWindow->GetSelTo();
 
-  if (!g_pMainWindow->GetCurrentTrack()
-      || iFrom >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
-      || iTo >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
-    return;
-
-  int iValue = GetValue(iFrom);
+  int iValue = CTrack::GetIntValueFromSignedBit(m_uiSignedBitValue);
+  if (!m_bApplyCancel)
+    iValue = GetValue(iFrom);
   uint32 uiValue = CTrack::GetSignedBitValueFromInt(iValue);
 
   BLOCK_SIG_AND_DO(ckDisable            , setChecked(iValue == -1));
@@ -551,15 +655,15 @@ void CEditSurfaceDialog::UpdateDialog()
     lblTransparency->hide();
     cbTransparency->hide();
     int iIndex = uiValue & SURFACE_MASK_TEXTURE_INDEX;
-    if (iIndex < g_pMainWindow->GetCurrentTrack()->m_pTex->m_iNumTiles) {
+    if (GetTexture() && iIndex < GetTexture()->m_iNumTiles) {
       QPixmap pixmap;
-      pixmap.convertFromImage(QtHelpers::GetQImageFromTile(g_pMainWindow->GetCurrentTrack()->m_pTex->m_pTileAy[iIndex]));
+      pixmap.convertFromImage(QtHelpers::GetQImageFromTile(GetTexture()->m_pTileAy[iIndex]));
       pbTexture1->setIcon(pixmap);
 
       if (uiValue & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
         if (uiValue & SURFACE_FLAG_PAIR_NEXT_TEX) {
           QPixmap pixmap2;
-          pixmap2.convertFromImage(QtHelpers::GetQImageFromTile(g_pMainWindow->GetCurrentTrack()->m_pTex->m_pTileAy[iIndex + 1]));
+          pixmap2.convertFromImage(QtHelpers::GetQImageFromTile(GetTexture()->m_pTileAy[iIndex + 1]));
           lblTexture2->setPixmap(pixmap2);
         } else {
           lblTexture2->setPixmap(pixmap);

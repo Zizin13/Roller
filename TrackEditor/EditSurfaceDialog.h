@@ -18,10 +18,12 @@ enum eSurfaceField
   SURFACE_RLOWALL,
   SURFACE_RUOWALL,
   SURFACE_ENVFLOOR,
-  SURFACE_SIGN
+  SURFACE_SIGN,
+  SURFACE_BACK
 };
 //-------------------------------------------------------------------------------------------------
 class CTrack;
+class CTexture;
 //-------------------------------------------------------------------------------------------------
 class CEditSurfaceDialog : public QDialog, private Ui::EditSurfaceDialog
 {
@@ -29,8 +31,14 @@ class CEditSurfaceDialog : public QDialog, private Ui::EditSurfaceDialog
 
 public:
   CEditSurfaceDialog(QWidget *pParent, eSurfaceField field,
-                     bool bShowDisable = false, const QString &sDisableEffects = "", bool bShowDisableAttach = false);
+                     bool bShowDisable = false, 
+                     const QString &sDisableEffects = "", 
+                     bool bShowDisableAttach = false,
+                     bool bApplyCancel = false,
+                     int iValue = -1);
   ~CEditSurfaceDialog();
+
+  int GetDialogValue();
 
 protected slots:
   void OnDisableChecked(bool bChecked);
@@ -65,11 +73,14 @@ protected slots:
 private:
   void UpdateValueHelper(uint32 uiFlag, bool bChecked);
   int &GetValue(int i);
+  CTexture *GetTexture();
   void UpdateDialog();
 
   eSurfaceField m_field;
+  unsigned int m_uiSignedBitValue;
   bool m_bShowDisable;
   bool m_bShowDisableAttach;
+  bool m_bApplyCancel;
 };
 
 //-------------------------------------------------------------------------------------------------

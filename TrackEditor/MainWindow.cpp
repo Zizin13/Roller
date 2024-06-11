@@ -1031,7 +1031,7 @@ void CMainWindow::LoadSettings()
   }
 
   //setup dock widgets
-  if (settings.contains("show_edit_data")
+  if (settings.contains("show_debug_data")
       && settings.contains("show_global_settings")
       && settings.contains("show_edit_series")
       && settings.contains("show_display_settings")

@@ -197,6 +197,15 @@ template <typename T> void CEditSeriesDialog::ApplySeriesToGeometry(int iStartCh
   T tValue = tStartValue;
   bool bDirection = tIncrement >= 0;
   for (int i = iStartChunk; i <= iEndChunk && (bDirection ? tValue <= tEndValue : tValue >= tEndValue); i += iInterval) {
+    if (cbRate->currentIndex() == 1) {
+      int iNumChunks = (m_iEndChunk - m_iStartChunk);
+      double dX = 1.0 / (double)iNumChunks * (double)(i - iStartChunk);
+      tValue = pow(dX, dsbPower->value()) * (tEndValue - tStartValue) + tStartValue;
+    }/*else if (cbRate->currentIndex() == 2) {
+      int iNumChunks = (m_iEndChunk - m_iStartChunk);
+      double dX = (10.0 - 1.0) / (double)iNumChunks * (double)(i - iStartChunk) + 1.0;
+      tValue = log10(dX) * (tEndValue - tStartValue) + tStartValue;
+    }*/
     switch (iField) {
       case 0: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftShoulderWidth = tValue; break;
       case 1: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftLaneWidth = tValue; break;
@@ -272,15 +281,7 @@ template <typename T> void CEditSeriesDialog::ApplySeriesToGeometry(int iStartCh
     }
     if (cbRate->currentIndex() == 0) {
       tValue += tIncrement;
-    } else if (cbRate->currentIndex() == 1) {
-      int iNumChunks = (m_iEndChunk - m_iStartChunk);
-      double dX = 1.0 / (double)iNumChunks * (double)(i - iStartChunk);
-      tValue = pow(dX, dsbPower->value()) * (tEndValue - tStartValue) + tStartValue;
-    } /*else if (cbRate->currentIndex() == 2) {
-      int iNumChunks = (m_iEndChunk - m_iStartChunk);
-      double dX = (10.0 - 1.0) / (double)iNumChunks * (double)(i - iStartChunk) + 1.0;
-      tValue = log10(dX) * (tEndValue - tStartValue) + tStartValue;
-    }*/
+    } 
   }
 }
 

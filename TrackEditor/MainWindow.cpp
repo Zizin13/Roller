@@ -1039,7 +1039,7 @@ void CMainWindow::LoadSettings()
       && settings.contains("show_edit_sign")
       && settings.contains("show_edit_audio")
       && settings.contains("show_edit_stunt")) {
-    bool bShowEditData = false;
+    bool bShowDebugData = false;
     bool bShowGlobalSettings = false;
     bool bShowEditSeries = false;
     bool bShowDisplaySettings = false;
@@ -1047,7 +1047,7 @@ void CMainWindow::LoadSettings()
     bool bShowEditSign = false;
     bool bShowEditAudio = false;
     bool bShowEditStunt = false;
-    bShowEditData = settings.value("show_edit_data", bShowEditData).toBool();
+    bShowDebugData = settings.value("show_debug_data", bShowDebugData).toBool();
     bShowGlobalSettings = settings.value("show_global_settings", bShowGlobalSettings).toBool();
     bShowEditSeries = settings.value("show_edit_series", bShowEditSeries).toBool();
     bShowDisplaySettings = settings.value("show_display_settings", bShowDisplaySettings).toBool();
@@ -1055,7 +1055,7 @@ void CMainWindow::LoadSettings()
     bShowEditSign = settings.value("show_edit_sign", bShowEditSign).toBool();
     bShowEditAudio = settings.value("show_edit_audio", bShowEditAudio).toBool();
     bShowEditStunt = settings.value("show_edit_stunt", bShowEditStunt).toBool();
-    p->m_pDebugDataDockWidget->setVisible(bShowEditData);
+    p->m_pDebugDataDockWidget->setVisible(bShowDebugData);
     p->m_pGlobalSettingsDockWidget->setVisible(bShowGlobalSettings);
     p->m_pEditSeriesDockWidget->setVisible(bShowEditSeries);
     p->m_pDisplaySettingsDockWidget->setVisible(bShowDisplaySettings);

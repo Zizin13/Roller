@@ -21,7 +21,9 @@ CEditSeriesDialog::CEditSeriesDialog(QWidget *pParent)
 
   cbRate->addItem("Linear");
   cbRate->addItem("Exponential");
-  cbRate->addItem("Logarithmic");
+  //cbRate->addItem("Logarithmic");
+  lblPower->hide();
+  dsbPower->hide();
 
   connect(g_pMainWindow, &CMainWindow::UpdateWindowSig, this, &CEditSeriesDialog::OnUpdateWindow);
   connect(pbApply, &QPushButton::clicked, this, &CEditSeriesDialog::Validate);
@@ -102,10 +104,20 @@ void CEditSeriesDialog::OnRateChanged(const QString &sText)
   if (sText.compare("Linear") == 0) {
     lblIncrement->show();
     leIncrement->show();
+    lblPower->hide();
+    dsbPower->hide();
+  } else if (sText.compare("Exponential") == 0) {
+    lblIncrement->hide();
+    leIncrement->hide();
+    leIncrement->setText("");
+    lblPower->show();
+    dsbPower->show();
   } else {
     lblIncrement->hide();
     leIncrement->hide();
     leIncrement->setText("");
+    lblPower->hide();
+    dsbPower->hide();
   }
 }
 
@@ -113,6 +125,9 @@ void CEditSeriesDialog::OnRateChanged(const QString &sText)
 
 void CEditSeriesDialog::Validate()
 {
+  if (!g_pMainWindow->GetCurrentTrack())
+    return;
+
   m_iStartChunk = g_pMainWindow->GetSelFrom();
   m_iEndChunk = g_pMainWindow->GetSelTo();
   m_iInterval = ToInt(sbInterval->text());
@@ -174,7 +189,9 @@ template <typename T> void CEditSeriesDialog::ApplySeriesToGeometry(int iStartCh
                                                                     T tEndValue,
                                                                     T tIncrement)
 {
-  if (!g_pMainWindow->GetCurrentTrack())
+  if (!g_pMainWindow->GetCurrentTrack()
+      || iStartChunk >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size()
+      || iEndChunk >= (int)g_pMainWindow->GetCurrentTrack()->m_chunkAy.size())
     return;
 
   T tValue = tStartValue;
@@ -258,12 +275,12 @@ template <typename T> void CEditSeriesDialog::ApplySeriesToGeometry(int iStartCh
     } else if (cbRate->currentIndex() == 1) {
       int iNumChunks = (m_iEndChunk - m_iStartChunk);
       double dX = 1.0 / (double)iNumChunks * (double)(i - iStartChunk);
-      tValue = pow(dX, tIncrement) * (tEndValue - tStartValue) + tStartValue;
-    } else if (cbRate->currentIndex() == 2) {
+      tValue = pow(dX, dsbPower->value()) * (tEndValue - tStartValue) + tStartValue;
+    } /*else if (cbRate->currentIndex() == 2) {
       int iNumChunks = (m_iEndChunk - m_iStartChunk);
       double dX = (10.0 - 1.0) / (double)iNumChunks * (double)(i - iStartChunk) + 1.0;
       tValue = log10(dX) * (tEndValue - tStartValue) + tStartValue;
-    }
+    }*/
   }
 }
 

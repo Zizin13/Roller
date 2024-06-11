@@ -2,6 +2,7 @@
 #define _TRACKEDITOR_EDITSERIESDLG_H
 //-------------------------------------------------------------------------------------------------
 #include "ui_EditSeriesDialog.h"
+#include <vector>
 //-------------------------------------------------------------------------------------------------
 class CEditSeriesDialog : public QWidget, private Ui::EditSeriesDialog
 {
@@ -21,12 +22,19 @@ public:
 
 protected slots:
   void OnUpdateWindow();
+  void OnRateChanged(const QString &sText);
 
 private:
   void Validate();
   bool IsDirectionValid(double dStart, double dEnd, double dIncrement);
   int ToInt(QString sText);
-  template <typename T> void ApplySeriesToGeometry(int iStartChunk, int iEndChunk, int iInterval, int iField, T tStartValue, T tEndValue, T tIncrement);
+  template <typename T> void ApplySeriesToGeometry(int iStartChunk, 
+                                                   int iEndChunk, 
+                                                   int iInterval, 
+                                                   int iField, 
+                                                   T tStartValue, 
+                                                   T tEndValue, 
+                                                   T tIncrement);
 
   int m_iStartChunk;
   int m_iEndChunk;

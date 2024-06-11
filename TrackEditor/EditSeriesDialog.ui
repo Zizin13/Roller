@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>266</width>
+    <width>238</width>
     <height>242</height>
    </rect>
   </property>
@@ -81,6 +81,13 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout3">
+     <item row="2" column="4">
+      <widget class="QLabel" name="lblFunction">
+       <property name="text">
+        <string>Rate</string>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="4">
       <widget class="QLabel" name="lblStartValue">
        <property name="toolTip">
@@ -90,9 +97,6 @@
         <string>Start value</string>
        </property>
       </widget>
-     </item>
-     <item row="1" column="4">
-      <widget class="QLineEdit" name="leStartValue"/>
      </item>
      <item row="0" column="5">
       <widget class="QLabel" name="lblEndValue">
@@ -104,10 +108,16 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="4">
+      <widget class="QLineEdit" name="leStartValue"/>
+     </item>
      <item row="1" column="5">
       <widget class="QLineEdit" name="leEndValue"/>
      </item>
-     <item row="0" column="6">
+     <item row="3" column="4">
+      <widget class="QComboBox" name="cbRate"/>
+     </item>
+     <item row="2" column="5">
       <widget class="QLabel" name="lblIncrement">
        <property name="toolTip">
         <string>Amount to alter field value each iteration (optional)</string>
@@ -117,7 +127,7 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="6">
+     <item row="3" column="5">
       <widget class="QLineEdit" name="leIncrement"/>
      </item>
     </layout>

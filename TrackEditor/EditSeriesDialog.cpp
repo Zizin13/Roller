@@ -19,8 +19,13 @@ CEditSeriesDialog::CEditSeriesDialog(QWidget *pParent)
     cbField->addItem(chunkFields[i], i);
   }
 
+  cbRate->addItem("Linear");
+  cbRate->addItem("Exponential");
+  cbRate->addItem("Logarithmic");
+
   connect(g_pMainWindow, &CMainWindow::UpdateWindowSig, this, &CEditSeriesDialog::OnUpdateWindow);
   connect(pbApply, &QPushButton::clicked, this, &CEditSeriesDialog::Validate);
+  connect(cbRate, SIGNAL(currentTextChanged(const QString&)), this, SLOT(OnRateChanged(const QString &)));
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -92,6 +97,20 @@ void CEditSeriesDialog::OnUpdateWindow()
 
 //-------------------------------------------------------------------------------------------------
 
+void CEditSeriesDialog::OnRateChanged(const QString &sText)
+{
+  if (sText.compare("Linear") == 0) {
+    lblIncrement->show();
+    leIncrement->show();
+  } else {
+    lblIncrement->hide();
+    leIncrement->hide();
+    leIncrement->setText("");
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CEditSeriesDialog::Validate()
 {
   m_iStartChunk = g_pMainWindow->GetSelFrom();
@@ -110,6 +129,7 @@ void CEditSeriesDialog::Validate()
     return;
   }
 
+  std::vector<double> logAy;
   int iField = GetField();
   if ((iField >= 7 && iField <= 9) || (iField >= 37 && iField <= 39)) {
     double dStartValue = GetStartValue().toDouble();
@@ -146,7 +166,13 @@ int CEditSeriesDialog::ToInt(QString sText)
 
 //-------------------------------------------------------------------------------------------------
 
-template <typename T> void CEditSeriesDialog::ApplySeriesToGeometry(int iStartChunk, int iEndChunk, int iInterval, int iField, T tStartValue, T tEndValue, T tIncrement)
+template <typename T> void CEditSeriesDialog::ApplySeriesToGeometry(int iStartChunk,
+                                                                    int iEndChunk,
+                                                                    int iInterval,
+                                                                    int iField,
+                                                                    T tStartValue,
+                                                                    T tEndValue,
+                                                                    T tIncrement)
 {
   if (!g_pMainWindow->GetCurrentTrack())
     return;
@@ -227,7 +253,17 @@ template <typename T> void CEditSeriesDialog::ApplySeriesToGeometry(int iStartCh
       case 69: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iUnk50 = tValue; break;
       case 70: g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignTexture = tValue; break;
     }
-    tValue += tIncrement;
+    if (cbRate->currentIndex() == 0) {
+      tValue += tIncrement;
+    } else if (cbRate->currentIndex() == 1) {
+      int iNumChunks = (m_iEndChunk - m_iStartChunk);
+      double dX = 1.0 / (double)iNumChunks * (double)(i - iStartChunk);
+      tValue = pow(dX, tIncrement) * (tEndValue - tStartValue) + tStartValue;
+    } else if (cbRate->currentIndex() == 2) {
+      int iNumChunks = (m_iEndChunk - m_iStartChunk);
+      double dX = (10.0 - 1.0) / (double)iNumChunks * (double)(i - iStartChunk) + 1.0;
+      tValue = log10(dX) * (tEndValue - tStartValue) + tStartValue;
+    }
   }
 }
 

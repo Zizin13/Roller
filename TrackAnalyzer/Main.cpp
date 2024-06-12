@@ -160,6 +160,7 @@ int main(int argc, char *argv[])
     delete pTrack;
   }
 
+  //print results
   for (int i = 0; i < (int)resultAy.size(); ++i) {
     if (!resultAy[i].valuesFound.empty()) {
       printf("----------------------------------------------------------------------------------\n");

@@ -182,7 +182,8 @@ enum eFileSection
   TEXTURE,
   TRACK_NUM,
   LAPS,
-  MAP
+  MAP,
+  END
 };
 //-------------------------------------------------------------------------------------------------
 class CTexture;

@@ -506,6 +506,9 @@ bool CTrack::ProcessTrackData(const uint8 *pData, size_t length)
           m_raceInfo.iTrackMapFidelity  = std::stoi(lineAy[1]);
           m_raceInfo.dPreviewSize       = std::stod(lineAy[2]);
         }
+        section = END;
+        break;
+      case END:
         break;
     }
   }

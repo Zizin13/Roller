@@ -140,6 +140,7 @@ void CTrack::ClearData()
   memset(&m_header, 0, sizeof(m_header));
   m_header.iFloorDepth = 2048;
   m_chunkAy.clear();
+  m_sTrackFile = "";
   m_sTextureFile = "";
   m_sBuildingFile = "";
   m_sLastLoadedTex = "";
@@ -159,6 +160,7 @@ bool CTrack::LoadTrack(const std::string &sFilename)
     return false;
   }
 
+  m_sTrackFile = sFilename;
   m_sTrackFileFolder = sFilename;
   size_t pos = sFilename.find_last_of('/');
   if (pos == std::string::npos)

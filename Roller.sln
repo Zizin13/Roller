@@ -18,6 +18,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WhipLib", "WhipLib\WhipLib.vcxproj", "{FFE1E8A8-1052-4271-AA18-253855ABA0E6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TrackAnalyzer", "TrackAnalyzer\TrackAnalyzer.vcxproj", "{AA65CDB8-27A0-4AC3-810B-B901B323F7D2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FFE1E8A8-1052-4271-AA18-253855ABA0E6} = {FFE1E8A8-1052-4271-AA18-253855ABA0E6}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

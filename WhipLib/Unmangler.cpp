@@ -1,10 +1,7 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #include "Unmangler.h"
 #include <string.h>
-#include <stdlib.h>
 #include <algorithm>
-#include <iostream>
-#include <sstream>
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
   #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -26,10 +23,10 @@ bool Unmangler::UnmangleFile(const uint8 *pSource, int iSourceLen, uint8 *pDesti
   // start positions
   int iInputPos = 4;
   int iOutputPos = 0;
-  
+
   while ((iInputPos < iSourceLen) && (iOutputPos < iDestLength)) {
     int iValue = (int)pSource[iInputPos];
-  
+
     if (iValue <= 0x3F) // 0x00 to 0x3F: read bytes from input
     {
       uint8* pTempArray = new uint8[iValue];
@@ -174,5 +171,5 @@ void Unmangler::MangleFile(const std::vector<uint8> &source, std::vector<uint8> 
     }
   }
 }
- 
+
 //-------------------------------------------------------------------------------------------------

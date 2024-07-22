@@ -3,6 +3,9 @@
 #include <fstream>
 #include <assert.h>
 #include "Logging.h"
+#include <Windows.h>
+#include <Shlwapi.h>
+#include <iostream>
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -139,9 +142,40 @@ bool CShader::CheckProgramStatus(GLuint programId)
 
 //-------------------------------------------------------------------------------------------------
 
+std::string CShader::GetExecutableDir()
+{
+  static std::string executableDir;
+  static std::once_flag flag;
+
+  std::call_once(flag, []() {
+    char path[MAX_PATH];
+    GetModuleFileName(NULL, path, MAX_PATH);
+    PathRemoveFileSpec(path);
+    executableDir = std::string(path);
+  });
+
+  return executableDir;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+std::string CShader::GetAbsoluteShaderPath(const char *filename)
+{
+  if (PathIsRelative(filename)) {
+    char absolutePath[MAX_PATH];
+    PathCombine(absolutePath, CShader::GetExecutableDir().c_str(), filename);
+
+    return std::string(absolutePath);
+  }
+
+  return std::string(filename);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 std::string CShader::ReadShaderCode(const char *filename)
 {
-  std::ifstream stream(filename);
+  std::ifstream stream(CShader::GetAbsoluteShaderPath(filename));
   if (!stream.good()) {
     assert(0);
   }

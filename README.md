@@ -8,3 +8,23 @@ External dependencies used:
 * Glew 2.1.0: https://sourceforge.net/projects/glew/files/glew/2.1.0/
 * GLM 1.0.1: https://github.com/g-truc/glm
 * FBX 2020.3.7: https://aps.autodesk.com/developer/overview/fbx-sdk (libs are too big to include on github, must install SDK to /external/FBX)
+
+Remaining issues:
+- TRACK1: right wall at the end of final tunnel is shaped wrong (483-486)
+- TRACK4: light green outer walls - bit 31? (217-241)
+- TRACK5: light green outer walls right before start/finish, roofs before jump (363-366, 81, 87, 93, 99)
+- TRACK9: buildings clip into track in tunnel (137)
+- TRACK12: wall geometry wrong (106-107)
+- TRACK13: building floating over roof (428-431)
+- TRACK15: pits need doubled texture (0-46)
+- TRACK16: floating tree (203)
+- TRACK20: has the geen walls too
+- TRACK22: end of tunnel walls are gone facing backwards (335)
+- TRACK24: moving pothole animates too quickly (27)
+- outer floor at ends of corkscrews
+- left lane/right lane belong to combined surface
+- z fighting is annoying
+- advanced car models have wrong mirror color
+- mission car lacks pink color changing
+- polygons have four bytes of data that do something unknown
+- "places" arrays are unknown

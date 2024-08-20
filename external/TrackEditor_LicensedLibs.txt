@@ -2,3 +2,4 @@
 Qt - LGPLv3 (See QT_LICENSE.txt)
 GLEW - BSD-3 Clause (See GLEW_LICENSE.txt)
 GLM - MIT (See GLM_LICENSE.txt)
+FBX - FBX (See FBX_LICENSE.rtf)

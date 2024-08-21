@@ -56,10 +56,10 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;IS_WINDOWS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;IS_WINDOWS;K_PLUGIN;K_FBXSDK;K_NODLL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>.\;..\external\glew\include\GL;..\external\glm;CarPlans;SignPlans</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\external\glew\include\GL;..\external\glm;..\external\FBX\include;CarPlans;SignPlans</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -67,9 +67,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>..\external\glew\lib\Debug\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32sd.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\external\glew\lib\Debug\x64;..\external\FBX\lib\x64\debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libfbxsdk-mt.lib;glew32sd.lib;opengl32.lib</AdditionalDependencies>
       <ErrorReporting>NoErrorReport</ErrorReporting>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
@@ -81,10 +82,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;IS_WINDOWS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;IS_WINDOWS;K_PLUGIN;K_FBXSDK;K_NODLL;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>.\;..\external\glew\include\GL;..\external\glm;CarPlans;SignPlans</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\external\glew\include\GL;..\external\glm;..\external\FBX\include;CarPlans;SignPlans</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -94,9 +95,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalLibraryDirectories>..\external\glew\lib\Release\x64</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32s.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\external\glew\lib\Release\x64;..\external\FBX\lib\x64\release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libfbxsdk-mt.lib;glew32s.lib;opengl32.lib</AdditionalDependencies>
       <ErrorReporting>NoErrorReport</ErrorReporting>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>

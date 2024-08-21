@@ -75,6 +75,7 @@
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying QT dlls...
@@ -126,6 +127,7 @@ exit 1</Command>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying QT dlls...

@@ -180,6 +180,8 @@
     <addaction name="actLoad"/>
     <addaction name="actSave"/>
     <addaction name="actSaveAs"/>
+    <addaction name="separator"/>
+    <addaction name="actExportFBX"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -393,6 +395,11 @@
   <action name="actPreferences">
    <property name="text">
     <string>Preferences...</string>
+   </property>
+  </action>
+  <action name="actExportFBX">
+   <property name="text">
+    <string>Export to FBX</string>
    </property>
   </action>
  </widget>

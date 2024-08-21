@@ -56,6 +56,7 @@ protected slots:
   void OnLoadTrack();
   void OnSaveTrack();
   void OnSaveTrackAs();
+  void OnExportFBX();
   void OnUndo();
   void OnRedo();
   void OnCut();

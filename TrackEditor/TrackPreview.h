@@ -33,6 +33,7 @@ public:
   bool SaveChangesAndContinue();
   bool SaveTrack();
   bool SaveTrackAs();
+  bool ExportFBX();
   QString GetTitle(bool bFullPath);
   const QString &GetFilename() { return m_sTrackFile; };
   void UpdateGeometrySelection();

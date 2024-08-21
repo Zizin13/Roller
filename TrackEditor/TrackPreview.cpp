@@ -746,6 +746,22 @@ bool CTrackPreview::SaveTrackAs()
 
 //-------------------------------------------------------------------------------------------------
 
+bool CTrackPreview::ExportFBX()
+{
+  //save track
+  QString sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
+    this, "Export Track As", p->m_track.m_sTrackFileFolder.c_str(), "FBX Files (*.fbx)"));
+
+  bool bExported = true;
+  if (!bExported)
+    return false;
+
+  g_pMainWindow->m_sLastTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
+  return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 QString CTrackPreview::GetTitle(bool bFullPath)
 {
   QString sTitle = m_sTrackFile;

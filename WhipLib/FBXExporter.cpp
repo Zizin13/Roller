@@ -1,5 +1,6 @@
 #include "FBXExporter.h"
 #include "ShapeData.h"
+#include "Logging.h"
 #include <fbxsdk.h>
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -27,6 +28,8 @@ CFBXExporter &CFBXExporter::GetFBXExporter()
 CFBXExporter::CFBXExporter()
 {
   g_pFbxManager = FbxManager::Create();
+  if (!g_pFbxManager)
+    Logging::LogMessage("Error: Could not create FBX manager");
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -43,8 +46,34 @@ CFBXExporter::~CFBXExporter()
 
 bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szFile)
 {
-  (void)(pShapeData); (void)(szFile);
-  return false;
+  if (!pShapeData || !szFile)
+    return false;
+
+  FbxScene *pScene = FbxScene::Create(g_pFbxManager, "Export Scene");
+  if (!pScene) {
+    Logging::LogMessage("Error: Could not create FBX scene");
+    return false;
+  }
+
+  FbxExporter *pExporter = FbxExporter::Create(g_pFbxManager, "Exporter");
+  if (!pExporter) {
+    Logging::LogMessage("Error: Could not create FBX exporter");
+    pScene->Destroy();
+    return false;
+  }
+
+  if (pExporter->Initialize(szFile, g_pFbxManager->GetIOPluginRegistry()->GetNativeWriterFormat(), g_pFbxManager->GetIOSettings()) == false) {
+    Logging::LogMessage("FbxExporter::Initialize() failed. %s\n", pExporter->GetStatus().GetErrorString());
+    pScene->Destroy();
+    pExporter->Destroy();
+    return false;
+  }
+
+  bool bSuccess = pExporter->Export(pScene);
+
+  pScene->Destroy();
+  pExporter->Destroy();
+  return bSuccess;
 }
 
 //-------------------------------------------------------------------------------------------------

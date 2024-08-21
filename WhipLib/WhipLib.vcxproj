@@ -68,7 +68,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>..\external\glew\lib\Debug\x64;..\external\FBX\lib\x64\debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libfbxsdk-mt.lib;glew32sd.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;glew32sd.lib;opengl32.lib</AdditionalDependencies>
       <ErrorReporting>NoErrorReport</ErrorReporting>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
@@ -96,7 +96,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>..\external\glew\lib\Release\x64;..\external\FBX\lib\x64\release</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libfbxsdk-mt.lib;glew32s.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;glew32s.lib;opengl32.lib</AdditionalDependencies>
       <ErrorReporting>NoErrorReport</ErrorReporting>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Lib>

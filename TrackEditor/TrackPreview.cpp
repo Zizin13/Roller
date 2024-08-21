@@ -13,6 +13,7 @@
 #include "ShapeData.h"
 #include "ShapeFactory.h"
 #include "Texture.h"
+#include "FBXExporter.h"
 #include "qevent.h"
 #include "qdir.h"
 #include "qmessagebox.h"
@@ -752,7 +753,7 @@ bool CTrackPreview::ExportFBX()
   QString sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
     this, "Export Track As", p->m_track.m_sTrackFileFolder.c_str(), "FBX Files (*.fbx)"));
 
-  bool bExported = true;
+  bool bExported = CFBXExporter::GetFBXExporter().ExportShape(p->m_pCar, sFilename.toLatin1().constData());
   if (!bExported)
     return false;
 

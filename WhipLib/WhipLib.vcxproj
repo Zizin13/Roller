@@ -162,6 +162,7 @@
     <ClCompile Include="ShapeData.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Track.cpp" />
+    <ClCompile Include="Types.cpp" />
     <ClCompile Include="Unmangler.cpp" />
     <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />

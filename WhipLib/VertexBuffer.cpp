@@ -12,9 +12,6 @@ CVertexBuffer::CVertexBuffer(const tVertex *pData, uint32 uiCount, GLenum usage)
   : m_uiCount(uiCount)
   , m_usage(usage)
 {
-  if (!CShapeFactory::GetShapeFactory().m_bOglRunning)
-    return;
-
   GLCALL(glGenBuffers(1, &m_uiId));
   GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_uiId));
   GLCALL(glBufferData(GL_ARRAY_BUFFER, uiCount * sizeof(tVertex), pData, m_usage));

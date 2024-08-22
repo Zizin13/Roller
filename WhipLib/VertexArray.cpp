@@ -11,9 +11,6 @@
 
 CVertexArray::CVertexArray(CVertexBuffer *pVertexBuf)
 {
-  if (!CShapeFactory::GetShapeFactory().m_bOglRunning)
-    return;
-
   GLCALL(glGenVertexArrays(1, &m_uiId));
   GLCALL(glBindVertexArray(m_uiId));
   GLCALL(glEnableVertexAttribArray(0));

@@ -5,11 +5,13 @@
 #include "stdio.h"
 #include <assert.h>
 #include "Logging.h"
+#include "ShapeFactory.h"
 //-------------------------------------------------------------------------------------------------
 #define ASSERT(x) if (!(x)) __debugbreak();
-#define GLCALL(x) GLClearError();\
+#define GLCALL(x) if (CShapeFactory::GetShapeFactory().m_bOglRunning) {\
+  GLClearError();\
   x;\
-  ASSERT(GLLogCall(#x,__FILE__,__LINE__))
+  ASSERT(GLLogCall(#x,__FILE__,__LINE__)) }
 //-------------------------------------------------------------------------------------------------
 
 static void GLErrorCb(GLenum source,

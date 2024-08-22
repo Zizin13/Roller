@@ -32,9 +32,7 @@ CTexture::~CTexture()
 
 void CTexture::ClearData()
 {
-  if (CShapeFactory::GetShapeFactory().m_bOglRunning) {
-    GLCALL(glDeleteTextures(1, &m_uiId));
-  }
+  GLCALL(glDeleteTextures(1, &m_uiId));
 
   m_uiId = 0;
   m_iNumTiles = 0;

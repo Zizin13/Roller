@@ -472,64 +472,7 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
   }
 
   if (p->m_track.m_pPal && !p->m_track.m_sTrackFileFolder.empty()) {
-    QString sTexName;
-    switch (carModel) {
-      case CAR_F1WACK:
-        sTexName = "RED28.BM";
-        break;
-      case CAR_XAUTO:
-        sTexName = "XAUTO.BM";
-        break;
-      case CAR_XDESILVA:
-        sTexName = "XDESILVA.BM";
-        break;
-      case CAR_XPULSE:
-        sTexName = "XPULSE.BM";
-        break;
-      case CAR_XGLOBAL:
-        sTexName = "XGLOBAL.BM";
-        break;
-      case CAR_XMILLION:
-        sTexName = "XMILLION.BM";
-        break;
-      case CAR_XMISSION:
-        sTexName = "XMISSION.BM";
-        break;
-      case CAR_XZIZIN:
-        sTexName = "XZIZIN.BM";
-        break;
-      case CAR_XREISE:
-        sTexName = "XREISE.BM";
-        break;
-      case CAR_YAUTO:
-        sTexName = "YAUTO.BM";
-        break;
-      case CAR_YDESILVA:
-        sTexName = "YDESILVA.BM";
-        break;
-      case CAR_YPULSE:
-        sTexName = "YPULSE.BM";
-        break;
-      case CAR_YGLOBAL:
-        sTexName = "YGLOBAL.BM";
-        break;
-      case CAR_YMILLION:
-        sTexName = "YMILLION.BM";
-        break;
-      case CAR_YMISSION:
-        sTexName = "YMISSION.BM";
-        break;
-      case CAR_YZIZIN:
-        sTexName = "YZIZIN.BM";
-        break;
-      case CAR_YREISE:
-        sTexName = "YREISE.BM";
-        break;
-      case CAR_DEATH:
-        sTexName = "DEATH.BM";
-        break;
-    }
-    QString sPal = QString(p->m_track.m_sTrackFileFolder.c_str()) + QDir::separator() + "PALETTE.PAL";
+    QString sTexName = CarHelpers::GetCarTextureFromModel(carModel).c_str();
     QString sTex = QString(p->m_track.m_sTrackFileFolder.c_str()) + QDir::separator() + sTexName;
     if (m_sLastCarTex.compare(sTex) != 0) {
       if (p->m_carTex.LoadTexture(sTex.toLatin1().constData(), p->m_track.m_pPal))

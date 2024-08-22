@@ -6,6 +6,8 @@ namespace fbxsdk
 {
   class FbxNode;
   class FbxScene;
+  class FbxSurfacePhong;
+  class FbxMesh;
 };
 //-------------------------------------------------------------------------------------------------
 
@@ -22,6 +24,8 @@ public:
 private:
   CFBXExporter();
   fbxsdk::FbxNode *CreateShapeMesh(CShapeData *pShapeData, fbxsdk::FbxScene *pScene);
+  fbxsdk::FbxSurfacePhong *CreateMaterial(fbxsdk::FbxScene *pScene);
+  void AddMaterials(fbxsdk::FbxSurfacePhong *pMaterial, fbxsdk::FbxMesh *pMesh, CShapeData *pShapeData);
 };
 
 //-------------------------------------------------------------------------------------------------

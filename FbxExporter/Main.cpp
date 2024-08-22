@@ -63,6 +63,7 @@ int main(int argc, char *argv[])
   CShapeFactory::GetShapeFactory().m_bOglRunning = false;
 
   //export models
+  ExportCar(CAR_F1WACK, sWhipDir, sOutDir);
   ExportCar(CAR_XZIZIN, sWhipDir, sOutDir);
 
   //exit

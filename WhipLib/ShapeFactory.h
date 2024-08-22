@@ -3,6 +3,7 @@
 //-------------------------------------------------------------------------------------------------
 #include "Types.h"
 #include <vector>
+#include <glm.hpp>
 //-------------------------------------------------------------------------------------------------
 class CShapeData;
 class CShader;
@@ -36,6 +37,7 @@ public:
   void GetCarPos(CTrack *pTrack, int iChunk, eShapeSection aiLine, glm::mat4 &modelToWorldMatrix, bool bMillionPlus = false);
 
   float m_fScale;
+  bool m_bOglRunning;
 
 private:
   CShapeFactory();

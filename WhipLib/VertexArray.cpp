@@ -2,6 +2,7 @@
 #include "VertexArray.h"
 #include "IndexBuffer.h"
 #include "VertexBuffer.h"
+#include "ShapeFactory.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -10,6 +11,9 @@
 
 CVertexArray::CVertexArray(CVertexBuffer *pVertexBuf)
 {
+  if (!CShapeFactory::GetShapeFactory().m_bOglRunning)
+    return;
+
   GLCALL(glGenVertexArrays(1, &m_uiId));
   GLCALL(glBindVertexArray(m_uiId));
   GLCALL(glEnableVertexAttribArray(0));
@@ -33,6 +37,9 @@ CVertexArray::CVertexArray(CVertexBuffer *pVertexBuf)
 
 CVertexArray::~CVertexArray()
 {
+  if (!CShapeFactory::GetShapeFactory().m_bOglRunning)
+    return;
+
   glDeleteVertexArrays(1, &m_uiId);
 }
 

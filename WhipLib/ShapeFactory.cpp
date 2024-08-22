@@ -55,6 +55,7 @@ CShapeFactory &CShapeFactory::GetShapeFactory()
 
 CShapeFactory::CShapeFactory()
   : m_fScale(1000.0f)
+  , m_bOglRunning(true)
 {
 
 }

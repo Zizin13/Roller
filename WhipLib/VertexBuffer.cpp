@@ -1,6 +1,7 @@
 #include "OpenGLDebug.h"
 #include "VertexBuffer.h"
 #include "Logging.h"
+#include "ShapeFactory.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -11,6 +12,9 @@ CVertexBuffer::CVertexBuffer(const tVertex *pData, uint32 uiCount, GLenum usage)
   : m_uiCount(uiCount)
   , m_usage(usage)
 {
+  if (!CShapeFactory::GetShapeFactory().m_bOglRunning)
+    return;
+
   GLCALL(glGenBuffers(1, &m_uiId));
   GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_uiId));
   GLCALL(glBufferData(GL_ARRAY_BUFFER, uiCount * sizeof(tVertex), pData, m_usage));
@@ -20,6 +24,9 @@ CVertexBuffer::CVertexBuffer(const tVertex *pData, uint32 uiCount, GLenum usage)
 
 CVertexBuffer::~CVertexBuffer()
 {
+  if (!CShapeFactory::GetShapeFactory().m_bOglRunning)
+    return;
+
   glDeleteBuffers(1, &m_uiId);
 }
 

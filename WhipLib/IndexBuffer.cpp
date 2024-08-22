@@ -1,5 +1,6 @@
 #include "IndexBuffer.h"
 #include "OpenGLDebug.h"
+#include "ShapeFactory.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -10,6 +11,9 @@ CIndexBuffer::CIndexBuffer(const uint32 *pData, uint32 uiCount, GLenum usage)
   : m_uiCount(uiCount)
   , m_usage(usage)
 {
+  if (!CShapeFactory::GetShapeFactory().m_bOglRunning)
+    return;
+
   GLCALL(glGenBuffers(1, &m_uiId));
   GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_uiId));
   GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, uiCount * sizeof(uint32), pData, usage));
@@ -19,6 +23,9 @@ CIndexBuffer::CIndexBuffer(const uint32 *pData, uint32 uiCount, GLenum usage)
 
 CIndexBuffer::~CIndexBuffer()
 {
+  if (!CShapeFactory::GetShapeFactory().m_bOglRunning)
+    return;
+
   glDeleteBuffers(1, &m_uiId);
 }
 

@@ -6,6 +6,7 @@
 #include "glew.h"
 #include "OpenGLDebug.h"
 #include "Vertex.h"
+#include "ShapeFactory.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
   #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -31,6 +32,9 @@ CTexture::~CTexture()
 
 void CTexture::ClearData()
 {
+  if (!CShapeFactory::GetShapeFactory().m_bOglRunning)
+    return;
+
   GLCALL(glDeleteTextures(1, &m_uiId));
   m_uiId = 0;
   m_iNumTiles = 0;

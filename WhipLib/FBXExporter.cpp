@@ -99,14 +99,14 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, FbxScene *pScene)
     controlPointsAy[i] = controlPoint;
   }
 
-  //create normals
-  FbxGeometryElementNormal *pGeometryElementNormal = pMesh->CreateElementNormal();
-  pGeometryElementNormal->SetMappingMode(FbxGeometryElement::eByControlPoint);
-  pGeometryElementNormal->SetReferenceMode(FbxGeometryElement::eDirect);
-  for (int i = 0; i < (int)pShapeData->m_uiNumVerts; ++i) {
-    FbxVector4 normal(pShapeData->m_vertices[i].normal.x, pShapeData->m_vertices[i].normal.y, pShapeData->m_vertices[i].normal.z);
-    pGeometryElementNormal->GetDirectArray().Add(normal);
-  }
+  ////create normals
+  //FbxGeometryElementNormal *pGeometryElementNormal = pMesh->CreateElementNormal();
+  //pGeometryElementNormal->SetMappingMode(FbxGeometryElement::eByControlPoint);
+  //pGeometryElementNormal->SetReferenceMode(FbxGeometryElement::eDirect);
+  //for (int i = 0; i < (int)pShapeData->m_uiNumVerts; ++i) {
+  //  FbxVector4 normal(pShapeData->m_vertices[i].normal.x, pShapeData->m_vertices[i].normal.y, pShapeData->m_vertices[i].normal.z);
+  //  pGeometryElementNormal->GetDirectArray().Add(normal);
+  //}
 
   //// Create UV for Diffuse channel.
   //FbxGeometryElementUV *lUVDiffuseElement = pMesh->CreateElementUV("DiffuseUV");
@@ -125,7 +125,7 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, FbxScene *pScene)
   ////we must update the size of the index array.
   //lUVDiffuseElement->GetIndexArray().SetCount((int)pShapeData->m_uiNumIndices);
 
-  //FbxSurfacePhong *pMaterial = CreateMaterial(pScene);
+  FbxSurfacePhong *pMaterial = CreateMaterial(pScene);
   //create polygons
   for (int i = 0; i < (int)pShapeData->m_uiNumIndices / 3; ++i) {
     pMesh->BeginPolygon();
@@ -139,14 +139,13 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, FbxScene *pScene)
     pMesh->EndPolygon();
   }
 
-  //AddMaterials(pMaterial, pMesh, pShapeData);
-
   // create a FbxNode
   FbxNode *pNode = FbxNode::Create(pScene, "shape");
   // set the node attribute
   pNode->SetNodeAttribute(pMesh);
   // set the shading mode to view texture
   //pNode->SetShadingMode(FbxNode::eTextureShading);
+  AddMaterials(pMaterial, pMesh, pShapeData);
 
   return pNode;
 }
@@ -184,23 +183,23 @@ FbxSurfacePhong *CFBXExporter::CreateMaterial(FbxScene *pScene)
 void CFBXExporter::AddMaterials(FbxSurfacePhong *pMaterial, FbxMesh *pMesh, CShapeData *pShapeData)
 {
     // Set material mapping.
-  FbxGeometryElementMaterial *lMaterialElement = pMesh->CreateElementMaterial();
-  lMaterialElement->SetMappingMode(FbxGeometryElement::eByPolygon);
-  lMaterialElement->SetReferenceMode(FbxGeometryElement::eIndexToDirect);
+  FbxGeometryElementMaterial *pMaterialElement = pMesh->CreateElementMaterial();
+  pMaterialElement->SetMappingMode(FbxGeometryElement::eByPolygon);
+  pMaterialElement->SetReferenceMode(FbxGeometryElement::eIndexToDirect);
 
   //get the node of mesh, add material for it.
-  FbxNode *lNode = pMesh->GetNode();
-  if (lNode == NULL)
+  FbxNode *pNode = pMesh->GetNode();
+  if (pNode == NULL)
     return;
-  lNode->AddMaterial(pMaterial);
+  pNode->AddMaterial(pMaterial);
 
   // We are in eByPolygon, so there's only need for 6 index (a cube has 6 polygons).
   int iNumPols = (int)pShapeData->m_uiNumIndices / 3;
-  lMaterialElement->GetIndexArray().SetCount(iNumPols);
+  pMaterialElement->GetIndexArray().SetCount(iNumPols);
 
   // Set the Index 0 to 6 to the material in position 0 of the direct array.
   for (int i = 0; i < iNumPols; ++i)
-    lMaterialElement->GetIndexArray().SetAt(i, 0);
+    pMaterialElement->GetIndexArray().SetAt(i, 0);
 }
 
 //-------------------------------------------------------------------------------------------------

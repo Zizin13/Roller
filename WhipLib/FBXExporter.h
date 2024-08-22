@@ -2,6 +2,11 @@
 #define _WHIPLIB_FBXEXPORTER_H
 //-------------------------------------------------------------------------------------------------
 class CShapeData;
+namespace fbxsdk
+{
+  class FbxNode;
+  class FbxScene;
+};
 //-------------------------------------------------------------------------------------------------
 
 class CFBXExporter
@@ -16,6 +21,7 @@ public:
 
 private:
   CFBXExporter();
+  fbxsdk::FbxNode *CreateShapeMesh(CShapeData *pShapeData, fbxsdk::FbxScene *pScene);
 };
 
 //-------------------------------------------------------------------------------------------------

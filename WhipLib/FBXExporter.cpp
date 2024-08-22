@@ -2,6 +2,7 @@
 #include "ShapeData.h"
 #include "Logging.h"
 #include <fbxsdk.h>
+#include <vector>
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -13,6 +14,10 @@ using namespace FBXSDK_NAMESPACE;
 //-------------------------------------------------------------------------------------------------
 
 FbxManager *g_pFbxManager = NULL;
+
+//-------------------------------------------------------------------------------------------------
+
+typedef std::map<std::string, int> CColorMaterialMap; //map of color to material index
 
 //-------------------------------------------------------------------------------------------------
 
@@ -47,7 +52,7 @@ CFBXExporter::~CFBXExporter()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szFile)
+bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szName, const char *szFile)
 {
   if (!pShapeData || !szFile)
     return false;
@@ -72,7 +77,7 @@ bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szFile)
     return false;
   }
 
-  FbxNode *pShapeMesh = CreateShapeMesh(pShapeData, pScene);
+  FbxNode *pShapeMesh = CreateShapeMesh(pShapeData, szName, pScene);
   pScene->GetRootNode()->AddChild(pShapeMesh);
 
   g_pFbxManager->GetIOSettings()->SetBoolProp(EXP_FBX_EMBEDDED, true);
@@ -86,10 +91,12 @@ bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szFile)
 
 //-------------------------------------------------------------------------------------------------
 
-FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, FbxScene *pScene)
+FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szName, FbxScene *pScene)
 {
+  int iNumPols = (int)pShapeData->m_uiNumIndices / 3;
+
   //create mesh object
-  FbxMesh *pMesh = FbxMesh::Create(pScene, "shape mesh");
+  FbxMesh *pMesh = FbxMesh::Create(pScene, szName);
 
   //create vertices
   pMesh->InitControlPoints((int)pShapeData->m_uiNumVerts);
@@ -99,14 +106,14 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, FbxScene *pScene)
     controlPointsAy[i] = controlPoint;
   }
 
-  ////create normals
-  //FbxGeometryElementNormal *pGeometryElementNormal = pMesh->CreateElementNormal();
-  //pGeometryElementNormal->SetMappingMode(FbxGeometryElement::eByControlPoint);
-  //pGeometryElementNormal->SetReferenceMode(FbxGeometryElement::eDirect);
-  //for (int i = 0; i < (int)pShapeData->m_uiNumVerts; ++i) {
-  //  FbxVector4 normal(pShapeData->m_vertices[i].normal.x, pShapeData->m_vertices[i].normal.y, pShapeData->m_vertices[i].normal.z);
-  //  pGeometryElementNormal->GetDirectArray().Add(normal);
-  //}
+  //create normals
+  FbxGeometryElementNormal *pGeometryElementNormal = pMesh->CreateElementNormal();
+  pGeometryElementNormal->SetMappingMode(FbxGeometryElement::eByControlPoint);
+  pGeometryElementNormal->SetReferenceMode(FbxGeometryElement::eDirect);
+  for (int i = 0; i < (int)pShapeData->m_uiNumVerts; ++i) {
+    FbxVector4 normal(pShapeData->m_vertices[i].normal.x, pShapeData->m_vertices[i].normal.y, pShapeData->m_vertices[i].normal.z);
+    pGeometryElementNormal->GetDirectArray().Add(normal);
+  }
 
   //// Create UV for Diffuse channel.
   //FbxGeometryElementUV *lUVDiffuseElement = pMesh->CreateElementUV("DiffuseUV");
@@ -125,10 +132,30 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, FbxScene *pScene)
   ////we must update the size of the index array.
   //lUVDiffuseElement->GetIndexArray().SetCount((int)pShapeData->m_uiNumIndices);
 
-  FbxSurfacePhong *pMaterial = CreateMaterial(pScene);
-  //create polygons
-  for (int i = 0; i < (int)pShapeData->m_uiNumIndices / 3; ++i) {
+  //set material mapping
+  FbxGeometryElementMaterial *pMaterialElement = pMesh->CreateElementMaterial();
+  pMaterialElement->SetMappingMode(FbxGeometryElement::eByPolygon);
+  pMaterialElement->SetReferenceMode(FbxGeometryElement::eIndexToDirect);
+  pMaterialElement->GetIndexArray().SetCount(iNumPols);
+  std::vector<FbxSurfacePhong *> addedMaterials;
+  CColorMaterialMap colorMaterialMap;
+
+  //create polygons and materials
+  for (int i = 0; i < iNumPols; ++i) {
     pMesh->BeginPolygon();
+
+    if (true || pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.x == 1.0f) {
+      //polygon is solid color
+      glm::vec3 color = pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color;
+      CColorMaterialMap::iterator it = colorMaterialMap.find(GetColorString(color));
+      if (it == colorMaterialMap.end()) { //only add new material if it's a new color
+        FbxSurfacePhong *pNewMaterial = CreateColorMaterial(color, pScene);
+        colorMaterialMap[GetColorString(color)] = (int)addedMaterials.size();
+        addedMaterials.push_back(pNewMaterial);
+      }
+    } else {
+      //texture
+    }
 
     for (int j = 0; j < 3; ++j) {
       pMesh->AddPolygon(pShapeData->m_indices[i * 3 + j]);
@@ -140,35 +167,53 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, FbxScene *pScene)
   }
 
   // create a FbxNode
-  FbxNode *pNode = FbxNode::Create(pScene, "shape");
+  FbxNode *pNode = FbxNode::Create(pScene, szName);
   // set the node attribute
   pNode->SetNodeAttribute(pMesh);
   // set the shading mode to view texture
   //pNode->SetShadingMode(FbxNode::eTextureShading);
-  AddMaterials(pMaterial, pMesh, pShapeData);
+
+  //add materials to mesh
+  for (int i = 0; i < (int)addedMaterials.size(); ++i) {
+    pNode->AddMaterial(addedMaterials[i]);
+  }
+
+  //assign materials to polygons
+  for (int i = 0; i < iNumPols; ++i) {
+    if (true || pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.x == 1.0f) {
+      //polygon is solid color
+      glm::vec3 color = pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color;
+      CColorMaterialMap::iterator it = colorMaterialMap.find(GetColorString(color));
+      if (it != colorMaterialMap.end()) {
+        pMaterialElement->GetIndexArray().SetAt(i, it->second);
+      } else {
+        assert(0); //color should have been added
+      }
+    } else {
+      //texture
+    }
+  }
 
   return pNode;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-FbxSurfacePhong *CFBXExporter::CreateMaterial(FbxScene *pScene)
+FbxSurfacePhong *CFBXExporter::CreateColorMaterial(const glm::vec3 &color, FbxScene *pScene)
 {
   FbxSurfacePhong *pMaterial;
 
-  FbxString lMaterialName = "material";
-  FbxString lShadingName = "Phong";
-  FbxDouble3 lBlack(0.0, 0.0, 0.0);
-  FbxDouble3 lRed(1.0, 0.0, 0.0);
-  FbxDouble3 lDiffuseColor(0.75, 0.75, 0.0);
-  pMaterial = FbxSurfacePhong::Create(pScene, lMaterialName.Buffer());
+  std::string sName = "Color: " + GetColorString(color);
+  FbxDouble3 black(0.0, 0.0, 0.0);
+  FbxDouble3 diffuseColor(color.r, color.g, color.b);
+  pMaterial = FbxSurfacePhong::Create(pScene, sName.c_str());
 
   // Generate primary and secondary colors.
-  pMaterial->Emissive.Set(lBlack);
-  pMaterial->Ambient.Set(lRed);
-  pMaterial->Diffuse.Set(lDiffuseColor);
+  pMaterial->Emissive.Set(black);
+  pMaterial->Ambient.Set(diffuseColor);
+  pMaterial->Diffuse.Set(diffuseColor);
   pMaterial->TransparencyFactor.Set(40.5);
-  pMaterial->ShadingModel.Set(lShadingName);
+  pMaterial->ShadingModel.Set("Phong");
   pMaterial->Shininess.Set(0.5);
 
   //// the texture need to be connected to the material on the corresponding property
@@ -180,26 +225,11 @@ FbxSurfacePhong *CFBXExporter::CreateMaterial(FbxScene *pScene)
 
 //-------------------------------------------------------------------------------------------------
 
-void CFBXExporter::AddMaterials(FbxSurfacePhong *pMaterial, FbxMesh *pMesh, CShapeData *pShapeData)
+std::string CFBXExporter::GetColorString(const glm::vec3 &color)
 {
-    // Set material mapping.
-  FbxGeometryElementMaterial *pMaterialElement = pMesh->CreateElementMaterial();
-  pMaterialElement->SetMappingMode(FbxGeometryElement::eByPolygon);
-  pMaterialElement->SetReferenceMode(FbxGeometryElement::eIndexToDirect);
-
-  //get the node of mesh, add material for it.
-  FbxNode *pNode = pMesh->GetNode();
-  if (pNode == NULL)
-    return;
-  pNode->AddMaterial(pMaterial);
-
-  // We are in eByPolygon, so there's only need for 6 index (a cube has 6 polygons).
-  int iNumPols = (int)pShapeData->m_uiNumIndices / 3;
-  pMaterialElement->GetIndexArray().SetCount(iNumPols);
-
-  // Set the Index 0 to 6 to the material in position 0 of the direct array.
-  for (int i = 0; i < iNumPols; ++i)
-    pMaterialElement->GetIndexArray().SetAt(i, 0);
+  return "(" + std::to_string(color.r) +
+    "," + std::to_string(color.g) +
+    "," + std::to_string(color.b) + ")";
 }
 
 //-------------------------------------------------------------------------------------------------

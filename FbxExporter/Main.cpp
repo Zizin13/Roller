@@ -37,7 +37,7 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir)
     return false;
 
   std::string sFilename = sOutDir + std::string("\\") + sCarName + std::string(".fbx");
-  bool bSuccess = CFBXExporter::GetFBXExporter().ExportShape(pCar, sFilename.c_str());
+  bool bSuccess = CFBXExporter::GetFBXExporter().ExportShape(pCar, sCarName.c_str(), sFilename.c_str());
 
   delete pCar;
   return bSuccess;
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
   CShapeFactory::GetShapeFactory().m_bOglRunning = false;
 
   //export models
-  //ExportCar(CAR_F1WACK, sWhipDir, sOutDir);
+  ExportCar(CAR_F1WACK, sWhipDir, sOutDir);
   ExportCar(CAR_XZIZIN, sWhipDir, sOutDir);
 
   //exit

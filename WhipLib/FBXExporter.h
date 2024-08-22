@@ -1,6 +1,10 @@
 #ifndef _WHIPLIB_FBXEXPORTER_H
 #define _WHIPLIB_FBXEXPORTER_H
 //-------------------------------------------------------------------------------------------------
+#include <map>
+#include <string>
+#include "glm.hpp"
+//-------------------------------------------------------------------------------------------------
 class CShapeData;
 namespace fbxsdk
 {
@@ -19,13 +23,13 @@ public:
   CFBXExporter(CFBXExporter const &) = delete;
   void operator=(CFBXExporter const &) = delete;
 
-  bool ExportShape(CShapeData *pShapeData, const char *szFile);
+  bool ExportShape(CShapeData *pShapeData, const char *szName, const char *szFile);
 
 private:
   CFBXExporter();
-  fbxsdk::FbxNode *CreateShapeMesh(CShapeData *pShapeData, fbxsdk::FbxScene *pScene);
-  fbxsdk::FbxSurfacePhong *CreateMaterial(fbxsdk::FbxScene *pScene);
-  void AddMaterials(fbxsdk::FbxSurfacePhong *pMaterial, fbxsdk::FbxMesh *pMesh, CShapeData *pShapeData);
+  fbxsdk::FbxNode *CreateShapeMesh(CShapeData *pShapeData, const char *szName, fbxsdk::FbxScene *pScene);
+  fbxsdk::FbxSurfacePhong *CreateColorMaterial(const glm::vec3 &color, fbxsdk::FbxScene *pScene);
+  std::string GetColorString(const glm::vec3 &color);
 };
 
 //-------------------------------------------------------------------------------------------------

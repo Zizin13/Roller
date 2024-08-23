@@ -310,7 +310,7 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
 
 uint8 *CTexture::GenerateBitmapData(int &iSize)
 {
-  iSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + (3 * TILE_WIDTH * TILE_HEIGHT * m_iNumTiles);
+  iSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + (4 * TILE_WIDTH * TILE_HEIGHT * m_iNumTiles);
 
   BITMAPFILEHEADER fileHeader = { 0 };
   fileHeader.bfType = 0x4D42; //BM
@@ -322,7 +322,7 @@ uint8 *CTexture::GenerateBitmapData(int &iSize)
   infoHeader.biWidth = TILE_WIDTH;
   infoHeader.biHeight = m_iNumTiles * TILE_HEIGHT;
   infoHeader.biPlanes = 1;
-  infoHeader.biBitCount = 24;
+  infoHeader.biBitCount = 32;
   infoHeader.biCompression = 0;
   infoHeader.biSizeImage = 0;
   infoHeader.biXPelsPerMeter = 3780;
@@ -345,6 +345,7 @@ uint8 *CTexture::GenerateBitmapData(int &iSize)
         pData[iOffset++] = pTilesFlipped[i].data[x][y].b;
         pData[iOffset++] = pTilesFlipped[i].data[x][y].g;
         pData[iOffset++] = pTilesFlipped[i].data[x][y].r;
+        pData[iOffset++] = pTilesFlipped[i].data[x][y].a;
       }
     }
   }

@@ -1,6 +1,7 @@
 #include "FBXExporter.h"
 #include "ShapeData.h"
 #include "Logging.h"
+#include "Texture.h"
 #include <fbxsdk.h>
 #include <vector>
 //-------------------------------------------------------------------------------------------------
@@ -115,22 +116,22 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
     pGeometryElementNormal->GetDirectArray().Add(normal);
   }
 
-  //// Create UV for Diffuse channel.
-  //FbxGeometryElementUV *lUVDiffuseElement = pMesh->CreateElementUV("DiffuseUV");
-  //FBX_ASSERT(lUVDiffuseElement != NULL);
-  //lUVDiffuseElement->SetMappingMode(FbxGeometryElement::eByPolygonVertex);
-  //lUVDiffuseElement->SetReferenceMode(FbxGeometryElement::eIndexToDirect);
-  //FbxVector2 lVectors0(0, 0);
-  //FbxVector2 lVectors1(1, 0);
-  //FbxVector2 lVectors2(1, 1);
-  //FbxVector2 lVectors3(0, 1);
-  //lUVDiffuseElement->GetDirectArray().Add(lVectors0);
-  //lUVDiffuseElement->GetDirectArray().Add(lVectors1);
-  //lUVDiffuseElement->GetDirectArray().Add(lVectors2);
-  //lUVDiffuseElement->GetDirectArray().Add(lVectors3);
-  ////Now we have set the UVs as eIndexToDirect reference and in eByPolygonVertex  mapping mode
-  ////we must update the size of the index array.
-  //lUVDiffuseElement->GetIndexArray().SetCount((int)pShapeData->m_uiNumIndices);
+  // Create UV for Diffuse channel.
+  FbxGeometryElementUV *lUVDiffuseElement = pMesh->CreateElementUV("DiffuseUV");
+  FBX_ASSERT(lUVDiffuseElement != NULL);
+  lUVDiffuseElement->SetMappingMode(FbxGeometryElement::eByPolygonVertex);
+  lUVDiffuseElement->SetReferenceMode(FbxGeometryElement::eIndexToDirect);
+  FbxVector2 lVectors0(0, 0);
+  FbxVector2 lVectors1(1, 0);
+  FbxVector2 lVectors2(1, 1);
+  FbxVector2 lVectors3(0, 1);
+  lUVDiffuseElement->GetDirectArray().Add(lVectors0);
+  lUVDiffuseElement->GetDirectArray().Add(lVectors1);
+  lUVDiffuseElement->GetDirectArray().Add(lVectors2);
+  lUVDiffuseElement->GetDirectArray().Add(lVectors3);
+  //Now we have set the UVs as eIndexToDirect reference and in eByPolygonVertex  mapping mode
+  //we must update the size of the index array.
+  lUVDiffuseElement->GetIndexArray().SetCount((int)pShapeData->m_uiNumIndices);
 
   //set material mapping
   FbxGeometryElementMaterial *pMaterialElement = pMesh->CreateElementMaterial();
@@ -141,10 +142,12 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
   CColorMaterialMap colorMaterialMap;
 
   //create polygons and materials
+  FbxSurfacePhong *pTextureMaterial = CreateTextureMaterial(pShapeData->m_pTexture, pScene);
+  addedMaterials.push_back(pTextureMaterial);
   for (int i = 0; i < iNumPols; ++i) {
     pMesh->BeginPolygon();
 
-    if (true || pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.x == 1.0f) {
+    if (pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.x == 1.0f) {
       //polygon is solid color
       glm::vec3 color = pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color;
       CColorMaterialMap::iterator it = colorMaterialMap.find(GetColorString(color));
@@ -154,13 +157,13 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
         addedMaterials.push_back(pNewMaterial);
       }
     } else {
-      //texture
+      //texture, already created this material so do nothing
     }
 
     for (int j = 0; j < 3; ++j) {
       pMesh->AddPolygon(pShapeData->m_indices[i * 3 + j]);
-      //// update the index array of the UVs that map the texture to the face
-      //lUVDiffuseElement->GetIndexArray().SetAt(i * 3 + j, j);
+      // update the index array of the UVs that map the texture to the face
+      lUVDiffuseElement->GetIndexArray().SetAt(i * 3 + j, j);
     }
     
     pMesh->EndPolygon();
@@ -170,8 +173,7 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
   FbxNode *pNode = FbxNode::Create(pScene, szName);
   // set the node attribute
   pNode->SetNodeAttribute(pMesh);
-  // set the shading mode to view texture
-  //pNode->SetShadingMode(FbxNode::eTextureShading);
+  pNode->SetShadingMode(FbxNode::eTextureShading);
 
   //add materials to mesh
   for (int i = 0; i < (int)addedMaterials.size(); ++i) {
@@ -180,7 +182,7 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
 
   //assign materials to polygons
   for (int i = 0; i < iNumPols; ++i) {
-    if (true || pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.x == 1.0f) {
+    if (pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.x == 1.0f) {
       //polygon is solid color
       glm::vec3 color = pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color;
       CColorMaterialMap::iterator it = colorMaterialMap.find(GetColorString(color));
@@ -190,7 +192,8 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
         assert(0); //color should have been added
       }
     } else {
-      //texture
+      //texture is always the first material added
+      pMaterialElement->GetIndexArray().SetAt(i, 0);
     }
   }
 
@@ -204,8 +207,22 @@ FbxSurfacePhong *CFBXExporter::CreateColorMaterial(const glm::vec3 &color, FbxSc
   FbxSurfacePhong *pMaterial;
 
   std::string sName = "Color: " + GetColorString(color);
-  FbxDouble3 black(0.0, 0.0, 0.0);
   FbxDouble3 diffuseColor(color.r, color.g, color.b);
+  pMaterial = FbxSurfacePhong::Create(pScene, sName.c_str());
+  pMaterial->Diffuse.Set(diffuseColor);
+
+  return pMaterial;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+fbxsdk::FbxSurfacePhong *CFBXExporter::CreateTextureMaterial(CTexture *pTexture, fbxsdk::FbxScene *pScene)
+{
+  FbxSurfacePhong *pMaterial;
+
+  std::string sName = "Texture";
+  FbxDouble3 black(0.0, 0.0, 0.0);
+  FbxDouble3 diffuseColor(0.75, 0.75, 0.0);
   pMaterial = FbxSurfacePhong::Create(pScene, sName.c_str());
 
   // Generate primary and secondary colors.
@@ -216,11 +233,25 @@ FbxSurfacePhong *CFBXExporter::CreateColorMaterial(const glm::vec3 &color, FbxSc
   pMaterial->ShadingModel.Set("Phong");
   pMaterial->Shininess.Set(0.5);
 
-  //// the texture need to be connected to the material on the corresponding property
-  //if (gTexture)
-  //  gMaterial->Diffuse.ConnectSrcObject(gTexture);
+  FbxProceduralTexture *pFbxTex = CreateProceduralTexture(pTexture, pScene);
+
+  // the texture need to be connected to the material on the corresponding property
+  if (pFbxTex)
+    pMaterial->Diffuse.ConnectSrcObject(pFbxTex);
 
   return pMaterial;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+FbxProceduralTexture *CFBXExporter::CreateProceduralTexture(CTexture *pTexture, FbxScene *pScene)
+{
+  FbxProceduralTexture *pProceduralTexture = FbxProceduralTexture::Create(pScene, "texture");
+
+  FbxBlob binaryBlob((const void *)pTexture->m_pTileAy, (int)(pTexture->m_iNumTiles * sizeof(tTile)));
+  pProceduralTexture->SetBlob(binaryBlob);
+
+  return pProceduralTexture;
 }
 
 //-------------------------------------------------------------------------------------------------

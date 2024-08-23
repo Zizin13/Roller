@@ -28,6 +28,7 @@ public:
   glm::mat4 m_modelToWorldMatrix;
   CIndexBuffer *m_pIndexBuf;
   CVertexBuffer *m_pVertexBuf;
+  CTexture *m_pTexture; //owned by track or renderer
 
   uint32 m_uiNumVerts;
   tVertex *m_vertices;
@@ -38,7 +39,6 @@ private:
   CVertexArray *m_pVertexArray;
   GLenum m_drawType;
   CShader *m_pShader; //owned by renderer
-  CTexture *m_pTexture; //owned by track
 };
 //-------------------------------------------------------------------------------------------------
 #endif

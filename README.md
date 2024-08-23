@@ -1,5 +1,5 @@
 # Roller
-Whiplash/Fatal Racing Track Editor
+Whiplash/Fatal Racing track editor and resource converter
 
 Features: 
 * Open, render, edit, and save Whiplash tracks

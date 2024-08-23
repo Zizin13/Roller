@@ -87,6 +87,7 @@ echo Copying License Files...
 echo f | xcopy ..\external\Qt5\QT_License.txt .\$(OutDir) /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glew\GLEW_License.txt .\$(OutDir) /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glm\copying.txt .\$(OutDir)GLM_License.txt /R /Y /d /i &gt; null
+echo f | xcopy ..\external\FBX\FBX_LICENSE.rtf .\$(OutDir)FBX_License.rtf /R /Y /d /i &gt; null
 echo f | xcopy ..\external\TrackEditor_LicensedLibs.txt .\$(OutDir)LicensedLibs.txt /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
@@ -139,6 +140,7 @@ echo Copying License Files...
 echo f | xcopy ..\external\Qt5\QT_License.txt .\$(OutDir) /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glew\GLEW_License.txt .\$(OutDir) /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glm\copying.txt .\$(OutDir)GLM_License.txt /R /Y /d /i &gt; null
+echo f | xcopy ..\external\FBX\FBX_LICENSE.rtf .\$(OutDir)FBX_License.rtf /R /Y /d /i &gt; null
 echo f | xcopy ..\external\TrackEditor_LicensedLibs.txt .\$(OutDir)LicensedLibs.txt /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 

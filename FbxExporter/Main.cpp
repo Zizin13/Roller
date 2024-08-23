@@ -78,9 +78,25 @@ int main(int argc, char *argv[])
   CShapeFactory::GetShapeFactory().m_fScale = 1.0f;
   CShapeFactory::GetShapeFactory().m_bOglRunning = false;
 
-  //export models
+  //export cars
   ExportCar(CAR_F1WACK, sWhipDir, sOutDir);
+  ExportCar(CAR_XAUTO, sWhipDir, sOutDir);
+  ExportCar(CAR_XDESILVA, sWhipDir, sOutDir);
+  ExportCar(CAR_XPULSE, sWhipDir, sOutDir);
+  ExportCar(CAR_XGLOBAL, sWhipDir, sOutDir);
+  ExportCar(CAR_XMILLION, sWhipDir, sOutDir);
+  ExportCar(CAR_XMISSION, sWhipDir, sOutDir);
   ExportCar(CAR_XZIZIN, sWhipDir, sOutDir);
+  ExportCar(CAR_XREISE, sWhipDir, sOutDir);
+  ExportCar(CAR_YAUTO, sWhipDir, sOutDir);
+  ExportCar(CAR_YDESILVA, sWhipDir, sOutDir);
+  ExportCar(CAR_YPULSE, sWhipDir, sOutDir);
+  ExportCar(CAR_YGLOBAL, sWhipDir, sOutDir);
+  ExportCar(CAR_YMILLION, sWhipDir, sOutDir);
+  ExportCar(CAR_YMISSION, sWhipDir, sOutDir);
+  ExportCar(CAR_YZIZIN, sWhipDir, sOutDir);
+  ExportCar(CAR_YREISE, sWhipDir, sOutDir);
+  ExportCar(CAR_DEATH, sWhipDir, sOutDir);
 
   //exit
   return 0;

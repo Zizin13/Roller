@@ -1,6 +1,20 @@
 # Roller
 Whiplash/Fatal Racing Track Editor
 
+Features: 
+* Export Whiplash assets to FBX format
+* Track geometry data can be edited and track chunks can be added and removed
+* Additional surface data such as grip level and AI data can be edited
+* Surface textures can be edited
+* Signs can be added, removed, repositioned, and edited
+* Audio triggers can be added, removed, and edited
+* Moving stunts can be added, removed, and edited
+* Track global settings such as texture files and lap data can be edited
+* Surface backface textures can be edited
+* Undo/Redo and Cut/Copy/Paste between tracks
+* Fine control over copy/paste behavior
+* Toggle display of each individual section of track
+
 ![alt text](https://github.com/Zizin13/Roller/blob/master/TrackEditor/images/screenshot.png)
 
 External dependencies used:

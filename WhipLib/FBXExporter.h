@@ -13,7 +13,7 @@ namespace fbxsdk
   class FbxScene;
   class FbxSurfacePhong;
   class FbxMesh;
-  class FbxProceduralTexture;
+  class FbxFileTexture;
 };
 //-------------------------------------------------------------------------------------------------
 
@@ -25,14 +25,14 @@ public:
   CFBXExporter(CFBXExporter const &) = delete;
   void operator=(CFBXExporter const &) = delete;
 
-  bool ExportShape(CShapeData *pShapeData, const char *szName, const char *szFile);
+  bool ExportShape(CShapeData *pShapeData, const char *szName, const char *szFile, const char *szTextureFile);
 
 private:
   CFBXExporter();
-  fbxsdk::FbxNode *CreateShapeMesh(CShapeData *pShapeData, const char *szName, fbxsdk::FbxScene *pScene);
+  fbxsdk::FbxNode *CreateShapeMesh(CShapeData *pShapeData, const char *szName, const char *szTextureFile, fbxsdk::FbxScene *pScene);
   fbxsdk::FbxSurfacePhong *CreateColorMaterial(const glm::vec3 &color, fbxsdk::FbxScene *pScene);
-  fbxsdk::FbxSurfacePhong *CreateTextureMaterial(CTexture *pTexture, fbxsdk::FbxScene *pScene);
-  fbxsdk::FbxProceduralTexture *CreateProceduralTexture(CTexture *pTexture, fbxsdk::FbxScene *pScene);
+  fbxsdk::FbxSurfacePhong *CreateTextureMaterial(const char *szTextureFile, fbxsdk::FbxScene *pScene);
+  fbxsdk::FbxFileTexture *CreateFileTexture(const char *szTextureFile, fbxsdk::FbxScene *pScene);
   std::string GetColorString(const glm::vec3 &color);
 };
 

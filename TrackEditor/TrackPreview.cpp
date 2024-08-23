@@ -696,9 +696,9 @@ bool CTrackPreview::ExportFBX()
   QString sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
     this, "Export Track As", p->m_track.m_sTrackFileFolder.c_str(), "FBX Files (*.fbx)"));
 
-  bool bExported = CFBXExporter::GetFBXExporter().ExportShape(p->m_pCar, "car", sFilename.toLatin1().constData());
-  if (!bExported)
-    return false;
+  //bool bExported = CFBXExporter::GetFBXExporter().ExportShape(p->m_pCar, "car", sFilename.toLatin1().constData());
+  //if (!bExported)
+  //  return false;
 
   g_pMainWindow->m_sLastTrackFilesFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
   return true;

@@ -32,20 +32,20 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir)
   if (!carTex.LoadTexture(sWhipDir + "\\" + sTex, &palette))
     return false;
 
-  ////test
-  //int iBmpSize;
-  //uint8 *pBmpData = carTex.GenerateBitmapData(iBmpSize);
-  //std::string sFile = sOutDir + "\\test.bmp";
-  //std::ofstream out(sFile.c_str(), std::ios_base::binary);
-  //if (!out.is_open()) {
-  //  printf("failed to open output file\n");
-  //  return false;
-  //}
-  //for (int i = 0; i < iBmpSize; ++i) {
-  //  out << pBmpData[i];
-  //}
-  //out.close();
-  //delete[] pBmpData;
+  //make texture file
+  int iBmpSize;
+  uint8 *pBmpData = carTex.GenerateBitmapData(iBmpSize);
+  std::string sTexFile = sOutDir + "\\" + sCarName + ".bmp";
+  std::ofstream out(sTexFile.c_str(), std::ios_base::binary);
+  if (!out.is_open()) {
+    printf("failed to open bmp output file\n");
+    return false;
+  }
+  for (int i = 0; i < iBmpSize; ++i) {
+    out << pBmpData[i];
+  }
+  out.close();
+  delete[] pBmpData;
 
   //create shape data
   CShapeData *pCar = CShapeFactory::GetShapeFactory().MakeModel(NULL, &carTex, carModel);
@@ -53,7 +53,7 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir)
     return false;
 
   std::string sFilename = sOutDir + std::string("\\") + sCarName + std::string(".fbx");
-  bool bSuccess = CFBXExporter::GetFBXExporter().ExportShape(pCar, sCarName.c_str(), sFilename.c_str());
+  bool bSuccess = CFBXExporter::GetFBXExporter().ExportShape(pCar, sCarName.c_str(), sFilename.c_str(), sTexFile.c_str());
 
   delete pCar;
   return bSuccess;

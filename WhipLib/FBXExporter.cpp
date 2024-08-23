@@ -53,9 +53,9 @@ CFBXExporter::~CFBXExporter()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szName, const char *szFile)
+bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szName, const char *szFile, const char *szTextureFile)
 {
-  if (!pShapeData || !szFile)
+  if (!pShapeData || !szFile || !szTextureFile)
     return false;
 
   FbxScene *pScene = FbxScene::Create(g_pFbxManager, "Export Scene");
@@ -78,10 +78,10 @@ bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szName, const
     return false;
   }
 
-  FbxNode *pShapeMesh = CreateShapeMesh(pShapeData, szName, pScene);
+  FbxNode *pShapeMesh = CreateShapeMesh(pShapeData, szName, szTextureFile, pScene);
   pScene->GetRootNode()->AddChild(pShapeMesh);
 
-  g_pFbxManager->GetIOSettings()->SetBoolProp(EXP_FBX_EMBEDDED, true);
+  //g_pFbxManager->GetIOSettings()->SetBoolProp(EXP_FBX_EMBEDDED, true);
 
   bool bSuccess = pExporter->Export(pScene);
 
@@ -92,7 +92,7 @@ bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szName, const
 
 //-------------------------------------------------------------------------------------------------
 
-FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szName, FbxScene *pScene)
+FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szName, const char *szTextureFile, FbxScene *pScene)
 {
   int iNumPols = (int)pShapeData->m_uiNumIndices / 3;
 
@@ -116,23 +116,6 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
     pGeometryElementNormal->GetDirectArray().Add(normal);
   }
 
-  // Create UV for Diffuse channel.
-  FbxGeometryElementUV *lUVDiffuseElement = pMesh->CreateElementUV("DiffuseUV");
-  FBX_ASSERT(lUVDiffuseElement != NULL);
-  lUVDiffuseElement->SetMappingMode(FbxGeometryElement::eByPolygonVertex);
-  lUVDiffuseElement->SetReferenceMode(FbxGeometryElement::eIndexToDirect);
-  FbxVector2 lVectors0(0, 0);
-  FbxVector2 lVectors1(1, 0);
-  FbxVector2 lVectors2(1, 1);
-  FbxVector2 lVectors3(0, 1);
-  lUVDiffuseElement->GetDirectArray().Add(lVectors0);
-  lUVDiffuseElement->GetDirectArray().Add(lVectors1);
-  lUVDiffuseElement->GetDirectArray().Add(lVectors2);
-  lUVDiffuseElement->GetDirectArray().Add(lVectors3);
-  //Now we have set the UVs as eIndexToDirect reference and in eByPolygonVertex  mapping mode
-  //we must update the size of the index array.
-  lUVDiffuseElement->GetIndexArray().SetCount((int)pShapeData->m_uiNumIndices);
-
   //set material mapping
   FbxGeometryElementMaterial *pMaterialElement = pMesh->CreateElementMaterial();
   pMaterialElement->SetMappingMode(FbxGeometryElement::eByPolygon);
@@ -142,13 +125,13 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
   CColorMaterialMap colorMaterialMap;
 
   //create polygons and materials
-  FbxSurfacePhong *pTextureMaterial = CreateTextureMaterial(pShapeData->m_pTexture, pScene);
+  FbxSurfacePhong *pTextureMaterial = CreateTextureMaterial(szTextureFile, pScene);
   addedMaterials.push_back(pTextureMaterial);
   for (int i = 0; i < iNumPols; ++i) {
     pMesh->BeginPolygon();
 
+    //need to add materials for solid color polygons
     if (pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.x == 1.0f) {
-      //polygon is solid color
       glm::vec3 color = pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color;
       CColorMaterialMap::iterator it = colorMaterialMap.find(GetColorString(color));
       if (it == colorMaterialMap.end()) { //only add new material if it's a new color
@@ -156,17 +139,27 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
         colorMaterialMap[GetColorString(color)] = (int)addedMaterials.size();
         addedMaterials.push_back(pNewMaterial);
       }
-    } else {
-      //texture, already created this material so do nothing
     }
 
+    //create polygon from indices
     for (int j = 0; j < 3; ++j) {
       pMesh->AddPolygon(pShapeData->m_indices[i * 3 + j]);
-      // update the index array of the UVs that map the texture to the face
-      lUVDiffuseElement->GetIndexArray().SetAt(i * 3 + j, j);
     }
-    
     pMesh->EndPolygon();
+  }
+
+  //create UV for diffuse channel.
+  FbxGeometryElementUV *lUVDiffuseElement = pMesh->CreateElementUV("DiffuseUV");
+  FBX_ASSERT(lUVDiffuseElement != NULL);
+  lUVDiffuseElement->SetMappingMode(FbxGeometryElement::eByPolygonVertex);
+  lUVDiffuseElement->SetReferenceMode(FbxGeometryElement::eIndexToDirect);
+  lUVDiffuseElement->GetIndexArray().SetCount((int)pShapeData->m_uiNumIndices);
+  //generate UV mapping
+  for (int i = 0; i < (int)pShapeData->m_uiNumIndices; ++i) {
+    FbxVector2 uv(pShapeData->m_vertices[pShapeData->m_indices[i]].texCoords.x,
+                  pShapeData->m_vertices[pShapeData->m_indices[i]].texCoords.y);
+    lUVDiffuseElement->GetDirectArray().Add(uv);
+    lUVDiffuseElement->GetIndexArray().SetAt(i, i);
   }
 
   // create a FbxNode
@@ -215,7 +208,7 @@ FbxSurfacePhong *CFBXExporter::CreateColorMaterial(const glm::vec3 &color, FbxSc
 
 //-------------------------------------------------------------------------------------------------
 
-fbxsdk::FbxSurfacePhong *CFBXExporter::CreateTextureMaterial(CTexture *pTexture, fbxsdk::FbxScene *pScene)
+fbxsdk::FbxSurfacePhong *CFBXExporter::CreateTextureMaterial(const char *szTextureFile, fbxsdk::FbxScene *pScene)
 {
   FbxSurfacePhong *pMaterial;
 
@@ -232,7 +225,7 @@ fbxsdk::FbxSurfacePhong *CFBXExporter::CreateTextureMaterial(CTexture *pTexture,
   pMaterial->ShadingModel.Set("Phong");
   pMaterial->Shininess.Set(0.5);
 
-  FbxProceduralTexture *pFbxTex = CreateProceduralTexture(pTexture, pScene);
+  FbxFileTexture *pFbxTex = CreateFileTexture(szTextureFile, pScene);
 
   // the texture need to be connected to the material on the corresponding property
   if (pFbxTex)
@@ -243,16 +236,42 @@ fbxsdk::FbxSurfacePhong *CFBXExporter::CreateTextureMaterial(CTexture *pTexture,
 
 //-------------------------------------------------------------------------------------------------
 
-FbxProceduralTexture *CFBXExporter::CreateProceduralTexture(CTexture *pTexture, FbxScene *pScene)
+//FbxProceduralTexture *CFBXExporter::CreateProceduralTexture(CTexture *pTexture, FbxScene *pScene)
+//{
+//  FbxProceduralTexture *pProceduralTexture = FbxProceduralTexture::Create(pScene, "texture");
+//
+//  int iBmpSize;
+//  uint8 *pBmpData = pTexture->GenerateBitmapData(iBmpSize);
+//  FbxBlob binaryBlob(pBmpData, iBmpSize);
+//  pProceduralTexture->SetBlob(binaryBlob);
+//  pProceduralTexture->SetTextureUse(FbxTexture::eStandard);
+//  pProceduralTexture->SetMappingType(FbxTexture::eUV);
+//  //pProceduralTexture->SetMaterialUse(FbxFileTexture::eModelMaterial);
+//  pProceduralTexture->SetSwapUV(false);
+//  pProceduralTexture->SetTranslation(0.0, 0.0);
+//  pProceduralTexture->SetScale(1.0, 1.0);
+//  pProceduralTexture->SetRotation(0.0, 0.0);
+//
+//  return pProceduralTexture;
+//}
+
+//-------------------------------------------------------------------------------------------------
+
+FbxFileTexture *CFBXExporter::CreateFileTexture(const char *szTextureFile, FbxScene *pScene)
 {
-  FbxProceduralTexture *pProceduralTexture = FbxProceduralTexture::Create(pScene, "texture");
+  std::string sTexName = "Texture: " + std::string(szTextureFile);
+  FbxFileTexture *pFileTexture = FbxFileTexture::Create(pScene, sTexName.c_str());
 
-  int iBmpSize;
-  uint8 *pBmpData = pTexture->GenerateBitmapData(iBmpSize);
-  FbxBlob binaryBlob(pBmpData, iBmpSize);
-  pProceduralTexture->SetBlob(binaryBlob);
+  pFileTexture->SetFileName(szTextureFile);
+  pFileTexture->SetTextureUse(FbxTexture::eStandard);
+  pFileTexture->SetMappingType(FbxTexture::eUV);
+  pFileTexture->SetMaterialUse(FbxFileTexture::eModelMaterial);
+  pFileTexture->SetSwapUV(false);
+  pFileTexture->SetTranslation(0.0, 0.0);
+  pFileTexture->SetScale(1.0, 1.0);
+  pFileTexture->SetRotation(0.0, 0.0);
 
-  return pProceduralTexture;
+  return pFileTexture;
 }
 
 //-------------------------------------------------------------------------------------------------

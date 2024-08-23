@@ -334,16 +334,21 @@ uint8 *CTexture::GenerateBitmapData(int &iSize)
   memcpy(pData, &fileHeader, sizeof(fileHeader));
   memcpy(pData + sizeof(fileHeader), &infoHeader, sizeof(infoHeader));
 
+
+  tTile *pTilesFlipped = new tTile[m_iNumTiles];
+  FlipTileLines(m_pTileAy, pTilesFlipped, m_iNumTiles);
+
   int iOffset = fileHeader.bfOffBits;
   for (int i = 0; i < m_iNumTiles; ++i) {
     for (int x = 0; x < TILE_WIDTH; ++x) {
       for (int y = 0; y < TILE_HEIGHT; ++y) {
-        pData[iOffset++] = m_pTileAy[i].data[x][y].r;
-        pData[iOffset++] = m_pTileAy[i].data[x][y].g;
-        pData[iOffset++] = m_pTileAy[i].data[x][y].b;
+        pData[iOffset++] = pTilesFlipped[i].data[x][y].b;
+        pData[iOffset++] = pTilesFlipped[i].data[x][y].g;
+        pData[iOffset++] = pTilesFlipped[i].data[x][y].r;
       }
     }
   }
+  delete[] pTilesFlipped;
 
   return pData;
 }

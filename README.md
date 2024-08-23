@@ -1,7 +1,9 @@
 # Roller
 Whiplash/Fatal Racing track editor and resource converter
 
-Track Editor Features: 
+![alt text](https://github.com/Zizin13/Roller/blob/master/TrackEditor/images/screenshot.png)
+
+## Track Editor Features: 
 * Open, render, edit, and save Whiplash tracks
 * Multiple tracks open at once in tabs
 * Export tracks to FBX format
@@ -17,18 +19,16 @@ Track Editor Features:
 * Fine control over Copy/Paste behavior
 * Toggle display of each individual section of track
 
-FbxExporter Features:
+## FbxExporter Features:
 * Exports all Whiplash tracks and cars to FBX format
 
-![alt text](https://github.com/Zizin13/Roller/blob/master/TrackEditor/images/screenshot.png)
-
-External dependencies used:
+## External dependencies used:
 * Qt 5.15.2: https://download.qt.io/archive/qt/5.15/5.15.2/single/qt-everywhere-src-5.15.2.zip.mirrorlist
 * Glew 2.1.0: https://sourceforge.net/projects/glew/files/glew/2.1.0/
 * GLM 1.0.1: https://github.com/g-truc/glm
 * FBX 2020.3.7: https://aps.autodesk.com/developer/overview/fbx-sdk (libs are too big to include on github, must install SDK to /external/FBX)
 
-Remaining issues:
+## Remaining issues:
 - TRACK1: right wall at the end of final tunnel is shaped wrong (483-486)
 - TRACK4: light green outer walls - bit 31? (217-241)
 - TRACK5: light green outer walls right before start/finish, roofs before jump (363-366, 81, 87, 93, 99)

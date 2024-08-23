@@ -58,6 +58,7 @@ public:
   void GetTextureCoordinates(uint32 uiSurfaceType,
                              tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
                              bool bLeftLane = false, bool bRightLane = false, bool bBack = false);
+  uint8 *GenerateBitmapData(int &iSize);
 
   tTile *m_pTileAy;
   int m_iNumTiles;

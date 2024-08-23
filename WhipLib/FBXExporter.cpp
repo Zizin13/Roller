@@ -171,7 +171,6 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
 
   // create a FbxNode
   FbxNode *pNode = FbxNode::Create(pScene, szName);
-  // set the node attribute
   pNode->SetNodeAttribute(pMesh);
   pNode->SetShadingMode(FbxNode::eTextureShading);
 
@@ -248,7 +247,9 @@ FbxProceduralTexture *CFBXExporter::CreateProceduralTexture(CTexture *pTexture, 
 {
   FbxProceduralTexture *pProceduralTexture = FbxProceduralTexture::Create(pScene, "texture");
 
-  FbxBlob binaryBlob((const void *)pTexture->m_pTileAy, (int)(pTexture->m_iNumTiles * sizeof(tTile)));
+  int iBmpSize;
+  uint8 *pBmpData = pTexture->GenerateBitmapData(iBmpSize);
+  FbxBlob binaryBlob(pBmpData, iBmpSize);
   pProceduralTexture->SetBlob(binaryBlob);
 
   return pProceduralTexture;

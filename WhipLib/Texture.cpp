@@ -7,6 +7,7 @@
 #include "OpenGLDebug.h"
 #include "Vertex.h"
 #include "ShapeFactory.h"
+#include <Windows.h>
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
   #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -303,6 +304,48 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
       }
     }
   }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+uint8 *CTexture::GenerateBitmapData(int &iSize)
+{
+  iSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + (3 * TILE_WIDTH * TILE_HEIGHT * m_iNumTiles);
+
+  BITMAPFILEHEADER fileHeader = { 0 };
+  fileHeader.bfType = 0x4D42; //BM
+  fileHeader.bfSize = iSize;
+  fileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
+
+  BITMAPINFOHEADER infoHeader = { 0 };
+  infoHeader.biSize = sizeof(BITMAPINFOHEADER);
+  infoHeader.biWidth = TILE_WIDTH;
+  infoHeader.biHeight = m_iNumTiles * TILE_HEIGHT;
+  infoHeader.biPlanes = 1;
+  infoHeader.biBitCount = 24;
+  infoHeader.biCompression = 0;
+  infoHeader.biSizeImage = 0;
+  infoHeader.biXPelsPerMeter = 3780;
+  infoHeader.biYPelsPerMeter = 3780;
+  infoHeader.biClrUsed = 0;
+  infoHeader.biClrImportant = 0;
+
+  uint8 *pData = new uint8[fileHeader.bfSize];
+  memcpy(pData, &fileHeader, sizeof(fileHeader));
+  memcpy(pData + sizeof(fileHeader), &infoHeader, sizeof(infoHeader));
+
+  int iOffset = fileHeader.bfOffBits;
+  for (int i = 0; i < m_iNumTiles; ++i) {
+    for (int x = 0; x < TILE_WIDTH; ++x) {
+      for (int y = 0; y < TILE_HEIGHT; ++y) {
+        pData[iOffset++] = m_pTileAy[i].data[x][y].r;
+        pData[iOffset++] = m_pTileAy[i].data[x][y].g;
+        pData[iOffset++] = m_pTileAy[i].data[x][y].b;
+      }
+    }
+  }
+
+  return pData;
 }
 
 //-------------------------------------------------------------------------------------------------

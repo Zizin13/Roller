@@ -5,6 +5,7 @@
 #include "Palette.h"
 #include "Logging.h"
 #include <string>
+#include <fstream>
 //-------------------------------------------------------------------------------------------------
 
 static void LogMessageCbStatic(const char *szMsg, int iLen)
@@ -30,6 +31,21 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir)
   CTexture carTex;
   if (!carTex.LoadTexture(sWhipDir + "\\" + sTex, &palette))
     return false;
+
+  ////test
+  //int iBmpSize;
+  //uint8 *pBmpData = carTex.GenerateBitmapData(iBmpSize);
+  //std::string sFile = sOutDir + "\\test.bmp";
+  //std::ofstream out(sFile.c_str(), std::ios_base::binary);
+  //if (!out.is_open()) {
+  //  printf("failed to open output file\n");
+  //  return false;
+  //}
+  //for (int i = 0; i < iBmpSize; ++i) {
+  //  out << pBmpData[i];
+  //}
+  //out.close();
+  //delete[] pBmpData;
 
   //create shape data
   CShapeData *pCar = CShapeFactory::GetShapeFactory().MakeModel(NULL, &carTex, carModel);

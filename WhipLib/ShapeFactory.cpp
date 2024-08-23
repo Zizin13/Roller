@@ -1185,7 +1185,10 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShapeData *pShape, CShader *pShader
     uint32 *indices = NULL;
     GLenum drawType = GL_TRIANGLES;
     if (!bWireframe) {
-      indices = MakeIndicesSingleSection(uiNumIndices, section, pTrack, bAttachLast);
+      if (section == eShapeSection::EXPORT)
+        indices = MakeIndicesExport(uiNumIndices, pTrack);
+      else
+        indices = MakeIndicesSingleSection(uiNumIndices, section, pTrack, bAttachLast);
     } else {
       indices = MakeIndicesSingleSectionWireframe(uiNumIndices, pTrack, bAttachLast);
       drawType = GL_LINES;
@@ -1196,15 +1199,21 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShapeData *pShape, CShader *pShader
     CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
     pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
+    pShape->m_vertices = vertices;
+    pShape->m_uiNumVerts = uiNumVerts;
+    pShape->m_indices = indices;
+    pShape->m_uiNumIndices = uiNumIndices;
 
-    if (indices)
-      delete[] indices;
+    //if (indices)
+    //  delete[] indices;
   } else {
     pShape->m_pVertexBuf->Update(vertices, uiNumVerts);
+    pShape->m_vertices = vertices;
+    pShape->m_uiNumVerts = uiNumVerts;
   }
 
-  if (vertices)
-    delete[] vertices;
+  //if (vertices)
+  //  delete[] vertices;
 
   return pShape;
 }
@@ -1517,6 +1526,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
   uint32 uiNumVertsPerChunk = 4;
   if (section == eShapeSection::SELECTED) uiNumVertsPerChunk = 8;
   if (section >= eShapeSection::AILINE1 && section <= eShapeSection::AILINE4) uiNumVertsPerChunk = 1;
+  if (section == eShapeSection::EXPORT) uiNumVertsPerChunk = 48;
 
   numVertices = (uint32)pTrack->m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
@@ -1744,6 +1754,143 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
       case AILINE4:
         vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.aiLine4;
         break;
+      case EXPORT:
+        //llane
+        vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.lLane;
+        vertices[i * uiNumVertsPerChunk + 1].position = pTrack->m_chunkAy[i].math.center;
+        vertices[i * uiNumVertsPerChunk + 2].position = pTrack->m_chunkAy[iChunkIndex].math.lLane;
+        vertices[i * uiNumVertsPerChunk + 3].position = pTrack->m_chunkAy[iChunkIndex].math.center;
+        //rlane
+        vertices[i * uiNumVertsPerChunk + 4].position = pTrack->m_chunkAy[i].math.center;
+        vertices[i * uiNumVertsPerChunk + 5].position = pTrack->m_chunkAy[i].math.rLane;
+        vertices[i * uiNumVertsPerChunk + 6].position = pTrack->m_chunkAy[iChunkIndex].math.center;
+        vertices[i * uiNumVertsPerChunk + 7].position = pTrack->m_chunkAy[iChunkIndex].math.rLane;
+        //lshoulder
+        vertices[i * uiNumVertsPerChunk + 8].position = pTrack->m_chunkAy[i].math.lShoulder;
+        vertices[i * uiNumVertsPerChunk + 9].position = pTrack->m_chunkAy[i].math.lLane;
+        vertices[i * uiNumVertsPerChunk + 10].position = pTrack->m_chunkAy[iChunkIndex].math.lShoulder;
+        vertices[i * uiNumVertsPerChunk + 11].position = pTrack->m_chunkAy[iChunkIndex].math.lLane;
+        //rshoulder
+        vertices[i * uiNumVertsPerChunk + 12].position = pTrack->m_chunkAy[i].math.rLane;
+        vertices[i * uiNumVertsPerChunk + 13].position = pTrack->m_chunkAy[i].math.rShoulder;
+        vertices[i * uiNumVertsPerChunk + 14].position = pTrack->m_chunkAy[iChunkIndex].math.rLane;
+        vertices[i * uiNumVertsPerChunk + 15].position = pTrack->m_chunkAy[iChunkIndex].math.rShoulder;
+        //lwall
+        vertices[i * uiNumVertsPerChunk + 16].position = pTrack->m_chunkAy[i].math.lWall;
+        vertices[i * uiNumVertsPerChunk + 17].position = pTrack->m_chunkAy[i].math.lWallBottomAttach;
+        vertices[i * uiNumVertsPerChunk + 18].position = pTrack->m_chunkAy[iChunkIndex].math.lWall;
+        vertices[i * uiNumVertsPerChunk + 19].position = pTrack->m_chunkAy[iChunkIndex].math.lWallBottomAttach;
+        //rwall
+        vertices[i * uiNumVertsPerChunk + 20].position = pTrack->m_chunkAy[i].math.rWallBottomAttach;
+        vertices[i * uiNumVertsPerChunk + 21].position = pTrack->m_chunkAy[i].math.rWall;
+        vertices[i * uiNumVertsPerChunk + 22].position = pTrack->m_chunkAy[iChunkIndex].math.rWallBottomAttach;
+        vertices[i * uiNumVertsPerChunk + 23].position = pTrack->m_chunkAy[iChunkIndex].math.rWall;
+        //roof
+        vertices[i * uiNumVertsPerChunk + 24].position = pTrack->m_chunkAy[i].math.rWall;
+        vertices[i * uiNumVertsPerChunk + 25].position = pTrack->m_chunkAy[i].math.lWall;
+        vertices[i * uiNumVertsPerChunk + 26].position = pTrack->m_chunkAy[iChunkIndex].math.rWall;
+        vertices[i * uiNumVertsPerChunk + 27].position = pTrack->m_chunkAy[iChunkIndex].math.lWall;
+        //owallfloor
+        vertices[i * uiNumVertsPerChunk + 28].position = pTrack->m_chunkAy[i].math.lFloor;
+        vertices[i * uiNumVertsPerChunk + 29].position = pTrack->m_chunkAy[i].math.rFloor;
+        vertices[i * uiNumVertsPerChunk + 30].position = pTrack->m_chunkAy[iChunkIndex].math.lFloor;
+        vertices[i * uiNumVertsPerChunk + 31].position = pTrack->m_chunkAy[iChunkIndex].math.rFloor;
+        //llowall
+        vertices[i * uiNumVertsPerChunk + 32].position = pTrack->m_chunkAy[i].math.lloWall;
+        vertices[i * uiNumVertsPerChunk + 33].position = pTrack->m_chunkAy[i].math.lloWallBottomAttach;
+        vertices[i * uiNumVertsPerChunk + 34].position = pTrack->m_chunkAy[iChunkIndex].math.lloWall;
+        vertices[i * uiNumVertsPerChunk + 35].position = pTrack->m_chunkAy[iChunkIndex].math.lloWallBottomAttach;
+        //rlowall
+        vertices[i * uiNumVertsPerChunk + 36].position = pTrack->m_chunkAy[i].math.rloWallBottomAttach;
+        vertices[i * uiNumVertsPerChunk + 37].position = pTrack->m_chunkAy[i].math.rloWall;
+        vertices[i * uiNumVertsPerChunk + 38].position = pTrack->m_chunkAy[iChunkIndex].math.rloWallBottomAttach;
+        vertices[i * uiNumVertsPerChunk + 39].position = pTrack->m_chunkAy[iChunkIndex].math.rloWall;
+        //luowall
+        vertices[i * uiNumVertsPerChunk + 40].position = pTrack->m_chunkAy[i].math.luoWall;
+        vertices[i * uiNumVertsPerChunk + 41].position = pTrack->m_chunkAy[i].math.lloWall;
+        vertices[i * uiNumVertsPerChunk + 42].position = pTrack->m_chunkAy[iChunkIndex].math.luoWall;
+        vertices[i * uiNumVertsPerChunk + 43].position = pTrack->m_chunkAy[iChunkIndex].math.lloWall;
+        //ruowall
+        vertices[i * uiNumVertsPerChunk + 44].position = pTrack->m_chunkAy[i].math.rloWall;
+        vertices[i * uiNumVertsPerChunk + 45].position = pTrack->m_chunkAy[i].math.ruoWall;
+        vertices[i * uiNumVertsPerChunk + 46].position = pTrack->m_chunkAy[iChunkIndex].math.rloWall;
+        vertices[i * uiNumVertsPerChunk + 47].position = pTrack->m_chunkAy[iChunkIndex].math.ruoWall;
+        if (pTexture) {
+          //llane
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
+                                vertices[i * uiNumVertsPerChunk + 0],
+                                vertices[i * uiNumVertsPerChunk + 1],
+                                vertices[i * uiNumVertsPerChunk + 2],
+                                vertices[i * uiNumVertsPerChunk + 3], true, false);
+          //rlane
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
+                              vertices[i * uiNumVertsPerChunk + 4],
+                              vertices[i * uiNumVertsPerChunk + 5],
+                              vertices[i * uiNumVertsPerChunk + 6],
+                              vertices[i * uiNumVertsPerChunk + 7], false, true);
+          //lshoulder
+          if (pTexture)
+            pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftSurfaceType),
+                                vertices[i * uiNumVertsPerChunk + 8],
+                                vertices[i * uiNumVertsPerChunk + 9],
+                                vertices[i * uiNumVertsPerChunk + 10],
+                                vertices[i * uiNumVertsPerChunk + 11]);
+          //rshoulder
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightSurfaceType),
+                              vertices[i * uiNumVertsPerChunk + 12],
+                              vertices[i * uiNumVertsPerChunk + 13],
+                              vertices[i * uiNumVertsPerChunk + 14],
+                              vertices[i * uiNumVertsPerChunk + 15]);
+          //lwall
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType),
+                              vertices[i * uiNumVertsPerChunk + 18],
+                              vertices[i * uiNumVertsPerChunk + 16],
+                              vertices[i * uiNumVertsPerChunk + 19],
+                              vertices[i * uiNumVertsPerChunk + 17]);
+          //rwall
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType),
+                              vertices[i * uiNumVertsPerChunk + 21],
+                              vertices[i * uiNumVertsPerChunk + 23],
+                              vertices[i * uiNumVertsPerChunk + 20],
+                              vertices[i * uiNumVertsPerChunk + 22]);
+          //roof
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRoofType),
+                              vertices[i * uiNumVertsPerChunk + 24],
+                              vertices[i * uiNumVertsPerChunk + 25],
+                              vertices[i * uiNumVertsPerChunk + 26],
+                              vertices[i * uiNumVertsPerChunk + 27]);
+          //owallfloor
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iOuterFloorType),
+                              vertices[i * uiNumVertsPerChunk + 28],
+                              vertices[i * uiNumVertsPerChunk + 29],
+                              vertices[i * uiNumVertsPerChunk + 30],
+                              vertices[i * uiNumVertsPerChunk + 31]);
+          //llowall
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLLOuterWallType),
+                              vertices[i * uiNumVertsPerChunk + 34],
+                              vertices[i * uiNumVertsPerChunk + 32],
+                              vertices[i * uiNumVertsPerChunk + 35],
+                              vertices[i * uiNumVertsPerChunk + 33]);
+          //rlowall
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRLOuterWallType),
+                              vertices[i * uiNumVertsPerChunk + 38],
+                              vertices[i * uiNumVertsPerChunk + 36],
+                              vertices[i * uiNumVertsPerChunk + 39],
+                              vertices[i * uiNumVertsPerChunk + 37]);
+          //luowall
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLUOuterWallType),
+                              vertices[i * uiNumVertsPerChunk + 42],
+                              vertices[i * uiNumVertsPerChunk + 40],
+                              vertices[i * uiNumVertsPerChunk + 43],
+                              vertices[i * uiNumVertsPerChunk + 41]);
+          //ruowall
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRUOuterWallType),
+                              vertices[i * uiNumVertsPerChunk + 46],
+                              vertices[i * uiNumVertsPerChunk + 44],
+                              vertices[i * uiNumVertsPerChunk + 47],
+                              vertices[i * uiNumVertsPerChunk + 45]);
+        }
+        break;
       default:
         assert(0); //shape not implemented
         break;
@@ -1842,6 +1989,138 @@ uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSectio
   }
 
   return indices;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
+{
+  if (pTrack->m_chunkAy.empty()) {
+    numIndices = 0;
+    return NULL;
+  }
+
+  uint32 uiNumVertsPerChunk = 48;
+  uint32 uiNumIndicesPerChunk = 72;
+  numIndices = (uint32)pTrack->m_chunkAy.size() * uiNumIndicesPerChunk;
+  uint32 *indices = new uint32[numIndices];
+  memset(indices, 0, numIndices * sizeof(uint32));
+
+  uint32 i = 0;
+  for (; i < pTrack->m_chunkAy.size(); i++) {
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LLANE))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LLANE)))
+    {
+      indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 2;
+      indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 3;
+      indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 1;
+      indices[i * uiNumIndicesPerChunk + 3] = (i * uiNumVertsPerChunk) + 2;
+      indices[i * uiNumIndicesPerChunk + 4] = (i * uiNumVertsPerChunk) + 1;
+      indices[i * uiNumIndicesPerChunk + 5] = (i * uiNumVertsPerChunk) + 0;
+    }
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RLANE))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RLANE))) {
+      indices[i * uiNumIndicesPerChunk + 6] = (i * uiNumVertsPerChunk) + 6;
+      indices[i * uiNumIndicesPerChunk + 7] = (i * uiNumVertsPerChunk) + 7;
+      indices[i * uiNumIndicesPerChunk + 8] = (i * uiNumVertsPerChunk) + 5;
+      indices[i * uiNumIndicesPerChunk + 9] = (i * uiNumVertsPerChunk) + 6;
+      indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumVertsPerChunk) + 5;
+      indices[i * uiNumIndicesPerChunk + 11] = (i * uiNumVertsPerChunk) + 4;
+    }
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LSHOULDER))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LSHOULDER))) {
+      indices[i * uiNumIndicesPerChunk + 12] = (i * uiNumVertsPerChunk) + 10;
+      indices[i * uiNumIndicesPerChunk + 13] = (i * uiNumVertsPerChunk) + 11;
+      indices[i * uiNumIndicesPerChunk + 14] = (i * uiNumVertsPerChunk) + 9;
+      indices[i * uiNumIndicesPerChunk + 15] = (i * uiNumVertsPerChunk) + 10;
+      indices[i * uiNumIndicesPerChunk + 16] = (i * uiNumVertsPerChunk) + 9;
+      indices[i * uiNumIndicesPerChunk + 17] = (i * uiNumVertsPerChunk) + 8;
+    }
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RSHOULDER))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RSHOULDER))) {
+      indices[i * uiNumIndicesPerChunk + 18] = (i * uiNumVertsPerChunk) + 14;
+      indices[i * uiNumIndicesPerChunk + 19] = (i * uiNumVertsPerChunk) + 15;
+      indices[i * uiNumIndicesPerChunk + 20] = (i * uiNumVertsPerChunk) + 13;
+      indices[i * uiNumIndicesPerChunk + 21] = (i * uiNumVertsPerChunk) + 14;
+      indices[i * uiNumIndicesPerChunk + 22] = (i * uiNumVertsPerChunk) + 13;
+      indices[i * uiNumIndicesPerChunk + 23] = (i * uiNumVertsPerChunk) + 12;
+    }
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LWALL))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LWALL))) {
+      indices[i * uiNumIndicesPerChunk + 24] = (i * uiNumVertsPerChunk) + 18;
+      indices[i * uiNumIndicesPerChunk + 25] = (i * uiNumVertsPerChunk) + 19;
+      indices[i * uiNumIndicesPerChunk + 26] = (i * uiNumVertsPerChunk) + 17;
+      indices[i * uiNumIndicesPerChunk + 27] = (i * uiNumVertsPerChunk) + 18;
+      indices[i * uiNumIndicesPerChunk + 28] = (i * uiNumVertsPerChunk) + 17;
+      indices[i * uiNumIndicesPerChunk + 29] = (i * uiNumVertsPerChunk) + 16;
+    }
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RWALL))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RWALL))) {
+      indices[i * uiNumIndicesPerChunk + 30] = (i * uiNumVertsPerChunk) + 22;
+      indices[i * uiNumIndicesPerChunk + 31] = (i * uiNumVertsPerChunk) + 23;
+      indices[i * uiNumIndicesPerChunk + 32] = (i * uiNumVertsPerChunk) + 21;
+      indices[i * uiNumIndicesPerChunk + 33] = (i * uiNumVertsPerChunk) + 22;
+      indices[i * uiNumIndicesPerChunk + 34] = (i * uiNumVertsPerChunk) + 21;
+      indices[i * uiNumIndicesPerChunk + 35] = (i * uiNumVertsPerChunk) + 20;
+    }
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::ROOF))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::ROOF))) {
+      indices[i * uiNumIndicesPerChunk + 36] = (i * uiNumVertsPerChunk) + 26;
+      indices[i * uiNumIndicesPerChunk + 37] = (i * uiNumVertsPerChunk) + 27;
+      indices[i * uiNumIndicesPerChunk + 38] = (i * uiNumVertsPerChunk) + 25;
+      indices[i * uiNumIndicesPerChunk + 39] = (i * uiNumVertsPerChunk) + 26;
+      indices[i * uiNumIndicesPerChunk + 40] = (i * uiNumVertsPerChunk) + 25;
+      indices[i * uiNumIndicesPerChunk + 41] = (i * uiNumVertsPerChunk) + 24;
+    }
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::OWALLFLOOR))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::OWALLFLOOR))) {
+      indices[i * uiNumIndicesPerChunk + 42] = (i * uiNumVertsPerChunk) + 30;
+      indices[i * uiNumIndicesPerChunk + 43] = (i * uiNumVertsPerChunk) + 31;
+      indices[i * uiNumIndicesPerChunk + 44] = (i * uiNumVertsPerChunk) + 29;
+      indices[i * uiNumIndicesPerChunk + 45] = (i * uiNumVertsPerChunk) + 40;
+      indices[i * uiNumIndicesPerChunk + 46] = (i * uiNumVertsPerChunk) + 29;
+      indices[i * uiNumIndicesPerChunk + 47] = (i * uiNumVertsPerChunk) + 28;
+    }
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LLOWALL))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LLOWALL))) {
+      indices[i * uiNumIndicesPerChunk + 48] = (i * uiNumVertsPerChunk) + 34;
+      indices[i * uiNumIndicesPerChunk + 49] = (i * uiNumVertsPerChunk) + 35;
+      indices[i * uiNumIndicesPerChunk + 50] = (i * uiNumVertsPerChunk) + 33;
+      indices[i * uiNumIndicesPerChunk + 51] = (i * uiNumVertsPerChunk) + 34;
+      indices[i * uiNumIndicesPerChunk + 52] = (i * uiNumVertsPerChunk) + 33;
+      indices[i * uiNumIndicesPerChunk + 53] = (i * uiNumVertsPerChunk) + 32;
+    }
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RLOWALL))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RLOWALL))) {
+      indices[i * uiNumIndicesPerChunk + 54] = (i * uiNumVertsPerChunk) + 38;
+      indices[i * uiNumIndicesPerChunk + 55] = (i * uiNumVertsPerChunk) + 39;
+      indices[i * uiNumIndicesPerChunk + 56] = (i * uiNumVertsPerChunk) + 37;
+      indices[i * uiNumIndicesPerChunk + 57] = (i * uiNumVertsPerChunk) + 38;
+      indices[i * uiNumIndicesPerChunk + 58] = (i * uiNumVertsPerChunk) + 37;
+      indices[i * uiNumIndicesPerChunk + 59] = (i * uiNumVertsPerChunk) + 36;
+    }
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LUOWALL))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LUOWALL))) {
+      indices[i * uiNumIndicesPerChunk + 60] = (i * uiNumVertsPerChunk) + 42;
+      indices[i * uiNumIndicesPerChunk + 61] = (i * uiNumVertsPerChunk) + 43;
+      indices[i * uiNumIndicesPerChunk + 62] = (i * uiNumVertsPerChunk) + 41;
+      indices[i * uiNumIndicesPerChunk + 63] = (i * uiNumVertsPerChunk) + 42;
+      indices[i * uiNumIndicesPerChunk + 64] = (i * uiNumVertsPerChunk) + 41;
+      indices[i * uiNumIndicesPerChunk + 65] = (i * uiNumVertsPerChunk) + 40;
+    }
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RUOWALL))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RUOWALL))) {
+      indices[i * uiNumIndicesPerChunk + 66] = (i * uiNumVertsPerChunk) + 46;
+      indices[i * uiNumIndicesPerChunk + 67] = (i * uiNumVertsPerChunk) + 47;
+      indices[i * uiNumIndicesPerChunk + 68] = (i * uiNumVertsPerChunk) + 45;
+      indices[i * uiNumIndicesPerChunk + 69] = (i * uiNumVertsPerChunk) + 46;
+      indices[i * uiNumIndicesPerChunk + 70] = (i * uiNumVertsPerChunk) + 45;
+      indices[i * uiNumIndicesPerChunk + 71] = (i * uiNumVertsPerChunk) + 44;
+    }
+  }
+
+  return indices;
+
 }
 
 //-------------------------------------------------------------------------------------------------

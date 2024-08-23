@@ -727,13 +727,12 @@ bool CTrackPreview::ExportFBX()
                                                               "track", 
                                                               sFilename.toLatin1().constData(),
                                                               sTexFile.toLatin1().constData());
+  if (!bExported)
+    return false;
 
   if (pExportTrack)
     delete pExportTrack;
   CShapeFactory::GetShapeFactory().m_fScale = fScale;
-
-  if (!bExported)
-    return false;
 
   g_pMainWindow->m_sLastTrackFilesFolder = sFolder;
   return true;

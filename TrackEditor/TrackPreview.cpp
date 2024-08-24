@@ -697,11 +697,13 @@ bool CTrackPreview::ExportFBX()
   QString sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
     this, "Export Track As", p->m_track.m_sTrackFileFolder.c_str(), "FBX Files (*.fbx)"));
   QString sFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
+  QString sName = sFilename.right(sFilename.size() - sFilename.lastIndexOf(QDir::separator()) - 1);
+  sName = sName.left(sName.lastIndexOf('.'));
 
   //make texture file
   int iBmpSize;
   uint8 *pBmpData = p->m_track.m_pTex->GenerateBitmapData(iBmpSize);
-  QString sTexFile = sFolder + "\\" + "track" + ".bmp";
+  QString sTexFile = sFolder + "\\" + sName + ".bmp";
   std::ofstream out(sTexFile.toLatin1().constData(), std::ios_base::binary);
   if (!out.is_open()) {
     //printf("failed to open bmp output file\n");
@@ -724,7 +726,7 @@ bool CTrackPreview::ExportFBX()
                                                                    true);
 
   bool bExported = CFBXExporter::GetFBXExporter().ExportShape(pExportTrack, 
-                                                              "track", 
+                                                              sName.toLatin1().constData(),
                                                               sFilename.toLatin1().constData(),
                                                               sTexFile.toLatin1().constData());
 

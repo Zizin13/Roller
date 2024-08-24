@@ -2020,102 +2020,102 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RLANE))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RLANE))) {
-      indices[i * uiNumIndicesPerChunk + 6] = (i * uiNumVertsPerChunk) + 6;
-      indices[i * uiNumIndicesPerChunk + 7] = (i * uiNumVertsPerChunk) + 7;
-      indices[i * uiNumIndicesPerChunk + 8] = (i * uiNumVertsPerChunk) + 5;
-      indices[i * uiNumIndicesPerChunk + 9] = (i * uiNumVertsPerChunk) + 6;
-      indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumVertsPerChunk) + 5;
-      indices[i * uiNumIndicesPerChunk + 11] = (i * uiNumVertsPerChunk) + 4;
+      indices[i * uiNumIndicesPerChunk + 6]  = (i * uiNumVertsPerChunk) + 2 + 4;
+      indices[i * uiNumIndicesPerChunk + 7]  = (i * uiNumVertsPerChunk) + 3 + 4;
+      indices[i * uiNumIndicesPerChunk + 8]  = (i * uiNumVertsPerChunk) + 1 + 4;
+      indices[i * uiNumIndicesPerChunk + 9]  = (i * uiNumVertsPerChunk) + 2 + 4;
+      indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumVertsPerChunk) + 1 + 4;
+      indices[i * uiNumIndicesPerChunk + 11] = (i * uiNumVertsPerChunk) + 0 + 4;
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LSHOULDER))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LSHOULDER))) {
-      indices[i * uiNumIndicesPerChunk + 12] = (i * uiNumVertsPerChunk) + 10;
-      indices[i * uiNumIndicesPerChunk + 13] = (i * uiNumVertsPerChunk) + 11;
-      indices[i * uiNumIndicesPerChunk + 14] = (i * uiNumVertsPerChunk) + 9;
-      indices[i * uiNumIndicesPerChunk + 15] = (i * uiNumVertsPerChunk) + 10;
-      indices[i * uiNumIndicesPerChunk + 16] = (i * uiNumVertsPerChunk) + 9;
-      indices[i * uiNumIndicesPerChunk + 17] = (i * uiNumVertsPerChunk) + 8;
+      indices[i * uiNumIndicesPerChunk + 12] = (i * uiNumVertsPerChunk) + 2 + 8;
+      indices[i * uiNumIndicesPerChunk + 13] = (i * uiNumVertsPerChunk) + 3 + 8;
+      indices[i * uiNumIndicesPerChunk + 14] = (i * uiNumVertsPerChunk) + 1 + 8;
+      indices[i * uiNumIndicesPerChunk + 15] = (i * uiNumVertsPerChunk) + 2 + 8;
+      indices[i * uiNumIndicesPerChunk + 16] = (i * uiNumVertsPerChunk) + 1 + 8;
+      indices[i * uiNumIndicesPerChunk + 17] = (i * uiNumVertsPerChunk) + 0 + 8;
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RSHOULDER))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RSHOULDER))) {
-      indices[i * uiNumIndicesPerChunk + 18] = (i * uiNumVertsPerChunk) + 14;
-      indices[i * uiNumIndicesPerChunk + 19] = (i * uiNumVertsPerChunk) + 15;
-      indices[i * uiNumIndicesPerChunk + 20] = (i * uiNumVertsPerChunk) + 13;
-      indices[i * uiNumIndicesPerChunk + 21] = (i * uiNumVertsPerChunk) + 14;
-      indices[i * uiNumIndicesPerChunk + 22] = (i * uiNumVertsPerChunk) + 13;
-      indices[i * uiNumIndicesPerChunk + 23] = (i * uiNumVertsPerChunk) + 12;
+      indices[i * uiNumIndicesPerChunk + 18] = (i * uiNumVertsPerChunk) + 2 + 12;
+      indices[i * uiNumIndicesPerChunk + 19] = (i * uiNumVertsPerChunk) + 3 + 12;
+      indices[i * uiNumIndicesPerChunk + 20] = (i * uiNumVertsPerChunk) + 1 + 12;
+      indices[i * uiNumIndicesPerChunk + 21] = (i * uiNumVertsPerChunk) + 2 + 12;
+      indices[i * uiNumIndicesPerChunk + 22] = (i * uiNumVertsPerChunk) + 1 + 12;
+      indices[i * uiNumIndicesPerChunk + 23] = (i * uiNumVertsPerChunk) + 0 + 12;
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LWALL))) {
-      indices[i * uiNumIndicesPerChunk + 24] = (i * uiNumVertsPerChunk) + 18;
-      indices[i * uiNumIndicesPerChunk + 25] = (i * uiNumVertsPerChunk) + 19;
-      indices[i * uiNumIndicesPerChunk + 26] = (i * uiNumVertsPerChunk) + 17;
-      indices[i * uiNumIndicesPerChunk + 27] = (i * uiNumVertsPerChunk) + 18;
-      indices[i * uiNumIndicesPerChunk + 28] = (i * uiNumVertsPerChunk) + 17;
-      indices[i * uiNumIndicesPerChunk + 29] = (i * uiNumVertsPerChunk) + 16;
+      indices[i * uiNumIndicesPerChunk + 24] = (i * uiNumVertsPerChunk) + 2 + 16;
+      indices[i * uiNumIndicesPerChunk + 25] = (i * uiNumVertsPerChunk) + 3 + 16;
+      indices[i * uiNumIndicesPerChunk + 26] = (i * uiNumVertsPerChunk) + 1 + 16;
+      indices[i * uiNumIndicesPerChunk + 27] = (i * uiNumVertsPerChunk) + 2 + 16;
+      indices[i * uiNumIndicesPerChunk + 28] = (i * uiNumVertsPerChunk) + 1 + 16;
+      indices[i * uiNumIndicesPerChunk + 29] = (i * uiNumVertsPerChunk) + 0 + 16;
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RWALL))) {
-      indices[i * uiNumIndicesPerChunk + 30] = (i * uiNumVertsPerChunk) + 22;
-      indices[i * uiNumIndicesPerChunk + 31] = (i * uiNumVertsPerChunk) + 23;
-      indices[i * uiNumIndicesPerChunk + 32] = (i * uiNumVertsPerChunk) + 21;
-      indices[i * uiNumIndicesPerChunk + 33] = (i * uiNumVertsPerChunk) + 22;
-      indices[i * uiNumIndicesPerChunk + 34] = (i * uiNumVertsPerChunk) + 21;
-      indices[i * uiNumIndicesPerChunk + 35] = (i * uiNumVertsPerChunk) + 20;
+      indices[i * uiNumIndicesPerChunk + 30] = (i * uiNumVertsPerChunk) + 2 + 20;
+      indices[i * uiNumIndicesPerChunk + 31] = (i * uiNumVertsPerChunk) + 3 + 20;
+      indices[i * uiNumIndicesPerChunk + 32] = (i * uiNumVertsPerChunk) + 1 + 20;
+      indices[i * uiNumIndicesPerChunk + 33] = (i * uiNumVertsPerChunk) + 2 + 20;
+      indices[i * uiNumIndicesPerChunk + 34] = (i * uiNumVertsPerChunk) + 1 + 20;
+      indices[i * uiNumIndicesPerChunk + 35] = (i * uiNumVertsPerChunk) + 0 + 20;
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::ROOF))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::ROOF))) {
-      indices[i * uiNumIndicesPerChunk + 36] = (i * uiNumVertsPerChunk) + 26;
-      indices[i * uiNumIndicesPerChunk + 37] = (i * uiNumVertsPerChunk) + 27;
-      indices[i * uiNumIndicesPerChunk + 38] = (i * uiNumVertsPerChunk) + 25;
-      indices[i * uiNumIndicesPerChunk + 39] = (i * uiNumVertsPerChunk) + 26;
-      indices[i * uiNumIndicesPerChunk + 40] = (i * uiNumVertsPerChunk) + 25;
-      indices[i * uiNumIndicesPerChunk + 41] = (i * uiNumVertsPerChunk) + 24;
+      indices[i * uiNumIndicesPerChunk + 36] = (i * uiNumVertsPerChunk) + 2 + 24;
+      indices[i * uiNumIndicesPerChunk + 37] = (i * uiNumVertsPerChunk) + 3 + 24;
+      indices[i * uiNumIndicesPerChunk + 38] = (i * uiNumVertsPerChunk) + 1 + 24;
+      indices[i * uiNumIndicesPerChunk + 39] = (i * uiNumVertsPerChunk) + 2 + 24;
+      indices[i * uiNumIndicesPerChunk + 40] = (i * uiNumVertsPerChunk) + 1 + 24;
+      indices[i * uiNumIndicesPerChunk + 41] = (i * uiNumVertsPerChunk) + 0 + 24;
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::OWALLFLOOR))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::OWALLFLOOR))) {
-      indices[i * uiNumIndicesPerChunk + 42] = (i * uiNumVertsPerChunk) + 30;
-      indices[i * uiNumIndicesPerChunk + 43] = (i * uiNumVertsPerChunk) + 31;
-      indices[i * uiNumIndicesPerChunk + 44] = (i * uiNumVertsPerChunk) + 29;
-      indices[i * uiNumIndicesPerChunk + 45] = (i * uiNumVertsPerChunk) + 40;
-      indices[i * uiNumIndicesPerChunk + 46] = (i * uiNumVertsPerChunk) + 29;
-      indices[i * uiNumIndicesPerChunk + 47] = (i * uiNumVertsPerChunk) + 28;
+      indices[i * uiNumIndicesPerChunk + 42] = (i * uiNumVertsPerChunk) + 2 + 28;
+      indices[i * uiNumIndicesPerChunk + 43] = (i * uiNumVertsPerChunk) + 3 + 28;
+      indices[i * uiNumIndicesPerChunk + 44] = (i * uiNumVertsPerChunk) + 1 + 28;
+      indices[i * uiNumIndicesPerChunk + 45] = (i * uiNumVertsPerChunk) + 2 + 28;
+      indices[i * uiNumIndicesPerChunk + 46] = (i * uiNumVertsPerChunk) + 1 + 28;
+      indices[i * uiNumIndicesPerChunk + 47] = (i * uiNumVertsPerChunk) + 0 + 28;
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LLOWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LLOWALL))) {
-      indices[i * uiNumIndicesPerChunk + 48] = (i * uiNumVertsPerChunk) + 34;
-      indices[i * uiNumIndicesPerChunk + 49] = (i * uiNumVertsPerChunk) + 35;
-      indices[i * uiNumIndicesPerChunk + 50] = (i * uiNumVertsPerChunk) + 33;
-      indices[i * uiNumIndicesPerChunk + 51] = (i * uiNumVertsPerChunk) + 34;
-      indices[i * uiNumIndicesPerChunk + 52] = (i * uiNumVertsPerChunk) + 33;
-      indices[i * uiNumIndicesPerChunk + 53] = (i * uiNumVertsPerChunk) + 32;
+      indices[i * uiNumIndicesPerChunk + 48] = (i * uiNumVertsPerChunk) + 2 + 32;
+      indices[i * uiNumIndicesPerChunk + 49] = (i * uiNumVertsPerChunk) + 3 + 32;
+      indices[i * uiNumIndicesPerChunk + 50] = (i * uiNumVertsPerChunk) + 1 + 32;
+      indices[i * uiNumIndicesPerChunk + 51] = (i * uiNumVertsPerChunk) + 2 + 32;
+      indices[i * uiNumIndicesPerChunk + 52] = (i * uiNumVertsPerChunk) + 1 + 32;
+      indices[i * uiNumIndicesPerChunk + 53] = (i * uiNumVertsPerChunk) + 0 + 32;
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RLOWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RLOWALL))) {
-      indices[i * uiNumIndicesPerChunk + 54] = (i * uiNumVertsPerChunk) + 38;
-      indices[i * uiNumIndicesPerChunk + 55] = (i * uiNumVertsPerChunk) + 39;
-      indices[i * uiNumIndicesPerChunk + 56] = (i * uiNumVertsPerChunk) + 37;
-      indices[i * uiNumIndicesPerChunk + 57] = (i * uiNumVertsPerChunk) + 38;
-      indices[i * uiNumIndicesPerChunk + 58] = (i * uiNumVertsPerChunk) + 37;
-      indices[i * uiNumIndicesPerChunk + 59] = (i * uiNumVertsPerChunk) + 36;
+      indices[i * uiNumIndicesPerChunk + 54] = (i * uiNumVertsPerChunk) + 2 + 36;
+      indices[i * uiNumIndicesPerChunk + 55] = (i * uiNumVertsPerChunk) + 3 + 36;
+      indices[i * uiNumIndicesPerChunk + 56] = (i * uiNumVertsPerChunk) + 1 + 36;
+      indices[i * uiNumIndicesPerChunk + 57] = (i * uiNumVertsPerChunk) + 2 + 36;
+      indices[i * uiNumIndicesPerChunk + 58] = (i * uiNumVertsPerChunk) + 1 + 36;
+      indices[i * uiNumIndicesPerChunk + 59] = (i * uiNumVertsPerChunk) + 0 + 36;
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LUOWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LUOWALL))) {
-      indices[i * uiNumIndicesPerChunk + 60] = (i * uiNumVertsPerChunk) + 42;
-      indices[i * uiNumIndicesPerChunk + 61] = (i * uiNumVertsPerChunk) + 43;
-      indices[i * uiNumIndicesPerChunk + 62] = (i * uiNumVertsPerChunk) + 41;
-      indices[i * uiNumIndicesPerChunk + 63] = (i * uiNumVertsPerChunk) + 42;
-      indices[i * uiNumIndicesPerChunk + 64] = (i * uiNumVertsPerChunk) + 41;
-      indices[i * uiNumIndicesPerChunk + 65] = (i * uiNumVertsPerChunk) + 40;
+      indices[i * uiNumIndicesPerChunk + 60] = (i * uiNumVertsPerChunk) + 2 + 40;
+      indices[i * uiNumIndicesPerChunk + 61] = (i * uiNumVertsPerChunk) + 3 + 40;
+      indices[i * uiNumIndicesPerChunk + 62] = (i * uiNumVertsPerChunk) + 1 + 40;
+      indices[i * uiNumIndicesPerChunk + 63] = (i * uiNumVertsPerChunk) + 2 + 40;
+      indices[i * uiNumIndicesPerChunk + 64] = (i * uiNumVertsPerChunk) + 1 + 40;
+      indices[i * uiNumIndicesPerChunk + 65] = (i * uiNumVertsPerChunk) + 0 + 40;
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RUOWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RUOWALL))) {
-      indices[i * uiNumIndicesPerChunk + 66] = (i * uiNumVertsPerChunk) + 46;
-      indices[i * uiNumIndicesPerChunk + 67] = (i * uiNumVertsPerChunk) + 47;
-      indices[i * uiNumIndicesPerChunk + 68] = (i * uiNumVertsPerChunk) + 45;
-      indices[i * uiNumIndicesPerChunk + 69] = (i * uiNumVertsPerChunk) + 46;
-      indices[i * uiNumIndicesPerChunk + 70] = (i * uiNumVertsPerChunk) + 45;
-      indices[i * uiNumIndicesPerChunk + 71] = (i * uiNumVertsPerChunk) + 44;
+      indices[i * uiNumIndicesPerChunk + 66] = (i * uiNumVertsPerChunk) + 2 + 44;
+      indices[i * uiNumIndicesPerChunk + 67] = (i * uiNumVertsPerChunk) + 3 + 44;
+      indices[i * uiNumIndicesPerChunk + 68] = (i * uiNumVertsPerChunk) + 1 + 44;
+      indices[i * uiNumIndicesPerChunk + 69] = (i * uiNumVertsPerChunk) + 2 + 44;
+      indices[i * uiNumIndicesPerChunk + 70] = (i * uiNumVertsPerChunk) + 1 + 44;
+      indices[i * uiNumIndicesPerChunk + 71] = (i * uiNumVertsPerChunk) + 0 + 44;
     }
   }
 

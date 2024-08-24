@@ -48,5 +48,6 @@ Whiplash/Fatal Racing track editor and resource converter
 - polygons have four bytes of data that do something unknown
 - "places" arrays are unknown
 - support backface textures in FBX export (is this possible?)
+- find a way to embed additional information in FBX export such as AI data and surface grip (is this possible?)
 - support stunt animation in FBX export
 - support wheel texture animation in FBX export

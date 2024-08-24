@@ -718,7 +718,7 @@ bool CTrackPreview::ExportFBX()
   }
 
   //make sign texture file
-  QString sSignTexFile = sFolder + "\\" + sName + "_signs.bmp";
+  QString sSignTexFile = sFolder + "\\" + sName + "_BLD.bmp";
   { //todo refactor into function
     int iSignBmpSize;
     uint8 *pSignBmpData = p->m_track.m_pBld->GenerateBitmapData(iSignBmpSize);

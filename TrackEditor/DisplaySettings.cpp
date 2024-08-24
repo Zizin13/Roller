@@ -1,6 +1,7 @@
 #include "TrackEditor.h"
 #include "DisplaySettings.h"
 #include "QtHelpers.h"
+#include "Camera.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -86,6 +87,7 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent)
   connect(cbTestCarPos, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
   connect(ckMillionPlus, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckAttachLast, &QCheckBox::toggled, this, &CDisplaySettings::AttachLastCheckedSig);
+  connect(sbCameraSpeed, SIGNAL(valueChanged(int)), this, SLOT(OnCameraSpeedChanged(int)));
 
   UpdateAllSurface();
   UpdateAllWireframe();
@@ -202,6 +204,20 @@ void CDisplaySettings::SetAttachLast(bool bAttachLast)
 
 //-------------------------------------------------------------------------------------------------
 
+int CDisplaySettings::GetCameraSpeed()
+{
+  return sbCameraSpeed->value();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CDisplaySettings::SetCameraSpeed(int iSpeed)
+{
+  sbCameraSpeed->setValue(iSpeed);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CDisplaySettings::UpdateAllSurface()
 {
   BLOCK_SIG_AND_DO(ckLLaneSurface, setChecked(ckAllSurface->isChecked()));
@@ -275,6 +291,13 @@ void CDisplaySettings::UpdatePreviewSelection()
   BLOCK_SIG_AND_DO(ckAllWireframe, setChecked(bAllWireframeChecked));
 
   UpdatePreviewSig();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CDisplaySettings::OnCameraSpeedChanged(int iSpeed)
+{
+  Camera::s_fMovementSpeed = (float)iSpeed;
 }
 
 //-------------------------------------------------------------------------------------------------

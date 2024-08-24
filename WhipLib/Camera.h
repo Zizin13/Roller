@@ -18,8 +18,9 @@ public:
   void MoveDown();
   glm::vec3 GetPosition() { return m_position; };
 
+  static float s_fMovementSpeed;
+
 private:
-  static const float MOVEMENT_SPEED;
   glm::vec3 m_position;
   glm::vec3 m_viewDirection;
   glm::vec3 m_strafeDirection;

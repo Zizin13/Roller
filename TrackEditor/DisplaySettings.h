@@ -50,11 +50,14 @@ public:
   void SetDisplaySettings(uint32 uiShowModels, eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
   bool GetAttachLast();
   void SetAttachLast(bool bAttachLast);
+  int GetCameraSpeed();
+  void SetCameraSpeed(int iSpeed);
 
 protected slots:
   void UpdateAllSurface();
   void UpdateAllWireframe();
   void UpdatePreviewSelection();
+  void OnCameraSpeedChanged(int iSpeed);
 
 signals:
   void AttachLastCheckedSig(bool bChecked);

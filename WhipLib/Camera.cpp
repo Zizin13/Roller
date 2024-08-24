@@ -5,7 +5,7 @@
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
 //-------------------------------------------------------------------------------------------------
-const float Camera::MOVEMENT_SPEED = 1000.0f;
+float Camera::s_fMovementSpeed = 1000.0f;
 //-------------------------------------------------------------------------------------------------
 
 Camera::Camera()
@@ -46,42 +46,42 @@ glm::mat4 Camera::GetWorldToViewMatrix() const
 
 void Camera::MoveForward()
 {
-  m_position += MOVEMENT_SPEED * m_viewDirection;
+  m_position += s_fMovementSpeed * m_viewDirection;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void Camera::MoveBackward()
 {
-  m_position -= MOVEMENT_SPEED * m_viewDirection;
+  m_position -= s_fMovementSpeed * m_viewDirection;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void Camera::StrafeLeft()
 {
-  m_position -= MOVEMENT_SPEED * m_strafeDirection;
+  m_position -= s_fMovementSpeed * m_strafeDirection;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void Camera::StrafeRight()
 {
-  m_position += MOVEMENT_SPEED * m_strafeDirection;
+  m_position += s_fMovementSpeed * m_strafeDirection;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void Camera::MoveUp()
 {
-  m_position += MOVEMENT_SPEED * m_UP;
+  m_position += s_fMovementSpeed * m_UP;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void Camera::MoveDown()
 {
-  m_position -= MOVEMENT_SPEED * m_UP;
+  m_position -= s_fMovementSpeed * m_UP;
 }
 
 //-------------------------------------------------------------------------------------------------

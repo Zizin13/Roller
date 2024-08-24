@@ -27,6 +27,7 @@
 #include "NewTrackDialog.h"
 #include "PreferencesDialog.h"
 #include "AssignBacksDialog.h"
+#include "Camera.h"
 #include "qtimer.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
@@ -1094,15 +1095,18 @@ void CMainWindow::LoadSettings()
   bool bMillionPlus;
   uint32 uiShowModels = p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus);
   bool bAttachLast = p->m_pDisplaySettings->GetAttachLast();
+  int iCameraSpeed = (int)Camera::s_fMovementSpeed;
   //load display settings
   uiShowModels = settings.value("show_models", uiShowModels).toUInt();
   carModel = (eWhipModel)settings.value("car_model", (int)carModel).toInt();
   aiLine = (eShapeSection)settings.value("car_pos", (int)aiLine).toInt();
   bMillionPlus = settings.value("wrong_way", bMillionPlus).toBool();
   bAttachLast = settings.value("attach_last", bAttachLast).toBool();
+  iCameraSpeed = settings.value("camera_speed", iCameraSpeed).toInt();
   //apply display settings
   p->m_pDisplaySettings->SetDisplaySettings(uiShowModels, carModel, aiLine, bMillionPlus);
   p->m_pDisplaySettings->SetAttachLast(bAttachLast);
+  p->m_pDisplaySettings->SetCameraSpeed(iCameraSpeed);
 
   //preferences
   m_preferences.iHistoryMaxSize = settings.value("history_max_size", m_preferences.iHistoryMaxSize).toInt();
@@ -1150,6 +1154,7 @@ void CMainWindow::SaveSettings()
   settings.setValue("car_pos", (int)aiLine);
   settings.setValue("wrong_way", bMillionPlus);
   settings.setValue("attach_last", p->m_pDisplaySettings->GetAttachLast());
+  settings.setValue("camera_speed", p->m_pDisplaySettings->GetCameraSpeed());
   settings.setValue("history_max_size", m_preferences.iHistoryMaxSize);
   settings.setValue("paste_new_chunks", m_preferences.bPasteNewChunks);
   settings.setValue("copy_relative_yaw", m_preferences.bCopyRelativeYaw);

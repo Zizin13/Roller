@@ -181,7 +181,8 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
 
     //need to add materials for solid color polygons
     if (pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.x == 1.0f) {
-      glm::vec3 color = pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color;
+      glm::vec4 color = glm::vec4(pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color,
+                                  pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.y); //alpha
       CColorMaterialMap::iterator it = colorMaterialMap.find(GetColorString(color));
       if (it == colorMaterialMap.end()) { //only add new material if it's a new color
         FbxSurfacePhong *pNewMaterial = CreateColorMaterial(color, pScene);
@@ -225,7 +226,8 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
   for (int i = 0; i < iNumPols; ++i) {
     if (pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.x == 1.0f) {
       //polygon is solid color
-      glm::vec3 color = pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color;
+      glm::vec4 color = glm::vec4(pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color,
+                                  pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.y); //alpha
       CColorMaterialMap::iterator it = colorMaterialMap.find(GetColorString(color));
       if (it != colorMaterialMap.end()) {
         pMaterialElement->GetIndexArray().SetAt(i, it->second);
@@ -243,14 +245,15 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
 
 //-------------------------------------------------------------------------------------------------
 
-FbxSurfacePhong *CFBXExporter::CreateColorMaterial(const glm::vec3 &color, FbxScene *pScene)
+FbxSurfacePhong *CFBXExporter::CreateColorMaterial(const glm::vec4 &color, FbxScene *pScene)
 {
   FbxSurfacePhong *pMaterial;
 
   std::string sName = "Color: " + GetColorString(color);
-  FbxDouble3 diffuseColor(color.r, color.g, color.b);
+  FbxDouble4 diffuseColor(color.r, color.g, color.b, color.a);
   pMaterial = FbxSurfacePhong::Create(pScene, sName.c_str());
   pMaterial->Diffuse.Set(diffuseColor);
+  pMaterial->TransparencyFactor.Set(color.a);
 
   return pMaterial;
 }
@@ -325,11 +328,12 @@ FbxFileTexture *CFBXExporter::CreateFileTexture(const char *szTextureFile, FbxSc
 
 //-------------------------------------------------------------------------------------------------
 
-std::string CFBXExporter::GetColorString(const glm::vec3 &color)
+std::string CFBXExporter::GetColorString(const glm::vec4 &color)
 {
   return "(" + std::to_string(color.r) +
     "," + std::to_string(color.g) +
-    "," + std::to_string(color.b) + ")";
+    "," + std::to_string(color.b) + 
+    "," + std::to_string(color.a) + ")";
 }
 
 //-------------------------------------------------------------------------------------------------

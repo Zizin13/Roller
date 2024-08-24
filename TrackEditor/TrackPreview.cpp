@@ -702,37 +702,11 @@ bool CTrackPreview::ExportFBX()
 
   //make texture file
   QString sTexFile = sFolder + "\\" + sName + ".bmp";
-  {
-    int iBmpSize;
-    uint8 *pBmpData = p->m_track.m_pTex->GenerateBitmapData(iBmpSize);
-    std::ofstream out(sTexFile.toLatin1().constData(), std::ios_base::binary);
-    if (!out.is_open()) {
-      //printf("failed to open bmp output file\n");
-      return false;
-    }
-    for (int i = 0; i < iBmpSize; ++i) {
-      out << pBmpData[i];
-    }
-    out.close();
-    delete[] pBmpData;
-  }
+  p->m_track.m_pTex->ExportToBitmapFile(sTexFile.toLatin1().constData());
 
   //make sign texture file
   QString sSignTexFile = sFolder + "\\" + sName + "_BLD.bmp";
-  { //todo refactor into function
-    int iSignBmpSize;
-    uint8 *pSignBmpData = p->m_track.m_pBld->GenerateBitmapData(iSignBmpSize);
-    std::ofstream outSigns(sSignTexFile.toLatin1().constData(), std::ios_base::binary);
-    if (!outSigns.is_open()) {
-      //printf("failed to open bmp output file\n");
-      return false;
-    }
-    for (int i = 0; i < iSignBmpSize; ++i) {
-      outSigns << pSignBmpData[i];
-    }
-    outSigns.close();
-    delete[] pSignBmpData;
-  }
+  p->m_track.m_pBld->ExportToBitmapFile(sSignTexFile.toLatin1().constData());
 
   //setup
   float fShapeScale = CShapeFactory::GetShapeFactory().m_fScale;

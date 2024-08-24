@@ -59,6 +59,7 @@ public:
                              tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
                              bool bLeftLane = false, bool bRightLane = false, bool bBack = false);
   uint8 *GenerateBitmapData(int &iSize);
+  bool ExportToBitmapFile(const std::string &sFilename);
 
   tTile *m_pTileAy;
   int m_iNumTiles;

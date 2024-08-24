@@ -6,7 +6,6 @@
 #include "Logging.h"
 #include "Track.h"
 #include <string>
-#include <fstream>
 #include <filesystem>
 //-------------------------------------------------------------------------------------------------
 
@@ -34,24 +33,12 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir)
   if (!carTex.LoadTexture(sWhipDir + "\\" + sTex, &palette))
     return false;
 
-  printf("Exporting");
-  printf(sCarName.c_str());
-  printf("...\n");
-
   //make texture file
-  int iBmpSize;
-  uint8 *pBmpData = carTex.GenerateBitmapData(iBmpSize);
   std::string sTexFile = sOutDir + "\\" + sCarName + ".bmp";
-  std::ofstream out(sTexFile.c_str(), std::ios_base::binary);
-  if (!out.is_open()) {
-    printf("failed to open bmp output file\n");
-    return false;
-  }
-  for (int i = 0; i < iBmpSize; ++i) {
-    out << pBmpData[i];
-  }
-  out.close();
-  delete[] pBmpData;
+  carTex.ExportToBitmapFile(sTexFile);
+  printf("Exporting");
+  printf(sTexFile.c_str());
+  printf("...\n");
 
   //create shape data
   CShapeData *pCar = CShapeFactory::GetShapeFactory().MakeModel(NULL, &carTex, carModel);
@@ -59,6 +46,9 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir)
     return false;
 
   std::string sFilename = sOutDir + std::string("\\") + sCarName + std::string(".fbx");
+  printf("Exporting");
+  printf(sFilename.c_str());
+  printf("...\n");
   bool bSuccess = CFBXExporter::GetFBXExporter().ExportShape(pCar, sCarName.c_str(), sFilename.c_str(), sTexFile.c_str());
 
   delete pCar;
@@ -69,7 +59,10 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir)
 
 bool ExportTrack(CTrack *pTrack, std::string sOutDir)
 {
-  //make texture file
+  if (!pTrack || !pTrack->m_pTex || !pTrack->m_pBld)
+    return false;
+
+  //get track name
   std::string sTrackName = pTrack->m_sTrackFile;
   size_t pos = pTrack->m_sTrackFile.find_last_of('\\');
   if (pos == std::string::npos) {
@@ -78,45 +71,20 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir)
   sTrackName = pTrack->m_sTrackFile.substr(pos + 1, pTrack->m_sTrackFile.size() - pos);
   pos = sTrackName.find_last_of('.');
   sTrackName = sTrackName.substr(0, pos);
+
+  //make texture files
   std::string sTexFile = sOutDir + "\\" + sTrackName + ".bmp";
-  if (!pTrack || !pTrack->m_pTex || !pTrack->m_pBld)
-    return false;
-
   printf("Exporting");
-  printf(sTrackName.c_str());
+  printf(sTexFile.c_str());
   printf("...\n");
-  {
-    int iBmpSize;
-    uint8 *pBmpData = pTrack->m_pTex->GenerateBitmapData(iBmpSize);
-    std::ofstream out(sTexFile.c_str(), std::ios_base::binary);
-    if (!out.is_open()) {
-      //printf("failed to open bmp output file\n");
-      return false;
-    }
-    for (int i = 0; i < iBmpSize; ++i) {
-      out << pBmpData[i];
-    }
-    out.close();
-    delete[] pBmpData;
-  }
-
-  //make sign texture file
+  pTrack->m_pTex->ExportToBitmapFile(sTexFile);
   std::string sSignTexFile = sOutDir + "\\" + sTrackName + "_BLD.bmp";
-  { //todo refactor into function
-    int iSignBmpSize;
-    uint8 *pSignBmpData = pTrack->m_pBld->GenerateBitmapData(iSignBmpSize);
-    std::ofstream outSigns(sSignTexFile.c_str(), std::ios_base::binary);
-    if (!outSigns.is_open()) {
-      //printf("failed to open bmp output file\n");
-      return false;
-    }
-    for (int i = 0; i < iSignBmpSize; ++i) {
-      outSigns << pSignBmpData[i];
-    }
-    outSigns.close();
-    delete[] pSignBmpData;
-  }
+  printf("Exporting");
+  printf(sSignTexFile.c_str());
+  printf("...\n");
+  pTrack->m_pBld->ExportToBitmapFile(sSignTexFile);
 
+  //setup
   pTrack->m_fScale = 1.0f;
   pTrack->GenerateTrackMath();
 
@@ -135,6 +103,9 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir)
 
   //export
   std::string sFilename = sOutDir + std::string("\\") + sTrackName + std::string(".fbx");
+  printf("Exporting");
+  printf(sFilename.c_str());
+  printf("...\n");
   bool bExported = CFBXExporter::GetFBXExporter().ExportTrack(pExportTrack,
                                                               signAy,
                                                               sTrackName.c_str(),

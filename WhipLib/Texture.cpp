@@ -8,6 +8,8 @@
 #include "Vertex.h"
 #include "ShapeFactory.h"
 #include <Windows.h>
+#include <fstream>
+#include "Logging.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
   #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -352,6 +354,25 @@ uint8 *CTexture::GenerateBitmapData(int &iSize)
   delete[] pTilesFlipped;
 
   return pData;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CTexture::ExportToBitmapFile(const std::string &sFilename)
+{
+  int iBmpSize;
+  uint8 *pBmpData = GenerateBitmapData(iBmpSize);
+  std::ofstream out(sFilename.c_str(), std::ios_base::binary);
+  if (!out.is_open()) {
+    Logging::LogMessage("Failed to open bmp output file %s\n", sFilename.c_str());
+    return false;
+  }
+  for (int i = 0; i < iBmpSize; ++i) {
+    out << pBmpData[i];
+  }
+  out.close();
+  delete[] pBmpData;
+  return true;
 }
 
 //-------------------------------------------------------------------------------------------------

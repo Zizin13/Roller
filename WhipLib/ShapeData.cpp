@@ -81,3 +81,13 @@ void CShapeData::Draw(const glm::mat4 &worldToProjectionMatrix, const glm::vec3 
 }
 
 //-------------------------------------------------------------------------------------------------
+
+void CShapeData::TransformVertsForExport()
+{
+  for (uint32 i = 0; i < m_uiNumVerts; ++i) {
+    m_vertices[i].position = glm::vec3(m_modelToWorldMatrix * glm::vec4(m_vertices[i].position, 1.0f));
+    //vtfVertexPositionWorld = vec3(modelToWorldMatrix * vertexPositionModel);
+  }
+}
+
+//-------------------------------------------------------------------------------------------------

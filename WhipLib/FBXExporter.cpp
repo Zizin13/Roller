@@ -92,6 +92,55 @@ bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szName, const
 
 //-------------------------------------------------------------------------------------------------
 
+bool CFBXExporter::ExportTrack(CShapeData *pTrackShape,
+                               std::vector<CShapeData *> signAy,
+                               const char *szName,
+                               const char *szFile,
+                               const char *szTextureFile,
+                               const char *szSignTextureFile)
+{
+  if (!pTrackShape || !szFile || !szTextureFile || !szSignTextureFile)
+    return false;
+
+  FbxScene *pScene = FbxScene::Create(g_pFbxManager, "Export Scene");
+  if (!pScene) {
+    Logging::LogMessage("Error: Could not create FBX scene");
+    return false;
+  }
+
+  FbxExporter *pExporter = FbxExporter::Create(g_pFbxManager, "Exporter");
+  if (!pExporter) {
+    Logging::LogMessage("Error: Could not create FBX exporter");
+    pScene->Destroy();
+    return false;
+  }
+
+  if (pExporter->Initialize(szFile, g_pFbxManager->GetIOPluginRegistry()->GetNativeWriterFormat(), g_pFbxManager->GetIOSettings()) == false) {
+    Logging::LogMessage("FbxExporter::Initialize() failed. %s\n", pExporter->GetStatus().GetErrorString());
+    pScene->Destroy();
+    pExporter->Destroy();
+    return false;
+  }
+
+  FbxNode *pTrackMesh = CreateShapeMesh(pTrackShape, szName, szTextureFile, pScene);
+  pScene->GetRootNode()->AddChild(pTrackMesh);
+  for (int i = 0; i < (int)signAy.size(); ++i) {
+    std::string sSignName = "Sign " + std::to_string(i);
+    FbxNode *pSignMesh = CreateShapeMesh(signAy[i], sSignName.c_str(), szSignTextureFile, pScene);
+    pScene->GetRootNode()->AddChild(pSignMesh);
+  }
+
+  //g_pFbxManager->GetIOSettings()->SetBoolProp(EXP_FBX_EMBEDDED, true);
+
+  bool bSuccess = pExporter->Export(pScene);
+
+  pScene->Destroy();
+  pExporter->Destroy();
+  return bSuccess;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szName, const char *szTextureFile, FbxScene *pScene)
 {
   int iNumPols = (int)pShapeData->m_uiNumIndices / 3;

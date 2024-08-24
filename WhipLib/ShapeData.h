@@ -24,6 +24,7 @@ public:
   ~CShapeData();
 
   void Draw(const glm::mat4 &worldToProjectionMatrix, const glm::vec3 cameraPosition);
+  void TransformVertsForExport();
 
   glm::mat4 m_modelToWorldMatrix;
   CIndexBuffer *m_pIndexBuf;

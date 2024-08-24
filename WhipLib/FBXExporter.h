@@ -3,6 +3,7 @@
 //-------------------------------------------------------------------------------------------------
 #include <map>
 #include <string>
+#include <vector>
 #include "glm.hpp"
 //-------------------------------------------------------------------------------------------------
 class CShapeData;
@@ -26,6 +27,12 @@ public:
   void operator=(CFBXExporter const &) = delete;
 
   bool ExportShape(CShapeData *pShapeData, const char *szName, const char *szFile, const char *szTextureFile);
+  bool ExportTrack(CShapeData *pTrackShape,
+                   std::vector<CShapeData *> signAy,
+                   const char *szName,
+                   const char *szFile,
+                   const char *szTextureFile,
+                   const char *szSignTextureFile);
 
 private:
   CFBXExporter();

@@ -701,40 +701,72 @@ bool CTrackPreview::ExportFBX()
   sName = sName.left(sName.lastIndexOf('.'));
 
   //make texture file
-  int iBmpSize;
-  uint8 *pBmpData = p->m_track.m_pTex->GenerateBitmapData(iBmpSize);
   QString sTexFile = sFolder + "\\" + sName + ".bmp";
-  std::ofstream out(sTexFile.toLatin1().constData(), std::ios_base::binary);
-  if (!out.is_open()) {
-    //printf("failed to open bmp output file\n");
-    return false;
+  {
+    int iBmpSize;
+    uint8 *pBmpData = p->m_track.m_pTex->GenerateBitmapData(iBmpSize);
+    std::ofstream out(sTexFile.toLatin1().constData(), std::ios_base::binary);
+    if (!out.is_open()) {
+      //printf("failed to open bmp output file\n");
+      return false;
+    }
+    for (int i = 0; i < iBmpSize; ++i) {
+      out << pBmpData[i];
+    }
+    out.close();
+    delete[] pBmpData;
   }
-  for (int i = 0; i < iBmpSize; ++i) {
-    out << pBmpData[i];
-  }
-  out.close();
-  delete[] pBmpData;
 
+  //make sign texture file
+  QString sSignTexFile = sFolder + "\\" + sName + "_signs.bmp";
+  { //todo refactor into function
+    int iSignBmpSize;
+    uint8 *pSignBmpData = p->m_track.m_pBld->GenerateBitmapData(iSignBmpSize);
+    std::ofstream outSigns(sSignTexFile.toLatin1().constData(), std::ios_base::binary);
+    if (!outSigns.is_open()) {
+      //printf("failed to open bmp output file\n");
+      return false;
+    }
+    for (int i = 0; i < iSignBmpSize; ++i) {
+      outSigns << pSignBmpData[i];
+    }
+    outSigns.close();
+    delete[] pSignBmpData;
+  }
+
+  //setup
   float fShapeScale = CShapeFactory::GetShapeFactory().m_fScale;
   float fTrackScale = p->m_track.m_fScale;
   CShapeFactory::GetShapeFactory().m_fScale = 1.0f;
   p->m_track.m_fScale = 1.0f;
   p->m_track.GenerateTrackMath();
 
+  //generate models
   CShapeData *pExportTrack = NULL;
+  std::vector<CShapeData *> signAy;
   pExportTrack = CShapeFactory::GetShapeFactory().MakeTrackSurface(pExportTrack,
-                                                                   p->m_pShader, 
-                                                                   &p->m_track, 
-                                                                   eShapeSection::EXPORT, 
+                                                                   p->m_pShader,
+                                                                   &p->m_track,
+                                                                   eShapeSection::EXPORT,
                                                                    true);
+  CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signAy);
+  //signs need to be moved to the right position on track, this is normally done in the shader
+  for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
+    (*it)->TransformVertsForExport();
 
-  bool bExported = CFBXExporter::GetFBXExporter().ExportShape(pExportTrack, 
+  //export
+  bool bExported = CFBXExporter::GetFBXExporter().ExportTrack(pExportTrack,
+                                                              signAy,
                                                               sName.toLatin1().constData(),
                                                               sFilename.toLatin1().constData(),
-                                                              sTexFile.toLatin1().constData());
+                                                              sTexFile.toLatin1().constData(),
+                                                              sSignTexFile.toLatin1().constData());
 
+  //cleanup
   if (pExportTrack)
     delete pExportTrack;
+  for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
+    delete *it;
   CShapeFactory::GetShapeFactory().m_fScale = fShapeScale;
   p->m_track.m_fScale = fTrackScale;
   p->m_track.GenerateTrackMath();

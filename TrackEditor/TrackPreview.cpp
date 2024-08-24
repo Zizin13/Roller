@@ -715,8 +715,11 @@ bool CTrackPreview::ExportFBX()
   out.close();
   delete[] pBmpData;
 
-  float fScale = CShapeFactory::GetShapeFactory().m_fScale;
+  float fShapeScale = CShapeFactory::GetShapeFactory().m_fScale;
+  float fTrackScale = p->m_track.m_fScale;
   CShapeFactory::GetShapeFactory().m_fScale = 1.0f;
+  p->m_track.m_fScale = 1.0f;
+  p->m_track.GenerateTrackMath();
 
   CShapeData *pExportTrack = NULL;
   pExportTrack = CShapeFactory::GetShapeFactory().MakeTrackSurface(pExportTrack,
@@ -732,7 +735,10 @@ bool CTrackPreview::ExportFBX()
 
   if (pExportTrack)
     delete pExportTrack;
-  CShapeFactory::GetShapeFactory().m_fScale = fScale;
+  CShapeFactory::GetShapeFactory().m_fScale = fShapeScale;
+  p->m_track.m_fScale = fTrackScale;
+  p->m_track.GenerateTrackMath();
+  UpdateTrack();
 
   if (!bExported)
     return false;

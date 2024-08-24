@@ -217,7 +217,6 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   connect(pbAddChunk, &QPushButton::clicked, this, &CMainWindow::OnAddChunkClicked);
 
   connect(p->m_pDisplaySettings, &CDisplaySettings::UpdatePreviewSig, this, &CMainWindow::OnUpdatePreview);
-  connect(p->m_pDisplaySettings, &CDisplaySettings::SetScaleSig, this, &CMainWindow::OnSetScale);
   connect(p->m_pDisplaySettings, &CDisplaySettings::AttachLastCheckedSig, this, &CMainWindow::OnAttachLast);
 
   //open window
@@ -877,7 +876,6 @@ void CMainWindow::OnTabChanged(int iIndex)
   p->m_previewAy[iIndex]->ShowModels(uiShowModels);
   p->m_previewAy[iIndex]->UpdateCar(carModel, aiLine, bMillionPlus);
   p->m_previewAy[iIndex]->AttachLast(p->m_pDisplaySettings->GetAttachLast());
-  p->m_previewAy[iIndex]->SetScale(p->m_pDisplaySettings->GetScale());
   BLOCK_SIG_AND_DO(sbSelChunksFrom, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
   BLOCK_SIG_AND_DO(sbSelChunksTo, setRange(0, (int)GetCurrentTrack()->m_chunkAy.size() - 1));
   BLOCK_SIG_AND_DO(sbSelChunksFrom, setValue(p->m_previewAy[iIndex]->m_iSelFrom));
@@ -971,15 +969,6 @@ void CMainWindow::OnAttachLast(bool bChecked)
   if (!GetCurrentPreview()) return;
 
   GetCurrentPreview()->AttachLast(bChecked);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CMainWindow::OnSetScale(int iValue)
-{
-  if (!GetCurrentPreview()) return;
-
-  GetCurrentPreview()->SetScale(iValue);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1105,18 +1094,15 @@ void CMainWindow::LoadSettings()
   bool bMillionPlus;
   uint32 uiShowModels = p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus);
   bool bAttachLast = p->m_pDisplaySettings->GetAttachLast();
-  int iScale = p->m_pDisplaySettings->GetScale();
   //load display settings
   uiShowModels = settings.value("show_models", uiShowModels).toUInt();
   carModel = (eWhipModel)settings.value("car_model", (int)carModel).toInt();
   aiLine = (eShapeSection)settings.value("car_pos", (int)aiLine).toInt();
   bMillionPlus = settings.value("wrong_way", bMillionPlus).toBool();
   bAttachLast = settings.value("attach_last", bAttachLast).toBool();
-  iScale = settings.value("scale", iScale).toInt();
   //apply display settings
   p->m_pDisplaySettings->SetDisplaySettings(uiShowModels, carModel, aiLine, bMillionPlus);
   p->m_pDisplaySettings->SetAttachLast(bAttachLast);
-  p->m_pDisplaySettings->SetScale(iScale);
 
   //preferences
   m_preferences.iHistoryMaxSize = settings.value("history_max_size", m_preferences.iHistoryMaxSize).toInt();
@@ -1164,7 +1150,6 @@ void CMainWindow::SaveSettings()
   settings.setValue("car_pos", (int)aiLine);
   settings.setValue("wrong_way", bMillionPlus);
   settings.setValue("attach_last", p->m_pDisplaySettings->GetAttachLast());
-  settings.setValue("scale", p->m_pDisplaySettings->GetScale());
   settings.setValue("history_max_size", m_preferences.iHistoryMaxSize);
   settings.setValue("paste_new_chunks", m_preferences.bPasteNewChunks);
   settings.setValue("copy_relative_yaw", m_preferences.bCopyRelativeYaw);

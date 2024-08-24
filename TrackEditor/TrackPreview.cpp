@@ -324,7 +324,6 @@ void CTrackPreview::UpdateTrack(bool bUpdatingStunt)
   if (!bUpdatingStunt)
     p->DeleteModels();
 
-  CShapeFactory::GetShapeFactory().m_fScale = 10000.0f / m_iScale;
   if (!p->m_track.m_chunkAy.empty()) {
     p->m_pLLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLLaneSurf, p->m_pShader, &p->m_track, eShapeSection::LLANE, m_bAttachLast);
     p->m_pLLaneWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLLaneWire, p->m_pShader, &p->m_track, eShapeSection::LLANE, m_bAttachLast, true);
@@ -493,16 +492,6 @@ void CTrackPreview::UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bM
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackPreview::SetScale(int iScale)
-{
-  m_iScale = iScale;
-  p->m_track.m_fScale = 10000.0f / m_iScale;
-  p->m_track.GenerateTrackMath();
-  UpdateTrack();
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CTrackPreview::AttachLast(bool bAttachLast)
 {
   m_bAttachLast = bAttachLast;
@@ -520,7 +509,7 @@ void CTrackPreview::paintGL()
   glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
   glViewport(0, 0, width(), height());
 
-  glm::mat4 viewToProjectionMatrix = glm::perspective(glm::radians(60.0f), ((float)width()) / height(), 0.1f, 200.0f);
+  glm::mat4 viewToProjectionMatrix = glm::perspective(glm::radians(60.0f), ((float)width()) / height(), 100.0f, 500000.0f);
   glm::mat4 worldToViewMatrix = p->m_camera.GetWorldToViewMatrix();
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
@@ -708,13 +697,6 @@ bool CTrackPreview::ExportFBX()
   QString sSignTexFile = sFolder + "\\" + sName + "_BLD.bmp";
   p->m_track.m_pBld->ExportToBitmapFile(sSignTexFile.toLatin1().constData());
 
-  //setup
-  float fShapeScale = CShapeFactory::GetShapeFactory().m_fScale;
-  float fTrackScale = p->m_track.m_fScale;
-  CShapeFactory::GetShapeFactory().m_fScale = 1.0f;
-  p->m_track.m_fScale = 1.0f;
-  p->m_track.GenerateTrackMath();
-
   //generate models
   CShapeData *pExportTrack = NULL;
   std::vector<CShapeData *> signAy;
@@ -741,10 +723,6 @@ bool CTrackPreview::ExportFBX()
     delete pExportTrack;
   for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
     delete *it;
-  CShapeFactory::GetShapeFactory().m_fScale = fShapeScale;
-  p->m_track.m_fScale = fTrackScale;
-  p->m_track.GenerateTrackMath();
-  UpdateTrack();
 
   if (!bExported)
     return false;

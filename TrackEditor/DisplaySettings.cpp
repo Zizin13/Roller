@@ -86,7 +86,6 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent)
   connect(cbTestCarPos, SIGNAL(currentIndexChanged(int)), this, SLOT(UpdatePreviewSelection()));
   connect(ckMillionPlus, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckAttachLast, &QCheckBox::toggled, this, &CDisplaySettings::AttachLastCheckedSig);
-  connect(sldScale, &QSlider::valueChanged, this, &CDisplaySettings::SetScaleSig);
 
   UpdateAllSurface();
   UpdateAllWireframe();
@@ -199,20 +198,6 @@ bool CDisplaySettings::GetAttachLast()
 void CDisplaySettings::SetAttachLast(bool bAttachLast)
 {
   ckAttachLast->setChecked(bAttachLast);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-int CDisplaySettings::GetScale()
-{
-  return sldScale->value();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CDisplaySettings::SetScale(int iScale)
-{
-  sldScale->setValue(iScale);
 }
 
 //-------------------------------------------------------------------------------------------------

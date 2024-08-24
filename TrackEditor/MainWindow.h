@@ -76,7 +76,6 @@ protected slots:
   void OnDeleteChunkClicked();
   void OnAddChunkClicked();
   void OnAttachLast(bool bChecked);
-  void OnSetScale(int iValue);
   void OnUpdatePreview();
   void OnSaveHistoryTimer();
   void OnStuntTimer();

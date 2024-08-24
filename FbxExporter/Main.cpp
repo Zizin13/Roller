@@ -85,7 +85,6 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir)
   pTrack->m_pBld->ExportToBitmapFile(sSignTexFile);
 
   //setup
-  pTrack->m_fScale = 1.0f;
   pTrack->GenerateTrackMath();
 
   //generate models
@@ -137,7 +136,6 @@ int main(int argc, char *argv[])
   Logging::SetWhipLibLoggingCallback(LogMessageCbStatic);
   std::string sWhipDir = argv[1];
   std::string sOutDir = argv[2];
-  CShapeFactory::GetShapeFactory().m_fScale = 1.0f;
   CShapeFactory::GetShapeFactory().m_bOglRunning = false;
 
   //export cars

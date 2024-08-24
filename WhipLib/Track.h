@@ -223,7 +223,6 @@ public:
   std::string m_sBuildingFile;
   tRaceInfo m_raceInfo;
   int m_iAILineHeight;
-  float m_fScale;
 
   CPalette *m_pPal;
   CTexture *m_pTex;

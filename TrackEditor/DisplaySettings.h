@@ -50,8 +50,6 @@ public:
   void SetDisplaySettings(uint32 uiShowModels, eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
   bool GetAttachLast();
   void SetAttachLast(bool bAttachLast);
-  int GetScale();
-  void SetScale(int iScale);
 
 protected slots:
   void UpdateAllSurface();
@@ -60,7 +58,6 @@ protected slots:
 
 signals:
   void AttachLastCheckedSig(bool bChecked);
-  void SetScaleSig(int iValue);
   void UpdatePreviewSig();
 };
 

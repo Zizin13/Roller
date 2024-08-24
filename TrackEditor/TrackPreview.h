@@ -27,7 +27,6 @@ public:
   void UpdateTrack(bool bUpdatingStunt = false);
   void ShowModels(uint32 uiShowModels);
   void UpdateCar(eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus);
-  void SetScale(int iScale);
   void AttachLast(bool bAttachLast);
   CTrack *GetTrack();
   bool SaveChangesAndContinue();

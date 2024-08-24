@@ -54,8 +54,7 @@ CShapeFactory &CShapeFactory::GetShapeFactory()
 //-------------------------------------------------------------------------------------------------
 
 CShapeFactory::CShapeFactory()
-  : m_fScale(1000.0f)
-  , m_bOglRunning(true)
+  : m_bOglRunning(true)
 {
 
 }
@@ -177,7 +176,7 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
   tVertex *coordAy = new tVertex[uiNumCoords];
   int iVertIndex = 0;
   for (int i = 0; i < GetCoordsCount(model); ++i) {
-    coordAy[i / 3].position[iVertIndex] = GetCoords(model)[i] / m_fScale;
+    coordAy[i / 3].position[iVertIndex] = GetCoords(model)[i];
     iVertIndex++;
     if (iVertIndex == 3)
       iVertIndex = 0;
@@ -294,12 +293,12 @@ tVertex *CShapeFactory::MakeVertsAudioMarker(uint32 &uiNumVerts)
   tVertex *vertices = new tVertex[uiNumVerts];
 
   glm::vec3 color = glm::vec3(1, 1, 1);
-  vertices[0].position = glm::vec3(  +0.0f / m_fScale,   +0.0f / m_fScale, +0.0f);
-  vertices[1].position = glm::vec3(+500.0f / m_fScale,   +0.0f / m_fScale, +0.0f);
-  vertices[2].position = glm::vec3(+500.0f / m_fScale, +500.0f / m_fScale, +0.0f);
-  vertices[3].position = glm::vec3(  +0.0f / m_fScale, +500.0f / m_fScale, +0.0f);
-  vertices[4].position = glm::vec3(-500.0f / m_fScale, +800.0f / m_fScale, +0.0f);
-  vertices[5].position = glm::vec3(-500.0f / m_fScale, -300.0f / m_fScale, +0.0f);
+  vertices[0].position = glm::vec3(  +0.0f,   +0.0f, +0.0f);
+  vertices[1].position = glm::vec3(+500.0f,   +0.0f, +0.0f);
+  vertices[2].position = glm::vec3(+500.0f, +500.0f, +0.0f);
+  vertices[3].position = glm::vec3(  +0.0f, +500.0f, +0.0f);
+  vertices[4].position = glm::vec3(-500.0f, +800.0f, +0.0f);
+  vertices[5].position = glm::vec3(-500.0f, -300.0f, +0.0f);
   vertices[0].color = color;
   vertices[1].color = color;
   vertices[2].color = color;
@@ -379,13 +378,13 @@ tVertex *CShapeFactory::MakeVertsStuntMarker(uint32 &uiNumVerts)
   tVertex *vertices = new tVertex[uiNumVerts];
 
   glm::vec3 color = glm::vec3(0, 1, 0);
-  vertices[0].position = glm::vec3(+0.0f / m_fScale, +100.0f / m_fScale, +0.0f);
-  vertices[1].position = glm::vec3(+100.0f / m_fScale, +0.0f / m_fScale, +0.0f);
-  vertices[2].position = glm::vec3(+400.0f / m_fScale, -300.0f / m_fScale, +0.0f);
-  vertices[3].position = glm::vec3(+300.0f / m_fScale, -400.0f / m_fScale, +0.0f);
-  vertices[4].position = glm::vec3(+0.0f / m_fScale, -100.0f / m_fScale, +0.0f);
-  vertices[5].position = glm::vec3(-300.0f / m_fScale, -400.0f / m_fScale, +0.0f);
-  vertices[6].position = glm::vec3(-400.0f / m_fScale, -300.0f / m_fScale, +0.0f);
+  vertices[0].position = glm::vec3(+0.0f  , +100.0f, +0.0f);
+  vertices[1].position = glm::vec3(+100.0f, +0.0f  , +0.0f);
+  vertices[2].position = glm::vec3(+400.0f, -300.0f, +0.0f);
+  vertices[3].position = glm::vec3(+300.0f, -400.0f, +0.0f);
+  vertices[4].position = glm::vec3(+0.0f  , -100.0f, +0.0f);
+  vertices[5].position = glm::vec3(-300.0f, -400.0f, +0.0f);
+  vertices[6].position = glm::vec3(-400.0f, -300.0f, +0.0f);
 
   vertices[0].color = color;
   vertices[1].color = color;
@@ -1357,8 +1356,8 @@ void CShapeFactory::MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CSha
 
     //position sign
     bool bReversedOffsets = pTrack->m_chunkAy[i].dPitch >= 90.0f && pTrack->m_chunkAy[i].dPitch < 270.0f;
-    float fLen = (float)pTrack->m_chunkAy[i].iSignHorizOffset * 15.0f / m_fScale * (bReversedOffsets ? 1.0f : -1.0f);
-    float fHeight = (float)pTrack->m_chunkAy[i].iSignVertOffset * 15.0f / m_fScale * (bReversedOffsets ? 1.0f : -1.0f);
+    float fLen = (float)pTrack->m_chunkAy[i].iSignHorizOffset * 15.0f * (bReversedOffsets ? 1.0f : -1.0f);
+    float fHeight = (float)pTrack->m_chunkAy[i].iSignVertOffset * 15.0f * (bReversedOffsets ? 1.0f : -1.0f);
 
     glm::vec3 center; //sign origin is midpoint of centerline
     if (i + 1 < pTrack->m_chunkAy.size())
@@ -1402,7 +1401,7 @@ void CShapeFactory::MakeAudio(CShader *pShader, CTrack *pTrack, std::vector<CSha
     //make marker
     CShapeData *pNewMarker = MakeAudioMarker(pShader);
 
-    float fHeight = (float)1000.0f / m_fScale * -1.0f;
+    float fHeight = (float)1000.0f * -1.0f;
     glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[i].math.centerStunt);
     glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
     glm::vec3 normal = glm::normalize(glm::cross(pTrack->m_chunkAy[i].math.nextChunkPitched, pTrack->m_chunkAy[i].math.pitchAxis));
@@ -1431,7 +1430,7 @@ void CShapeFactory::MakeStunts(CShader *pShader, CTrack *pTrack, std::vector<CSh
     //make marker
     CShapeData *pNewMarker = MakeStuntMarker(pShader);
 
-    float fHeight = (float)1000.0f / m_fScale * -1.0f;
+    float fHeight = (float)1000.0f * -1.0f;
     glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[it->first].math.centerStunt);
     glm::mat4 scaleMatHeight = glm::scale(glm::vec3(fHeight, fHeight, fHeight));
     glm::vec3 normal = glm::normalize(glm::cross(pTrack->m_chunkAy[it->first].math.nextChunkPitched, pTrack->m_chunkAy[it->first].math.pitchAxis));
@@ -1910,7 +1909,7 @@ tVertex *CShapeFactory::MakeVertsEnvirFloor(uint32 &numVertices, CTrack *pTrack,
 
   numVertices = 4;
   tVertex *vertices = new tVertex[numVertices];
-  float fEnvirFloorDepth = (float)pTrack->m_header.iFloorDepth / m_fScale * -1.0f;
+  float fEnvirFloorDepth = (float)pTrack->m_header.iFloorDepth * -1.0f;
   float fPadding = 1000.0f;
   vertices[0].position = glm::vec3(-fPadding, fEnvirFloorDepth, -fPadding);
   vertices[1].position = glm::vec3(-fPadding, fEnvirFloorDepth, +fPadding);

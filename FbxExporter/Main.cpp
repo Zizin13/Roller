@@ -36,7 +36,7 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir)
   //make texture file
   std::string sTexFile = sOutDir + "\\" + sCarName + ".bmp";
   carTex.ExportToBitmapFile(sTexFile);
-  printf("Exporting");
+  printf("Exporting ");
   printf(sTexFile.c_str());
   printf("...\n");
 
@@ -46,7 +46,7 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir)
     return false;
 
   std::string sFilename = sOutDir + std::string("\\") + sCarName + std::string(".fbx");
-  printf("Exporting");
+  printf("Exporting ");
   printf(sFilename.c_str());
   printf("...\n");
   bool bSuccess = CFBXExporter::GetFBXExporter().ExportShape(pCar, sCarName.c_str(), sFilename.c_str(), sTexFile.c_str());
@@ -74,12 +74,12 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir)
 
   //make texture files
   std::string sTexFile = sOutDir + "\\" + sTrackName + ".bmp";
-  printf("Exporting");
+  printf("Exporting ");
   printf(sTexFile.c_str());
   printf("...\n");
   pTrack->m_pTex->ExportToBitmapFile(sTexFile);
   std::string sSignTexFile = sOutDir + "\\" + sTrackName + "_BLD.bmp";
-  printf("Exporting");
+  printf("Exporting ");
   printf(sSignTexFile.c_str());
   printf("...\n");
   pTrack->m_pBld->ExportToBitmapFile(sSignTexFile);
@@ -102,7 +102,7 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir)
 
   //export
   std::string sFilename = sOutDir + std::string("\\") + sTrackName + std::string(".fbx");
-  printf("Exporting");
+  printf("Exporting ");
   printf(sFilename.c_str());
   printf("...\n");
   bool bExported = CFBXExporter::GetFBXExporter().ExportTrack(pExportTrack,

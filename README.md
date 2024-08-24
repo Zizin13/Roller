@@ -47,3 +47,7 @@ Whiplash/Fatal Racing track editor and resource converter
 - mission car lacks pink color changing
 - polygons have four bytes of data that do something unknown
 - "places" arrays are unknown
+- support transparent materials in FBX export
+- support backface textures in FBX export (is this possible?)
+- support stunt animation in FBX export
+- support wheel texture animation in FBX export

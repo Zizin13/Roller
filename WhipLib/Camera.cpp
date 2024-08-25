@@ -9,12 +9,12 @@ float Camera::s_fMovementSpeed = 1000.0f;
 //-------------------------------------------------------------------------------------------------
 
 Camera::Camera()
-  : m_viewDirection(0.0f, 0.0f, -1.0f)
+  : m_viewDirection(0.0f, -0.3f, 1.0f)
   , m_UP(0.0f, 1.0f, 0.0f)
 {
-  m_position.x = 4.0f;
-  m_position.z = 4.0f;
-  m_position.y = 3.0f;
+  m_position.x = 0.0f;
+  m_position.z = -5000.0f;
+  m_position.y = 4000.0f;
 }
 
 //-------------------------------------------------------------------------------------------------

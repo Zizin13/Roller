@@ -35,6 +35,7 @@ Whiplash/Fatal Racing track editor and resource converter
 - TRACK9: buildings clip into track in tunnel (137)
 - TRACK12: wall geometry wrong (106-107)
 - TRACK13: building floating over roof (428-431)
+- TRACK15: pits have grass, texture pair should work backwards somehow instead of forwards (1-46)
 - TRACK16: floating tree (203)
 - TRACK20: has the green walls too
 - TRACK22: end of tunnel walls are gone facing backwards (335)

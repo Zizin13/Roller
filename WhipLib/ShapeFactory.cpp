@@ -1189,7 +1189,7 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShapeData *pShape, CShader *pShader
       else
         indices = MakeIndicesSingleSection(uiNumIndices, section, pTrack, bAttachLast);
     } else {
-      indices = MakeIndicesSingleSectionWireframe(uiNumIndices, pTrack, bAttachLast);
+      indices = MakeIndicesSingleSectionWireframe(uiNumIndices, section, pTrack, bAttachLast);
       drawType = GL_LINES;
     }
 
@@ -1524,6 +1524,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
 
   uint32 uiNumVertsPerChunk = 4;
   if (section == eShapeSection::SELECTED) uiNumVertsPerChunk = 8;
+  if (section == eShapeSection::LSHOULDER || section == eShapeSection::RSHOULDER) uiNumVertsPerChunk = 8;
   if (section >= eShapeSection::AILINE1 && section <= eShapeSection::AILINE4) uiNumVertsPerChunk = 1;
   if (section == eShapeSection::EXPORT) uiNumVertsPerChunk = 48;
 
@@ -1562,30 +1563,46 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                               vertices[i * uiNumVertsPerChunk + 3], false, true);
         break;
       case LSHOULDER:
-        ApplyVerticesSingleSection(i, vertices, 
-                                   pTrack->m_chunkAy[i].math.lShoulder, 
-                                   pTrack->m_chunkAy[i].math.lLane, 
-                                   pTrack->m_chunkAy[iChunkIndex].math.lShoulder,
-                                   pTrack->m_chunkAy[iChunkIndex].math.lLane);
+        ApplyVerticesShoulder(i, vertices,
+                              pTrack->m_chunkAy[i].math.lShoulder,
+                              pTrack->m_chunkAy[i].math.lShoulderHalf,
+                              pTrack->m_chunkAy[iChunkIndex].math.lShoulder,
+                              pTrack->m_chunkAy[iChunkIndex].math.lShoulderHalf,
+                              pTrack->m_chunkAy[i].math.lShoulderHalf,
+                              pTrack->m_chunkAy[i].math.lLane,
+                              pTrack->m_chunkAy[iChunkIndex].math.lShoulderHalf,
+                              pTrack->m_chunkAy[iChunkIndex].math.lLane);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftSurfaceType),
+          pTexture->GetTextureCoordinatesDual(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftSurfaceType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
-                              vertices[i * uiNumVertsPerChunk + 3]);
+                              vertices[i * uiNumVertsPerChunk + 3],
+                              vertices[i * uiNumVertsPerChunk + 4],
+                              vertices[i * uiNumVertsPerChunk + 5],
+                              vertices[i * uiNumVertsPerChunk + 6],
+                              vertices[i * uiNumVertsPerChunk + 7]);
         break;
       case RSHOULDER:
-        ApplyVerticesSingleSection(i, vertices, 
-                                   pTrack->m_chunkAy[i].math.rLane, 
-                                   pTrack->m_chunkAy[i].math.rShoulder, 
-                                   pTrack->m_chunkAy[iChunkIndex].math.rLane,
-                                   pTrack->m_chunkAy[iChunkIndex].math.rShoulder);
+        ApplyVerticesShoulder(i, vertices,
+                              pTrack->m_chunkAy[i].math.rLane,
+                              pTrack->m_chunkAy[i].math.rShoulderHalf,
+                              pTrack->m_chunkAy[iChunkIndex].math.rLane,
+                              pTrack->m_chunkAy[iChunkIndex].math.rShoulderHalf,
+                              pTrack->m_chunkAy[i].math.rShoulderHalf,
+                              pTrack->m_chunkAy[i].math.rShoulder,
+                              pTrack->m_chunkAy[iChunkIndex].math.rShoulderHalf,
+                              pTrack->m_chunkAy[iChunkIndex].math.rShoulder);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightSurfaceType),
+          pTexture->GetTextureCoordinatesDual(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightSurfaceType),
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 2],
-                              vertices[i * uiNumVertsPerChunk + 3]);
+                              vertices[i * uiNumVertsPerChunk + 3],
+                              vertices[i * uiNumVertsPerChunk + 4],
+                              vertices[i * uiNumVertsPerChunk + 5],
+                              vertices[i * uiNumVertsPerChunk + 6],
+                              vertices[i * uiNumVertsPerChunk + 7]);
         break;
       case LWALL:
         ApplyVerticesSingleSection(i, vertices, 
@@ -1959,6 +1976,10 @@ uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSectio
 
   uint32 uiNumVertsPerChunk = 4;
   uint32 uiNumIndicesPerChunk = 6;
+  if (section == eShapeSection::LSHOULDER || section == eShapeSection::RSHOULDER) {
+    uiNumVertsPerChunk = 8;
+    uiNumIndicesPerChunk = 12;
+  }
   numIndices = (uint32)pTrack->m_chunkAy.size() * uiNumIndicesPerChunk;
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
@@ -1979,12 +2000,22 @@ uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSectio
     if (!bAttachLast && i == 0)
       continue;
 
+
     indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 2;
     indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 3;
     indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 1;
     indices[i * uiNumIndicesPerChunk + 3] = (i * uiNumVertsPerChunk) + 2;
     indices[i * uiNumIndicesPerChunk + 4] = (i * uiNumVertsPerChunk) + 1;
     indices[i * uiNumIndicesPerChunk + 5] = (i * uiNumVertsPerChunk) + 0;
+
+    if (section == eShapeSection::LSHOULDER || section == eShapeSection::RSHOULDER) {
+      indices[i * uiNumIndicesPerChunk + 6]  = (i * uiNumVertsPerChunk) + 6;
+      indices[i * uiNumIndicesPerChunk + 7]  = (i * uiNumVertsPerChunk) + 7;
+      indices[i * uiNumIndicesPerChunk + 8]  = (i * uiNumVertsPerChunk) + 5;
+      indices[i * uiNumIndicesPerChunk + 9]  = (i * uiNumVertsPerChunk) + 6;
+      indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumVertsPerChunk) + 5;
+      indices[i * uiNumIndicesPerChunk + 11] = (i * uiNumVertsPerChunk) + 4;
+    }
   }
 
   return indices;
@@ -2207,7 +2238,7 @@ uint32 *CShapeFactory::MakeIndicesSelectedChunks(uint32 &numIndices, int iStart,
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 *CShapeFactory::MakeIndicesSingleSectionWireframe(uint32 &numIndices, CTrack *pTrack, bool bAttachLast)
+uint32 *CShapeFactory::MakeIndicesSingleSectionWireframe(uint32 &numIndices, eShapeSection section, CTrack *pTrack, bool bAttachLast)
 {
   if (pTrack->m_chunkAy.empty()) {
     numIndices = 0;
@@ -2216,6 +2247,10 @@ uint32 *CShapeFactory::MakeIndicesSingleSectionWireframe(uint32 &numIndices, CTr
 
   uint32 uiNumVertsPerChunk = 4;
   uint32 uiNumIndicesPerChunk = 8;
+  if (section == eShapeSection::LSHOULDER || section == eShapeSection::RSHOULDER) {
+    uiNumVertsPerChunk = 8;
+    uiNumIndicesPerChunk = 16;
+  }
   numIndices = (uint32)pTrack->m_chunkAy.size() * uiNumIndicesPerChunk;
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
@@ -2233,6 +2268,17 @@ uint32 *CShapeFactory::MakeIndicesSingleSectionWireframe(uint32 &numIndices, CTr
     indices[i * uiNumIndicesPerChunk + 5] = (i * uiNumVertsPerChunk) + 0;
     indices[i * uiNumIndicesPerChunk + 6] = (i * uiNumVertsPerChunk) + 0;
     indices[i * uiNumIndicesPerChunk + 7] = (i * uiNumVertsPerChunk) + 1;
+
+    if (section == eShapeSection::LSHOULDER || section == eShapeSection::RSHOULDER) {
+      indices[i * uiNumIndicesPerChunk + 8] = (i * uiNumVertsPerChunk) + 2 + 4;
+      indices[i * uiNumIndicesPerChunk + 9] = (i * uiNumVertsPerChunk) + 3 + 4;
+      indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumVertsPerChunk) + 3 + 4;
+      indices[i * uiNumIndicesPerChunk + 11] = (i * uiNumVertsPerChunk) + 1 + 4;
+      indices[i * uiNumIndicesPerChunk + 12] = (i * uiNumVertsPerChunk) + 2 + 4;
+      indices[i * uiNumIndicesPerChunk + 13] = (i * uiNumVertsPerChunk) + 0 + 4;
+      indices[i * uiNumIndicesPerChunk + 14] = (i * uiNumVertsPerChunk) + 0 + 4;
+      indices[i * uiNumIndicesPerChunk + 15] = (i * uiNumVertsPerChunk) + 1 + 4;
+    }
   }
 
   return indices;
@@ -2247,6 +2293,29 @@ void CShapeFactory::ApplyVerticesSingleSection(int i, tVertex *vertices, const g
   vertices[i * uiNumVertsPerChunk + 1].position = v1;
   vertices[i * uiNumVertsPerChunk + 2].position = v2;
   vertices[i * uiNumVertsPerChunk + 3].position = v3;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CShapeFactory::ApplyVerticesShoulder(int i, tVertex *vertices,
+                                          const glm::vec3 &v0,
+                                          const glm::vec3 &v1,
+                                          const glm::vec3 &v2,
+                                          const glm::vec3 &v3,
+                                          const glm::vec3 &v4,
+                                          const glm::vec3 &v5,
+                                          const glm::vec3 &v6,
+                                          const glm::vec3 &v7)
+{
+  uint32 uiNumVertsPerChunk = 8;
+  vertices[i * uiNumVertsPerChunk + 0].position = v0;
+  vertices[i * uiNumVertsPerChunk + 1].position = v1;
+  vertices[i * uiNumVertsPerChunk + 2].position = v2;
+  vertices[i * uiNumVertsPerChunk + 3].position = v3;
+  vertices[i * uiNumVertsPerChunk + 4].position = v4;
+  vertices[i * uiNumVertsPerChunk + 5].position = v5;
+  vertices[i * uiNumVertsPerChunk + 6].position = v6;
+  vertices[i * uiNumVertsPerChunk + 7].position = v7;
 }
 
 //-------------------------------------------------------------------------------------------------

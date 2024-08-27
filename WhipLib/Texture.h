@@ -58,6 +58,15 @@ public:
   void GetTextureCoordinates(uint32 uiSurfaceType,
                              tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
                              bool bLeftLane = false, bool bRightLane = false, bool bBack = false);
+  void GetTextureCoordinatesDual(uint32 uiSurfaceType,
+                                 tVertex &topLeft1,
+                                 tVertex &topRight1,
+                                 tVertex &bottomLeft1,
+                                 tVertex &bottomRight1,
+                                 tVertex &topLeft2,
+                                 tVertex &topRight2,
+                                 tVertex &bottomLeft2,
+                                 tVertex &bottomRight2);
   uint8 *GenerateBitmapData(int &iSize);
   bool ExportToBitmapFile(const std::string &sFilename);
 
@@ -70,6 +79,14 @@ public:
 private:
   bool ProcessTextureData(const uint8 *pData, size_t length);
   void FlipTileLines(tTile *pSource, tTile *pDest, int iNumTiles);
+  void ApplyTransparency(tVertex &vertex, uint32 uiTexIndex, bool bBack);
+  void ApplyColor(tVertex &vertex, uint32 uiTexIndex, bool bBack);
+  void ApplyTexCoords(glm::vec2 &topLeft,
+                      glm::vec2 &topRight,
+                      glm::vec2 &bottomLeft,
+                      glm::vec2 &bottomRight,
+                      uint32 uiTexIndex, uint32 uiTexIncVal,
+                      bool bFlipHoriz, bool bFlipVert);
 
   uint32 m_uiId;
   CPalette *m_pPalette; //not owned by this class

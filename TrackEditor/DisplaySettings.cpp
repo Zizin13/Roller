@@ -51,10 +51,8 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent)
 
   connect(ckAllSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAllSurface);
   connect(ckAllWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdateAllWireframe);
-  connect(ckLLaneSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
-  connect(ckLLaneWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
-  connect(ckRLaneSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
-  connect(ckRLaneWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
+  connect(ckCenterSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
+  connect(ckCenterWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckLShoulderSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckLShoulderWireframe, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
   connect(ckRShoulderSurface, &QCheckBox::toggled, this, &CDisplaySettings::UpdatePreviewSelection);
@@ -104,10 +102,8 @@ CDisplaySettings::~CDisplaySettings()
 uint32 CDisplaySettings::GetDisplaySettings(eWhipModel &carModel, eShapeSection &aiLine, bool &bMillionPlus)
 {
   uint32 uiShowModels = 0;
-  if (ckLLaneSurface->isChecked())        uiShowModels |= SHOW_LLANE_SURF_MODEL;
-  if (ckLLaneWireframe->isChecked())      uiShowModels |= SHOW_LLANE_WIRE_MODEL;
-  if (ckRLaneSurface->isChecked())        uiShowModels |= SHOW_RLANE_SURF_MODEL;
-  if (ckRLaneWireframe->isChecked())      uiShowModels |= SHOW_RLANE_WIRE_MODEL;
+  if (ckCenterSurface->isChecked())       uiShowModels |= SHOW_CENTER_SURF_MODEL;
+  if (ckCenterWireframe->isChecked())     uiShowModels |= SHOW_CENTER_WIRE_MODEL;
   if (ckLShoulderSurface->isChecked())    uiShowModels |= SHOW_LSHOULDER_SURF_MODEL;
   if (ckLShoulderWireframe->isChecked())  uiShowModels |= SHOW_LSHOULDER_WIRE_MODEL;
   if (ckRShoulderSurface->isChecked())    uiShowModels |= SHOW_RSHOULDER_SURF_MODEL;
@@ -148,10 +144,8 @@ uint32 CDisplaySettings::GetDisplaySettings(eWhipModel &carModel, eShapeSection 
 
 void CDisplaySettings::SetDisplaySettings(uint32 uiShowModels, eWhipModel carModel, eShapeSection aiLine, bool bMillionPlus)
 {
-  BLOCK_SIG_AND_DO(ckLLaneSurface, setChecked(       uiShowModels & SHOW_LLANE_SURF_MODEL));
-  BLOCK_SIG_AND_DO(ckLLaneWireframe, setChecked(     uiShowModels & SHOW_LLANE_WIRE_MODEL));
-  BLOCK_SIG_AND_DO(ckRLaneSurface, setChecked(       uiShowModels & SHOW_RLANE_SURF_MODEL));
-  BLOCK_SIG_AND_DO(ckRLaneWireframe, setChecked(     uiShowModels & SHOW_RLANE_WIRE_MODEL));
+  BLOCK_SIG_AND_DO(ckCenterSurface, setChecked(      uiShowModels & SHOW_CENTER_SURF_MODEL));
+  BLOCK_SIG_AND_DO(ckCenterWireframe, setChecked(    uiShowModels & SHOW_CENTER_WIRE_MODEL));
   BLOCK_SIG_AND_DO(ckLShoulderSurface, setChecked(   uiShowModels & SHOW_LSHOULDER_SURF_MODEL));
   BLOCK_SIG_AND_DO(ckLShoulderWireframe, setChecked( uiShowModels & SHOW_LSHOULDER_WIRE_MODEL));
   BLOCK_SIG_AND_DO(ckRShoulderSurface, setChecked(   uiShowModels & SHOW_RSHOULDER_SURF_MODEL));
@@ -220,8 +214,7 @@ void CDisplaySettings::SetCameraSpeed(int iSpeed)
 
 void CDisplaySettings::UpdateAllSurface()
 {
-  BLOCK_SIG_AND_DO(ckLLaneSurface, setChecked(ckAllSurface->isChecked()));
-  BLOCK_SIG_AND_DO(ckRLaneSurface, setChecked(ckAllSurface->isChecked()));
+  BLOCK_SIG_AND_DO(ckCenterSurface, setChecked(ckAllSurface->isChecked()));
   BLOCK_SIG_AND_DO(ckLShoulderSurface, setChecked(ckAllSurface->isChecked()));
   BLOCK_SIG_AND_DO(ckRShoulderSurface, setChecked(ckAllSurface->isChecked()));
   BLOCK_SIG_AND_DO(ckLWallSurface, setChecked(ckAllSurface->isChecked()));
@@ -240,8 +233,7 @@ void CDisplaySettings::UpdateAllSurface()
 
 void CDisplaySettings::UpdateAllWireframe()
 {
-  BLOCK_SIG_AND_DO(ckLLaneWireframe, setChecked(ckAllWireframe->isChecked()));
-  BLOCK_SIG_AND_DO(ckRLaneWireframe, setChecked(ckAllWireframe->isChecked()));
+  BLOCK_SIG_AND_DO(ckCenterWireframe, setChecked(ckAllWireframe->isChecked()));
   BLOCK_SIG_AND_DO(ckLShoulderWireframe, setChecked(ckAllWireframe->isChecked()));
   BLOCK_SIG_AND_DO(ckRShoulderWireframe, setChecked(ckAllWireframe->isChecked()));
   BLOCK_SIG_AND_DO(ckLWallWireframe, setChecked(ckAllWireframe->isChecked()));
@@ -262,10 +254,8 @@ void CDisplaySettings::UpdatePreviewSelection()
 {
   bool bAllSurfaceChecked = true;
   bool bAllWireframeChecked = true;
-  bAllSurfaceChecked &= ckLLaneSurface->isChecked();
-  bAllWireframeChecked &= ckLLaneWireframe->isChecked();
-  bAllSurfaceChecked &= ckRLaneSurface->isChecked();
-  bAllWireframeChecked &= ckRLaneWireframe->isChecked();
+  bAllSurfaceChecked &= ckCenterSurface->isChecked();
+  bAllWireframeChecked &= ckCenterWireframe->isChecked();
   bAllSurfaceChecked &= ckLShoulderSurface->isChecked();
   bAllWireframeChecked &= ckLShoulderWireframe->isChecked();
   bAllSurfaceChecked &= ckRShoulderSurface->isChecked();

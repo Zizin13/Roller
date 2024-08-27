@@ -212,6 +212,12 @@ void CTexture::GetTextureCoordinatesDual(uint32 uiSurfaceType,
       fTexIndexRight2 = (float)(uiTexIndex + 1) / (float)m_iNumTiles;
     }
   }
+  //if (!bWall) {
+  //  //flip second texture if driving surface
+  //  float fTemp = fTexIndexLeft2;
+  //  fTexIndexLeft2 = fTexIndexRight2;
+  //  fTexIndexRight2 = fTemp;
+  //}
 
   if (bApplyTexture) {
     if (!bFlipHoriz && !bFlipVert) {

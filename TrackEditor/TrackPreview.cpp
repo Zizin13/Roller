@@ -32,10 +32,8 @@ class CTrackPreviewPrivate
 public:
   CTrackPreviewPrivate()
     : m_pShader(NULL)
-    , m_pLLaneSurf(NULL)
-    , m_pLLaneWire(NULL)
-    , m_pRLaneSurf(NULL)
-    , m_pRLaneWire(NULL)
+    , m_pCenterSurf(NULL)
+    , m_pCenterWire(NULL)
     , m_pLShoulderSurf(NULL)
     , m_pLShoulderWire(NULL)
     , m_pRShoulderSurf(NULL)
@@ -92,21 +90,13 @@ public:
   };
   void DeleteModels()
   {
-    if (m_pLLaneSurf) {
-      delete m_pLLaneSurf;
-      m_pLLaneSurf = NULL;
+    if (m_pCenterSurf) {
+      delete m_pCenterSurf;
+      m_pCenterSurf = NULL;
     }
-    if (m_pLLaneWire) {
-      delete m_pLLaneWire;
-      m_pLLaneWire = NULL;
-    }
-    if (m_pRLaneSurf) {
-      delete m_pRLaneSurf;
-      m_pRLaneSurf = NULL;
-    }
-    if (m_pRLaneWire) {
-      delete m_pRLaneWire;
-      m_pRLaneWire = NULL;
+    if (m_pCenterWire) {
+      delete m_pCenterWire;
+      m_pCenterWire = NULL;
     }
     if (m_pLShoulderSurf) {
       delete m_pLShoulderSurf;
@@ -222,10 +212,8 @@ public:
     m_stuntAy.clear();
   }
 
-  CShapeData *m_pLLaneSurf;
-  CShapeData *m_pLLaneWire;
-  CShapeData *m_pRLaneSurf;
-  CShapeData *m_pRLaneWire;
+  CShapeData *m_pCenterSurf;
+  CShapeData *m_pCenterWire;
   CShapeData *m_pLShoulderSurf;
   CShapeData *m_pLShoulderWire;
   CShapeData *m_pRShoulderSurf;
@@ -325,10 +313,8 @@ void CTrackPreview::UpdateTrack(bool bUpdatingStunt)
     p->DeleteModels();
 
   if (!p->m_track.m_chunkAy.empty()) {
-    p->m_pLLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLLaneSurf, p->m_pShader, &p->m_track, eShapeSection::LLANE, m_bAttachLast);
-    p->m_pLLaneWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLLaneWire, p->m_pShader, &p->m_track, eShapeSection::LLANE, m_bAttachLast, true);
-    p->m_pRLaneSurf      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pRLaneSurf, p->m_pShader, &p->m_track, eShapeSection::RLANE, m_bAttachLast);
-    p->m_pRLaneWire      = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pRLaneWire, p->m_pShader, &p->m_track, eShapeSection::RLANE, m_bAttachLast, true);
+    p->m_pCenterSurf     = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pCenterSurf, p->m_pShader, &p->m_track, eShapeSection::CENTER, m_bAttachLast);
+    p->m_pCenterWire     = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pCenterWire, p->m_pShader, &p->m_track, eShapeSection::CENTER, m_bAttachLast, true);
     p->m_pLShoulderSurf  = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLShoulderSurf, p->m_pShader, &p->m_track, eShapeSection::LSHOULDER, m_bAttachLast);
     p->m_pLShoulderWire  = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pLShoulderWire, p->m_pShader, &p->m_track, eShapeSection::LSHOULDER, m_bAttachLast, true);
     p->m_pRShoulderSurf  = CShapeFactory::GetShapeFactory().MakeTrackSurface(p->m_pRShoulderSurf, p->m_pShader, &p->m_track, eShapeSection::RSHOULDER, m_bAttachLast);
@@ -519,14 +505,10 @@ void CTrackPreview::paintGL()
   //so we draw it first then clear depth buffer bit
   glClear(GL_DEPTH_BUFFER_BIT);
 
-  if (m_uiShowModels & SHOW_LLANE_SURF_MODEL && p->m_pLLaneSurf)
-    p->m_pLLaneSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-  if (m_uiShowModels & SHOW_LLANE_WIRE_MODEL && p->m_pLLaneWire)
-    p->m_pLLaneWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-  if (m_uiShowModels & SHOW_RLANE_SURF_MODEL && p->m_pRLaneSurf)
-    p->m_pRLaneSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-  if (m_uiShowModels & SHOW_RLANE_WIRE_MODEL && p->m_pRLaneWire)
-    p->m_pRLaneWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
+  if (m_uiShowModels & SHOW_CENTER_SURF_MODEL && p->m_pCenterSurf)
+    p->m_pCenterSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
+  if (m_uiShowModels & SHOW_CENTER_WIRE_MODEL && p->m_pCenterWire)
+    p->m_pCenterWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_LSHOULDER_SURF_MODEL && p->m_pLShoulderSurf)
     p->m_pLShoulderSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_LSHOULDER_WIRE_MODEL && p->m_pLShoulderWire)

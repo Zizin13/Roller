@@ -18,8 +18,7 @@ typedef unsigned __int64 uint64;
 
 enum eShapeSection
 {
-  LLANE = 0,
-  RLANE,
+  CENTER = 0,
   LSHOULDER,
   RSHOULDER,
   LWALL,

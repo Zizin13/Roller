@@ -569,7 +569,7 @@ double CTrack::ConstrainAngle(double dAngle)
 
 bool CTrack::ShouldShowChunkSection(int i, eShapeSection section)
 {
-  if ((section == eShapeSection::LLANE || section == eShapeSection::RLANE)
+  if ((section == eShapeSection::CENTER)
       && !ShouldDrawSurfaceType(m_chunkAy[i].iCenterSurfaceType))
     return false;
   if (section == eShapeSection::LSHOULDER

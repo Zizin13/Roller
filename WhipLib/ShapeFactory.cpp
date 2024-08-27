@@ -1207,6 +1207,8 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShapeData *pShape, CShader *pShader
     //  delete[] indices;
   } else {
     pShape->m_pVertexBuf->Update(vertices, uiNumVerts);
+    if (pShape->m_vertices)
+      delete[] pShape->m_vertices;
     pShape->m_vertices = vertices;
     pShape->m_uiNumVerts = uiNumVerts;
   }
@@ -1523,8 +1525,10 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
   }
 
   uint32 uiNumVertsPerChunk = 4;
-  if (section == eShapeSection::SELECTED) uiNumVertsPerChunk = 8;
-  if (section == eShapeSection::LSHOULDER || section == eShapeSection::RSHOULDER) uiNumVertsPerChunk = 8;
+  if (section == eShapeSection::LSHOULDER
+      || section == eShapeSection::RSHOULDER
+      || section == eShapeSection::CENTER
+      || section == eShapeSection::SELECTED) uiNumVertsPerChunk = 8;
   if (section >= eShapeSection::AILINE1 && section <= eShapeSection::AILINE4) uiNumVertsPerChunk = 1;
   if (section == eShapeSection::EXPORT) uiNumVertsPerChunk = 56;
 
@@ -1537,34 +1541,29 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
 
     int iVertRunner = 0;
     switch (section) {
-      case LLANE:
-        ApplyVerticesSingleSection(i, vertices, 
+      case CENTER:
+        ApplyVerticesDoubleSection(i, vertices, 
                                    pTrack->m_chunkAy[i].math.lLane, 
                                    pTrack->UseCenterStunt(i) ? pTrack->m_chunkAy[i].math.centerStunt : pTrack->m_chunkAy[i].math.center, 
                                    pTrack->m_chunkAy[iChunkIndex].math.lLane,
-                                   pTrack->UseCenterStunt(iChunkIndex) ? pTrack->m_chunkAy[iChunkIndex].math.centerStunt : pTrack->m_chunkAy[iChunkIndex].math.center);
-        if (pTexture)
-          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
-                                vertices[i * uiNumVertsPerChunk + 0],
-                                vertices[i * uiNumVertsPerChunk + 1],
-                                vertices[i * uiNumVertsPerChunk + 2],
-                                vertices[i * uiNumVertsPerChunk + 3], true, false);
-        break;
-      case RLANE:
-        ApplyVerticesSingleSection(i, vertices, 
+                                   pTrack->UseCenterStunt(iChunkIndex) ? pTrack->m_chunkAy[iChunkIndex].math.centerStunt : pTrack->m_chunkAy[iChunkIndex].math.center,
                                    pTrack->UseCenterStunt(i) ? pTrack->m_chunkAy[i].math.centerStunt : pTrack->m_chunkAy[i].math.center,
-                                   pTrack->m_chunkAy[i].math.rLane, 
+                                   pTrack->m_chunkAy[i].math.rLane,
                                    pTrack->UseCenterStunt(iChunkIndex) ? pTrack->m_chunkAy[iChunkIndex].math.centerStunt : pTrack->m_chunkAy[iChunkIndex].math.center,
                                    pTrack->m_chunkAy[iChunkIndex].math.rLane);
         if (pTexture)
-          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
-                              vertices[i * uiNumVertsPerChunk + 0],
-                              vertices[i * uiNumVertsPerChunk + 1],
-                              vertices[i * uiNumVertsPerChunk + 2],
-                              vertices[i * uiNumVertsPerChunk + 3], false, true);
+          pTexture->GetTextureCoordinatesDual(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
+                                vertices[i * uiNumVertsPerChunk + 0],
+                                vertices[i * uiNumVertsPerChunk + 1],
+                                vertices[i * uiNumVertsPerChunk + 2],
+                                vertices[i * uiNumVertsPerChunk + 3],
+                                vertices[i * uiNumVertsPerChunk + 4],
+                                vertices[i * uiNumVertsPerChunk + 5],
+                                vertices[i * uiNumVertsPerChunk + 6],
+                                vertices[i * uiNumVertsPerChunk + 7]);
         break;
       case LSHOULDER:
-        ApplyVerticesShoulder(i, vertices,
+        ApplyVerticesDoubleSection(i, vertices,
                               pTrack->m_chunkAy[i].math.lShoulder,
                               pTrack->m_chunkAy[i].math.lShoulderHalf,
                               pTrack->m_chunkAy[iChunkIndex].math.lShoulder,
@@ -1585,7 +1584,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                               vertices[i * uiNumVertsPerChunk + 7]);
         break;
       case RSHOULDER:
-        ApplyVerticesShoulder(i, vertices,
+        ApplyVerticesDoubleSection(i, vertices,
                               pTrack->m_chunkAy[i].math.rLane,
                               pTrack->m_chunkAy[i].math.rShoulderHalf,
                               pTrack->m_chunkAy[iChunkIndex].math.rLane,
@@ -1995,7 +1994,9 @@ uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSectio
 
   uint32 uiNumVertsPerChunk = 4;
   uint32 uiNumIndicesPerChunk = 6;
-  if (section == eShapeSection::LSHOULDER || section == eShapeSection::RSHOULDER) {
+  if (section == eShapeSection::LSHOULDER
+      || section == eShapeSection::RSHOULDER
+      || section == eShapeSection::CENTER) {
     uiNumVertsPerChunk = 8;
     uiNumIndicesPerChunk = 12;
   }
@@ -2027,7 +2028,7 @@ uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSectio
     indices[i * uiNumIndicesPerChunk + 4] = (i * uiNumVertsPerChunk) + 1;
     indices[i * uiNumIndicesPerChunk + 5] = (i * uiNumVertsPerChunk) + 0;
 
-    if (section == eShapeSection::LSHOULDER || section == eShapeSection::RSHOULDER) {
+    if (section == eShapeSection::LSHOULDER || section == eShapeSection::RSHOULDER || section == eShapeSection::CENTER) {
       indices[i * uiNumIndicesPerChunk + 6]  = (i * uiNumVertsPerChunk) + 6;
       indices[i * uiNumIndicesPerChunk + 7]  = (i * uiNumVertsPerChunk) + 7;
       indices[i * uiNumIndicesPerChunk + 8]  = (i * uiNumVertsPerChunk) + 5;
@@ -2058,8 +2059,8 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
   uint32 i = 0;
   for (; i < pTrack->m_chunkAy.size(); i++) {
     int iIndicesRunner = 0;
-    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LLANE))
-      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LLANE)))
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::CENTER))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::CENTER)))
     {
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3;
@@ -2067,9 +2068,6 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0;
-    }
-    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RLANE))
-      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RLANE))) {
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 4;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 4;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 4;
@@ -2318,7 +2316,11 @@ uint32 *CShapeFactory::MakeIndicesSingleSectionWireframe(uint32 &numIndices, eSh
 
 //-------------------------------------------------------------------------------------------------
 
-void CShapeFactory::ApplyVerticesSingleSection(int i, tVertex *vertices, const glm::vec3 &v0, const glm::vec3 &v1, const glm::vec3 &v2, const glm::vec3 &v3)
+void CShapeFactory::ApplyVerticesSingleSection(int i, tVertex *vertices,
+                                               const glm::vec3 &v0,
+                                               const glm::vec3 &v1,
+                                               const glm::vec3 &v2,
+                                               const glm::vec3 &v3)
 {
   uint32 uiNumVertsPerChunk = 4;
   vertices[i * uiNumVertsPerChunk + 0].position = v0;
@@ -2329,15 +2331,15 @@ void CShapeFactory::ApplyVerticesSingleSection(int i, tVertex *vertices, const g
 
 //-------------------------------------------------------------------------------------------------
 
-void CShapeFactory::ApplyVerticesShoulder(int i, tVertex *vertices,
-                                          const glm::vec3 &v0,
-                                          const glm::vec3 &v1,
-                                          const glm::vec3 &v2,
-                                          const glm::vec3 &v3,
-                                          const glm::vec3 &v4,
-                                          const glm::vec3 &v5,
-                                          const glm::vec3 &v6,
-                                          const glm::vec3 &v7)
+void CShapeFactory::ApplyVerticesDoubleSection(int i, tVertex *vertices,
+                                               const glm::vec3 &v0,
+                                               const glm::vec3 &v1,
+                                               const glm::vec3 &v2,
+                                               const glm::vec3 &v3,
+                                               const glm::vec3 &v4,
+                                               const glm::vec3 &v5,
+                                               const glm::vec3 &v6,
+                                               const glm::vec3 &v7)
 {
   uint32 uiNumVertsPerChunk = 8;
   vertices[i * uiNumVertsPerChunk + 0].position = v0;

@@ -37,7 +37,7 @@ Whiplash/Fatal Racing track editor and resource converter
 - TRACK13: building floating over roof (428-431)
 - TRACK15: pits need doubled texture (0-46)
 - TRACK16: floating tree (203)
-- TRACK20: has the geen walls too
+- TRACK20: has the green walls too
 - TRACK22: end of tunnel walls are gone facing backwards (335)
 - TRACK24: moving pothole animates too quickly (27)
 - outer floor at ends of corkscrews

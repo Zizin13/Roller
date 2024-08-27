@@ -185,7 +185,7 @@
      <item row="5" column="0">
       <widget class="QCheckBox" name="ck27PairNext">
        <property name="text">
-        <string>Pair next texture (requires texture pair)</string>
+        <string>Bit 27</string>
        </property>
       </widget>
      </item>

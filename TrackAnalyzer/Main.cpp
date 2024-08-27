@@ -92,7 +92,7 @@ bool SurfaceHasFlag(const int &iSurface, const std::string &sFlag)
     case 24: uiFlag = SURFACE_FLAG_YELLOW_MAP; break;
     case 25: uiFlag = SURFACE_FLAG_PIT; break;
     case 26: uiFlag = SURFACE_FLAG_26; break;
-    case 27: uiFlag = SURFACE_FLAG_PAIR_NEXT_TEX; break;
+    case 27: uiFlag = SURFACE_FLAG_27; break;
     case 28: uiFlag = SURFACE_FLAG_28; break;
     case 29: uiFlag = SURFACE_FLAG_ECHO; break;
     case 30: uiFlag = SURFACE_FLAG_BOUNCE_30; break;

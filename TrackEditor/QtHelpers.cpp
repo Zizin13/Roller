@@ -72,8 +72,7 @@ void QtHelpers::UpdateTextures(QLabel *pLblTex1, QLabel *pLblTex2, CTexture *pTe
           pLblTex1->setPixmap(pixmap);
 
         if (uiSignedBitVal & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
-          if (uiSignedBitVal & SURFACE_FLAG_PAIR_NEXT_TEX)
-            pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTex->m_pTileAy[iIndex + 1], true));
+          pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTex->m_pTileAy[iIndex + 1], true));
           if (pLblTex2)
             pLblTex2->setPixmap(pixmap);
         }

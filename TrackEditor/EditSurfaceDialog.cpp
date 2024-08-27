@@ -183,7 +183,7 @@ void CEditSurfaceDialog::On28Checked(bool bChecked)
 
 void CEditSurfaceDialog::On27PairNextChecked(bool bChecked)
 {
-  UpdateValueHelper(SURFACE_FLAG_PAIR_NEXT_TEX, bChecked);
+  UpdateValueHelper(SURFACE_FLAG_27, bChecked);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -588,7 +588,7 @@ void CEditSurfaceDialog::UpdateDialog()
   BLOCK_SIG_AND_DO(ck30Bounce           , setChecked(uiValue & SURFACE_FLAG_BOUNCE_30));
   BLOCK_SIG_AND_DO(ck29Echo             , setChecked(uiValue & SURFACE_FLAG_ECHO));
   BLOCK_SIG_AND_DO(ck28                 , setChecked(uiValue & SURFACE_FLAG_28));
-  BLOCK_SIG_AND_DO(ck27PairNext         , setChecked(uiValue & SURFACE_FLAG_PAIR_NEXT_TEX));
+  BLOCK_SIG_AND_DO(ck27PairNext         , setChecked(uiValue & SURFACE_FLAG_27));
   BLOCK_SIG_AND_DO(ck26                 , setChecked(uiValue & SURFACE_FLAG_26));
   BLOCK_SIG_AND_DO(ck25Pit              , setChecked(uiValue & SURFACE_FLAG_PIT));
   BLOCK_SIG_AND_DO(ck24Yellow           , setChecked(uiValue & SURFACE_FLAG_YELLOW_MAP));
@@ -661,13 +661,9 @@ void CEditSurfaceDialog::UpdateDialog()
       pbTexture1->setIcon(pixmap);
 
       if (uiValue & SURFACE_FLAG_TEXTURE_PAIR && iIndex > 0) {
-        if (uiValue & SURFACE_FLAG_PAIR_NEXT_TEX) {
-          QPixmap pixmap2;
-          pixmap2.convertFromImage(QtHelpers::GetQImageFromTile(GetTexture()->m_pTileAy[iIndex + 1]));
-          lblTexture2->setPixmap(pixmap2);
-        } else {
-          lblTexture2->setPixmap(pixmap);
-        }
+        QPixmap pixmap2;
+        pixmap2.convertFromImage(QtHelpers::GetQImageFromTile(GetTexture()->m_pTileAy[iIndex + 1]));
+        lblTexture2->setPixmap(pixmap2);
       } else {
         lblTexture2->setPixmap(QPixmap());
       }

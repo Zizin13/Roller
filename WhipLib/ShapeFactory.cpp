@@ -1542,15 +1542,15 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
     int iVertRunner = 0;
     switch (section) {
       case CENTER:
-        ApplyVerticesDoubleSection(i, vertices,
-                                   pTrack->m_chunkAy[i].math.lLane,
-                                   pTrack->UseCenterStunt(i) ? pTrack->m_chunkAy[i].math.centerStunt : pTrack->m_chunkAy[i].math.center,
+        ApplyVerticesDoubleSection(i, vertices, 
+                                   pTrack->m_chunkAy[i].math.lLane, 
+                                   pTrack->UseCenterStunt(i) ? pTrack->m_chunkAy[i].math.centerStunt : pTrack->m_chunkAy[i].math.center, 
                                    pTrack->m_chunkAy[iChunkIndex].math.lLane,
                                    pTrack->UseCenterStunt(iChunkIndex) ? pTrack->m_chunkAy[iChunkIndex].math.centerStunt : pTrack->m_chunkAy[iChunkIndex].math.center,
-                                   pTrack->m_chunkAy[i].math.rLane,
                                    pTrack->UseCenterStunt(i) ? pTrack->m_chunkAy[i].math.centerStunt : pTrack->m_chunkAy[i].math.center,
-                                   pTrack->m_chunkAy[iChunkIndex].math.rLane,
-                                   pTrack->UseCenterStunt(iChunkIndex) ? pTrack->m_chunkAy[iChunkIndex].math.centerStunt : pTrack->m_chunkAy[iChunkIndex].math.center);
+                                   pTrack->m_chunkAy[i].math.rLane,
+                                   pTrack->UseCenterStunt(iChunkIndex) ? pTrack->m_chunkAy[iChunkIndex].math.centerStunt : pTrack->m_chunkAy[iChunkIndex].math.center,
+                                   pTrack->m_chunkAy[iChunkIndex].math.rLane);
         if (pTexture)
           pTexture->GetTextureCoordinatesDual(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
                                               vertices[i * uiNumVertsPerChunk + 0],

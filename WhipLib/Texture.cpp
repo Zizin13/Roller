@@ -186,15 +186,13 @@ void CTexture::GetTextureCoordinatesDual(uint32 uiSurfaceType,
   }
 
   bool bPair = uiSurfaceType & SURFACE_FLAG_TEXTURE_PAIR;
-  bool bPairNext = uiSurfaceType & SURFACE_FLAG_PAIR_NEXT_TEX;
+  //bool bPairNext = uiSurfaceType & SURFACE_FLAG_PAIR_NEXT_TEX; //does something else for driving surfaces?
   bool bFlipVert = uiSurfaceType & SURFACE_FLAG_FLIP_VERT;
   bool bFlipHoriz = uiSurfaceType & SURFACE_FLAG_FLIP_HORIZ;
   bool bTransparent = uiSurfaceType & SURFACE_FLAG_TRANSPARENT;
   bool bPartialTrans = uiSurfaceType & SURFACE_FLAG_PARTIAL_TRANS;
   bool bApplyTexture = uiSurfaceType & SURFACE_FLAG_APPLY_TEXTURE;
   bool bWall = uiSurfaceType & SURFACE_FLAG_WALL_22;
-  if (bWall && bPair)
-    bPairNext = true;
   uint32 uiTexIndex = uiSurfaceType & SURFACE_MASK_TEXTURE_INDEX;
 
   float fTexIndexLeft1 = (float)uiTexIndex / (float)m_iNumTiles;
@@ -202,20 +200,9 @@ void CTexture::GetTextureCoordinatesDual(uint32 uiSurfaceType,
   float fTexIndexLeft2 = ((float)(uiTexIndex * 2 + 1) / (float)m_iNumTiles) / 2.0f;
   float fTexIndexRight2 = (float)(uiTexIndex + 1) / (float)m_iNumTiles;
   if (bPair) {
-    if (bPairNext) {
-      fTexIndexRight1 = (float)(uiTexIndex + 1) / (float)m_iNumTiles;
-      fTexIndexLeft2 = (float)(uiTexIndex + 1) / (float)m_iNumTiles;
-      fTexIndexRight2 = (float)(uiTexIndex + 2) / (float)m_iNumTiles;
-    } else {
-      fTexIndexRight1 = (float)(uiTexIndex + 1) / (float)m_iNumTiles;
-      fTexIndexLeft2 = (float)uiTexIndex / (float)m_iNumTiles;
-      fTexIndexRight2 = (float)(uiTexIndex + 1) / (float)m_iNumTiles;
-    }
-  }
-  if (bPair && !bPairNext) {
-    float fTemp = fTexIndexLeft2;
-    fTexIndexLeft2 = fTexIndexRight2;
-    fTexIndexRight2 = fTemp;
+    fTexIndexRight1 = (float)(uiTexIndex + 1) / (float)m_iNumTiles;
+    fTexIndexLeft2 = (float)(uiTexIndex + 1) / (float)m_iNumTiles;
+    fTexIndexRight2 = (float)(uiTexIndex + 2) / (float)m_iNumTiles;
   }
 
   if (bApplyTexture) {
@@ -224,37 +211,37 @@ void CTexture::GetTextureCoordinatesDual(uint32 uiSurfaceType,
       topRight1.texCoords     = glm::vec2(1.0f, fTexIndexRight1);
       bottomLeft1.texCoords   = glm::vec2(0.0f, fTexIndexLeft1);
       bottomRight1.texCoords  = glm::vec2(0.0f, fTexIndexRight1);
-      topLeft2.texCoords      = glm::vec2(1.0f, fTexIndexLeft2);
-      topRight2.texCoords     = glm::vec2(1.0f, fTexIndexRight2);
-      bottomLeft2.texCoords   = glm::vec2(0.0f, fTexIndexLeft2);
-      bottomRight2.texCoords  = glm::vec2(0.0f, fTexIndexRight2);
+      topLeft2.texCoords = glm::vec2(1.0f, fTexIndexLeft2);
+      topRight2.texCoords = glm::vec2(1.0f, fTexIndexRight2);
+      bottomLeft2.texCoords = glm::vec2(0.0f, fTexIndexLeft2);
+      bottomRight2.texCoords = glm::vec2(0.0f, fTexIndexRight2);
     } else if (bFlipHoriz && !bFlipVert) {
       topLeft2.texCoords      = glm::vec2(1.0f, fTexIndexRight1);
       topRight2.texCoords     = glm::vec2(1.0f, fTexIndexLeft1);
       bottomLeft2.texCoords   = glm::vec2(0.0f, fTexIndexRight1);
       bottomRight2.texCoords  = glm::vec2(0.0f, fTexIndexLeft1);
-      topLeft1.texCoords      = glm::vec2(1.0f, fTexIndexRight2);
-      topRight1.texCoords     = glm::vec2(1.0f, fTexIndexLeft2);
-      bottomLeft1.texCoords   = glm::vec2(0.0f, fTexIndexRight2);
-      bottomRight1.texCoords  = glm::vec2(0.0f, fTexIndexLeft2);
+      topLeft1.texCoords = glm::vec2(1.0f, fTexIndexRight2);
+      topRight1.texCoords = glm::vec2(1.0f, fTexIndexLeft2);
+      bottomLeft1.texCoords = glm::vec2(0.0f, fTexIndexRight2);
+      bottomRight1.texCoords = glm::vec2(0.0f, fTexIndexLeft2);
     } else if (!bFlipHoriz && bFlipVert) {
       topLeft1.texCoords      = glm::vec2(0.0f, fTexIndexLeft1);
       topRight1.texCoords     = glm::vec2(0.0f, fTexIndexRight1);
       bottomLeft1.texCoords   = glm::vec2(1.0f, fTexIndexLeft1);
       bottomRight1.texCoords  = glm::vec2(1.0f, fTexIndexRight1);
-      topLeft2.texCoords      = glm::vec2(0.0f, fTexIndexLeft2);
-      topRight2.texCoords     = glm::vec2(0.0f, fTexIndexRight2);
-      bottomLeft2.texCoords   = glm::vec2(1.0f, fTexIndexLeft2);
-      bottomRight2.texCoords  = glm::vec2(1.0f, fTexIndexRight2);
+      topLeft2.texCoords = glm::vec2(0.0f, fTexIndexLeft2);
+      topRight2.texCoords = glm::vec2(0.0f, fTexIndexRight2);
+      bottomLeft2.texCoords = glm::vec2(1.0f, fTexIndexLeft2);
+      bottomRight2.texCoords = glm::vec2(1.0f, fTexIndexRight2);
     } else if (bFlipHoriz && bFlipVert) {
       topLeft2.texCoords      = glm::vec2(0.0f, fTexIndexRight1);
       topRight2.texCoords     = glm::vec2(0.0f, fTexIndexLeft1);
       bottomLeft2.texCoords   = glm::vec2(1.0f, fTexIndexRight1);
       bottomRight2.texCoords  = glm::vec2(1.0f, fTexIndexLeft1);
-      topLeft1.texCoords      = glm::vec2(0.0f, fTexIndexRight2);
-      topRight1.texCoords     = glm::vec2(0.0f, fTexIndexLeft2);
-      bottomLeft1.texCoords   = glm::vec2(1.0f, fTexIndexRight2);
-      bottomRight1.texCoords  = glm::vec2(1.0f, fTexIndexLeft2);
+      topLeft1.texCoords = glm::vec2(0.0f, fTexIndexRight2);
+      topRight1.texCoords = glm::vec2(0.0f, fTexIndexLeft2);
+      bottomLeft1.texCoords = glm::vec2(1.0f, fTexIndexRight2);
+      bottomRight1.texCoords = glm::vec2(1.0f, fTexIndexLeft2);
     }
   } else if (bTransparent) {
     ApplyTransparency(topLeft1, uiTexIndex, false);

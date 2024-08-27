@@ -41,7 +41,6 @@ Whiplash/Fatal Racing track editor and resource converter
 - TRACK22: end of tunnel walls are gone facing backwards (335)
 - TRACK24: moving pothole animates too quickly (27)
 - outer floor at ends of corkscrews
-- left lane/right lane belong to combined surface
 - z fighting is annoying
 - advanced car models have wrong mirror color
 - mission car lacks pink color changing

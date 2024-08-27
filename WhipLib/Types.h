@@ -104,6 +104,7 @@ namespace CarHelpers
 {
   extern std::string GetCarNameFromModel(eWhipModel model);
   extern std::string GetCarTextureFromModel(eWhipModel model);
+  extern void RemapColor(eWhipModel model, uint32 &uiTex);
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -1,4 +1,5 @@
 #include "Types.h"
+#include "Texture.h"
 #include <assert.h>
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -77,6 +78,43 @@ std::string CarHelpers::GetCarTextureFromModel(eWhipModel model)
     return "RED28.BM";
   else
     return GetCarNameFromModel(model) + ".BM";
+}
+
+//-------------------------------------------------------------------------------------------------
+//taken from _car_flat_remap_variable_1 in disasm_object_3
+void CarHelpers::RemapColor(eWhipModel model, uint32 &uiTex)
+{
+  if (uiTex & SURFACE_FLAG_APPLY_TEXTURE)
+    return; //surface is using a texture, don't change it
+
+  uint32 uiColor = uiTex & SURFACE_MASK_TEXTURE_INDEX;
+
+  //other cars are unchanged
+  switch (model) {
+    case CAR_YDESILVA:
+      if (uiColor == 0x000000cf)
+        uiColor = 0x000000c3;
+      break;
+    case CAR_YPULSE:
+      if (uiColor == 0x000000e7)
+        uiColor = 0x000000ab;
+      break;
+    case CAR_YGLOBAL:
+      if (uiColor == 0x000000e7)
+        uiColor = 0x000000ff;
+      break;
+    case CAR_YMISSION:
+      if (uiColor == 0x000000c3)
+        uiColor = 0x000000ab;
+      break;
+    case CAR_YZIZIN:
+      if (uiColor == 0x0000008f)
+        uiColor = 0x000000db;
+      break;
+  }
+  //apply to texture
+  uiTex &= ~SURFACE_MASK_TEXTURE_INDEX;
+  uiTex |= uiColor;
 }
 
 //-------------------------------------------------------------------------------------------------

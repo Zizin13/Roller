@@ -209,6 +209,7 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
         }
       }
     }
+    CarHelpers::RemapColor(model, uiUseTex);
     pTexture->GetTextureCoordinates(uiUseTex,
                                     vertices[i * 4 + 1],
                                     vertices[i * 4 + 0],

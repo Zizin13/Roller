@@ -203,6 +203,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   connect(actPaste, &QAction::triggered, this, &CMainWindow::OnPaste);
   connect(actDelete, &QAction::triggered, this, &CMainWindow::OnDeleteChunkClicked);
   connect(actSelectAll, &QAction::triggered, this, &CMainWindow::OnSelectAll);
+  connect(actMirror, &QAction::triggered, this, &CMainWindow::OnMirror);
   connect(pDeselectAction, &QAction::triggered, this, &CMainWindow::OnDeselect);
   connect(pBacksAction, &QAction::triggered, this, &CMainWindow::OnBacks);
   connect(p->m_pDebugAction, &QAction::triggered, this, &CMainWindow::OnDebug);
@@ -796,6 +797,108 @@ void CMainWindow::OnSelectAll()
   ckTo->setChecked(true);
   BLOCK_SIG_AND_DO(sbSelChunksTo, setValue((int)GetCurrentTrack()->m_chunkAy.size() - 1));
   UpdateGeometrySelection();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnMirror()
+{
+  if (!GetCurrentTrack())
+    return;
+
+  if (sbSelChunksTo->value() > (int)GetCurrentTrack()->m_chunkAy.size()
+      || sbSelChunksFrom->value() > (int)GetCurrentTrack()->m_chunkAy.size())
+    return;
+
+  //store all relative yaw values
+  std::vector<double> relativeYawAy;
+  relativeYawAy.push_back(0.0);
+  for (int i = 1; i < (int)GetCurrentTrack()->m_chunkAy.size(); ++i) {
+    double dRelativeYaw = GetCurrentTrack()->m_chunkAy[i].dYaw - GetCurrentTrack()->m_chunkAy[i - 1].dYaw;
+    relativeYawAy.push_back(dRelativeYaw);
+  }
+
+  for (int i = sbSelChunksFrom->value(); i <= sbSelChunksTo->value(); ++i) {
+    //invert relative yaw of selected chunks
+    relativeYawAy[i] = CTrack::ConstrainAngle(relativeYawAy[i] * -1);
+
+    //invert values of selected chunks
+    GetCurrentTrack()->m_chunkAy[i].dYaw = CTrack::ConstrainAngle(GetCurrentTrack()->m_chunkAy[i].dYaw * -1);
+    GetCurrentTrack()->m_chunkAy[i].dRoll = CTrack::ConstrainAngle(GetCurrentTrack()->m_chunkAy[i].dRoll * -1);
+    GetCurrentTrack()->m_chunkAy[i].iSignHorizOffset = GetCurrentTrack()->m_chunkAy[i].iSignHorizOffset * -1;
+    GetCurrentTrack()->m_chunkAy[i].dSignYaw = CTrack::ConstrainAngle(GetCurrentTrack()->m_chunkAy[i].dSignYaw * -1);
+    GetCurrentTrack()->m_chunkAy[i].dSignRoll = CTrack::ConstrainAngle(GetCurrentTrack()->m_chunkAy[i].dSignRoll * -1);
+
+    //store left side values
+    int iLeftShoulderWidth  = GetCurrentTrack()->m_chunkAy[i].iLeftShoulderWidth;
+    int iLeftLaneWidth      = GetCurrentTrack()->m_chunkAy[i].iLeftLaneWidth;
+    int iLeftShoulderHeight = GetCurrentTrack()->m_chunkAy[i].iLeftShoulderHeight;
+    int iLeftShoulderGrip   = GetCurrentTrack()->m_chunkAy[i].iLeftShoulderGrip;
+    int iLUOuterWallHOffset = GetCurrentTrack()->m_chunkAy[i].iLUOuterWallHOffset;
+    int iLLOuterWallHOffset = GetCurrentTrack()->m_chunkAy[i].iLLOuterWallHOffset;
+    int iLOuterFloorHOffset = GetCurrentTrack()->m_chunkAy[i].iLOuterFloorHOffset;
+    int iLUOuterWallHeight  = GetCurrentTrack()->m_chunkAy[i].iLUOuterWallHeight;
+    int iLLOuterWallHeight  = GetCurrentTrack()->m_chunkAy[i].iLLOuterWallHeight;
+    int iLOuterFloorHeight  = GetCurrentTrack()->m_chunkAy[i].iLOuterFloorHeight;
+    int iLeftSurfaceType    = GetCurrentTrack()->m_chunkAy[i].iLeftSurfaceType;
+    int iLeftWallType       = GetCurrentTrack()->m_chunkAy[i].iLeftWallType;
+    int iLUOuterWallType    = GetCurrentTrack()->m_chunkAy[i].iLUOuterWallType;
+    int iLLOuterWallType    = GetCurrentTrack()->m_chunkAy[i].iLLOuterWallType;
+    //apply right side values to left side
+    GetCurrentTrack()->m_chunkAy[i].iLeftShoulderWidth = GetCurrentTrack()->m_chunkAy[i].iRightShoulderWidth;
+    GetCurrentTrack()->m_chunkAy[i].iLeftLaneWidth = GetCurrentTrack()->m_chunkAy[i].iRightLaneWidth;
+    GetCurrentTrack()->m_chunkAy[i].iLeftShoulderHeight = GetCurrentTrack()->m_chunkAy[i].iRightShoulderHeight;
+    GetCurrentTrack()->m_chunkAy[i].iLeftShoulderGrip = GetCurrentTrack()->m_chunkAy[i].iRightShoulderGrip;
+    GetCurrentTrack()->m_chunkAy[i].iLUOuterWallHOffset = GetCurrentTrack()->m_chunkAy[i].iRUOuterWallHOffset;
+    GetCurrentTrack()->m_chunkAy[i].iLLOuterWallHOffset = GetCurrentTrack()->m_chunkAy[i].iRLOuterWallHOffset;
+    GetCurrentTrack()->m_chunkAy[i].iLOuterFloorHOffset = GetCurrentTrack()->m_chunkAy[i].iROuterFloorHOffset;
+    GetCurrentTrack()->m_chunkAy[i].iLUOuterWallHeight = GetCurrentTrack()->m_chunkAy[i].iRUOuterWallHeight;
+    GetCurrentTrack()->m_chunkAy[i].iLLOuterWallHeight = GetCurrentTrack()->m_chunkAy[i].iRLOuterWallHeight;
+    GetCurrentTrack()->m_chunkAy[i].iLOuterFloorHeight = GetCurrentTrack()->m_chunkAy[i].iROuterFloorHeight;
+    GetCurrentTrack()->m_chunkAy[i].iLeftSurfaceType = MirrorSurfaceType(GetCurrentTrack()->m_chunkAy[i].iRightSurfaceType);
+    GetCurrentTrack()->m_chunkAy[i].iLeftWallType    = MirrorSurfaceType(GetCurrentTrack()->m_chunkAy[i].iRightWallType);
+    GetCurrentTrack()->m_chunkAy[i].iLUOuterWallType = MirrorSurfaceType(GetCurrentTrack()->m_chunkAy[i].iRUOuterWallType);
+    GetCurrentTrack()->m_chunkAy[i].iLLOuterWallType = MirrorSurfaceType(GetCurrentTrack()->m_chunkAy[i].iRLOuterWallType);
+    //apply left side values to right side
+    GetCurrentTrack()->m_chunkAy[i].iRightShoulderWidth   = iLeftShoulderWidth ;
+    GetCurrentTrack()->m_chunkAy[i].iRightLaneWidth       = iLeftLaneWidth     ;
+    GetCurrentTrack()->m_chunkAy[i].iRightShoulderHeight  = iLeftShoulderHeight;
+    GetCurrentTrack()->m_chunkAy[i].iRightShoulderGrip    = iLeftShoulderGrip  ;
+    GetCurrentTrack()->m_chunkAy[i].iRUOuterWallHOffset   = iLUOuterWallHOffset;
+    GetCurrentTrack()->m_chunkAy[i].iRLOuterWallHOffset   = iLLOuterWallHOffset;
+    GetCurrentTrack()->m_chunkAy[i].iROuterFloorHOffset   = iLOuterFloorHOffset;
+    GetCurrentTrack()->m_chunkAy[i].iRUOuterWallHeight    = iLUOuterWallHeight ;
+    GetCurrentTrack()->m_chunkAy[i].iRLOuterWallHeight    = iLLOuterWallHeight ;
+    GetCurrentTrack()->m_chunkAy[i].iROuterFloorHeight    = iLOuterFloorHeight ;
+    GetCurrentTrack()->m_chunkAy[i].iRightSurfaceType     = MirrorSurfaceType(iLeftSurfaceType);
+    GetCurrentTrack()->m_chunkAy[i].iRightWallType        = MirrorSurfaceType(iLeftWallType   );
+    GetCurrentTrack()->m_chunkAy[i].iRUOuterWallType      = MirrorSurfaceType(iLUOuterWallType);
+    GetCurrentTrack()->m_chunkAy[i].iRLOuterWallType      = MirrorSurfaceType(iLLOuterWallType);
+  }
+
+  //apply yaw updates to entire track
+  for (int i = 1; i < (int)GetCurrentTrack()->m_chunkAy.size(); ++i) {
+    GetCurrentTrack()->m_chunkAy[i].dYaw = CTrack::ConstrainAngle(GetCurrentTrack()->m_chunkAy[i - 1].dYaw + relativeYawAy[i]);
+  }
+
+  GetCurrentPreview()->m_bUnsavedChanges = true;
+  GetCurrentPreview()->SaveHistory("Pasted " + QString::number(p->m_clipBoard.size()) + " geometry chunks");
+  g_pMainWindow->UpdateWindow();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+int CMainWindow::MirrorSurfaceType(int iSurfaceType)
+{
+  if (iSurfaceType != -1) {
+    uint32 uiSurfaceType = CTrack::GetSignedBitValueFromInt(iSurfaceType);
+    if (uiSurfaceType & SURFACE_FLAG_FLIP_VERT)
+      uiSurfaceType &= ~SURFACE_FLAG_FLIP_VERT;
+    else
+      uiSurfaceType |= SURFACE_FLAG_FLIP_VERT;
+    return CTrack::GetIntValueFromSignedBit(uiSurfaceType);
+  }
+  return iSurfaceType;
 }
 
 //-------------------------------------------------------------------------------------------------

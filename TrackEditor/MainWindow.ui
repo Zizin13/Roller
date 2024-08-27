@@ -206,6 +206,8 @@
     <addaction name="actPaste"/>
     <addaction name="actDelete"/>
     <addaction name="actSelectAll"/>
+    <addaction name="separator"/>
+    <addaction name="actMirror"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
@@ -400,6 +402,11 @@
   <action name="actExportFBX">
    <property name="text">
     <string>Export to FBX</string>
+   </property>
+  </action>
+  <action name="actMirror">
+   <property name="text">
+    <string>Mirror</string>
    </property>
   </action>
  </widget>

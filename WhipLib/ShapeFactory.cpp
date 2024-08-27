@@ -1910,7 +1910,7 @@ tVertex *CShapeFactory::MakeVertsEnvirFloor(uint32 &numVertices, CTrack *pTrack,
   numVertices = 4;
   tVertex *vertices = new tVertex[numVertices];
   float fEnvirFloorDepth = (float)pTrack->m_header.iFloorDepth * -1.0f;
-  float fPadding = 1000.0f;
+  float fPadding = 1000000.0f;
   vertices[0].position = glm::vec3(-fPadding, fEnvirFloorDepth, -fPadding);
   vertices[1].position = glm::vec3(-fPadding, fEnvirFloorDepth, +fPadding);
   vertices[2].position = glm::vec3(+fPadding, fEnvirFloorDepth, -fPadding);

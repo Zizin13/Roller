@@ -63,6 +63,7 @@ protected slots:
   void OnCopy();
   void OnPaste();
   void OnSelectAll();
+  void OnMirror();
   void OnDeselect();
   void OnBacks();
   void OnPreferences();
@@ -90,6 +91,7 @@ private:
   void SaveSettings();
   bool SaveChangesAndContinue();
   void UpdateGeometrySelection();
+  int MirrorSurfaceType(int iSurfaceType);
 
   CMainWindowPrivate *p;
   QString m_sAppPath;

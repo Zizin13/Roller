@@ -895,16 +895,14 @@ void CTrack::GenerateTrackMath()
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
-                m_chunkAy[i].math.lShoulder,
-                m_chunkAy[i].math.lShoulderHalf, true);
+                m_chunkAy[i].math.lShoulder, true);
     //right shoulder
     GetShoulder(i,
                 m_chunkAy[i].math.rLane,
                 m_chunkAy[i].math.pitchAxis,
                 m_chunkAy[i].math.rollMat,
                 m_chunkAy[i].math.nextChunkPitched,
-                m_chunkAy[i].math.rShoulder,
-                m_chunkAy[i].math.rShoulderHalf, false);
+                m_chunkAy[i].math.rShoulder, false);
     //left wall
     m_chunkAy[i].math.bLWallAttachToLane = CTrack::GetSignedBitValueFromInt(m_chunkAy[i].iLeftWallType) & SURFACE_FLAG_WALL_31;
     if (m_chunkAy[i].iLeftWallType == -1)
@@ -1120,15 +1118,13 @@ void CTrack::UpdateStunts()
                     m_chunkAy[i].math.pitchAxis,
                     m_chunkAy[i].math.rollMat,
                     m_chunkAy[i].math.nextChunkPitched,
-                    m_chunkAy[i].math.lShoulder,
-                    m_chunkAy[i].math.lShoulderHalf, true);
+                    m_chunkAy[i].math.lShoulder, true);
       if (it->second.iFlags & STUNT_FLAG_RSHOULDER)
         GetShoulder(i, rLaneStunt,
                     m_chunkAy[i].math.pitchAxis,
                     m_chunkAy[i].math.rollMat,
                     m_chunkAy[i].math.nextChunkPitched,
-                    m_chunkAy[i].math.rShoulder,
-                    m_chunkAy[i].math.rShoulderHalf, false);
+                    m_chunkAy[i].math.rShoulder, false);
       m_chunkAy[i].math.lWallBottomAttach = m_chunkAy[i].math.bLWallAttachToLane ? m_chunkAy[i].math.lLane : m_chunkAy[i].math.lShoulder;
       if (it->second.iFlags & STUNT_FLAG_LWALL)
         GetWall(i,
@@ -1234,16 +1230,14 @@ void CTrack::UpdateStunts()
                     m_chunkAy[i].math.pitchAxis,
                     m_chunkAy[i].math.rollMat,
                     m_chunkAy[i].math.nextChunkPitched,
-                    m_chunkAy[i].math.lShoulder,
-                    m_chunkAy[i].math.lShoulderHalf, true);
+                    m_chunkAy[i].math.lShoulder, true);
       if (it->second.iFlags & STUNT_FLAG_RSHOULDER)
         GetShoulder(i,
                     rLaneStunt,
                     m_chunkAy[i].math.pitchAxis,
                     m_chunkAy[i].math.rollMat,
                     m_chunkAy[i].math.nextChunkPitched,
-                    m_chunkAy[i].math.rShoulder,
-                    m_chunkAy[i].math.rShoulderHalf, false);
+                    m_chunkAy[i].math.rShoulder, false);
       m_chunkAy[i].math.lWallBottomAttach = m_chunkAy[i].math.bLWallAttachToLane ? m_chunkAy[i].math.lLane : m_chunkAy[i].math.lShoulder;
       if (it->second.iFlags & STUNT_FLAG_LWALL)
         GetWall(i,
@@ -1410,7 +1404,7 @@ void CTrack::GetLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rol
 //-------------------------------------------------------------------------------------------------
 
 void CTrack::GetShoulder(int i, glm::vec3 lLane, glm::vec3 pitchAxis, glm::mat4 rollMat, glm::vec3 nextChunkPitched,
-                              glm::vec3 &shoulder, glm::vec3 &shoulderHalf, bool bLeft, bool bIgnoreHeight)
+                              glm::vec3 &shoulder, bool bLeft, bool bIgnoreHeight)
 {
   glm::mat4 translateMat = glm::translate(lLane); //translate to end of left lane
   float fLen = 0.0f;
@@ -1431,7 +1425,6 @@ void CTrack::GetShoulder(int i, glm::vec3 lLane, glm::vec3 pitchAxis, glm::mat4 
   glm::vec3 heightVec = glm::vec3(scaleMatHeight * rollMat * glm::vec4(normal, 1.0f));
   glm::vec3 shoulderVec = widthVec + heightVec;
   shoulder = glm::vec3(translateMat * glm::vec4(shoulderVec, 1.0f));
-  shoulderHalf = (shoulder + lLane) / 2.0f;
 }
 
 //-------------------------------------------------------------------------------------------------

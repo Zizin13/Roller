@@ -219,7 +219,7 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
                                     vertices[i * 4 + 1],
                                     vertices[i * 4 + 3],
                                     vertices[i * 4 + 2],
-                                    false, false, true);
+                                    true);
 
     if (GetBacks(model)) {
       uint32 uiBackTex = GetBacks(model)[i];
@@ -229,7 +229,7 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
                                         vertices[i * 4 + 1],
                                         vertices[i * 4 + 3],
                                         vertices[i * 4 + 2],
-                                        false, false, true);
+                                        true);
     }
   }
 
@@ -1624,7 +1624,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                               vertices[i * uiNumVertsPerChunk + 2],
                               vertices[i * uiNumVertsPerChunk + 0],
                               vertices[i * uiNumVertsPerChunk + 3],
-                              vertices[i * uiNumVertsPerChunk + 1], false, false, true);
+                              vertices[i * uiNumVertsPerChunk + 1], true);
           if (CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType) & SURFACE_FLAG_BACK) {
             uint32 uiTexIdx = CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftWallType) & SURFACE_MASK_TEXTURE_INDEX;
             CSignMap::iterator it = pTrack->m_backsMap.find(uiTexIdx);
@@ -1633,7 +1633,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                   vertices[i * uiNumVertsPerChunk + 0],
                                   vertices[i * uiNumVertsPerChunk + 2],
                                   vertices[i * uiNumVertsPerChunk + 1],
-                                  vertices[i * uiNumVertsPerChunk + 3], false, false, true);
+                                  vertices[i * uiNumVertsPerChunk + 3], true);
           }
         }
         break;
@@ -1657,7 +1657,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                               vertices[i * uiNumVertsPerChunk + 1],
                               vertices[i * uiNumVertsPerChunk + 3],
                               vertices[i * uiNumVertsPerChunk + 0],
-                              vertices[i * uiNumVertsPerChunk + 2], false, false, true);
+                              vertices[i * uiNumVertsPerChunk + 2], true);
           if (CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType) & SURFACE_FLAG_BACK) {
             uint32 uiTexIdx = CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightWallType) & SURFACE_MASK_TEXTURE_INDEX;
             CSignMap::iterator it = pTrack->m_backsMap.find(uiTexIdx);
@@ -1666,7 +1666,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                   vertices[i * uiNumVertsPerChunk + 3],
                                   vertices[i * uiNumVertsPerChunk + 1],
                                   vertices[i * uiNumVertsPerChunk + 2],
-                                  vertices[i * uiNumVertsPerChunk + 0], false, false, true);
+                                  vertices[i * uiNumVertsPerChunk + 0], true);
           }
         }
         break;

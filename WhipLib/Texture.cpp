@@ -130,25 +130,20 @@ void CTexture::Unbind() const
 
 void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
                                      tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
-                                     bool bLeftLane, bool bRightLane, bool bBack)
+                                     bool bBack)
 {
   if (!m_pPalette) {
     return;
   }
 
-  bool bPair = uiSurfaceType & SURFACE_FLAG_TEXTURE_PAIR && uiSurfaceType & SURFACE_FLAG_PAIR_NEXT_TEX;
+  bool bPair = uiSurfaceType & SURFACE_FLAG_TEXTURE_PAIR;// &&uiSurfaceType &SURFACE_FLAG_PAIR_NEXT_TEX;
   bool bFlipVert = uiSurfaceType & SURFACE_FLAG_FLIP_VERT;
   bool bFlipHoriz = uiSurfaceType & SURFACE_FLAG_FLIP_HORIZ;
   bool bTransparent = uiSurfaceType & SURFACE_FLAG_TRANSPARENT;
   bool bPartialTrans = uiSurfaceType & SURFACE_FLAG_PARTIAL_TRANS;
   bool bApplyTexture = uiSurfaceType & SURFACE_FLAG_APPLY_TEXTURE;
   uint32 uiTexIndex = uiSurfaceType & SURFACE_MASK_TEXTURE_INDEX;
-
-  //right lane takes the second texture on center surface
-  //both center lanes only draw one texture each when paired
-  uint32 uiTexIncVal = (bPair && !(bLeftLane || bRightLane)) ? 2 : 1;
-  if (bRightLane && uiSurfaceType & SURFACE_FLAG_TEXTURE_PAIR)
-    uiTexIndex++;
+  uint32 uiTexIncVal = bPair ? 2 : 1;
 
   if (bApplyTexture) {
     ApplyTexCoords(bBack ? topLeft.backTexCoords : topLeft.texCoords,

@@ -56,8 +56,7 @@ public:
   void Bind(uint32 uiSlot = 0) const;
   void Unbind() const;
   void GetTextureCoordinates(uint32 uiSurfaceType,
-                             tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
-                             bool bLeftLane = false, bool bRightLane = false, bool bBack = false);
+                             tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight, bool bBack = false);
   void GetTextureCoordinatesDual(uint32 uiSurfaceType,
                                  tVertex &topLeft1,
                                  tVertex &topRight1,

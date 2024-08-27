@@ -9,12 +9,12 @@ Whiplash/Fatal Racing track editor and resource converter
 * Export tracks to FBX format
 * Track geometry data can be edited and track chunks can be added and removed
 * Additional surface data such as grip level and AI data can be edited
-* Surface textures can be edited
+* Surface textures can be changed
 * Signs can be added, removed, repositioned, and edited
 * Audio triggers can be added, removed, and edited
 * Moving stunts can be added, removed, and edited
 * Track global settings such as texture files and lap data can be edited
-* Surface backface textures can be edited
+* Surface backface textures can be changed
 * Undo/Redo and Cut/Copy/Paste between tracks
 * Fine control over Copy/Paste behavior
 * Toggle display of each individual section of track

@@ -42,7 +42,6 @@ Whiplash/Fatal Racing track editor and resource converter
 - TRACK24: moving pothole animates too quickly (27)
 - outer floor at ends of corkscrews
 - z fighting is annoying
-- advanced car models have wrong mirror color
 - mission car lacks pink color changing
 - polygons have four bytes of data that do something unknown
 - "places" arrays are unknown

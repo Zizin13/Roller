@@ -1525,10 +1525,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
   }
 
   uint32 uiNumVertsPerChunk = 4;
-  if (section == eShapeSection::LSHOULDER
-      || section == eShapeSection::RSHOULDER
-      || section == eShapeSection::CENTER
-      || section == eShapeSection::SELECTED) uiNumVertsPerChunk = 8;
+  if (section == eShapeSection::SELECTED) uiNumVertsPerChunk = 8;
   if (section >= eShapeSection::AILINE1 && section <= eShapeSection::AILINE4) uiNumVertsPerChunk = 1;
   if (section == eShapeSection::EXPORT) uiNumVertsPerChunk = 56;
 
@@ -1542,67 +1539,43 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
     int iVertRunner = 0;
     switch (section) {
       case CENTER:
-        ApplyVerticesDoubleSection(i, vertices, 
-                                   pTrack->m_chunkAy[i].math.lLane, 
-                                   pTrack->UseCenterStunt(i) ? pTrack->m_chunkAy[i].math.centerStunt : pTrack->m_chunkAy[i].math.center, 
-                                   pTrack->m_chunkAy[iChunkIndex].math.lLane,
-                                   pTrack->UseCenterStunt(iChunkIndex) ? pTrack->m_chunkAy[iChunkIndex].math.centerStunt : pTrack->m_chunkAy[iChunkIndex].math.center,
-                                   pTrack->UseCenterStunt(i) ? pTrack->m_chunkAy[i].math.centerStunt : pTrack->m_chunkAy[i].math.center,
+        ApplyVerticesSingleSection(i, vertices, 
+                                   pTrack->m_chunkAy[i].math.lLane,
                                    pTrack->m_chunkAy[i].math.rLane,
-                                   pTrack->UseCenterStunt(iChunkIndex) ? pTrack->m_chunkAy[iChunkIndex].math.centerStunt : pTrack->m_chunkAy[iChunkIndex].math.center,
+                                   pTrack->m_chunkAy[iChunkIndex].math.lLane,
                                    pTrack->m_chunkAy[iChunkIndex].math.rLane);
         if (pTexture)
-          pTexture->GetTextureCoordinatesDual(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
                                               vertices[i * uiNumVertsPerChunk + 0],
                                               vertices[i * uiNumVertsPerChunk + 1],
                                               vertices[i * uiNumVertsPerChunk + 2],
-                                              vertices[i * uiNumVertsPerChunk + 3],
-                                              vertices[i * uiNumVertsPerChunk + 4],
-                                              vertices[i * uiNumVertsPerChunk + 5],
-                                              vertices[i * uiNumVertsPerChunk + 6],
-                                              vertices[i * uiNumVertsPerChunk + 7]);
+                                              vertices[i * uiNumVertsPerChunk + 3]);
         break;
       case LSHOULDER:
-        ApplyVerticesDoubleSection(i, vertices,
+        ApplyVerticesSingleSection(i, vertices,
                               pTrack->m_chunkAy[i].math.lShoulder,
-                              pTrack->m_chunkAy[i].math.lShoulderHalf,
-                              pTrack->m_chunkAy[iChunkIndex].math.lShoulder,
-                              pTrack->m_chunkAy[iChunkIndex].math.lShoulderHalf,
-                              pTrack->m_chunkAy[i].math.lShoulderHalf,
                               pTrack->m_chunkAy[i].math.lLane,
-                              pTrack->m_chunkAy[iChunkIndex].math.lShoulderHalf,
+                              pTrack->m_chunkAy[iChunkIndex].math.lShoulder,
                               pTrack->m_chunkAy[iChunkIndex].math.lLane);
         if (pTexture)
-          pTexture->GetTextureCoordinatesDual(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftSurfaceType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftSurfaceType),
                                               vertices[i * uiNumVertsPerChunk + 0],
                                               vertices[i * uiNumVertsPerChunk + 1],
                                               vertices[i * uiNumVertsPerChunk + 2],
-                                              vertices[i * uiNumVertsPerChunk + 3],
-                                              vertices[i * uiNumVertsPerChunk + 4],
-                                              vertices[i * uiNumVertsPerChunk + 5],
-                                              vertices[i * uiNumVertsPerChunk + 6],
-                                              vertices[i * uiNumVertsPerChunk + 7]);
+                                              vertices[i * uiNumVertsPerChunk + 3]);
         break;
       case RSHOULDER:
-        ApplyVerticesDoubleSection(i, vertices,
+        ApplyVerticesSingleSection(i, vertices,
                                    pTrack->m_chunkAy[i].math.rLane,
-                                   pTrack->m_chunkAy[i].math.rShoulderHalf,
-                                   pTrack->m_chunkAy[iChunkIndex].math.rLane,
-                                   pTrack->m_chunkAy[iChunkIndex].math.rShoulderHalf,
-                                   pTrack->m_chunkAy[i].math.rShoulderHalf,
                                    pTrack->m_chunkAy[i].math.rShoulder,
-                                   pTrack->m_chunkAy[iChunkIndex].math.rShoulderHalf,
+                                   pTrack->m_chunkAy[iChunkIndex].math.rLane,
                                    pTrack->m_chunkAy[iChunkIndex].math.rShoulder);
         if (pTexture)
-          pTexture->GetTextureCoordinatesDual(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightSurfaceType),
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightSurfaceType),
                                               vertices[i * uiNumVertsPerChunk + 0],
                                               vertices[i * uiNumVertsPerChunk + 1],
                                               vertices[i * uiNumVertsPerChunk + 2],
-                                              vertices[i * uiNumVertsPerChunk + 3],
-                                              vertices[i * uiNumVertsPerChunk + 4],
-                                              vertices[i * uiNumVertsPerChunk + 5],
-                                              vertices[i * uiNumVertsPerChunk + 6],
-                                              vertices[i * uiNumVertsPerChunk + 7]);
+                                              vertices[i * uiNumVertsPerChunk + 3]);
         break;
       case LWALL:
         ApplyVerticesSingleSection(i, vertices, 
@@ -1783,21 +1756,13 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rLane;
         //lshoulder
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lShoulder;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lShoulderHalf;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lShoulder;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lShoulderHalf;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lShoulderHalf;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lLane;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lShoulderHalf;
+        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lShoulder;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lLane;
         //rshoulder
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rLane;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rShoulderHalf;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rLane;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rShoulderHalf;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rShoulderHalf;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rShoulder;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rShoulderHalf;
+        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rLane;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rShoulder;
         //lwall
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lWall;
@@ -1843,31 +1808,19 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         iVertRunner = 0;
         if (pTexture) {
           //center
-          pTexture->GetTextureCoordinatesDual(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
-                                              vertices[i * uiNumVertsPerChunk + 0],
-                                              vertices[i * uiNumVertsPerChunk + 1],
-                                              vertices[i * uiNumVertsPerChunk + 2],
-                                              vertices[i * uiNumVertsPerChunk + 3],
-                                              vertices[i * uiNumVertsPerChunk + 4],
-                                              vertices[i * uiNumVertsPerChunk + 5],
-                                              vertices[i * uiNumVertsPerChunk + 6],
-                                              vertices[i * uiNumVertsPerChunk + 7]);
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iCenterSurfaceType),
+                                              vertices[i * uiNumVertsPerChunk + iVertRunner++],
+                                              vertices[i * uiNumVertsPerChunk + iVertRunner++],
+                                              vertices[i * uiNumVertsPerChunk + iVertRunner++],
+                                              vertices[i * uiNumVertsPerChunk + iVertRunner++]);
           //lshoulder
-          pTexture->GetTextureCoordinatesDual(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftSurfaceType),
-                                              vertices[i * uiNumVertsPerChunk + iVertRunner++],
-                                              vertices[i * uiNumVertsPerChunk + iVertRunner++],
-                                              vertices[i * uiNumVertsPerChunk + iVertRunner++],
-                                              vertices[i * uiNumVertsPerChunk + iVertRunner++],
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iLeftSurfaceType),
                                               vertices[i * uiNumVertsPerChunk + iVertRunner++],
                                               vertices[i * uiNumVertsPerChunk + iVertRunner++],
                                               vertices[i * uiNumVertsPerChunk + iVertRunner++],
                                               vertices[i * uiNumVertsPerChunk + iVertRunner++]);
           //rshoulder
-          pTexture->GetTextureCoordinatesDual(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightSurfaceType),
-                                              vertices[i * uiNumVertsPerChunk + iVertRunner++],
-                                              vertices[i * uiNumVertsPerChunk + iVertRunner++],
-                                              vertices[i * uiNumVertsPerChunk + iVertRunner++],
-                                              vertices[i * uiNumVertsPerChunk + iVertRunner++],
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iChunkIndex].iRightSurfaceType),
                                               vertices[i * uiNumVertsPerChunk + iVertRunner++],
                                               vertices[i * uiNumVertsPerChunk + iVertRunner++],
                                               vertices[i * uiNumVertsPerChunk + iVertRunner++],
@@ -1992,29 +1945,16 @@ uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSectio
 
   uint32 uiNumVertsPerChunk = 4;
   uint32 uiNumIndicesPerChunk = 6;
-  if (section == eShapeSection::LSHOULDER
-      || section == eShapeSection::RSHOULDER
-      || section == eShapeSection::CENTER) {
-    uiNumVertsPerChunk = 8;
-    uiNumIndicesPerChunk = 12;
-  }
   numIndices = (uint32)pTrack->m_chunkAy.size() * uiNumIndicesPerChunk;
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
   uint32 i = 0;
   for (; i < pTrack->m_chunkAy.size(); i++) {
-    //if (section == eShapeSection::LWALL || section == eShapeSection::RWALL) {
-    //  //walls don't draw if forward section isn't drawn
-    //  if (!ShouldMakeIndicesForChunk(i, section))
-    //    continue;
-    //}
     if (i > 0 && !pTrack->ShouldShowChunkSection(i - 1, section))
       continue;
     else if (i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), section))
       continue;
-    //else if (i == 0 && !ShouldMakeIndicesForChunk(((int)pTrack->m_chunkAy.size() - (int)i + 1), section))
-    //  continue;
     if (!bAttachLast && i == 0)
       continue;
 
@@ -2025,15 +1965,6 @@ uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSectio
     indices[i * uiNumIndicesPerChunk + 3] = (i * uiNumVertsPerChunk) + 2;
     indices[i * uiNumIndicesPerChunk + 4] = (i * uiNumVertsPerChunk) + 1;
     indices[i * uiNumIndicesPerChunk + 5] = (i * uiNumVertsPerChunk) + 0;
-
-    if (section == eShapeSection::LSHOULDER || section == eShapeSection::RSHOULDER || section == eShapeSection::CENTER) {
-      indices[i * uiNumIndicesPerChunk + 6]  = (i * uiNumVertsPerChunk) + 6;
-      indices[i * uiNumIndicesPerChunk + 7]  = (i * uiNumVertsPerChunk) + 7;
-      indices[i * uiNumIndicesPerChunk + 8]  = (i * uiNumVertsPerChunk) + 5;
-      indices[i * uiNumIndicesPerChunk + 9]  = (i * uiNumVertsPerChunk) + 6;
-      indices[i * uiNumIndicesPerChunk + 10] = (i * uiNumVertsPerChunk) + 5;
-      indices[i * uiNumIndicesPerChunk + 11] = (i * uiNumVertsPerChunk) + 4;
-    }
   }
 
   return indices;
@@ -2048,8 +1979,8 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
     return NULL;
   }
 
-  uint32 uiNumVertsPerChunk = 56;
-  uint32 uiNumIndicesPerChunk = 84;
+  uint32 uiNumVertsPerChunk = 48;
+  uint32 uiNumIndicesPerChunk = 72;
   numIndices = (uint32)pTrack->m_chunkAy.size() * uiNumIndicesPerChunk;
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
@@ -2066,6 +1997,9 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0;
+    }
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LSHOULDER))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LSHOULDER))) {
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 4;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 4;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 4;
@@ -2073,14 +2007,17 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 4;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 4;
     }
-    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LSHOULDER))
-      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LSHOULDER))) {
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RSHOULDER))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RSHOULDER))) {
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 8;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 8;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 8;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 8;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 8;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 8;
+    }
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LWALL))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LWALL))) {
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 12;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 12;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 12;
@@ -2088,14 +2025,17 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 12;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 12;
     }
-    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RSHOULDER))
-      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RSHOULDER))) {
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RWALL))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RWALL))) {
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 16;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 16;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 16;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 16;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 16;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 16;
+    }
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::ROOF))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::ROOF))) {
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 20;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 20;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 20;
@@ -2103,8 +2043,8 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 20;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 20;
     }
-    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LWALL))
-      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LWALL))) {
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::OWALLFLOOR))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::OWALLFLOOR))) {
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 24;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 24;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 24;
@@ -2112,8 +2052,8 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 24;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 24;
     }
-    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RWALL))
-      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RWALL))) {
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LLOWALL))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LLOWALL))) {
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 28;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 28;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 28;
@@ -2121,8 +2061,8 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 28;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 28;
     }
-    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::ROOF))
-      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::ROOF))) {
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RLOWALL))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RLOWALL))) {
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 32;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 32;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 32;
@@ -2130,8 +2070,8 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 32;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 32;
     }
-    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::OWALLFLOOR))
-      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::OWALLFLOOR))) {
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LUOWALL))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LUOWALL))) {
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 36;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 36;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 36;
@@ -2139,41 +2079,14 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 36;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 36;
     }
-    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LLOWALL))
-      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LLOWALL))) {
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 40;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 40;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 40;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 40;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 40;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 40;
-    }
-    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RLOWALL))
-      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RLOWALL))) {
+    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RUOWALL))
+      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RUOWALL))) {
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 44;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 44;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 44;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 44;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 44;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 44;
-    }
-    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LUOWALL))
-      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LUOWALL))) {
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 48;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 48;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 48;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 48;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 48;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 48;
-    }
-    if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RUOWALL))
-      && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RUOWALL))) {
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 52;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 52;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 52;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 52;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 52;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 52;
     }
   }
 
@@ -2325,29 +2238,6 @@ void CShapeFactory::ApplyVerticesSingleSection(int i, tVertex *vertices,
   vertices[i * uiNumVertsPerChunk + 1].position = v1;
   vertices[i * uiNumVertsPerChunk + 2].position = v2;
   vertices[i * uiNumVertsPerChunk + 3].position = v3;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CShapeFactory::ApplyVerticesDoubleSection(int i, tVertex *vertices,
-                                               const glm::vec3 &v0,
-                                               const glm::vec3 &v1,
-                                               const glm::vec3 &v2,
-                                               const glm::vec3 &v3,
-                                               const glm::vec3 &v4,
-                                               const glm::vec3 &v5,
-                                               const glm::vec3 &v6,
-                                               const glm::vec3 &v7)
-{
-  uint32 uiNumVertsPerChunk = 8;
-  vertices[i * uiNumVertsPerChunk + 0].position = v0;
-  vertices[i * uiNumVertsPerChunk + 1].position = v1;
-  vertices[i * uiNumVertsPerChunk + 2].position = v2;
-  vertices[i * uiNumVertsPerChunk + 3].position = v3;
-  vertices[i * uiNumVertsPerChunk + 4].position = v4;
-  vertices[i * uiNumVertsPerChunk + 5].position = v5;
-  vertices[i * uiNumVertsPerChunk + 6].position = v6;
-  vertices[i * uiNumVertsPerChunk + 7].position = v7;
 }
 
 //-------------------------------------------------------------------------------------------------

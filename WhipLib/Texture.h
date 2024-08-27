@@ -57,15 +57,6 @@ public:
   void Unbind() const;
   void GetTextureCoordinates(uint32 uiSurfaceType,
                              tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight, bool bBack = false);
-  void GetTextureCoordinatesDual(uint32 uiSurfaceType,
-                                 tVertex &topLeft1,
-                                 tVertex &topRight1,
-                                 tVertex &bottomLeft1,
-                                 tVertex &bottomRight1,
-                                 tVertex &topLeft2,
-                                 tVertex &topRight2,
-                                 tVertex &bottomLeft2,
-                                 tVertex &bottomRight2);
   uint8 *GenerateBitmapData(int &iSize);
   bool ExportToBitmapFile(const std::string &sFilename);
 

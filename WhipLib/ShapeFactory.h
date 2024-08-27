@@ -78,15 +78,6 @@ private:
                                   const glm::vec3 &v1,
                                   const glm::vec3 &v2,
                                   const glm::vec3 &v3);
-  void ApplyVerticesDoubleSection(int i, tVertex *vertices,
-                                  const glm::vec3 &v0,
-                                  const glm::vec3 &v1,
-                                  const glm::vec3 &v2,
-                                  const glm::vec3 &v3,
-                                  const glm::vec3 &v4,
-                                  const glm::vec3 &v5,
-                                  const glm::vec3 &v6,
-                                  const glm::vec3 &v7);
   void MakeNormals(tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight);
 
   static CShapeFactory s_shapeFactory;

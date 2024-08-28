@@ -26,7 +26,7 @@ void main()
       daColor = texture(textureSlot, vtfTexCoords);
     }
   } else {
-    if (vtfFlags.z != 0) {
+    if (vtfFlags.y != 0) {
       daColor = vtfBackColor;
     } else {
       daColor = texture(textureSlot, vtfBackTexCoords);

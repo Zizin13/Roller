@@ -332,12 +332,12 @@ void CTexture::ApplyTransparency(tVertex &vertex, uint32 uiTexIndex, bool bBack)
   }
   if (!bBack) {
     //use color
-    vertex.flags.x = 1.0f;
+    vertex.byUseColor = 1;
     //color
     vertex.color = color;
   } else {
     //use color
-    vertex.flags.z = 1.0f;
+    vertex.byBackUseColor = 1;
     //color
     vertex.backColor = color;
   }
@@ -350,14 +350,14 @@ void CTexture::ApplyColor(tVertex &vertex, uint32 uiTexIndex, bool bBack)
 {
   if (!bBack) {
     //use color
-    vertex.flags.x = 1.0f;
+    vertex.byUseColor = 1;
     //color
     if (uiTexIndex < m_pPalette->m_paletteAy.size()) {
       vertex.color = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
     }
   } else {
     //use color
-    vertex.flags.z = 1.0f;
+    vertex.byBackUseColor = 1;
     //color
     if (uiTexIndex < m_pPalette->m_paletteAy.size()) {
       vertex.backColor = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);

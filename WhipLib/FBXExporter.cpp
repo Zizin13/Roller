@@ -180,7 +180,7 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
     pMesh->BeginPolygon();
 
     //need to add materials for solid color polygons
-    if (pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.x == 1.0f) {
+    if (pShapeData->m_vertices[pShapeData->m_indices[i * 3]].byUseColor == 1) {
       glm::vec4 color = pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color;
       CColorMaterialMap::iterator it = colorMaterialMap.find(GetColorString(color));
       if (it == colorMaterialMap.end()) { //only add new material if it's a new color
@@ -223,7 +223,7 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
 
   //assign materials to polygons
   for (int i = 0; i < iNumPols; ++i) {
-    if (pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.x == 1.0f) {
+    if (pShapeData->m_vertices[pShapeData->m_indices[i * 3]].byUseColor == 1) {
       //polygon is solid color
       glm::vec4 color = pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color;
       CColorMaterialMap::iterator it = colorMaterialMap.find(GetColorString(color));

@@ -4,8 +4,9 @@
 #include "glm.hpp"
 #include "Types.h"
 //-------------------------------------------------------------------------------------------------
-static const uint32 NUM_FLOATS_PER_VERTICE = 22;
-static const uint32 VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
+static const uint32 NUM_FLOATS_PER_VERTICE = 18;
+static const uint32 NUM_BYTES_PER_VERTICE = 4;
+static const uint32 VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float) + NUM_BYTES_PER_VERTICE * sizeof(uint8);
 //-------------------------------------------------------------------------------------------------
 struct tVertex
 {
@@ -17,7 +18,10 @@ struct tVertex
     texCoords = glm::vec2(0);
     backColor = glm::vec4(0);
     backTexCoords = glm::vec2(0);
-    flags = glm::vec4(0);
+    byUseColor = 0;
+    byPadding1 = 0;
+    byBackUseColor = 0;
+    byPadding2 = 0;
   }
   glm::vec3 position;
   glm::vec3 normal;
@@ -25,7 +29,10 @@ struct tVertex
   glm::vec2 texCoords;
   glm::vec4 backColor;
   glm::vec2 backTexCoords;
-  glm::vec4 flags;
+  uint8 byUseColor;
+  uint8 byBackUseColor;
+  uint8 byPadding1;
+  uint8 byPadding2;
 };
 //-------------------------------------------------------------------------------------------------
 #endif

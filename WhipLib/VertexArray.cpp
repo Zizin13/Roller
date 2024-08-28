@@ -27,7 +27,7 @@ CVertexArray::CVertexArray(CVertexBuffer *pVertexBuf)
   GLCALL(glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 10)));
   GLCALL(glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 12)));
   GLCALL(glVertexAttribPointer(5, 2, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 16)));
-  GLCALL(glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 18)));
+  GLCALL(glVertexAttribPointer(6, 4, GL_BYTE,  GL_FALSE, VERTEX_BYTE_SIZE, (char *)(sizeof(float) * 18)));
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -108,10 +108,10 @@ tVertex *CShapeFactory::MakeVertsAxes(uint32 &uiNumVerts)
   vertices[1].color = glm::vec4(0, 1, 0, 1);
   vertices[2].color = glm::vec4(0, 0, 1, 1);
   vertices[3].color = glm::vec4(1, 1, 1, 1);
-  vertices[0].flags.x = 1.0f;
-  vertices[1].flags.x = 1.0f;
-  vertices[2].flags.x = 1.0f;
-  vertices[3].flags.x = 1.0f;
+  vertices[0].byUseColor = 1;
+  vertices[1].byUseColor = 1;
+  vertices[2].byUseColor = 1;
+  vertices[3].byUseColor = 1;
 
   return vertices;
 }
@@ -302,12 +302,12 @@ tVertex *CShapeFactory::MakeVertsAudioMarker(uint32 &uiNumVerts)
   vertices[3].color = color;
   vertices[4].color = color;
   vertices[5].color = color;
-  vertices[0].flags.x = 1.0f;
-  vertices[1].flags.x = 1.0f;
-  vertices[2].flags.x = 1.0f;
-  vertices[3].flags.x = 1.0f;
-  vertices[4].flags.x = 1.0f;
-  vertices[5].flags.x = 1.0f;
+  vertices[0].byUseColor = 1;
+  vertices[1].byUseColor = 1;
+  vertices[2].byUseColor = 1;
+  vertices[3].byUseColor = 1;
+  vertices[4].byUseColor = 1;
+  vertices[5].byUseColor = 1;
 
   return vertices;
 }
@@ -385,13 +385,13 @@ tVertex *CShapeFactory::MakeVertsStuntMarker(uint32 &uiNumVerts)
   vertices[5].color = color;
   vertices[6].color = color;
 
-  vertices[0].flags.x = 1.0f;
-  vertices[1].flags.x = 1.0f;
-  vertices[2].flags.x = 1.0f;
-  vertices[3].flags.x = 1.0f;
-  vertices[4].flags.x = 1.0f;
-  vertices[5].flags.x = 1.0f;
-  vertices[6].flags.x = 1.0f;
+  vertices[0].byUseColor = 1;
+  vertices[1].byUseColor = 1;
+  vertices[2].byUseColor = 1;
+  vertices[3].byUseColor = 1;
+  vertices[4].byUseColor = 1;
+  vertices[5].byUseColor = 1;
+  vertices[6].byUseColor = 1;
 
   return vertices;
 }
@@ -1156,7 +1156,7 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShapeData *pShape, CShader *pShader
 
   if (bWireframe) {
     for (uint32 i = 0; i < uiNumVerts; ++i) {
-      vertices[i].flags.x = 1.0f; //use color rather than tex
+      vertices[i].byUseColor = 1; //use color rather than tex
       vertices[i].color = CTexture::RandomColor();
     }
   }
@@ -1244,7 +1244,7 @@ CShapeData *CShapeFactory::MakeAILine(CShapeData *pShape, CShader *pShader, CTra
     return NULL;
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {
-    vertices[i].flags.x = 1.0f; //use color rather than tex
+    vertices[i].byUseColor = 1; //use color rather than tex
     switch (section) {
       case eShapeSection::AILINE1:
         vertices[i].color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
@@ -1294,7 +1294,7 @@ CShapeData *CShapeFactory::MakeSelectedChunks(CShapeData *pShape, CShader *pShad
     return NULL;
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {
-    vertices[i].flags.x = 1.0f; //use color rather than tex
+    vertices[i].byUseColor = 1; //use color rather than tex
     vertices[i].color = CTexture::RandomColor();
   }
 

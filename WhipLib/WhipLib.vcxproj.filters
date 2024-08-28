@@ -158,6 +158,9 @@
     <ClInclude Include="CarHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DisasmHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Unmangler.cpp">
@@ -200,6 +203,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CarHelpers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DisasmHelpers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

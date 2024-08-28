@@ -14,6 +14,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TrackEditor", "TrackEditor\
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CarPlansParser", "CarPlansParser\CarPlansParser.vcxproj", "{2D4EFE3E-1FF1-465C-A4A2-2D3A0CB54305}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FFE1E8A8-1052-4271-AA18-253855ABA0E6} = {FFE1E8A8-1052-4271-AA18-253855ABA0E6}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WhipLib", "WhipLib\WhipLib.vcxproj", "{FFE1E8A8-1052-4271-AA18-253855ABA0E6}"
 EndProject

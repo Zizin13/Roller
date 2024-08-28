@@ -20,13 +20,13 @@ void main()
   float s = dot(vtfNormalWorld, eyeVectorWorld);
 
   if (s > 0 || vtfNormalModel == vec3(0, 0, 0)) {
-    if (vtfFlags.x != 0) {
+    if (vtfFlags.x != 0) { //byUseColor
       daColor = vtfColor;
     } else {
       daColor = texture(textureSlot, vtfTexCoords);
     }
   } else {
-    if (vtfFlags.y != 0) {
+    if (vtfFlags.y != 0) { //byBackUseColor
       daColor = vtfBackColor;
     } else {
       daColor = texture(textureSlot, vtfBackTexCoords);

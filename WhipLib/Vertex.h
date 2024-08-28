@@ -19,8 +19,8 @@ struct tVertex
     backColor = glm::vec4(0);
     backTexCoords = glm::vec2(0);
     byUseColor = 0;
-    byPadding1 = 0;
     byBackUseColor = 0;
+    byPadding1 = 0;
     byPadding2 = 0;
   }
   glm::vec3 position;
@@ -31,6 +31,7 @@ struct tVertex
   glm::vec2 backTexCoords;
   uint8 byUseColor;
   uint8 byBackUseColor;
+  //GLSL does not play nice with things that aren't on 32-bit boundaries
   uint8 byPadding1;
   uint8 byPadding2;
 };

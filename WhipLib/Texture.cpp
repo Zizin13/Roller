@@ -233,23 +233,25 @@ bool CTexture::ExportToBitmapFile(const std::string &sFilename)
 
 //-------------------------------------------------------------------------------------------------
 
-glm::vec3 CTexture::RandomColor()
+glm::vec4 CTexture::RandomColor()
 {
-  glm::vec3 ret;
-  ret.x = rand() / (float)RAND_MAX;
-  ret.y = rand() / (float)RAND_MAX;
-  ret.z = rand() / (float)RAND_MAX;
+  glm::vec4 ret;
+  ret.r = rand() / (float)RAND_MAX;
+  ret.b = rand() / (float)RAND_MAX;
+  ret.g = rand() / (float)RAND_MAX;
+  ret.a = 1.0f;
   return ret;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-glm::vec3 CTexture::ColorBytesToFloat(const glm::vec3 &color)
+glm::vec4 CTexture::ColorBytesToFloat(const glm::vec3 &color)
 {
-  glm::vec3 ret;
+  glm::vec4 ret;
   ret.r = (float)color.r / 255.0f;
   ret.g = (float)color.g / 255.0f;
   ret.b = (float)color.b / 255.0f;
+  ret.a = 1.0f;
   return ret;
 }
 
@@ -311,27 +313,23 @@ void CTexture::FlipTileLines(tTile *pSource, tTile *pDest, int iNumTiles)
 
 void CTexture::ApplyTransparency(tVertex &vertex, uint32 uiTexIndex, bool bBack)
 {
-  float fAlphaVal = 0.0f;
-  glm::vec3 color = glm::vec3(0);
+  glm::vec4 color = glm::vec4(0, 0, 0, 1);
   switch (uiTexIndex) {
     case 0:
       break;
     case 1:
-      fAlphaVal = 0.25f;
+      color.a = 0.25f;
       break;
     case 2:
-      fAlphaVal = 0.5f;
+      color.a = 0.5f;
       break;
     case 3:
-      fAlphaVal = 0.75f;
+      color.a = 0.75f;
       break;
     case 4:
-      fAlphaVal = 0.25f;
-      color = glm::vec3(0, 0, 1);
+      color = glm::vec4(0, 0, 1, 0.25f);
       break;
   }
-  //alpha
-  vertex.flags.y = fAlphaVal;
   if (!bBack) {
     //use color
     vertex.flags.x = 1.0f;
@@ -350,8 +348,6 @@ void CTexture::ApplyTransparency(tVertex &vertex, uint32 uiTexIndex, bool bBack)
 
 void CTexture::ApplyColor(tVertex &vertex, uint32 uiTexIndex, bool bBack)
 {
-    //alpha
-  vertex.flags.y = 1;
   if (!bBack) {
     //use color
     vertex.flags.x = 1.0f;

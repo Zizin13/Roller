@@ -181,8 +181,7 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
 
     //need to add materials for solid color polygons
     if (pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.x == 1.0f) {
-      glm::vec4 color = glm::vec4(pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color,
-                                  pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.y); //alpha
+      glm::vec4 color = pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color;
       CColorMaterialMap::iterator it = colorMaterialMap.find(GetColorString(color));
       if (it == colorMaterialMap.end()) { //only add new material if it's a new color
         FbxSurfacePhong *pNewMaterial = CreateColorMaterial(color, pScene);
@@ -226,8 +225,7 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
   for (int i = 0; i < iNumPols; ++i) {
     if (pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.x == 1.0f) {
       //polygon is solid color
-      glm::vec4 color = glm::vec4(pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color,
-                                  pShapeData->m_vertices[pShapeData->m_indices[i * 3]].flags.y); //alpha
+      glm::vec4 color = pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color;
       CColorMaterialMap::iterator it = colorMaterialMap.find(GetColorString(color));
       if (it != colorMaterialMap.end()) {
         pMaterialElement->GetIndexArray().SetAt(i, it->second);

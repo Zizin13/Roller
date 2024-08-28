@@ -1,8 +1,8 @@
 #version 430
 
-in vec3 vtfColor;
+in vec4 vtfColor;
 in vec2 vtfTexCoords;
-in vec3 vtfBackColor;
+in vec4 vtfBackColor;
 in vec2 vtfBackTexCoords;
 in vec4 vtfFlags;
 in vec3 vtfNormalModel;
@@ -21,15 +21,13 @@ void main()
 
   if (s > 0 || vtfNormalModel == vec3(0, 0, 0)) {
     if (vtfFlags.x != 0) {
-      daColor = vec4(vtfColor, 1);
-      daColor.a = vtfFlags.y;
+      daColor = vtfColor;
     } else {
       daColor = texture(textureSlot, vtfTexCoords);
     }
   } else {
     if (vtfFlags.z != 0) {
-      daColor = vec4(vtfBackColor, 1);
-      daColor.a = vtfFlags.y;
+      daColor = vtfBackColor;
     } else {
       daColor = texture(textureSlot, vtfBackTexCoords);
     }

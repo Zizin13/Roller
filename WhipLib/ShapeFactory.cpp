@@ -104,18 +104,14 @@ tVertex *CShapeFactory::MakeVertsAxes(uint32 &uiNumVerts)
   vertices[1].position = glm::vec3(0, 1, 0);
   vertices[2].position = glm::vec3(0, 0, 1);
   vertices[3].position = glm::vec3(0, 0, 0);
-  vertices[0].color = glm::vec3(1, 0, 0);
-  vertices[1].color = glm::vec3(0, 1, 0);
-  vertices[2].color = glm::vec3(0, 0, 1);
-  vertices[3].color = glm::vec3(1, 1, 1);
+  vertices[0].color = glm::vec4(1, 0, 0, 1);
+  vertices[1].color = glm::vec4(0, 1, 0, 1);
+  vertices[2].color = glm::vec4(0, 0, 1, 1);
+  vertices[3].color = glm::vec4(1, 1, 1, 1);
   vertices[0].flags.x = 1.0f;
   vertices[1].flags.x = 1.0f;
   vertices[2].flags.x = 1.0f;
   vertices[3].flags.x = 1.0f;
-  vertices[0].flags.y = 1.0f;
-  vertices[1].flags.y = 1.0f;
-  vertices[2].flags.y = 1.0f;
-  vertices[3].flags.y = 1.0f;
 
   return vertices;
 }
@@ -293,7 +289,7 @@ tVertex *CShapeFactory::MakeVertsAudioMarker(uint32 &uiNumVerts)
   uiNumVerts = 6;
   tVertex *vertices = new tVertex[uiNumVerts];
 
-  glm::vec3 color = glm::vec3(1, 1, 1);
+  glm::vec4 color = glm::vec4(1, 1, 1, 1);
   vertices[0].position = glm::vec3(  +0.0f,   +0.0f, +0.0f);
   vertices[1].position = glm::vec3(+500.0f,   +0.0f, +0.0f);
   vertices[2].position = glm::vec3(+500.0f, +500.0f, +0.0f);
@@ -312,12 +308,6 @@ tVertex *CShapeFactory::MakeVertsAudioMarker(uint32 &uiNumVerts)
   vertices[3].flags.x = 1.0f;
   vertices[4].flags.x = 1.0f;
   vertices[5].flags.x = 1.0f;
-  vertices[0].flags.y = 1.0f;
-  vertices[1].flags.y = 1.0f;
-  vertices[2].flags.y = 1.0f;
-  vertices[3].flags.y = 1.0f;
-  vertices[4].flags.y = 1.0f;
-  vertices[5].flags.y = 1.0f;
 
   return vertices;
 }
@@ -378,7 +368,7 @@ tVertex *CShapeFactory::MakeVertsStuntMarker(uint32 &uiNumVerts)
   uiNumVerts = 8;
   tVertex *vertices = new tVertex[uiNumVerts];
 
-  glm::vec3 color = glm::vec3(0, 1, 0);
+  glm::vec4 color = glm::vec4(0, 1, 0, 1);
   vertices[0].position = glm::vec3(+0.0f  , +100.0f, +0.0f);
   vertices[1].position = glm::vec3(+100.0f, +0.0f  , +0.0f);
   vertices[2].position = glm::vec3(+400.0f, -300.0f, +0.0f);
@@ -402,14 +392,6 @@ tVertex *CShapeFactory::MakeVertsStuntMarker(uint32 &uiNumVerts)
   vertices[4].flags.x = 1.0f;
   vertices[5].flags.x = 1.0f;
   vertices[6].flags.x = 1.0f;
-
-  vertices[0].flags.y = 1.0f;
-  vertices[1].flags.y = 1.0f;
-  vertices[2].flags.y = 1.0f;
-  vertices[3].flags.y = 1.0f;
-  vertices[4].flags.y = 1.0f;
-  vertices[5].flags.y = 1.0f;
-  vertices[6].flags.y = 1.0f;
 
   return vertices;
 }
@@ -1175,7 +1157,6 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShapeData *pShape, CShader *pShader
   if (bWireframe) {
     for (uint32 i = 0; i < uiNumVerts; ++i) {
       vertices[i].flags.x = 1.0f; //use color rather than tex
-      vertices[i].flags.y = 1.0f; //alpha val for color
       vertices[i].color = CTexture::RandomColor();
     }
   }
@@ -1264,19 +1245,18 @@ CShapeData *CShapeFactory::MakeAILine(CShapeData *pShape, CShader *pShader, CTra
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {
     vertices[i].flags.x = 1.0f; //use color rather than tex
-    vertices[i].flags.y = 1.0f; //alpha val for color
     switch (section) {
       case eShapeSection::AILINE1:
-        vertices[i].color = glm::vec3(1.0f, 0.0f, 0.0f);
+        vertices[i].color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
         break;
       case eShapeSection::AILINE2:
-        vertices[i].color = glm::vec3(0.0f, 1.0f, 0.0f);
+        vertices[i].color = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
         break;
       case eShapeSection::AILINE3:
-        vertices[i].color = glm::vec3(0.0f, 0.0f, 1.0f);
+        vertices[i].color = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
         break;
       case eShapeSection::AILINE4:
-        vertices[i].color = glm::vec3(1.0f, 1.0f, 0.0f);
+        vertices[i].color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
         break;
     }
   }
@@ -1315,7 +1295,6 @@ CShapeData *CShapeFactory::MakeSelectedChunks(CShapeData *pShape, CShader *pShad
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {
     vertices[i].flags.x = 1.0f; //use color rather than tex
-    vertices[i].flags.y = 1.0f; //alpha val for color
     vertices[i].color = CTexture::RandomColor();
   }
 
@@ -1455,7 +1434,7 @@ CShapeData *CShapeFactory::MakeNormalsTest(const CShapeData &data, CShader *pSha
 {
   uint32 uiNumVerts = data.m_uiNumVerts * 2;
   tVertex *vertices = new tVertex[uiNumVerts];
-  glm::vec3 white(1.0f, 1.0f, 1.0f);
+  glm::vec4 white(1.0f, 1.0f, 1.0f, 1.0f);
   for (int i = 0; i < (int)data.m_uiNumVerts; i++) {
     GLuint vertIndex = i * 2;
     tVertex &v1 = vertices[vertIndex];
@@ -1898,14 +1877,6 @@ tVertex *CShapeFactory::MakeVertsEnvirFloor(uint32 &numVertices, CTrack *pTrack,
   pTexture->GetTextureCoordinates(
     CTrack::GetSignedBitValueFromInt(pTrack->m_chunkAy[iIndex].iEnvironmentFloorType) & SURFACE_MASK_TEXTURE_INDEX,
     vertices[0], vertices[1], vertices[2], vertices[3]);
-  vertices[0].flags.x = 1.0f;
-  vertices[1].flags.x = 1.0f;
-  vertices[2].flags.x = 1.0f;
-  vertices[3].flags.x = 1.0f;
-  vertices[0].flags.y = 1.0f;
-  vertices[1].flags.y = 1.0f;
-  vertices[2].flags.y = 1.0f;
-  vertices[3].flags.y = 1.0f;
 
   return vertices;
 }

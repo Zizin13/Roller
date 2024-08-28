@@ -14,6 +14,7 @@
 #include "ShapeFactory.h"
 #include "Texture.h"
 #include "FBXExporter.h"
+#include "CarHelpers.h"
 #include "qevent.h"
 #include "qdir.h"
 #include "qmessagebox.h"

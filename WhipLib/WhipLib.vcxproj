@@ -107,6 +107,7 @@
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CarHelpers.h" />
     <ClInclude Include="FBXExporter.h" />
     <ClInclude Include="Logging.h" />
     <ClInclude Include="ShapeFactory.h" />
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CarHelpers.cpp" />
     <ClCompile Include="FBXExporter.cpp" />
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="ShapeFactory.cpp" />
@@ -162,7 +164,6 @@
     <ClCompile Include="ShapeData.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Track.cpp" />
-    <ClCompile Include="Types.cpp" />
     <ClCompile Include="Unmangler.cpp" />
     <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />

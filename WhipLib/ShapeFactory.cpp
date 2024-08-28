@@ -11,6 +11,7 @@
 #include "Texture.h"
 #include "Track.h"
 #include "SignType.h"
+#include "CarHelpers.h"
 //-------------------------------------------------------------------------------------------------
 #include "AutoPlans.h"
 #include "DesilvaPlans.h"

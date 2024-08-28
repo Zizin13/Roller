@@ -1,3 +1,4 @@
+#include "CarHelpers.h"
 #include "Types.h"
 #include "Texture.h"
 #include <assert.h>

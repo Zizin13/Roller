@@ -5,6 +5,7 @@
 #include "Palette.h"
 #include "Logging.h"
 #include "Track.h"
+#include "CarHelpers.h"
 #include <string>
 #include <filesystem>
 //-------------------------------------------------------------------------------------------------

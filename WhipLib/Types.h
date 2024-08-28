@@ -99,13 +99,4 @@ static int g_transparencyAyCount = 5;
 #define STUNT_FLAG_RWALL      0x20
 
 //-------------------------------------------------------------------------------------------------
-
-namespace CarHelpers
-{
-  extern std::string GetCarNameFromModel(eWhipModel model);
-  extern std::string GetCarTextureFromModel(eWhipModel model);
-  extern void RemapColor(eWhipModel model, uint32 &uiTex);
-}
-
-//-------------------------------------------------------------------------------------------------
 #endif

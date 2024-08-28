@@ -155,6 +155,9 @@
     <ClInclude Include="FBXExporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CarHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Unmangler.cpp">
@@ -196,7 +199,7 @@
     <ClCompile Include="FBXExporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Types.cpp">
+    <ClCompile Include="CarHelpers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

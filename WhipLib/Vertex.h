@@ -12,20 +12,20 @@ struct tVertex
   tVertex()
   {
     position = glm::vec3(0);
-    color = glm::vec4(0);
     normal = glm::vec3(0);
+    color = glm::vec4(0);
     texCoords = glm::vec2(0);
-    flags = glm::vec4(0);
     backColor = glm::vec4(0);
     backTexCoords = glm::vec2(0);
+    flags = glm::vec4(0);
   }
   glm::vec3 position;
-  glm::vec4 color;
   glm::vec3 normal;
+  glm::vec4 color;
   glm::vec2 texCoords;
-  glm::vec4 flags;
   glm::vec4 backColor;
   glm::vec2 backTexCoords;
+  glm::vec4 flags;
 };
 //-------------------------------------------------------------------------------------------------
 #endif

@@ -787,9 +787,11 @@ void CTrackPreview::keyPressEvent(QKeyEvent *pEvent)
       p->m_camera.StrafeRight();
       break;
     case Qt::Key::Key_R:
+    case Qt::Key::Key_E:
       p->m_camera.MoveUp();
       break;
     case Qt::Key::Key_F:
+    case Qt::Key::Key_Q:
       p->m_camera.MoveDown();
       break;
   }

@@ -946,7 +946,7 @@ void CMainWindow::OnDebug()
 
 void CMainWindow::OnAbout()
 {
-  QMessageBox::information(this, "Git Gud", "Click to pan. WASD to move. R/F up/down.");
+  QMessageBox::information(this, "Git Gud", "Click to pan. WASD to move. R or E is up, F or Q is down.");
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -41,7 +41,7 @@ CDisplaySettings::CDisplaySettings(QWidget *pParent)
   cbTestCarType->addItem("YZIZIN", (int)eWhipModel::CAR_YZIZIN);
   cbTestCarType->addItem("YREISE", (int)eWhipModel::CAR_YREISE);
   cbTestCarType->addItem("DEATH", (int)eWhipModel::CAR_DEATH);
-  cbTestCarType->setCurrentIndex(cbTestCarType->findData((int)eWhipModel::CAR_XZIZIN));
+  cbTestCarType->setCurrentIndex(cbTestCarType->findData((int)eWhipModel::CAR_YZIZIN));
 
   cbTestCarPos->addItem("AILINE 1", (int)eShapeSection::AILINE1);
   cbTestCarPos->addItem("AILINE 2", (int)eShapeSection::AILINE2);

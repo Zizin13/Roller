@@ -82,6 +82,7 @@ bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szName, const
   FlipTexCoordsForExport(pShapeData->m_vertices, pShapeData->m_uiNumVerts);
 
   FbxNode *pShapeMesh = CreateShapeMesh(pShapeData, szName, szTextureFile, pScene);
+  pShapeMesh->SetGeometricRotation(FbxNode::eSourcePivot, FbxVector4(-90.0f, 0.0f, 0.0f));
   pScene->GetRootNode()->AddChild(pShapeMesh);
 
   //g_pFbxManager->GetIOSettings()->SetBoolProp(EXP_FBX_EMBEDDED, true);

@@ -223,6 +223,7 @@ void CEditSignWidget::EditClicked()
     return;
 
   CEditSurfaceDialog dlg(this, eSurfaceField::SURFACE_SIGN);
+  dlg.exec();
 
   g_pMainWindow->SaveHistory("Changed sign texture");
   g_pMainWindow->UpdateWindow();

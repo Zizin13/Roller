@@ -125,10 +125,13 @@ bool CFBXExporter::ExportTrack(CShapeData *pTrackShape,
     return false;
   }
 
+  FlipTexCoordsForExport(pTrackShape->m_vertices, pTrackShape->m_uiNumVerts); //OpenGL expects texture data in reverse order
+
   FbxNode *pTrackMesh = CreateShapeMesh(pTrackShape, szName, szTextureFile, pScene);
   pScene->GetRootNode()->AddChild(pTrackMesh);
   for (int i = 0; i < (int)signAy.size(); ++i) {
     std::string sSignName = "Sign " + std::to_string(i);
+    FlipTexCoordsForExport(signAy[i]->m_vertices, signAy[i]->m_uiNumVerts); //OpenGL expects texture data in reverse order
     FbxNode *pSignMesh = CreateShapeMesh(signAy[i], sSignName.c_str(), szSignTextureFile, pScene);
     pScene->GetRootNode()->AddChild(pSignMesh);
   }

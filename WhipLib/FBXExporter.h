@@ -4,10 +4,12 @@
 #include <map>
 #include <string>
 #include <vector>
+#include "Types.h"
 #include "glm.hpp"
 //-------------------------------------------------------------------------------------------------
 class CShapeData;
 class CTexture;
+struct tVertex;
 namespace fbxsdk
 {
   class FbxNode;
@@ -41,6 +43,7 @@ private:
   fbxsdk::FbxSurfacePhong *CreateTextureMaterial(const char *szTextureFile, fbxsdk::FbxScene *pScene);
   fbxsdk::FbxFileTexture *CreateFileTexture(const char *szTextureFile, fbxsdk::FbxScene *pScene);
   std::string GetColorString(const glm::vec4 &color);
+  void FlipTexCoordsForExport(tVertex *vertices, uint32 uiNumVerts);
 };
 
 //-------------------------------------------------------------------------------------------------

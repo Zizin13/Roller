@@ -78,6 +78,9 @@ bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szName, const
     return false;
   }
 
+  //OpenGL expects texture data in reverse order
+  FlipTexCoordsForExport(pShapeData->m_vertices, pShapeData->m_uiNumVerts);
+
   FbxNode *pShapeMesh = CreateShapeMesh(pShapeData, szName, szTextureFile, pScene);
   pScene->GetRootNode()->AddChild(pShapeMesh);
 
@@ -332,6 +335,16 @@ std::string CFBXExporter::GetColorString(const glm::vec4 &color)
     "," + std::to_string(color.g) +
     "," + std::to_string(color.b) + 
     "," + std::to_string(color.a) + ")";
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CFBXExporter::FlipTexCoordsForExport(tVertex *vertices, uint32 uiNumVerts)
+{
+  for (uint32 i = 0; i < uiNumVerts; ++i) {
+    vertices[i].texCoords.y = 1.0f - vertices[i].texCoords.y;
+    vertices[i].backTexCoords.y = 1.0f - vertices[i].backTexCoords.y;
+  }
 }
 
 //-------------------------------------------------------------------------------------------------

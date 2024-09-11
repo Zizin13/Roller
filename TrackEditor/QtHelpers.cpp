@@ -98,7 +98,7 @@ QImage QtHelpers::GetQImageFromTile(const tTile &tile, bool bScale)
   QImage image(TILE_WIDTH, TILE_HEIGHT, QImage::Format_RGB32);
   for (int i = 0; i < TILE_WIDTH; ++i) {
     for (int j = 0; j < TILE_HEIGHT; ++j)
-      image.setPixelColor(j, i, QColor(tile.data[i][j].r,
+      image.setPixelColor(i, j, QColor(tile.data[i][j].r,
                                        tile.data[i][j].g,
                                        tile.data[i][j].b));
   }

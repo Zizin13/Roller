@@ -12,7 +12,7 @@
 #include "Logging.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
-  #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
+#define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
 //-------------------------------------------------------------------------------------------------
 
@@ -55,8 +55,8 @@ bool CTexture::LoadTexture(const std::string &sFilename, CPalette *pPalette)
   if (m_uiId == 0) {
     GLCALL(glGenTextures(1, &m_uiId));
     GLCALL(glBindTexture(GL_TEXTURE_2D, m_uiId));
-    GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-    GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+    GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
     GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
     GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
   }
@@ -178,7 +178,7 @@ uint8 *CTexture::GenerateBitmapData(int &iSize)
   BITMAPINFOHEADER infoHeader = { 0 };
   infoHeader.biSize = sizeof(BITMAPINFOHEADER);
   infoHeader.biWidth = TILE_WIDTH;
-  infoHeader.biHeight = m_iNumTiles * TILE_HEIGHT * -1;
+  infoHeader.biHeight = m_iNumTiles * TILE_HEIGHT;
   infoHeader.biPlanes = 1;
   infoHeader.biBitCount = 32;
   infoHeader.biCompression = 0;
@@ -192,17 +192,22 @@ uint8 *CTexture::GenerateBitmapData(int &iSize)
   memcpy(pData, &fileHeader, sizeof(fileHeader));
   memcpy(pData + sizeof(fileHeader), &infoHeader, sizeof(infoHeader));
 
+
+  tTile *pTilesFlipped = new tTile[m_iNumTiles];
+  FlipTileLines(m_pTileAy, pTilesFlipped, m_iNumTiles);
+
   int iOffset = fileHeader.bfOffBits;
   for (int i = 0; i < m_iNumTiles; ++i) {
     for (int x = 0; x < TILE_WIDTH; ++x) {
       for (int y = 0; y < TILE_HEIGHT; ++y) {
-        pData[iOffset++] = m_pTileAy[i].data[x][y].b;
-        pData[iOffset++] = m_pTileAy[i].data[x][y].g;
-        pData[iOffset++] = m_pTileAy[i].data[x][y].r;
-        pData[iOffset++] = m_pTileAy[i].data[x][y].a;
+        pData[iOffset++] = pTilesFlipped[i].data[x][y].b;
+        pData[iOffset++] = pTilesFlipped[i].data[x][y].g;
+        pData[iOffset++] = pTilesFlipped[i].data[x][y].r;
+        pData[iOffset++] = pTilesFlipped[i].data[x][y].a;
       }
     }
   }
+  delete[] pTilesFlipped;
 
   return pData;
 }
@@ -267,7 +272,7 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length)
     for (int j = 0; j < iPixelsPerTile; ++j) {
       uint8 byPaletteIndex = pData[i * iPixelsPerTile + j];
       if (m_pPalette->m_paletteAy.size() > byPaletteIndex) {
-        pTile->data[j / TILE_WIDTH][j % TILE_WIDTH] = glm::vec<4, uint8>(m_pPalette->m_paletteAy[byPaletteIndex].r,
+        pTile->data[j % TILE_WIDTH][j / TILE_WIDTH] = glm::vec<4, uint8>(m_pPalette->m_paletteAy[byPaletteIndex].r,
                                                                          m_pPalette->m_paletteAy[byPaletteIndex].g,
                                                                          m_pPalette->m_paletteAy[byPaletteIndex].b,
                                                                          byPaletteIndex ? 255 : 0);
@@ -279,14 +284,29 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length)
     }
   }
 
+  tTile *pTilesFlipped = new tTile[m_iNumTiles];
+  FlipTileLines(m_pTileAy, pTilesFlipped, m_iNumTiles);
   int iLength = TILE_WIDTH;
   int iHeight = TILE_HEIGHT * m_iNumTiles;
-  GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 
+  GLCALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
                       iLength, iHeight, 0,
-                      GL_RGBA, GL_UNSIGNED_BYTE, m_pTileAy));
+                      GL_RGBA, GL_UNSIGNED_BYTE, pTilesFlipped));
   GLCALL(glBindTexture(GL_TEXTURE_2D, 0));
-
+  delete[] pTilesFlipped;
   return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTexture::FlipTileLines(tTile *pSource, tTile *pDest, int iNumTiles)
+{
+  for (int i = 0; i < iNumTiles; ++i) {
+    for (int x = 0; x < TILE_WIDTH; ++x) {
+      for (int y = 0; y < TILE_HEIGHT; ++y) {
+        pDest[i].data[x][y] = pSource[i].data[x][TILE_HEIGHT - (y + 1)];
+      }
+    }
+  }
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -355,25 +375,25 @@ void CTexture::ApplyTexCoords(glm::vec2 &topLeft,
                               bool bFlipHoriz, bool bFlipVert)
 {
   if (!bFlipHoriz && !bFlipVert) {
-    topLeft = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    topRight = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    bottomLeft = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
-    bottomRight = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
-  } else if (bFlipHoriz && !bFlipVert) {
     topLeft = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    topRight = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    bottomLeft = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
-    bottomRight = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
-  } else if (!bFlipHoriz && bFlipVert) {
-    topLeft = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
     topRight = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
     bottomLeft = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    bottomRight = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
-  } else if (bFlipHoriz && bFlipVert) {
+    bottomRight = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+  } else if (bFlipHoriz && !bFlipVert) {
     topLeft = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+    topRight = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
+    bottomLeft = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+    bottomRight = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
+  } else if (!bFlipHoriz && bFlipVert) {
+    topLeft = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
     topRight = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
     bottomLeft = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
-    bottomRight = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
+    bottomRight = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+  } else if (bFlipHoriz && bFlipVert) {
+    topLeft = glm::vec2(0.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+    topRight = glm::vec2(0.0f, (float)uiTexIndex / (float)m_iNumTiles);
+    bottomLeft = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
+    bottomRight = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
   }
 }
 

@@ -55,8 +55,8 @@ bool CTexture::LoadTexture(const std::string &sFilename, CPalette *pPalette)
   if (m_uiId == 0) {
     GLCALL(glGenTextures(1, &m_uiId));
     GLCALL(glBindTexture(GL_TEXTURE_2D, m_uiId));
-    GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-    GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+    GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+    GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
     GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
     GLCALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
   }
@@ -178,7 +178,7 @@ uint8 *CTexture::GenerateBitmapData(int &iSize)
   BITMAPINFOHEADER infoHeader = { 0 };
   infoHeader.biSize = sizeof(BITMAPINFOHEADER);
   infoHeader.biWidth = TILE_WIDTH;
-  infoHeader.biHeight = m_iNumTiles * TILE_HEIGHT;
+  infoHeader.biHeight = m_iNumTiles * TILE_HEIGHT * -1;
   infoHeader.biPlanes = 1;
   infoHeader.biBitCount = 32;
   infoHeader.biCompression = 0;

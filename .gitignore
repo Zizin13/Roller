@@ -379,3 +379,6 @@ FodyWeavers.xsd
 /CarPlansParser/out.txt
 /CarPlansParser/null
 /bin/TrackAnalyzer
+/WhipLib/null
+/bin/WhipLib/include
+/bin/WhipLib

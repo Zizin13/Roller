@@ -1,8 +1,6 @@
 # Roller
 Whiplash/Fatal Racing track editor, FBX resource converter, and DLL for loading Whiplash assets
 
-![alt text](https://github.com/Zizin13/Roller/blob/master/TrackEditor/images/screenshot.png)
-
 ## Track Editor Features: 
 * Open, render, edit, and save Whiplash tracks
 * Multiple tracks open at once in tabs
@@ -19,9 +17,13 @@ Whiplash/Fatal Racing track editor, FBX resource converter, and DLL for loading 
 * Fine control over Copy/Paste behavior
 * Toggle display of each individual section of track
 
+![alt text](https://github.com/Zizin13/Roller/blob/master/TrackEditor/images/screenshot.png)
+
 ## FbxExporter Features:
 * Included with Track Editor releases
 * Exports all Whiplash tracks and cars to FBX format
+
+![alt text](https://github.com/Zizin13/Roller/blob/master/FbxExporter/images/blender.png)
 
 ## WhipLib DLL Features:
 * Loads Whiplash textures and models for use in other applications

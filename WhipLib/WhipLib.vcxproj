@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_DLL|x64">
+      <Configuration>Debug_DLL</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_DLL|x64">
+      <Configuration>Release_DLL</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
@@ -25,8 +33,21 @@
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DLL|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -40,7 +61,13 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DLL|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_DLL|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -48,15 +75,23 @@
     <OutDir>..\lib\x64\</OutDir>
     <TargetName>$(ProjectName)_staticd</TargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DLL|x64'">
+    <OutDir>..\bin\WhipLib\bin\x64\</OutDir>
+    <TargetName>$(ProjectName)_staticd</TargetName>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\lib\x64\</OutDir>
+    <TargetName>$(ProjectName)_static</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DLL|x64'">
+    <OutDir>..\bin\WhipLib\bin\x64\</OutDir>
     <TargetName>$(ProjectName)_static</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;IS_WINDOWS;K_PLUGIN;K_FBXSDK;K_NODLL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WHIPLIB_LIB;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;IS_WINDOWS;K_PLUGIN;K_FBXSDK;K_NODLL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalIncludeDirectories>.\;..\external\glew\include\GL;..\external\glm;..\external\FBX\include;CarPlans;SignPlans</AdditionalIncludeDirectories>
@@ -76,13 +111,65 @@
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DLL|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WHIPLIB_DLL;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;IS_WINDOWS;K_PLUGIN;K_FBXSDK;K_NODLL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalIncludeDirectories>.\;..\external\glew\include\GL;..\external\glm;..\external\FBX\include;CarPlans;SignPlans</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\external\glew\lib\Debug\x64;..\external\FBX\lib\x64\debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Advapi32.lib;Shlwapi.lib;libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;glew32sd.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>..\external\glew\lib\Debug\x64;..\external\FBX\lib\x64\debug</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;glew32sd.lib;opengl32.lib</AdditionalDependencies>
+      <ErrorReporting>NoErrorReport</ErrorReporting>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+    <PostBuildEvent>
+      <Command>echo Copying Headers...
+echo f | xcopy ".\WhipLib.h" ..\bin\WhipLib\include\ /R /Y /d /i &gt; null
+echo f | xcopy ".\Types.h" ..\bin\WhipLib\include\ /R /Y /d /i &gt; null
+if %errorlevel% NEQ 0 goto Failed
+
+echo Copying Readme File...
+echo f | xcopy ..\README.md ..\bin\WhipLib /R /Y /d /i &gt; null
+if %errorlevel% NEQ 0 goto Failed
+
+echo Copying License Files...
+echo f | xcopy ..\LICENSE.md ..\bin\WhipLib /R /Y /d /i &gt; null
+echo f | xcopy ..\external\glew\GLEW_License.txt ..\bin\WhipLib /R /Y /d /i &gt; null
+echo f | xcopy ..\external\glm\copying.txt ..\bin\WhipLib\GLM_License.txt /R /Y /d /i &gt; null
+echo f | xcopy ..\external\FBX\FBX_LICENSE.rtf ..\bin\WhipLib\FBX_License.rtf /R /Y /d /i &gt; null
+echo f | xcopy ..\external\WhipLib_LicensedLibs.txt ..\bin\WhipLib\LicensedLibs.txt /R /Y /d /i &gt; null
+if %errorlevel% NEQ 0 goto Failed
+
+echo Post-Build Step for $(ProjectName) completed successfully
+exit 0
+
+:Failed
+echo Post-Build Step for $(ProjectName) FAILED!
+exit 1</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;IS_WINDOWS;K_PLUGIN;K_FBXSDK;K_NODLL;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WHIPLIB_LIB;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;IS_WINDOWS;K_PLUGIN;K_FBXSDK;K_NODLL;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalIncludeDirectories>.\;..\external\glew\include\GL;..\external\glm;..\external\FBX\include;CarPlans;SignPlans</AdditionalIncludeDirectories>
@@ -103,6 +190,62 @@
     <ProjectReference>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_DLL|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WHIPLIB_DLL;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;IS_WINDOWS;K_PLUGIN;K_FBXSDK;K_NODLL;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>.\;..\external\glew\include\GL;..\external\glm;..\external\FBX\include;CarPlans;SignPlans</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>..\external\glew\lib\Release\x64;..\external\FBX\lib\x64\release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Advapi32.lib;Shlwapi.lib;libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;glew32s.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>..\external\glew\lib\Release\x64;..\external\FBX\lib\x64\release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;glew32s.lib;opengl32.lib</AdditionalDependencies>
+      <ErrorReporting>NoErrorReport</ErrorReporting>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+    <PostBuildEvent>
+      <Command>echo Copying Headers...
+echo f | xcopy ".\WhipLib.h" ..\bin\WhipLib\include\ /R /Y /d /i &gt; null
+echo f | xcopy ".\Types.h" ..\bin\WhipLib\include\ /R /Y /d /i &gt; null
+if %errorlevel% NEQ 0 goto Failed
+
+echo Copying Readme File...
+echo f | xcopy ..\README.md ..\bin\WhipLib /R /Y /d /i &gt; null
+if %errorlevel% NEQ 0 goto Failed
+
+echo Copying License Files...
+echo f | xcopy ..\LICENSE.md ..\bin\WhipLib /R /Y /d /i &gt; null
+echo f | xcopy ..\external\glew\GLEW_License.txt ..\bin\WhipLib /R /Y /d /i &gt; null
+echo f | xcopy ..\external\glm\copying.txt ..\bin\WhipLib\GLM_License.txt /R /Y /d /i &gt; null
+echo f | xcopy ..\external\FBX\FBX_LICENSE.rtf ..\bin\WhipLib\FBX_License.rtf /R /Y /d /i &gt; null
+echo f | xcopy ..\external\WhipLib_LicensedLibs.txt ..\bin\WhipLib\LicensedLibs.txt /R /Y /d /i &gt; null
+if %errorlevel% NEQ 0 goto Failed
+
+echo Post-Build Step for $(ProjectName) completed successfully
+exit 0
+
+:Failed
+echo Post-Build Step for $(ProjectName) FAILED!
+exit 1</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
@@ -152,6 +295,7 @@
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="VertexArray.h" />
     <ClInclude Include="VertexBuffer.h" />
+    <ClInclude Include="WhipLib.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
@@ -169,6 +313,7 @@
     <ClCompile Include="Unmangler.cpp" />
     <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
+    <ClCompile Include="WhipLib.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\FragmentShaderCode.glsl" />

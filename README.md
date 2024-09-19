@@ -1,5 +1,5 @@
 # Roller
-Whiplash/Fatal Racing track editor and resource converter
+Whiplash/Fatal Racing track editor, FBX resource converter, and DLL for loading Whiplash assets
 
 ![alt text](https://github.com/Zizin13/Roller/blob/master/TrackEditor/images/screenshot.png)
 
@@ -20,7 +20,11 @@ Whiplash/Fatal Racing track editor and resource converter
 * Toggle display of each individual section of track
 
 ## FbxExporter Features:
+* Included with Track Editor releases
 * Exports all Whiplash tracks and cars to FBX format
+
+## WhipLib DLL Features:
+* Loads Whiplash textures and models for use in other applications
 
 ## External dependencies used:
 * Qt 5.15.2: https://download.qt.io/archive/qt/5.15/5.15.2/single/qt-everywhere-src-5.15.2.zip.mirrorlist

@@ -105,6 +105,7 @@ tVertex *CShapeFactory::MakeVertsAxes(uint32 &uiNumVerts)
   vertices[1].position = glm::vec3(0, 1, 0);
   vertices[2].position = glm::vec3(0, 0, 1);
   vertices[3].position = glm::vec3(0, 0, 0);
+  //TODO: fix
   //vertices[0].color = glm::vec4(1, 0, 0, 1);
   //vertices[1].color = glm::vec4(0, 1, 0, 1);
   //vertices[2].color = glm::vec4(0, 0, 1, 1);
@@ -1152,7 +1153,7 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShapeData *pShape, CShader *pShader
 
   if (bWireframe) {
     for (uint32 i = 0; i < uiNumVerts; ++i) {
-      //vertices[i].color = CTexture::RandomColor();
+      vertices[i].texCoords = pTrack->m_pTex->GetColorCenterCoordinates(0xCF);
     }
   }
 
@@ -1215,7 +1216,7 @@ CShapeData *CShapeFactory::MakeEnvirFloor(CShapeData *pShape, CShader *pShader, 
     CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts, GL_DYNAMIC_DRAW);
     CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
     CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
-    pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
+    pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
 
     if (indices)
       delete[] indices;
@@ -1239,20 +1240,20 @@ CShapeData *CShapeFactory::MakeAILine(CShapeData *pShape, CShader *pShader, CTra
     return NULL;
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {
-    /*switch (section) {
+    switch (section) {
       case eShapeSection::AILINE1:
-        vertices[i].color = glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+        vertices[i].texCoords = pTrack->m_pTex->GetColorCenterCoordinates(0xE6);
         break;
       case eShapeSection::AILINE2:
-        vertices[i].color = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+        vertices[i].texCoords = pTrack->m_pTex->GetColorCenterCoordinates(0xFF);
         break;
       case eShapeSection::AILINE3:
-        vertices[i].color = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+        vertices[i].texCoords = pTrack->m_pTex->GetColorCenterCoordinates(0xF3);
         break;
       case eShapeSection::AILINE4:
-        vertices[i].color = glm::vec4(1.0f, 1.0f, 0.0f, 1.0f);
+        vertices[i].texCoords = pTrack->m_pTex->GetColorCenterCoordinates(0xCF);
         break;
-    }*/
+    }
   }
 
   if (!pShape) {
@@ -1264,7 +1265,7 @@ CShapeData *CShapeFactory::MakeAILine(CShapeData *pShape, CShader *pShader, CTra
     CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
     CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
-    pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
+    pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
 
     if (indices)
       delete[] indices;
@@ -1288,7 +1289,7 @@ CShapeData *CShapeFactory::MakeSelectedChunks(CShapeData *pShape, CShader *pShad
     return NULL;
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {
-    //vertices[i].color = CTexture::RandomColor();
+    vertices[i].texCoords = pTrack->m_pTex->GetColorCenterCoordinates(0xDA);
   }
 
   uint32 uiNumIndices;
@@ -1300,7 +1301,7 @@ CShapeData *CShapeFactory::MakeSelectedChunks(CShapeData *pShape, CShader *pShad
     CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices, GL_DYNAMIC_DRAW);
     CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
-    pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
+    pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
   } else {
     pShape->m_pVertexBuf->Update(vertices, uiNumVerts);
     pShape->m_pIndexBuf->Update(indices, uiNumIndices);
@@ -1435,6 +1436,7 @@ CShapeData *CShapeFactory::MakeNormalsTest(const CShapeData &data, CShader *pSha
     const tVertex &sourceVertex = data.m_vertices[i];
     v1.position = sourceVertex.position;
     v2.position = sourceVertex.position + sourceVertex.normal;
+    //TODO
     //v1.color = v2.color = white;
   }
 

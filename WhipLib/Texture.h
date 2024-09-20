@@ -81,10 +81,7 @@ private:
                   glm::vec2 &bottomLeft,
                   glm::vec2 &bottomRight,
                   uint32 uiTexIndex);
-  void ApplyTransparency(glm::vec2 &topLeft,
-                         glm::vec2 &topRight,
-                         glm::vec2 &bottomLeft,
-                         glm::vec2 &bottomRight,
+  void ApplyTransparency(tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
                          uint32 uiTexIndex);
 
   uint32 m_uiId;

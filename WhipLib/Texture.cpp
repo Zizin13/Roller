@@ -20,7 +20,7 @@
 //-------------------------------------------------------------------------------------------------
 
 #define NUM_PALETTE_TILES 1
-#define NUM_TRANSPARENT_TILES 5
+#define NUM_TRANSPARENT_TILES 1
 
 //-------------------------------------------------------------------------------------------------
 
@@ -299,33 +299,19 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length)
     }
   }
 
-  //generate transparent color tiles
-  for (int i = iNumTexTiles + NUM_PALETTE_TILES; i < m_iNumTiles; ++i) {
-    glm::vec<4, uint8> color;
-    switch (i - iNumTexTiles - NUM_PALETTE_TILES) {
-    case 0:
-      color = glm::vec<4, uint8>(0, 0, 0, 255);
-      break;
-    case 1:
-      color = glm::vec<4, uint8>(0, 0, 0, 64);
-      break;
-    case 2:
-      color = glm::vec<4, uint8>(0, 0, 0, 128);
-      break;
-    case 3:
-      color = glm::vec<4, uint8>(0, 0, 0, 192);
-      break;
-    case 4:
-      color = glm::vec<4, uint8>(0, 0, 255, 64);
-      break;
-    }
+  //generate transparent color tile
+  tTile *pTranspTile = &m_pTileAy[iNumTexTiles + NUM_PALETTE_TILES];
+  iRunner = 0;
+  for (int i = 0; i < 16; ++i) {
+    for (int j = 0; j < 16; ++j) {
+      for (int k = 0; k < 16; ++k) {
+        int iPixelNum = iRunner++;
+        int iTileX = iPixelNum % TILE_WIDTH;
+        int iTileY = iPixelNum / TILE_WIDTH;
+        int iTranspIndex = iTileX / 4 + i * 16;
 
-    tTile *pTile = &m_pTileAy[i];
-    for (int j = 0; j < iPixelsPerTile; ++j) {
-      pTile->data[j % TILE_WIDTH][j / TILE_WIDTH] = glm::vec<4, uint8>(color.r,
-                                                                       color.g,
-                                                                       color.b,
-                                                                       color.a);
+        pTranspTile->data[iTileX][iTileY] = GetTranspColor(iTranspIndex);
+      }
     }
   }
 
@@ -413,12 +399,40 @@ void CTexture::ApplyTransparency(glm::vec2 &topLeft,
                                  glm::vec2 &bottomRight,
                                  uint32 uiTexIndex)
 {
-  int iTransparencyIndex = m_iNumTiles - NUM_TRANSPARENT_TILES;
-  iTransparencyIndex += (int)uiTexIndex;
-  topLeft = glm::vec2(1.0f, (float)iTransparencyIndex / (float)m_iNumTiles);
-  topRight = glm::vec2(1.0f, (float)(iTransparencyIndex + 1) / (float)m_iNumTiles);
-  bottomLeft = glm::vec2(0.0f, (float)iTransparencyIndex / (float)m_iNumTiles);
-  bottomRight = glm::vec2(0.0f, (float)(iTransparencyIndex + 1) / (float)m_iNumTiles);
+  int iTranspIndex = m_iNumTiles - NUM_TRANSPARENT_TILES;
+
+  int iTranspX = uiTexIndex / 16;
+  int iTranspY = uiTexIndex % 16;
+
+  topLeft     = glm::vec2(1.0f - (float)(iTranspX * 4 + 1) / TILE_WIDTH, ((float)iTranspIndex * TILE_HEIGHT + iTranspY * 4 + 1) / (float)(m_iNumTiles * TILE_HEIGHT));
+  topRight    = glm::vec2(1.0f - (float)(iTranspX * 4 + 1) / TILE_WIDTH, ((float)iTranspIndex * TILE_HEIGHT + iTranspY * 4 + 3) / (float)(m_iNumTiles * TILE_HEIGHT));
+  bottomLeft  = glm::vec2(1.0f - (float)(iTranspX * 4 + 3) / TILE_WIDTH, ((float)iTranspIndex * TILE_HEIGHT + iTranspY * 4 + 1) / (float)(m_iNumTiles * TILE_HEIGHT));
+  bottomRight = glm::vec2(1.0f - (float)(iTranspX * 4 + 3) / TILE_WIDTH, ((float)iTranspIndex * TILE_HEIGHT + iTranspY * 4 + 3) / (float)(m_iNumTiles * TILE_HEIGHT));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+glm::vec<4, uint8> CTexture::GetTranspColor(int iTranspIndex)
+{
+  glm::vec<4, uint8> color(0, 0, 0, 0);
+  switch (iTranspIndex) {
+    case 0:
+      color = glm::vec<4, uint8>(0, 0, 0, 255);
+      break;
+    case 1:
+      color = glm::vec<4, uint8>(0, 0, 0, 64);
+      break;
+    case 2:
+      color = glm::vec<4, uint8>(0, 0, 0, 128);
+      break;
+    case 3:
+      color = glm::vec<4, uint8>(0, 0, 0, 192);
+      break;
+    case 4:
+      color = glm::vec<4, uint8>(0, 0, 255, 64);
+      break;
+  }
+  return color;
 }
 
 //-------------------------------------------------------------------------------------------------

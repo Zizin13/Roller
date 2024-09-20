@@ -86,6 +86,7 @@ private:
                          glm::vec2 &bottomLeft,
                          glm::vec2 &bottomRight,
                          uint32 uiTexIndex);
+  glm::vec<4, uint8> GetTranspColor(int iTranspIndex);
 
   uint32 m_uiId;
   CPalette *m_pPalette; //not owned by this class

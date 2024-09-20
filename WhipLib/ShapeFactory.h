@@ -24,8 +24,8 @@ public:
 
   CShapeData *MakeAxes(CShader *pShader);
   CShapeData *MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1);
-  CShapeData *MakeAudioMarker(CShader *pShader);
-  CShapeData *MakeStuntMarker(CShader *pShader);
+  CShapeData *MakeAudioMarker(CShader *pShader, CTexture *pTexture);
+  CShapeData *MakeStuntMarker(CShader *pShader, CTexture *pTexture);
   CShapeData *MakeTrackSurface(CShapeData *pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false);
   CShapeData *MakeEnvirFloor(CShapeData *pShape, CShader *pShader, CTrack *pTrack, int iIndex);
   CShapeData *MakeAILine(CShapeData *pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast);
@@ -47,9 +47,9 @@ private:
   tVertex *MakeModelVerts(uint32 &numVertices, CTexture *pTexture, eWhipModel model, int iSignSurfaceType);
   uint32 *MakeModelIndices(uint32 &numIndices, eWhipModel model);
 
-  tVertex *MakeVertsAudioMarker(uint32 &uiNumVerts);
+  tVertex *MakeVertsAudioMarker(uint32 &uiNumVerts, CTexture *pTexture);
   uint32 *MakeIndicesAudioMarker(uint32 &uiNumIndices);
-  tVertex *MakeVertsStuntMarker(uint32 &uiNumVerts);
+  tVertex *MakeVertsStuntMarker(uint32 &uiNumVert, CTexture *pTextures);
   uint32 *MakeIndicesStuntMarker(uint32 &uiNumIndices);
 
   float *GetCoords(eWhipModel model);

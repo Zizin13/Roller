@@ -256,10 +256,10 @@ uint32 *CShapeFactory::MakeModelIndices(uint32 &numIndices, eWhipModel model)
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeAudioMarker(CShader *pShader)
+CShapeData *CShapeFactory::MakeAudioMarker(CShader *pShader, CTexture *pTexture)
 {
   uint32 uiNumVerts;
-  struct tVertex *vertices = MakeVertsAudioMarker(uiNumVerts);
+  struct tVertex *vertices = MakeVertsAudioMarker(uiNumVerts, pTexture);
   uint32 uiNumIndices;
   uint32 *indices = MakeIndicesAudioMarker(uiNumIndices);
   GLenum drawType = GL_TRIANGLES;
@@ -268,7 +268,7 @@ CShapeData *CShapeFactory::MakeAudioMarker(CShader *pShader)
   CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
   CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
-  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
+  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture, drawType);
 
   if (vertices)
     delete[] vertices;
@@ -281,7 +281,7 @@ CShapeData *CShapeFactory::MakeAudioMarker(CShader *pShader)
 
 //-------------------------------------------------------------------------------------------------
 
-tVertex *CShapeFactory::MakeVertsAudioMarker(uint32 &uiNumVerts)
+tVertex *CShapeFactory::MakeVertsAudioMarker(uint32 &uiNumVerts, CTexture *pTexture)
 {
   uiNumVerts = 6;
   tVertex *vertices = new tVertex[uiNumVerts];
@@ -292,12 +292,18 @@ tVertex *CShapeFactory::MakeVertsAudioMarker(uint32 &uiNumVerts)
   vertices[3].position = glm::vec3(  +0.0f, +500.0f, +0.0f);
   vertices[4].position = glm::vec3(-500.0f, +800.0f, +0.0f);
   vertices[5].position = glm::vec3(-500.0f, -300.0f, +0.0f);
-  //vertices[0].color = color;
-  //vertices[1].color = color;
-  //vertices[2].color = color;
-  //vertices[3].color = color;
-  //vertices[4].color = color;
-  //vertices[5].color = color;
+  vertices[0].texCoords = pTexture->GetColorCenterCoordinates(0x8f);
+  vertices[1].texCoords = pTexture->GetColorCenterCoordinates(0x8f);
+  vertices[2].texCoords = pTexture->GetColorCenterCoordinates(0x8f);
+  vertices[3].texCoords = pTexture->GetColorCenterCoordinates(0x8f);
+  vertices[4].texCoords = pTexture->GetColorCenterCoordinates(0x8f);
+  vertices[5].texCoords = pTexture->GetColorCenterCoordinates(0x8f);
+  vertices[0].backTexCoords = pTexture->GetColorCenterCoordinates(0x8f);
+  vertices[1].backTexCoords = pTexture->GetColorCenterCoordinates(0x8f);
+  vertices[2].backTexCoords = pTexture->GetColorCenterCoordinates(0x8f);
+  vertices[3].backTexCoords = pTexture->GetColorCenterCoordinates(0x8f);
+  vertices[4].backTexCoords = pTexture->GetColorCenterCoordinates(0x8f);
+  vertices[5].backTexCoords = pTexture->GetColorCenterCoordinates(0x8f);
 
   return vertices;
 }
@@ -328,10 +334,10 @@ uint32 *CShapeFactory::MakeIndicesAudioMarker(uint32 &uiNumIndices)
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeStuntMarker(CShader *pShader)
+CShapeData *CShapeFactory::MakeStuntMarker(CShader *pShader, CTexture *pTexture)
 {
   uint32 uiNumVerts;
-  struct tVertex *vertices = MakeVertsStuntMarker(uiNumVerts);
+  struct tVertex *vertices = MakeVertsStuntMarker(uiNumVerts, pTexture);
   uint32 uiNumIndices;
   uint32 *indices = MakeIndicesStuntMarker(uiNumIndices);
   GLenum drawType = GL_TRIANGLES;
@@ -340,7 +346,7 @@ CShapeData *CShapeFactory::MakeStuntMarker(CShader *pShader)
   CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
   CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
-  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
+  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture, drawType);
 
   if (vertices)
     delete[] vertices;
@@ -353,7 +359,7 @@ CShapeData *CShapeFactory::MakeStuntMarker(CShader *pShader)
 
 //-------------------------------------------------------------------------------------------------
 
-tVertex *CShapeFactory::MakeVertsStuntMarker(uint32 &uiNumVerts)
+tVertex *CShapeFactory::MakeVertsStuntMarker(uint32 &uiNumVerts, CTexture *pTexture)
 {
   uiNumVerts = 8;
   tVertex *vertices = new tVertex[uiNumVerts];
@@ -367,13 +373,21 @@ tVertex *CShapeFactory::MakeVertsStuntMarker(uint32 &uiNumVerts)
   vertices[5].position = glm::vec3(-300.0f, -400.0f, +0.0f);
   vertices[6].position = glm::vec3(-400.0f, -300.0f, +0.0f);
 
-  //vertices[0].color = color;
-  //vertices[1].color = color;
-  //vertices[2].color = color;
-  //vertices[3].color = color;
-  //vertices[4].color = color;
-  //vertices[5].color = color;
-  //vertices[6].color = color;
+  vertices[0].texCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[1].texCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[2].texCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[3].texCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[4].texCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[5].texCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[6].texCoords = pTexture->GetColorCenterCoordinates(0xff);
+
+  vertices[0].backTexCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[1].backTexCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[2].backTexCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[3].backTexCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[4].backTexCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[5].backTexCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[6].backTexCoords = pTexture->GetColorCenterCoordinates(0xff);
 
   return vertices;
 }
@@ -1360,7 +1374,7 @@ void CShapeFactory::MakeAudio(CShader *pShader, CTrack *pTrack, std::vector<CSha
       continue; //no audio in this chunk
 
     //make marker
-    CShapeData *pNewMarker = MakeAudioMarker(pShader);
+    CShapeData *pNewMarker = MakeAudioMarker(pShader, pTrack->m_pTex);
 
     float fHeight = (float)1000.0f * -1.0f;
     glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[i].math.centerStunt);
@@ -1389,7 +1403,7 @@ void CShapeFactory::MakeStunts(CShader *pShader, CTrack *pTrack, std::vector<CSh
     }
 
     //make marker
-    CShapeData *pNewMarker = MakeStuntMarker(pShader);
+    CShapeData *pNewMarker = MakeStuntMarker(pShader, pTrack->m_pTex);
 
     float fHeight = (float)1000.0f * -1.0f;
     glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[it->first].math.centerStunt);

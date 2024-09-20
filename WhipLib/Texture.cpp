@@ -168,6 +168,15 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
 
 //-------------------------------------------------------------------------------------------------
 
+glm::vec2 CTexture::GetColorCenterCoordinates(uint32 uiColor)
+{
+  int iPaletteIndex = m_iNumTiles - (int)m_pPalette->m_paletteAy.size();
+  iPaletteIndex += (int)uiColor;
+  return glm::vec2(0.5f, (float)iPaletteIndex / (float)m_iNumTiles + 0.5f / (float)m_iNumTiles);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 uint8 *CTexture::GenerateBitmapData(int &iSize)
 {
   iSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + (4 * TILE_WIDTH * TILE_HEIGHT * m_iNumTiles);

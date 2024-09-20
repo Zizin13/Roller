@@ -60,9 +60,9 @@ public:
   glm::vec2 GetColorCenterCoordinates(uint32 uiColor);
   uint8 *GenerateBitmapData(int &iSize);
   bool ExportToPngFile(const std::string &sFilename);
+  int GetNumTiles();
 
   tTile *m_pTileAy;
-  int m_iNumTiles;
 
   static glm::vec4 RandomColor();
   static glm::vec4 ColorBytesToFloat(const glm::vec3 &color);
@@ -90,6 +90,7 @@ private:
 
   uint32 m_uiId;
   CPalette *m_pPalette; //not owned by this class
+  int m_iNumTiles;
 };
 
 //-------------------------------------------------------------------------------------------------

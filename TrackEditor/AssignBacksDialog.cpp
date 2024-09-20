@@ -20,11 +20,11 @@ CAssignBacksDialog::CAssignBacksDialog(QWidget *pParent, CTrack *pTrack)
   connect(pbApply, &QPushButton::clicked, this, &CAssignBacksDialog::OnApplyClicked);
   
   if (pTrack && pTrack->m_pTex) {
-    lblNotLoaded->setVisible(pTrack->m_pTex->m_iNumTiles == 0);
+    lblNotLoaded->setVisible(pTrack->m_pTex->GetNumTiles() == 0);
     int iButtonSize = 90;
     int iTilesPerLine = (width() - 256) / (iButtonSize + 6);
     int i = 0;
-    for (; i < pTrack->m_pTex->m_iNumTiles; ++i) {
+    for (; i < pTrack->m_pTex->GetNumTiles(); ++i) {
       int iBack = -1;
       CSignMap::iterator it = pTrack->m_backsMap.find(i);
       if (it != pTrack->m_backsMap.end())

@@ -71,7 +71,7 @@ void CBackWidget::UpdateWidget()
 
   uint32 uiBackIndex = CTrack::GetSignedBitValueFromInt(m_iBack);
   uiBackIndex &= SURFACE_MASK_TEXTURE_INDEX;
-  if ((int)uiBackIndex < m_pTexture->m_iNumTiles) {
+  if ((int)uiBackIndex < m_pTexture->GetNumTiles()) {
     QPixmap backPixmap;
     backPixmap.convertFromImage(QtHelpers::GetQImageFromTile(m_pTexture->m_pTileAy[uiBackIndex]));
     pbBack->setIcon(backPixmap);

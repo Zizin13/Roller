@@ -33,7 +33,7 @@ void QtHelpers::UpdateSignButtonDisplay(QPushButton *pPushButton, QCheckBox *pCh
     unsigned int uiSignedBitVal = CTrack::GetSignedBitValueFromInt(iValue);
     bool bChecked = uiSignedBitVal & SURFACE_FLAG_APPLY_TEXTURE;
     int iBldIndex = CTrack::GetIntValueFromSignedBit(uiSignedBitVal & SURFACE_MASK_TEXTURE_INDEX);
-    if (iBldIndex < pTex->m_iNumTiles) {
+    if (iBldIndex < pTex->GetNumTiles()) {
       QPixmap pixmap;
       pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTex->m_pTileAy[iBldIndex]));
       pPushButton->setIcon(pixmap);
@@ -66,7 +66,7 @@ void QtHelpers::UpdateTextures(QLabel *pLblTex1, QLabel *pLblTex2, CTexture *pTe
   }
   if (iSurface != -1) {
     if (pTex && uiSignedBitVal & SURFACE_FLAG_APPLY_TEXTURE) {
-      if (iIndex < pTex->m_iNumTiles) {
+      if (iIndex < pTex->GetNumTiles()) {
         pixmap.convertFromImage(QtHelpers::GetQImageFromTile(pTex->m_pTileAy[iIndex], true));
         if (pLblTex1)
           pLblTex1->setPixmap(pixmap);

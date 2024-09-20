@@ -361,7 +361,7 @@ void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
     int iIndex = m_uiSignedBitValue & SURFACE_MASK_TEXTURE_INDEX;
 
     if (bChecked) {
-      if (iIndex >= GetTexture()->m_iNumTiles)
+      if (iIndex >= GetTexture()->GetNumTiles())
         m_uiSignedBitValue = 0;
       m_uiSignedBitValue |= SURFACE_FLAG_APPLY_TEXTURE;
       m_uiSignedBitValue &= ~SURFACE_FLAG_TRANSPARENT;
@@ -385,7 +385,7 @@ void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
       int iIndex = uiValue & SURFACE_MASK_TEXTURE_INDEX;
 
       if (bChecked) {
-        if (iIndex >= GetTexture()->m_iNumTiles)
+        if (iIndex >= GetTexture()->GetNumTiles())
           uiValue = 0;
         uiValue |= SURFACE_FLAG_APPLY_TEXTURE;
         uiValue &= ~SURFACE_FLAG_TRANSPARENT;
@@ -655,7 +655,7 @@ void CEditSurfaceDialog::UpdateDialog()
     lblTransparency->hide();
     cbTransparency->hide();
     int iIndex = uiValue & SURFACE_MASK_TEXTURE_INDEX;
-    if (GetTexture() && iIndex < GetTexture()->m_iNumTiles) {
+    if (GetTexture() && iIndex < GetTexture()->GetNumTiles()) {
       QPixmap pixmap;
       pixmap.convertFromImage(QtHelpers::GetQImageFromTile(GetTexture()->m_pTileAy[iIndex]));
       pbTexture1->setIcon(pixmap);

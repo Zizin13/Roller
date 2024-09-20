@@ -226,6 +226,13 @@ bool CTexture::ExportToPngFile(const std::string &sFilename)
 
 //-------------------------------------------------------------------------------------------------
 
+int CTexture::GetNumTiles()
+{
+  return m_iNumTiles - NUM_PALETTE_TILES - NUM_TRANSPARENT_TILES;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 glm::vec4 CTexture::RandomColor()
 {
   glm::vec4 ret;

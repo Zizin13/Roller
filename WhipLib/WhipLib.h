@@ -45,13 +45,13 @@ struct tWhiplashVertex
 
 //-------------------------------------------------------------------------------------------------
 
-// Loads a Whiplash texture file and fills pDataBuf with a bitmap conversion including file header
+// Loads a Whiplash texture and palette file and fills pDataBuf with an 8-bit rgba bitmap
 // Returns the size of the bitmap or -1 if there is an error
 WLFUNC int wlLoadTexture(uint8 *pDataBuf, int iBufSize, const char *szTex, const char *szPal);
 typedef int (WLCDECL *wlLoadTextureFunc)(uint8 *pDataBuf, int iBufSize, const char *szTex, const char *szPal);
 
 
-// Fills pBmpBuf with a bitmap conversion of the texture and palette files including file header,
+// Fills pBmpBuf with an 8-bit rgba bitmap of the texture and palette files,
 //   pVertexBuf with vertices, and pIndexBuf with indices for the chosen model.
 // iBmpSize will be set to the size of the bitmap file
 // iNumVertices and iNumIndices will be set to the number of vertices and indices

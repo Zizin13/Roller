@@ -11,6 +11,9 @@
 #include <fstream>
 #include "Logging.h"
 //-------------------------------------------------------------------------------------------------
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+//-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
@@ -183,41 +186,20 @@ glm::vec2 CTexture::GetColorCenterCoordinates(uint32 uiColor)
 
 uint8 *CTexture::GenerateBitmapData(int &iSize)
 {
-  iSize = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + (4 * TILE_WIDTH * TILE_HEIGHT * m_iNumTiles);
+  iSize = (4 * TILE_WIDTH * TILE_HEIGHT * m_iNumTiles);
 
-  BITMAPFILEHEADER fileHeader = { 0 };
-  fileHeader.bfType = 0x4D42; //BM
-  fileHeader.bfSize = iSize;
-  fileHeader.bfOffBits = sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER);
-
-  BITMAPINFOHEADER infoHeader = { 0 };
-  infoHeader.biSize = sizeof(BITMAPINFOHEADER);
-  infoHeader.biWidth = TILE_WIDTH;
-  infoHeader.biHeight = m_iNumTiles * TILE_HEIGHT * -1;
-  infoHeader.biPlanes = 1;
-  infoHeader.biBitCount = 32;
-  infoHeader.biCompression = 0;
-  infoHeader.biSizeImage = 0;
-  infoHeader.biXPelsPerMeter = 3780;
-  infoHeader.biYPelsPerMeter = 3780;
-  infoHeader.biClrUsed = 0;
-  infoHeader.biClrImportant = 0;
-
-  uint8 *pData = new uint8[fileHeader.bfSize];
-  memcpy(pData, &fileHeader, sizeof(fileHeader));
-  memcpy(pData + sizeof(fileHeader), &infoHeader, sizeof(infoHeader));
-
+  uint8 *pData = new uint8[iSize];
 
   tTile *pTilesFlipped = new tTile[m_iNumTiles];
   FlipTileLines(m_pTileAy, pTilesFlipped, m_iNumTiles);
 
-  int iOffset = fileHeader.bfOffBits;
+  int iOffset = 0;// fileHeader.bfOffBits;
   for (int i = 0; i < m_iNumTiles; ++i) {
     for (int x = 0; x < TILE_WIDTH; ++x) {
       for (int y = 0; y < TILE_HEIGHT; ++y) {
-        pData[iOffset++] = pTilesFlipped[i].data[x][y].b;
-        pData[iOffset++] = pTilesFlipped[i].data[x][y].g;
         pData[iOffset++] = pTilesFlipped[i].data[x][y].r;
+        pData[iOffset++] = pTilesFlipped[i].data[x][y].g;
+        pData[iOffset++] = pTilesFlipped[i].data[x][y].b;
         pData[iOffset++] = pTilesFlipped[i].data[x][y].a;
       }
     }
@@ -229,19 +211,11 @@ uint8 *CTexture::GenerateBitmapData(int &iSize)
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTexture::ExportToBitmapFile(const std::string &sFilename)
+bool CTexture::ExportToPngFile(const std::string &sFilename)
 {
   int iBmpSize;
   uint8 *pBmpData = GenerateBitmapData(iBmpSize);
-  std::ofstream out(sFilename.c_str(), std::ios_base::binary);
-  if (!out.is_open()) {
-    Logging::LogMessage("Failed to open bmp output file %s\n", sFilename.c_str());
-    return false;
-  }
-  for (int i = 0; i < iBmpSize; ++i) {
-    out << pBmpData[i];
-  }
-  out.close();
+  stbi_write_png(sFilename.c_str(), TILE_WIDTH, TILE_HEIGHT * m_iNumTiles, 4, pBmpData, TILE_WIDTH * 4);
   delete[] pBmpData;
   return true;
 }

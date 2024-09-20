@@ -673,12 +673,12 @@ bool CTrackPreview::ExportFBX()
   sName = sName.left(sName.lastIndexOf('.'));
 
   //make texture file
-  QString sTexFile = sFolder + "\\" + sName + ".bmp";
-  p->m_track.m_pTex->ExportToBitmapFile(sTexFile.toLatin1().constData());
+  QString sTexFile = sFolder + "\\" + sName + ".png";
+  p->m_track.m_pTex->ExportToPngFile(sTexFile.toLatin1().constData());
 
   //make sign texture file
-  QString sSignTexFile = sFolder + "\\" + sName + "_BLD.bmp";
-  p->m_track.m_pBld->ExportToBitmapFile(sSignTexFile.toLatin1().constData());
+  QString sSignTexFile = sFolder + "\\" + sName + "_BLD.png";
+  p->m_track.m_pBld->ExportToPngFile(sSignTexFile.toLatin1().constData());
 
   //generate models
   CShapeData *pExportTrack = NULL;

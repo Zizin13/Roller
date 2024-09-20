@@ -35,8 +35,8 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir)
     return false;
 
   //make texture file
-  std::string sTexFile = sOutDir + "\\" + sCarName + ".bmp";
-  carTex.ExportToBitmapFile(sTexFile);
+  std::string sTexFile = sOutDir + "\\" + sCarName + ".png";
+  carTex.ExportToPngFile(sTexFile);
   printf("Exporting ");
   printf(sTexFile.c_str());
   printf("...\n");
@@ -74,16 +74,16 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir)
   sTrackName = sTrackName.substr(0, pos);
 
   //make texture files
-  std::string sTexFile = sOutDir + "\\" + sTrackName + ".bmp";
+  std::string sTexFile = sOutDir + "\\" + sTrackName + ".png";
   printf("Exporting ");
   printf(sTexFile.c_str());
   printf("...\n");
-  pTrack->m_pTex->ExportToBitmapFile(sTexFile);
-  std::string sSignTexFile = sOutDir + "\\" + sTrackName + "_BLD.bmp";
+  pTrack->m_pTex->ExportToPngFile(sTexFile);
+  std::string sSignTexFile = sOutDir + "\\" + sTrackName + "_BLD.png";
   printf("Exporting ");
   printf(sSignTexFile.c_str());
   printf("...\n");
-  pTrack->m_pBld->ExportToBitmapFile(sSignTexFile);
+  pTrack->m_pBld->ExportToPngFile(sSignTexFile);
 
   //setup
   pTrack->GenerateTrackMath();

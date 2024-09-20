@@ -94,7 +94,7 @@
       <PreprocessorDefinitions>WHIPLIB_LIB;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;IS_WINDOWS;K_PLUGIN;K_FBXSDK;K_NODLL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>.\;..\external\glew\include\GL;..\external\glm;..\external\FBX\include;CarPlans;SignPlans</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\external\glew\include\GL;..\external\glm;..\external\FBX\include;..\external\stb;CarPlans;SignPlans</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -118,7 +118,7 @@
       <PreprocessorDefinitions>WHIPLIB_DLL;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;IS_WINDOWS;K_PLUGIN;K_FBXSDK;K_NODLL;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>.\;..\external\glew\include\GL;..\external\glm;..\external\FBX\include;CarPlans;SignPlans</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\external\glew\include\GL;..\external\glm;..\external\FBX\include;..\external\stb;CarPlans;SignPlans</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -149,9 +149,10 @@ if %errorlevel% NEQ 0 goto Failed
 
 echo Copying License Files...
 echo f | xcopy ..\LICENSE.md ..\bin\WhipLib /R /Y /d /i &gt; null
-echo f | xcopy ..\external\glew\GLEW_License.txt ..\bin\WhipLib /R /Y /d /i &gt; null
+echo f | xcopy ..\external\glew\GLEW_License.txt ..\bin\WhipLib\GLEW_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glm\copying.txt ..\bin\WhipLib\GLM_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\FBX\FBX_LICENSE.rtf ..\bin\WhipLib\FBX_License.rtf /R /Y /d /i &gt; null
+echo f | xcopy ..\external\stb\LICENSE.txt ..\bin\WhipLib\STB_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\WhipLib_LicensedLibs.txt ..\bin\WhipLib\LicensedLibs.txt /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
@@ -172,7 +173,7 @@ exit 1</Command>
       <PreprocessorDefinitions>WHIPLIB_LIB;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;IS_WINDOWS;K_PLUGIN;K_FBXSDK;K_NODLL;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>.\;..\external\glew\include\GL;..\external\glm;..\external\FBX\include;CarPlans;SignPlans</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\external\glew\include\GL;..\external\glm;..\external\FBX\include;..\external\stb;CarPlans;SignPlans</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -200,7 +201,7 @@ exit 1</Command>
       <PreprocessorDefinitions>WHIPLIB_DLL;GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;GLM_ENABLE_EXPERIMENTAL;IS_WINDOWS;K_PLUGIN;K_FBXSDK;K_NODLL;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>.\;..\external\glew\include\GL;..\external\glm;..\external\FBX\include;CarPlans;SignPlans</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;..\external\glew\include\GL;..\external\glm;..\external\FBX\include;..\external\stb;CarPlans;SignPlans</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
@@ -233,9 +234,10 @@ if %errorlevel% NEQ 0 goto Failed
 
 echo Copying License Files...
 echo f | xcopy ..\LICENSE.md ..\bin\WhipLib /R /Y /d /i &gt; null
-echo f | xcopy ..\external\glew\GLEW_License.txt ..\bin\WhipLib /R /Y /d /i &gt; null
+echo f | xcopy ..\external\glew\GLEW_License.txt ..\bin\WhipLib\GLEW_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glm\copying.txt ..\bin\WhipLib\GLM_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\FBX\FBX_LICENSE.rtf ..\bin\WhipLib\FBX_License.rtf /R /Y /d /i &gt; null
+echo f | xcopy ..\external\stb\LICENSE.txt ..\bin\WhipLib\STB_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\WhipLib_LicensedLibs.txt ..\bin\WhipLib\LicensedLibs.txt /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 

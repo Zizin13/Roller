@@ -59,7 +59,7 @@ public:
                              tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight, bool bBack = false);
   glm::vec2 GetColorCenterCoordinates(uint32 uiColor);
   uint8 *GenerateBitmapData(int &iSize);
-  bool ExportToBitmapFile(const std::string &sFilename);
+  bool ExportToPngFile(const std::string &sFilename);
 
   tTile *m_pTileAy;
   int m_iNumTiles;

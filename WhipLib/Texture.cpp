@@ -137,8 +137,7 @@ void CTexture::Unbind() const
 //-------------------------------------------------------------------------------------------------
 
 void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
-                                     tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
-                                     bool bBack)
+                                     tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight)
 {
   if (!m_pPalette) {
     return;
@@ -154,22 +153,22 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
   uint32 uiTexIncVal = bPair ? 2 : 1;
 
   if (bApplyTexture) {
-    ApplyTexCoords(bBack ? topLeft.backTexCoords : topLeft.texCoords,
-                   bBack ? topRight.backTexCoords : topRight.texCoords,
-                   bBack ? bottomLeft.backTexCoords : bottomLeft.texCoords,
-                   bBack ? bottomRight.backTexCoords : bottomRight.texCoords,
+    ApplyTexCoords(topLeft.texCoords,
+                   topRight.texCoords,
+                   bottomLeft.texCoords,
+                   bottomRight.texCoords,
                    uiTexIndex, uiTexIncVal, bFlipHoriz, bFlipVert);
   } else if (bTransparent) {
-    ApplyTransparency(bBack ? topLeft.backTexCoords : topLeft.texCoords,
-                      bBack ? topRight.backTexCoords : topRight.texCoords,
-                      bBack ? bottomLeft.backTexCoords : bottomLeft.texCoords,
-                      bBack ? bottomRight.backTexCoords : bottomRight.texCoords,
+    ApplyTransparency(topLeft.texCoords,
+                      topRight.texCoords,
+                      bottomLeft.texCoords,
+                      bottomRight.texCoords,
                       uiTexIndex);
   } else {
-    ApplyColor(bBack ? topLeft.backTexCoords : topLeft.texCoords,
-               bBack ? topRight.backTexCoords : topRight.texCoords,
-               bBack ? bottomLeft.backTexCoords : bottomLeft.texCoords,
-               bBack ? bottomRight.backTexCoords : bottomRight.texCoords,
+    ApplyColor(topLeft.texCoords,
+               topRight.texCoords,
+               bottomLeft.texCoords,
+               bottomRight.texCoords,
                uiTexIndex);
   }
 }

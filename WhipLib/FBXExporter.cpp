@@ -290,7 +290,6 @@ void CFBXExporter::FlipTexCoordsForExport(tVertex *vertices, uint32 uiNumVerts)
 {
   for (uint32 i = 0; i < uiNumVerts; ++i) {
     vertices[i].texCoords.y = 1.0f - vertices[i].texCoords.y;
-    vertices[i].backTexCoords.y = 1.0f - vertices[i].backTexCoords.y;
   }
 }
 

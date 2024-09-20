@@ -1,7 +1,6 @@
 #version 430
 
 in vec2 vtfTexCoords;
-in vec2 vtfBackTexCoords;
 in vec3 vtfNormalModel;
 in vec3 vtfNormalWorld;
 in vec3 vtfVertexPositionWorld;
@@ -16,9 +15,5 @@ void main()
   vec3 eyeVectorWorld = normalize(eyePositionWorld - vtfVertexPositionWorld);
   float s = dot(vtfNormalWorld, eyeVectorWorld);
 
-  if (s > 0 || vtfNormalModel == vec3(0, 0, 0)) {
-    daColor = texture(textureSlot, vtfTexCoords);
-  } else {
-    daColor = texture(textureSlot, vtfBackTexCoords);
-  }
+  daColor = texture(textureSlot, vtfTexCoords);
 }

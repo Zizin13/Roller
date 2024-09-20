@@ -56,7 +56,7 @@ public:
   void Bind(uint32 uiSlot = 0) const;
   void Unbind() const;
   void GetTextureCoordinates(uint32 uiSurfaceType,
-                             tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight, bool bBack = false);
+                             tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight);
   glm::vec2 GetColorCenterCoordinates(uint32 uiColor);
   uint8 *GenerateBitmapData(int &iSize);
   bool ExportToPngFile(const std::string &sFilename);

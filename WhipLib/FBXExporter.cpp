@@ -18,10 +18,6 @@ FbxManager *g_pFbxManager = NULL;
 
 //-------------------------------------------------------------------------------------------------
 
-typedef std::map<std::string, int> CColorMaterialMap; //map of color to material index
-
-//-------------------------------------------------------------------------------------------------
-
 CFBXExporter &CFBXExporter::GetFBXExporter()
 {
   static CFBXExporter s_fbxExporter;
@@ -177,26 +173,11 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
   pMaterialElement->SetMappingMode(FbxGeometryElement::eByPolygon);
   pMaterialElement->SetReferenceMode(FbxGeometryElement::eIndexToDirect);
   pMaterialElement->GetIndexArray().SetCount(iNumPols);
-  std::vector<FbxSurfacePhong *> addedMaterials;
-  CColorMaterialMap colorMaterialMap;
 
   //create polygons and materials
   FbxSurfacePhong *pTextureMaterial = CreateTextureMaterial(szTextureFile, pScene);
-  addedMaterials.push_back(pTextureMaterial);
   for (int i = 0; i < iNumPols; ++i) {
     pMesh->BeginPolygon();
-
-    //need to add materials for solid color polygons
-    if (pShapeData->m_vertices[pShapeData->m_indices[i * 3]].byUseColor == 1) {
-      glm::vec4 color = pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color;
-      CColorMaterialMap::iterator it = colorMaterialMap.find(GetColorString(color));
-      if (it == colorMaterialMap.end()) { //only add new material if it's a new color
-        FbxSurfacePhong *pNewMaterial = CreateColorMaterial(color, pScene);
-        colorMaterialMap[GetColorString(color)] = (int)addedMaterials.size();
-        addedMaterials.push_back(pNewMaterial);
-      }
-    }
-
     //create polygon from indices
     for (int j = 0; j < 3; ++j) {
       pMesh->AddPolygon(pShapeData->m_indices[i * 3 + j]);
@@ -224,43 +205,15 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
   pNode->SetShadingMode(FbxNode::eTextureShading);
 
   //add materials to mesh
-  for (int i = 0; i < (int)addedMaterials.size(); ++i) {
-    pNode->AddMaterial(addedMaterials[i]);
-  }
+  pNode->AddMaterial(pTextureMaterial);
 
   //assign materials to polygons
   for (int i = 0; i < iNumPols; ++i) {
-    if (pShapeData->m_vertices[pShapeData->m_indices[i * 3]].byUseColor == 1) {
-      //polygon is solid color
-      glm::vec4 color = pShapeData->m_vertices[pShapeData->m_indices[i * 3]].color;
-      CColorMaterialMap::iterator it = colorMaterialMap.find(GetColorString(color));
-      if (it != colorMaterialMap.end()) {
-        pMaterialElement->GetIndexArray().SetAt(i, it->second);
-      } else {
-        assert(0); //color should have been added
-      }
-    } else {
-      //texture is always the first material added
-      pMaterialElement->GetIndexArray().SetAt(i, 0);
-    }
+    //texture is always the first material added
+    pMaterialElement->GetIndexArray().SetAt(i, 0);
   }
 
   return pNode;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-FbxSurfacePhong *CFBXExporter::CreateColorMaterial(const glm::vec4 &color, FbxScene *pScene)
-{
-  FbxSurfacePhong *pMaterial;
-
-  std::string sName = "Color: " + GetColorString(color);
-  FbxDouble4 diffuseColor(color.r, color.g, color.b, color.a);
-  pMaterial = FbxSurfacePhong::Create(pScene, sName.c_str());
-  pMaterial->Diffuse.Set(diffuseColor);
-  pMaterial->TransparencyFactor.Set(color.a);
-
-  return pMaterial;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -329,16 +282,6 @@ FbxFileTexture *CFBXExporter::CreateFileTexture(const char *szTextureFile, FbxSc
   pFileTexture->SetRotation(0.0, 0.0);
 
   return pFileTexture;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-std::string CFBXExporter::GetColorString(const glm::vec4 &color)
-{
-  return "(" + std::to_string(color.r) +
-    "," + std::to_string(color.g) +
-    "," + std::to_string(color.b) + 
-    "," + std::to_string(color.a) + ")";
 }
 
 //-------------------------------------------------------------------------------------------------

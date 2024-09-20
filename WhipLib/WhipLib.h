@@ -29,11 +29,6 @@ struct tWhiplashVertex
     , fNormalX(0.0f)
     , fNormalY(0.0f)
     , fNormalZ(0.0f)
-    , fColorR(0.0f)
-    , fColorB(0.0f)
-    , fColorG(0.0f)
-    , fColorA(0.0f)
-    , bUseColor(false)
   {};
 
   float fX;
@@ -42,11 +37,6 @@ struct tWhiplashVertex
   float fNormalX;
   float fNormalY;
   float fNormalZ;
-  float fColorR;
-  float fColorB;
-  float fColorG;
-  float fColorA;
-  bool bUseColor;
 };
 
 //-------------------------------------------------------------------------------------------------

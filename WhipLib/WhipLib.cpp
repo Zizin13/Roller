@@ -100,11 +100,6 @@ WLFUNC bool wlGetModel(uint8 *pBmpBuf,
       pVertexBuf[i].fNormalX = pShape->m_vertices[i].normal.x;
       pVertexBuf[i].fNormalY = pShape->m_vertices[i].normal.y;
       pVertexBuf[i].fNormalZ = pShape->m_vertices[i].normal.z;
-      pVertexBuf[i].fColorR = pShape->m_vertices[i].color.r;
-      pVertexBuf[i].fColorB = pShape->m_vertices[i].color.b;
-      pVertexBuf[i].fColorG = pShape->m_vertices[i].color.g;
-      pVertexBuf[i].fColorA = pShape->m_vertices[i].color.a;
-      pVertexBuf[i].bUseColor = pShape->m_vertices[i].byUseColor == 1;
     }
     for (int i = 0; i < (int)pShape->m_uiNumIndices; ++i) {
       pIndexBuf[i] = pShape->m_indices[i];

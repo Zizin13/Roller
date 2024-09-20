@@ -1,10 +1,7 @@
 #version 430
 
-in vec4 vtfColor;
 in vec2 vtfTexCoords;
-in vec4 vtfBackColor;
 in vec2 vtfBackTexCoords;
-in vec4 vtfFlags;
 in vec3 vtfNormalModel;
 in vec3 vtfNormalWorld;
 in vec3 vtfVertexPositionWorld;
@@ -20,16 +17,8 @@ void main()
   float s = dot(vtfNormalWorld, eyeVectorWorld);
 
   if (s > 0 || vtfNormalModel == vec3(0, 0, 0)) {
-    if (vtfFlags.x != 0) { //byUseColor
-      daColor = vtfColor;
-    } else {
-      daColor = texture(textureSlot, vtfTexCoords);
-    }
+    daColor = texture(textureSlot, vtfTexCoords);
   } else {
-    if (vtfFlags.y != 0) { //byBackUseColor
-      daColor = vtfBackColor;
-    } else {
-      daColor = texture(textureSlot, vtfBackTexCoords);
-    }
+    daColor = texture(textureSlot, vtfBackTexCoords);
   }
 }

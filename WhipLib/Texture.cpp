@@ -16,6 +16,10 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
+#define NUM_TRANSPARENT_TILES 5
+
+//-------------------------------------------------------------------------------------------------
+
 CTexture::CTexture()
   : m_uiId(0)
   , m_iNumTiles(0)
@@ -170,7 +174,7 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
 
 glm::vec2 CTexture::GetColorCenterCoordinates(uint32 uiColor)
 {
-  int iPaletteIndex = m_iNumTiles - (int)m_pPalette->m_paletteAy.size();
+  int iPaletteIndex = m_iNumTiles - (int)m_pPalette->m_paletteAy.size() - NUM_TRANSPARENT_TILES;
   iPaletteIndex += (int)uiColor;
   return glm::vec2(0.5f, (float)iPaletteIndex / (float)m_iNumTiles + 0.5f / (float)m_iNumTiles);
 }
@@ -277,7 +281,7 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length)
 
   int iPixelsPerTile = TILE_WIDTH * TILE_HEIGHT;
   int iNumTexTiles = (int)length / iPixelsPerTile;
-  m_iNumTiles = iNumTexTiles + (int)m_pPalette->m_paletteAy.size();
+  m_iNumTiles = iNumTexTiles + (int)m_pPalette->m_paletteAy.size() + NUM_TRANSPARENT_TILES;
   m_pTileAy = new tTile[m_iNumTiles];
   for (int i = 0; i < iNumTexTiles; ++i) {
     tTile *pTile = &m_pTileAy[i];
@@ -297,7 +301,7 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length)
   }
 
   //generate palette tiles
-  for (int i = iNumTexTiles; i < m_iNumTiles; ++i) {
+  for (int i = iNumTexTiles; i < iNumTexTiles + (int)m_pPalette->m_paletteAy.size(); ++i) {
     tTile *pTile = &m_pTileAy[i];
     for (int j = 0; j < iPixelsPerTile; ++j) {
       if (m_pPalette->m_paletteAy.size() > (i - iNumTexTiles)) {
@@ -305,9 +309,37 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length)
                                                                          m_pPalette->m_paletteAy[i - iNumTexTiles].g,
                                                                          m_pPalette->m_paletteAy[i - iNumTexTiles].b,
                                                                          255);
-      } else {
-        pTile->data[j % TILE_WIDTH][j / TILE_WIDTH] = glm::vec<4, uint8>(0, 0, 0, 0);
       }
+    }
+  }
+
+  //generate transparent color tiles
+  for (int i = iNumTexTiles + (int)m_pPalette->m_paletteAy.size(); i < m_iNumTiles; ++i) {
+    glm::vec<4, uint8> color;
+    switch (i - iNumTexTiles - (int)m_pPalette->m_paletteAy.size()) {
+    case 0:
+      color = glm::vec<4, uint8>(0, 0, 0, 255);
+      break;
+    case 1:
+      color = glm::vec<4, uint8>(0, 0, 0, 64);
+      break;
+    case 2:
+      color = glm::vec<4, uint8>(0, 0, 0, 128);
+      break;
+    case 3:
+      color = glm::vec<4, uint8>(0, 0, 0, 192);
+      break;
+    case 4:
+      color = glm::vec<4, uint8>(0, 0, 255, 64);
+      break;
+    }
+
+    tTile *pTile = &m_pTileAy[i];
+    for (int j = 0; j < iPixelsPerTile; ++j) {
+      pTile->data[j % TILE_WIDTH][j / TILE_WIDTH] = glm::vec<4, uint8>(color.r,
+                                                                       color.g,
+                                                                       color.b,
+                                                                       color.a);
     }
   }
 
@@ -376,7 +408,7 @@ void CTexture::ApplyColor(glm::vec2 &topLeft,
                           glm::vec2 &bottomRight,
                           uint32 uiTexIndex)
 {
-  int iPaletteIndex = m_iNumTiles - (int)m_pPalette->m_paletteAy.size();
+  int iPaletteIndex = m_iNumTiles - (int)m_pPalette->m_paletteAy.size() - NUM_TRANSPARENT_TILES;
   iPaletteIndex += (int)uiTexIndex;
   topLeft = glm::vec2(1.0f, (float)iPaletteIndex / (float)m_iNumTiles);
   topRight = glm::vec2(1.0f, (float)(iPaletteIndex + 1) / (float)m_iNumTiles);
@@ -392,30 +424,12 @@ void CTexture::ApplyTransparency(glm::vec2 &topLeft,
                                  glm::vec2 &bottomRight,
                                  uint32 uiTexIndex)
 {
-  uint32 uiColorIndex = 0; //black
-  float fAlpha = 1.0f;
-  switch (uiTexIndex) {
-    case 0:
-      break;
-    case 1:
-      fAlpha = 0.25f;
-      break;
-    case 2:
-      fAlpha = 0.5f;
-      break;
-    case 3:
-      fAlpha = 0.75f;
-      break;
-    case 4:
-      fAlpha = 0.25f;
-      uiColorIndex = 0xF4; //blue
-      break;
-  }
-  ApplyColor(topLeft,
-             topRight,
-             bottomLeft,
-             bottomRight,
-             uiColorIndex);
+  int iTransparencyIndex = m_iNumTiles - NUM_TRANSPARENT_TILES;
+  iTransparencyIndex += (int)uiTexIndex;
+  topLeft = glm::vec2(1.0f, (float)iTransparencyIndex / (float)m_iNumTiles);
+  topRight = glm::vec2(1.0f, (float)(iTransparencyIndex + 1) / (float)m_iNumTiles);
+  bottomLeft = glm::vec2(0.0f, (float)iTransparencyIndex / (float)m_iNumTiles);
+  bottomRight = glm::vec2(0.0f, (float)(iTransparencyIndex + 1) / (float)m_iNumTiles);
 }
 
 //-------------------------------------------------------------------------------------------------

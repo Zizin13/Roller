@@ -157,10 +157,19 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
     ApplyTransparency(bottomLeft, uiTexIndex, bBack);
     ApplyTransparency(bottomRight, uiTexIndex, bBack);
   } else {
-    ApplyColor(topLeft, uiTexIndex, bBack);
-    ApplyColor(topRight, uiTexIndex, bBack);
-    ApplyColor(bottomLeft, uiTexIndex, bBack);
-    ApplyColor(bottomRight, uiTexIndex, bBack);
+    int iPaletteIndex = m_iNumTiles - (int)m_pPalette->m_paletteAy.size();
+    iPaletteIndex += (int)uiTexIndex;
+    if (!bBack) {
+      topLeft.texCoords     = glm::vec2(1.0f, (float)iPaletteIndex / (float)m_iNumTiles);
+      topRight.texCoords    = glm::vec2(1.0f, (float)(iPaletteIndex + 1) / (float)m_iNumTiles);
+      bottomLeft.texCoords  = glm::vec2(0.0f, (float)iPaletteIndex / (float)m_iNumTiles);
+      bottomRight.texCoords = glm::vec2(0.0f, (float)(iPaletteIndex + 1) / (float)m_iNumTiles);
+    } else {
+      topLeft.backTexCoords     = glm::vec2(1.0f, (float)iPaletteIndex / (float)m_iNumTiles);
+      topRight.backTexCoords    = glm::vec2(1.0f, (float)(iPaletteIndex + 1) / (float)m_iNumTiles);
+      bottomLeft.backTexCoords  = glm::vec2(0.0f, (float)iPaletteIndex / (float)m_iNumTiles);
+      bottomRight.backTexCoords = glm::vec2(0.0f, (float)(iPaletteIndex + 1) / (float)m_iNumTiles);
+    }
   }
 }
 
@@ -265,9 +274,10 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length)
   }
 
   int iPixelsPerTile = TILE_WIDTH * TILE_HEIGHT;
-  m_iNumTiles = (int)length / iPixelsPerTile;
+  int iNumTexTiles = (int)length / iPixelsPerTile;
+  m_iNumTiles = iNumTexTiles + (int)m_pPalette->m_paletteAy.size();
   m_pTileAy = new tTile[m_iNumTiles];
-  for (int i = 0; i < m_iNumTiles; ++i) {
+  for (int i = 0; i < iNumTexTiles; ++i) {
     tTile *pTile = &m_pTileAy[i];
     for (int j = 0; j < iPixelsPerTile; ++j) {
       uint8 byPaletteIndex = pData[i * iPixelsPerTile + j];
@@ -280,6 +290,21 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length)
         assert(0);
         Logging::LogMessage("Error loading texture: palette index out of bounds");
         return false;
+      }
+    }
+  }
+
+  //generate palette tiles
+  for (int i = iNumTexTiles; i < m_iNumTiles; ++i) {
+    tTile *pTile = &m_pTileAy[i];
+    for (int j = 0; j < iPixelsPerTile; ++j) {
+      if (m_pPalette->m_paletteAy.size() > (i - iNumTexTiles)) {
+        pTile->data[j % TILE_WIDTH][j / TILE_WIDTH] = glm::vec<4, uint8>(m_pPalette->m_paletteAy[i - iNumTexTiles].r,
+                                                                         m_pPalette->m_paletteAy[i - iNumTexTiles].g,
+                                                                         m_pPalette->m_paletteAy[i - iNumTexTiles].b,
+                                                                         255);
+      } else {
+        pTile->data[j % TILE_WIDTH][j / TILE_WIDTH] = glm::vec<4, uint8>(0, 0, 0, 0);
       }
     }
   }
@@ -342,27 +367,6 @@ void CTexture::ApplyTransparency(tVertex &vertex, uint32 uiTexIndex, bool bBack)
     vertex.backColor = color;
   }
 
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTexture::ApplyColor(tVertex &vertex, uint32 uiTexIndex, bool bBack)
-{
-  if (!bBack) {
-    //use color
-    vertex.byUseColor = 1;
-    //color
-    if (uiTexIndex < m_pPalette->m_paletteAy.size()) {
-      vertex.color = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
-    }
-  } else {
-    //use color
-    vertex.byBackUseColor = 1;
-    //color
-    if (uiTexIndex < m_pPalette->m_paletteAy.size()) {
-      vertex.backColor = ColorBytesToFloat(m_pPalette->m_paletteAy[uiTexIndex]);
-    }
-  }
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -70,7 +70,6 @@ private:
   bool ProcessTextureData(const uint8 *pData, size_t length);
   void FlipTileLines(tTile *pSource, tTile *pDest, int iNumTiles);
   void ApplyTransparency(tVertex &vertex, uint32 uiTexIndex, bool bBack);
-  void ApplyColor(tVertex &vertex, uint32 uiTexIndex, bool bBack);
   void ApplyTexCoords(glm::vec2 &topLeft,
                       glm::vec2 &topRight,
                       glm::vec2 &bottomLeft,

@@ -140,51 +140,51 @@ int main(int argc, char *argv[])
   CShapeFactory::GetShapeFactory().m_bOglRunning = false;
 
   //export cars
-  ExportCar(CAR_F1WACK, sWhipDir, sOutDir);
-  ExportCar(CAR_XAUTO, sWhipDir, sOutDir);
-  ExportCar(CAR_XDESILVA, sWhipDir, sOutDir);
-  ExportCar(CAR_XPULSE, sWhipDir, sOutDir);
-  ExportCar(CAR_XGLOBAL, sWhipDir, sOutDir);
-  ExportCar(CAR_XMILLION, sWhipDir, sOutDir);
-  ExportCar(CAR_XMISSION, sWhipDir, sOutDir);
-  ExportCar(CAR_XZIZIN, sWhipDir, sOutDir);
-  ExportCar(CAR_XREISE, sWhipDir, sOutDir);
-  ExportCar(CAR_YAUTO, sWhipDir, sOutDir);
-  ExportCar(CAR_YDESILVA, sWhipDir, sOutDir);
-  ExportCar(CAR_YPULSE, sWhipDir, sOutDir);
-  ExportCar(CAR_YGLOBAL, sWhipDir, sOutDir);
-  ExportCar(CAR_YMILLION, sWhipDir, sOutDir);
-  ExportCar(CAR_YMISSION, sWhipDir, sOutDir);
+  //ExportCar(CAR_F1WACK, sWhipDir, sOutDir);
+  //ExportCar(CAR_XAUTO, sWhipDir, sOutDir);
+  //ExportCar(CAR_XDESILVA, sWhipDir, sOutDir);
+  //ExportCar(CAR_XPULSE, sWhipDir, sOutDir);
+  //ExportCar(CAR_XGLOBAL, sWhipDir, sOutDir);
+  //ExportCar(CAR_XMILLION, sWhipDir, sOutDir);
+  //ExportCar(CAR_XMISSION, sWhipDir, sOutDir);
+  //ExportCar(CAR_XZIZIN, sWhipDir, sOutDir);
+  //ExportCar(CAR_XREISE, sWhipDir, sOutDir);
+  //ExportCar(CAR_YAUTO, sWhipDir, sOutDir);
+  //ExportCar(CAR_YDESILVA, sWhipDir, sOutDir);
+  //ExportCar(CAR_YPULSE, sWhipDir, sOutDir);
+  //ExportCar(CAR_YGLOBAL, sWhipDir, sOutDir);
+  //ExportCar(CAR_YMILLION, sWhipDir, sOutDir);
+  //ExportCar(CAR_YMISSION, sWhipDir, sOutDir);
   ExportCar(CAR_YZIZIN, sWhipDir, sOutDir);
-  ExportCar(CAR_YREISE, sWhipDir, sOutDir);
-  ExportCar(CAR_DEATH, sWhipDir, sOutDir);
+  //ExportCar(CAR_YREISE, sWhipDir, sOutDir);
+  //ExportCar(CAR_DEATH, sWhipDir, sOutDir);
 
   //load all tracks in dir
-  std::vector<CTrack *> trackAy;
-  for (const auto &entry : std::filesystem::directory_iterator(sWhipDir)) {
-    std::string sEntry = entry.path().string();
-    size_t pos = sEntry.find_last_of('.');
-    if (pos != std::string::npos) {
-      std::string sExtension = sEntry.substr(pos, sEntry.size() - pos);
-      if (sExtension.compare(".TRK") == 0) {
-        CTrack *pNewTrack = new CTrack();
-        printf("Loading %s ", sEntry.c_str());
-        if (pNewTrack->LoadTrack(sEntry) && pNewTrack->LoadTextures()) {
-          printf("success\n");
-          trackAy.push_back(pNewTrack);
-        } else {
-          printf("failure\n");
-          delete pNewTrack;
-        }
-      }
-    }
-  }
-  //export tracks
-  for (std::vector<CTrack *>::iterator it = trackAy.begin(); it != trackAy.end(); ++it) {
-    CTrack *pTrack = *it;
-    ExportTrack(pTrack, sOutDir);
-    delete pTrack;
-  }
+  //std::vector<CTrack *> trackAy;
+  //for (const auto &entry : std::filesystem::directory_iterator(sWhipDir)) {
+  //  std::string sEntry = entry.path().string();
+  //  size_t pos = sEntry.find_last_of('.');
+  //  if (pos != std::string::npos) {
+  //    std::string sExtension = sEntry.substr(pos, sEntry.size() - pos);
+  //    if (sExtension.compare(".TRK") == 0) {
+  //      CTrack *pNewTrack = new CTrack();
+  //      printf("Loading %s ", sEntry.c_str());
+  //      if (pNewTrack->LoadTrack(sEntry) && pNewTrack->LoadTextures()) {
+  //        printf("success\n");
+  //        trackAy.push_back(pNewTrack);
+  //      } else {
+  //        printf("failure\n");
+  //        delete pNewTrack;
+  //      }
+  //    }
+  //  }
+  //}
+  ////export tracks
+  //for (std::vector<CTrack *>::iterator it = trackAy.begin(); it != trackAy.end(); ++it) {
+  //  CTrack *pTrack = *it;
+  //  ExportTrack(pTrack, sOutDir);
+  //  delete pTrack;
+  //}
 
   //exit
   return 0;

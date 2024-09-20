@@ -19,6 +19,7 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
+#define NUM_PALETTE_TILES 1
 #define NUM_TRANSPARENT_TILES 5
 
 //-------------------------------------------------------------------------------------------------
@@ -177,9 +178,12 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
 
 glm::vec2 CTexture::GetColorCenterCoordinates(uint32 uiColor)
 {
-  int iPaletteIndex = m_iNumTiles - (int)m_pPalette->m_paletteAy.size() - NUM_TRANSPARENT_TILES;
-  iPaletteIndex += (int)uiColor;
-  return glm::vec2(0.5f, (float)iPaletteIndex / (float)m_iNumTiles + 0.5f / (float)m_iNumTiles);
+  int iPaletteIndex = m_iNumTiles - NUM_PALETTE_TILES - NUM_TRANSPARENT_TILES;
+
+  int iPaletteX = uiColor / 16;
+  int iPaletteY = uiColor % 16;
+
+  return glm::vec2(1.0f - (float)(iPaletteX * 4 + 1) / TILE_WIDTH, ((float)iPaletteIndex * TILE_HEIGHT + iPaletteY * 4 + 1) / (float)(m_iNumTiles * TILE_HEIGHT));
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -255,7 +259,7 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length)
 
   int iPixelsPerTile = TILE_WIDTH * TILE_HEIGHT;
   int iNumTexTiles = (int)length / iPixelsPerTile;
-  m_iNumTiles = iNumTexTiles + (int)m_pPalette->m_paletteAy.size() + NUM_TRANSPARENT_TILES;
+  m_iNumTiles = iNumTexTiles + NUM_PALETTE_TILES + NUM_TRANSPARENT_TILES;
   m_pTileAy = new tTile[m_iNumTiles];
   for (int i = 0; i < iNumTexTiles; ++i) {
     tTile *pTile = &m_pTileAy[i];
@@ -274,23 +278,31 @@ bool CTexture::ProcessTextureData(const uint8 *pData, size_t length)
     }
   }
 
-  //generate palette tiles
-  for (int i = iNumTexTiles; i < iNumTexTiles + (int)m_pPalette->m_paletteAy.size(); ++i) {
-    tTile *pTile = &m_pTileAy[i];
-    for (int j = 0; j < iPixelsPerTile; ++j) {
-      if (m_pPalette->m_paletteAy.size() > (i - iNumTexTiles)) {
-        pTile->data[j % TILE_WIDTH][j / TILE_WIDTH] = glm::vec<4, uint8>(m_pPalette->m_paletteAy[i - iNumTexTiles].r,
-                                                                         m_pPalette->m_paletteAy[i - iNumTexTiles].g,
-                                                                         m_pPalette->m_paletteAy[i - iNumTexTiles].b,
-                                                                         255);
+  //generate palette tile
+  tTile *pPaletteTile = &m_pTileAy[iNumTexTiles];
+  int iRunner = 0;
+  for (int i = 0; i < 16; ++i) {
+    for (int j = 0; j < 16; ++j) {
+      for (int k = 0; k < 16; ++k) {
+        int iPixelNum = iRunner++;
+        int iTileX = iPixelNum % TILE_WIDTH;
+        int iTileY = iPixelNum / TILE_WIDTH;
+        int iPaletteIndex = iTileX / 4 + i * 16;
+        if ((int)m_pPalette->m_paletteAy.size() > iPaletteIndex) {
+          pPaletteTile->data[iTileX][iTileY] =
+            glm::vec<4, uint8>(m_pPalette->m_paletteAy[iPaletteIndex].r,
+                               m_pPalette->m_paletteAy[iPaletteIndex].g,
+                               m_pPalette->m_paletteAy[iPaletteIndex].b,
+                               255);
+        }
       }
     }
   }
 
   //generate transparent color tiles
-  for (int i = iNumTexTiles + (int)m_pPalette->m_paletteAy.size(); i < m_iNumTiles; ++i) {
+  for (int i = iNumTexTiles + NUM_PALETTE_TILES; i < m_iNumTiles; ++i) {
     glm::vec<4, uint8> color;
-    switch (i - iNumTexTiles - (int)m_pPalette->m_paletteAy.size()) {
+    switch (i - iNumTexTiles - NUM_PALETTE_TILES) {
     case 0:
       color = glm::vec<4, uint8>(0, 0, 0, 255);
       break;
@@ -382,12 +394,15 @@ void CTexture::ApplyColor(glm::vec2 &topLeft,
                           glm::vec2 &bottomRight,
                           uint32 uiTexIndex)
 {
-  int iPaletteIndex = m_iNumTiles - (int)m_pPalette->m_paletteAy.size() - NUM_TRANSPARENT_TILES;
-  iPaletteIndex += (int)uiTexIndex;
-  topLeft = glm::vec2(1.0f, (float)iPaletteIndex / (float)m_iNumTiles);
-  topRight = glm::vec2(1.0f, (float)(iPaletteIndex + 1) / (float)m_iNumTiles);
-  bottomLeft = glm::vec2(0.0f, (float)iPaletteIndex / (float)m_iNumTiles);
-  bottomRight = glm::vec2(0.0f, (float)(iPaletteIndex + 1) / (float)m_iNumTiles);
+  int iPaletteIndex = m_iNumTiles - NUM_PALETTE_TILES - NUM_TRANSPARENT_TILES;
+
+  int iPaletteX = uiTexIndex / 16;
+  int iPaletteY = uiTexIndex % 16;
+
+  topLeft     = glm::vec2(1.0f - (float)(iPaletteX * 4 + 1) / TILE_WIDTH, ((float)iPaletteIndex * TILE_HEIGHT + iPaletteY * 4 + 1) / (float)(m_iNumTiles * TILE_HEIGHT));
+  topRight    = glm::vec2(1.0f - (float)(iPaletteX * 4 + 1) / TILE_WIDTH, ((float)iPaletteIndex * TILE_HEIGHT + iPaletteY * 4 + 3) / (float)(m_iNumTiles * TILE_HEIGHT));
+  bottomLeft  = glm::vec2(1.0f - (float)(iPaletteX * 4 + 3) / TILE_WIDTH, ((float)iPaletteIndex * TILE_HEIGHT + iPaletteY * 4 + 1) / (float)(m_iNumTiles * TILE_HEIGHT));
+  bottomRight = glm::vec2(1.0f - (float)(iPaletteX * 4 + 3) / TILE_WIDTH, ((float)iPaletteIndex * TILE_HEIGHT + iPaletteY * 4 + 3) / (float)(m_iNumTiles * TILE_HEIGHT));
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -152,10 +152,10 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
                    bBack ? bottomRight.backTexCoords : bottomRight.texCoords,
                    uiTexIndex, uiTexIncVal, bFlipHoriz, bFlipVert);
   } else if (bTransparent) {
-    ApplyTransparency(topLeft,
-                      topRight,
-                      bottomLeft,
-                      bottomRight,
+    ApplyTransparency(bBack ? topLeft.backTexCoords : topLeft.texCoords,
+                      bBack ? topRight.backTexCoords : topRight.texCoords,
+                      bBack ? bottomLeft.backTexCoords : bottomLeft.texCoords,
+                      bBack ? bottomRight.backTexCoords : bottomRight.texCoords,
                       uiTexIndex);
   } else {
     ApplyColor(bBack ? topLeft.backTexCoords : topLeft.texCoords,
@@ -386,7 +386,10 @@ void CTexture::ApplyColor(glm::vec2 &topLeft,
 
 //-------------------------------------------------------------------------------------------------
 
-void CTexture::ApplyTransparency(tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight,
+void CTexture::ApplyTransparency(glm::vec2 &topLeft,
+                                 glm::vec2 &topRight,
+                                 glm::vec2 &bottomLeft,
+                                 glm::vec2 &bottomRight,
                                  uint32 uiTexIndex)
 {
   uint32 uiColorIndex = 0; //black
@@ -405,23 +408,14 @@ void CTexture::ApplyTransparency(tVertex &topLeft, tVertex &topRight, tVertex &b
       break;
     case 4:
       fAlpha = 0.25f;
-      uiColorIndex = 0xF3; //blue
+      uiColorIndex = 0xF4; //blue
       break;
   }
-  ApplyColor(topLeft.texCoords,
-             topRight.texCoords,
-             bottomLeft.texCoords,
-             bottomRight.texCoords,
+  ApplyColor(topLeft,
+             topRight,
+             bottomLeft,
+             bottomRight,
              uiColorIndex);
-  ApplyColor(topLeft.backTexCoords,
-             topRight.backTexCoords,
-             bottomLeft.backTexCoords,
-             bottomRight.backTexCoords,
-             uiColorIndex);
-  topLeft.fAlpha = fAlpha;
-  topRight.fAlpha = fAlpha;
-  bottomLeft.fAlpha = fAlpha;
-  bottomRight.fAlpha = fAlpha;
 }
 
 //-------------------------------------------------------------------------------------------------

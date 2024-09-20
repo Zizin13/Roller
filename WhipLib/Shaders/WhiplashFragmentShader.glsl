@@ -5,7 +5,6 @@ in vec2 vtfBackTexCoords;
 in vec3 vtfNormalModel;
 in vec3 vtfNormalWorld;
 in vec3 vtfVertexPositionWorld;
-in float vtfAlpha;
 
 out vec4 daColor;
 
@@ -22,5 +21,4 @@ void main()
   } else {
     daColor = texture(textureSlot, vtfBackTexCoords);
   }
-  daColor.a = vtfAlpha;
 }

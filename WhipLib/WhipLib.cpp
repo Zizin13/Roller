@@ -100,6 +100,8 @@ WLFUNC bool wlGetModel(uint8 *pBmpBuf,
       pVertexBuf[i].fNormalX = pShape->m_vertices[i].normal.x;
       pVertexBuf[i].fNormalY = pShape->m_vertices[i].normal.y;
       pVertexBuf[i].fNormalZ = pShape->m_vertices[i].normal.z;
+      pVertexBuf[i].fTexX = pShape->m_vertices[i].texCoords.x;
+      pVertexBuf[i].fTexY = pShape->m_vertices[i].texCoords.y;
     }
     for (int i = 0; i < (int)pShape->m_uiNumIndices; ++i) {
       pIndexBuf[i] = pShape->m_indices[i];

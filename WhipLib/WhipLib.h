@@ -29,6 +29,8 @@ struct tWhiplashVertex
     , fNormalX(0.0f)
     , fNormalY(0.0f)
     , fNormalZ(0.0f)
+    , fTexX(0.0f)
+    , fTexY(0.0f)
   {};
 
   float fX;
@@ -37,6 +39,8 @@ struct tWhiplashVertex
   float fNormalX;
   float fNormalY;
   float fNormalZ;
+  float fTexX;
+  float fTexY;
 };
 
 //-------------------------------------------------------------------------------------------------

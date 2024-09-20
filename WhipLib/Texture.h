@@ -69,13 +69,22 @@ public:
 private:
   bool ProcessTextureData(const uint8 *pData, size_t length);
   void FlipTileLines(tTile *pSource, tTile *pDest, int iNumTiles);
-  void ApplyTransparency(tVertex &vertex, uint32 uiTexIndex, bool bBack);
   void ApplyTexCoords(glm::vec2 &topLeft,
                       glm::vec2 &topRight,
                       glm::vec2 &bottomLeft,
                       glm::vec2 &bottomRight,
                       uint32 uiTexIndex, uint32 uiTexIncVal,
                       bool bFlipHoriz, bool bFlipVert);
+  void ApplyColor(glm::vec2 &topLeft,
+                  glm::vec2 &topRight,
+                  glm::vec2 &bottomLeft,
+                  glm::vec2 &bottomRight,
+                  uint32 uiTexIndex);
+  void ApplyTransparency(glm::vec2 &topLeft,
+                         glm::vec2 &topRight,
+                         glm::vec2 &bottomLeft,
+                         glm::vec2 &bottomRight,
+                         uint32 uiTexIndex);
 
   uint32 m_uiId;
   CPalette *m_pPalette; //not owned by this class

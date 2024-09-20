@@ -152,24 +152,17 @@ void CTexture::GetTextureCoordinates(uint32 uiSurfaceType,
                    bBack ? bottomRight.backTexCoords : bottomRight.texCoords,
                    uiTexIndex, uiTexIncVal, bFlipHoriz, bFlipVert);
   } else if (bTransparent) {
-    ApplyTransparency(topLeft, uiTexIndex, bBack);
-    ApplyTransparency(topRight, uiTexIndex, bBack);
-    ApplyTransparency(bottomLeft, uiTexIndex, bBack);
-    ApplyTransparency(bottomRight, uiTexIndex, bBack);
+    ApplyTransparency(bBack ? topLeft.backTexCoords : topLeft.texCoords,
+                      bBack ? topRight.backTexCoords : topRight.texCoords,
+                      bBack ? bottomLeft.backTexCoords : bottomLeft.texCoords,
+                      bBack ? bottomRight.backTexCoords : bottomRight.texCoords,
+                      uiTexIndex);
   } else {
-    int iPaletteIndex = m_iNumTiles - (int)m_pPalette->m_paletteAy.size();
-    iPaletteIndex += (int)uiTexIndex;
-    if (!bBack) {
-      topLeft.texCoords     = glm::vec2(1.0f, (float)iPaletteIndex / (float)m_iNumTiles);
-      topRight.texCoords    = glm::vec2(1.0f, (float)(iPaletteIndex + 1) / (float)m_iNumTiles);
-      bottomLeft.texCoords  = glm::vec2(0.0f, (float)iPaletteIndex / (float)m_iNumTiles);
-      bottomRight.texCoords = glm::vec2(0.0f, (float)(iPaletteIndex + 1) / (float)m_iNumTiles);
-    } else {
-      topLeft.backTexCoords     = glm::vec2(1.0f, (float)iPaletteIndex / (float)m_iNumTiles);
-      topRight.backTexCoords    = glm::vec2(1.0f, (float)(iPaletteIndex + 1) / (float)m_iNumTiles);
-      bottomLeft.backTexCoords  = glm::vec2(0.0f, (float)iPaletteIndex / (float)m_iNumTiles);
-      bottomRight.backTexCoords = glm::vec2(0.0f, (float)(iPaletteIndex + 1) / (float)m_iNumTiles);
-    }
+    ApplyColor(bBack ? topLeft.backTexCoords : topLeft.texCoords,
+               bBack ? topRight.backTexCoords : topRight.texCoords,
+               bBack ? bottomLeft.backTexCoords : bottomLeft.texCoords,
+               bBack ? bottomRight.backTexCoords : bottomRight.texCoords,
+               uiTexIndex);
   }
 }
 
@@ -336,41 +329,6 @@ void CTexture::FlipTileLines(tTile *pSource, tTile *pDest, int iNumTiles)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTexture::ApplyTransparency(tVertex &vertex, uint32 uiTexIndex, bool bBack)
-{
-  glm::vec4 color = glm::vec4(0, 0, 0, 1);
-  switch (uiTexIndex) {
-    case 0:
-      break;
-    case 1:
-      color.a = 0.25f;
-      break;
-    case 2:
-      color.a = 0.5f;
-      break;
-    case 3:
-      color.a = 0.75f;
-      break;
-    case 4:
-      color = glm::vec4(0, 0, 1, 0.25f);
-      break;
-  }
-  if (!bBack) {
-    //use color
-    vertex.byUseColor = 1;
-    //color
-    vertex.color = color;
-  } else {
-    //use color
-    vertex.byBackUseColor = 1;
-    //color
-    vertex.backColor = color;
-  }
-
-}
-
-//-------------------------------------------------------------------------------------------------
-
 void CTexture::ApplyTexCoords(glm::vec2 &topLeft,
                               glm::vec2 &topRight,
                               glm::vec2 &bottomLeft,
@@ -399,6 +357,56 @@ void CTexture::ApplyTexCoords(glm::vec2 &topLeft,
     bottomLeft = glm::vec2(1.0f, (float)(uiTexIndex + uiTexIncVal) / (float)m_iNumTiles);
     bottomRight = glm::vec2(1.0f, (float)uiTexIndex / (float)m_iNumTiles);
   }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTexture::ApplyColor(glm::vec2 &topLeft,
+                          glm::vec2 &topRight,
+                          glm::vec2 &bottomLeft,
+                          glm::vec2 &bottomRight,
+                          uint32 uiTexIndex)
+{
+  int iPaletteIndex = m_iNumTiles - (int)m_pPalette->m_paletteAy.size();
+  iPaletteIndex += (int)uiTexIndex;
+  topLeft = glm::vec2(1.0f, (float)iPaletteIndex / (float)m_iNumTiles);
+  topRight = glm::vec2(1.0f, (float)(iPaletteIndex + 1) / (float)m_iNumTiles);
+  bottomLeft = glm::vec2(0.0f, (float)iPaletteIndex / (float)m_iNumTiles);
+  bottomRight = glm::vec2(0.0f, (float)(iPaletteIndex + 1) / (float)m_iNumTiles);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTexture::ApplyTransparency(glm::vec2 &topLeft,
+                                 glm::vec2 &topRight,
+                                 glm::vec2 &bottomLeft,
+                                 glm::vec2 &bottomRight,
+                                 uint32 uiTexIndex)
+{
+  uint32 uiColorIndex = 0; //black
+  float fAlpha = 1.0f;
+  switch (uiTexIndex) {
+    case 0:
+      break;
+    case 1:
+      fAlpha = 0.25f;
+      break;
+    case 2:
+      fAlpha = 0.5f;
+      break;
+    case 3:
+      fAlpha = 0.75f;
+      break;
+    case 4:
+      fAlpha = 0.25f;
+      uiColorIndex = 0xF4; //blue
+      break;
+  }
+  ApplyColor(topLeft,
+             topRight,
+             bottomLeft,
+             bottomRight,
+             uiColorIndex);
 }
 
 //-------------------------------------------------------------------------------------------------

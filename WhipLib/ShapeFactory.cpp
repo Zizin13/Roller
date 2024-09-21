@@ -298,7 +298,7 @@ CShapeData *CShapeFactory::MakeAudioMarker(CShader *pShader, CTexture *pTexture)
 
 tVertex *CShapeFactory::MakeVertsAudioMarker(uint32 &uiNumVerts, CTexture *pTexture)
 {
-  uiNumVerts = 6;
+  uiNumVerts = 12;
   tVertex *vertices = new tVertex[uiNumVerts];
 
   vertices[0].position = glm::vec3(  +0.0f,   +0.0f, +0.0f);
@@ -314,6 +314,19 @@ tVertex *CShapeFactory::MakeVertsAudioMarker(uint32 &uiNumVerts, CTexture *pText
   vertices[4].texCoords = pTexture->GetColorCenterCoordinates(0x8f);
   vertices[5].texCoords = pTexture->GetColorCenterCoordinates(0x8f);
 
+  vertices[0 + 6].position = glm::vec3(+0.0f, +0.0f, +0.0f);
+  vertices[1 + 6].position = glm::vec3(+500.0f, +0.0f, +0.0f);
+  vertices[2 + 6].position = glm::vec3(+500.0f, +500.0f, +0.0f);
+  vertices[3 + 6].position = glm::vec3(+0.0f, +500.0f, +0.0f);
+  vertices[4 + 6].position = glm::vec3(-500.0f, +800.0f, +0.0f);
+  vertices[5 + 6].position = glm::vec3(-500.0f, -300.0f, +0.0f);
+  vertices[0 + 6].texCoords = pTexture->GetColorCenterCoordinates(0x8f);
+  vertices[1 + 6].texCoords = pTexture->GetColorCenterCoordinates(0x8f);
+  vertices[2 + 6].texCoords = pTexture->GetColorCenterCoordinates(0x8f);
+  vertices[3 + 6].texCoords = pTexture->GetColorCenterCoordinates(0x8f);
+  vertices[4 + 6].texCoords = pTexture->GetColorCenterCoordinates(0x8f);
+  vertices[5 + 6].texCoords = pTexture->GetColorCenterCoordinates(0x8f);
+
   return vertices;
 }
 
@@ -321,7 +334,7 @@ tVertex *CShapeFactory::MakeVertsAudioMarker(uint32 &uiNumVerts, CTexture *pText
 
 uint32 *CShapeFactory::MakeIndicesAudioMarker(uint32 &uiNumIndices)
 {
-  uiNumIndices = 12;
+  uiNumIndices = 24;
   uint32 *indices = new uint32[uiNumIndices];
   memset(indices, 0, uiNumIndices * sizeof(uint32));
 
@@ -337,6 +350,19 @@ uint32 *CShapeFactory::MakeIndicesAudioMarker(uint32 &uiNumIndices)
   indices[9] = 0;
   indices[10] = 4;
   indices[11] = 3;
+
+  indices[0 + 12] = 1;
+  indices[1 + 12] = 3;
+  indices[2 + 12] = 0;
+  indices[3 + 12] = 1;
+  indices[4 + 12] = 2;
+  indices[5 + 12] = 3;
+  indices[6 + 12] = 0;
+  indices[7 + 12] = 4;
+  indices[8 + 12] = 5;
+  indices[9 + 12] = 0;
+  indices[10 + 12] = 3;
+  indices[11 + 12] = 4;
 
   return indices;
 }
@@ -370,7 +396,7 @@ CShapeData *CShapeFactory::MakeStuntMarker(CShader *pShader, CTexture *pTexture)
 
 tVertex *CShapeFactory::MakeVertsStuntMarker(uint32 &uiNumVerts, CTexture *pTexture)
 {
-  uiNumVerts = 8;
+  uiNumVerts = 14;
   tVertex *vertices = new tVertex[uiNumVerts];
 
   glm::vec4 color = glm::vec4(0, 1, 0, 1);
@@ -381,7 +407,6 @@ tVertex *CShapeFactory::MakeVertsStuntMarker(uint32 &uiNumVerts, CTexture *pText
   vertices[4].position = glm::vec3(+0.0f  , -100.0f, +0.0f);
   vertices[5].position = glm::vec3(-300.0f, -400.0f, +0.0f);
   vertices[6].position = glm::vec3(-400.0f, -300.0f, +0.0f);
-
   vertices[0].texCoords = pTexture->GetColorCenterCoordinates(0xff);
   vertices[1].texCoords = pTexture->GetColorCenterCoordinates(0xff);
   vertices[2].texCoords = pTexture->GetColorCenterCoordinates(0xff);
@@ -390,6 +415,21 @@ tVertex *CShapeFactory::MakeVertsStuntMarker(uint32 &uiNumVerts, CTexture *pText
   vertices[5].texCoords = pTexture->GetColorCenterCoordinates(0xff);
   vertices[6].texCoords = pTexture->GetColorCenterCoordinates(0xff);
 
+  vertices[0 + 7].position = glm::vec3(+0.0f, +100.0f, +0.0f);
+  vertices[1 + 7].position = glm::vec3(+100.0f, +0.0f, +0.0f);
+  vertices[2 + 7].position = glm::vec3(+400.0f, -300.0f, +0.0f);
+  vertices[3 + 7].position = glm::vec3(+300.0f, -400.0f, +0.0f);
+  vertices[4 + 7].position = glm::vec3(+0.0f, -100.0f, +0.0f);
+  vertices[5 + 7].position = glm::vec3(-300.0f, -400.0f, +0.0f);
+  vertices[6 + 7].position = glm::vec3(-400.0f, -300.0f, +0.0f);
+  vertices[0 + 7].texCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[1 + 7].texCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[2 + 7].texCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[3 + 7].texCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[4 + 7].texCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[5 + 7].texCoords = pTexture->GetColorCenterCoordinates(0xff);
+  vertices[6 + 7].texCoords = pTexture->GetColorCenterCoordinates(0xff);
+
   return vertices;
 }
 
@@ -397,7 +437,7 @@ tVertex *CShapeFactory::MakeVertsStuntMarker(uint32 &uiNumVerts, CTexture *pText
 
 uint32 *CShapeFactory::MakeIndicesStuntMarker(uint32 &uiNumIndices)
 {
-  uiNumIndices = 12;
+  uiNumIndices = 24;
   uint32 *indices = new uint32[uiNumIndices];
   memset(indices, 0, uiNumIndices * sizeof(uint32));
 
@@ -413,6 +453,19 @@ uint32 *CShapeFactory::MakeIndicesStuntMarker(uint32 &uiNumIndices)
   indices[9]  = 6;
   indices[10] = 5;
   indices[11] = 0;
+
+  indices[0 + 12] = 4;
+  indices[1 + 12] = 2;
+  indices[2 + 12] = 3;
+  indices[3 + 12] = 4;
+  indices[4 + 12] = 1;
+  indices[5 + 12] = 2;
+  indices[6 + 12] = 5;
+  indices[7 + 12] = 0;
+  indices[8 + 12] = 1;
+  indices[9 + 12] = 6;
+  indices[10 + 12] = 0;
+  indices[11 + 12] = 5;
 
   return indices;
 }

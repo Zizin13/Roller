@@ -62,8 +62,6 @@ WLFUNC bool wlGetModel(uint8 *pBmpBuf,
   if (!pBmpBuf || !pVertexBuf || !pIndexBuf || !szTex || !szPal)
     return bSuccess;
 
-  CShapeFactory::GetShapeFactory().m_bOglRunning = false;
-
   //load palette
   CPalette pal;
   if (!pal.LoadPalette(szPal))

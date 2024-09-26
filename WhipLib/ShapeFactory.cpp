@@ -44,6 +44,12 @@
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
 //-------------------------------------------------------------------------------------------------
+#if defined (WHIPLIB_DLL)
+  #define OGL_DEFAULT false
+#else
+  #define OGL_DEFAULT true
+#endif
+//-------------------------------------------------------------------------------------------------
 
 CShapeFactory &CShapeFactory::GetShapeFactory()
 {
@@ -55,7 +61,7 @@ CShapeFactory &CShapeFactory::GetShapeFactory()
 //-------------------------------------------------------------------------------------------------
 
 CShapeFactory::CShapeFactory()
-  : m_bOglRunning(true)
+  : m_bOglRunning(OGL_DEFAULT)
 {
 
 }

@@ -2,6 +2,7 @@
 #define _WHIPLIB_WHIPLIB_H
 //-------------------------------------------------------------------------------------------------
 #include "Types.h"
+#include "Logging.h"
 //-------------------------------------------------------------------------------------------------
 
 #if defined(WIN32) || defined(_WIN32)
@@ -44,6 +45,11 @@ struct tWhiplashVertex
 };
 
 //-------------------------------------------------------------------------------------------------
+
+// Sets logging callback
+WLFUNC void wlSetLoggingCallback(Logging::WhipLibLoggingCallback pfnLogMsg);
+typedef void (WLCDECL *wlSetLoggingCallbackFunc)(Logging::WhipLibLoggingCallback pfnLogMsg);
+
 
 // Loads a Whiplash texture and palette file and fills pDataBuf with an 8-bit rgba bitmap
 // Returns the size of the bitmap or -1 if there is an error

@@ -141,6 +141,7 @@
       <Command>echo Copying Headers...
 echo f | xcopy ".\WhipLib.h" ..\bin\WhipLib\include\ /R /Y /d /i &gt; null
 echo f | xcopy ".\Types.h" ..\bin\WhipLib\include\ /R /Y /d /i &gt; null
+echo f | xcopy ".\Logging.h" ..\bin\WhipLib\include\ /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
 echo Copying Readme File...
@@ -226,6 +227,7 @@ exit 1</Command>
       <Command>echo Copying Headers...
 echo f | xcopy ".\WhipLib.h" ..\bin\WhipLib\include\ /R /Y /d /i &gt; null
 echo f | xcopy ".\Types.h" ..\bin\WhipLib\include\ /R /Y /d /i &gt; null
+echo f | xcopy ".\Logging.h" ..\bin\WhipLib\include\ /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
 echo Copying Readme File...

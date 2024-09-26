@@ -9,6 +9,13 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
+WLFUNC void wlSetLoggingCallback(Logging::WhipLibLoggingCallback pfnLogMsg)
+{
+  Logging::SetWhipLibLoggingCallback(pfnLogMsg);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 WLFUNC int wlLoadTexture(uint8 *pDataBuf, int iBufSize, const char *szTex, const char *szPal)
 {
   int iRet = -1;

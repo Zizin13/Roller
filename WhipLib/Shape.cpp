@@ -1,6 +1,6 @@
 #include <glew.h>
 #include "OpenGLDebug.h"
-#include "ShapeData.h"
+#include "Shape.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
@@ -12,12 +12,12 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
-CShapeData::CShapeData(CVertexBuffer *pVertexBuf,
-                       CIndexBuffer *pIndexBuf,
-                       CVertexArray *pVertexArray,
-                       CShader *pShader,
-                       CTexture *pTexture,
-                       GLenum drawType)
+CShape::CShape(CVertexBuffer *pVertexBuf,
+               CIndexBuffer *pIndexBuf,
+               CVertexArray *pVertexArray,
+               CShader *pShader,
+               CTexture *pTexture,
+               GLenum drawType)
   : m_pVertexBuf(pVertexBuf)
   , m_pIndexBuf(pIndexBuf)
   , m_pVertexArray(pVertexArray)
@@ -34,7 +34,7 @@ CShapeData::CShapeData(CVertexBuffer *pVertexBuf,
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData::~CShapeData()
+CShape::~CShape()
 {
   if (m_vertices) {
     delete[] m_vertices;
@@ -60,7 +60,7 @@ CShapeData::~CShapeData()
 
 //-------------------------------------------------------------------------------------------------
 
-void CShapeData::Draw(const glm::mat4 &worldToProjectionMatrix, const glm::vec3 cameraPosition)
+void CShape::Draw(const glm::mat4 &worldToProjectionMatrix, const glm::vec3 cameraPosition)
 {
   if (!m_pShader || !m_pVertexArray || !m_pIndexBuf)
     return;
@@ -82,7 +82,7 @@ void CShapeData::Draw(const glm::mat4 &worldToProjectionMatrix, const glm::vec3 
 
 //-------------------------------------------------------------------------------------------------
 
-void CShapeData::TransformVertsForExport()
+void CShape::TransformVertsForExport()
 {
   for (uint32 i = 0; i < m_uiNumVerts; ++i) {
     m_vertices[i].position = glm::vec3(m_modelToWorldMatrix * glm::vec4(m_vertices[i].position, 1.0f));

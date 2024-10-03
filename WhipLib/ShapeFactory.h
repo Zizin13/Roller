@@ -5,7 +5,7 @@
 #include <vector>
 #include <glm.hpp>
 //-------------------------------------------------------------------------------------------------
-class CShapeData;
+class CShape;
 class CShader;
 class CTexture;
 class CTrack;
@@ -22,18 +22,18 @@ public:
   CShapeFactory(CShapeFactory const &) = delete;
   void operator=(CShapeFactory const &) = delete;
 
-  CShapeData *MakeAxes(CShader *pShader);
-  CShapeData *MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1);
-  CShapeData *MakeAudioMarker(CShader *pShader, CTexture *pTexture);
-  CShapeData *MakeStuntMarker(CShader *pShader, CTexture *pTexture);
-  CShapeData *MakeTrackSurface(CShapeData *pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false);
-  CShapeData *MakeEnvirFloor(CShapeData *pShape, CShader *pShader, CTrack *pTrack, int iIndex);
-  CShapeData *MakeAILine(CShapeData *pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast);
-  CShapeData *MakeSelectedChunks(CShapeData *pShape, CShader *pShader, CTrack *pTrack, int iStart, int iEnd);
-  void MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CShapeData*> &signAy);
-  void MakeAudio(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &audioAy);
-  void MakeStunts(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &stuntAy);
-  CShapeData *MakeNormalsTest(const CShapeData &data, CShader *pShader);
+  CShape *MakeAxes(CShader *pShader);
+  CShape *MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1);
+  CShape *MakeAudioMarker(CShader *pShader, CTexture *pTexture);
+  CShape *MakeStuntMarker(CShader *pShader, CTexture *pTexture);
+  CShape *MakeTrackSurface(CShape *pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false);
+  CShape *MakeEnvirFloor(CShape *pShape, CShader *pShader, CTrack *pTrack, int iIndex);
+  CShape *MakeAILine(CShape *pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast);
+  CShape *MakeSelectedChunks(CShape *pShape, CShader *pShader, CTrack *pTrack, int iStart, int iEnd);
+  void MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CShape*> &signAy);
+  void MakeAudio(CShader *pShader, CTrack *pTrack, std::vector<CShape *> &audioAy);
+  void MakeStunts(CShader *pShader, CTrack *pTrack, std::vector<CShape *> &stuntAy);
+  CShape *MakeNormalsTest(const CShape &data, CShader *pShader);
   void GetCarPos(CTrack *pTrack, int iChunk, eShapeSection aiLine, glm::mat4 &modelToWorldMatrix, bool bMillionPlus = false);
 
   bool m_bOglRunning;

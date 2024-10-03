@@ -273,7 +273,7 @@ exit 1</Command>
     <ClInclude Include="Palette.h" />
     <ClInclude Include="Polygon.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="ShapeData.h" />
+    <ClInclude Include="Shape.h" />
     <ClInclude Include="SignPlans\Advert2Plans.h" />
     <ClInclude Include="SignPlans\Advert3Plans.h" />
     <ClInclude Include="SignPlans\AdvertPlans.h" />
@@ -311,7 +311,7 @@ exit 1</Command>
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="Palette.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="ShapeData.cpp" />
+    <ClCompile Include="Shape.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Track.cpp" />
     <ClCompile Include="Unmangler.cpp" />

@@ -12,16 +12,16 @@ class CIndexBuffer;
 class CVertexArray;
 class CTexture;
 //-------------------------------------------------------------------------------------------------
-class CShapeData
+class CShape
 {
 public:
-  CShapeData(CVertexBuffer *pVertexBuf,
-             CIndexBuffer *pIndexBuf,
-             CVertexArray *pVertexArray,
-             CShader *pShader,
-             CTexture *pTexture = NULL,
-             GLenum drawType = GL_TRIANGLES);
-  ~CShapeData();
+  CShape(CVertexBuffer *pVertexBuf,
+         CIndexBuffer *pIndexBuf,
+         CVertexArray *pVertexArray,
+         CShader *pShader,
+         CTexture *pTexture = NULL,
+         GLenum drawType = GL_TRIANGLES);
+  ~CShape();
 
   void Draw(const glm::mat4 &worldToProjectionMatrix, const glm::vec3 cameraPosition);
   void TransformVertsForExport();

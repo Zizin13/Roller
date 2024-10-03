@@ -1,6 +1,6 @@
 #include "ShapeFactory.h"
 #include "FBXExporter.h"
-#include "ShapeData.h"
+#include "Shape.h"
 #include "Texture.h"
 #include "Palette.h"
 #include "Logging.h"
@@ -42,7 +42,7 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir)
   printf("...\n");
 
   //create shape data
-  CShapeData *pCar = CShapeFactory::GetShapeFactory().MakeModel(NULL, &carTex, carModel);
+  CShape *pCar = CShapeFactory::GetShapeFactory().MakeModel(NULL, &carTex, carModel);
   if (!pCar)
     return false;
 
@@ -89,8 +89,8 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir)
   pTrack->GenerateTrackMath();
 
   //generate models
-  CShapeData *pExportTrack = NULL;
-  std::vector<CShapeData *> signAy;
+  CShape *pExportTrack = NULL;
+  std::vector<CShape *> signAy;
   pExportTrack = CShapeFactory::GetShapeFactory().MakeTrackSurface(pExportTrack,
                                                                    NULL,
                                                                    pTrack,
@@ -98,7 +98,7 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir)
                                                                    true);
   CShapeFactory::GetShapeFactory().MakeSigns(NULL, pTrack, signAy);
   //signs need to be moved to the right position on track, this is normally done in the shader
-  for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
+  for (std::vector<CShape *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
     (*it)->TransformVertsForExport();
 
   //export
@@ -116,7 +116,7 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir)
   //cleanup
   if (pExportTrack)
     delete pExportTrack;
-  for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
+  for (std::vector<CShape *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
     delete *it;
   return bExported;
 }

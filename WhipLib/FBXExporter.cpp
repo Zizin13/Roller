@@ -1,5 +1,5 @@
 #include "FBXExporter.h"
-#include "ShapeData.h"
+#include "Shape.h"
 #include "Logging.h"
 #include "Texture.h"
 #include <fbxsdk.h>
@@ -49,7 +49,7 @@ CFBXExporter::~CFBXExporter()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szName, const char *szFile, const char *szTextureFile)
+bool CFBXExporter::ExportShape(CShape *pShapeData, const char *szName, const char *szFile, const char *szTextureFile)
 {
   if (!pShapeData || !szFile || !szTextureFile)
     return false;
@@ -92,8 +92,8 @@ bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szName, const
 
 //-------------------------------------------------------------------------------------------------
 
-bool CFBXExporter::ExportTrack(CShapeData *pTrackShape,
-                               std::vector<CShapeData *> signAy,
+bool CFBXExporter::ExportTrack(CShape *pTrackShape,
+                               std::vector<CShape *> signAy,
                                const char *szName,
                                const char *szFile,
                                const char *szTextureFile,
@@ -144,7 +144,7 @@ bool CFBXExporter::ExportTrack(CShapeData *pTrackShape,
 
 //-------------------------------------------------------------------------------------------------
 
-FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szName, const char *szTextureFile, FbxScene *pScene)
+FbxNode *CFBXExporter::CreateShapeMesh(CShape *pShapeData, const char *szName, const char *szTextureFile, FbxScene *pScene)
 {
   int iNumPols = (int)pShapeData->m_uiNumIndices / 3;
 

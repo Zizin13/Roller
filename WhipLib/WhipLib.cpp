@@ -178,10 +178,14 @@ WLFUNC int wlLoadTrack(const char *szTrack)
 
   bool bSuccess = pNewTrack->track.LoadTrack(szTrack);
   bSuccess |= pNewTrack->track.LoadTextures();
-  pNewTrack->pTrackShape = CShapeFactory::GetShapeFactory().MakeTrackSurface(pNewTrack->pTrackShape, NULL, &pNewTrack->track, eShapeSection::EXPORT, true, false);
-  CShapeFactory::GetShapeFactory().MakeSigns(NULL, &pNewTrack->track, pNewTrack->signAy);
 
   if (bSuccess) {
+    pNewTrack->pTrackShape = CShapeFactory::GetShapeFactory().MakeTrackSurface(pNewTrack->pTrackShape, NULL, &pNewTrack->track, eShapeSection::EXPORT, true, false);
+    CShapeFactory::GetShapeFactory().MakeSigns(NULL, &pNewTrack->track, pNewTrack->signAy);
+    for (int i = 0; i < (int)pNewTrack->signAy.size(); ++i) {
+      pNewTrack->signAy[i]->TransformVertsForExport();
+    }
+
     s_trackMap[++s_iNextTrackId] = pNewTrack;
     return s_iNextTrackId;
   } else {

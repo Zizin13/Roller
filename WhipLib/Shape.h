@@ -1,10 +1,11 @@
-#ifndef _WHIPLIB_SHAPEDATA_H
-#define _WHIPLIB_SHAPEDATA_H
+#ifndef _WHIPLIB_SHAPE_H
+#define _WHIPLIB_SHAPE_H
 //-------------------------------------------------------------------------------------------------
 #include <glew.h>
 #include "glm.hpp"
 #include "Vertex.h"
 #include "Types.h"
+#include "ShapeData.h"
 //-------------------------------------------------------------------------------------------------
 class CShader;
 class CVertexBuffer;
@@ -30,11 +31,7 @@ public:
   CIndexBuffer *m_pIndexBuf;
   CVertexBuffer *m_pVertexBuf;
   CTexture *m_pTexture; //owned by track or renderer
-
-  uint32 m_uiNumVerts;
-  tVertex *m_vertices;
-  uint32 m_uiNumIndices;
-  uint32 *m_indices;
+  tShapeData m_shapeData;
 
 private:
   CVertexArray *m_pVertexArray;

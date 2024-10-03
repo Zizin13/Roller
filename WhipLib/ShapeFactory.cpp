@@ -155,10 +155,10 @@ CShape *CShapeFactory::MakeModel(CShader *pShader, CTexture *pTexture, eWhipMode
     CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
     pRet = new CShape(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture);
-    pRet->m_shapeData.m_vertices = vertices;
-    pRet->m_shapeData.m_uiNumVerts = uiNumVerts;
-    pRet->m_shapeData.m_indices = indices;
-    pRet->m_shapeData.m_uiNumIndices = uiNumIndices;
+    pRet->m_vertices = vertices;
+    pRet->m_uiNumVerts = uiNumVerts;
+    pRet->m_indices = indices;
+    pRet->m_uiNumIndices = uiNumIndices;
   }
 
   return pRet;
@@ -1235,19 +1235,19 @@ CShape *CShapeFactory::MakeTrackSurface(CShape *pShape, CShader *pShader, CTrack
     CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
     pShape = new CShape(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
-    pShape->m_shapeData.m_vertices = vertices;
-    pShape->m_shapeData.m_uiNumVerts = uiNumVerts;
-    pShape->m_shapeData.m_indices = indices;
-    pShape->m_shapeData.m_uiNumIndices = uiNumIndices;
+    pShape->m_vertices = vertices;
+    pShape->m_uiNumVerts = uiNumVerts;
+    pShape->m_indices = indices;
+    pShape->m_uiNumIndices = uiNumIndices;
 
     //if (indices)
     //  delete[] indices;
   } else {
     pShape->m_pVertexBuf->Update(vertices, uiNumVerts);
-    if (pShape->m_shapeData.m_vertices)
-      delete[] pShape->m_shapeData.m_vertices;
-    pShape->m_shapeData.m_vertices = vertices;
-    pShape->m_shapeData.m_uiNumVerts = uiNumVerts;
+    if (pShape->m_vertices)
+      delete[] pShape->m_vertices;
+    pShape->m_vertices = vertices;
+    pShape->m_uiNumVerts = uiNumVerts;
   }
 
   //if (vertices)
@@ -1485,14 +1485,14 @@ void CShapeFactory::MakeStunts(CShader *pShader, CTrack *pTrack, std::vector<CSh
 
 CShape *CShapeFactory::MakeNormalsTest(const CShape &data, CShader *pShader)
 {
-  uint32 uiNumVerts = data.m_shapeData.m_uiNumVerts * 2;
+  uint32 uiNumVerts = data.m_uiNumVerts * 2;
   tVertex *vertices = new tVertex[uiNumVerts];
   glm::vec4 white(1.0f, 1.0f, 1.0f, 1.0f);
-  for (int i = 0; i < (int)data.m_shapeData.m_uiNumVerts; i++) {
+  for (int i = 0; i < (int)data.m_uiNumVerts; i++) {
     GLuint vertIndex = i * 2;
     tVertex &v1 = vertices[vertIndex];
     tVertex &v2 = vertices[vertIndex + 1];
-    const tVertex &sourceVertex = data.m_shapeData.m_vertices[i];
+    const tVertex &sourceVertex = data.m_vertices[i];
     v1.position = sourceVertex.position;
     v2.position = sourceVertex.position + sourceVertex.normal;
     //TODO
@@ -1508,10 +1508,10 @@ CShape *CShapeFactory::MakeNormalsTest(const CShape &data, CShader *pShader)
   CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
   CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
   CShape *pRet = new CShape(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, GL_LINES);
-  pRet->m_shapeData.m_vertices = vertices;
-  pRet->m_shapeData.m_uiNumVerts = uiNumVerts;
-  pRet->m_shapeData.m_indices = indices;
-  pRet->m_shapeData.m_uiNumIndices = uiNumIndices;
+  pRet->m_vertices = vertices;
+  pRet->m_uiNumVerts = uiNumVerts;
+  pRet->m_indices = indices;
+  pRet->m_uiNumIndices = uiNumIndices;
   return pRet;
 }
 

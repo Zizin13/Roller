@@ -88,28 +88,28 @@ WLFUNC bool wlGetModel(uint8 *pBmpBuf,
     return bSuccess;
 
   //fill buffers
-  if (pShape->m_shapeData.m_uiNumVerts <= (uint32)(iVertexBufSize / sizeof(tWhiplashVertex))
-      && pShape->m_shapeData.m_uiNumIndices <= (uint32)iIndexBufSize / sizeof(uint32)
+  if (pShape->m_uiNumVerts <= (uint32)(iVertexBufSize / sizeof(tWhiplashVertex))
+      && pShape->m_uiNumIndices <= (uint32)iIndexBufSize / sizeof(uint32)
       && iBmpSize <= iBmpBufSize)
   {
     bSuccess = true;
-    iNumVertices = (int)pShape->m_shapeData.m_uiNumVerts;
-    iNumIndices = (int)pShape->m_shapeData.m_uiNumIndices;
+    iNumVertices = (int)pShape->m_uiNumVerts;
+    iNumIndices = (int)pShape->m_uiNumIndices;
     for (int i = 0; i < iBmpSize; ++i) {
       pBmpBuf[i] = pBmpData[i];
     }
-    for (int i = 0; i < (int)pShape->m_shapeData.m_uiNumVerts; ++i) {
-      pVertexBuf[i].fX = pShape->m_shapeData.m_vertices[i].position.x;
-      pVertexBuf[i].fY = pShape->m_shapeData.m_vertices[i].position.y;
-      pVertexBuf[i].fZ = pShape->m_shapeData.m_vertices[i].position.z;
-      pVertexBuf[i].fNormalX = pShape->m_shapeData.m_vertices[i].normal.x;
-      pVertexBuf[i].fNormalY = pShape->m_shapeData.m_vertices[i].normal.y;
-      pVertexBuf[i].fNormalZ = pShape->m_shapeData.m_vertices[i].normal.z;
-      pVertexBuf[i].fTexX = pShape->m_shapeData.m_vertices[i].texCoords.x;
-      pVertexBuf[i].fTexY = pShape->m_shapeData.m_vertices[i].texCoords.y;
+    for (int i = 0; i < (int)pShape->m_uiNumVerts; ++i) {
+      pVertexBuf[i].fX = pShape->m_vertices[i].position.x;
+      pVertexBuf[i].fY = pShape->m_vertices[i].position.y;
+      pVertexBuf[i].fZ = pShape->m_vertices[i].position.z;
+      pVertexBuf[i].fNormalX = pShape->m_vertices[i].normal.x;
+      pVertexBuf[i].fNormalY = pShape->m_vertices[i].normal.y;
+      pVertexBuf[i].fNormalZ = pShape->m_vertices[i].normal.z;
+      pVertexBuf[i].fTexX = pShape->m_vertices[i].texCoords.x;
+      pVertexBuf[i].fTexY = pShape->m_vertices[i].texCoords.y;
     }
-    for (int i = 0; i < (int)pShape->m_shapeData.m_uiNumIndices; ++i) {
-      pIndexBuf[i] = pShape->m_shapeData.m_indices[i];
+    for (int i = 0; i < (int)pShape->m_uiNumIndices; ++i) {
+      pIndexBuf[i] = pShape->m_indices[i];
     }
   }
 

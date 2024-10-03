@@ -258,7 +258,6 @@ exit 1</Command>
     <ClInclude Include="DisasmHelpers.h" />
     <ClInclude Include="FBXExporter.h" />
     <ClInclude Include="Logging.h" />
-    <ClInclude Include="ShapeData.h" />
     <ClInclude Include="ShapeFactory.h" />
     <ClInclude Include="CarPlans\AutoPlans.h" />
     <ClInclude Include="CarPlans\DesilvaPlans.h" />

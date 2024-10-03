@@ -75,7 +75,7 @@ bool CFBXExporter::ExportShape(CShape *pShapeData, const char *szName, const cha
   }
 
   //OpenGL expects texture data in reverse order
-  FlipTexCoordsForExport(pShapeData->m_shapeData.m_vertices, pShapeData->m_shapeData.m_uiNumVerts);
+  FlipTexCoordsForExport(pShapeData->m_vertices, pShapeData->m_uiNumVerts);
 
   FbxNode *pShapeMesh = CreateShapeMesh(pShapeData, szName, szTextureFile, pScene);
   pShapeMesh->SetGeometricRotation(FbxNode::eSourcePivot, FbxVector4(-90.0f, 0.0f, 0.0f));
@@ -122,13 +122,13 @@ bool CFBXExporter::ExportTrack(CShape *pTrackShape,
     return false;
   }
 
-  FlipTexCoordsForExport(pTrackShape->m_shapeData.m_vertices, pTrackShape->m_shapeData.m_uiNumVerts); //OpenGL expects texture data in reverse order
+  FlipTexCoordsForExport(pTrackShape->m_vertices, pTrackShape->m_uiNumVerts); //OpenGL expects texture data in reverse order
 
   FbxNode *pTrackMesh = CreateShapeMesh(pTrackShape, szName, szTextureFile, pScene);
   pScene->GetRootNode()->AddChild(pTrackMesh);
   for (int i = 0; i < (int)signAy.size(); ++i) {
     std::string sSignName = "Sign " + std::to_string(i);
-    FlipTexCoordsForExport(signAy[i]->m_shapeData.m_vertices, signAy[i]->m_shapeData.m_uiNumVerts); //OpenGL expects texture data in reverse order
+    FlipTexCoordsForExport(signAy[i]->m_vertices, signAy[i]->m_uiNumVerts); //OpenGL expects texture data in reverse order
     FbxNode *pSignMesh = CreateShapeMesh(signAy[i], sSignName.c_str(), szSignTextureFile, pScene);
     pScene->GetRootNode()->AddChild(pSignMesh);
   }
@@ -146,18 +146,16 @@ bool CFBXExporter::ExportTrack(CShape *pTrackShape,
 
 FbxNode *CFBXExporter::CreateShapeMesh(CShape *pShapeData, const char *szName, const char *szTextureFile, FbxScene *pScene)
 {
-  int iNumPols = (int)pShapeData->m_shapeData.m_uiNumIndices / 3;
+  int iNumPols = (int)pShapeData->m_uiNumIndices / 3;
 
   //create mesh object
   FbxMesh *pMesh = FbxMesh::Create(pScene, szName);
 
   //create vertices
-  pMesh->InitControlPoints((int)pShapeData->m_shapeData.m_uiNumVerts);
+  pMesh->InitControlPoints((int)pShapeData->m_uiNumVerts);
   FbxVector4 *controlPointsAy = pMesh->GetControlPoints();
-  for (int i = 0; i < (int)pShapeData->m_shapeData.m_uiNumVerts; ++i) {
-    FbxVector4 controlPoint(pShapeData->m_shapeData.m_vertices[i].position.x,
-                            pShapeData->m_shapeData.m_vertices[i].position.y,
-                            pShapeData->m_shapeData.m_vertices[i].position.z);
+  for (int i = 0; i < (int)pShapeData->m_uiNumVerts; ++i) {
+    FbxVector4 controlPoint(pShapeData->m_vertices[i].position.x, pShapeData->m_vertices[i].position.y, pShapeData->m_vertices[i].position.z);
     controlPointsAy[i] = controlPoint;
   }
 
@@ -165,10 +163,8 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShape *pShapeData, const char *szName, c
   FbxGeometryElementNormal *pGeometryElementNormal = pMesh->CreateElementNormal();
   pGeometryElementNormal->SetMappingMode(FbxGeometryElement::eByControlPoint);
   pGeometryElementNormal->SetReferenceMode(FbxGeometryElement::eDirect);
-  for (int i = 0; i < (int)pShapeData->m_shapeData.m_uiNumVerts; ++i) {
-    FbxVector4 normal(pShapeData->m_shapeData.m_vertices[i].normal.x,
-                      pShapeData->m_shapeData.m_vertices[i].normal.y,
-                      pShapeData->m_shapeData.m_vertices[i].normal.z);
+  for (int i = 0; i < (int)pShapeData->m_uiNumVerts; ++i) {
+    FbxVector4 normal(pShapeData->m_vertices[i].normal.x, pShapeData->m_vertices[i].normal.y, pShapeData->m_vertices[i].normal.z);
     pGeometryElementNormal->GetDirectArray().Add(normal);
   }
 
@@ -184,7 +180,7 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShape *pShapeData, const char *szName, c
     pMesh->BeginPolygon();
     //create polygon from indices
     for (int j = 0; j < 3; ++j) {
-      pMesh->AddPolygon(pShapeData->m_shapeData.m_indices[i * 3 + j]);
+      pMesh->AddPolygon(pShapeData->m_indices[i * 3 + j]);
     }
     pMesh->EndPolygon();
   }
@@ -194,11 +190,11 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShape *pShapeData, const char *szName, c
   FBX_ASSERT(lUVDiffuseElement != NULL);
   lUVDiffuseElement->SetMappingMode(FbxGeometryElement::eByPolygonVertex);
   lUVDiffuseElement->SetReferenceMode(FbxGeometryElement::eIndexToDirect);
-  lUVDiffuseElement->GetIndexArray().SetCount((int)pShapeData->m_shapeData.m_uiNumIndices);
+  lUVDiffuseElement->GetIndexArray().SetCount((int)pShapeData->m_uiNumIndices);
   //generate UV mapping
-  for (int i = 0; i < (int)pShapeData->m_shapeData.m_uiNumIndices; ++i) {
-    FbxVector2 uv(pShapeData->m_shapeData.m_vertices[pShapeData->m_shapeData.m_indices[i]].texCoords.x,
-                  pShapeData->m_shapeData.m_vertices[pShapeData->m_shapeData.m_indices[i]].texCoords.y);
+  for (int i = 0; i < (int)pShapeData->m_uiNumIndices; ++i) {
+    FbxVector2 uv(pShapeData->m_vertices[pShapeData->m_indices[i]].texCoords.x,
+                  pShapeData->m_vertices[pShapeData->m_indices[i]].texCoords.y);
     lUVDiffuseElement->GetDirectArray().Add(uv);
     lUVDiffuseElement->GetIndexArray().SetAt(i, i);
   }

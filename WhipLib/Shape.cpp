@@ -25,6 +25,10 @@ CShape::CShape(CVertexBuffer *pVertexBuf,
   , m_pTexture(pTexture)
   , m_drawType(drawType)
   , m_modelToWorldMatrix(glm::mat4(1))
+  , m_vertices(NULL)
+  , m_uiNumVerts(0)
+  , m_indices(NULL)
+  , m_uiNumIndices(0)
 {
 }
 
@@ -32,6 +36,14 @@ CShape::CShape(CVertexBuffer *pVertexBuf,
 
 CShape::~CShape()
 {
+  if (m_vertices) {
+    delete[] m_vertices;
+    m_vertices = NULL;
+  }
+  if (m_indices) {
+    delete[] m_indices;
+    m_indices = NULL;
+  }
   if (m_pVertexBuf) {
     delete m_pVertexBuf;
     m_pVertexBuf = NULL;
@@ -72,8 +84,8 @@ void CShape::Draw(const glm::mat4 &worldToProjectionMatrix, const glm::vec3 came
 
 void CShape::TransformVertsForExport()
 {
-  for (uint32 i = 0; i < m_shapeData.m_uiNumVerts; ++i) {
-    m_shapeData.m_vertices[i].position = glm::vec3(m_modelToWorldMatrix * glm::vec4(m_shapeData.m_vertices[i].position, 1.0f));
+  for (uint32 i = 0; i < m_uiNumVerts; ++i) {
+    m_vertices[i].position = glm::vec3(m_modelToWorldMatrix * glm::vec4(m_vertices[i].position, 1.0f));
     //vtfVertexPositionWorld = vec3(modelToWorldMatrix * vertexPositionModel);
   }
 }

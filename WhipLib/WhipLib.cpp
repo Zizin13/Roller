@@ -3,10 +3,18 @@
 #include "Texture.h"
 #include "ShapeData.h"
 #include "ShapeFactory.h"
+#include "Track.h"
+#include <vector>
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
+//-------------------------------------------------------------------------------------------------
+
+static CTrack s_track;
+static CShapeData *s_pTrackShape = NULL;
+static std::vector<CShapeData *> s_signAy;
+
 //-------------------------------------------------------------------------------------------------
 
 WLFUNC void wlSetLoggingCallback(Logging::WhipLibLoggingCallback pfnLogMsg)
@@ -118,6 +126,88 @@ WLFUNC bool wlGetModel(uint8 *pBmpBuf,
   delete[] pBmpData;
 
   return bSuccess;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+WLFUNC bool wlLoadTrack(const char *szTrack)
+{
+  wlShutdownModule();
+
+  bool bSuccess = s_track.LoadTrack(szTrack);
+  bSuccess |= s_track.LoadTextures();
+  s_pTrackShape = CShapeFactory::GetShapeFactory().MakeTrackSurface(s_pTrackShape, NULL, &s_track, eShapeSection::EXPORT, true, false);
+  CShapeFactory::GetShapeFactory().MakeSigns(NULL, &s_track, s_signAy);
+  
+  return bSuccess;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+WLFUNC void wlShutdownModule()
+{
+  s_track.ClearData();
+  if (s_pTrackShape) {
+    delete s_pTrackShape;
+    s_pTrackShape = NULL;
+  }
+  for (std::vector<CShapeData *>::iterator it = s_signAy.begin(); it != s_signAy.end(); ++it) {
+    delete *it;
+  }
+  s_signAy.clear();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+WLFUNC int wlGetTrackTex(uint8 *pDataBuf, int iBufSize)
+{
+  int iBmpSize = -1;
+  if (!s_track.m_pTex)
+    return iBmpSize;
+
+  //generate bmp
+  uint8 *pBmpData = s_track.m_pTex->GenerateBitmapData(iBmpSize);
+
+  //fill buffer
+  if (iBmpSize <= iBufSize) {
+    for (int i = 0; i < iBmpSize; ++i) {
+      pDataBuf[i] = pBmpData[i];
+    }
+  }
+
+  //cleanup
+  delete[] pBmpData;
+  return iBmpSize;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+WLFUNC int wlGetTrackBld(uint8 *pDataBuf, int iBufSize)
+{
+  int iBmpSize = -1;
+  if (!s_track.m_pBld)
+    return iBmpSize;
+
+  //generate bmp
+  uint8 *pBmpData = s_track.m_pBld->GenerateBitmapData(iBmpSize);
+
+  //fill buffer
+  if (iBmpSize <= iBufSize) {
+    for (int i = 0; i < iBmpSize; ++i) {
+      pDataBuf[i] = pBmpData[i];
+    }
+  }
+
+  //cleanup
+  delete[] pBmpData;
+  return iBmpSize;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+WLFUNC int wlGetNumSigns()
+{
+  return (int)s_signAy.size();
 }
 
 //-------------------------------------------------------------------------------------------------

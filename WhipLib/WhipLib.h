@@ -87,5 +87,26 @@ typedef bool (WLCDECL *wlGetModelFunc)(uint8 *pBmpBuf,
                                        int &iNumVertices,
                                        int &iNumIndices);
 
+// Loads a Whiplash track into memory, must be called to get track model
+//   and sign models.
+WLFUNC bool wlLoadTrack(const char *szTrack);
+typedef bool (WLCDECL *wlLoadTrackFunc)(const char *szTrack);
+
+// Must be called to clean up memory
+WLFUNC void wlShutdownModule();
+typedef void (WLCDECL *wlShutdownModuleFunc)();
+
+// Fills pDataBuf with an 8-bit rgba bitmap of the loaded track's TEX file
+WLFUNC int wlGetTrackTex(uint8 *pDataBuf, int iBufSize);
+typedef void (WLCDECL *wlGetTrackTexFunc)(uint8 *pDataBuf, int iBufSize);
+
+// Fills pDataBuf with an 8-bit rgba bitmap of the loaded track's BLD file
+WLFUNC int wlGetTrackBld(uint8 *pDataBuf, int iBufSize);
+typedef void (WLCDECL *wlGetTrackBldFunc)(uint8 *pDataBuf, int iBufSize);
+
+// Returns the number of signs in the currently loaded track
+WLFUNC int wlGetNumSigns();
+typedef int (WLCDECL *wlGetNumSignsFunc)();
+
 //-------------------------------------------------------------------------------------------------
 #endif

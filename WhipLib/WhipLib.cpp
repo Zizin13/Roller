@@ -5,15 +5,74 @@
 #include "ShapeFactory.h"
 #include "Track.h"
 #include <vector>
+#include <map>
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
 //-------------------------------------------------------------------------------------------------
 
-static CTrack s_track;
-static CShapeData *s_pTrackShape = NULL;
-static std::vector<CShapeData *> s_signAy;
+struct tTrackData
+{
+  tTrackData()
+    : pTrackShape(NULL)
+  {};
+  ~tTrackData()
+  {
+    track.ClearData();
+    if (pTrackShape) {
+      delete pTrackShape;
+      pTrackShape = NULL;
+    }
+    for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it) {
+      delete *it;
+    }
+    signAy.clear();
+  }
+
+  CTrack track;
+  CShapeData *pTrackShape;
+  std::vector<CShapeData *> signAy;
+};
+
+//-------------------------------------------------------------------------------------------------
+
+typedef std::map<int, tTrackData *> CTrackMap;
+static CTrackMap s_trackMap;
+static int s_iNextTrackId = 0;
+
+//-------------------------------------------------------------------------------------------------
+
+bool StuffModel(CShapeData *pShape,
+                tWhiplashVertex *pVertexBuf,
+                int iVertexBufSize,
+                uint32 *pIndexBuf,
+                int iIndexBufSize,
+                int &iNumVertices,
+                int &iNumIndices)
+{
+  bool bSuccess = false;
+  if (pShape->m_uiNumVerts <= (uint32)(iVertexBufSize / sizeof(tWhiplashVertex))
+      && pShape->m_uiNumIndices <= (uint32)iIndexBufSize / sizeof(uint32)) {
+    bSuccess = true;
+    iNumVertices = (int)pShape->m_uiNumVerts;
+    iNumIndices = (int)pShape->m_uiNumIndices;
+    for (int i = 0; i < (int)pShape->m_uiNumVerts; ++i) {
+      pVertexBuf[i].fX = pShape->m_vertices[i].position.x;
+      pVertexBuf[i].fY = pShape->m_vertices[i].position.y;
+      pVertexBuf[i].fZ = pShape->m_vertices[i].position.z;
+      pVertexBuf[i].fNormalX = pShape->m_vertices[i].normal.x;
+      pVertexBuf[i].fNormalY = pShape->m_vertices[i].normal.y;
+      pVertexBuf[i].fNormalZ = pShape->m_vertices[i].normal.z;
+      pVertexBuf[i].fTexX = pShape->m_vertices[i].texCoords.x;
+      pVertexBuf[i].fTexY = pShape->m_vertices[i].texCoords.y;
+    }
+    for (int i = 0; i < (int)pShape->m_uiNumIndices; ++i) {
+      pIndexBuf[i] = pShape->m_indices[i];
+    }
+  }
+  return bSuccess;
+}
 
 //-------------------------------------------------------------------------------------------------
 
@@ -96,28 +155,11 @@ WLFUNC bool wlGetModel(uint8 *pBmpBuf,
     return bSuccess;
 
   //fill buffers
-  if (pShape->m_uiNumVerts <= (uint32)(iVertexBufSize / sizeof(tWhiplashVertex))
-      && pShape->m_uiNumIndices <= (uint32)iIndexBufSize / sizeof(uint32)
-      && iBmpSize <= iBmpBufSize)
-  {
+  bSuccess = StuffModel(pShape, pVertexBuf, iVertexBufSize, pIndexBuf, iIndexBufSize, iNumVertices, iNumIndices);
+  if (iBmpSize <= iBmpBufSize) {
     bSuccess = true;
-    iNumVertices = (int)pShape->m_uiNumVerts;
-    iNumIndices = (int)pShape->m_uiNumIndices;
     for (int i = 0; i < iBmpSize; ++i) {
       pBmpBuf[i] = pBmpData[i];
-    }
-    for (int i = 0; i < (int)pShape->m_uiNumVerts; ++i) {
-      pVertexBuf[i].fX = pShape->m_vertices[i].position.x;
-      pVertexBuf[i].fY = pShape->m_vertices[i].position.y;
-      pVertexBuf[i].fZ = pShape->m_vertices[i].position.z;
-      pVertexBuf[i].fNormalX = pShape->m_vertices[i].normal.x;
-      pVertexBuf[i].fNormalY = pShape->m_vertices[i].normal.y;
-      pVertexBuf[i].fNormalZ = pShape->m_vertices[i].normal.z;
-      pVertexBuf[i].fTexX = pShape->m_vertices[i].texCoords.x;
-      pVertexBuf[i].fTexY = pShape->m_vertices[i].texCoords.y;
-    }
-    for (int i = 0; i < (int)pShape->m_uiNumIndices; ++i) {
-      pIndexBuf[i] = pShape->m_indices[i];
     }
   }
 
@@ -130,43 +172,62 @@ WLFUNC bool wlGetModel(uint8 *pBmpBuf,
 
 //-------------------------------------------------------------------------------------------------
 
-WLFUNC bool wlLoadTrack(const char *szTrack)
+WLFUNC int wlLoadTrack(const char *szTrack)
 {
-  wlShutdownModule();
+  tTrackData *pNewTrack = new tTrackData();
 
-  bool bSuccess = s_track.LoadTrack(szTrack);
-  bSuccess |= s_track.LoadTextures();
-  s_pTrackShape = CShapeFactory::GetShapeFactory().MakeTrackSurface(s_pTrackShape, NULL, &s_track, eShapeSection::EXPORT, true, false);
-  CShapeFactory::GetShapeFactory().MakeSigns(NULL, &s_track, s_signAy);
-  
-  return bSuccess;
+  bool bSuccess = pNewTrack->track.LoadTrack(szTrack);
+  bSuccess |= pNewTrack->track.LoadTextures();
+  pNewTrack->pTrackShape = CShapeFactory::GetShapeFactory().MakeTrackSurface(pNewTrack->pTrackShape, NULL, &pNewTrack->track, eShapeSection::EXPORT, true, false);
+  CShapeFactory::GetShapeFactory().MakeSigns(NULL, &pNewTrack->track, pNewTrack->signAy);
+
+  if (bSuccess) {
+    s_trackMap[++s_iNextTrackId] = pNewTrack;
+    return s_iNextTrackId;
+  } else {
+    delete pNewTrack;
+    return -1;
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+WLFUNC bool wlUnloadTrack(int iTrackId)
+{
+  CTrackMap::iterator it = s_trackMap.find(iTrackId);
+  if (it == s_trackMap.end())
+    return false;
+
+  delete it->second;
+  s_trackMap.erase(it);
+  return true;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 WLFUNC void wlShutdownModule()
 {
-  s_track.ClearData();
-  if (s_pTrackShape) {
-    delete s_pTrackShape;
-    s_pTrackShape = NULL;
+  CTrackMap::iterator it = s_trackMap.begin();
+  for (; it != s_trackMap.end(); ++it) {
+    delete it->second;
   }
-  for (std::vector<CShapeData *>::iterator it = s_signAy.begin(); it != s_signAy.end(); ++it) {
-    delete *it;
-  }
-  s_signAy.clear();
+  s_trackMap.clear();
 }
 
 //-------------------------------------------------------------------------------------------------
 
-WLFUNC int wlGetTrackTex(uint8 *pDataBuf, int iBufSize)
+WLFUNC int wlGetTrackTex(int iTrackId, uint8 *pDataBuf, int iBufSize)
 {
   int iBmpSize = -1;
-  if (!s_track.m_pTex)
+  CTrackMap::iterator it = s_trackMap.find(iTrackId);
+  if (it == s_trackMap.end())
+    return iBmpSize;
+
+  if (!it->second->track.m_pTex)
     return iBmpSize;
 
   //generate bmp
-  uint8 *pBmpData = s_track.m_pTex->GenerateBitmapData(iBmpSize);
+  uint8 *pBmpData = it->second->track.m_pTex->GenerateBitmapData(iBmpSize);
 
   //fill buffer
   if (iBmpSize <= iBufSize) {
@@ -182,14 +243,18 @@ WLFUNC int wlGetTrackTex(uint8 *pDataBuf, int iBufSize)
 
 //-------------------------------------------------------------------------------------------------
 
-WLFUNC int wlGetTrackBld(uint8 *pDataBuf, int iBufSize)
+WLFUNC int wlGetTrackBld(int iTrackId, uint8 *pDataBuf, int iBufSize)
 {
   int iBmpSize = -1;
-  if (!s_track.m_pBld)
+  CTrackMap::iterator it = s_trackMap.find(iTrackId);
+  if (it == s_trackMap.end())
+    return iBmpSize;
+
+  if (!it->second->track.m_pBld)
     return iBmpSize;
 
   //generate bmp
-  uint8 *pBmpData = s_track.m_pBld->GenerateBitmapData(iBmpSize);
+  uint8 *pBmpData = it->second->track.m_pBld->GenerateBitmapData(iBmpSize);
 
   //fill buffer
   if (iBmpSize <= iBufSize) {
@@ -205,9 +270,61 @@ WLFUNC int wlGetTrackBld(uint8 *pDataBuf, int iBufSize)
 
 //-------------------------------------------------------------------------------------------------
 
-WLFUNC int wlGetNumSigns()
+WLFUNC int wlGetNumSigns(int iTrackId)
 {
-  return (int)s_signAy.size();
+  CTrackMap::iterator it = s_trackMap.find(iTrackId);
+  if (it == s_trackMap.end())
+    return -1;
+
+  return (int)it->second->signAy.size();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+WLFUNC bool wlGetTrackModel(int iTrackId,
+                            tWhiplashVertex *pVertexBuf,
+                            int iVertexBufSize,
+                            uint32 *pIndexBuf,
+                            int iIndexBufSize,
+                            int &iNumVertices,
+                            int &iNumIndices)
+{
+  bool bSuccess = false;
+  CTrackMap::iterator it = s_trackMap.find(iTrackId);
+  if (it == s_trackMap.end())
+    return bSuccess;
+  if (!it->second->pTrackShape)
+    return bSuccess;
+
+  //fill buffers
+  bSuccess = StuffModel(it->second->pTrackShape, pVertexBuf, iVertexBufSize, pIndexBuf, iIndexBufSize, iNumVertices, iNumIndices);
+
+  return bSuccess;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+WLFUNC bool wlGetSignModel(int iTrackId,
+                           int iSignIndex,
+                           tWhiplashVertex *pVertexBuf,
+                           int iVertexBufSize,
+                           uint32 *pIndexBuf,
+                           int iIndexBufSize,
+                           int &iNumVertices,
+                           int &iNumIndices)
+{
+  bool bSuccess = false;
+  CTrackMap::iterator it = s_trackMap.find(iTrackId);
+  if (it == s_trackMap.end())
+    return bSuccess;
+
+  if (iSignIndex < 0 || iSignIndex > it->second->signAy.size() - 1)
+    return bSuccess;
+
+  //fill buffers
+  bSuccess = StuffModel(it->second->signAy[iSignIndex], pVertexBuf, iVertexBufSize, pIndexBuf, iIndexBufSize, iNumVertices, iNumIndices);
+
+  return bSuccess;
 }
 
 //-------------------------------------------------------------------------------------------------

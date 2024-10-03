@@ -1,7 +1,7 @@
 #include "WhipLib.h"
 #include "Palette.h"
 #include "Texture.h"
-#include "Shape.h"
+#include "ShapeData.h"
 #include "ShapeFactory.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -83,7 +83,7 @@ WLFUNC bool wlGetModel(uint8 *pBmpBuf,
   uint8 *pBmpData = tex.GenerateBitmapData(iBmpSize);
 
   //generate model
-  CShape *pShape = CShapeFactory::GetShapeFactory().MakeModel(NULL, &tex, model);
+  CShapeData *pShape = CShapeFactory::GetShapeFactory().MakeModel(NULL, &tex, model);
   if (!pShape)
     return bSuccess;
 

@@ -10,7 +10,7 @@
 #include "OpenGLDebug.h"
 #include "Track.h"
 #include "DisplaySettings.h"
-#include "Shape.h"
+#include "ShapeData.h"
 #include "ShapeFactory.h"
 #include "Texture.h"
 #include "FBXExporter.h"
@@ -199,54 +199,54 @@ public:
       delete m_pSelection;
       m_pSelection = NULL;
     }
-    for (std::vector<CShape *>::iterator it = m_signAy.begin(); it != m_signAy.end(); ++it) {
+    for (std::vector<CShapeData *>::iterator it = m_signAy.begin(); it != m_signAy.end(); ++it) {
       delete *it;
     }
     m_signAy.clear();
-    for (std::vector<CShape *>::iterator it = m_audioAy.begin(); it != m_audioAy.end(); ++it) {
+    for (std::vector<CShapeData *>::iterator it = m_audioAy.begin(); it != m_audioAy.end(); ++it) {
       delete *it;
     }
     m_audioAy.clear();
-    for (std::vector<CShape *>::iterator it = m_stuntAy.begin(); it != m_stuntAy.end(); ++it) {
+    for (std::vector<CShapeData *>::iterator it = m_stuntAy.begin(); it != m_stuntAy.end(); ++it) {
       delete *it;
     }
     m_stuntAy.clear();
   }
 
-  CShape *m_pCenterSurf;
-  CShape *m_pCenterWire;
-  CShape *m_pLShoulderSurf;
-  CShape *m_pLShoulderWire;
-  CShape *m_pRShoulderSurf;
-  CShape *m_pRShoulderWire;
-  CShape *m_pLWallSurf;
-  CShape *m_pLWallWire;
-  CShape *m_pRWallSurf;
-  CShape *m_pRWallWire;
-  CShape *m_pRoofSurf;
-  CShape *m_pRoofWire;
-  CShape *m_pOWallFloorSurf;
-  CShape *m_pOWallFloorWire;
-  CShape *m_pLLOWallSurf;
-  CShape *m_pLLOWallWire;
-  CShape *m_pRLOWallSurf;
-  CShape *m_pRLOWallWire;
-  CShape *m_pLUOWallSurf;
-  CShape *m_pLUOWallWire;
-  CShape *m_pRUOWallSurf;
-  CShape *m_pRUOWallWire;
-  CShape *m_pSelection;
-  CShape *m_pAILine1;
-  CShape *m_pAILine2;
-  CShape *m_pAILine3;
-  CShape *m_pAILine4;
-  CShape *m_pEnvirFloor;
-  CShape *m_pCar;
-  CShape *m_pAxes;
-  CShape *m_pTestNormals;
-  std::vector<CShape *> m_signAy;
-  std::vector<CShape *> m_audioAy;
-  std::vector<CShape *> m_stuntAy;
+  CShapeData *m_pCenterSurf;
+  CShapeData *m_pCenterWire;
+  CShapeData *m_pLShoulderSurf;
+  CShapeData *m_pLShoulderWire;
+  CShapeData *m_pRShoulderSurf;
+  CShapeData *m_pRShoulderWire;
+  CShapeData *m_pLWallSurf;
+  CShapeData *m_pLWallWire;
+  CShapeData *m_pRWallSurf;
+  CShapeData *m_pRWallWire;
+  CShapeData *m_pRoofSurf;
+  CShapeData *m_pRoofWire;
+  CShapeData *m_pOWallFloorSurf;
+  CShapeData *m_pOWallFloorWire;
+  CShapeData *m_pLLOWallSurf;
+  CShapeData *m_pLLOWallWire;
+  CShapeData *m_pRLOWallSurf;
+  CShapeData *m_pRLOWallWire;
+  CShapeData *m_pLUOWallSurf;
+  CShapeData *m_pLUOWallWire;
+  CShapeData *m_pRUOWallSurf;
+  CShapeData *m_pRUOWallWire;
+  CShapeData *m_pSelection;
+  CShapeData *m_pAILine1;
+  CShapeData *m_pAILine2;
+  CShapeData *m_pAILine3;
+  CShapeData *m_pAILine4;
+  CShapeData *m_pEnvirFloor;
+  CShapeData *m_pCar;
+  CShapeData *m_pAxes;
+  CShapeData *m_pTestNormals;
+  std::vector<CShapeData *> m_signAy;
+  std::vector<CShapeData *> m_audioAy;
+  std::vector<CShapeData *> m_stuntAy;
 
   CShader *m_pShader;
   CTrack m_track;
@@ -565,17 +565,17 @@ void CTrackPreview::paintGL()
   if (m_uiShowModels & SHOW_TEST_CAR && p->m_pCar)
     p->m_pCar->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_SIGNS) {
-    for (std::vector<CShape *>::iterator it = p->m_signAy.begin(); it != p->m_signAy.end(); ++it) {
+    for (std::vector<CShapeData *>::iterator it = p->m_signAy.begin(); it != p->m_signAy.end(); ++it) {
       (*it)->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
     }
   }
   if (m_uiShowModels & SHOW_AUDIO) {
-    for (std::vector<CShape *>::iterator it = p->m_audioAy.begin(); it != p->m_audioAy.end(); ++it) {
+    for (std::vector<CShapeData *>::iterator it = p->m_audioAy.begin(); it != p->m_audioAy.end(); ++it) {
       (*it)->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
     }
   }
   if (m_uiShowModels & SHOW_STUNTS) {
-    for (std::vector<CShape *>::iterator it = p->m_stuntAy.begin(); it != p->m_stuntAy.end(); ++it) {
+    for (std::vector<CShapeData *>::iterator it = p->m_stuntAy.begin(); it != p->m_stuntAy.end(); ++it) {
       (*it)->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
     }
   }
@@ -681,8 +681,8 @@ bool CTrackPreview::ExportFBX()
   p->m_track.m_pBld->ExportToPngFile(sSignTexFile.toLatin1().constData());
 
   //generate models
-  CShape *pExportTrack = NULL;
-  std::vector<CShape *> signAy;
+  CShapeData *pExportTrack = NULL;
+  std::vector<CShapeData *> signAy;
   pExportTrack = CShapeFactory::GetShapeFactory().MakeTrackSurface(pExportTrack,
                                                                    p->m_pShader,
                                                                    &p->m_track,
@@ -690,7 +690,7 @@ bool CTrackPreview::ExportFBX()
                                                                    true);
   CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signAy);
   //signs need to be moved to the right position on track, this is normally done in the shader
-  for (std::vector<CShape *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
+  for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
     (*it)->TransformVertsForExport();
 
   //export
@@ -704,7 +704,7 @@ bool CTrackPreview::ExportFBX()
   //cleanup
   if (pExportTrack)
     delete pExportTrack;
-  for (std::vector<CShape *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
+  for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
     delete *it;
 
   if (!bExported)

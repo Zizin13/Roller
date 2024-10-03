@@ -7,7 +7,7 @@
 #include "Types.h"
 #include "glm.hpp"
 //-------------------------------------------------------------------------------------------------
-class CShape;
+class CShapeData;
 class CTexture;
 struct tVertex;
 namespace fbxsdk
@@ -28,9 +28,9 @@ public:
   CFBXExporter(CFBXExporter const &) = delete;
   void operator=(CFBXExporter const &) = delete;
 
-  bool ExportShape(CShape *pShapeData, const char *szName, const char *szFile, const char *szTextureFile);
-  bool ExportTrack(CShape *pTrackShape,
-                   std::vector<CShape *> signAy,
+  bool ExportShape(CShapeData *pShapeData, const char *szName, const char *szFile, const char *szTextureFile);
+  bool ExportTrack(CShapeData *pTrackShape,
+                   std::vector<CShapeData *> signAy,
                    const char *szName,
                    const char *szFile,
                    const char *szTextureFile,
@@ -38,7 +38,7 @@ public:
 
 private:
   CFBXExporter();
-  fbxsdk::FbxNode *CreateShapeMesh(CShape *pShapeData, const char *szName, const char *szTextureFile, fbxsdk::FbxScene *pScene);
+  fbxsdk::FbxNode *CreateShapeMesh(CShapeData *pShapeData, const char *szName, const char *szTextureFile, fbxsdk::FbxScene *pScene);
   fbxsdk::FbxSurfacePhong *CreateTextureMaterial(const char *szTextureFile, fbxsdk::FbxScene *pScene);
   fbxsdk::FbxFileTexture *CreateFileTexture(const char *szTextureFile, fbxsdk::FbxScene *pScene);
   void FlipTexCoordsForExport(tVertex *vertices, uint32 uiNumVerts);

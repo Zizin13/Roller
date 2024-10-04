@@ -101,15 +101,15 @@ typedef void (WLCDECL *wlShutdownModuleFunc)();
 
 // Fills pDataBuf with an 8-bit rgba bitmap of the loaded track's TEX file
 WLFUNC int wlGetTrackTex(int iTrackId, uint8 *pDataBuf, int iBufSize);
-typedef int (WLCDECL *wlGetTrackTexFunc)(uint8 *pDataBuf, int iBufSize);
+typedef int (WLCDECL *wlGetTrackTexFunc)(int iTrackId, uint8 *pDataBuf, int iBufSize);
 
 // Fills pDataBuf with an 8-bit rgba bitmap of the loaded track's BLD file
 WLFUNC int wlGetTrackBld(int iTrackId, uint8 *pDataBuf, int iBufSize);
-typedef int (WLCDECL *wlGetTrackBldFunc)(uint8 *pDataBuf, int iBufSize);
+typedef int (WLCDECL *wlGetTrackBldFunc)(int iTrackId, uint8 *pDataBuf, int iBufSize);
 
 // Returns the number of signs in the loaded track
 WLFUNC int wlGetNumSigns(int iTrackId);
-typedef int (WLCDECL *wlGetNumSignsFunc)();
+typedef int (WLCDECL *wlGetNumSignsFunc)(int iTrackId);
 
 // Fills pVertexBuf with the vertices and pIndexBuf with the indices of
 //   the loaded track.

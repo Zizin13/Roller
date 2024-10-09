@@ -25,6 +25,8 @@ private:
   IComponent *m_components[s_iMaxComponents];
 };
 
+//-------------------------------------------------------------------------------------------------
+
 template<class T>
 T *CEntity::GetComponent() const
 {

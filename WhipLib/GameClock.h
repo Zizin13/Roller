@@ -1,5 +1,5 @@
-#ifndef WHIPLIB_GAMECLOCK_H
-#define WHIPLIB_GAMECLOCK_H
+#ifndef _WHIPLIB_GAMECLOCK_H
+#define _WHIPLIB_GAMECLOCK_H
 //-------------------------------------------------------------------------------------------------
 #include "Clock.h"
 //-------------------------------------------------------------------------------------------------

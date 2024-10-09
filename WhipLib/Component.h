@@ -1,5 +1,5 @@
-#ifndef WHIPLIB_COMPONENT_H
-#define WHIPLIB_COMPONENT_H
+#ifndef _WHIPLIB_COMPONENT_H
+#define _WHIPLIB_COMPONENT_H
 //-------------------------------------------------------------------------------------------------
 class CEntity;
 //-------------------------------------------------------------------------------------------------

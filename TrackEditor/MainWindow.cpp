@@ -28,6 +28,7 @@
 #include "PreferencesDialog.h"
 #include "AssignBacksDialog.h"
 #include "Camera.h"
+#include "GameClock.h"
 #include "qtimer.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
@@ -112,6 +113,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   twViewer->setTabsClosable(true);
   lblChunkWarning->hide();
   lblStuntWarning->hide();
+  CGameClock::GetGameClock().Init();
 
   //setup dock widgets
   p->m_pDebugDataDockWidget = new QDockWidget("Debug Chunk Data", this);
@@ -189,6 +191,12 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   connect(m_pStuntTimer, &QTimer::timeout, this, &CMainWindow::OnStuntTimer);
   m_pStuntTimer->start();
 
+  //setup zero timer
+  m_pZeroTimer = new QTimer(this);
+  m_pZeroTimer->setInterval(0);
+  connect(m_pZeroTimer, &QTimer::timeout, this, &CMainWindow::OnZeroTimer);
+  m_pZeroTimer->start();
+
   //signals
   connect(this, &CMainWindow::LogMsgSig, this, &CMainWindow::OnLogMsg, Qt::QueuedConnection);
   connect(actNew, &QAction::triggered, this, &CMainWindow::OnNewTrack);
@@ -241,6 +249,7 @@ void CMainWindow::closeEvent(QCloseEvent *pEvent)
   }
   pEvent->accept();
 
+  m_pZeroTimer->stop();
   SaveSettings();
 
   //cleanup
@@ -1110,6 +1119,15 @@ void CMainWindow::OnStuntTimer()
     if (GetCurrentPreview())
       GetCurrentPreview()->UpdateTrack(true);
   }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnZeroTimer()
+{
+  CGameClock::GetGameClock().NewFrame();
+  if (GetCurrentPreview())
+    GetCurrentPreview()->UpdateCameraPos();
 }
 
 //-------------------------------------------------------------------------------------------------

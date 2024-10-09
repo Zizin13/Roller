@@ -294,6 +294,38 @@ CTrackPreview::~CTrackPreview()
 
 //-------------------------------------------------------------------------------------------------
 
+void CTrackPreview::UpdateCameraPos()
+{
+  if (!hasFocus())
+    return;
+
+  if (GetAsyncKeyState(0x57)) //W
+    p->m_camera.MoveForward();
+  if (GetAsyncKeyState(0x41)) //A
+    p->m_camera.StrafeLeft();
+  if (GetAsyncKeyState(0x53)) //S
+    p->m_camera.MoveBackward();
+  if (GetAsyncKeyState(0x44)) //D
+    p->m_camera.StrafeRight();
+  if (GetAsyncKeyState(0x52) //R
+      || GetAsyncKeyState(0x45)) //E
+    p->m_camera.MoveUp();
+  if (GetAsyncKeyState(0x46) //F
+      || GetAsyncKeyState(0x51)) //Q
+    p->m_camera.MoveDown();
+  if (GetAsyncKeyState(VK_LBUTTON)
+      || GetAsyncKeyState(VK_RBUTTON)) {
+    POINT mousePos;
+    if (GetCursorPos(&mousePos)) {
+      p->m_camera.MouseUpdate(glm::vec2(mousePos.x, mousePos.y));
+    }
+  }
+
+  repaint();
+}
+
+//-------------------------------------------------------------------------------------------------
+
 bool CTrackPreview::LoadTrack(const QString &sFilename)
 {
   m_sTrackFile = sFilename;
@@ -764,38 +796,8 @@ void CTrackPreview::mouseClickEvent(QMouseEvent *pEvent)
 
 void CTrackPreview::mouseMoveEvent(QMouseEvent *pEvent)
 {
+  (void)(pEvent);
   setFocus();
-  p->m_camera.MouseUpdate(glm::vec2(pEvent->x(), pEvent->y()));
-  repaint();
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CTrackPreview::keyPressEvent(QKeyEvent *pEvent)
-{
-  switch (pEvent->key()) {
-    case Qt::Key::Key_W:
-      p->m_camera.MoveForward();
-      break;
-    case Qt::Key::Key_S:
-      p->m_camera.MoveBackward();
-      break;
-    case Qt::Key::Key_A:
-      p->m_camera.StrafeLeft();
-      break;
-    case Qt::Key::Key_D:
-      p->m_camera.StrafeRight();
-      break;
-    case Qt::Key::Key_R:
-    case Qt::Key::Key_E:
-      p->m_camera.MoveUp();
-      break;
-    case Qt::Key::Key_F:
-    case Qt::Key::Key_Q:
-      p->m_camera.MoveDown();
-      break;
-  }
-  repaint();
 }
 
 //-------------------------------------------------------------------------------------------------

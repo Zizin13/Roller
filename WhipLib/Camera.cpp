@@ -1,11 +1,12 @@
 #include "Camera.h"
+#include "GameClock.h"
 #include "gtx\transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
 //-------------------------------------------------------------------------------------------------
-float Camera::s_fMovementSpeed = 1000.0f;
+float Camera::s_fMovementSpeed = 10000.0f;
 //-------------------------------------------------------------------------------------------------
 
 Camera::Camera()
@@ -46,42 +47,42 @@ glm::mat4 Camera::GetWorldToViewMatrix() const
 
 void Camera::MoveForward()
 {
-  m_position += s_fMovementSpeed * m_viewDirection;
+  m_position += s_fMovementSpeed * m_viewDirection * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void Camera::MoveBackward()
 {
-  m_position -= s_fMovementSpeed * m_viewDirection;
+  m_position -= s_fMovementSpeed * m_viewDirection * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void Camera::StrafeLeft()
 {
-  m_position -= s_fMovementSpeed * m_strafeDirection;
+  m_position -= s_fMovementSpeed * m_strafeDirection * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void Camera::StrafeRight()
 {
-  m_position += s_fMovementSpeed * m_strafeDirection;
+  m_position += s_fMovementSpeed * m_strafeDirection * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void Camera::MoveUp()
 {
-  m_position += s_fMovementSpeed * m_UP;
+  m_position += s_fMovementSpeed * m_UP * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void Camera::MoveDown()
 {
-  m_position -= s_fMovementSpeed * m_UP;
+  m_position -= s_fMovementSpeed * m_UP * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -255,8 +255,10 @@ exit 1</Command>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CarHelpers.h" />
+    <ClInclude Include="Clock.h" />
     <ClInclude Include="DisasmHelpers.h" />
     <ClInclude Include="FBXExporter.h" />
+    <ClInclude Include="GameClock.h" />
     <ClInclude Include="Logging.h" />
     <ClInclude Include="ShapeFactory.h" />
     <ClInclude Include="CarPlans\AutoPlans.h" />
@@ -304,8 +306,10 @@ exit 1</Command>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CarHelpers.cpp" />
+    <ClCompile Include="Clock.cpp" />
     <ClCompile Include="DisasmHelpers.cpp" />
     <ClCompile Include="FBXExporter.cpp" />
+    <ClCompile Include="GameClock.cpp" />
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="ShapeFactory.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />

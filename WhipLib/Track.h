@@ -1,5 +1,5 @@
-#ifndef _WHIPLIB_Track_H
-#define _WHIPLIB_Track_H
+#ifndef _WHIPLIB_TRACK_H
+#define _WHIPLIB_TRACK_H
 //-------------------------------------------------------------------------------------------------
 #include "glm.hpp"
 #include <vector>

@@ -23,6 +23,7 @@ public:
   CTrackPreview(QWidget *pParent, const QString &sTrackFile = "");
   ~CTrackPreview();
 
+  void UpdateCameraPos();
   bool LoadTrack(const QString &sFilename);
   void UpdateTrack(bool bUpdatingStunt = false);
   void ShowModels(uint32 uiShowModels);
@@ -50,7 +51,6 @@ protected:
   void paintGL();
   void mouseClickEvent(QMouseEvent *pEvent);
   void mouseMoveEvent(QMouseEvent *pEvent);
-  void keyPressEvent(QKeyEvent *pEvent);
 
 private:
   void LoadHistory(const tTrackHistory *pHistory);

@@ -80,6 +80,7 @@ protected slots:
   void OnUpdatePreview();
   void OnSaveHistoryTimer();
   void OnStuntTimer();
+  void OnZeroTimer();
 
 signals:
   void LogMsgSig(QString sMsg);
@@ -101,6 +102,7 @@ private:
   QString m_sHistoryDescription;
   QTimer *m_pSaveHistoryTimer;
   QTimer *m_pStuntTimer;
+  QTimer *m_pZeroTimer;
 };
 
 //-------------------------------------------------------------------------------------------------

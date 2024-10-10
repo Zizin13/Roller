@@ -376,6 +376,10 @@ FodyWeavers.xsd
 !/external/glew/lib/Release
 !/external/glew/lib/Debug/x64
 !/external/glew/lib/Release/x64
+!/external/glfw/lib/Debug
+!/external/glfw/lib/Release
+!/external/glfw/lib/Debug/x64
+!/external/glfw/lib/Release/x64
 /CarPlansParser/out.txt
 /CarPlansParser/null
 /bin/TrackAnalyzer

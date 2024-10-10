@@ -1,5 +1,5 @@
 3rd Party License Attributions
-GLFW - zlib/libpng (See GLFW_License.txt)
+GLFW - zlib/libpng (See GLFW_License.md)
 GLEW - BSD-3 Clause (See GLEW_License.txt)
 GLM - MIT (See GLM_License.txt)
 FBX - FBX (See FBX_License.rtf)

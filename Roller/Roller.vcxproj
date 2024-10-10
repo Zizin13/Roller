@@ -120,6 +120,33 @@
       <AdditionalLibraryDirectories>..\lib\x64;..\external\glfw\lib\Debug\x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;Shlwapi.lib;WhipLib_staticd.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>echo Copying Readme File...
+echo f | xcopy ..\README.md .\$(OutDir) /R /Y /d /i &gt; null
+if %errorlevel% NEQ 0 goto Failed
+
+echo Copying License Files...
+echo f | xcopy ..\LICENSE.md .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\external\glfw\LICENSE.md .\$(OutDir)GLFW_License.md /R /Y /d /i &gt; null
+echo f | xcopy ..\external\glew\GLEW_License.txt .\$(OutDir)GLEW_License.txt /R /Y /d /i &gt; null
+echo f | xcopy ..\external\glm\copying.txt .\$(OutDir)GLM_License.txt /R /Y /d /i &gt; null
+echo f | xcopy ..\external\FBX\FBX_LICENSE.rtf .\$(OutDir)FBX_License.rtf /R /Y /d /i &gt; null
+echo f | xcopy ..\external\stb\LICENSE.txt .\$(OutDir)STB_License.txt /R /Y /d /i &gt; null
+echo f | xcopy ..\external\Roller_LicensedLibs.txt .\$(OutDir)LicensedLibs.txt /R /Y /d /i &gt; null
+if %errorlevel% NEQ 0 goto Failed
+
+echo Copying Shaders...
+echo f | xcopy ..\WhipLib\Shaders\WhiplashFragmentShader.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
+echo f | xcopy ..\WhipLib\Shaders\WhiplashVertexShader.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
+if %errorlevel% NEQ 0 goto Failed
+
+echo Post-Build Step for $(ProjectName) completed successfully
+exit 0
+
+:Failed
+echo Post-Build Step for $(ProjectName) FAILED!
+exit 1</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -140,6 +167,33 @@
       <AdditionalLibraryDirectories>..\lib\x64;..\external\glfw\lib\Release\x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;Shlwapi.lib;WhipLib_static.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>echo Copying Readme File...
+echo f | xcopy ..\README.md .\$(OutDir) /R /Y /d /i &gt; null
+if %errorlevel% NEQ 0 goto Failed
+
+echo Copying License Files...
+echo f | xcopy ..\LICENSE.md .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\external\glfw\LICENSE.md .\$(OutDir)GLFW_License.md /R /Y /d /i &gt; null
+echo f | xcopy ..\external\glew\GLEW_License.txt .\$(OutDir)GLEW_License.txt /R /Y /d /i &gt; null
+echo f | xcopy ..\external\glm\copying.txt .\$(OutDir)GLM_License.txt /R /Y /d /i &gt; null
+echo f | xcopy ..\external\FBX\FBX_LICENSE.rtf .\$(OutDir)FBX_License.rtf /R /Y /d /i &gt; null
+echo f | xcopy ..\external\stb\LICENSE.txt .\$(OutDir)STB_License.txt /R /Y /d /i &gt; null
+echo f | xcopy ..\external\Roller_LicensedLibs.txt .\$(OutDir)LicensedLibs.txt /R /Y /d /i &gt; null
+if %errorlevel% NEQ 0 goto Failed
+
+echo Copying Shaders...
+echo f | xcopy ..\WhipLib\Shaders\WhiplashFragmentShader.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
+echo f | xcopy ..\WhipLib\Shaders\WhiplashVertexShader.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
+if %errorlevel% NEQ 0 goto Failed
+
+echo Post-Build Step for $(ProjectName) completed successfully
+exit 0
+
+:Failed
+echo Post-Build Step for $(ProjectName) FAILED!
+exit 1</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Roller.cpp" />

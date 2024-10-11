@@ -2,6 +2,15 @@
 #define GLFW_INCLUDE_NONE
 #include <glfw3.h>
 #include <glew.h>
+#include <glm.hpp>
+#include "gtc/matrix_transform.hpp"
+#include "gtx/transform.hpp"
+#include "Shader.h"
+#include "Camera.h"
+#include "ShapeFactory.h"
+#include "ShapeData.h"
+#include "Texture.h"
+#include "Palette.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -29,10 +38,37 @@ int main(int argc, char *argv[])
   /* Make the window's context current */
   glfwMakeContextCurrent(window);
 
+  if (glewInit() != GLEW_OK)
+    return -1;
+  glEnable(GL_DEBUG_OUTPUT);
+  //glDebugMessageCallback(GLErrorCb, 0);
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_ALPHA_TEST);
+  glAlphaFunc(GL_GREATER, 0.24f);
+  glLineWidth(3.0f);
+  CShader shader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");
+  Camera camera;
+  CPalette pal;
+  pal.LoadPalette("C:\\WHIP\\WHIPLASH\\FATDATA\\PALETTE.PAL");
+  CTexture tex;
+  tex.LoadTexture("C:\\WHIP\\WHIPLASH\\FATDATA\\YZIZIN.BM", &pal);
+  CShapeData *pShape = CShapeFactory::GetShapeFactory().MakeModel(&shader, &tex, eWhipModel::CAR_YZIZIN);
+
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
     /* Render here */
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(0.03125f, 0.296875f, 0.984375f, 1.0f);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+    //glViewport(0, 0, width(), height());
+
+    glm::mat4 viewToProjectionMatrix = glm::perspective(glm::radians(60.0f), ((float)640.0f) / 480.0f, 100.0f, 500000.0f);
+    glm::mat4 worldToViewMatrix = camera.GetWorldToViewMatrix();
+    glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
+
+    pShape->Draw(worldToProjectionMatrix, camera.GetPosition());
 
     /* Swap front and back buffers */
     glfwSwapBuffers(window);
@@ -40,6 +76,8 @@ int main(int argc, char *argv[])
     /* Poll for and process events */
     glfwPollEvents();
   }
+
+  delete pShape;
 
   glfwTerminate();
 

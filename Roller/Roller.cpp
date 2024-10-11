@@ -51,11 +51,15 @@ int main(int argc, char *argv[])
   glLineWidth(3.0f);
   CShader shader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");
   Camera camera;
-  CPalette pal;
-  pal.LoadPalette("C:\\WHIP\\WHIPLASH\\FATDATA\\PALETTE.PAL");
-  CTexture tex;
-  tex.LoadTexture("C:\\WHIP\\WHIPLASH\\FATDATA\\YZIZIN.BM", &pal);
-  CShapeData *pShape = CShapeFactory::GetShapeFactory().MakeModel(&shader, &tex, eWhipModel::CAR_YZIZIN);
+  camera.m_position.z = 500.0f;
+  camera.m_position.y = 1300.0f;
+  camera.m_viewDirection.z = 0.05f;
+  camera.m_viewDirection.y = -1.0f;
+  CPalette *pPal = new CPalette();;
+  pPal->LoadPalette("C:\\WHIP\\WHIPLASH\\FATDATA\\PALETTE.PAL");
+  CTexture *pTex = new CTexture();
+  pTex->LoadTexture("C:\\WHIP\\WHIPLASH\\FATDATA\\YZIZIN.BM", pPal);
+  CShapeData *pShape = CShapeFactory::GetShapeFactory().MakeModel(&shader, pTex, eWhipModel::CAR_YZIZIN);
 
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
@@ -68,7 +72,7 @@ int main(int argc, char *argv[])
     glm::mat4 worldToViewMatrix = camera.GetWorldToViewMatrix();
     glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
-    pShape->Draw(worldToProjectionMatrix, camera.GetPosition());
+    pShape->Draw(worldToProjectionMatrix, camera.m_position);
 
     /* Swap front and back buffers */
     glfwSwapBuffers(window);
@@ -78,6 +82,8 @@ int main(int argc, char *argv[])
   }
 
   delete pShape;
+  delete pTex;
+  delete pPal;
 
   glfwTerminate();
 

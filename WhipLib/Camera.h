@@ -16,13 +16,12 @@ public:
   void StrafeRight();
   void MoveUp();
   void MoveDown();
-  glm::vec3 GetPosition() { return m_position; };
 
   static float s_fMovementSpeed;
-
-private:
   glm::vec3 m_position;
   glm::vec3 m_viewDirection;
+
+private:
   glm::vec3 m_strafeDirection;
   const glm::vec3 m_UP;
   glm::vec2 m_oldMousePos;

@@ -2266,11 +2266,11 @@ uint32 *CShapeFactory::MakeIndicesEnvirFloor(uint32 &numIndices)
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
   indices[0] = 2;
-  indices[1] = 3;
-  indices[2] = 1;
+  indices[1] = 1;
+  indices[2] = 3;
   indices[3] = 2;
-  indices[4] = 1;
-  indices[5] = 0;
+  indices[4] = 0;
+  indices[5] = 1;
   return indices;
 }
 

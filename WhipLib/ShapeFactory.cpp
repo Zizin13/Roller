@@ -481,66 +481,66 @@ uint32 *CShapeFactory::MakeIndicesStuntMarker(uint32 &uiNumIndices)
 float *CShapeFactory::GetCoords(eWhipModel model)
 {
   switch (model) {
-    case CAR_F1WACK:
+    case eWhipModel::CAR_F1WACK:
       return g_f1wackCoords;
-    case CAR_XAUTO:
-    case CAR_YAUTO:
+    case eWhipModel::CAR_XAUTO:
+    case eWhipModel::CAR_YAUTO:
       return g_xautoCoords;
-    case CAR_XDESILVA:
-    case CAR_YDESILVA:
+    case eWhipModel::CAR_XDESILVA:
+    case eWhipModel::CAR_YDESILVA:
       return g_xdesilvaCoords;
-    case CAR_XPULSE:
-    case CAR_YPULSE:
+    case eWhipModel::CAR_XPULSE:
+    case eWhipModel::CAR_YPULSE:
       return g_xpulseCoords;
-    case CAR_XGLOBAL:
-    case CAR_YGLOBAL:
+    case eWhipModel::CAR_XGLOBAL:
+    case eWhipModel::CAR_YGLOBAL:
       return g_xglobalCoords;
-    case CAR_XMILLION:
-    case CAR_YMILLION:
+    case eWhipModel::CAR_XMILLION:
+    case eWhipModel::CAR_YMILLION:
       return g_xmillionCoords;
-    case CAR_XMISSION:
-    case CAR_YMISSION:
+    case eWhipModel::CAR_XMISSION:
+    case eWhipModel::CAR_YMISSION:
       return g_xmissionCoords;
-    case CAR_XZIZIN:
-    case CAR_YZIZIN:
+    case eWhipModel::CAR_XZIZIN:
+    case eWhipModel::CAR_YZIZIN:
       return g_xzizinCoords;
-    case CAR_XREISE:
-    case CAR_YREISE:
-    case CAR_DEATH:
+    case eWhipModel::CAR_XREISE:
+    case eWhipModel::CAR_YREISE:
+    case eWhipModel::CAR_DEATH:
       return g_xreiseCoords;
-    case SIGN_TOWER:
+    case eWhipModel::SIGN_TOWER:
       return g_towerCoords;
-    case SIGN_TOWER2:
+    case eWhipModel::SIGN_TOWER2:
       return g_tower2Coords;
-    case SIGN_SIGN01:
+    case eWhipModel::SIGN_SIGN01:
       return g_sign01Coords;
-    case SIGN_SIGN02:
+    case eWhipModel::SIGN_SIGN02:
       return g_sign02Coords;
-    case SIGN_BUILD:
+    case eWhipModel::SIGN_BUILD:
       return g_buildCoords;
-    case SIGN_BUILD1:
+    case eWhipModel::SIGN_BUILD1:
       return g_build1Coords;
-    case SIGN_BUILD2:
+    case eWhipModel::SIGN_BUILD2:
       return g_build2Coords;
-    case SIGN_BUILD3:
+    case eWhipModel::SIGN_BUILD3:
       return g_build3Coords;
-    case SIGN_HEELBAR:
+    case eWhipModel::SIGN_HEELBAR:
       return g_heelbarCoords;
-    case SIGN_BALLOON:
+    case eWhipModel::SIGN_BALLOON:
       return g_balloonCoords;
-    case SIGN_BALLOON2:
+    case eWhipModel::SIGN_BALLOON2:
       return g_balloon2Coords;
-    case SIGN_TREE:
+    case eWhipModel::SIGN_TREE:
       return g_treeCoords;
-    case SIGN_ADVERT:
+    case eWhipModel::SIGN_ADVERT:
       return g_advertCoords;
-    case SIGN_ADVERT2:
+    case eWhipModel::SIGN_ADVERT2:
       return g_advert2Coords;
-    case SIGN_ADVERT3:
+    case eWhipModel::SIGN_ADVERT3:
       return g_advert3Coords;
-    case SIGN_QUADBLD:
+    case eWhipModel::SIGN_QUADBLD:
       return g_quadbldCoords;
-    case SIGN_BLD0:
+    case eWhipModel::SIGN_BLD0:
       return g_bld0Coords;
     default:
       assert(0);
@@ -553,66 +553,66 @@ float *CShapeFactory::GetCoords(eWhipModel model)
 int CShapeFactory::GetCoordsCount(eWhipModel model)
 {
   switch (model) {
-    case CAR_F1WACK:
+    case eWhipModel::CAR_F1WACK:
       return g_f1wackCoordsCount;
-    case CAR_XAUTO:
-    case CAR_YAUTO:
+    case eWhipModel::CAR_XAUTO:
+    case eWhipModel::CAR_YAUTO:
       return g_xautoCoordsCount;
-    case CAR_XDESILVA:
-    case CAR_YDESILVA:
+    case eWhipModel::CAR_XDESILVA:
+    case eWhipModel::CAR_YDESILVA:
       return g_xdesilvaCoordsCount;
-    case CAR_XPULSE:
-    case CAR_YPULSE:
+    case eWhipModel::CAR_XPULSE:
+    case eWhipModel::CAR_YPULSE:
       return g_xpulseCoordsCount;
-    case CAR_XGLOBAL:
-    case CAR_YGLOBAL:
+    case eWhipModel::CAR_XGLOBAL:
+    case eWhipModel::CAR_YGLOBAL:
       return g_xglobalCoordsCount;
-    case CAR_XMILLION:
-    case CAR_YMILLION:
+    case eWhipModel::CAR_XMILLION:
+    case eWhipModel::CAR_YMILLION:
       return g_xmillionCoordsCount;
-    case CAR_XMISSION:
-    case CAR_YMISSION:
+    case eWhipModel::CAR_XMISSION:
+    case eWhipModel::CAR_YMISSION:
       return g_xmissionCoordsCount;
-    case CAR_XZIZIN:
-    case CAR_YZIZIN:
+    case eWhipModel::CAR_XZIZIN:
+    case eWhipModel::CAR_YZIZIN:
       return g_xzizinCoordsCount;
-    case CAR_XREISE:
-    case CAR_YREISE:
-    case CAR_DEATH:
+    case eWhipModel::CAR_XREISE:
+    case eWhipModel::CAR_YREISE:
+    case eWhipModel::CAR_DEATH:
       return g_xreiseCoordsCount;
-    case SIGN_TOWER:
+    case eWhipModel::SIGN_TOWER:
       return g_towerCoordsCount;
-    case SIGN_TOWER2:
+    case eWhipModel::SIGN_TOWER2:
       return g_tower2CoordsCount;
-    case SIGN_SIGN01:
+    case eWhipModel::SIGN_SIGN01:
       return g_sign01CoordsCount;
-    case SIGN_SIGN02:
+    case eWhipModel::SIGN_SIGN02:
       return g_sign02CoordsCount;
-    case SIGN_BUILD:
+    case eWhipModel::SIGN_BUILD:
       return g_buildCoordsCount;
-    case SIGN_BUILD1:
+    case eWhipModel::SIGN_BUILD1:
       return g_build1CoordsCount;
-    case SIGN_BUILD2:
+    case eWhipModel::SIGN_BUILD2:
       return g_build2CoordsCount;
-    case SIGN_BUILD3:
+    case eWhipModel::SIGN_BUILD3:
       return g_build3CoordsCount;
-    case SIGN_HEELBAR:
+    case eWhipModel::SIGN_HEELBAR:
       return g_heelbarCoordsCount;
-    case SIGN_BALLOON:
+    case eWhipModel::SIGN_BALLOON:
       return g_balloonCoordsCount;
-    case SIGN_BALLOON2:
+    case eWhipModel::SIGN_BALLOON2:
       return g_balloon2CoordsCount;
-    case SIGN_TREE:
+    case eWhipModel::SIGN_TREE:
       return g_treeCoordsCount;
-    case SIGN_ADVERT:
+    case eWhipModel::SIGN_ADVERT:
       return g_advertCoordsCount;
-    case SIGN_ADVERT2:
+    case eWhipModel::SIGN_ADVERT2:
       return g_advert2CoordsCount;
-    case SIGN_ADVERT3:
+    case eWhipModel::SIGN_ADVERT3:
       return g_advert3CoordsCount;
-    case SIGN_QUADBLD:
+    case eWhipModel::SIGN_QUADBLD:
       return g_quadbldCoordsCount;
-    case SIGN_BLD0:
+    case eWhipModel::SIGN_BLD0:
       return g_bld0CoordsCount;
     default:
       assert(0);
@@ -625,66 +625,66 @@ int CShapeFactory::GetCoordsCount(eWhipModel model)
 tPolygon *CShapeFactory::GetPols(eWhipModel model)
 {
   switch (model) {
-    case CAR_F1WACK:
+    case eWhipModel::CAR_F1WACK:
       return g_f1wackPols;
-    case CAR_XAUTO:
-    case CAR_YAUTO:
+    case eWhipModel::CAR_XAUTO:
+    case eWhipModel::CAR_YAUTO:
       return g_xautoPols;
-    case CAR_XDESILVA:
-    case CAR_YDESILVA:
+    case eWhipModel::CAR_XDESILVA:
+    case eWhipModel::CAR_YDESILVA:
       return g_xdesilvaPols;
-    case CAR_XPULSE:
-    case CAR_YPULSE:
+    case eWhipModel::CAR_XPULSE:
+    case eWhipModel::CAR_YPULSE:
       return g_xpulsePols;
-    case CAR_XGLOBAL:
-    case CAR_YGLOBAL:
+    case eWhipModel::CAR_XGLOBAL:
+    case eWhipModel::CAR_YGLOBAL:
       return g_xglobalPols;
-    case CAR_XMILLION:
-    case CAR_YMILLION:
+    case eWhipModel::CAR_XMILLION:
+    case eWhipModel::CAR_YMILLION:
       return g_xmillionPols;
-    case CAR_XMISSION:
-    case CAR_YMISSION:
+    case eWhipModel::CAR_XMISSION:
+    case eWhipModel::CAR_YMISSION:
       return g_xmissionPols;
-    case CAR_XZIZIN:
-    case CAR_YZIZIN:
+    case eWhipModel::CAR_XZIZIN:
+    case eWhipModel::CAR_YZIZIN:
       return g_xzizinPols;
-    case CAR_XREISE:
-    case CAR_YREISE:
-    case CAR_DEATH:
+    case eWhipModel::CAR_XREISE:
+    case eWhipModel::CAR_YREISE:
+    case eWhipModel::CAR_DEATH:
       return g_xreisePols;
-    case SIGN_TOWER:
+    case eWhipModel::SIGN_TOWER:
       return g_towerPols;
-    case SIGN_TOWER2:
+    case eWhipModel::SIGN_TOWER2:
       return g_tower2Pols;
-    case SIGN_SIGN01:
+    case eWhipModel::SIGN_SIGN01:
       return g_sign01Pols;
-    case SIGN_SIGN02:
+    case eWhipModel::SIGN_SIGN02:
       return g_sign02Pols;
-    case SIGN_BUILD:
+    case eWhipModel::SIGN_BUILD:
       return g_buildPols;
-    case SIGN_BUILD1:
+    case eWhipModel::SIGN_BUILD1:
       return g_build1Pols;
-    case SIGN_BUILD2:
+    case eWhipModel::SIGN_BUILD2:
       return g_build2Pols;
-    case SIGN_BUILD3:
+    case eWhipModel::SIGN_BUILD3:
       return g_build3Pols;
-    case SIGN_HEELBAR:
+    case eWhipModel::SIGN_HEELBAR:
       return g_heelbarPols;
-    case SIGN_BALLOON:
+    case eWhipModel::SIGN_BALLOON:
       return g_balloonPols;
-    case SIGN_BALLOON2:
+    case eWhipModel::SIGN_BALLOON2:
       return g_balloon2Pols;
-    case SIGN_TREE:
+    case eWhipModel::SIGN_TREE:
       return g_treePols;
-    case SIGN_ADVERT:
+    case eWhipModel::SIGN_ADVERT:
       return g_advertPols;
-    case SIGN_ADVERT2:
+    case eWhipModel::SIGN_ADVERT2:
       return g_advert2Pols;
-    case SIGN_ADVERT3:
+    case eWhipModel::SIGN_ADVERT3:
       return g_advert3Pols;
-    case SIGN_QUADBLD:
+    case eWhipModel::SIGN_QUADBLD:
       return g_quadbldPols;
-    case SIGN_BLD0:
+    case eWhipModel::SIGN_BLD0:
       return g_bld0Pols;
     default:
       assert(0);
@@ -697,66 +697,66 @@ tPolygon *CShapeFactory::GetPols(eWhipModel model)
 int CShapeFactory::GetPolsCount(eWhipModel model)
 {
   switch (model) {
-    case CAR_F1WACK:
+    case eWhipModel::CAR_F1WACK:
       return g_f1wackPolsCount;
-    case CAR_XAUTO:
-    case CAR_YAUTO:
+    case eWhipModel::CAR_XAUTO:
+    case eWhipModel::CAR_YAUTO:
       return g_xautoPolsCount;
-    case CAR_XDESILVA:
-    case CAR_YDESILVA:
+    case eWhipModel::CAR_XDESILVA:
+    case eWhipModel::CAR_YDESILVA:
       return g_xdesilvaPolsCount;
-    case CAR_XPULSE:
-    case CAR_YPULSE:
+    case eWhipModel::CAR_XPULSE:
+    case eWhipModel::CAR_YPULSE:
       return g_xpulsePolsCount;
-    case CAR_XGLOBAL:
-    case CAR_YGLOBAL:
+    case eWhipModel::CAR_XGLOBAL:
+    case eWhipModel::CAR_YGLOBAL:
       return g_xglobalPolsCount;
-    case CAR_XMILLION:
-    case CAR_YMILLION:
+    case eWhipModel::CAR_XMILLION:
+    case eWhipModel::CAR_YMILLION:
       return g_xmillionPolsCount;
-    case CAR_XMISSION:
-    case CAR_YMISSION:
+    case eWhipModel::CAR_XMISSION:
+    case eWhipModel::CAR_YMISSION:
       return g_xmissionPolsCount;
-    case CAR_XZIZIN:
-    case CAR_YZIZIN:
+    case eWhipModel::CAR_XZIZIN:
+    case eWhipModel::CAR_YZIZIN:
       return g_xzizinPolsCount;
-    case CAR_XREISE:
-    case CAR_YREISE:
-    case CAR_DEATH:
+    case eWhipModel::CAR_XREISE:
+    case eWhipModel::CAR_YREISE:
+    case eWhipModel::CAR_DEATH:
       return g_xreisePolsCount;
-    case SIGN_TOWER:
+    case eWhipModel::SIGN_TOWER:
       return g_towerPolsCount;
-    case SIGN_TOWER2:
+    case eWhipModel::SIGN_TOWER2:
       return g_tower2PolsCount;
-    case SIGN_SIGN01:
+    case eWhipModel::SIGN_SIGN01:
       return g_sign01PolsCount;
-    case SIGN_SIGN02:
+    case eWhipModel::SIGN_SIGN02:
       return g_sign02PolsCount;
-    case SIGN_BUILD:
+    case eWhipModel::SIGN_BUILD:
       return g_buildPolsCount;
-    case SIGN_BUILD1:
+    case eWhipModel::SIGN_BUILD1:
       return g_build1PolsCount;
-    case SIGN_BUILD2:
+    case eWhipModel::SIGN_BUILD2:
       return g_build2PolsCount;
-    case SIGN_BUILD3:
+    case eWhipModel::SIGN_BUILD3:
       return g_build3PolsCount;
-    case SIGN_HEELBAR:
+    case eWhipModel::SIGN_HEELBAR:
       return g_heelbarPolsCount;
-    case SIGN_BALLOON:
+    case eWhipModel::SIGN_BALLOON:
       return g_balloonPolsCount;
-    case SIGN_BALLOON2:
+    case eWhipModel::SIGN_BALLOON2:
       return g_balloon2PolsCount;
-    case SIGN_TREE:
+    case eWhipModel::SIGN_TREE:
       return g_treePolsCount;
-    case SIGN_ADVERT:
+    case eWhipModel::SIGN_ADVERT:
       return g_advertPolsCount;
-    case SIGN_ADVERT2:
+    case eWhipModel::SIGN_ADVERT2:
       return g_advert2PolsCount;
-    case SIGN_ADVERT3:
+    case eWhipModel::SIGN_ADVERT3:
       return g_advert3PolsCount;
-    case SIGN_QUADBLD:
+    case eWhipModel::SIGN_QUADBLD:
       return g_quadbldPolsCount;
-    case SIGN_BLD0:
+    case eWhipModel::SIGN_BLD0:
       return g_bld0PolsCount;
     default:
       assert(0);
@@ -769,66 +769,66 @@ int CShapeFactory::GetPolsCount(eWhipModel model)
 tAnimation *CShapeFactory::GetAnms(eWhipModel model)
 {
   switch (model) {
-    case CAR_F1WACK:
+    case eWhipModel::CAR_F1WACK:
       return NULL;
-    case CAR_XAUTO:
-    case CAR_YAUTO:
+    case eWhipModel::CAR_XAUTO:
+    case eWhipModel::CAR_YAUTO:
       return g_xautoAnms;
-    case CAR_XDESILVA:
-    case CAR_YDESILVA:
+    case eWhipModel::CAR_XDESILVA:
+    case eWhipModel::CAR_YDESILVA:
       return g_xdesilvaAnms;
-    case CAR_XPULSE:
-    case CAR_YPULSE:
+    case eWhipModel::CAR_XPULSE:
+    case eWhipModel::CAR_YPULSE:
       return g_xpulseAnms;
-    case CAR_XGLOBAL:
-    case CAR_YGLOBAL:
+    case eWhipModel::CAR_XGLOBAL:
+    case eWhipModel::CAR_YGLOBAL:
       return g_xglobalAnms;
-    case CAR_XMILLION:
-    case CAR_YMILLION:
+    case eWhipModel::CAR_XMILLION:
+    case eWhipModel::CAR_YMILLION:
       return g_xmillionAnms;
-    case CAR_XMISSION:
-    case CAR_YMISSION:
+    case eWhipModel::CAR_XMISSION:
+    case eWhipModel::CAR_YMISSION:
       return g_xmissionAnms;
-    case CAR_XZIZIN:
-    case CAR_YZIZIN:
+    case eWhipModel::CAR_XZIZIN:
+    case eWhipModel::CAR_YZIZIN:
       return g_xzizinAnms;
-    case CAR_XREISE:
-    case CAR_YREISE:
-    case CAR_DEATH:
+    case eWhipModel::CAR_XREISE:
+    case eWhipModel::CAR_YREISE:
+    case eWhipModel::CAR_DEATH:
       return g_xreiseAnms;
-    case SIGN_TOWER:
+    case eWhipModel::SIGN_TOWER:
       return g_towerAnms;
-    case SIGN_TOWER2:
+    case eWhipModel::SIGN_TOWER2:
       return NULL;
-    case SIGN_SIGN01:
+    case eWhipModel::SIGN_SIGN01:
       return g_sign01Anms;
-    case SIGN_SIGN02:
+    case eWhipModel::SIGN_SIGN02:
       return g_sign02Anms;
-    case SIGN_BUILD:
+    case eWhipModel::SIGN_BUILD:
       return NULL;
-    case SIGN_BUILD1:
+    case eWhipModel::SIGN_BUILD1:
       return NULL;
-    case SIGN_BUILD2:
+    case eWhipModel::SIGN_BUILD2:
       return NULL;
-    case SIGN_BUILD3:
+    case eWhipModel::SIGN_BUILD3:
       return g_build3Anms;
-    case SIGN_HEELBAR:
+    case eWhipModel::SIGN_HEELBAR:
       return NULL;
-    case SIGN_BALLOON:
+    case eWhipModel::SIGN_BALLOON:
       return NULL;
-    case SIGN_BALLOON2:
+    case eWhipModel::SIGN_BALLOON2:
       return g_balloon2Anms;
-    case SIGN_TREE:
+    case eWhipModel::SIGN_TREE:
       return NULL;
-    case SIGN_ADVERT:
+    case eWhipModel::SIGN_ADVERT:
       return g_advertAnms;
-    case SIGN_ADVERT2:
+    case eWhipModel::SIGN_ADVERT2:
       return g_advert2Anms;
-    case SIGN_ADVERT3:
+    case eWhipModel::SIGN_ADVERT3:
       return g_advert3Anms;
-    case SIGN_QUADBLD:
+    case eWhipModel::SIGN_QUADBLD:
       return NULL;
-    case SIGN_BLD0:
+    case eWhipModel::SIGN_BLD0:
       return NULL;
     default:
       assert(0);
@@ -841,66 +841,66 @@ tAnimation *CShapeFactory::GetAnms(eWhipModel model)
 int CShapeFactory::GetAnmsCount(eWhipModel model)
 {
   switch (model) {
-    case CAR_F1WACK:
+    case eWhipModel::CAR_F1WACK:
       return 0;
-    case CAR_XAUTO:
-    case CAR_YAUTO:
+    case eWhipModel::CAR_XAUTO:
+    case eWhipModel::CAR_YAUTO:
       return g_xautoAnmsCount;
-    case CAR_XDESILVA:
-    case CAR_YDESILVA:
+    case eWhipModel::CAR_XDESILVA:
+    case eWhipModel::CAR_YDESILVA:
       return g_xdesilvaAnmsCount;
-    case CAR_XPULSE:
-    case CAR_YPULSE:
+    case eWhipModel::CAR_XPULSE:
+    case eWhipModel::CAR_YPULSE:
       return g_xpulseAnmsCount;
-    case CAR_XGLOBAL:
-    case CAR_YGLOBAL:
+    case eWhipModel::CAR_XGLOBAL:
+    case eWhipModel::CAR_YGLOBAL:
       return g_xglobalAnmsCount;
-    case CAR_XMILLION:
-    case CAR_YMILLION:
+    case eWhipModel::CAR_XMILLION:
+    case eWhipModel::CAR_YMILLION:
       return g_xmillionAnmsCount;
-    case CAR_XMISSION:
-    case CAR_YMISSION:
+    case eWhipModel::CAR_XMISSION:
+    case eWhipModel::CAR_YMISSION:
       return g_xmissionAnmsCount;
-    case CAR_XZIZIN:
-    case CAR_YZIZIN:
+    case eWhipModel::CAR_XZIZIN:
+    case eWhipModel::CAR_YZIZIN:
       return g_xzizinAnmsCount;
-    case CAR_XREISE:
-    case CAR_YREISE:
-    case CAR_DEATH:
+    case eWhipModel::CAR_XREISE:
+    case eWhipModel::CAR_YREISE:
+    case eWhipModel::CAR_DEATH:
       return g_xreiseAnmsCount;
-    case SIGN_TOWER:
+    case eWhipModel::SIGN_TOWER:
       return g_towerAnmsCount;
-    case SIGN_TOWER2:
+    case eWhipModel::SIGN_TOWER2:
       return 0;
-    case SIGN_SIGN01:
+    case eWhipModel::SIGN_SIGN01:
       return g_sign01AnmsCount;
-    case SIGN_SIGN02:
+    case eWhipModel::SIGN_SIGN02:
       return g_sign02AnmsCount;
-    case SIGN_BUILD:
+    case eWhipModel::SIGN_BUILD:
       return 0;
-    case SIGN_BUILD1:
+    case eWhipModel::SIGN_BUILD1:
       return 0;
-    case SIGN_BUILD2:
+    case eWhipModel::SIGN_BUILD2:
       return 0;
-    case SIGN_BUILD3:
+    case eWhipModel::SIGN_BUILD3:
       return g_build3AnmsCount;
-    case SIGN_HEELBAR:
+    case eWhipModel::SIGN_HEELBAR:
       return 0;
-    case SIGN_BALLOON:
+    case eWhipModel::SIGN_BALLOON:
       return 0;
-    case SIGN_BALLOON2:
+    case eWhipModel::SIGN_BALLOON2:
       return g_balloon2AnmsCount;
-    case SIGN_TREE:
+    case eWhipModel::SIGN_TREE:
       return 0;
-    case SIGN_ADVERT:
+    case eWhipModel::SIGN_ADVERT:
       return g_advertAnmsCount;
-    case SIGN_ADVERT2:
+    case eWhipModel::SIGN_ADVERT2:
       return g_advert2AnmsCount;
-    case SIGN_ADVERT3:
+    case eWhipModel::SIGN_ADVERT3:
       return g_advert3AnmsCount;
-    case SIGN_QUADBLD:
+    case eWhipModel::SIGN_QUADBLD:
       return 0;
-    case SIGN_BLD0:
+    case eWhipModel::SIGN_BLD0:
       return 0;
     default:
       assert(0);
@@ -913,66 +913,66 @@ int CShapeFactory::GetAnmsCount(eWhipModel model)
 uint32 *CShapeFactory::GetBacks(eWhipModel model)
 {
   switch (model) {
-    case CAR_F1WACK:
+    case eWhipModel::CAR_F1WACK:
       return g_f1wackBacks;
-    case CAR_XAUTO:
-    case CAR_YAUTO:
+    case eWhipModel::CAR_XAUTO:
+    case eWhipModel::CAR_YAUTO:
       return g_xautoBacks;
-    case CAR_XDESILVA:
-    case CAR_YDESILVA:
+    case eWhipModel::CAR_XDESILVA:
+    case eWhipModel::CAR_YDESILVA:
       return g_xdesilvaBacks;
-    case CAR_XPULSE:
-    case CAR_YPULSE:
+    case eWhipModel::CAR_XPULSE:
+    case eWhipModel::CAR_YPULSE:
       return g_xpulseBacks;
-    case CAR_XGLOBAL:
-    case CAR_YGLOBAL:
+    case eWhipModel::CAR_XGLOBAL:
+    case eWhipModel::CAR_YGLOBAL:
       return g_xglobalBacks;
-    case CAR_XMILLION:
-    case CAR_YMILLION:
+    case eWhipModel::CAR_XMILLION:
+    case eWhipModel::CAR_YMILLION:
       return g_xmillionBacks;
-    case CAR_XMISSION:
-    case CAR_YMISSION:
+    case eWhipModel::CAR_XMISSION:
+    case eWhipModel::CAR_YMISSION:
       return g_xmissionBacks;
-    case CAR_XZIZIN:
-    case CAR_YZIZIN:
+    case eWhipModel::CAR_XZIZIN:
+    case eWhipModel::CAR_YZIZIN:
       return g_xzizinBacks;
-    case CAR_XREISE:
-    case CAR_YREISE:
-    case CAR_DEATH:
+    case eWhipModel::CAR_XREISE:
+    case eWhipModel::CAR_YREISE:
+    case eWhipModel::CAR_DEATH:
       return g_xreiseBacks;
-    case SIGN_TOWER:
+    case eWhipModel::SIGN_TOWER:
       return g_towerBacks;
-    case SIGN_TOWER2:
+    case eWhipModel::SIGN_TOWER2:
       return g_tower2Backs;
-    case SIGN_SIGN01:
+    case eWhipModel::SIGN_SIGN01:
       return g_sign01Backs;
-    case SIGN_SIGN02:
+    case eWhipModel::SIGN_SIGN02:
       return g_sign02Backs;
-    case SIGN_BUILD:
+    case eWhipModel::SIGN_BUILD:
       return g_buildBacks;
-    case SIGN_BUILD1:
+    case eWhipModel::SIGN_BUILD1:
       return g_build1Backs;
-    case SIGN_BUILD2:
+    case eWhipModel::SIGN_BUILD2:
       return g_build2Backs;
-    case SIGN_BUILD3:
+    case eWhipModel::SIGN_BUILD3:
       return g_build3Backs;
-    case SIGN_HEELBAR:
+    case eWhipModel::SIGN_HEELBAR:
       return g_heelbarBacks;
-    case SIGN_BALLOON:
+    case eWhipModel::SIGN_BALLOON:
       return NULL;
-    case SIGN_BALLOON2:
+    case eWhipModel::SIGN_BALLOON2:
       return g_balloon2Backs;
-    case SIGN_TREE:
+    case eWhipModel::SIGN_TREE:
       return g_treeBacks;
-    case SIGN_ADVERT:
+    case eWhipModel::SIGN_ADVERT:
       return g_advertBacks;
-    case SIGN_ADVERT2:
+    case eWhipModel::SIGN_ADVERT2:
       return g_advert2Backs;
-    case SIGN_ADVERT3:
+    case eWhipModel::SIGN_ADVERT3:
       return g_advert3Backs;
-    case SIGN_QUADBLD:
+    case eWhipModel::SIGN_QUADBLD:
       return g_quadbldBacks;
-    case SIGN_BLD0:
+    case eWhipModel::SIGN_BLD0:
       return g_bld0Backs;
     default:
       assert(0);
@@ -985,66 +985,66 @@ uint32 *CShapeFactory::GetBacks(eWhipModel model)
 int CShapeFactory::GetBacksCount(eWhipModel model)
 {
   switch (model) {
-    case CAR_F1WACK:
+    case eWhipModel::CAR_F1WACK:
       return g_f1wackBacksCount;
-    case CAR_XAUTO:
-    case CAR_YAUTO:
+    case eWhipModel::CAR_XAUTO:
+    case eWhipModel::CAR_YAUTO:
       return g_xautoBacksCount;
-    case CAR_XDESILVA:
-    case CAR_YDESILVA:
+    case eWhipModel::CAR_XDESILVA:
+    case eWhipModel::CAR_YDESILVA:
       return g_xdesilvaBacksCount;
-    case CAR_XPULSE:
-    case CAR_YPULSE:
+    case eWhipModel::CAR_XPULSE:
+    case eWhipModel::CAR_YPULSE:
       return g_xpulseBacksCount;
-    case CAR_XGLOBAL:
-    case CAR_YGLOBAL:
+    case eWhipModel::CAR_XGLOBAL:
+    case eWhipModel::CAR_YGLOBAL:
       return g_xglobalBacksCount;
-    case CAR_XMILLION:
-    case CAR_YMILLION:
+    case eWhipModel::CAR_XMILLION:
+    case eWhipModel::CAR_YMILLION:
       return g_xmillionBacksCount;
-    case CAR_XMISSION:
-    case CAR_YMISSION:
+    case eWhipModel::CAR_XMISSION:
+    case eWhipModel::CAR_YMISSION:
       return g_xmissionBacksCount;
-    case CAR_XZIZIN:
-    case CAR_YZIZIN:
+    case eWhipModel::CAR_XZIZIN:
+    case eWhipModel::CAR_YZIZIN:
       return g_xzizinBacksCount;
-    case CAR_XREISE:
-    case CAR_YREISE:
-    case CAR_DEATH:
+    case eWhipModel::CAR_XREISE:
+    case eWhipModel::CAR_YREISE:
+    case eWhipModel::CAR_DEATH:
       return g_xreiseBacksCount;
-    case SIGN_TOWER:
+    case eWhipModel::SIGN_TOWER:
       return g_towerBacksCount;
-    case SIGN_TOWER2:
+    case eWhipModel::SIGN_TOWER2:
       return g_tower2BacksCount;
-    case SIGN_SIGN01:
+    case eWhipModel::SIGN_SIGN01:
       return g_sign01BacksCount;
-    case SIGN_SIGN02:
+    case eWhipModel::SIGN_SIGN02:
       return g_sign02BacksCount;
-    case SIGN_BUILD:
+    case eWhipModel::SIGN_BUILD:
       return g_buildBacksCount;
-    case SIGN_BUILD1:
+    case eWhipModel::SIGN_BUILD1:
       return g_build1BacksCount;
-    case SIGN_BUILD2:
+    case eWhipModel::SIGN_BUILD2:
       return g_build2BacksCount;
-    case SIGN_BUILD3:
+    case eWhipModel::SIGN_BUILD3:
       return g_build3BacksCount;
-    case SIGN_HEELBAR:
+    case eWhipModel::SIGN_HEELBAR:
       return g_heelbarBacksCount;
-    case SIGN_BALLOON:
+    case eWhipModel::SIGN_BALLOON:
       return 0;
-    case SIGN_BALLOON2:
+    case eWhipModel::SIGN_BALLOON2:
       return g_balloon2BacksCount;
-    case SIGN_TREE:
+    case eWhipModel::SIGN_TREE:
       return g_treeBacksCount;
-    case SIGN_ADVERT:
+    case eWhipModel::SIGN_ADVERT:
       return g_advertBacksCount;
-    case SIGN_ADVERT2:
+    case eWhipModel::SIGN_ADVERT2:
       return g_advert2BacksCount;
-    case SIGN_ADVERT3:
+    case eWhipModel::SIGN_ADVERT3:
       return g_advert3BacksCount;
-    case SIGN_QUADBLD:
+    case eWhipModel::SIGN_QUADBLD:
       return g_quadbldBacksCount;
-    case SIGN_BLD0:
+    case eWhipModel::SIGN_BLD0:
       return g_bld0BacksCount;
     default:
       assert(0);
@@ -1572,7 +1572,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
 
     int iVertRunner = 0;
     switch (section) {
-      case CENTER:
+      case eShapeSection::CENTER:
         ApplyVerticesSingleSection(i, vertices, 
                                    pTrack->m_chunkAy[i].math.lLane,
                                    pTrack->m_chunkAy[i].math.rLane,
@@ -1597,7 +1597,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                             vertices[i * uiNumVertsPerChunk + 2 + 4],
                                             vertices[i * uiNumVertsPerChunk + 3 + 4]);
         break;
-      case LSHOULDER:
+      case eShapeSection::LSHOULDER:
         ApplyVerticesSingleSection(i, vertices,
                               pTrack->m_chunkAy[i].math.lShoulder,
                               pTrack->m_chunkAy[i].math.lLane,
@@ -1622,7 +1622,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                             vertices[i * uiNumVertsPerChunk + 2 + 4],
                                             vertices[i * uiNumVertsPerChunk + 3 + 4]);
         break;
-      case RSHOULDER:
+      case eShapeSection::RSHOULDER:
         ApplyVerticesSingleSection(i, vertices,
                                    pTrack->m_chunkAy[i].math.rLane,
                                    pTrack->m_chunkAy[i].math.rShoulder,
@@ -1647,7 +1647,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                                             vertices[i * uiNumVertsPerChunk + 2 + 4],
                                             vertices[i * uiNumVertsPerChunk + 3 + 4]);
         break;
-      case LWALL:
+      case eShapeSection::LWALL:
         ApplyVerticesSingleSection(i, vertices, 
                                    pTrack->m_chunkAy[i].math.lWall, 
                                    pTrack->m_chunkAy[i].math.lWallBottomAttach, 
@@ -1683,7 +1683,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
           }
         }
         break;
-      case RWALL:
+      case eShapeSection::RWALL:
         ApplyVerticesSingleSection(i, vertices, 
                                    pTrack->m_chunkAy[i].math.rWallBottomAttach, 
                                    pTrack->m_chunkAy[i].math.rWall, 
@@ -1719,7 +1719,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
           }
         }
         break;
-      case ROOF:
+      case eShapeSection::ROOF:
         ApplyVerticesSingleSection(i, vertices, 
                                    pTrack->m_chunkAy[i].math.rWall, 
                                    pTrack->m_chunkAy[i].math.lWall, 
@@ -1744,7 +1744,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                             vertices[i * uiNumVertsPerChunk + 2 + 4],
                             vertices[i * uiNumVertsPerChunk + 3 + 4]);
         break;
-      case OWALLFLOOR:
+      case eShapeSection::OWALLFLOOR:
         ApplyVerticesSingleSection(i, vertices, 
                                    pTrack->m_chunkAy[i].math.lFloor, 
                                    pTrack->m_chunkAy[i].math.rFloor, 
@@ -1769,7 +1769,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                             vertices[i * uiNumVertsPerChunk + 2 + 4],
                             vertices[i * uiNumVertsPerChunk + 3 + 4]);
         break;
-      case LLOWALL:
+      case eShapeSection::LLOWALL:
         ApplyVerticesSingleSection(i, vertices, 
                                    pTrack->m_chunkAy[i].math.lloWall, 
                                    pTrack->m_chunkAy[i].math.lloWallBottomAttach, 
@@ -1794,7 +1794,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                             vertices[i * uiNumVertsPerChunk + 3 + 4],
                             vertices[i * uiNumVertsPerChunk + 1 + 4]);
         break;
-      case RLOWALL:
+      case eShapeSection::RLOWALL:
         ApplyVerticesSingleSection(i, vertices, 
                                    pTrack->m_chunkAy[i].math.rloWallBottomAttach, 
                                    pTrack->m_chunkAy[i].math.rloWall, 
@@ -1819,7 +1819,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                             vertices[i * uiNumVertsPerChunk + 3 + 4],
                             vertices[i * uiNumVertsPerChunk + 1 + 4]);
         break;
-      case LUOWALL:
+      case eShapeSection::LUOWALL:
         ApplyVerticesSingleSection(i, vertices, 
                                    pTrack->m_chunkAy[i].math.luoWall, 
                                    pTrack->m_chunkAy[i].math.lloWall, 
@@ -1844,7 +1844,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                             vertices[i * uiNumVertsPerChunk + 3 + 4],
                             vertices[i * uiNumVertsPerChunk + 1 + 4]);
         break;
-      case RUOWALL:
+      case eShapeSection::RUOWALL:
         ApplyVerticesSingleSection(i, vertices, 
                                    pTrack->m_chunkAy[i].math.rloWall, 
                                    pTrack->m_chunkAy[i].math.ruoWall, 
@@ -1869,7 +1869,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                             vertices[i * uiNumVertsPerChunk + 3 + 4],
                             vertices[i * uiNumVertsPerChunk + 1 + 4]);
         break;
-      case SELECTED:
+      case eShapeSection::SELECTED:
         vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.luoWall;
         vertices[i * uiNumVertsPerChunk + 1].position = pTrack->m_chunkAy[i].math.ruoWall;
         vertices[i * uiNumVertsPerChunk + 2].position = pTrack->m_chunkAy[i].math.lloWallBottomAttach;
@@ -1879,19 +1879,19 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         vertices[i * uiNumVertsPerChunk + 6].position = pTrack->m_chunkAy[iChunkIndex].math.lloWallBottomAttach;
         vertices[i * uiNumVertsPerChunk + 7].position = pTrack->m_chunkAy[iChunkIndex].math.rloWallBottomAttach;
         break;
-      case AILINE1:
+      case eShapeSection::AILINE1:
         vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.aiLine1;
         break;
-      case AILINE2:
+      case eShapeSection::AILINE2:
         vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.aiLine2;
         break;
-      case AILINE3:
+      case eShapeSection::AILINE3:
         vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.aiLine3;
         break;
-      case AILINE4:
+      case eShapeSection::AILINE4:
         vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.aiLine4;
         break;
-      case EXPORT:
+      case eShapeSection::EXPORT:
         //center
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lLane;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rLane;

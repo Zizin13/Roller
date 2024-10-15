@@ -173,7 +173,7 @@ struct tRaceInfo
   double dPreviewSize;
 };
 //-------------------------------------------------------------------------------------------------
-enum eFileSection
+enum class eFileSection
 {
   HEADER = 0,
   GEOMETRY,

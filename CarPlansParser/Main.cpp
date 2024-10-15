@@ -18,7 +18,7 @@ using namespace DisasmHelpers;
 
 //-------------------------------------------------------------------------------------------------
 
-enum eCarPlansSection
+enum class eCarPlansSection
 {
   NONE = 0,
   COORDS,

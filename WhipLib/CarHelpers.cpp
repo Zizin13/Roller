@@ -11,58 +11,58 @@
 std::string CarHelpers::GetCarNameFromModel(eWhipModel model)
 {
   switch (model) {
-    case CAR_F1WACK:
+    case eWhipModel::CAR_F1WACK:
       return "F1WACK";
       break;
-    case CAR_XAUTO:
+    case eWhipModel::CAR_XAUTO:
       return "XAUTO";
       break;
-    case CAR_XDESILVA:
+    case eWhipModel::CAR_XDESILVA:
       return "XDESILVA";
       break;
-    case CAR_XPULSE:
+    case eWhipModel::CAR_XPULSE:
       return "XPULSE";
       break;
-    case CAR_XGLOBAL:
+    case eWhipModel::CAR_XGLOBAL:
       return "XGLOBAL";
       break;
-    case CAR_XMILLION:
+    case eWhipModel::CAR_XMILLION:
       return "XMILLION";
       break;
-    case CAR_XMISSION:
+    case eWhipModel::CAR_XMISSION:
       return "XMISSION";
       break;
-    case CAR_XZIZIN:
+    case eWhipModel::CAR_XZIZIN:
       return "XZIZIN";
       break;
-    case CAR_XREISE:
+    case eWhipModel::CAR_XREISE:
       return "XREISE";
       break;
-    case CAR_YAUTO:
+    case eWhipModel::CAR_YAUTO:
       return "YAUTO";
       break;
-    case CAR_YDESILVA:
+    case eWhipModel::CAR_YDESILVA:
       return "YDESILVA";
       break;
-    case CAR_YPULSE:
+    case eWhipModel::CAR_YPULSE:
       return "YPULSE";
       break;
-    case CAR_YGLOBAL:
+    case eWhipModel::CAR_YGLOBAL:
       return "YGLOBAL";
       break;
-    case CAR_YMILLION:
+    case eWhipModel::CAR_YMILLION:
       return "YMILLION";
       break;
-    case CAR_YMISSION:
+    case eWhipModel::CAR_YMISSION:
       return "YMISSION";
       break;
-    case CAR_YZIZIN:
+    case eWhipModel::CAR_YZIZIN:
       return "YZIZIN";
       break;
-    case CAR_YREISE:
+    case eWhipModel::CAR_YREISE:
       return "YREISE";
       break;
-    case CAR_DEATH:
+    case eWhipModel::CAR_DEATH:
       return "DEATH";
       break;
     default:
@@ -75,7 +75,7 @@ std::string CarHelpers::GetCarNameFromModel(eWhipModel model)
 
 std::string CarHelpers::GetCarTextureFromModel(eWhipModel model)
 {
-  if (model == CAR_F1WACK)
+  if (model == eWhipModel::CAR_F1WACK)
     return "RED28.BM";
   else
     return GetCarNameFromModel(model) + ".BM";
@@ -92,23 +92,23 @@ void CarHelpers::RemapColor(eWhipModel model, uint32 &uiTex)
 
   //other cars are unchanged
   switch (model) {
-    case CAR_YDESILVA:
+    case eWhipModel::CAR_YDESILVA:
       if (uiColor == 0x000000cf)
         uiColor = 0x000000c3;
       break;
-    case CAR_YPULSE:
+    case eWhipModel::CAR_YPULSE:
       if (uiColor == 0x000000e7)
         uiColor = 0x000000ab;
       break;
-    case CAR_YGLOBAL:
+    case eWhipModel::CAR_YGLOBAL:
       if (uiColor == 0x000000e7)
         uiColor = 0x000000ff;
       break;
-    case CAR_YMISSION:
+    case eWhipModel::CAR_YMISSION:
       if (uiColor == 0x000000c3)
         uiColor = 0x000000ab;
       break;
-    case CAR_YZIZIN:
+    case eWhipModel::CAR_YZIZIN:
       if (uiColor == 0x0000008f)
         uiColor = 0x000000db;
       break;

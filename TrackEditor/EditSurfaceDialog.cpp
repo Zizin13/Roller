@@ -541,19 +541,19 @@ int &CEditSurfaceDialog::GetValue(int i)
     return (int&)m_uiSignedBitValue;
 
   switch (m_field) {
-    case SURFACE_CENTER:    return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iCenterSurfaceType;     break;
-    case SURFACE_LSHOULDER: return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftSurfaceType;       break;
-    case SURFACE_RSHOULDER: return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightSurfaceType;      break;
-    case SURFACE_LWALL:     return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftWallType;          break;
-    case SURFACE_RWALL:     return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightWallType;         break;
-    case SURFACE_ROOF:      return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRoofType;              break;
-    case SURFACE_LUOWALL:   return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLUOuterWallType;       break;
-    case SURFACE_LLOWALL:   return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLLOuterWallType;       break;
-    case SURFACE_OFLOOR:    return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iOuterFloorType;        break;
-    case SURFACE_RLOWALL:   return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRLOuterWallType;       break;
-    case SURFACE_RUOWALL:   return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRUOuterWallType;       break;
-    case SURFACE_ENVFLOOR:  return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iEnvironmentFloorType;  break;
-    case SURFACE_SIGN:      return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignTexture;           break;
+    case eSurfaceField::SURFACE_CENTER:    return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iCenterSurfaceType;     break;
+    case eSurfaceField::SURFACE_LSHOULDER: return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftSurfaceType;       break;
+    case eSurfaceField::SURFACE_RSHOULDER: return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightSurfaceType;      break;
+    case eSurfaceField::SURFACE_LWALL:     return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLeftWallType;          break;
+    case eSurfaceField::SURFACE_RWALL:     return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRightWallType;         break;
+    case eSurfaceField::SURFACE_ROOF:      return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRoofType;              break;
+    case eSurfaceField::SURFACE_LUOWALL:   return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLUOuterWallType;       break;
+    case eSurfaceField::SURFACE_LLOWALL:   return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iLLOuterWallType;       break;
+    case eSurfaceField::SURFACE_OFLOOR:    return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iOuterFloorType;        break;
+    case eSurfaceField::SURFACE_RLOWALL:   return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRLOuterWallType;       break;
+    case eSurfaceField::SURFACE_RUOWALL:   return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iRUOuterWallType;       break;
+    case eSurfaceField::SURFACE_ENVFLOOR:  return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iEnvironmentFloorType;  break;
+    case eSurfaceField::SURFACE_SIGN:      return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iSignTexture;           break;
     default: return g_pMainWindow->GetCurrentTrack()->m_chunkAy[i].iEnvironmentFloorType;
   }
 }
@@ -563,7 +563,7 @@ int &CEditSurfaceDialog::GetValue(int i)
 CTexture *CEditSurfaceDialog::GetTexture()
 {
   if (g_pMainWindow->GetCurrentTrack()) {
-    if (m_field == SURFACE_SIGN)
+    if (m_field == eSurfaceField::SURFACE_SIGN)
       return g_pMainWindow->GetCurrentTrack()->m_pBld;
     else
       return g_pMainWindow->GetCurrentTrack()->m_pTex;

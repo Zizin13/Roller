@@ -140,24 +140,24 @@ int main(int argc, char *argv[])
   CShapeFactory::GetShapeFactory().m_bOglRunning = false;
 
   //export cars
-  ExportCar(CAR_F1WACK, sWhipDir, sOutDir);
-  ExportCar(CAR_XAUTO, sWhipDir, sOutDir);
-  ExportCar(CAR_XDESILVA, sWhipDir, sOutDir);
-  ExportCar(CAR_XPULSE, sWhipDir, sOutDir);
-  ExportCar(CAR_XGLOBAL, sWhipDir, sOutDir);
-  ExportCar(CAR_XMILLION, sWhipDir, sOutDir);
-  ExportCar(CAR_XMISSION, sWhipDir, sOutDir);
-  ExportCar(CAR_XZIZIN, sWhipDir, sOutDir);
-  ExportCar(CAR_XREISE, sWhipDir, sOutDir);
-  ExportCar(CAR_YAUTO, sWhipDir, sOutDir);
-  ExportCar(CAR_YDESILVA, sWhipDir, sOutDir);
-  ExportCar(CAR_YPULSE, sWhipDir, sOutDir);
-  ExportCar(CAR_YGLOBAL, sWhipDir, sOutDir);
-  ExportCar(CAR_YMILLION, sWhipDir, sOutDir);
-  ExportCar(CAR_YMISSION, sWhipDir, sOutDir);
-  ExportCar(CAR_YZIZIN, sWhipDir, sOutDir);
-  ExportCar(CAR_YREISE, sWhipDir, sOutDir);
-  ExportCar(CAR_DEATH, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_F1WACK, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_XAUTO, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_XDESILVA, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_XPULSE, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_XGLOBAL, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_XMILLION, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_XMISSION, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_XZIZIN, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_XREISE, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_YAUTO, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_YDESILVA, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_YPULSE, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_YGLOBAL, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_YMILLION, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_YMISSION, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_YZIZIN, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_YREISE, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_DEATH, sWhipDir, sOutDir);
 
   //load all tracks in dir
   std::vector<CTrack *> trackAy;

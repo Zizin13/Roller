@@ -275,7 +275,7 @@ bool CTrack::ProcessTrackData(const uint8 *pData, size_t length)
   bool bSuccess = true;
   int iChunkLine = 0;
   struct tGeometryChunk currChunk;
-  eFileSection section = HEADER;
+  eFileSection section = eFileSection::HEADER;
 
   std::stringstream ssFile((char*)pData);
   while (ssFile.good()) {
@@ -299,7 +299,7 @@ bool CTrack::ProcessTrackData(const uint8 *pData, size_t length)
     }
 
     switch (section) {
-      case HEADER:
+      case eFileSection::HEADER:
         //must be first thing in file
         if (lineAy.size() == HEADER_ELEMENT_COUNT) {
           //found header
@@ -307,10 +307,10 @@ bool CTrack::ProcessTrackData(const uint8 *pData, size_t length)
           m_header.iHeaderUnk1 = std::stoi(lineAy[1]);
           m_header.iHeaderUnk2 = std::stoi(lineAy[2]);
           m_header.iFloorDepth = std::stoi(lineAy[3]);
-          section = GEOMETRY;
+          section = eFileSection::GEOMETRY;
         }
         break;
-      case GEOMETRY:
+      case eFileSection::GEOMETRY:
         if (iChunkLine == 0) {
           if (lineAy.empty()) {
             //do nothing
@@ -322,7 +322,7 @@ bool CTrack::ProcessTrackData(const uint8 *pData, size_t length)
             // there is no defined end to geometry chunks
             // more chunks than the count at the top of the file is allowed
             // so we must detect the beginning of the next section
-            section = SIGNS;
+            section = eFileSection::SIGNS;
             ProcessSign(lineAy, section);
           } else {
             //start new chunk
@@ -414,7 +414,7 @@ bool CTrack::ProcessTrackData(const uint8 *pData, size_t length)
           iChunkLine = 0;
         }
         break;
-      case SIGNS:
+      case eFileSection::SIGNS:
         if (lineAy.size() == SIGNS_COUNT) {
           ProcessSign(lineAy, section);
         } else {
@@ -423,13 +423,13 @@ bool CTrack::ProcessTrackData(const uint8 *pData, size_t length)
           bSuccess = false;
         }
         break;
-      case STUNTS:
+      case eFileSection::STUNTS:
         if (lineAy.size() == 0) {
             //do nothing
         } else if (lineAy.size() == 1) {
           if (lineAy[0].compare("-1") == 0) {
             //stunts section always ends with a single -1 value
-            section = TEXTURE;
+            section = eFileSection::TEXTURE;
           }
         } else if (lineAy.size() == STUNTS_COUNT) {
           //process stunt
@@ -452,13 +452,13 @@ bool CTrack::ProcessTrackData(const uint8 *pData, size_t length)
           bSuccess = false;
         }
         break;
-      case TEXTURE:
+      case eFileSection::TEXTURE:
         if (lineAy.size() == 0) {
             //do nothing
         } else if (lineAy.size() == 1) {
           if (lineAy[0].compare("-1") == 0) {
             //texture section always ends with a single -1 value
-            section = TRACK_NUM;
+            section = eFileSection::TRACK_NUM;
           } else {
             //texture and building files
             size_t pos = lineAy[0].find(':');
@@ -482,13 +482,13 @@ bool CTrack::ProcessTrackData(const uint8 *pData, size_t length)
           bSuccess = false;
         }
         break;
-      case TRACK_NUM:
+      case eFileSection::TRACK_NUM:
         if (lineAy.size() == 1 && IsNumber(lineAy[0])) {
           m_raceInfo.iTrackNumber = std::stoi(lineAy[0]);
-          section = LAPS;
+          section = eFileSection::LAPS;
         }
         break;
-      case LAPS:
+      case eFileSection::LAPS:
         if (lineAy.size() == LAPS_COUNT) {
           m_raceInfo.iImpossibleLaps  = std::stoi(lineAy[0]);
           m_raceInfo.iHardLaps        = std::stoi(lineAy[1]);
@@ -496,18 +496,18 @@ bool CTrack::ProcessTrackData(const uint8 *pData, size_t length)
           m_raceInfo.iMediumLaps      = std::stoi(lineAy[3]);
           m_raceInfo.iEasyLaps        = std::stoi(lineAy[4]);
           m_raceInfo.iGirlieLaps      = std::stoi(lineAy[5]);
-          section = MAP;
+          section = eFileSection::MAP;
         }
         break;
-      case MAP:
+      case eFileSection::MAP:
         if (lineAy.size() == MAP_COUNT) {
           m_raceInfo.dTrackMapSize      = std::stod(lineAy[0]);
           m_raceInfo.iTrackMapFidelity  = std::stoi(lineAy[1]);
           m_raceInfo.dPreviewSize       = std::stod(lineAy[2]);
         }
-        section = END;
+        section = eFileSection::END;
         break;
-      case END:
+      case eFileSection::END:
         break;
     }
   }
@@ -630,7 +630,7 @@ void CTrack::ProcessSign(const std::vector<std::string> &lineAy, eFileSection &s
   int iVal1 = std::stoi(lineAy[1]);
   if (iVal0 == -1 || iVal1 == -1) {
     //sign section always ends in two -1 values
-    section = STUNTS;
+    section = eFileSection::STUNTS;
   } else {
     //process sign
     int iSignable = 0;
@@ -1472,26 +1472,26 @@ void CTrack::GetWall(int i, glm::vec3 bottomAttach, glm::vec3 pitchAxis, glm::ma
   float fHOffset = 0.0f;
   float fHeight = 0.0f;
   switch (wallSection) {
-    case LWALL:
+    case eShapeSection::LWALL:
       if (m_chunkAy[i].iLeftWallType != -1)
         fHeight = (float)m_chunkAy[i].iRoofHeight * -1.0f;
-    case RWALL:
+    case eShapeSection::RWALL:
       if (m_chunkAy[i].iRightWallType != -1)
         fHeight = (float)m_chunkAy[i].iRoofHeight * -1.0f;
       break;
-    case LLOWALL:
+    case eShapeSection::LLOWALL:
       fHOffset = (float)m_chunkAy[i].iLLOuterWallHOffset * -1.0f;
       fHeight = (float)m_chunkAy[i].iLLOuterWallHeight * -1.0f;
       break;
-    case RLOWALL:
+    case eShapeSection::RLOWALL:
       fHOffset = (float)m_chunkAy[i].iRLOuterWallHOffset;
       fHeight = (float)m_chunkAy[i].iRLOuterWallHeight * -1.0f;
       break;
-    case LUOWALL:
+    case eShapeSection::LUOWALL:
       fHOffset = (float)m_chunkAy[i].iLUOuterWallHOffset * -1.0f;
       fHeight = (float)m_chunkAy[i].iLUOuterWallHeight * -1.0f;
       break;
-    case RUOWALL:
+    case eShapeSection::RUOWALL:
       fHOffset = (float)m_chunkAy[i].iRUOuterWallHOffset;
       fHeight = (float)m_chunkAy[i].iRUOuterWallHeight * -1.0f;
       break;

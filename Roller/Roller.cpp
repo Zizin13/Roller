@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
   camera.m_position.y = 1300.0f;
   camera.m_viewDirection.z = 0.05f;
   camera.m_viewDirection.y = -1.0f;
-  CPalette *pPal = new CPalette();;
+  CPalette *pPal = new CPalette();
   pPal->LoadPalette("C:\\WHIP\\WHIPLASH\\FATDATA\\PALETTE.PAL");
   CTexture *pTex = new CTexture();
   pTex->LoadTexture("C:\\WHIP\\WHIPLASH\\FATDATA\\YZIZIN.BM", pPal);

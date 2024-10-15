@@ -16,7 +16,7 @@ typedef unsigned __int64 uint64;
 
 //-------------------------------------------------------------------------------------------------
 
-enum eShapeSection
+enum class eShapeSection
 {
   CENTER = 0,
   LSHOULDER,
@@ -39,7 +39,7 @@ enum eShapeSection
 
 //-------------------------------------------------------------------------------------------------
 
-enum eWhipModel
+enum class eWhipModel
 {
   CAR_F1WACK = 0,
   CAR_XAUTO,

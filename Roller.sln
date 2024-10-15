@@ -28,6 +28,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FbxExporter", "FbxExporter\FbxExporter.vcxproj", "{24AA1AFA-11C3-47D7-B36C-0B5CE25B7804}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Roller", "Roller\Roller.vcxproj", "{23877577-CF1D-4E74-B4F2-24A0F1FF3725}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FFE1E8A8-1052-4271-AA18-253855ABA0E6} = {FFE1E8A8-1052-4271-AA18-253855ABA0E6}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

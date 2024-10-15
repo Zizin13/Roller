@@ -4,7 +4,7 @@
 #include "ui_EditSurfaceDialog.h"
 #include "Types.h"
 //-------------------------------------------------------------------------------------------------
-enum eSurfaceField
+enum class eSurfaceField
 {
   SURFACE_CENTER = 0,
   SURFACE_LSHOULDER,

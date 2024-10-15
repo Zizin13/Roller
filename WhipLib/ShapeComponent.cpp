@@ -57,6 +57,14 @@ bool CShapeComponent::Shutdown()
     delete m_pShapeData;
     m_pShapeData = NULL;
   }
+  if (m_pTex) {
+    delete m_pTex;
+    m_pTex = NULL;
+  }
+  if (m_pPal) {
+    delete m_pPal;
+    m_pPal = NULL;
+  }
   return true;
 }
 

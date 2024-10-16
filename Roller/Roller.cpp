@@ -4,14 +4,10 @@
 #include <glfw3.h>
 #include <glew.h>
 #include "Logging.h"
-#include "Shader.h"
-#include "Camera.h"
-#include "Renderer.h"
-#include "Entity.h"
-#include "NoclipComponent.h"
 #include "GameClock.h"
 #include "GameInput.h"
 #include "WinUserKeyMapper.h"
+#include "Scene.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -54,33 +50,20 @@ int main(int argc, char *argv[])
   CWinUserKeyMapper keyMapper;
   CGameInput::GetGameInput().Init(&keyMapper);
 
-  CCamera camera;
-
-  CRenderer renderer;
-  if (!renderer.Init("C:\\WHIP\\WHIPLASH\\FATDATA"))
-    return -1;
-  renderer.MakeCarShape(eWhipModel::CAR_YZIZIN);
-
-  CNoclipComponent noclip;
-  noclip.Init();
-
-  CEntity defaultEntity;
-  defaultEntity.Init();
-  defaultEntity.AddComponent(&noclip);
+  CScene testScene;
+  testScene.Init("C:\\WHIP\\WHIPLASH\\FATDATA");
+  testScene.SpawnCar(eWhipModel::CAR_YZIZIN);
 
   //Loop until the user closes the window
   while (!glfwWindowShouldClose(window)) {
-    CGameClock::GetGameClock().NewFrame();
-    CGameInput::GetGameInput().Update();
-
+    //get window size
     int iWidth, iHeight = 0;
     glfwGetWindowSize(window, &iWidth, &iHeight);
 
-    defaultEntity.Update();
-
-    camera.m_position = defaultEntity.m_position;
-    camera.m_viewDirection = defaultEntity.m_orientation;
-    renderer.Draw(iWidth, iHeight, &camera);
+    //update game
+    CGameClock::GetGameClock().NewFrame();
+    CGameInput::GetGameInput().Update();
+    testScene.Update(iWidth, iHeight);
 
     //Swap front and back buffers
     glfwSwapBuffers(window);
@@ -88,8 +71,7 @@ int main(int argc, char *argv[])
     glfwPollEvents();
   }
 
-  defaultEntity.Shutdown();
-  renderer.Shutdown();
+  testScene.Shutdown();
   glfwTerminate();
 
   return 0;

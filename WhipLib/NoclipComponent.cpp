@@ -14,6 +14,8 @@ float CNoclipComponent::s_fMovementSpeed = 30000.0f;
 
 CNoclipComponent::CNoclipComponent(bool bRequiresClick)
   : m_bRequiresClick(bRequiresClick)
+  , m_strafeDirection(0.0f, 0.0f, 0.0f)
+  , m_oldMousePos(0.0f, 0.0f)
 {
 }
 

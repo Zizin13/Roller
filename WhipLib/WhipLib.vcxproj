@@ -266,6 +266,7 @@ exit 1</Command>
     <ClInclude Include="Logging.h" />
     <ClInclude Include="NoclipComponent.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="ShapeComponent.h" />
     <ClInclude Include="ShapeFactory.h" />
     <ClInclude Include="CarPlans\AutoPlans.h" />
@@ -323,6 +324,7 @@ exit 1</Command>
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="NoclipComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShapeComponent.cpp" />
     <ClCompile Include="ShapeFactory.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />

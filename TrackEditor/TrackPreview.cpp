@@ -252,7 +252,7 @@ public:
   CTrack m_track;
   CHistoryAy m_historyAy;
   CTexture m_carTex;
-  Camera m_camera;
+  CCamera m_camera;
 };
 
 //-------------------------------------------------------------------------------------------------

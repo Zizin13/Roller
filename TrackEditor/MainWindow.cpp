@@ -1216,7 +1216,7 @@ void CMainWindow::LoadSettings()
   bool bMillionPlus;
   uint32 uiShowModels = p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus);
   bool bAttachLast = p->m_pDisplaySettings->GetAttachLast();
-  int iCameraSpeed = (int)Camera::s_fMovementSpeed;
+  int iCameraSpeed = (int)CCamera::s_fMovementSpeed;
   //load display settings
   uiShowModels = settings.value("show_models", uiShowModels).toUInt();
   carModel = (eWhipModel)settings.value("car_model", (int)carModel).toInt();

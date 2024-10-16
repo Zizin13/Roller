@@ -6,9 +6,7 @@
 //-------------------------------------------------------------------------------------------------
 class CShader;
 class CShapeData;
-class CTexture;
-class CPalette;
-class Camera;
+class CCamera;
 struct tCarShape;
 //-------------------------------------------------------------------------------------------------
 typedef std::vector<tCarShape *> CCarShapeAy;
@@ -22,7 +20,7 @@ public:
 
   bool Init(const std::string &sFatDataDir);
   bool Shutdown();
-  void Draw(int iWindowWidth, int iWindowHeight, Camera *pCamera);
+  void Draw(int iWindowWidth, int iWindowHeight, CCamera *pCamera);
 
   CShapeData *MakeCarShape(eWhipModel model);
 

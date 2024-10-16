@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
   //Make the window's context current
   glfwMakeContextCurrent(window);
 
-  Camera camera;
+  CCamera camera;
   camera.m_position.z = 500.0f;
   camera.m_position.y = 1300.0f;
   camera.m_viewDirection.z = 0.05f;

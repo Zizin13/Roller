@@ -287,7 +287,7 @@ void CDisplaySettings::UpdatePreviewSelection()
 
 void CDisplaySettings::OnCameraSpeedChanged(int iSpeed)
 {
-  Camera::s_fMovementSpeed = (float)iSpeed;
+  CCamera::s_fMovementSpeed = (float)iSpeed;
 }
 
 //-------------------------------------------------------------------------------------------------

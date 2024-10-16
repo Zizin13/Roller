@@ -6,10 +6,10 @@
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
 //-------------------------------------------------------------------------------------------------
-float Camera::s_fMovementSpeed = 30000.0f;
+float CCamera::s_fMovementSpeed = 30000.0f;
 //-------------------------------------------------------------------------------------------------
 
-Camera::Camera()
+CCamera::CCamera()
   : m_viewDirection(0.0f, -0.3f, 1.0f)
   , m_UP(0.0f, 1.0f, 0.0f)
 {
@@ -20,7 +20,7 @@ Camera::Camera()
 
 //-------------------------------------------------------------------------------------------------
 
-void Camera::MouseUpdate(const glm::vec2 &newMousePos)
+void CCamera::MouseUpdate(const glm::vec2 &newMousePos)
 {
   glm::vec2 mouseDelta = newMousePos - m_oldMousePos;
   if (glm::length(mouseDelta) > 50.0f) {
@@ -38,49 +38,49 @@ void Camera::MouseUpdate(const glm::vec2 &newMousePos)
 
 //-------------------------------------------------------------------------------------------------
 
-glm::mat4 Camera::GetWorldToViewMatrix() const
+glm::mat4 CCamera::GetWorldToViewMatrix() const
 {
   return glm::lookAt(m_position, m_position + m_viewDirection, m_UP);
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void Camera::MoveForward()
+void CCamera::MoveForward()
 {
   m_position += s_fMovementSpeed * m_viewDirection * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void Camera::MoveBackward()
+void CCamera::MoveBackward()
 {
   m_position -= s_fMovementSpeed * m_viewDirection * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void Camera::StrafeLeft()
+void CCamera::StrafeLeft()
 {
   m_position -= s_fMovementSpeed * m_strafeDirection * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void Camera::StrafeRight()
+void CCamera::StrafeRight()
 {
   m_position += s_fMovementSpeed * m_strafeDirection * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void Camera::MoveUp()
+void CCamera::MoveUp()
 {
   m_position += s_fMovementSpeed * m_UP * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void Camera::MoveDown()
+void CCamera::MoveDown()
 {
   m_position -= s_fMovementSpeed * m_UP * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }

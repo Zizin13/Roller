@@ -3,10 +3,10 @@
 //-------------------------------------------------------------------------------------------------
 #include "glm.hpp"
 //-------------------------------------------------------------------------------------------------
-class Camera
+class CCamera
 {
 public:
-  Camera();
+  CCamera();
 
   void MouseUpdate(const glm::vec2 &newMousePos);
   glm::mat4 GetWorldToViewMatrix() const;

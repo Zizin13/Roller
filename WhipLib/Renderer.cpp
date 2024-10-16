@@ -101,7 +101,7 @@ bool CRenderer::Shutdown()
 
 //-------------------------------------------------------------------------------------------------
 
-void CRenderer::Draw(int iWindowWidth, int iWindowHeight, Camera *pCamera)
+void CRenderer::Draw(int iWindowWidth, int iWindowHeight, CCamera *pCamera)
 {
   if (!m_pShader)
     return;

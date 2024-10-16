@@ -10,7 +10,7 @@
 //-------------------------------------------------------------------------------------------------
 CPalette::CPalette()
 {
-
+  ClearData();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -24,7 +24,8 @@ CPalette::~CPalette()
 
 void CPalette::ClearData()
 {
-  m_paletteAy.clear();
+  memset(m_paletteAy, 0, sizeof(m_paletteAy));
+  m_bLoaded = false;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -59,16 +60,20 @@ bool CPalette::LoadPalette(const std::string &sFilename)
   file.read(szBuf, length);
 
   int iLength = (int)length / 3;
+  if (iLength != PALETTE_SIZE)
+    return false;
+
   for (int i = 0; i < iLength; ++i) {
     uint8 byR = szBuf[i * 3] << 2;
     uint8 byG = szBuf[i * 3 + 1] << 2;
     uint8 byB = szBuf[i * 3 + 2] << 2;
-    m_paletteAy.push_back(glm::vec<3, uint8>(byR, byG, byB));
+    m_paletteAy[i] = glm::vec<3, uint8>(byR, byG, byB);
   }
 
   delete[] szBuf;
   file.close();
 
+  m_bLoaded = true;
   Logging::LogMessage("Loaded palette: %s", sFilename.c_str());
   return true;
 }

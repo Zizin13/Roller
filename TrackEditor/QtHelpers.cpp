@@ -81,7 +81,7 @@ void QtHelpers::UpdateTextures(QLabel *pLblTex1, QLabel *pLblTex2, CTexture *pTe
       if (iIndex < g_transparencyAyCount)
         pLblTex1->setText(g_transparencyAy[iIndex].c_str());
     } else {
-      if (pPal && iIndex < (int)pPal->m_paletteAy.size()) {
+      if (pPal && iIndex < PALETTE_SIZE) {
         QPixmap pixmap;
         pixmap.convertFromImage(QtHelpers::GetQImageFromColor(pPal->m_paletteAy[iIndex]));
         if (pLblTex1)

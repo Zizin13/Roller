@@ -54,11 +54,11 @@ CTilePicker::CTilePicker(QWidget *pParent, int iIndex, CPalette *pPalette)
   connect(pbCancel, &QPushButton::clicked, this, &CTilePicker::reject);
 
   if (pPalette) {
-    lblNotLoaded->setVisible(pPalette->m_paletteAy.empty());
+    lblNotLoaded->setVisible(!pPalette->IsLoaded());
     int iButtonSize = 90;
     int iTilesPerLine = (width() - 256) / (iButtonSize + 6);
     int i = 0;
-    for (; i < (int)pPalette->m_paletteAy.size(); ++i) {
+    for (; i < PALETTE_SIZE; ++i) {
       QPushButton *pButton = new QPushButton(this);
       pButton->setMaximumHeight(iButtonSize);
       pButton->setMaximumWidth(iButtonSize);

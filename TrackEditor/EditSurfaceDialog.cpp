@@ -366,7 +366,7 @@ void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
       m_uiSignedBitValue |= SURFACE_FLAG_APPLY_TEXTURE;
       m_uiSignedBitValue &= ~SURFACE_FLAG_TRANSPARENT;
     } else {
-      if (iIndex >= (int)g_pMainWindow->GetCurrentTrack()->m_pPal->m_paletteAy.size())
+      if (iIndex >= PALETTE_SIZE)
         m_uiSignedBitValue = 0;
       m_uiSignedBitValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
     }
@@ -390,7 +390,7 @@ void CEditSurfaceDialog::On8ApplyTextureChecked(bool bChecked)
         uiValue |= SURFACE_FLAG_APPLY_TEXTURE;
         uiValue &= ~SURFACE_FLAG_TRANSPARENT;
       } else {
-        if (iIndex >= (int)g_pMainWindow->GetCurrentTrack()->m_pPal->m_paletteAy.size())
+        if (iIndex >= PALETTE_SIZE)
           uiValue = 0;
         uiValue &= ~SURFACE_FLAG_APPLY_TEXTURE;
       }
@@ -681,7 +681,7 @@ void CEditSurfaceDialog::UpdateDialog()
     lblTransparency->hide();
     cbTransparency->hide();
     int iIndex = uiValue & SURFACE_MASK_TEXTURE_INDEX;
-    if (iIndex < (int)g_pMainWindow->GetCurrentTrack()->m_pPal->m_paletteAy.size()) {
+    if (iIndex < PALETTE_SIZE) {
       QPixmap pixmap;
       pixmap.convertFromImage(QtHelpers::GetQImageFromColor(g_pMainWindow->GetCurrentTrack()->m_pPal->m_paletteAy[iIndex]));
       pbTexture1->setIcon(pixmap);

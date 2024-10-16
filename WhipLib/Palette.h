@@ -6,6 +6,8 @@
 #include "glm.hpp"
 #include "Types.h"
 //-------------------------------------------------------------------------------------------------
+#define PALETTE_SIZE 256
+//-------------------------------------------------------------------------------------------------
 
 class CPalette
 {
@@ -15,8 +17,12 @@ public:
 
   void ClearData();
   bool LoadPalette(const std::string &sFilename);
+  bool IsLoaded() { return m_bLoaded; };
 
-  std::vector<glm::vec<3, uint8>> m_paletteAy;
+  glm::vec<3, uint8> m_paletteAy[PALETTE_SIZE];
+
+private:
+  bool m_bLoaded;
 };
 
 //-------------------------------------------------------------------------------------------------

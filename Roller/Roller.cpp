@@ -3,7 +3,6 @@
 #include <windows.h>
 #include <glfw3.h>
 #include <glew.h>
-#include "OpenGLDebug.h"
 #include "Logging.h"
 #include "Shader.h"
 #include "Camera.h"
@@ -46,18 +45,6 @@ int main(int argc, char *argv[])
   //Make the window's context current
   glfwMakeContextCurrent(window);
 
-  if (glewInit() != GLEW_OK)
-    return -1;
-  glEnable(GL_DEBUG_OUTPUT);
-  glDebugMessageCallback(GLErrorCb, 0);
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glEnable(GL_ALPHA_TEST);
-  glAlphaFunc(GL_GREATER, 0.24f);
-  glLineWidth(3.0f);
-
   Camera camera;
   camera.m_position.z = 500.0f;
   camera.m_position.y = 1300.0f;
@@ -65,7 +52,8 @@ int main(int argc, char *argv[])
   camera.m_viewDirection.y = -1.0f;
 
   CRenderer renderer;
-  renderer.Init("C:\\WHIP\\WHIPLASH\\FATDATA");
+  if (!renderer.Init("C:\\WHIP\\WHIPLASH\\FATDATA"))
+    return -1;
   renderer.MakeCarShape(eWhipModel::CAR_YZIZIN);
 
   //Loop until the user closes the window

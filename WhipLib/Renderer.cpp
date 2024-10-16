@@ -6,6 +6,7 @@
 #include "ShapeFactory.h"
 #include "Camera.h"
 #include "CarHelpers.h"
+#include "OpenGLDebug.h"
 #include <glm.hpp>
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
@@ -62,6 +63,18 @@ CRenderer::~CRenderer()
 
 bool CRenderer::Init(const std::string &sFatDataDir)
 {
+  if (glewInit() != GLEW_OK)
+    return false;
+  glEnable(GL_DEBUG_OUTPUT);
+  glDebugMessageCallback(GLErrorCb, 0);
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_ALPHA_TEST);
+  glAlphaFunc(GL_GREATER, 0.24f);
+  glLineWidth(3.0f);
+
   m_sFatDataDir = sFatDataDir;
   if (!m_pShader) {
     m_pShader = new CShader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");

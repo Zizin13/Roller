@@ -124,6 +124,9 @@ void CRenderer::Draw(int iWindowWidth, int iWindowHeight, CCamera *pCamera)
 
 CShapeData *CRenderer::MakeCarShape(eWhipModel model)
 {
+  if (!m_pShader)
+    return NULL;
+
   std::string sTexName = CarHelpers::GetCarTextureFromModel(model);
 
   tCarShape *pNewCarShape = new tCarShape;

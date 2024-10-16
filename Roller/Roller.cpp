@@ -65,16 +65,13 @@ int main(int argc, char *argv[])
   camera.m_viewDirection.y = -1.0f;
 
   CRenderer renderer;
-  renderer.Init();
+  renderer.Init("C:\\WHIP\\WHIPLASH\\FATDATA");
   renderer.MakeCarShape(eWhipModel::CAR_YZIZIN);
 
   //Loop until the user closes the window
   while (!glfwWindowShouldClose(window)) {
-    glClearColor(0.03125f, 0.296875f, 0.984375f, 1.0f);
-    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     int iWidth, iHeight = 0;
     glfwGetWindowSize(window, &iWidth, &iHeight);
-    glViewport(0, 0, iWidth, iHeight);
 
     renderer.Draw(iWidth, iHeight, &camera);
 

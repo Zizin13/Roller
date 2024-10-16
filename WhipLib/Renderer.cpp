@@ -5,6 +5,7 @@
 #include "Texture.h"
 #include "ShapeFactory.h"
 #include "Camera.h"
+#include "CarHelpers.h"
 #include <glm.hpp>
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
@@ -45,6 +46,7 @@ struct tCarShape
 
 CRenderer::CRenderer()
   : m_pShader(NULL)
+  , m_sFatDataDir("")
 {
   m_carShapeAy.reserve(16);
 }
@@ -58,8 +60,9 @@ CRenderer::~CRenderer()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CRenderer::Init()
+bool CRenderer::Init(const std::string &sFatDataDir)
 {
+  m_sFatDataDir = sFatDataDir;
   if (!m_pShader) {
     m_pShader = new CShader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");
     return true;
@@ -87,6 +90,13 @@ bool CRenderer::Shutdown()
 
 void CRenderer::Draw(int iWindowWidth, int iWindowHeight, Camera *pCamera)
 {
+  if (!m_pShader)
+    return;
+
+  glClearColor(0.03125f, 0.296875f, 0.984375f, 1.0f);
+  glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+  glViewport(0, 0, iWindowWidth, iWindowHeight);
+
   glm::mat4 viewToProjectionMatrix = glm::perspective(glm::radians(60.0f), ((float)iWindowWidth) / iWindowHeight, 100.0f, 500000.0f);
   glm::mat4 worldToViewMatrix = pCamera->GetWorldToViewMatrix();
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
@@ -101,11 +111,13 @@ void CRenderer::Draw(int iWindowWidth, int iWindowHeight, Camera *pCamera)
 
 CShapeData *CRenderer::MakeCarShape(eWhipModel model)
 {
+  std::string sTexName = CarHelpers::GetCarTextureFromModel(model);
+
   tCarShape *pNewCarShape = new tCarShape;
   pNewCarShape->pPal = new CPalette();
-  pNewCarShape->pPal->LoadPalette("C:\\WHIP\\WHIPLASH\\FATDATA\\PALETTE.PAL");
+  pNewCarShape->pPal->LoadPalette(m_sFatDataDir + "/PALETTE.PAL");
   pNewCarShape->pTex = new CTexture();
-  pNewCarShape->pTex->LoadTexture("C:\\WHIP\\WHIPLASH\\FATDATA\\YZIZIN.BM", pNewCarShape->pPal);
+  pNewCarShape->pTex->LoadTexture(m_sFatDataDir + "/" + sTexName, pNewCarShape->pPal);
   pNewCarShape->pShapeData = CShapeFactory::GetShapeFactory().MakeModel(m_pShader, pNewCarShape->pTex, model);
   m_carShapeAy.emplace_back(pNewCarShape);
   return pNewCarShape->pShapeData;

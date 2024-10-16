@@ -20,13 +20,14 @@ public:
   CRenderer();
   ~CRenderer();
 
-  bool Init();
+  bool Init(const std::string &sFatDataDir);
   bool Shutdown();
   void Draw(int iWindowWidth, int iWindowHeight, Camera *pCamera);
 
   CShapeData *MakeCarShape(eWhipModel model);
 
 private:
+  std::string m_sFatDataDir;
   CShader *m_pShader;
   CCarShapeAy m_carShapeAy;
 };

@@ -3,17 +3,11 @@
 #include <windows.h>
 #include <glfw3.h>
 #include <glew.h>
-#include <glm.hpp>
-#include "gtc/matrix_transform.hpp"
-#include "gtx/transform.hpp"
 #include "OpenGLDebug.h"
 #include "Logging.h"
 #include "Shader.h"
 #include "Camera.h"
-#include "ShapeFactory.h"
-#include "ShapeData.h"
-#include "Texture.h"
-#include "Palette.h"
+#include "Renderer.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -63,18 +57,16 @@ int main(int argc, char *argv[])
   glEnable(GL_ALPHA_TEST);
   glAlphaFunc(GL_GREATER, 0.24f);
   glLineWidth(3.0f);
-  CShader shader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");
 
   Camera camera;
   camera.m_position.z = 500.0f;
   camera.m_position.y = 1300.0f;
   camera.m_viewDirection.z = 0.05f;
   camera.m_viewDirection.y = -1.0f;
-  CPalette *pPal = new CPalette();
-  pPal->LoadPalette("C:\\WHIP\\WHIPLASH\\FATDATA\\PALETTE.PAL");
-  CTexture *pTex = new CTexture();
-  pTex->LoadTexture("C:\\WHIP\\WHIPLASH\\FATDATA\\YZIZIN.BM", pPal);
-  CShapeData *pShape = CShapeFactory::GetShapeFactory().MakeModel(&shader, pTex, eWhipModel::CAR_YZIZIN);
+
+  CRenderer renderer;
+  renderer.Init();
+  renderer.MakeCarShape(eWhipModel::CAR_YZIZIN);
 
   //Loop until the user closes the window
   while (!glfwWindowShouldClose(window)) {
@@ -84,22 +76,13 @@ int main(int argc, char *argv[])
     glfwGetWindowSize(window, &iWidth, &iHeight);
     glViewport(0, 0, iWidth, iHeight);
 
-    glm::mat4 viewToProjectionMatrix = glm::perspective(glm::radians(60.0f), ((float)iWidth) / iHeight, 100.0f, 500000.0f);
-    glm::mat4 worldToViewMatrix = camera.GetWorldToViewMatrix();
-    glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
-
-    pShape->Draw(worldToProjectionMatrix, camera.m_position);
+    renderer.Draw(iWidth, iHeight, &camera);
 
     //Swap front and back buffers
     glfwSwapBuffers(window);
     //Poll for and process events
     glfwPollEvents();
   }
-
-  //cleanup
-  delete pShape;
-  delete pTex;
-  delete pPal;
 
   glfwTerminate();
 

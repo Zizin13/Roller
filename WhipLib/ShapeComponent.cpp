@@ -9,12 +9,8 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
-CShapeComponent::CShapeComponent(CShader *pShader, const eWhipModel &model, const std::string &sTex, const std::string &sPal)
+CShapeComponent::CShapeComponent()
   : m_pShapeData(NULL)
-  , m_model(model)
-  , m_sTex(sTex)
-  , m_sPal(sPal)
-  , m_pShader(pShader)
 {
 
 }
@@ -23,48 +19,19 @@ CShapeComponent::CShapeComponent(CShader *pShader, const eWhipModel &model, cons
 
 CShapeComponent::~CShapeComponent()
 {
-  Shutdown();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 bool CShapeComponent::Init()
 {
-  bool bSuccess = false;
-
-  if (!m_pPal) {
-    m_pPal = new CPalette();
-    bSuccess |= m_pPal->LoadPalette(m_sPal);
-  }
-  if (!m_pTex) {
-    m_pTex = new CTexture();
-    bSuccess |= m_pTex->LoadTexture(m_sTex, m_pPal);
-  }
-  if (!m_pShapeData) {
-    m_pShapeData = CShapeFactory::GetShapeFactory().MakeModel(m_pShader, m_pTex, m_model);
-  }
-  if (!m_pShapeData)
-    bSuccess = false;
-
-  return bSuccess;
+  return true;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 bool CShapeComponent::Shutdown()
 {
-  if (m_pShapeData) {
-    delete m_pShapeData;
-    m_pShapeData = NULL;
-  }
-  if (m_pTex) {
-    delete m_pTex;
-    m_pTex = NULL;
-  }
-  if (m_pPal) {
-    delete m_pPal;
-    m_pPal = NULL;
-  }
   return true;
 }
 
@@ -73,6 +40,13 @@ bool CShapeComponent::Shutdown()
 void CShapeComponent::Update()
 {
 
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CShapeComponent::SetData(CShapeData *pShapeData)
+{
+  m_pShapeData = pShapeData;
 }
 
 //-------------------------------------------------------------------------------------------------

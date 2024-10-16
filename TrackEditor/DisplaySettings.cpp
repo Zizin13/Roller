@@ -1,7 +1,7 @@
 #include "TrackEditor.h"
 #include "DisplaySettings.h"
 #include "QtHelpers.h"
-#include "Camera.h"
+#include "NoclipComponent.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -287,7 +287,7 @@ void CDisplaySettings::UpdatePreviewSelection()
 
 void CDisplaySettings::OnCameraSpeedChanged(int iSpeed)
 {
-  CCamera::s_fMovementSpeed = (float)iSpeed;
+  CNoclipComponent::s_fMovementSpeed = (float)iSpeed;
 }
 
 //-------------------------------------------------------------------------------------------------

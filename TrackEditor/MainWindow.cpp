@@ -27,7 +27,7 @@
 #include "NewTrackDialog.h"
 #include "PreferencesDialog.h"
 #include "AssignBacksDialog.h"
-#include "Camera.h"
+#include "NoclipComponent.h"
 #include "GameClock.h"
 #include "qtimer.h"
 #if defined (IS_WINDOWS)
@@ -1216,7 +1216,7 @@ void CMainWindow::LoadSettings()
   bool bMillionPlus;
   uint32 uiShowModels = p->m_pDisplaySettings->GetDisplaySettings(carModel, aiLine, bMillionPlus);
   bool bAttachLast = p->m_pDisplaySettings->GetAttachLast();
-  int iCameraSpeed = (int)CCamera::s_fMovementSpeed;
+  int iCameraSpeed = (int)CNoclipComponent::s_fMovementSpeed;
   //load display settings
   uiShowModels = settings.value("show_models", uiShowModels).toUInt();
   carModel = (eWhipModel)settings.value("car_model", (int)carModel).toInt();

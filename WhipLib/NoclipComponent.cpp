@@ -1,6 +1,7 @@
 #include "NoclipComponent.h"
 #include "GameClock.h"
 #include "Entity.h"
+#include "Camera.h"
 #include "gtx\transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -10,8 +11,8 @@
 float CNoclipComponent::s_fMovementSpeed = 30000.0f;
 //-------------------------------------------------------------------------------------------------
 
-CNoclipComponent::CNoclipComponent()
-  : m_UP(0.0f, 1.0f, 0.0f)
+CNoclipComponent::CNoclipComponent(bool bRequiresClick)
+  : m_bRequiresClick(bRequiresClick)
 {
 }
 
@@ -34,8 +35,12 @@ void CNoclipComponent::Update()
       || GetAsyncKeyState(0x51)) //Q
     MoveDown();
   POINT mousePos;
-  if (GetCursorPos(&mousePos)) {
-    MouseUpdate(glm::vec2(mousePos.x, mousePos.y));
+  if (GetAsyncKeyState(VK_LBUTTON)
+      || GetAsyncKeyState(VK_RBUTTON)
+      || !m_bRequiresClick) {
+    if (GetCursorPos(&mousePos)) {
+      MouseUpdate(glm::vec2(mousePos.x, mousePos.y));
+    }
   }
 }
 
@@ -49,8 +54,8 @@ void CNoclipComponent::MouseUpdate(const glm::vec2 &newMousePos)
     return;
   }
   const float ROTATIONAL_SPEED = -0.3f;
-  m_strafeDirection = glm::cross(m_pContainingEntity->m_orientation, m_UP);
-  glm::mat4 rotator = glm::rotate(glm::radians(mouseDelta.x * ROTATIONAL_SPEED), m_UP) *
+  m_strafeDirection = glm::cross(m_pContainingEntity->m_orientation, CCamera::s_UP);
+  glm::mat4 rotator = glm::rotate(glm::radians(mouseDelta.x * ROTATIONAL_SPEED), CCamera::s_UP) *
     glm::rotate(glm::radians(mouseDelta.y * ROTATIONAL_SPEED), m_strafeDirection);
   m_pContainingEntity->m_orientation = glm::mat3(rotator) * m_pContainingEntity->m_orientation;
 
@@ -89,14 +94,14 @@ void CNoclipComponent::StrafeRight()
 
 void CNoclipComponent::MoveUp()
 {
-  m_pContainingEntity->m_position += s_fMovementSpeed * m_UP * CGameClock::GetGameClock().DeltaTimeLastFrame();
+  m_pContainingEntity->m_position += s_fMovementSpeed * CCamera::s_UP * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CNoclipComponent::MoveDown()
 {
-  m_pContainingEntity->m_position -= s_fMovementSpeed * m_UP * CGameClock::GetGameClock().DeltaTimeLastFrame();
+  m_pContainingEntity->m_position -= s_fMovementSpeed * CCamera::s_UP * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------

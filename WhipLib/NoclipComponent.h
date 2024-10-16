@@ -7,9 +7,11 @@
 class CNoclipComponent : public IComponent
 {
 public:
-  CNoclipComponent();
+  CNoclipComponent(bool bRequiresClick = false);
 
   void Update() override;
+
+  static float s_fMovementSpeed;
 
 private:
   void MouseUpdate(const glm::vec2 &newMousePos);
@@ -22,8 +24,7 @@ private:
 
   glm::vec3 m_strafeDirection;
   glm::vec2 m_oldMousePos;
-  const glm::vec3 m_UP;
-  static float s_fMovementSpeed;
+  bool m_bRequiresClick;
 };
 //-------------------------------------------------------------------------------------------------
 #endif

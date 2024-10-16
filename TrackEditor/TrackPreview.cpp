@@ -15,6 +15,8 @@
 #include "Texture.h"
 #include "FBXExporter.h"
 #include "CarHelpers.h"
+#include "Entity.h"
+#include "NoclipComponent.h"
 #include "qevent.h"
 #include "qdir.h"
 #include "qmessagebox.h"
@@ -64,9 +66,15 @@ public:
     , m_pAxes(NULL)
     , m_pCar(NULL)
     , m_pTestNormals(NULL)
-  {};
+    , m_noclipComponent(true)
+  {
+    m_entity.Init();
+    m_noclipComponent.Init();
+    m_entity.AddComponent(&m_noclipComponent);
+  };
   ~CTrackPreviewPrivate()
   {
+    m_entity.Shutdown();
     DeleteModels();
     if (m_pEnvirFloor) {
       delete m_pEnvirFloor;
@@ -253,6 +261,8 @@ public:
   CHistoryAy m_historyAy;
   CTexture m_carTex;
   CCamera m_camera;
+  CEntity m_entity;
+  CNoclipComponent m_noclipComponent;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -299,27 +309,30 @@ void CTrackPreview::UpdateCameraPos()
   if (!hasFocus())
     return;
 
-  if (GetAsyncKeyState(0x57)) //W
-    p->m_camera.MoveForward();
-  if (GetAsyncKeyState(0x41)) //A
-    p->m_camera.StrafeLeft();
-  if (GetAsyncKeyState(0x53)) //S
-    p->m_camera.MoveBackward();
-  if (GetAsyncKeyState(0x44)) //D
-    p->m_camera.StrafeRight();
-  if (GetAsyncKeyState(0x52) //R
-      || GetAsyncKeyState(0x45)) //E
-    p->m_camera.MoveUp();
-  if (GetAsyncKeyState(0x46) //F
-      || GetAsyncKeyState(0x51)) //Q
-    p->m_camera.MoveDown();
-  if (GetAsyncKeyState(VK_LBUTTON)
-      || GetAsyncKeyState(VK_RBUTTON)) {
-    POINT mousePos;
-    if (GetCursorPos(&mousePos)) {
-      p->m_camera.MouseUpdate(glm::vec2(mousePos.x, mousePos.y));
-    }
-  }
+  //if (GetAsyncKeyState(0x57)) //W
+  //  p->m_camera.MoveForward();
+  //if (GetAsyncKeyState(0x41)) //A
+  //  p->m_camera.StrafeLeft();
+  //if (GetAsyncKeyState(0x53)) //S
+  //  p->m_camera.MoveBackward();
+  //if (GetAsyncKeyState(0x44)) //D
+  //  p->m_camera.StrafeRight();
+  //if (GetAsyncKeyState(0x52) //R
+  //    || GetAsyncKeyState(0x45)) //E
+  //  p->m_camera.MoveUp();
+  //if (GetAsyncKeyState(0x46) //F
+  //    || GetAsyncKeyState(0x51)) //Q
+  //  p->m_camera.MoveDown();
+  //if (GetAsyncKeyState(VK_LBUTTON)
+  //    || GetAsyncKeyState(VK_RBUTTON)) {
+  //  POINT mousePos;
+  //  if (GetCursorPos(&mousePos)) {
+  //    p->m_camera.MouseUpdate(glm::vec2(mousePos.x, mousePos.y));
+  //  }
+  //}
+  p->m_entity.Update();
+  p->m_camera.m_position = p->m_entity.m_position;
+  p->m_camera.m_viewDirection = p->m_entity.m_orientation;
 
   repaint();
 }

@@ -10,6 +10,8 @@
 #include "Entity.h"
 #include "NoclipComponent.h"
 #include "GameClock.h"
+#include "GameInput.h"
+#include "WinUserKeyMapper.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -49,6 +51,8 @@ int main(int argc, char *argv[])
   glfwMakeContextCurrent(window);
 
   CGameClock::GetGameClock().Init();
+  CWinUserKeyMapper keyMapper;
+  CGameInput::GetGameInput().Init(&keyMapper);
 
   CCamera camera;
 
@@ -67,6 +71,7 @@ int main(int argc, char *argv[])
   //Loop until the user closes the window
   while (!glfwWindowShouldClose(window)) {
     CGameClock::GetGameClock().NewFrame();
+    CGameInput::GetGameInput().Update();
 
     int iWidth, iHeight = 0;
     glfwGetWindowSize(window, &iWidth, &iHeight);

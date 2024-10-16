@@ -29,6 +29,8 @@
 #include "AssignBacksDialog.h"
 #include "NoclipComponent.h"
 #include "GameClock.h"
+#include "GameInput.h"
+#include "WinUserKeyMapper.h"
 #include "qtimer.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
@@ -91,6 +93,7 @@ public:
   QAction *m_pDebugAction;
   std::vector<CTrackPreview *> m_previewAy;
   CChunkAy m_clipBoard;
+  CWinUserKeyMapper m_keyMapper;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -114,6 +117,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   lblChunkWarning->hide();
   lblStuntWarning->hide();
   CGameClock::GetGameClock().Init();
+  CGameInput::GetGameInput().Init(&p->m_keyMapper);
 
   //setup dock widgets
   p->m_pDebugDataDockWidget = new QDockWidget("Debug Chunk Data", this);
@@ -1126,6 +1130,7 @@ void CMainWindow::OnStuntTimer()
 void CMainWindow::OnZeroTimer()
 {
   CGameClock::GetGameClock().NewFrame();
+  CGameInput::GetGameInput().Update();
   if (GetCurrentPreview())
     GetCurrentPreview()->UpdateCameraPos();
 }

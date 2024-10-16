@@ -261,6 +261,8 @@ exit 1</Command>
     <ClInclude Include="Entity.h" />
     <ClInclude Include="FBXExporter.h" />
     <ClInclude Include="GameClock.h" />
+    <ClInclude Include="GameInput.h" />
+    <ClInclude Include="KeyMapper.h" />
     <ClInclude Include="Logging.h" />
     <ClInclude Include="NoclipComponent.h" />
     <ClInclude Include="Renderer.h" />
@@ -307,6 +309,7 @@ exit 1</Command>
     <ClInclude Include="VertexArray.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="WhipLib.h" />
+    <ClInclude Include="WinUserKeyMapper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
@@ -316,6 +319,7 @@ exit 1</Command>
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="FBXExporter.cpp" />
     <ClCompile Include="GameClock.cpp" />
+    <ClCompile Include="GameInput.cpp" />
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="NoclipComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -331,6 +335,7 @@ exit 1</Command>
     <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="WhipLib.cpp" />
+    <ClCompile Include="WinUserKeyMapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\FragmentShaderCode.glsl" />

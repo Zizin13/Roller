@@ -1,5 +1,6 @@
 #include "NoclipComponent.h"
 #include "GameClock.h"
+#include "GameInput.h"
 #include "Entity.h"
 #include "Camera.h"
 #include "gtx\transform.hpp"
@@ -20,27 +21,21 @@ CNoclipComponent::CNoclipComponent(bool bRequiresClick)
 
 void CNoclipComponent::Update()
 {
-  if (GetAsyncKeyState(0x57)) //W
+  if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_FORWARD)
     MoveForward();
-  if (GetAsyncKeyState(0x41)) //A
+  if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_LEFT)
     StrafeLeft();
-  if (GetAsyncKeyState(0x53)) //S
+  if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_BACKWARD)
     MoveBackward();
-  if (GetAsyncKeyState(0x44)) //D
+  if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_RIGHT)
     StrafeRight();
-  if (GetAsyncKeyState(0x52) //R
-      || GetAsyncKeyState(0x45)) //E
+  if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_UP)
     MoveUp();
-  if (GetAsyncKeyState(0x46) //F
-      || GetAsyncKeyState(0x51)) //Q
+  if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_DOWN)
     MoveDown();
-  POINT mousePos;
-  if (GetAsyncKeyState(VK_LBUTTON)
-      || GetAsyncKeyState(VK_RBUTTON)
+  if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_CLICK
       || !m_bRequiresClick) {
-    if (GetCursorPos(&mousePos)) {
-      MouseUpdate(glm::vec2(mousePos.x, mousePos.y));
-    }
+    MouseUpdate(CGameInput::GetGameInput().GetMousePos());
   }
 }
 

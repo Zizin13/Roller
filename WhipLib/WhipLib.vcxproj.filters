@@ -185,6 +185,15 @@
     <ClInclude Include="NoclipComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameInput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyMapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WinUserKeyMapper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Unmangler.cpp">
@@ -251,6 +260,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="NoclipComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WinUserKeyMapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

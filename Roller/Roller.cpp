@@ -69,6 +69,7 @@ int main(int argc, char *argv[])
     glfwPollEvents();
   }
 
+  renderer.Shutdown();
   glfwTerminate();
 
   return 0;

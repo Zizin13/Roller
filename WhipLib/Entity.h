@@ -2,6 +2,7 @@
 #define _WHIPLIB_ENTITY_H
 //-------------------------------------------------------------------------------------------------
 #include "Types.h"
+#include "glm.hpp"
 //-------------------------------------------------------------------------------------------------
 class IComponent;
 //-------------------------------------------------------------------------------------------------
@@ -18,6 +19,9 @@ public:
 
   template<class T>
   T *GetComponent() const;
+
+  glm::vec3 m_position;
+  glm::vec3 m_orientation;
 
 private:
   static const int s_iMaxComponents = 10;

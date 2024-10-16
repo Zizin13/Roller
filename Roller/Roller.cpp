@@ -7,6 +7,9 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Renderer.h"
+#include "Entity.h"
+#include "NoclipComponent.h"
+#include "GameClock.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -45,22 +48,33 @@ int main(int argc, char *argv[])
   //Make the window's context current
   glfwMakeContextCurrent(window);
 
+  CGameClock::GetGameClock().Init();
+
   CCamera camera;
-  camera.m_position.z = 500.0f;
-  camera.m_position.y = 1300.0f;
-  camera.m_viewDirection.z = 0.05f;
-  camera.m_viewDirection.y = -1.0f;
 
   CRenderer renderer;
   if (!renderer.Init("C:\\WHIP\\WHIPLASH\\FATDATA"))
     return -1;
   renderer.MakeCarShape(eWhipModel::CAR_YZIZIN);
 
+  CNoclipComponent noclip;
+  noclip.Init();
+
+  CEntity defaultEntity;
+  defaultEntity.Init();
+  defaultEntity.AddComponent(&noclip);
+
   //Loop until the user closes the window
   while (!glfwWindowShouldClose(window)) {
+    CGameClock::GetGameClock().NewFrame();
+
     int iWidth, iHeight = 0;
     glfwGetWindowSize(window, &iWidth, &iHeight);
 
+    defaultEntity.Update();
+
+    camera.m_position = defaultEntity.m_position;
+    camera.m_viewDirection = defaultEntity.m_orientation;
     renderer.Draw(iWidth, iHeight, &camera);
 
     //Swap front and back buffers
@@ -69,6 +83,7 @@ int main(int argc, char *argv[])
     glfwPollEvents();
   }
 
+  defaultEntity.Shutdown();
   renderer.Shutdown();
   glfwTerminate();
 

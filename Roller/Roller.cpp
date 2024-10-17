@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
     glfwTerminate();
     return -1;
   }
+  glfwSwapInterval(0); //don't limit framerate?
 
   //Make the window's context current
   glfwMakeContextCurrent(pWindow);
@@ -58,8 +59,27 @@ int main(int argc, char *argv[])
   testScene.SpawnCar(eWhipModel::CAR_YZIZIN);
   testScene.LoadTrack("TRACK8.TRK");
 
+#if defined(_DEBUG)
+  //init framerate test
+  float fTimer = 0.0f;
+  int iNumFrames = 0;
+#endif
+
   //Loop until the user closes the window
   while (!glfwWindowShouldClose(pWindow)) {
+#if defined(_DEBUG)
+    //calculate framerate
+    fTimer += CGameClock::GetGameClock().DeltaTimeLastFrame();
+    ++iNumFrames;
+    if (fTimer >= 1.0f) {
+      char szFramerate[100];
+      snprintf(szFramerate, sizeof(szFramerate), "%d fps\n", iNumFrames);
+      OutputDebugString(szFramerate);
+      fTimer = 0.0f;
+      iNumFrames = 0;
+    }
+#endif
+
     //get window size
     int iWidth, iHeight = 0;
     glfwGetWindowSize(pWindow, &iWidth, &iHeight);

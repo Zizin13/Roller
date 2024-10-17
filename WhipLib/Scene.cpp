@@ -104,6 +104,7 @@ void CScene::LoadTrack(const std::string &sTrackFile)
   p->m_track.LoadTrack(p->m_sFatDataDir + "/" + sTrackFile);
   p->m_track.LoadTextures();
   p->m_renderer.MakeTrackShape(&p->m_track);
+  p->m_renderer.MakeSigns(&p->m_track);
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -26,6 +26,7 @@ public:
 
   CShapeData *MakeCarShape(eWhipModel model);
   CShapeData *MakeTrackShape(CTrack *pTrack);
+  void MakeSigns(CTrack *pTrack);
 
 private:
   std::string m_sFatDataDir;

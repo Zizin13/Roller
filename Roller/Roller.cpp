@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
   CScene testScene;
   testScene.Init("C:\\WHIP\\WHIPLASH\\FATDATA");
   testScene.SpawnCar(eWhipModel::CAR_YZIZIN);
-  testScene.LoadTrack("TRACK3.TRK");
+  testScene.LoadTrack("TRACK8.TRK");
 
   //Loop until the user closes the window
   while (!glfwWindowShouldClose(pWindow)) {

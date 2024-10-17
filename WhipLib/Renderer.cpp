@@ -159,3 +159,15 @@ CShapeData *CRenderer::MakeTrackShape(CTrack *pTrack)
 }
 
 //-------------------------------------------------------------------------------------------------
+
+void CRenderer::MakeSigns(CTrack *pTrack)
+{
+  std::vector<CShapeData *> signAy;
+
+  CShapeFactory::GetShapeFactory().MakeSigns(m_pShader, pTrack, signAy);
+  for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it) {
+    m_shapeAy.emplace_back(*it);
+  }
+}
+
+//-------------------------------------------------------------------------------------------------

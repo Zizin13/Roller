@@ -17,6 +17,7 @@ public:
   bool Shutdown();
   void Update(int iWindowWidth, int iWindowHeight);
   void SpawnCar(eWhipModel model);
+  void LoadTrack(const std::string &sTrackFile);
 
 private:
   CScenePrivate *p;

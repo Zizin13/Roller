@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "Entity.h"
 #include "NoclipComponent.h"
+#include "Track.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -24,6 +25,7 @@ public:
   CRenderer m_renderer;
   CNoclipComponent m_noClip;
   CEntity m_defaultEntity;
+  CTrack m_track;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -89,6 +91,19 @@ void CScene::SpawnCar(eWhipModel model)
     return;
 
   p->m_renderer.MakeCarShape(model);
+}
+
+
+//-------------------------------------------------------------------------------------------------
+
+void CScene::LoadTrack(const std::string &sTrackFile)
+{
+  if (!p)
+    return;
+
+  p->m_track.LoadTrack(p->m_sFatDataDir + "/" + sTrackFile);
+  p->m_track.LoadTextures();
+  p->m_renderer.MakeTrackShape(&p->m_track);
 }
 
 //-------------------------------------------------------------------------------------------------

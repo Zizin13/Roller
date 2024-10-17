@@ -7,9 +7,11 @@
 class CShader;
 class CShapeData;
 class CCamera;
+class CTrack;
 struct tCarShape;
 //-------------------------------------------------------------------------------------------------
 typedef std::vector<tCarShape *> CCarShapeAy;
+typedef std::vector<CShapeData *> CShapeAy;
 //-------------------------------------------------------------------------------------------------
 
 class CRenderer
@@ -23,11 +25,13 @@ public:
   void Draw(int iWindowWidth, int iWindowHeight, CCamera *pCamera);
 
   CShapeData *MakeCarShape(eWhipModel model);
+  CShapeData *MakeTrackShape(CTrack *pTrack);
 
 private:
   std::string m_sFatDataDir;
   CShader *m_pShader;
   CCarShapeAy m_carShapeAy;
+  CShapeAy m_shapeAy;
 };
 
 //-------------------------------------------------------------------------------------------------

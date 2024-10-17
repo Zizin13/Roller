@@ -91,11 +91,14 @@ bool CRenderer::Shutdown()
     delete m_pShader;
     m_pShader = NULL;
   }
-  CCarShapeAy::iterator it = m_carShapeAy.begin();
-  for (; it != m_carShapeAy.end(); ++it) {
+  for (CCarShapeAy::iterator it = m_carShapeAy.begin(); it != m_carShapeAy.end(); ++it) {
     delete *it;
   }
   m_carShapeAy.clear();
+  for (CShapeAy::iterator it = m_shapeAy.begin(); it != m_shapeAy.end(); ++it) {
+    delete *it;
+  }
+  m_shapeAy.clear();
   return true;
 }
 
@@ -114,9 +117,11 @@ void CRenderer::Draw(int iWindowWidth, int iWindowHeight, CCamera *pCamera)
   glm::mat4 worldToViewMatrix = pCamera->GetWorldToViewMatrix();
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
-  CCarShapeAy::iterator it = m_carShapeAy.begin();
-  for (; it != m_carShapeAy.end(); ++it) {
+  for (CCarShapeAy::iterator it = m_carShapeAy.begin(); it != m_carShapeAy.end(); ++it) {
     (*it)->pShapeData->Draw(worldToProjectionMatrix, pCamera->m_position);
+  }
+  for (CShapeAy::iterator it = m_shapeAy.begin(); it != m_shapeAy.end(); ++it) {
+    (*it)->Draw(worldToProjectionMatrix, pCamera->m_position);
   }
 }
 
@@ -135,8 +140,22 @@ CShapeData *CRenderer::MakeCarShape(eWhipModel model)
   pNewCarShape->pTex = new CTexture();
   pNewCarShape->pTex->LoadTexture(m_sFatDataDir + "/" + sTexName, pNewCarShape->pPal);
   pNewCarShape->pShapeData = CShapeFactory::GetShapeFactory().MakeModel(m_pShader, pNewCarShape->pTex, model);
+  pNewCarShape->pShapeData->m_modelToWorldMatrix = glm::rotate(glm::radians(-90.0f), glm::vec3(1, 0, 0));
   m_carShapeAy.emplace_back(pNewCarShape);
   return pNewCarShape->pShapeData;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+CShapeData *CRenderer::MakeTrackShape(CTrack *pTrack)
+{
+  if (!m_pShader)
+    return NULL;
+
+  CShapeData *pNewShape = NULL;
+  pNewShape = CShapeFactory::GetShapeFactory().MakeTrackSurface(pNewShape, m_pShader, pTrack, eShapeSection::EXPORT, true);
+  m_shapeAy.emplace_back(pNewShape);
+  return pNewShape;
 }
 
 //-------------------------------------------------------------------------------------------------

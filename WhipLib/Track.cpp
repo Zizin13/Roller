@@ -1363,6 +1363,13 @@ bool CTrack::UseCenterStunt(int i)
 
 //-------------------------------------------------------------------------------------------------
 
+void CTrack::ProjectToTrack(const glm::vec3 &position, glm::vec3 &positionOnTrack)
+{
+
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CTrack::GetCenter(int i, glm::vec3 prevCenter,
                            glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched,
                            glm::mat4 &yawMat, glm::mat4 &pitchMat, glm::mat4 &rollMat)

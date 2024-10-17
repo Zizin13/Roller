@@ -1,21 +1,24 @@
-#ifndef _WHIPLIB_TRACKCOMPONENT_H
-#define _WHIPLIB_TRACKCOMPONENT_H
+#ifndef _WHIPLIB_TRACKPOSCOMPONENT_H
+#define _WHIPLIB_TRACKPOSCOMPONENT_H
 //-------------------------------------------------------------------------------------------------
 #include "Component.h"
 #include "Types.h"
+#include "glm.hpp"
 #include <string>
 //-------------------------------------------------------------------------------------------------
 class CTrack;
 //-------------------------------------------------------------------------------------------------
 
-class CTrackComponent : public IComponent
+class CTrackPosComponent : public IComponent
 {
 public:
-  CTrackComponent();
-  ~CTrackComponent();
+  CTrackPosComponent();
+  ~CTrackPosComponent();
 
   void Update() override;
   void SetData(CTrack *pTrack);
+
+  glm::vec3 m_positionOnTrack;
 
 private:
   CTrack *m_pTrack;

@@ -1,4 +1,4 @@
-#include "TrackComponent.h"
+#include "TrackPosComponent.h"
 #include "Track.h"
 #include "Entity.h"
 //-------------------------------------------------------------------------------------------------
@@ -7,30 +7,32 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
-CTrackComponent::CTrackComponent()
+CTrackPosComponent::CTrackPosComponent()
   : m_pTrack(NULL)
+  , m_positionOnTrack(glm::vec3(0.0f, 0.0f, 0.0f))
 {
 }
 
 //-------------------------------------------------------------------------------------------------
 
-CTrackComponent::~CTrackComponent()
+CTrackPosComponent::~CTrackPosComponent()
 {
 
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackComponent::Update()
+void CTrackPosComponent::Update()
 {
   if (!m_pTrack)
     return;
 
+  m_pTrack->ProjectToTrack(m_pContainingEntity->m_position, m_positionOnTrack);
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackComponent::SetData(CTrack *pTrack)
+void CTrackPosComponent::SetData(CTrack *pTrack)
 {
   m_pTrack = pTrack;
 }

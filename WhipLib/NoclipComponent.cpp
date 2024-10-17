@@ -23,6 +23,9 @@ CNoclipComponent::CNoclipComponent(bool bRequiresClick)
 
 void CNoclipComponent::Update()
 {
+  if (!m_pContainingEntity->m_bAcceptControls)
+    return;
+
   if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_FORWARD)
     MoveForward();
   if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_LEFT)

@@ -9,8 +9,10 @@
 
 CEntity::CEntity()
   : m_iNumComponents(0)
-  , m_orientation(0.0f, -0.3f, 1.0f)
-  , m_position(0.0f, 4000.0f, -5000.0f)
+  , m_orientation(0.0f, 0.0f, 1.0f)
+  , m_position(0.0f, 0.0f, 0.0f)
+  , m_up(0.0f, 1.0f, 0.0f)
+  , m_bAcceptControls(false)
 {
 }
 

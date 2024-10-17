@@ -10,6 +10,7 @@ class CCamera : public IComponent
 public:
   CCamera();
 
+  void Update() override;
   glm::mat4 GetWorldToViewMatrix() const;
 
   glm::vec3 m_position;

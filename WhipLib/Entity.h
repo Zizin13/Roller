@@ -22,6 +22,8 @@ public:
 
   glm::vec3 m_position;
   glm::vec3 m_orientation;
+  glm::vec3 m_up;
+  bool m_bAcceptControls;
 
 private:
   static const int s_iMaxComponents = 10;

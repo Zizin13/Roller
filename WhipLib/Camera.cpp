@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "Entity.h"
 #include "gtx\transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -11,6 +12,14 @@ CCamera::CCamera()
   : m_viewDirection(0.0f, -0.3f, 1.0f)
   , m_position(0.0f, 4000.0f, -5000.0f)
 {
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CCamera::Update()
+{
+  m_position = m_pContainingEntity->m_position;
+  m_viewDirection = m_pContainingEntity->m_orientation;
 }
 
 //-------------------------------------------------------------------------------------------------

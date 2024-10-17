@@ -5,6 +5,7 @@
 #include "Types.h"
 //-------------------------------------------------------------------------------------------------
 class CScenePrivate;
+class CEntity;
 //-------------------------------------------------------------------------------------------------
 
 class CScene
@@ -18,6 +19,7 @@ public:
   void Update(int iWindowWidth, int iWindowHeight);
   void SpawnCar(eWhipModel model);
   void LoadTrack(const std::string &sTrackFile);
+  bool SetPlayer(CEntity *pEntity);
 
 private:
   CScenePrivate *p;

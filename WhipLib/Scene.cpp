@@ -24,11 +24,15 @@ public:
   };
 
   std::string m_sFatDataDir;
-  CCamera m_camera;
   CRenderer m_renderer;
+  CEntity *m_pPlayer;
+
+  //default entity
   CNoclipComponent m_noClip;
   CEntity m_defaultEntity;
+  CCamera m_defaultCamera;
 
+  //track entity
   CTrack m_track;
   CEntity m_trackEntity;
   CTrackComponent m_trackComponent;
@@ -60,8 +64,13 @@ bool CScene::Init(const std::string &sFatDataDir)
   p->m_sFatDataDir = sFatDataDir;
   bSuccess |= p->m_renderer.Init(p->m_sFatDataDir);
   bSuccess |= p->m_noClip.Init();
+  bSuccess |= p->m_defaultCamera.Init();
   bSuccess |= p->m_defaultEntity.Init();
   p->m_defaultEntity.AddComponent(&p->m_noClip);
+  p->m_defaultEntity.AddComponent(&p->m_defaultCamera);
+  p->m_defaultEntity.m_orientation = glm::vec3(0.0f, -0.3f, 1.0f);
+  p->m_defaultEntity.m_position = glm::vec3(0.0f, 4000.0f, -5000.0f);
+  SetPlayer(&p->m_defaultEntity);
 
   return bSuccess;
 }
@@ -86,9 +95,8 @@ void CScene::Update(int iWindowWidth, int iWindowHeight)
 
   p->m_defaultEntity.Update();
   p->m_trackEntity.Update();
-  p->m_camera.m_position = p->m_defaultEntity.m_position;
-  p->m_camera.m_viewDirection = p->m_defaultEntity.m_orientation;
-  p->m_renderer.Draw(iWindowWidth, iWindowHeight, &p->m_camera);
+  CCamera *pCamera = p->m_pPlayer->GetComponent<CCamera>();
+  p->m_renderer.Draw(iWindowWidth, iWindowHeight, pCamera);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -128,6 +136,19 @@ void CScene::LoadTrack(const std::string &sTrackFile)
   p->m_trackEntity.AddComponent(&p->m_trackShapeComponent);
   p->m_trackEntity.AddComponent(&p->m_trackComponent);
   p->m_trackEntity.Init();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CScene::SetPlayer(CEntity *pEntity)
+{
+  CCamera *pCamera = pEntity->GetComponent<CCamera>();
+  if (!pCamera)
+    return false;
+
+  p->m_pPlayer = pEntity;
+  pEntity->m_bAcceptControls = true;
+  return true;
 }
 
 //-------------------------------------------------------------------------------------------------

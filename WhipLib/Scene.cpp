@@ -142,10 +142,15 @@ void CScene::LoadTrack(const std::string &sTrackFile)
 
 bool CScene::SetPlayer(CEntity *pEntity)
 {
+  //can't make an entity a player without a camera
   CCamera *pCamera = pEntity->GetComponent<CCamera>();
   if (!pCamera)
     return false;
 
+  //old player should no longer accept controls
+  p->m_pPlayer->m_bAcceptControls = false;
+
+  //set new player
   p->m_pPlayer = pEntity;
   pEntity->m_bAcceptControls = true;
   return true;

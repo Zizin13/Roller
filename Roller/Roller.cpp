@@ -25,31 +25,34 @@ static void LogMessageCbStatic(const char *szMsg, int iLen)
 
 int main(int argc, char *argv[])
 {
+  //memory leak detection
 #if defined(_DEBUG) && defined(IS_WINDOWS)
   _set_error_mode(_OUT_TO_MSGBOX);
   _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
-  GLFWwindow *pWindow;
 
+  //init glfw
   if (!glfwInit())
     return -1;
 
   //Create a windowed mode window and its OpenGL context
+  GLFWwindow *pWindow;
   pWindow = glfwCreateWindow(640, 480, "Roller", NULL, NULL);
   if (!pWindow) {
     glfwTerminate();
     return -1;
   }
 
-  Logging::SetWhipLibLoggingCallback(LogMessageCbStatic);
-
   //Make the window's context current
   glfwMakeContextCurrent(pWindow);
-
+  
+  //init game
+  Logging::SetWhipLibLoggingCallback(LogMessageCbStatic);
   CGameClock::GetGameClock().Init();
   CGlfwKeyMapper::GetGlfwKeyMapper().Init(pWindow);
   CGameInput::GetGameInput().Init(&CGlfwKeyMapper::GetGlfwKeyMapper());
 
+  //init test scene
   CScene testScene;
   testScene.Init("C:\\WHIP\\WHIPLASH\\FATDATA");
   testScene.SpawnCar(eWhipModel::CAR_YZIZIN);
@@ -72,6 +75,7 @@ int main(int argc, char *argv[])
     glfwPollEvents();
   }
 
+  //shutdown
   testScene.Shutdown();
   glfwTerminate();
 

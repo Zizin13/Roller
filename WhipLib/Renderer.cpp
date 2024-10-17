@@ -162,12 +162,28 @@ CShapeData *CRenderer::MakeTrackShape(CTrack *pTrack)
 
 void CRenderer::MakeSigns(CTrack *pTrack)
 {
+  if (!m_pShader)
+    return;
+
   std::vector<CShapeData *> signAy;
 
   CShapeFactory::GetShapeFactory().MakeSigns(m_pShader, pTrack, signAy);
   for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it) {
     m_shapeAy.emplace_back(*it);
   }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CRenderer::MakeEnvirFloor(CTrack *pTrack)
+{
+  if (!m_pShader)
+    return;
+
+  CShapeData *pNewShape = NULL;
+  pNewShape = CShapeFactory::GetShapeFactory().MakeEnvirFloor(pNewShape, m_pShader, pTrack, 0);
+  if (pNewShape)
+    m_shapeAy.emplace_back(pNewShape);
 }
 
 //-------------------------------------------------------------------------------------------------

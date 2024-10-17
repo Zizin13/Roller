@@ -198,7 +198,11 @@ exit 1</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GlfwKeyMapper.cpp" />
     <ClCompile Include="Roller.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GlfwKeyMapper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

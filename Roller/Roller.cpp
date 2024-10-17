@@ -6,7 +6,7 @@
 #include "Logging.h"
 #include "GameClock.h"
 #include "GameInput.h"
-#include "WinUserKeyMapper.h"
+#include "GlfwKeyMapper.h"
 #include "Scene.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -29,14 +29,14 @@ int main(int argc, char *argv[])
   _set_error_mode(_OUT_TO_MSGBOX);
   _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
-  GLFWwindow *window;
+  GLFWwindow *pWindow;
 
   if (!glfwInit())
     return -1;
 
   //Create a windowed mode window and its OpenGL context
-  window = glfwCreateWindow(640, 480, "Roller", NULL, NULL);
-  if (!window) {
+  pWindow = glfwCreateWindow(640, 480, "Roller", NULL, NULL);
+  if (!pWindow) {
     glfwTerminate();
     return -1;
   }
@@ -44,11 +44,11 @@ int main(int argc, char *argv[])
   Logging::SetWhipLibLoggingCallback(LogMessageCbStatic);
 
   //Make the window's context current
-  glfwMakeContextCurrent(window);
+  glfwMakeContextCurrent(pWindow);
 
   CGameClock::GetGameClock().Init();
-  CWinUserKeyMapper keyMapper;
-  CGameInput::GetGameInput().Init(&keyMapper);
+  CGlfwKeyMapper::GetGlfwKeyMapper().Init(pWindow);
+  CGameInput::GetGameInput().Init(&CGlfwKeyMapper::GetGlfwKeyMapper());
 
   CScene testScene;
   testScene.Init("C:\\WHIP\\WHIPLASH\\FATDATA");
@@ -56,10 +56,10 @@ int main(int argc, char *argv[])
   testScene.LoadTrack("TRACK3.TRK");
 
   //Loop until the user closes the window
-  while (!glfwWindowShouldClose(window)) {
+  while (!glfwWindowShouldClose(pWindow)) {
     //get window size
     int iWidth, iHeight = 0;
-    glfwGetWindowSize(window, &iWidth, &iHeight);
+    glfwGetWindowSize(pWindow, &iWidth, &iHeight);
 
     //update game
     CGameClock::GetGameClock().NewFrame();
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     testScene.Update(iWidth, iHeight);
 
     //Swap front and back buffers
-    glfwSwapBuffers(window);
+    glfwSwapBuffers(pWindow);
     //Poll for and process events
     glfwPollEvents();
   }

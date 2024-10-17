@@ -109,17 +109,22 @@ void CScene::LoadTrack(const std::string &sTrackFile)
   if (!p)
     return;
 
+  //load track
   p->m_track.LoadTrack(p->m_sFatDataDir + "/" + sTrackFile);
   p->m_track.LoadTextures();
+
+  //make shapes
   CShapeData *pTrackShape = p->m_renderer.MakeTrackShape(&p->m_track);
   p->m_renderer.MakeSigns(&p->m_track);
   p->m_renderer.MakeEnvirFloor(&p->m_track);
 
+  //setup components
   p->m_trackShapeComponent.m_pShapeData = pTrackShape;
   p->m_trackComponent.SetData(&p->m_track, &p->m_renderer);
   p->m_trackShapeComponent.Init();
   p->m_trackComponent.Init();
 
+  //setup track entity
   p->m_trackEntity.AddComponent(&p->m_trackShapeComponent);
   p->m_trackEntity.AddComponent(&p->m_trackComponent);
   p->m_trackEntity.Init();

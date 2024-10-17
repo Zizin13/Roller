@@ -1,5 +1,3 @@
-#ifdef IS_WINDOWS
-//-------------------------------------------------------------------------------------------------
 #include "GlfwKeyMapper.h"
 #include "GameInput.h"
 #include <glfw3.h>
@@ -102,4 +100,3 @@ void CGlfwKeyMapper::SetMouseCaptured(bool bCaptured)
 }
 
 //-------------------------------------------------------------------------------------------------
-#endif

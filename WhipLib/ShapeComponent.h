@@ -18,9 +18,6 @@ public:
   bool Shutdown() override;
   void Update() override;
 
-  void SetData(CShapeData *pShapeData);
-
-private:
   CShapeData *m_pShapeData;
 };
 

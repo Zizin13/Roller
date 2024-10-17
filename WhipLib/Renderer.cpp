@@ -160,6 +160,16 @@ CShapeData *CRenderer::MakeTrackShape(CTrack *pTrack)
 
 //-------------------------------------------------------------------------------------------------
 
+void CRenderer::UpdateTrackShape(CTrack *pTrack, CShapeData *pShape)
+{
+  if (!m_pShader)
+    return;
+
+  pShape = CShapeFactory::GetShapeFactory().MakeTrackSurface(pShape, m_pShader, pTrack, eShapeSection::EXPORT, true);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CRenderer::MakeSigns(CTrack *pTrack)
 {
   if (!m_pShader)

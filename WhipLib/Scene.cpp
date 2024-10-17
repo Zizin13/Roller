@@ -4,6 +4,8 @@
 #include "Entity.h"
 #include "NoclipComponent.h"
 #include "Track.h"
+#include "TrackComponent.h"
+#include "ShapeComponent.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -16,6 +18,7 @@ public:
   CScenePrivate() {};
   ~CScenePrivate()
   {
+    m_trackEntity.Shutdown();
     m_defaultEntity.Shutdown();
     m_renderer.Shutdown();
   };
@@ -25,7 +28,11 @@ public:
   CRenderer m_renderer;
   CNoclipComponent m_noClip;
   CEntity m_defaultEntity;
+
   CTrack m_track;
+  CEntity m_trackEntity;
+  CTrackComponent m_trackComponent;
+  CShapeComponent m_trackShapeComponent;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -78,6 +85,7 @@ void CScene::Update(int iWindowWidth, int iWindowHeight)
     return;
 
   p->m_defaultEntity.Update();
+  p->m_trackEntity.Update();
   p->m_camera.m_position = p->m_defaultEntity.m_position;
   p->m_camera.m_viewDirection = p->m_defaultEntity.m_orientation;
   p->m_renderer.Draw(iWindowWidth, iWindowHeight, &p->m_camera);
@@ -103,9 +111,18 @@ void CScene::LoadTrack(const std::string &sTrackFile)
 
   p->m_track.LoadTrack(p->m_sFatDataDir + "/" + sTrackFile);
   p->m_track.LoadTextures();
-  p->m_renderer.MakeTrackShape(&p->m_track);
+  CShapeData *pTrackShape = p->m_renderer.MakeTrackShape(&p->m_track);
   p->m_renderer.MakeSigns(&p->m_track);
   p->m_renderer.MakeEnvirFloor(&p->m_track);
+
+  p->m_trackShapeComponent.m_pShapeData = pTrackShape;
+  p->m_trackComponent.SetData(&p->m_track, &p->m_renderer);
+  p->m_trackShapeComponent.Init();
+  p->m_trackComponent.Init();
+
+  p->m_trackEntity.AddComponent(&p->m_trackShapeComponent);
+  p->m_trackEntity.AddComponent(&p->m_trackComponent);
+  p->m_trackEntity.Init();
 }
 
 //-------------------------------------------------------------------------------------------------

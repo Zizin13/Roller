@@ -26,6 +26,7 @@ public:
 
   CShapeData *MakeCarShape(eWhipModel model);
   CShapeData *MakeTrackShape(CTrack *pTrack);
+  void UpdateTrackShape(CTrack *pTrack, CShapeData *pShape);
   void MakeSigns(CTrack *pTrack);
   void MakeEnvirFloor(CTrack *pTrack);
 

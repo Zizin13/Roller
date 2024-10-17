@@ -6,6 +6,7 @@
 #include <string>
 //-------------------------------------------------------------------------------------------------
 class CTrack;
+class CRenderer;
 //-------------------------------------------------------------------------------------------------
 
 class CTrackComponent : public IComponent
@@ -15,10 +16,12 @@ public:
   ~CTrackComponent();
 
   void Update() override;
-  void SetData(CTrack *pTrack);
+  void SetData(CTrack *pTrack, CRenderer *pRenderer);
 
 private:
   CTrack *m_pTrack;
+  CRenderer *m_pRenderer;
+  float m_fTimer;
 };
 
 //-------------------------------------------------------------------------------------------------

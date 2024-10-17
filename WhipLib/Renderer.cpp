@@ -118,10 +118,10 @@ void CRenderer::Draw(int iWindowWidth, int iWindowHeight, CCamera *pCamera)
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
   for (CCarShapeAy::iterator it = m_carShapeAy.begin(); it != m_carShapeAy.end(); ++it) {
-    (*it)->pShapeData->Draw(worldToProjectionMatrix, pCamera->m_position);
+    (*it)->pShapeData->Draw(worldToProjectionMatrix, pCamera->GetPosition());
   }
   for (CShapeAy::iterator it = m_shapeAy.begin(); it != m_shapeAy.end(); ++it) {
-    (*it)->Draw(worldToProjectionMatrix, pCamera->m_position);
+    (*it)->Draw(worldToProjectionMatrix, pCamera->GetPosition());
   }
 }
 
@@ -140,7 +140,9 @@ CShapeData *CRenderer::MakeCarShape(eWhipModel model)
   pNewCarShape->pTex = new CTexture();
   pNewCarShape->pTex->LoadTexture(m_sFatDataDir + "/" + sTexName, pNewCarShape->pPal);
   pNewCarShape->pShapeData = CShapeFactory::GetShapeFactory().MakeModel(m_pShader, pNewCarShape->pTex, model);
-  pNewCarShape->pShapeData->m_modelToWorldMatrix = glm::rotate(glm::radians(-90.0f), glm::vec3(1, 0, 0));
+  pNewCarShape->pShapeData->m_modelToWorldMatrix = glm::rotate(glm::radians(-90.0f), glm::vec3(0, 0, 1)) * //car starts on its side
+    glm::rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0)); //entity starts facing z positive, car starts facing x positive
+
   m_carShapeAy.emplace_back(pNewCarShape);
   return pNewCarShape->pShapeData;
 }

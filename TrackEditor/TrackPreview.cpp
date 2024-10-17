@@ -69,8 +69,13 @@ public:
     , m_noclipComponent(true)
   {
     m_entity.Init();
+    m_camera.Init();
     m_noclipComponent.Init();
+    m_entity.AddComponent(&m_camera);
     m_entity.AddComponent(&m_noclipComponent);
+    m_entity.m_orientation = glm::vec3(0.0f, -0.3f, 1.0f);
+    m_entity.m_position = glm::vec3(0.0f, 4000.0f, -5000.0f);
+    m_entity.m_bAcceptControls = true;
   };
   ~CTrackPreviewPrivate()
   {
@@ -309,30 +314,7 @@ void CTrackPreview::UpdateCameraPos()
   if (!hasFocus())
     return;
 
-  //if (GetAsyncKeyState(0x57)) //W
-  //  p->m_camera.MoveForward();
-  //if (GetAsyncKeyState(0x41)) //A
-  //  p->m_camera.StrafeLeft();
-  //if (GetAsyncKeyState(0x53)) //S
-  //  p->m_camera.MoveBackward();
-  //if (GetAsyncKeyState(0x44)) //D
-  //  p->m_camera.StrafeRight();
-  //if (GetAsyncKeyState(0x52) //R
-  //    || GetAsyncKeyState(0x45)) //E
-  //  p->m_camera.MoveUp();
-  //if (GetAsyncKeyState(0x46) //F
-  //    || GetAsyncKeyState(0x51)) //Q
-  //  p->m_camera.MoveDown();
-  //if (GetAsyncKeyState(VK_LBUTTON)
-  //    || GetAsyncKeyState(VK_RBUTTON)) {
-  //  POINT mousePos;
-  //  if (GetCursorPos(&mousePos)) {
-  //    p->m_camera.MouseUpdate(glm::vec2(mousePos.x, mousePos.y));
-  //  }
-  //}
   p->m_entity.Update();
-  p->m_camera.m_position = p->m_entity.m_position;
-  p->m_camera.m_viewDirection = p->m_entity.m_orientation;
 
   repaint();
 }
@@ -546,82 +528,82 @@ void CTrackPreview::paintGL()
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
   if (m_uiShowModels & SHOW_ENVIRONMENT && p->m_pEnvirFloor)
-    p->m_pEnvirFloor->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pEnvirFloor->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   //environment floor should never clip through track even when it is higher than it
   //so we draw it first then clear depth buffer bit
   glClear(GL_DEPTH_BUFFER_BIT);
 
   if (m_uiShowModels & SHOW_CENTER_SURF_MODEL && p->m_pCenterSurf)
-    p->m_pCenterSurf->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pCenterSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_CENTER_WIRE_MODEL && p->m_pCenterWire)
-    p->m_pCenterWire->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pCenterWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_LSHOULDER_SURF_MODEL && p->m_pLShoulderSurf)
-    p->m_pLShoulderSurf->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pLShoulderSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_LSHOULDER_WIRE_MODEL && p->m_pLShoulderWire)
-    p->m_pLShoulderWire->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pLShoulderWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_RSHOULDER_SURF_MODEL && p->m_pRShoulderSurf)
-    p->m_pRShoulderSurf->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pRShoulderSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_RSHOULDER_WIRE_MODEL && p->m_pRShoulderWire)
-    p->m_pRShoulderWire->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pRShoulderWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_LWALL_SURF_MODEL && p->m_pLWallSurf)
-    p->m_pLWallSurf->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pLWallSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_LWALL_WIRE_MODEL && p->m_pLWallWire)
-    p->m_pLWallWire->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pLWallWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_RWALL_SURF_MODEL && p->m_pRWallSurf)
-    p->m_pRWallSurf->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pRWallSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_RWALL_WIRE_MODEL && p->m_pRWallWire)
-    p->m_pRWallWire->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pRWallWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_ROOF_SURF_MODEL && p->m_pRoofSurf)
-    p->m_pRoofSurf->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pRoofSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_ROOF_WIRE_MODEL && p->m_pRoofWire)
-    p->m_pRoofWire->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pRoofWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_OWALLFLOOR_SURF_MODEL && p->m_pOWallFloorSurf)
-    p->m_pOWallFloorSurf->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pOWallFloorSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_OWALLFLOOR_WIRE_MODEL && p->m_pOWallFloorWire)
-    p->m_pOWallFloorWire->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pOWallFloorWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_LLOWALL_SURF_MODEL && p->m_pLLOWallSurf)
-    p->m_pLLOWallSurf->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pLLOWallSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_LLOWALL_WIRE_MODEL && p->m_pLLOWallWire)
-    p->m_pLLOWallWire->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pLLOWallWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_RLOWALL_SURF_MODEL && p->m_pRLOWallSurf)
-    p->m_pRLOWallSurf->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pRLOWallSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_RLOWALL_WIRE_MODEL && p->m_pRLOWallWire)
-    p->m_pRLOWallWire->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pRLOWallWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_LUOWALL_SURF_MODEL && p->m_pLUOWallSurf)
-    p->m_pLUOWallSurf->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pLUOWallSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_LUOWALL_WIRE_MODEL && p->m_pLUOWallWire)
-    p->m_pLUOWallWire->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pLUOWallWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_RUOWALL_SURF_MODEL && p->m_pRUOWallSurf)
-    p->m_pRUOWallSurf->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pRUOWallSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_RUOWALL_WIRE_MODEL && p->m_pRUOWallWire)
-    p->m_pRUOWallWire->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pRUOWallWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_SELECTION_HIGHLIGHT && p->m_pSelection)
-    p->m_pSelection->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pSelection->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_AILINE_MODELS
       && p->m_pAILine1
       && p->m_pAILine2
       && p->m_pAILine3
       && p->m_pAILine4) {
-    p->m_pAILine1->Draw(worldToProjectionMatrix, p->m_camera.m_position);
-    p->m_pAILine2->Draw(worldToProjectionMatrix, p->m_camera.m_position);
-    p->m_pAILine3->Draw(worldToProjectionMatrix, p->m_camera.m_position);
-    p->m_pAILine4->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pAILine1->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
+    p->m_pAILine2->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
+    p->m_pAILine3->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
+    p->m_pAILine4->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   }
   if (m_uiShowModels & SHOW_TEST_CAR && p->m_pCar)
-    p->m_pCar->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+    p->m_pCar->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   if (m_uiShowModels & SHOW_SIGNS) {
     for (std::vector<CShapeData *>::iterator it = p->m_signAy.begin(); it != p->m_signAy.end(); ++it) {
-      (*it)->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+      (*it)->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
     }
   }
   if (m_uiShowModels & SHOW_AUDIO) {
     for (std::vector<CShapeData *>::iterator it = p->m_audioAy.begin(); it != p->m_audioAy.end(); ++it) {
-      (*it)->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+      (*it)->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
     }
   }
   if (m_uiShowModels & SHOW_STUNTS) {
     for (std::vector<CShapeData *>::iterator it = p->m_stuntAy.begin(); it != p->m_stuntAy.end(); ++it) {
-      (*it)->Draw(worldToProjectionMatrix, p->m_camera.m_position);
+      (*it)->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
     }
   }
   //if (p->m_pAxes)

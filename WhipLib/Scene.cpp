@@ -15,9 +15,12 @@
 class CScenePrivate
 {
 public:
-  CScenePrivate() {};
+  CScenePrivate()
+    : m_pPlayer(NULL)
+  {};
   ~CScenePrivate()
   {
+    m_car.Shutdown();
     m_trackEntity.Shutdown();
     m_defaultEntity.Shutdown();
     m_renderer.Shutdown();
@@ -37,6 +40,11 @@ public:
   CEntity m_trackEntity;
   CTrackComponent m_trackComponent;
   CShapeComponent m_trackShapeComponent;
+
+  //car entity
+  CEntity m_car;
+  CShapeComponent m_carShapeComponent;
+  CCamera m_carCamera;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -106,7 +114,20 @@ void CScene::SpawnCar(eWhipModel model)
   if (!p)
     return;
 
-  p->m_renderer.MakeCarShape(model);
+  //make shape
+  CShapeData *pCarShape = p->m_renderer.MakeCarShape(model);
+
+  //setup components
+  p->m_carShapeComponent.m_pShapeData = pCarShape;
+  p->m_carShapeComponent.Init();
+  p->m_carCamera.m_offset = glm::vec3(0.0f, 800.0f, -3000.0f);
+  p->m_carCamera.Init();
+
+  //setup car entity
+  p->m_car.AddComponent(&p->m_carShapeComponent);
+  p->m_car.AddComponent(&p->m_carCamera);
+  p->m_car.Init();
+  SetPlayer(&p->m_car);
 }
 
 
@@ -142,13 +163,17 @@ void CScene::LoadTrack(const std::string &sTrackFile)
 
 bool CScene::SetPlayer(CEntity *pEntity)
 {
+  if (!pEntity)
+    return false;
+  
   //can't make an entity a player without a camera
   CCamera *pCamera = pEntity->GetComponent<CCamera>();
   if (!pCamera)
     return false;
 
   //old player should no longer accept controls
-  p->m_pPlayer->m_bAcceptControls = false;
+  if (p->m_pPlayer)
+    p->m_pPlayer->m_bAcceptControls = false;
 
   //set new player
   p->m_pPlayer = pEntity;

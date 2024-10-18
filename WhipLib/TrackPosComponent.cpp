@@ -27,7 +27,7 @@ void CTrackPosComponent::Update()
   if (!m_pTrack)
     return;
 
-  m_pTrack->ProjectToTrack(m_pContainingEntity->m_position, m_positionOnTrack);
+  //m_pTrack->ProjectToTrack(m_pContainingEntity->m_prevPos, m_pContainingEntity->m_position);// , m_positionOnTrack);
 }
 
 //-------------------------------------------------------------------------------------------------

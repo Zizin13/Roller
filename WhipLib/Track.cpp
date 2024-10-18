@@ -10,6 +10,8 @@
 #include "gtx/transform.hpp"
 #include "Logging.h"
 #include "SignType.h"
+#include "MathHelpers.h"
+#include "Windows.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -336,9 +338,9 @@ bool CTrack::ProcessTrackData(const uint8 *pData, size_t length)
             if (lineAy.size() > 4) currChunk.iLeftShoulderHeight   = std::stoi(lineAy[4]);
             if (lineAy.size() > 5) currChunk.iRightShoulderHeight  = std::stoi(lineAy[5]);
             if (lineAy.size() > 6) currChunk.iLength               = std::stoi(lineAy[6]);
-            if (lineAy.size() > 7) currChunk.dYaw                  = ConstrainAngle(std::stod(lineAy[7]));
-            if (lineAy.size() > 8) currChunk.dPitch                = ConstrainAngle(std::stod(lineAy[8]));
-            if (lineAy.size() > 9) currChunk.dRoll                 = ConstrainAngle(std::stod(lineAy[9]));
+            if (lineAy.size() > 7) currChunk.dYaw                  = MathHelpers::ConstrainAngle(std::stod(lineAy[7]));
+            if (lineAy.size() > 8) currChunk.dPitch                = MathHelpers::ConstrainAngle(std::stod(lineAy[8]));
+            if (lineAy.size() > 9) currChunk.dRoll                 = MathHelpers::ConstrainAngle(std::stod(lineAy[9]));
             if (lineAy.size() > 10) currChunk.iAILine1              = std::stoi(lineAy[10]);
             if (lineAy.size() > 11) currChunk.iAILine2              = std::stoi(lineAy[11]);
             if (lineAy.size() > 12) currChunk.iAILine3              = std::stoi(lineAy[12]);
@@ -372,9 +374,9 @@ bool CTrack::ProcessTrackData(const uint8 *pData, size_t length)
           if (lineAy.size() > 12) currChunk.iSignType             = std::stoi(lineAy[12]);
           if (lineAy.size() > 13) currChunk.iSignHorizOffset      = std::stoi(lineAy[13]);
           if (lineAy.size() > 14) currChunk.iSignVertOffset       = std::stoi(lineAy[14]);
-          if (lineAy.size() > 15) currChunk.dSignYaw              = ConstrainAngle(std::stod(lineAy[15]));
-          if (lineAy.size() > 16) currChunk.dSignPitch            = ConstrainAngle(std::stod(lineAy[16]));
-          if (lineAy.size() > 17) currChunk.dSignRoll             = ConstrainAngle(std::stod(lineAy[17]));
+          if (lineAy.size() > 15) currChunk.dSignYaw              = MathHelpers::ConstrainAngle(std::stod(lineAy[15]));
+          if (lineAy.size() > 16) currChunk.dSignPitch            = MathHelpers::ConstrainAngle(std::stod(lineAy[16]));
+          if (lineAy.size() > 17) currChunk.dSignRoll             = MathHelpers::ConstrainAngle(std::stod(lineAy[17]));
           //inc chunk index
           ++iChunkLine;
         } else if (iChunkLine == 2) {
@@ -553,16 +555,6 @@ bool CTrack::ShouldDrawSurfaceType(int iSurfaceType)
   //    && !(uiSurfaceType & SURFACE_FLAG_APPLY_TEXTURE))
   //  return false;
   return true;
-} 
-
-//-------------------------------------------------------------------------------------------------
-
-double CTrack::ConstrainAngle(double dAngle)
-{
-  dAngle = fmod(dAngle, 360);
-  if (dAngle < 0)
-    dAngle += 360;
-  return dAngle;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -664,12 +656,12 @@ void CTrack::GetTrackData(std::vector<uint8> &data)
   int iSignIndex = 0;
   for (int i = 0; i < m_chunkAy.size(); ++i) {
     //fix angles
-    m_chunkAy[i].dYaw = ConstrainAngle(m_chunkAy[i].dYaw);
-    m_chunkAy[i].dPitch = ConstrainAngle(m_chunkAy[i].dPitch);
-    m_chunkAy[i].dRoll = ConstrainAngle(m_chunkAy[i].dRoll);
-    m_chunkAy[i].dSignYaw = ConstrainAngle(m_chunkAy[i].dSignYaw);
-    m_chunkAy[i].dSignPitch = ConstrainAngle(m_chunkAy[i].dSignPitch);
-    m_chunkAy[i].dSignRoll = ConstrainAngle(m_chunkAy[i].dSignRoll);
+    m_chunkAy[i].dYaw = MathHelpers::ConstrainAngle(m_chunkAy[i].dYaw);
+    m_chunkAy[i].dPitch = MathHelpers::ConstrainAngle(m_chunkAy[i].dPitch);
+    m_chunkAy[i].dRoll = MathHelpers::ConstrainAngle(m_chunkAy[i].dRoll);
+    m_chunkAy[i].dSignYaw = MathHelpers::ConstrainAngle(m_chunkAy[i].dSignYaw);
+    m_chunkAy[i].dSignPitch = MathHelpers::ConstrainAngle(m_chunkAy[i].dSignPitch);
+    m_chunkAy[i].dSignRoll = MathHelpers::ConstrainAngle(m_chunkAy[i].dSignRoll);
 
     //write chunk data
     char szGenerate[1024];
@@ -1363,9 +1355,25 @@ bool CTrack::UseCenterStunt(int i)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrack::ProjectToTrack(const glm::vec3 &position, glm::vec3 &positionOnTrack)
+void CTrack::ProjectToTrack(const glm::vec3 &prevPos, glm::vec3 &position)
 {
+  for (int i = 1; i < (int)m_chunkAy.size(); ++i) {
+    //glm::vec3 projectedPoint = MathHelpers::ProjectPointOntoPlane(position, m_chunkAy[i].math.lLane, m_chunkAy[i - 1].math.lLane, m_chunkAy[i].math.rLane);
+    //
+    //glm::vec3 vecAy[4];
+    //vecAy[0] = m_chunkAy[i].math.lLane;
+    //vecAy[1] = m_chunkAy[i].math.rLane;
+    //vecAy[2] = m_chunkAy[i - 1].math.lLane;
+    //vecAy[3] = m_chunkAy[i - 1].math.rLane;
 
+    //if (MathHelpers::CollisionTriangle(prevPos, position, m_chunkAy[i].math.lLane, m_chunkAy[i - 1].math.lLane, m_chunkAy[i - 1].math.rLane)
+    //    || MathHelpers::CollisionTriangle(prevPos, position, m_chunkAy[i].math.lLane, m_chunkAy[i - 1].math.rLane, m_chunkAy[i].math.rLane)) {
+    //  char szOut[100];
+    //  snprintf(szOut, sizeof(szOut), "collides with %d\n", i);
+    //  OutputDebugString(szOut);
+    //  position = projectedPoint;
+    //}
+  }
 }
 
 //-------------------------------------------------------------------------------------------------

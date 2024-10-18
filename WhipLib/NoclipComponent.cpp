@@ -3,7 +3,7 @@
 #include "GameInput.h"
 #include "Entity.h"
 #include "Camera.h"
-#include "Track.h"
+#include "MathHelpers.h"
 #include "gtx\transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -57,8 +57,8 @@ void CNoclipComponent::MouseUpdate(const glm::vec2 &newMousePos)
   const float ROTATIONAL_SPEED = -0.3f;
   m_pContainingEntity->m_fYaw += mouseDelta.x * ROTATIONAL_SPEED;
   m_pContainingEntity->m_fPitch += mouseDelta.y * ROTATIONAL_SPEED;
-  m_pContainingEntity->m_fYaw = (float)CTrack::ConstrainAngle(m_pContainingEntity->m_fYaw);
-  m_pContainingEntity->m_fPitch = (float)CTrack::ConstrainAngle(m_pContainingEntity->m_fPitch);
+  m_pContainingEntity->m_fYaw = (float)MathHelpers::ConstrainAngle(m_pContainingEntity->m_fYaw);
+  m_pContainingEntity->m_fPitch = (float)MathHelpers::ConstrainAngle(m_pContainingEntity->m_fPitch);
   m_strafeDirection = glm::cross(m_pContainingEntity->GetOrientation(), CCamera::s_UP);
 
   m_oldMousePos = newMousePos;

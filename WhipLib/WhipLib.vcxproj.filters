@@ -224,6 +224,9 @@
     <ClInclude Include="DriveComponent.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="MathHelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Unmangler.cpp">
@@ -309,6 +312,9 @@
     </ClCompile>
     <ClCompile Include="DriveComponent.cpp">
       <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="MathHelpers.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

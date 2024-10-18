@@ -32,6 +32,7 @@
 #include "GameInput.h"
 #include "WinUserKeyMapper.h"
 #include "qtimer.h"
+#include "MathHelpers.h"
 #if defined (IS_WINDOWS)
   #include <Windows.h>
 #endif
@@ -458,9 +459,9 @@ void CMainWindow::OnPaste()
         p->m_clipBoard[i].dPitch = p->m_clipBoard[i].dPitch + prevChunk.dPitch;
       if (m_preferences.bCopyRelativeRoll)
         p->m_clipBoard[i].dRoll = p->m_clipBoard[i].dRoll + prevChunk.dRoll;
-      p->m_clipBoard[i].dYaw = CTrack::ConstrainAngle(p->m_clipBoard[i].dYaw);
-      p->m_clipBoard[i].dPitch = CTrack::ConstrainAngle(p->m_clipBoard[i].dPitch);
-      p->m_clipBoard[i].dRoll = CTrack::ConstrainAngle(p->m_clipBoard[i].dRoll);
+      p->m_clipBoard[i].dYaw = MathHelpers::ConstrainAngle(p->m_clipBoard[i].dYaw);
+      p->m_clipBoard[i].dPitch = MathHelpers::ConstrainAngle(p->m_clipBoard[i].dPitch);
+      p->m_clipBoard[i].dRoll = MathHelpers::ConstrainAngle(p->m_clipBoard[i].dRoll);
 
       if (!m_preferences.bPasteDirection) {
         p->m_clipBoard[i].iLength               = prevChunk.iLength;
@@ -628,9 +629,9 @@ void CMainWindow::OnPaste()
         p->m_clipBoard[i].dPitch = p->m_clipBoard[i].dPitch + prevChunk.dPitch;
       if (m_preferences.bCopyRelativeRoll)
         p->m_clipBoard[i].dRoll = p->m_clipBoard[i].dRoll + prevChunk.dRoll;
-      p->m_clipBoard[i].dYaw = CTrack::ConstrainAngle(p->m_clipBoard[i].dYaw);
-      p->m_clipBoard[i].dPitch = CTrack::ConstrainAngle(p->m_clipBoard[i].dPitch);
-      p->m_clipBoard[i].dRoll = CTrack::ConstrainAngle(p->m_clipBoard[i].dRoll);
+      p->m_clipBoard[i].dYaw = MathHelpers::ConstrainAngle(p->m_clipBoard[i].dYaw);
+      p->m_clipBoard[i].dPitch = MathHelpers::ConstrainAngle(p->m_clipBoard[i].dPitch);
+      p->m_clipBoard[i].dRoll = MathHelpers::ConstrainAngle(p->m_clipBoard[i].dRoll);
     }
 
     //overwrite data in existing chunks
@@ -833,14 +834,14 @@ void CMainWindow::OnMirror()
 
   for (int i = sbSelChunksFrom->value(); i <= sbSelChunksTo->value(); ++i) {
     //invert relative yaw of selected chunks
-    relativeYawAy[i] = CTrack::ConstrainAngle(relativeYawAy[i] * -1);
+    relativeYawAy[i] = MathHelpers::ConstrainAngle(relativeYawAy[i] * -1);
 
     //invert values of selected chunks
-    GetCurrentTrack()->m_chunkAy[i].dYaw = CTrack::ConstrainAngle(GetCurrentTrack()->m_chunkAy[i].dYaw * -1);
-    GetCurrentTrack()->m_chunkAy[i].dRoll = CTrack::ConstrainAngle(GetCurrentTrack()->m_chunkAy[i].dRoll * -1);
+    GetCurrentTrack()->m_chunkAy[i].dYaw = MathHelpers::ConstrainAngle(GetCurrentTrack()->m_chunkAy[i].dYaw * -1);
+    GetCurrentTrack()->m_chunkAy[i].dRoll = MathHelpers::ConstrainAngle(GetCurrentTrack()->m_chunkAy[i].dRoll * -1);
     GetCurrentTrack()->m_chunkAy[i].iSignHorizOffset = GetCurrentTrack()->m_chunkAy[i].iSignHorizOffset * -1;
-    GetCurrentTrack()->m_chunkAy[i].dSignYaw = CTrack::ConstrainAngle(GetCurrentTrack()->m_chunkAy[i].dSignYaw * -1);
-    GetCurrentTrack()->m_chunkAy[i].dSignRoll = CTrack::ConstrainAngle(GetCurrentTrack()->m_chunkAy[i].dSignRoll * -1);
+    GetCurrentTrack()->m_chunkAy[i].dSignYaw = MathHelpers::ConstrainAngle(GetCurrentTrack()->m_chunkAy[i].dSignYaw * -1);
+    GetCurrentTrack()->m_chunkAy[i].dSignRoll = MathHelpers::ConstrainAngle(GetCurrentTrack()->m_chunkAy[i].dSignRoll * -1);
 
     //store left side values
     int iLeftShoulderWidth  = GetCurrentTrack()->m_chunkAy[i].iLeftShoulderWidth;
@@ -891,7 +892,7 @@ void CMainWindow::OnMirror()
 
   //apply yaw updates to entire track
   for (int i = 1; i < (int)GetCurrentTrack()->m_chunkAy.size(); ++i) {
-    GetCurrentTrack()->m_chunkAy[i].dYaw = CTrack::ConstrainAngle(GetCurrentTrack()->m_chunkAy[i - 1].dYaw + relativeYawAy[i]);
+    GetCurrentTrack()->m_chunkAy[i].dYaw = MathHelpers::ConstrainAngle(GetCurrentTrack()->m_chunkAy[i - 1].dYaw + relativeYawAy[i]);
   }
 
   GetCurrentPreview()->m_bUnsavedChanges = true;

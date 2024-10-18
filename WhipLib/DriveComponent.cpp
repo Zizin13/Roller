@@ -2,7 +2,7 @@
 #include "GameClock.h"
 #include "GameInput.h"
 #include "Entity.h"
-#include "Track.h"
+#include "MathHelpers.h"
 #include "glm.hpp"
 #include "gtx\transform.hpp"
 //-------------------------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ void CDriveComponent::MoveBackward()
 void CDriveComponent::TurnLeft()
 {
   m_pContainingEntity->m_fYaw += m_fRotateSpeed * CGameClock::GetGameClock().DeltaTimeLastFrame();
-  m_pContainingEntity->m_fYaw = (float)CTrack::ConstrainAngle(m_pContainingEntity->m_fYaw);
+  m_pContainingEntity->m_fYaw = (float)MathHelpers::ConstrainAngle(m_pContainingEntity->m_fYaw);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ void CDriveComponent::TurnLeft()
 void CDriveComponent::TurnRight()
 {
   m_pContainingEntity->m_fYaw -= m_fRotateSpeed * CGameClock::GetGameClock().DeltaTimeLastFrame();
-  m_pContainingEntity->m_fYaw = (float)CTrack::ConstrainAngle(m_pContainingEntity->m_fYaw);
+  m_pContainingEntity->m_fYaw = (float)MathHelpers::ConstrainAngle(m_pContainingEntity->m_fYaw);
 }
 
 //-------------------------------------------------------------------------------------------------

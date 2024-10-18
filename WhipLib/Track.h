@@ -207,7 +207,7 @@ public:
   bool ShouldShowChunkSection(int i, eShapeSection section);
   bool HasPitchedStunt();
   bool UseCenterStunt(int i);
-  void ProjectToTrack(const glm::vec3 &prevPos, glm::vec3 &position);
+  void ProjectToTrack(glm::vec3 &position, float &fYaw, float &fPitch, float &fRoll);
 
   static unsigned int GetSignedBitValueFromInt(int iValue);
   static int GetIntValueFromSignedBit(unsigned int uiValue);

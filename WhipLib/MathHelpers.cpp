@@ -17,6 +17,15 @@ double MathHelpers::ConstrainAngle(double dAngle)
 
 //-------------------------------------------------------------------------------------------------
 
+float MathHelpers::Dist(glm::vec3 &pos1, glm::vec3 &pos2)
+{
+  return sqrt((pos1.x - pos2.x) * (pos1.x - pos2.x) +
+              (pos1.y - pos2.y) * (pos1.y - pos2.y) +
+              (pos1.z - pos2.z) * (pos1.z - pos2.z));
+}
+
+//-------------------------------------------------------------------------------------------------
+
 glm::vec3 MathHelpers::ProjectPointOntoPlane(const glm::vec3 &pos, const glm::vec3 &p1, const glm::vec3 &p2, const glm::vec3 &p3)
 {
   //get plane normal

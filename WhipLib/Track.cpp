@@ -8,6 +8,7 @@
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
+#include "gtx/quaternion.hpp"
 #include "Logging.h"
 #include "SignType.h"
 #include "MathHelpers.h"
@@ -1355,25 +1356,41 @@ bool CTrack::UseCenterStunt(int i)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrack::ProjectToTrack(const glm::vec3 &prevPos, glm::vec3 &position)
+void CTrack::ProjectToTrack(glm::vec3 &position, float &fYaw, float &fPitch, float &fRoll)
 {
   float fMinDist = FLT_MAX;
   int iClosestChunk = 0;
   for (int i = 1; i < (int)m_chunkAy.size(); ++i) {
-    glm::vec3 compare = m_chunkAy[i].math.lLane;
-    float fDist = sqrt((position.x - compare.x) * (position.x - compare.x) +
-                       (position.y - compare.y) * (position.y - compare.y) + 
-                       (position.z - compare.z) * (position.z - compare.z));
+    float fDist = MathHelpers::Dist(position, m_chunkAy[i].math.lLane) +
+      MathHelpers::Dist(position, m_chunkAy[i].math.rLane) +
+      MathHelpers::Dist(position, m_chunkAy[i - 1].math.lLane) +
+      MathHelpers::Dist(position, m_chunkAy[i - 1].math.rLane);
     if (fDist < fMinDist) {
       fMinDist = fDist;
       iClosestChunk = i;
     }
   }
-  glm::vec3 projectedPoint = MathHelpers::ProjectPointOntoPlane(position, m_chunkAy[iClosestChunk].math.lLane, m_chunkAy[iClosestChunk - 1].math.lLane, m_chunkAy[iClosestChunk].math.rLane);
   char szOut[100];
   snprintf(szOut, sizeof(szOut), "closest chunk %d, dist: %d\n", iClosestChunk, (int)fMinDist);
   OutputDebugString(szOut);
+
+  glm::vec3 projectedPoint = MathHelpers::ProjectPointOntoPlane(position, m_chunkAy[iClosestChunk].math.lLane, m_chunkAy[iClosestChunk - 1].math.lLane, m_chunkAy[iClosestChunk].math.rLane);
   position = projectedPoint;
+
+  //get plane normal
+  glm::vec3 tl1 = m_chunkAy[iClosestChunk - 1].math.lLane - m_chunkAy[iClosestChunk].math.lLane;
+  glm::vec3 tl2 = m_chunkAy[iClosestChunk].math.rLane - m_chunkAy[iClosestChunk].math.lLane;
+  glm::vec3 normal = glm::normalize(glm::cross(tl1, tl2));
+  glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+  glm::vec3 rotationVec = glm::normalize(glm::cross(normal, up));
+  if (glm::any(glm::isnan(rotationVec)))
+    return;
+  float fAngleRads = glm::acos(glm::dot(normal, up));
+  glm::mat4 rotationMat = glm::rotate(fAngleRads, rotationVec);
+  //fYaw = glm::degrees(glm::yaw(glm::quat(rotationMat)));
+  fPitch = glm::degrees(glm::pitch(glm::quat(rotationMat)));
+  fRoll = glm::degrees(glm::roll(glm::quat(rotationMat)));
+  return;
 }
 
 //-------------------------------------------------------------------------------------------------

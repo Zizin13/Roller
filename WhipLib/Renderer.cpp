@@ -106,7 +106,7 @@ bool CRenderer::Shutdown()
 
 void CRenderer::Draw(int iWindowWidth, int iWindowHeight, CCamera *pCamera)
 {
-  if (!m_pShader)
+  if (!m_pShader || !iWindowWidth || !iWindowHeight || !pCamera)
     return;
 
   glClearColor(0.03125f, 0.296875f, 0.984375f, 1.0f);

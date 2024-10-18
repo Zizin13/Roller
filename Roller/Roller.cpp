@@ -49,6 +49,7 @@ int main(int argc, char *argv[])
   GLFWimage image;
   image.pixels = stbi_load("./images/fatal.png", &image.width, &image.height, 0, 4);
   glfwSetWindowIcon(pWindow, 1, &image);
+  stbi_image_free(image.pixels);
 
   //Make the window's context current
   glfwMakeContextCurrent(pWindow);

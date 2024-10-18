@@ -42,10 +42,11 @@ int main(int argc, char *argv[])
     glfwTerminate();
     return -1;
   }
-  glfwSwapInterval(0); //don't limit framerate?
 
   //Make the window's context current
   glfwMakeContextCurrent(pWindow);
+  //don't limit framerate, must be done after glfwMakeContextCurrent
+  glfwSwapInterval(0);
   
   //init game
   Logging::SetWhipLibLoggingCallback(LogMessageCbStatic);

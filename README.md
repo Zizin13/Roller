@@ -35,6 +35,7 @@ Whiplash/Fatal Racing track editor, FBX resource converter, and DLL for loading 
 * Glew 2.1.0: https://sourceforge.net/projects/glew/files/glew/2.1.0/
 * GLM 1.0.1: https://github.com/g-truc/glm
 * GLFW 3.4: https://www.glfw.org/
+* stb_image 2.30: https://github.com/nothings/stb
 * stb_image_write 1.16: https://github.com/nothings/stb
 * FBX 2020.3.7: https://aps.autodesk.com/developer/overview/fbx-sdk (libs are too big to include on github, must install SDK to /external/FBX)
 

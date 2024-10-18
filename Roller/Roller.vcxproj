@@ -112,7 +112,7 @@
       <PreprocessorDefinitions>GLM_ENABLE_EXPERIMENTAL;GLEW_STATIC;IS_WINDOWS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>../WhipLib;../external/glm;../external/glew/include/GL;../external/glfw/include/GLFW;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../WhipLib;../external/glm;../external/glew/include/GL;../external/glfw/include/GLFW;../external/stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -140,6 +140,9 @@ echo Copying Shaders...
 echo f | xcopy ..\WhipLib\Shaders\WhiplashFragmentShader.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
 echo f | xcopy ..\WhipLib\Shaders\WhiplashVertexShader.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
+
+echo Copying Icon...
+echo f | xcopy .\images\fatal.png .\$(OutDir)images\ /R /Y /d /i &gt; null
 
 echo Post-Build Step for $(ProjectName) completed successfully
 exit 0
@@ -188,6 +191,9 @@ echo Copying Shaders...
 echo f | xcopy ..\WhipLib\Shaders\WhiplashFragmentShader.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
 echo f | xcopy ..\WhipLib\Shaders\WhiplashVertexShader.glsl .\$(OutDir)Shaders\ /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
+
+echo Copying Icon...
+echo f | xcopy .\images\fatal.png .\$(OutDir)images\ /R /Y /d /i &gt; null
 
 echo Post-Build Step for $(ProjectName) completed successfully
 exit 0

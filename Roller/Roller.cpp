@@ -1,5 +1,6 @@
 //-------------------------------------------------------------------------------------------------
 #define GLFW_INCLUDE_NONE
+#define STB_IMAGE_IMPLEMENTATION
 #include <windows.h>
 #include <glfw3.h>
 #include <glew.h>
@@ -8,6 +9,7 @@
 #include "GameInput.h"
 #include "GlfwKeyMapper.h"
 #include "Scene.h"
+#include "stb_image.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -42,6 +44,11 @@ int main(int argc, char *argv[])
     glfwTerminate();
     return -1;
   }
+
+  //load window icon
+  GLFWimage image;
+  image.pixels = stbi_load("./images/fatal.png", &image.width, &image.height, 0, 4);
+  glfwSetWindowIcon(pWindow, 1, &image);
 
   //Make the window's context current
   glfwMakeContextCurrent(pWindow);

@@ -3,6 +3,7 @@
 #include "GameInput.h"
 #include "Entity.h"
 #include "MathHelpers.h"
+#include "Track.h"
 #include "glm.hpp"
 #include "gtx\transform.hpp"
 //-------------------------------------------------------------------------------------------------
@@ -14,6 +15,7 @@
 CDriveComponent::CDriveComponent()
   : m_fMovementSpeed(15000.0f)
   , m_fRotateSpeed(300.0f)
+  , m_pTrack(NULL)
 {
 }
 
@@ -38,14 +40,22 @@ void CDriveComponent::Update()
 
 void CDriveComponent::MoveForward()
 {
-  m_pContainingEntity->m_position += m_fMovementSpeed * m_pContainingEntity->GetOrientation() * CGameClock::GetGameClock().DeltaTimeLastFrame();
+  glm::vec3 newPos = m_pContainingEntity->m_position + m_fMovementSpeed * m_pContainingEntity->GetOrientation() * CGameClock::GetGameClock().DeltaTimeLastFrame();
+  if (m_pTrack) {
+    m_pTrack->ProjectToTrack(m_pContainingEntity->m_position, newPos);
+  }
+  m_pContainingEntity->m_position = newPos;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CDriveComponent::MoveBackward()
 {
-  m_pContainingEntity->m_position -= m_fMovementSpeed * m_pContainingEntity->GetOrientation() * CGameClock::GetGameClock().DeltaTimeLastFrame();
+  glm::vec3 newPos = m_pContainingEntity->m_position -= m_fMovementSpeed * m_pContainingEntity->GetOrientation() * CGameClock::GetGameClock().DeltaTimeLastFrame();
+  if (m_pTrack) {
+    m_pTrack->ProjectToTrack(m_pContainingEntity->m_position, newPos);
+  }
+  m_pContainingEntity->m_position = newPos;
 }
 
 //-------------------------------------------------------------------------------------------------

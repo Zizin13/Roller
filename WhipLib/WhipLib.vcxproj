@@ -307,7 +307,6 @@ exit 1</Command>
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Track.h" />
     <ClInclude Include="TrackComponent.h" />
-    <ClInclude Include="TrackPosComponent.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="Unmangler.h" />
     <ClInclude Include="Vertex.h" />
@@ -340,7 +339,6 @@ exit 1</Command>
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Track.cpp" />
     <ClCompile Include="TrackComponent.cpp" />
-    <ClCompile Include="TrackPosComponent.cpp" />
     <ClCompile Include="Unmangler.cpp" />
     <ClCompile Include="VertexArray.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />

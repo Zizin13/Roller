@@ -218,9 +218,6 @@
     <ClInclude Include="WinUserKeyMapper.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
-    <ClInclude Include="TrackPosComponent.h">
-      <Filter>Header Files\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="DriveComponent.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
@@ -306,9 +303,6 @@
     </ClCompile>
     <ClCompile Include="ShapeFactory.cpp">
       <Filter>Source Files\Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="TrackPosComponent.cpp">
-      <Filter>Source Files\Entity</Filter>
     </ClCompile>
     <ClCompile Include="DriveComponent.cpp">
       <Filter>Source Files\Entity</Filter>

@@ -7,7 +7,6 @@
 #include "TrackComponent.h"
 #include "ShapeComponent.h"
 #include "DriveComponent.h"
-#include "TrackPosComponent.h"
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
@@ -50,7 +49,6 @@ public:
   CEntity m_car;
   CDriveComponent m_driveComponent;
   CShapeComponent m_carShapeComponent;
-  CTrackPosComponent m_trackPosComponent;
   CCamera m_carCamera;
 };
 
@@ -131,15 +129,13 @@ void CScene::SpawnCar(eWhipModel model)
   p->m_carShapeComponent.Init();
   p->m_carCamera.m_offset = glm::vec3(0.0f, 800.0f, -3000.0f);
   p->m_carCamera.Init();
+  p->m_driveComponent.m_pTrack = &p->m_track;
   p->m_driveComponent.Init();
-  p->m_trackPosComponent.SetData(&p->m_track);
-  p->m_trackPosComponent.Init();
 
   //setup car entity
   p->m_car.AddComponent(&p->m_driveComponent);
   p->m_car.AddComponent(&p->m_carShapeComponent);
   p->m_car.AddComponent(&p->m_carCamera);
-  p->m_car.AddComponent(&p->m_trackPosComponent);
   p->m_car.Init();
   SetPlayer(&p->m_car);
 }

@@ -16,3 +16,19 @@ double MathHelpers::ConstrainAngle(double dAngle)
 }
 
 //-------------------------------------------------------------------------------------------------
+
+glm::vec3 MathHelpers::ProjectPointOntoPlane(const glm::vec3 &pos, const glm::vec3 &p1, const glm::vec3 &p2, const glm::vec3 &p3)
+{
+  //get plane normal
+  glm::vec3 tl1 = p3 - p1;
+  glm::vec3 tl2 = p2 - p1;
+  glm::vec3 normal = glm::normalize(glm::cross(tl1, tl2));
+
+  glm::vec3 v = pos - p1;
+
+  //project point onto plane
+  float fDist = glm::dot(v, normal);
+  return (pos - fDist * normal);
+}
+
+//-------------------------------------------------------------------------------------------------

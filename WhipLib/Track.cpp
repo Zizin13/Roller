@@ -1357,23 +1357,23 @@ bool CTrack::UseCenterStunt(int i)
 
 void CTrack::ProjectToTrack(const glm::vec3 &prevPos, glm::vec3 &position)
 {
+  float fMinDist = FLT_MAX;
+  int iClosestChunk = 0;
   for (int i = 1; i < (int)m_chunkAy.size(); ++i) {
-    //glm::vec3 projectedPoint = MathHelpers::ProjectPointOntoPlane(position, m_chunkAy[i].math.lLane, m_chunkAy[i - 1].math.lLane, m_chunkAy[i].math.rLane);
-    //
-    //glm::vec3 vecAy[4];
-    //vecAy[0] = m_chunkAy[i].math.lLane;
-    //vecAy[1] = m_chunkAy[i].math.rLane;
-    //vecAy[2] = m_chunkAy[i - 1].math.lLane;
-    //vecAy[3] = m_chunkAy[i - 1].math.rLane;
-
-    //if (MathHelpers::CollisionTriangle(prevPos, position, m_chunkAy[i].math.lLane, m_chunkAy[i - 1].math.lLane, m_chunkAy[i - 1].math.rLane)
-    //    || MathHelpers::CollisionTriangle(prevPos, position, m_chunkAy[i].math.lLane, m_chunkAy[i - 1].math.rLane, m_chunkAy[i].math.rLane)) {
-    //  char szOut[100];
-    //  snprintf(szOut, sizeof(szOut), "collides with %d\n", i);
-    //  OutputDebugString(szOut);
-    //  position = projectedPoint;
-    //}
+    glm::vec3 compare = m_chunkAy[i].math.lLane;
+    float fDist = sqrt((position.x - compare.x) * (position.x - compare.x) +
+                       (position.y - compare.y) * (position.y - compare.y) + 
+                       (position.z - compare.z) * (position.z - compare.z));
+    if (fDist < fMinDist) {
+      fMinDist = fDist;
+      iClosestChunk = i;
+    }
   }
+  glm::vec3 projectedPoint = MathHelpers::ProjectPointOntoPlane(position, m_chunkAy[iClosestChunk].math.lLane, m_chunkAy[iClosestChunk - 1].math.lLane, m_chunkAy[iClosestChunk].math.rLane);
+  char szOut[100];
+  snprintf(szOut, sizeof(szOut), "closest chunk %d, dist: %d\n", iClosestChunk, (int)fMinDist);
+  OutputDebugString(szOut);
+  position = projectedPoint;
 }
 
 //-------------------------------------------------------------------------------------------------

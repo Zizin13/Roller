@@ -258,6 +258,7 @@ exit 1</Command>
     <ClInclude Include="Clock.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="DisasmHelpers.h" />
+    <ClInclude Include="DriveComponent.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="FBXExporter.h" />
     <ClInclude Include="GameClock.h" />
@@ -319,6 +320,7 @@ exit 1</Command>
     <ClCompile Include="CarHelpers.cpp" />
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="DisasmHelpers.cpp" />
+    <ClCompile Include="DriveComponent.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="FBXExporter.cpp" />
     <ClCompile Include="GameClock.cpp" />

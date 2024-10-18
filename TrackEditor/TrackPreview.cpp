@@ -73,7 +73,6 @@ public:
     m_noclipComponent.Init();
     m_entity.AddComponent(&m_camera);
     m_entity.AddComponent(&m_noclipComponent);
-    m_entity.m_orientation = glm::vec3(0.0f, -0.3f, 1.0f);
     m_entity.m_position = glm::vec3(0.0f, 4000.0f, -5000.0f);
     m_entity.m_bAcceptControls = true;
   };

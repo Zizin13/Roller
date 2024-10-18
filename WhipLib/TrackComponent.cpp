@@ -34,7 +34,7 @@ void CTrackComponent::Update()
   m_fTimer += CGameClock::GetGameClock().DeltaTimeLastFrame();
 
   if (m_fTimer > 0.028f) {
-    m_fTimer = 0.0f;
+    m_fTimer = m_fTimer - 0.028f;
     CShapeComponent *pTrackShapeComponent = m_pContainingEntity->GetComponent<CShapeComponent>();
     if (pTrackShapeComponent) {
       m_pTrack->UpdateStunts();

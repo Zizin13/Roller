@@ -6,6 +6,10 @@
 #include "Track.h"
 #include "TrackComponent.h"
 #include "ShapeComponent.h"
+#include "DriveComponent.h"
+#include "glm.hpp"
+#include "gtc/matrix_transform.hpp"
+#include "gtx/transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -43,6 +47,7 @@ public:
 
   //car entity
   CEntity m_car;
+  CDriveComponent m_driveComponent;
   CShapeComponent m_carShapeComponent;
   CCamera m_carCamera;
 };
@@ -76,7 +81,6 @@ bool CScene::Init(const std::string &sFatDataDir)
   bSuccess |= p->m_defaultEntity.Init();
   p->m_defaultEntity.AddComponent(&p->m_noClip);
   p->m_defaultEntity.AddComponent(&p->m_defaultCamera);
-  p->m_defaultEntity.m_orientation = glm::vec3(0.0f, -0.3f, 1.0f);
   p->m_defaultEntity.m_position = glm::vec3(0.0f, 4000.0f, -5000.0f);
   SetPlayer(&p->m_defaultEntity);
 
@@ -103,6 +107,7 @@ void CScene::Update(int iWindowWidth, int iWindowHeight)
 
   p->m_defaultEntity.Update();
   p->m_trackEntity.Update();
+  p->m_car.Update();
   CCamera *pCamera = p->m_pPlayer->GetComponent<CCamera>();
   p->m_renderer.Draw(iWindowWidth, iWindowHeight, pCamera);
 }
@@ -119,11 +124,15 @@ void CScene::SpawnCar(eWhipModel model)
 
   //setup components
   p->m_carShapeComponent.m_pShapeData = pCarShape;
+  p->m_carShapeComponent.m_rotationOffset = glm::rotate(glm::radians(-90.0f), glm::vec3(0, 0, 1)) * //car starts on its side
+    glm::rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0)); //entity starts facing z positive, car starts facing x positive
   p->m_carShapeComponent.Init();
   p->m_carCamera.m_offset = glm::vec3(0.0f, 800.0f, -3000.0f);
   p->m_carCamera.Init();
+  p->m_driveComponent.Init();
 
   //setup car entity
+  p->m_car.AddComponent(&p->m_driveComponent);
   p->m_car.AddComponent(&p->m_carShapeComponent);
   p->m_car.AddComponent(&p->m_carCamera);
   p->m_car.Init();

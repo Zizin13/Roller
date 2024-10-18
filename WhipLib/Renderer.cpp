@@ -140,8 +140,6 @@ CShapeData *CRenderer::MakeCarShape(eWhipModel model)
   pNewCarShape->pTex = new CTexture();
   pNewCarShape->pTex->LoadTexture(m_sFatDataDir + "/" + sTexName, pNewCarShape->pPal);
   pNewCarShape->pShapeData = CShapeFactory::GetShapeFactory().MakeModel(m_pShader, pNewCarShape->pTex, model);
-  pNewCarShape->pShapeData->m_modelToWorldMatrix = glm::rotate(glm::radians(-90.0f), glm::vec3(0, 0, 1)) * //car starts on its side
-    glm::rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0)); //entity starts facing z positive, car starts facing x positive
 
   m_carShapeAy.emplace_back(pNewCarShape);
   return pNewCarShape->pShapeData;

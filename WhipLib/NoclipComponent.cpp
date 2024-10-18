@@ -3,6 +3,7 @@
 #include "GameInput.h"
 #include "Entity.h"
 #include "Camera.h"
+#include "Track.h"
 #include "gtx\transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -54,10 +55,11 @@ void CNoclipComponent::MouseUpdate(const glm::vec2 &newMousePos)
     return;
   }
   const float ROTATIONAL_SPEED = -0.3f;
-  m_strafeDirection = glm::cross(m_pContainingEntity->m_orientation, CCamera::s_UP);
-  glm::mat4 rotator = glm::rotate(glm::radians(mouseDelta.x * ROTATIONAL_SPEED), CCamera::s_UP) *
-    glm::rotate(glm::radians(mouseDelta.y * ROTATIONAL_SPEED), m_strafeDirection);
-  m_pContainingEntity->m_orientation = glm::mat3(rotator) * m_pContainingEntity->m_orientation;
+  m_pContainingEntity->m_fYaw += mouseDelta.x * ROTATIONAL_SPEED;
+  m_pContainingEntity->m_fPitch += mouseDelta.y * ROTATIONAL_SPEED;
+  m_pContainingEntity->m_fYaw = (float)CTrack::ConstrainAngle(m_pContainingEntity->m_fYaw);
+  m_pContainingEntity->m_fPitch = (float)CTrack::ConstrainAngle(m_pContainingEntity->m_fPitch);
+  m_strafeDirection = glm::cross(m_pContainingEntity->GetOrientation(), CCamera::s_UP);
 
   m_oldMousePos = newMousePos;
 }
@@ -66,14 +68,14 @@ void CNoclipComponent::MouseUpdate(const glm::vec2 &newMousePos)
 
 void CNoclipComponent::MoveForward()
 {
-  m_pContainingEntity->m_position += s_fMovementSpeed * m_pContainingEntity->m_orientation * CGameClock::GetGameClock().DeltaTimeLastFrame();
+  m_pContainingEntity->m_position += s_fMovementSpeed * m_pContainingEntity->GetOrientation() * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void CNoclipComponent::MoveBackward()
 {
-  m_pContainingEntity->m_position -= s_fMovementSpeed * m_pContainingEntity->m_orientation * CGameClock::GetGameClock().DeltaTimeLastFrame();
+  m_pContainingEntity->m_position -= s_fMovementSpeed * m_pContainingEntity->GetOrientation() * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------

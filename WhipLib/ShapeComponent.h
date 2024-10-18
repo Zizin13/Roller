@@ -3,6 +3,7 @@
 //-------------------------------------------------------------------------------------------------
 #include "Component.h"
 #include "Types.h"
+#include "glm.hpp"
 #include <string>
 //-------------------------------------------------------------------------------------------------
 class CShapeData;
@@ -14,11 +15,10 @@ public:
   CShapeComponent();
   ~CShapeComponent();
 
-  bool Init() override;
-  bool Shutdown() override;
   void Update() override;
 
   CShapeData *m_pShapeData;
+  glm::mat4 m_rotationOffset;
 };
 
 //-------------------------------------------------------------------------------------------------

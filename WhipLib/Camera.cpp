@@ -18,7 +18,13 @@ CCamera::CCamera()
 
 void CCamera::Update()
 {
-  m_viewDirection = m_pContainingEntity->m_orientation;
+  glm::vec3 startVec = glm::vec3(0, 0, 1);
+  glm::mat4 yawMat = glm::rotate(glm::radians(m_pContainingEntity->m_fYaw), glm::vec3(0.0f, 1.0f, 0.0f));
+  glm::vec3 yawedVec = glm::vec3(yawMat * glm::vec4(startVec, 1.0f));
+  glm::vec3 pitchAxis = glm::normalize(glm::cross(yawedVec, glm::vec3(0.0f, 1.0f, 0.0f)));
+  glm::mat4 pitchMat = glm::rotate(glm::radians(m_pContainingEntity->m_fPitch), pitchAxis);
+
+  m_viewDirection = glm::vec3(pitchMat * glm::vec4(yawedVec, 1.0f));
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -32,7 +38,16 @@ glm::mat4 CCamera::GetWorldToViewMatrix() const
 
 glm::vec3 CCamera::GetPosition() const
 {
-  return m_pContainingEntity->m_position + m_offset;
+  glm::mat4 translateMat = glm::translate(m_pContainingEntity->m_position);
+  glm::vec3 startVec = glm::vec3(0, 0, 1);
+  glm::mat4 yawMat = glm::rotate(glm::radians(m_pContainingEntity->m_fYaw * -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+  glm::vec3 yawedVec = glm::vec3(yawMat * glm::vec4(startVec, 1.0f));
+  glm::vec3 pitchAxis = glm::normalize(glm::cross(yawedVec, glm::vec3(0.0f, 1.0f, 0.0f)));
+  glm::mat4 pitchMat = glm::rotate(glm::radians(m_pContainingEntity->m_fPitch), pitchAxis);
+
+  glm::vec3 positionRotated = glm::vec4(m_offset, 1.0f) * yawMat * pitchMat;
+  glm::vec3 positionTranslated = glm::vec3(translateMat * glm::vec4(positionRotated, 1.0f));
+  return positionTranslated;
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
   CScene testScene;
   testScene.Init("C:\\WHIP\\WHIPLASH\\FATDATA");
   testScene.SpawnCar(eWhipModel::CAR_YZIZIN);
-  testScene.LoadTrack("TRACK8.TRK");
+  testScene.LoadTrack("TRACK7.TRK");
 
 #if defined(_DEBUG)
   //init framerate test

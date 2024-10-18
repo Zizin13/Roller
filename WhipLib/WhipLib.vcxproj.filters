@@ -221,6 +221,9 @@
     <ClInclude Include="TrackPosComponent.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="DriveComponent.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Unmangler.cpp">
@@ -302,6 +305,9 @@
       <Filter>Source Files\Rendering</Filter>
     </ClCompile>
     <ClCompile Include="TrackPosComponent.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="DriveComponent.cpp">
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
   </ItemGroup>

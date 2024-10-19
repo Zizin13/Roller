@@ -17,14 +17,16 @@ public:
   void AddComponent(IComponent *pComponent);
   void Update();
   glm::vec3 GetOrientation();
+  glm::vec3 GetUp();
 
   template<class T>
   T *GetComponent() const;
 
   glm::vec3 m_position;
-  float m_fYaw;
-  float m_fPitch;
-  float m_fRoll;
+  glm::mat4 m_rotationMat;
+  //float m_fYaw;
+  //float m_fPitch;
+  //float m_fRoll;
   bool m_bAcceptControls;
 
 private:

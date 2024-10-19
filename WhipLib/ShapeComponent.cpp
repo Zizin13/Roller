@@ -32,15 +32,16 @@ void CShapeComponent::Update()
   if (!m_pShapeData)
     return;
 
-  glm::vec3 startVec = glm::vec3(0, 0, 1);
-  glm::mat4 yawMat = glm::rotate(glm::radians(m_pContainingEntity->m_fYaw), glm::vec3(0.0f, 1.0f, 0.0f));
-  glm::vec3 yawedVec = glm::vec3(yawMat * glm::vec4(startVec, 1.0f));
-  glm::vec3 pitchAxis = glm::normalize(glm::cross(yawedVec, glm::vec3(0.0f, 1.0f, 0.0f)));
-  glm::mat4 pitchMat = glm::rotate(glm::radians(m_pContainingEntity->m_fPitch), pitchAxis);
-  glm::mat4 rollMat = glm::rotate(glm::radians(m_pContainingEntity->m_fRoll), glm::normalize(m_pContainingEntity->GetOrientation()));
+  //glm::vec3 startVec = glm::vec3(0, 0, 1);
+  //glm::mat4 yawMat = glm::rotate(glm::radians(m_pContainingEntity->m_fYaw), glm::vec3(0.0f, 1.0f, 0.0f));
+  //glm::vec3 yawedVec = glm::vec3(yawMat * glm::vec4(startVec, 1.0f));
+  //glm::vec3 pitchAxis = glm::normalize(glm::cross(yawedVec, glm::vec3(0.0f, 1.0f, 0.0f)));
+  //glm::mat4 pitchMat = glm::rotate(glm::radians(m_pContainingEntity->m_fPitch), pitchAxis);
+  //glm::mat4 rollMat = glm::rotate(glm::radians(m_pContainingEntity->m_fRoll), glm::normalize(m_pContainingEntity->GetOrientation()));
 
   m_pShapeData->m_modelToWorldMatrix = glm::translate(m_pContainingEntity->m_position) *
-    rollMat * pitchMat * yawMat *
+    //rollMat * pitchMat * yawMat *
+    glm::inverse(m_pContainingEntity->m_rotationMat) *
     m_rotationOffset;
 }
 

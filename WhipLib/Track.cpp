@@ -1356,7 +1356,7 @@ bool CTrack::UseCenterStunt(int i)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrack::ProjectToTrack(glm::vec3 &position, float &fYaw, float &fPitch, float &fRoll)
+void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const glm::vec3 &up)
 {
   float fMinDist = FLT_MAX;
   int iClosestChunk = 0;
@@ -1381,15 +1381,29 @@ void CTrack::ProjectToTrack(glm::vec3 &position, float &fYaw, float &fPitch, flo
   glm::vec3 tl1 = m_chunkAy[iClosestChunk - 1].math.lLane - m_chunkAy[iClosestChunk].math.lLane;
   glm::vec3 tl2 = m_chunkAy[iClosestChunk].math.rLane - m_chunkAy[iClosestChunk].math.lLane;
   glm::vec3 normal = glm::normalize(glm::cross(tl1, tl2));
-  glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
   glm::vec3 rotationVec = glm::normalize(glm::cross(normal, up));
   if (glm::any(glm::isnan(rotationVec)))
     return;
-  float fAngleRads = glm::acos(glm::dot(normal, up));
-  glm::mat4 rotationMat = glm::rotate(fAngleRads, rotationVec);
-  //fYaw = glm::degrees(glm::yaw(glm::quat(rotationMat)));
-  fPitch = glm::degrees(glm::pitch(glm::quat(rotationMat)));
-  fRoll = glm::degrees(glm::roll(glm::quat(rotationMat)));
+  glm::vec3 test = glm::normalize(up);
+  float fAngle = glm::acos(glm::dot(normal, test));
+  glm::mat4 rotation = glm::rotate(glm::radians(fAngle), rotationVec);
+  rotationMat = glm::inverse(rotation) * rotationMat;
+  float fYaw = glm::degrees(glm::yaw(glm::toQuat(rotationMat)));
+  float fPitch = glm::degrees(glm::pitch(glm::toQuat(rotationMat)));
+  float fRoll = glm::degrees(glm::roll(glm::toQuat(rotationMat)));
+
+  if ((int)fAngle > 0) {
+    snprintf(szOut, sizeof(szOut), "angle %d, yaw %d, pitch %d, roll: %d\n", (int)(fAngle), (int)fYaw, (int)fPitch, (int)fRoll);
+    OutputDebugString(szOut);
+  }
+  //glm::vec3 startVec = glm::vec3(0, 0, 1);
+  //glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[iClosestChunk].dYaw), glm::vec3(0.0f, 1.0f, 0.0f));
+  //glm::vec3 yawedVec = glm::vec3(yawMat * glm::vec4(startVec, 1.0f));
+  //glm::vec3 pitchAxis = glm::normalize(glm::cross(yawedVec, glm::vec3(0.0f, 1.0f, 0.0f)));
+  //glm::mat4 pitchMat = glm::rotate(glm::radians((float)m_chunkAy[iClosestChunk].dPitch), pitchAxis);
+  //glm::vec3 pitchedVec = pitchMat * glm::vec4(yawedVec, 1.0f);
+  //glm::mat4 rollMat = glm::rotate(glm::radians((float)m_chunkAy[iClosestChunk].dRoll), glm::vec3(0.0f, 0.0f, 1.0f));
+  //trackRotationMat = rollMat * pitchMat * yawMat;
   return;
 }
 

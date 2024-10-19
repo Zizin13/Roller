@@ -137,6 +137,7 @@ void CScene::SpawnCar(eWhipModel model)
   p->m_car.AddComponent(&p->m_carShapeComponent);
   p->m_car.AddComponent(&p->m_carCamera);
   p->m_car.Init();
+  //p->m_car.m_bAcceptControls = true;
   SetPlayer(&p->m_car);
 }
 

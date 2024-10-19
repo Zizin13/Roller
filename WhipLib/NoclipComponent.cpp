@@ -54,12 +54,15 @@ void CNoclipComponent::MouseUpdate(const glm::vec2 &newMousePos)
     m_oldMousePos = newMousePos;
     return;
   }
-  const float ROTATIONAL_SPEED = -0.3f;
-  m_pContainingEntity->m_fYaw += mouseDelta.x * ROTATIONAL_SPEED;
-  m_pContainingEntity->m_fPitch += mouseDelta.y * ROTATIONAL_SPEED;
-  m_pContainingEntity->m_fYaw = (float)MathHelpers::ConstrainAngle(m_pContainingEntity->m_fYaw);
-  m_pContainingEntity->m_fPitch = (float)MathHelpers::ConstrainAngle(m_pContainingEntity->m_fPitch);
+  const float ROTATIONAL_SPEED = 0.3f;
+  //m_pContainingEntity->m_fYaw += mouseDelta.x * ROTATIONAL_SPEED;
+  //m_pContainingEntity->m_fPitch += mouseDelta.y * ROTATIONAL_SPEED;
+  //m_pContainingEntity->m_fYaw = (float)MathHelpers::ConstrainAngle(m_pContainingEntity->m_fYaw);
+  //m_pContainingEntity->m_fPitch = (float)MathHelpers::ConstrainAngle(m_pContainingEntity->m_fPitch);
   m_strafeDirection = glm::cross(m_pContainingEntity->GetOrientation(), CCamera::s_UP);
+  glm::mat4 rotator = glm::rotate(glm::radians(mouseDelta.x * ROTATIONAL_SPEED), CCamera::s_UP) *
+    glm::rotate(glm::radians(mouseDelta.y * ROTATIONAL_SPEED), m_strafeDirection);
+  m_pContainingEntity->m_rotationMat = m_pContainingEntity->m_rotationMat * rotator;// *glm::vec4(m_pContainingEntity->GetOrientation(), 1.0f);
 
   m_oldMousePos = newMousePos;
 }

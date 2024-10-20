@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
     if (fTimer >= 1.0f) {
       char szFramerate[100];
       snprintf(szFramerate, sizeof(szFramerate), "%d fps\n", iNumFrames);
-      OutputDebugString(szFramerate);
+      //OutputDebugString(szFramerate);
       fTimer = 0.0f;
       iNumFrames = 0;
     }

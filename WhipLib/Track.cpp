@@ -1356,6 +1356,19 @@ bool CTrack::UseCenterStunt(int i)
 
 //-------------------------------------------------------------------------------------------------
 
+bool MatrixContainsNan(const glm::mat4 &mat)
+{
+  for (int i = 0; i < 4; ++i) {
+    for (int j = 0; j < 4; ++j) {
+      if (glm::isnan(mat[i][j]))
+        return true;
+    }
+  }
+  return false;
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const glm::vec3 &up)
 {
   float fMinDist = FLT_MAX;
@@ -1370,40 +1383,60 @@ void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const g
       iClosestChunk = i;
     }
   }
-  char szOut[100];
-  snprintf(szOut, sizeof(szOut), "closest chunk %d, dist: %d\n", iClosestChunk, (int)fMinDist);
-  OutputDebugString(szOut);
-
+  char szOut[300];
+  //snprintf(szOut, sizeof(szOut), "closest chunk %d, dist: %d\n", iClosestChunk, (int)fMinDist);
+  //OutputDebugString(szOut);
   glm::vec3 projectedPoint = MathHelpers::ProjectPointOntoPlane(position, m_chunkAy[iClosestChunk].math.lLane, m_chunkAy[iClosestChunk - 1].math.lLane, m_chunkAy[iClosestChunk].math.rLane);
   position = projectedPoint;
 
-  //get plane normal
+  //find track normal
   glm::vec3 tl1 = m_chunkAy[iClosestChunk - 1].math.lLane - m_chunkAy[iClosestChunk].math.lLane;
   glm::vec3 tl2 = m_chunkAy[iClosestChunk].math.rLane - m_chunkAy[iClosestChunk].math.lLane;
   glm::vec3 normal = glm::normalize(glm::cross(tl1, tl2));
-  glm::vec3 rotationVec = glm::normalize(glm::cross(normal, up));
-  if (glm::any(glm::isnan(rotationVec)))
+  //find rotation axis
+  glm::vec3 rotationAxis = glm::normalize(glm::cross(normal, up));
+  if (glm::any(glm::isnan(rotationAxis))) {
+    //track normal and entity up vector are the same
     return;
-  glm::vec3 test = glm::normalize(up);
-  float fAngle = glm::acos(glm::dot(normal, test));
-  glm::mat4 rotation = glm::rotate(glm::radians(fAngle), rotationVec);
-  rotationMat = glm::inverse(rotation) * rotationMat;
-  float fYaw = glm::degrees(glm::yaw(glm::toQuat(rotationMat)));
-  float fPitch = glm::degrees(glm::pitch(glm::toQuat(rotationMat)));
-  float fRoll = glm::degrees(glm::roll(glm::toQuat(rotationMat)));
-
-  if ((int)fAngle > 0) {
-    snprintf(szOut, sizeof(szOut), "angle %d, yaw %d, pitch %d, roll: %d\n", (int)(fAngle), (int)fYaw, (int)fPitch, (int)fRoll);
-    OutputDebugString(szOut);
   }
-  //glm::vec3 startVec = glm::vec3(0, 0, 1);
-  //glm::mat4 yawMat = glm::rotate(glm::radians((float)m_chunkAy[iClosestChunk].dYaw), glm::vec3(0.0f, 1.0f, 0.0f));
-  //glm::vec3 yawedVec = glm::vec3(yawMat * glm::vec4(startVec, 1.0f));
-  //glm::vec3 pitchAxis = glm::normalize(glm::cross(yawedVec, glm::vec3(0.0f, 1.0f, 0.0f)));
-  //glm::mat4 pitchMat = glm::rotate(glm::radians((float)m_chunkAy[iClosestChunk].dPitch), pitchAxis);
-  //glm::vec3 pitchedVec = pitchMat * glm::vec4(yawedVec, 1.0f);
-  //glm::mat4 rollMat = glm::rotate(glm::radians((float)m_chunkAy[iClosestChunk].dRoll), glm::vec3(0.0f, 0.0f, 1.0f));
-  //trackRotationMat = rollMat * pitchMat * yawMat;
+  float fDot = glm::dot(normal, glm::normalize(up));
+  if (fDot > 1.0f) {
+    //some kind of floating point error results in un-normalized track normal?
+    //close enough to 1.0f we can assume track normal and entity up vector are close enough to the same
+    return;
+  }
+  //find angle amount to rotate
+  float fAngleRads = glm::acos(fDot);
+  if (fAngleRads > 1.0f) {
+    //something has obviously gone wrong
+    assert(0);
+  }
+  //rotate around axis
+  glm::mat4 rotationModifier = glm::rotate(fAngleRads, rotationAxis);
+  glm::mat4 newRotationMat = rotationModifier * rotationMat;
+
+  //debugging trash
+  float fstartYaw = glm::degrees(glm::yaw(glm::toQuat(rotationMat)));
+  float fstartPitch = glm::degrees(glm::pitch(glm::toQuat(rotationMat)));
+  float fstartRoll = glm::degrees(glm::roll(glm::toQuat(rotationMat)));
+  float frotYaw = glm::degrees(glm::yaw(glm::toQuat(rotationModifier)));
+  float frotPitch = glm::degrees(glm::pitch(glm::toQuat(rotationModifier)));
+  float frotRoll = glm::degrees(glm::roll(glm::toQuat(rotationModifier)));
+  float fendYaw = glm::degrees(glm::yaw(glm::toQuat(newRotationMat)));
+  float fendPitch = glm::degrees(glm::pitch(glm::toQuat(newRotationMat)));
+  float fendRoll = glm::degrees(glm::roll(glm::toQuat(newRotationMat)));
+  snprintf(szOut, sizeof(szOut), "anglerads %.2f\n"
+           "  stayaw %.2f, stapitch %.2f, staroll %.2f\n"
+           "  rotyaw %.2f, rotpitch %.2f, rotroll %.2f\n"
+           "  endyaw %.2f, endpitch %.2f, endroll %.2f\n"
+           "  trayaw %.2f, trapitch %.2f, traroll %.2f\n",
+           fAngleRads, fstartYaw, fstartPitch, fstartRoll,
+           frotYaw, frotPitch, frotRoll,
+           fendYaw, fendPitch, fendRoll,
+           m_chunkAy[iClosestChunk].dYaw, m_chunkAy[iClosestChunk].dPitch, m_chunkAy[iClosestChunk].dRoll);
+  OutputDebugString(szOut);
+
+  rotationMat = newRotationMat;
   return;
 }
 

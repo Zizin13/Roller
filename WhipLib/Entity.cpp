@@ -11,9 +11,6 @@
 CEntity::CEntity()
   : m_iNumComponents(0)
   , m_position(0.0f, 0.0f, 0.0f)
-  //, m_fYaw(0.0f)
-  //, m_fPitch(0.0f)
-  //, m_fRoll(0.0f)
   , m_bAcceptControls(false)
   , m_rotationMat(glm::mat4(1))
 {
@@ -67,22 +64,20 @@ void CEntity::Update()
 
 glm::vec3 CEntity::GetOrientation()
 {
-  glm::vec3 startVec = glm::vec3(0, 0, 1);
-  //glm::mat4 yawMat = glm::rotate(glm::radians(m_fYaw), glm::vec3(0.0f, 1.0f, 0.0f));
-  //glm::vec3 yawedVec = glm::vec3(yawMat * glm::vec4(startVec, 1.0f));
-  //glm::vec3 pitchAxis = glm::normalize(glm::cross(yawedVec, glm::vec3(0.0f, 1.0f, 0.0f)));
-  //glm::mat4 pitchMat = glm::rotate(glm::radians(m_fPitch), pitchAxis);
-  //glm::vec3 orientation = glm::vec3(pitchMat * glm::vec4(yawedVec, 1.0f));
-  return glm::normalize(glm::vec4(startVec, 1.0f) * m_rotationMat);
+  glm::vec3 start = glm::vec3(0, 0, 1);
+  glm::vec3 rotated = glm::vec4(start, 1) * m_rotationMat;
+  glm::vec3 normalized = glm::vec3(glm::normalize(rotated));
+  return normalized;
 }
 
 //-------------------------------------------------------------------------------------------------
 
 glm::vec3 CEntity::GetUp()
 {
-  glm::vec3 startVec = glm::vec3(0, 1, 0);
-
-  return glm::normalize(glm::vec4(startVec, 1.0f) * m_rotationMat);
+  glm::vec3 start = glm::vec3(0, 1, 0);
+  glm::vec3 rotated = glm::vec4(start, 1) * m_rotationMat;
+  glm::vec3 normalized = glm::vec3(glm::normalize(rotated));
+  return normalized;
 }
 
 //-------------------------------------------------------------------------------------------------

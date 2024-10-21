@@ -24,9 +24,6 @@ public:
 
   glm::vec3 m_position;
   glm::mat4 m_rotationMat;
-  //float m_fYaw;
-  //float m_fPitch;
-  //float m_fRoll;
   bool m_bAcceptControls;
 
 private:

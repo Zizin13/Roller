@@ -1409,43 +1409,7 @@ void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const g
     assert(0);
   }
   //rotate around axis
-  glm::mat4 rotationModifier = glm::rotate(fAngleRads, rotationAxis);
-  glm::mat4 newRotationMat = rotationMat * rotationModifier;
-
-  //debugging trash
-  char szOut[600];
-  float fstartYaw = glm::degrees(glm::yaw(glm::toQuat(rotationMat)));
-  float fstartPitch = glm::degrees(glm::pitch(glm::toQuat(rotationMat)));
-  float fstartRoll = glm::degrees(glm::roll(glm::toQuat(rotationMat)));
-  float frotYaw = glm::degrees(glm::yaw(glm::toQuat(rotationModifier)));
-  float frotPitch = glm::degrees(glm::pitch(glm::toQuat(rotationModifier)));
-  float frotRoll = glm::degrees(glm::roll(glm::toQuat(rotationModifier)));
-  float fendYaw = glm::degrees(glm::yaw(glm::toQuat(newRotationMat)));
-  float fendPitch = glm::degrees(glm::pitch(glm::toQuat(newRotationMat)));
-  float fendRoll = glm::degrees(glm::roll(glm::toQuat(newRotationMat)));
-  snprintf(szOut, sizeof(szOut), "anglerads %.2f, angledeg %.2f\n"
-           "  stayaw %.2f, stapitch %.2f, staroll %.2f\n"
-           "  rotyaw %.2f, rotpitch %.2f, rotroll %.2f\n"
-           "  endyaw %.2f, endpitch %.2f, endroll %.2f\n"
-           "  trayaw %.2f, trapitch %.2f, traroll %.2f\n"
-           "  normal.x %.2f, normal.y %.2f, normal.z %.2f\n"
-           "  normal length: %.2f\n"
-           "  carup.x %.2f, carup.y %.2f, carup.z %.2f\n"
-           "  carup length: %.2f\n"
-           "  axis.x %.2f, axis.y %.2f, axis.z %.2f\n",
-           fAngleRads, glm::degrees(fAngleRads),
-           fstartYaw, fstartPitch, fstartRoll,
-           frotYaw, frotPitch, frotRoll,
-           fendYaw, fendPitch, fendRoll,
-           m_chunkAy[iClosestChunk].dYaw, m_chunkAy[iClosestChunk].dPitch, m_chunkAy[iClosestChunk].dRoll,
-           normal.x, normal.y, normal.z,
-           glm::length(normal),
-           up.x, up.y, up.z,
-           glm::length(up),
-           rotationAxis.x, rotationAxis.y, rotationAxis.z);
-  OutputDebugString(szOut);
-
-  rotationMat = newRotationMat;
+  rotationMat = rotationMat * glm::rotate(fAngleRads, rotationAxis);
   return;
 }
 

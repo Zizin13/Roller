@@ -1410,7 +1410,7 @@ void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const g
   }
   //rotate around axis
   glm::mat4 rotationModifier = glm::rotate(fAngleRads, rotationAxis);
-  glm::mat4 newRotationMat = rotationModifier * rotationMat;
+  glm::mat4 newRotationMat = rotationMat * rotationModifier;
 
   //debugging trash
   char szOut[600];

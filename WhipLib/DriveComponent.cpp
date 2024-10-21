@@ -62,10 +62,7 @@ void CDriveComponent::TurnLeft()
 {
   float fYaw = m_fRotateSpeed * CGameClock::GetGameClock().DeltaTimeLastFrame() * -1.0f;
   glm::mat4 rotation = glm::rotate(glm::radians(fYaw), m_pContainingEntity->GetUp());
-  m_pContainingEntity->m_rotationMat = rotation * m_pContainingEntity->m_rotationMat;
-
-  //m_pContainingEntity->m_fYaw += m_fRotateSpeed * CGameClock::GetGameClock().DeltaTimeLastFrame();
-  //m_pContainingEntity->m_fYaw = (float)MathHelpers::ConstrainAngle(m_pContainingEntity->m_fYaw);
+  m_pContainingEntity->m_rotationMat = m_pContainingEntity->m_rotationMat * rotation;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -74,10 +71,7 @@ void CDriveComponent::TurnRight()
 {
   float fYaw = m_fRotateSpeed * CGameClock::GetGameClock().DeltaTimeLastFrame();
   glm::mat4 rotation = glm::rotate(glm::radians(fYaw), m_pContainingEntity->GetUp());
-  m_pContainingEntity->m_rotationMat = rotation * m_pContainingEntity->m_rotationMat;
-
-  //m_pContainingEntity->m_fYaw -= m_fRotateSpeed * CGameClock::GetGameClock().DeltaTimeLastFrame();
-  //m_pContainingEntity->m_fYaw = (float)MathHelpers::ConstrainAngle(m_pContainingEntity->m_fYaw);
+  m_pContainingEntity->m_rotationMat = m_pContainingEntity->m_rotationMat * rotation;
 }
 
 //-------------------------------------------------------------------------------------------------

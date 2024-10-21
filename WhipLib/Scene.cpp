@@ -166,7 +166,7 @@ void CScene::LoadTrack(const std::string &sTrackFile)
 
   //setup track entity
   p->m_trackEntity.AddComponent(&p->m_trackShapeComponent);
-  p->m_trackEntity.AddComponent(&p->m_trackComponent);
+  //p->m_trackEntity.AddComponent(&p->m_trackComponent);
   p->m_trackEntity.Init();
 }
 

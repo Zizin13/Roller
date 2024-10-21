@@ -1404,10 +1404,6 @@ void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const g
   }
   //find angle amount to rotate
   float fAngleRads = glm::acos(fCosTheta);
-  if (fAngleRads > 1.0f) {
-    //something has obviously gone wrong
-    assert(0);
-  }
   //rotate around axis
   rotationMat = rotationMat * glm::rotate(fAngleRads, rotationAxis);
   return;

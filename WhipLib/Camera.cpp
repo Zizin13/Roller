@@ -1,16 +1,21 @@
 #include "Camera.h"
 #include "Entity.h"
+#include "GameClock.h"
 #include "gtx\transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
 //-------------------------------------------------------------------------------------------------
+#define CAMERA_TIMER 0.024f
+//-------------------------------------------------------------------------------------------------
 const glm::vec3 CCamera::s_UP(0.0f, 1.0f, 0.0f);
 //-------------------------------------------------------------------------------------------------
 CCamera::CCamera()
-  : m_offset(0.0f, 0.0f, 0.0f)
-  , m_viewDirection(0.0f, 0.0f, 1.0f)
+  : m_offset(0, 0, 0)
+  , m_position(0, 0, 0)
+  , m_viewDirection(0, 0, 1)
+  , m_fTimer(0)
 {
 }
 
@@ -18,37 +23,40 @@ CCamera::CCamera()
 
 void CCamera::Update()
 {
-  //glm::vec3 startVec = glm::vec3(0, 0, 1);
-  //glm::mat4 yawMat = glm::rotate(glm::radians(m_pContainingEntity->m_fYaw), glm::vec3(0.0f, 1.0f, 0.0f));
-  //glm::vec3 yawedVec = glm::vec3(yawMat * glm::vec4(startVec, 1.0f));
-  //glm::vec3 pitchAxis = glm::normalize(glm::cross(yawedVec, glm::vec3(0.0f, 1.0f, 0.0f)));
-  //glm::mat4 pitchMat = glm::rotate(glm::radians(m_pContainingEntity->m_fPitch), pitchAxis);
+  //m_fTimer += CGameClock::GetGameClock().DeltaTimeLastFrame();
+  //
+  //if (m_fTimer > CAMERA_TIMER) {
+  //  m_fTimer = m_fTimer - CAMERA_TIMER;
 
-  m_viewDirection = m_pContainingEntity->GetOrientation(); //yawedVec;// glm::vec3(pitchMat * glm::vec4(yawedVec, 1.0f));
+    glm::vec3 desiredViewDirection = m_pContainingEntity->GetOrientation();
+    glm::mat4 translateMat = glm::translate(m_pContainingEntity->m_position);
+    glm::vec3 useOffset = glm::vec4(m_offset, 1.0f) * m_pContainingEntity->m_rotationMat;
+    glm::vec3 desiredPosition = m_pContainingEntity->m_position + useOffset;
+
+    m_viewDirection = 0.9f * m_viewDirection + 0.1f * desiredViewDirection;
+    m_position = 0.9f * m_position + 0.1f * desiredPosition;
+  //}
 }
 
 //-------------------------------------------------------------------------------------------------
 
 glm::mat4 CCamera::GetWorldToViewMatrix() const
 {
-  return glm::lookAt(GetPosition(), GetPosition() + m_viewDirection, CCamera::s_UP);
+  return glm::lookAt(GetPosition(), GetPosition() + GetViewDirection(), CCamera::s_UP);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 glm::vec3 CCamera::GetPosition() const
 {
-  glm::mat4 translateMat = glm::translate(m_pContainingEntity->m_position);
-  //glm::vec3 startVec = glm::vec3(0, 0, 1);
-  //glm::mat4 yawMat = glm::rotate(glm::radians(m_pContainingEntity->m_fYaw * -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-  //glm::vec3 yawedVec = glm::vec3(yawMat * glm::vec4(startVec, 1.0f));
-  //glm::vec3 pitchAxis = glm::normalize(glm::cross(yawedVec, glm::vec3(0.0f, 1.0f, 0.0f)));
-  //glm::mat4 pitchMat = glm::rotate(glm::radians(m_pContainingEntity->m_fPitch), pitchAxis);
+  return m_position;
+}
 
-  //glm::vec3 positionRotated = glm::vec4(m_offset, 1.0f) * yawMat;// *pitchMat;
-  //glm::vec3 positionTranslated = glm::vec3(translateMat * glm::vec4(positionRotated, 1.0f));
-  glm::vec3 useOffset = glm::vec4(m_offset, 1.0f) * m_pContainingEntity->m_rotationMat;
-  return m_pContainingEntity->m_position + useOffset;
+//-------------------------------------------------------------------------------------------------
+
+glm::vec3 CCamera::GetViewDirection() const
+{
+  return m_viewDirection;
 }
 
 //-------------------------------------------------------------------------------------------------

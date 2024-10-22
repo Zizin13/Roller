@@ -1378,8 +1378,7 @@ void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const g
   for (int i = 1; i < (int)m_chunkAy.size() - 1; ++i) {
     float fDist = MathHelpers::Dist(position, m_chunkAy[i].math.lLane) +
       MathHelpers::Dist(position, m_chunkAy[i].math.rLane) +
-      MathHelpers::Dist(position, m_chunkAy[i - 1].math.lLane) +
-      MathHelpers::Dist(position, m_chunkAy[i - 1].math.rLane);
+      MathHelpers::Dist(position, m_chunkAy[i - 1].math.lLane);
     if (fDist < fMinDist) {
       fMinDist = fDist;
       iClosestChunk = i;
@@ -1387,16 +1386,16 @@ void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const g
       p2 = m_chunkAy[i].math.rLane;
       p3 = m_chunkAy[i - 1].math.lLane;
     }
-    //fDist = MathHelpers::Dist(position, m_chunkAy[i].math.rLane) +
-    //  MathHelpers::Dist(position, m_chunkAy[i - 1].math.lLane) +
-    //  MathHelpers::Dist(position, m_chunkAy[i - 1].math.rLane);
-    //if (fDist < fMinDist) {
-    //  fMinDist = fDist;
-    //  iClosestChunk = i;
-    //  p1 = m_chunkAy[i].math.rLane;
-    //  p2 = m_chunkAy[i - 1].math.rLane;
-    //  p3 = m_chunkAy[i - 1].math.lLane;
-    //}
+    fDist = MathHelpers::Dist(position, m_chunkAy[i].math.rLane) +
+      MathHelpers::Dist(position, m_chunkAy[i - 1].math.lLane) +
+      MathHelpers::Dist(position, m_chunkAy[i - 1].math.rLane);
+    if (fDist < fMinDist) {
+      fMinDist = fDist;
+      iClosestChunk = i;
+      p1 = m_chunkAy[i].math.rLane;
+      p2 = m_chunkAy[i - 1].math.rLane;
+      p3 = m_chunkAy[i - 1].math.lLane;
+    }
   }
   glm::vec3 projectedPoint = MathHelpers::ProjectPointOntoPlane(position, p1, p2, p3);
   position = projectedPoint;

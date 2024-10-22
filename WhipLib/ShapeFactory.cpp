@@ -2608,12 +2608,8 @@ uint32 *CShapeFactory::MakeIndicesSingleSectionWireframe(uint32 &numIndices, eSh
     return NULL;
   }
 
-  uint32 uiNumVertsPerChunk = 4;
-  uint32 uiNumIndicesPerChunk = 8;
-  if (section == eShapeSection::LSHOULDER || section == eShapeSection::RSHOULDER) {
-    uiNumVertsPerChunk = 8;
-    uiNumIndicesPerChunk = 16;
-  }
+  uint32 uiNumVertsPerChunk = 8;
+  uint32 uiNumIndicesPerChunk = 16;
   numIndices = (uint32)pTrack->m_chunkAy.size() * uiNumIndicesPerChunk;
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));

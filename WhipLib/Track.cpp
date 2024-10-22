@@ -857,6 +857,7 @@ void CTrack::GenerateTrackMath()
               nextCenter,
               m_chunkAy[i].math.pitchAxis,
               m_chunkAy[i].math.nextChunkPitched,
+              m_chunkAy[i].math.normal,
               m_chunkAy[i].math.yawMat,
               m_chunkAy[i].math.pitchMat,
               m_chunkAy[i].math.rollMat);
@@ -1373,7 +1374,8 @@ void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const g
 {
   float fMinDist = FLT_MAX;
   int iClosestChunk = 0;
-  for (int i = 1; i < (int)m_chunkAy.size(); ++i) {
+  glm::vec3 p1, p2, p3;
+  for (int i = 1; i < (int)m_chunkAy.size() - 1; ++i) {
     float fDist = MathHelpers::Dist(position, m_chunkAy[i].math.lLane) +
       MathHelpers::Dist(position, m_chunkAy[i].math.rLane) +
       MathHelpers::Dist(position, m_chunkAy[i - 1].math.lLane) +
@@ -1381,15 +1383,46 @@ void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const g
     if (fDist < fMinDist) {
       fMinDist = fDist;
       iClosestChunk = i;
+      p1 = m_chunkAy[i].math.lLane;
+      p2 = m_chunkAy[i].math.rLane;
+      p3 = m_chunkAy[i - 1].math.lLane;
     }
+    //fDist = MathHelpers::Dist(position, m_chunkAy[i].math.rLane) +
+    //  MathHelpers::Dist(position, m_chunkAy[i - 1].math.lLane) +
+    //  MathHelpers::Dist(position, m_chunkAy[i - 1].math.rLane);
+    //if (fDist < fMinDist) {
+    //  fMinDist = fDist;
+    //  iClosestChunk = i;
+    //  p1 = m_chunkAy[i].math.rLane;
+    //  p2 = m_chunkAy[i - 1].math.rLane;
+    //  p3 = m_chunkAy[i - 1].math.lLane;
+    //}
   }
-  glm::vec3 projectedPoint = MathHelpers::ProjectPointOntoPlane(position, m_chunkAy[iClosestChunk].math.lLane, m_chunkAy[iClosestChunk - 1].math.lLane, m_chunkAy[iClosestChunk].math.rLane);
+  glm::vec3 projectedPoint = MathHelpers::ProjectPointOntoPlane(position, p1, p2, p3);
   position = projectedPoint;
 
-  //find track normal
-  glm::vec3 tl1 = m_chunkAy[iClosestChunk - 1].math.lLane - m_chunkAy[iClosestChunk].math.lLane;
-  glm::vec3 tl2 = m_chunkAy[iClosestChunk].math.rLane - m_chunkAy[iClosestChunk].math.lLane;
-  glm::vec3 normal = glm::normalize(glm::cross(tl1, tl2));
+  //get percentage into chunk
+  glm::vec3 endMinusBegin = m_chunkAy[iClosestChunk].math.center - m_chunkAy[iClosestChunk - 1].math.center;
+  glm::vec3 posMinusBegin = projectedPoint - m_chunkAy[iClosestChunk - 1].math.center;
+  float fScalarProjection = glm::dot(posMinusBegin, glm::normalize(endMinusBegin));
+  //float fL1 = glm::length(projectedPosMinusBegin);
+  float fL2 = glm::length(endMinusBegin);
+  float fPercentIntoChunk = fScalarProjection / fL2;
+  //char szOut[100];
+  //snprintf(szOut, sizeof(szOut), "Chunk %d, Percent: %.2f, SProj: %.2f, Len: %.2f\n", iClosestChunk, fPercentIntoChunk, fScalarProjection, fL2);
+  //OutputDebugString(szOut);
+
+  ////find track normal
+  //glm::vec3 tl1 = m_chunkAy[iClosestChunk - 1].math.lLane - m_chunkAy[iClosestChunk].math.lLane;
+  //glm::vec3 tl2 = m_chunkAy[iClosestChunk].math.rLane - m_chunkAy[iClosestChunk].math.lLane;
+  //glm::vec3 normal1 = glm::normalize(glm::cross(tl1, tl2));
+  //
+  //glm::vec3 tl3 = m_chunkAy[iClosestChunk].math.lLane - m_chunkAy[iClosestChunk+1].math.lLane;
+  //glm::vec3 tl4 = m_chunkAy[iClosestChunk+1].math.rLane - m_chunkAy[iClosestChunk+1].math.lLane;
+  //glm::vec3 normal2 = glm::normalize(glm::cross(tl3, tl4));
+
+  glm::vec3 normal = glm::mix(m_chunkAy[iClosestChunk].math.normal, m_chunkAy[iClosestChunk + 1].math.normal, fPercentIntoChunk);
+
   //find rotation axis
   glm::vec3 rotationAxis = glm::normalize(glm::cross(normal, up));
   if (glm::any(glm::isnan(rotationAxis))) {
@@ -1412,7 +1445,7 @@ void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const g
 //-------------------------------------------------------------------------------------------------
 
 void CTrack::GetCenter(int i, glm::vec3 prevCenter,
-                           glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched,
+                           glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched, glm::vec3 &normal,
                            glm::mat4 &yawMat, glm::mat4 &pitchMat, glm::mat4 &rollMat)
 {
   glm::vec3 nextChunkBase = glm::vec3(0, 0, 1);
@@ -1432,6 +1465,8 @@ void CTrack::GetCenter(int i, glm::vec3 prevCenter,
   glm::mat4 scaleMat = glm::scale(glm::vec3(fLen, fLen, fLen));
   center = glm::vec3(translateMat * scaleMat * glm::vec4(nextChunkPitched, 1.0f));
   rollMat = glm::rotate(glm::radians((float)m_chunkAy[i].dRoll * -1.0f), glm::normalize(nextChunkPitched));
+  glm::vec3 pitchAxisRolled = rollMat * glm::vec4(pitchAxis, 1.0f);
+  normal = glm::normalize(glm::cross(pitchAxisRolled, nextChunkPitched));
 }
 
 //-------------------------------------------------------------------------------------------------

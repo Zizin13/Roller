@@ -37,6 +37,7 @@ struct tChunkMath
   glm::vec3 centerStunt;
   glm::vec3 pitchAxis;
   glm::vec3 nextChunkPitched;
+  glm::vec3 normal;
   glm::vec3 lLane;
   glm::vec3 rLane;
   glm::vec3 lShoulder;
@@ -235,7 +236,7 @@ protected:
   void GenerateChunkString(tGeometryChunk &chunk, char *szBuf, int iSize);
 
   void GetCenter(int i, glm::vec3 prevCenter,
-                 glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched,
+                 glm::vec3 &center, glm::vec3 &pitchAxis, glm::vec3 &nextChunkPitched, glm::vec3 &normal,
                  glm::mat4 &yawMat, glm::mat4 &pitchMat, glm::mat4 &rollMat);
   void GetLane(int i, glm::vec3 center, glm::vec3 pitchAxis, glm::mat4 rollMat,
                glm::vec3 &lane, bool bLeft);

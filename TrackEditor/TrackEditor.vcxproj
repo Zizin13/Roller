@@ -76,6 +76,7 @@
       </ModuleDefinitionFile>
       <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying QT dlls...
@@ -135,6 +136,7 @@ exit 1</Command>
       </ModuleDefinitionFile>
       <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying QT dlls...

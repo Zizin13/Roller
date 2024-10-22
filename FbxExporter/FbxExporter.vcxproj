@@ -121,6 +121,7 @@
       <AdditionalLibraryDirectories>..\lib\x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>Shlwapi.lib;WhipLib_staticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -143,6 +144,7 @@
       <AdditionalLibraryDirectories>..\lib\x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>Shlwapi.lib;WhipLib_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

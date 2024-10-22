@@ -120,6 +120,7 @@
       <AdditionalLibraryDirectories>..\lib\x64;..\external\glfw\lib\Debug\x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;Shlwapi.lib;WhipLib_staticd.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying Readme File...
@@ -171,6 +172,7 @@ exit 1</Command>
       <AdditionalLibraryDirectories>..\lib\x64;..\external\glfw\lib\Release\x64</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;Shlwapi.lib;WhipLib_static.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
+      <ProgramDatabaseFile>$(IntDir)$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PostBuildEvent>
       <Command>echo Copying Readme File...

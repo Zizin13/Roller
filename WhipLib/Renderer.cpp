@@ -197,3 +197,18 @@ void CRenderer::MakeEnvirFloor(CTrack *pTrack)
 }
 
 //-------------------------------------------------------------------------------------------------
+
+CShapeData *CRenderer::MakeDebugTri(CShapeData *pShape, CTexture *pTexture,
+                                    const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &p2)
+{
+  if (!m_pShader || !pTexture)
+    return NULL;
+
+  bool bNew = !pShape;
+  pShape = CShapeFactory::GetShapeFactory().MakeDebugTri(pShape, m_pShader, pTexture, p0, p1, p2);
+  if (bNew)
+    m_shapeAy.emplace_back(pShape);
+  return pShape;
+}
+
+//-------------------------------------------------------------------------------------------------

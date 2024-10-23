@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "MathHelpers.h"
 #include "Track.h"
+#include "DebugTriComponent.h"
 #include "gtx\transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -44,7 +45,15 @@ void CDriveComponent::MoveForward(glm::vec3 &newPos)
 {
   newPos += m_fMovementSpeed * m_pContainingEntity->GetOrientation() * CGameClock::GetGameClock().DeltaTimeLastFrame();
   if (m_pTrack) {
-    m_pTrack->ProjectToTrack(newPos, m_pContainingEntity->m_rotationMat, m_pContainingEntity->GetUp());
+    glm::vec3 p0, p1, p2;
+    m_pTrack->ProjectToTrack(newPos, m_pContainingEntity->m_rotationMat, m_pContainingEntity->GetUp(), p0, p1, p2);
+
+    CDebugTriComponent *pDebugTri = m_pContainingEntity->GetComponent<CDebugTriComponent>();
+    if (pDebugTri) {
+      pDebugTri->p0 = p0;
+      pDebugTri->p1 = p1;
+      pDebugTri->p2 = p2;
+    }
   }
 }
 
@@ -54,7 +63,15 @@ void CDriveComponent::MoveBackward(glm::vec3 &newPos)
 {
   newPos -= m_fMovementSpeed * m_pContainingEntity->GetOrientation() * CGameClock::GetGameClock().DeltaTimeLastFrame();
   if (m_pTrack) {
-    m_pTrack->ProjectToTrack(newPos, m_pContainingEntity->m_rotationMat, m_pContainingEntity->GetUp());
+    glm::vec3 p0, p1, p2;
+    m_pTrack->ProjectToTrack(newPos, m_pContainingEntity->m_rotationMat, m_pContainingEntity->GetUp(), p0, p1, p2);
+
+    CDebugTriComponent *pDebugTri = m_pContainingEntity->GetComponent<CDebugTriComponent>();
+    if (pDebugTri) {
+      pDebugTri->p0 = p0;
+      pDebugTri->p1 = p1;
+      pDebugTri->p2 = p2;
+    }
   }
 }
 

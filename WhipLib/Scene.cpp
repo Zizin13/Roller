@@ -7,6 +7,7 @@
 #include "TrackComponent.h"
 #include "ShapeComponent.h"
 #include "DriveComponent.h"
+#include "DebugTriComponent.h"
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
@@ -50,6 +51,7 @@ public:
   CDriveComponent m_driveComponent;
   CShapeComponent m_carShapeComponent;
   CCamera m_carCamera;
+  CDebugTriComponent m_debugTri;
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -127,6 +129,8 @@ void CScene::SpawnCar(eWhipModel model)
   p->m_carShapeComponent.m_rotationOffset = glm::rotate(glm::radians(-90.0f), glm::vec3(0, 0, 1)) * //car starts on its side
     glm::rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0)); //entity starts facing z positive, car starts facing x positive
   p->m_carShapeComponent.Init();
+  p->m_debugTri.m_pRenderer = &p->m_renderer;
+  p->m_debugTri.m_pTex = p->m_track.m_pTex;
   p->m_carCamera.m_offset = glm::vec3(0.0f, 800.0f, -3000.0f);
   p->m_carCamera.Init();
   p->m_driveComponent.m_pTrack = &p->m_track;
@@ -136,6 +140,7 @@ void CScene::SpawnCar(eWhipModel model)
   p->m_car.AddComponent(&p->m_driveComponent);
   p->m_car.AddComponent(&p->m_carShapeComponent);
   p->m_car.AddComponent(&p->m_carCamera);
+  p->m_car.AddComponent(&p->m_debugTri);
   p->m_car.Init();
   //p->m_car.m_bAcceptControls = true;
   SetPlayer(&p->m_car);

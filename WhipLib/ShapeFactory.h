@@ -23,6 +23,7 @@ public:
   void operator=(CShapeFactory const &) = delete;
 
   CShapeData *MakeAxes(CShader *pShader);
+  CShapeData *MakeDebugTri(CShapeData *pShape, CShader *pShader, CTexture *pTexture, const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &p2);
   CShapeData *MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1);
   CShapeData *MakeAudioMarker(CShader *pShader, CTexture *pTexture);
   CShapeData *MakeStuntMarker(CShader *pShader, CTexture *pTexture);

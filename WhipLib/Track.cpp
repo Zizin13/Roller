@@ -1370,20 +1370,28 @@ bool MatrixContainsNan(const glm::mat4 &mat)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrack::CollideWithChunk(const glm::vec3 &position, int &iClosestChunk, int &iPrevChunk,
+void CTrack::CollideWithChunk(const glm::vec3 &position, const glm::vec3 &up, int &iClosestChunk, int &iPrevChunk,
                               glm::vec3 &p0, glm::vec3 &p1, glm::vec3 &p2, glm::vec3 &p3)
 {
+  //glm::mat4 translateMat = glm::translate(position);
+  //glm::vec3 peg1 = glm::vec3(translateMat * glm::vec4(up * 1000.0f, 1.0f));
+  //glm::vec3 peg2 = glm::vec3(translateMat * glm::vec4(up * -1000.0f, 1.0f));
+
+  iClosestChunk = -1;
+  iPrevChunk = -1;
   float fMinDist = FLT_MAX;
   for (int i = 0; i < (int)m_chunkAy.size(); ++i) {
     int iPrevIndex = (int)m_chunkAy.size() - 1;
     if (i > 0)
       iPrevIndex = i - 1;
 
+    //center
     float fDist = MathHelpers::Dist(position, m_chunkAy[iPrevIndex].math.lLane) +
       MathHelpers::Dist(position, m_chunkAy[i].math.rLane) +
       MathHelpers::Dist(position, m_chunkAy[i].math.lLane);
     if (fDist < fMinDist) {
       fMinDist = fDist;
+    //if (MathHelpers::RayCollisionTriangle(peg1, peg2, m_chunkAy[iPrevIndex].math.lLane, m_chunkAy[i].math.rLane, m_chunkAy[i].math.lLane)) {
       iClosestChunk = i;
       iPrevChunk = iPrevIndex;
       p0 = m_chunkAy[iPrevIndex].math.lLane;
@@ -1396,6 +1404,7 @@ void CTrack::CollideWithChunk(const glm::vec3 &position, int &iClosestChunk, int
       MathHelpers::Dist(position, m_chunkAy[i].math.rLane);
     if (fDist < fMinDist) {
       fMinDist = fDist;
+    //if (MathHelpers::RayCollisionTriangle(peg1, peg2, m_chunkAy[iPrevIndex].math.lLane, m_chunkAy[iPrevIndex].math.rLane, m_chunkAy[i].math.rLane)) {
       iClosestChunk = i;
       iPrevChunk = iPrevIndex;
       p0 = m_chunkAy[iPrevIndex].math.lLane;
@@ -1403,19 +1412,74 @@ void CTrack::CollideWithChunk(const glm::vec3 &position, int &iClosestChunk, int
       p2 = m_chunkAy[i].math.rLane;
       p3 = m_chunkAy[i].math.lLane;
     }
+    /*
+    //lshoulder
+    fDist = MathHelpers::Dist(position, m_chunkAy[iPrevIndex].math.lShoulder) +
+      MathHelpers::Dist(position, m_chunkAy[i].math.lLane) +
+      MathHelpers::Dist(position, m_chunkAy[i].math.lShoulder);
+    if (fDist < fMinDist) {
+      fMinDist = fDist;
+      iClosestChunk = i;
+      iPrevChunk = iPrevIndex;
+      p0 = m_chunkAy[iPrevIndex].math.lShoulder;
+      p1 = m_chunkAy[i].math.lLane;
+      p2 = m_chunkAy[i].math.lShoulder;
+      p3 = m_chunkAy[iPrevIndex].math.lLane;
+    }
+    fDist = MathHelpers::Dist(position, m_chunkAy[iPrevIndex].math.lShoulder) +
+      MathHelpers::Dist(position, m_chunkAy[iPrevIndex].math.lLane) +
+      MathHelpers::Dist(position, m_chunkAy[i].math.lLane);
+    if (fDist < fMinDist) {
+      fMinDist = fDist;
+      iClosestChunk = i;
+      iPrevChunk = iPrevIndex;
+      p0 = m_chunkAy[iPrevIndex].math.lShoulder;
+      p1 = m_chunkAy[iPrevIndex].math.lLane;
+      p2 = m_chunkAy[i].math.lLane;
+      p3 = m_chunkAy[i].math.lShoulder;
+    }
+
+    //rShoulder
+    fDist = MathHelpers::Dist(position, m_chunkAy[iPrevIndex].math.rLane) +
+      MathHelpers::Dist(position, m_chunkAy[i].math.rShoulder) +
+      MathHelpers::Dist(position, m_chunkAy[i].math.rLane);
+    if (fDist < fMinDist) {
+      fMinDist = fDist;
+      iClosestChunk = i;
+      iPrevChunk = iPrevIndex;
+      p0 = m_chunkAy[iPrevIndex].math.rLane;
+      p1 = m_chunkAy[i].math.rShoulder;
+      p2 = m_chunkAy[i].math.rLane;
+      p3 = m_chunkAy[iPrevIndex].math.rShoulder;
+    }
+    fDist = MathHelpers::Dist(position, m_chunkAy[iPrevIndex].math.rLane) +
+      MathHelpers::Dist(position, m_chunkAy[iPrevIndex].math.rShoulder) +
+      MathHelpers::Dist(position, m_chunkAy[i].math.rShoulder);
+    if (fDist < fMinDist) {
+      fMinDist = fDist;
+      iClosestChunk = i;
+      iPrevChunk = iPrevIndex;
+      p0 = m_chunkAy[iPrevIndex].math.rLane;
+      p1 = m_chunkAy[iPrevIndex].math.rShoulder;
+      p2 = m_chunkAy[i].math.rShoulder;
+      p3 = m_chunkAy[i].math.rLane;
+    }*/
   }
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const glm::vec3 &up)
+void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const glm::vec3 &up, glm::vec3 &p0, glm::vec3 &p1, glm::vec3 &p2)
 {
   int iClosestChunk = 0;
   int iPrevChunk = 0;
-  glm::vec3 p0, p1, p2, p3;
+  glm::vec3 p3;
 
   //project entity pos to plane
-  CollideWithChunk(position, iClosestChunk, iPrevChunk, p0, p1, p2, p3);
+  CollideWithChunk(position, up, iClosestChunk, iPrevChunk, p0, p1, p2, p3);
+  if (iClosestChunk < 0)
+    return;
+
   position = MathHelpers::ProjectPointOntoPlane(position, p0, p1, p2);
 
   //get plane normal

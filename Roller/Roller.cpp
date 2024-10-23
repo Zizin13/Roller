@@ -65,8 +65,8 @@ int main(int argc, char *argv[])
   //init test scene
   CScene testScene;
   testScene.Init("C:\\WHIP\\WHIPLASH\\FATDATA");
-  testScene.SpawnCar(eWhipModel::CAR_YZIZIN);
   testScene.LoadTrack("TRACK8.TRK");
+  testScene.SpawnCar(eWhipModel::CAR_XDESILVA);
 
 #if defined(_DEBUG)
   //init framerate test
@@ -82,7 +82,8 @@ int main(int argc, char *argv[])
     ++iNumFrames;
     if (fTimer >= 1.0f) {
       char szFramerate[100];
-      snprintf(szFramerate, sizeof(szFramerate), "%d fps\n", iNumFrames);
+      float fTest = CGameClock::GetGameClock().DeltaTimeLastFrame();
+      snprintf(szFramerate, sizeof(szFramerate), "%d fps, dt = %.2f\n", iNumFrames, fTest);
       //OutputDebugString(szFramerate);
       fTimer = 0.0f;
       iNumFrames = 0;

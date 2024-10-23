@@ -26,18 +26,17 @@ float MathHelpers::Dist(const glm::vec3 &pos1, const glm::vec3 &pos2)
 
 //-------------------------------------------------------------------------------------------------
 
-glm::vec3 MathHelpers::ProjectPointOntoPlane(const glm::vec3 &pos, const glm::vec3 &p1, const glm::vec3 &p2, const glm::vec3 &p3)
+glm::vec3 MathHelpers::ProjectPointOntoPlane(const glm::vec3 &pos, const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &p2)
 {
   //get plane normal
-  glm::vec3 tl1 = p3 - p1;
-  glm::vec3 tl2 = p2 - p1;
-  glm::vec3 normal = glm::normalize(glm::cross(tl1, tl2));
-
-  glm::vec3 v = pos - p1;
-
+  glm::vec3 sub1 = p2 - p0;
+  glm::vec3 sub2 = p1 - p0;
+  glm::vec3 normal = glm::normalize(glm::cross(sub1, sub2));
+  glm::vec3 v = pos - p0;
   //project point onto plane
   float fDist = glm::dot(v, normal);
-  return (pos - fDist * normal);
+  glm::vec3 ret = (pos - fDist * normal);
+  return ret;
 }
 
 //-------------------------------------------------------------------------------------------------

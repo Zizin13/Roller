@@ -1370,7 +1370,8 @@ bool MatrixContainsNan(const glm::mat4 &mat)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrack::CollideWithChunk(const glm::vec3 &position, int &iClosestChunk, int &iPrevChunk, glm::vec3 &p1, glm::vec3 &p2, glm::vec3 &p3)
+void CTrack::CollideWithChunk(const glm::vec3 &position, int &iClosestChunk, int &iPrevChunk,
+                              glm::vec3 &p0, glm::vec3 &p1, glm::vec3 &p2, glm::vec3 &p3)
 {
   float fMinDist = FLT_MAX;
   for (int i = 0; i < (int)m_chunkAy.size(); ++i) {
@@ -1385,9 +1386,10 @@ void CTrack::CollideWithChunk(const glm::vec3 &position, int &iClosestChunk, int
       fMinDist = fDist;
       iClosestChunk = i;
       iPrevChunk = iPrevIndex;
-      p1 = m_chunkAy[iPrevIndex].math.lLane;
-      p2 = m_chunkAy[i].math.rLane;
-      p3 = m_chunkAy[i].math.lLane;
+      p0 = m_chunkAy[iPrevIndex].math.lLane;
+      p1 = m_chunkAy[i].math.rLane;
+      p2 = m_chunkAy[i].math.lLane;
+      p3 = m_chunkAy[iPrevIndex].math.rLane;
     }
     fDist = MathHelpers::Dist(position, m_chunkAy[iPrevIndex].math.lLane) +
       MathHelpers::Dist(position, m_chunkAy[iPrevIndex].math.rLane) +
@@ -1396,9 +1398,10 @@ void CTrack::CollideWithChunk(const glm::vec3 &position, int &iClosestChunk, int
       fMinDist = fDist;
       iClosestChunk = i;
       iPrevChunk = iPrevIndex;
-      p1 = m_chunkAy[iPrevIndex].math.lLane;
-      p2 = m_chunkAy[iPrevIndex].math.rLane;
-      p3 = m_chunkAy[i].math.rLane;
+      p0 = m_chunkAy[iPrevIndex].math.lLane;
+      p1 = m_chunkAy[iPrevIndex].math.rLane;
+      p2 = m_chunkAy[i].math.rLane;
+      p3 = m_chunkAy[i].math.lLane;
     }
   }
 }
@@ -1409,23 +1412,22 @@ void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const g
 {
   int iClosestChunk = 0;
   int iPrevChunk = 0;
-  glm::vec3 p1, p2, p3;
+  glm::vec3 p0, p1, p2, p3;
 
   //project entity pos to plane
-  CollideWithChunk(position, iClosestChunk, iPrevChunk, p1, p2, p3);
-  position = MathHelpers::ProjectPointOntoPlane(position, p1, p2, p3);
-
-  ////get percentage into chunk
-  //float fPercentIntoChunk = MathHelpers::GetProjectionPercentageAlongSegment(position,
-  //                                                                           m_chunkAy[iPrevChunk].math.center,
-  //                                                                           m_chunkAy[iClosestChunk].math.center);
-  //
-  //glm::vec3 normal = glm::mix(m_chunkAy[iPrevChunk].math.normal, m_chunkAy[iClosestChunk].math.normal, fPercentIntoChunk);
+  CollideWithChunk(position, iClosestChunk, iPrevChunk, p0, p1, p2, p3);
+  position = MathHelpers::ProjectPointOntoPlane(position, p0, p1, p2);
 
   //get plane normal
-  glm::vec3 sub1 = p2 - p1;
-  glm::vec3 sub2 = p3 - p1;
-  glm::vec3 normal = glm::normalize(glm::cross(sub1, sub2));
+  glm::vec3 sub1 = p1 - p0;
+  glm::vec3 sub2 = p2 - p0;
+  glm::vec3 normal1 = glm::normalize(glm::cross(sub1, sub2));
+  //get normal of second plane
+  glm::vec3 sub3 = p1 - p3;
+  glm::vec3 sub4 = p2 - p3;
+  glm::vec3 normal2 = glm::normalize(glm::cross(sub3, sub4));
+  //normal of chunk is blended normal of two planes
+  glm::vec3 normal = glm::mix(normal1, normal2, 0.5);
 
   //find rotation axis
   glm::vec3 rotationAxis = glm::normalize(glm::cross(normal, up));

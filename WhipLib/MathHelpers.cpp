@@ -53,40 +53,38 @@ float MathHelpers::GetProjectionPercentageAlongSegment(const glm::vec3 &pos, con
 
 //-------------------------------------------------------------------------------------------------
 
-bool MathHelpers::RayCollisionTriangle(const glm::vec3 &pos1, const glm::vec3 &pos2, const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &p2)
+bool MathHelpers::RayCollisionTriangle(const glm::vec3 &rayOrig, const glm::vec3 &rayVec, const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &p2)
 {
-  constexpr float fEpsilon = std::numeric_limits<float>::epsilon();
-  glm::vec3 edge1;
-  glm::vec3 edge2;
-  glm::vec3 p, q, tv;
-  float det, invDet, u, v, t;
+  constexpr float epsilon = std::numeric_limits<float>::epsilon();
 
-  edge1 = p1 - p0;
-  edge2 = p2 - p0;
-  p = glm::cross(pos2, edge2);
-  det = glm::dot(edge1, p);
+  glm::vec3 edge1 = p1 - p0;
+  glm::vec3 edge2 = p2 - p0;
+  glm::vec3 ray_cross_e2 = glm::cross(rayVec, edge2);
+  float det = glm::dot(edge1, ray_cross_e2);
 
-  //parallel to triangle
-  if ((det > -fEpsilon) && (det < fEpsilon)) return false;
+  if (det > -epsilon && det < epsilon)
+    return false;    // This ray is parallel to this triangle.
 
-  invDet = 1.0f / det;
-  //distance from p0 to ray origin
-  tv = pos2 - p1;
-  u = glm::dot(tv, p) * invDet;
-  //not in triangle
-  if ((u < 0.0f) || (u > 1.0f)) return false;
+  float inv_det = 1.0f / det;
+  glm::vec3 s = rayOrig - p0;
+  float u = inv_det * glm::dot(s, ray_cross_e2);
 
-  q = glm::cross(tv, edge1);
-  v = glm::dot(pos2, q) * invDet;
-  //intersects but outside triangle
-  if ((v < 0.0f) || ((u + v) > 1.0f)) return false;
+  if (u < 0 || u > 1)
+    return false;
 
-  t = glm::dot(edge2, q) * invDet;
-  if (t > fEpsilon) {
-    //ray intersection
-    return true;
-  }
-  //line intersection but not ray intersection
-  return false;
+  glm::vec3 s_cross_e1 = glm::cross(s, edge1);
+  float v = inv_det * glm::dot(rayVec, s_cross_e1);
+
+  if (v < 0 || u + v > 1)
+    return false;
+
+// At this stage we can compute t to find out where the intersection point is on the line.
+  float t = inv_det * glm::dot(edge2, s_cross_e1);
+
+  if (t > epsilon) // ray intersection
+  {
+    return true;// glm::vec3(ray_origin + ray_vector * t);
+  } else // This means that there is a line intersection but not a ray intersection.
+    return false;
 }
 //-------------------------------------------------------------------------------------------------

@@ -5,6 +5,7 @@
 #include "MathHelpers.h"
 #include "Track.h"
 #include "DebugTriComponent.h"
+#include "DebugLineComponent.h"
 #include "gtx\transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -45,14 +46,19 @@ void CDriveComponent::MoveForward(glm::vec3 &newPos)
 {
   newPos += m_fMovementSpeed * m_pContainingEntity->GetOrientation() * CGameClock::GetGameClock().DeltaTimeLastFrame();
   if (m_pTrack) {
-    glm::vec3 p0, p1, p2;
-    m_pTrack->ProjectToTrack(newPos, m_pContainingEntity->m_rotationMat, m_pContainingEntity->GetUp(), p0, p1, p2);
+    glm::vec3 p0, p1, p2, peg1, peg2;
+    m_pTrack->ProjectToTrack(newPos, m_pContainingEntity->m_rotationMat, m_pContainingEntity->GetUp(), p0, p1, p2, peg1, peg2);
 
     CDebugTriComponent *pDebugTri = m_pContainingEntity->GetComponent<CDebugTriComponent>();
     if (pDebugTri) {
       pDebugTri->p0 = p0;
       pDebugTri->p1 = p1;
       pDebugTri->p2 = p2;
+    }
+    CDebugLineComponent *pDebugLine = m_pContainingEntity->GetComponent<CDebugLineComponent>();
+    if (pDebugLine) {
+      pDebugLine->p0 = peg1;
+      pDebugLine->p1 = peg2;
     }
   }
 }
@@ -63,14 +69,19 @@ void CDriveComponent::MoveBackward(glm::vec3 &newPos)
 {
   newPos -= m_fMovementSpeed * m_pContainingEntity->GetOrientation() * CGameClock::GetGameClock().DeltaTimeLastFrame();
   if (m_pTrack) {
-    glm::vec3 p0, p1, p2;
-    m_pTrack->ProjectToTrack(newPos, m_pContainingEntity->m_rotationMat, m_pContainingEntity->GetUp(), p0, p1, p2);
+    glm::vec3 p0, p1, p2, peg1, peg2;
+    m_pTrack->ProjectToTrack(newPos, m_pContainingEntity->m_rotationMat, m_pContainingEntity->GetUp(), p0, p1, p2, peg1, peg2);
 
     CDebugTriComponent *pDebugTri = m_pContainingEntity->GetComponent<CDebugTriComponent>();
     if (pDebugTri) {
       pDebugTri->p0 = p0;
       pDebugTri->p1 = p1;
       pDebugTri->p2 = p2;
+    }
+    CDebugLineComponent *pDebugLine = m_pContainingEntity->GetComponent<CDebugLineComponent>();
+    if (pDebugLine) {
+      pDebugLine->p0 = peg1;
+      pDebugLine->p1 = peg2;
     }
   }
 }

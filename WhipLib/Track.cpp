@@ -1370,12 +1370,9 @@ bool MatrixContainsNan(const glm::mat4 &mat)
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrack::CollideWithChunk(const glm::vec3 &position, const glm::vec3 &up, int &iClosestChunk, int &iPrevChunk,
-                              glm::vec3 &p0, glm::vec3 &p1, glm::vec3 &p2, glm::vec3 &p3, glm::vec3 &peg1, glm::vec3 &peg2)
+void CTrack::CollideWithChunk(const glm::vec3 &position, int &iClosestChunk, int &iPrevChunk,
+                              glm::vec3 &p0, glm::vec3 &p1, glm::vec3 &p2, glm::vec3 &p3, const glm::vec3 &peg1, const glm::vec3 &peg2)
 {
-  glm::mat4 translateMat = glm::translate(position);
-  peg1 = glm::vec3(translateMat * glm::vec4(up * 1000.0f, 1.0f));
-  peg2 = glm::vec3(translateMat * glm::vec4(up * -1000.0f, 1.0f));
   glm::vec3 rayOrig = peg1;
   glm::vec3 rayVec = peg2 - peg1;
 
@@ -1444,14 +1441,14 @@ void CTrack::CollideWithChunk(const glm::vec3 &position, const glm::vec3 &up, in
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const glm::vec3 &up, glm::vec3 &p0, glm::vec3 &p1, glm::vec3 &p2, glm::vec3 &peg1, glm::vec3 &peg2)
+void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const glm::vec3 &up, glm::vec3 &p0, glm::vec3 &p1, glm::vec3 &p2, const glm::vec3 &peg1, const glm::vec3 &peg2)
 {
   int iClosestChunk = 0;
   int iPrevChunk = 0;
   glm::vec3 p3;
 
   //project entity pos to plane
-  CollideWithChunk(position, up, iClosestChunk, iPrevChunk, p0, p1, p2, p3, peg1, peg2);
+  CollideWithChunk(position, iClosestChunk, iPrevChunk, p0, p1, p2, p3, peg1, peg2);
   if (iClosestChunk < 0)
     return;
 

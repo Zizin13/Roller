@@ -208,11 +208,11 @@ public:
   bool ShouldShowChunkSection(int i, eShapeSection section);
   bool HasPitchedStunt();
   bool UseCenterStunt(int i);
-  void CollideWithChunk(const glm::vec3 &position, const glm::vec3 &up, int &iClosestChunk, int &iPrevChunk,
-                        glm::vec3 &p0, glm::vec3 &p1, glm::vec3 &p2, glm::vec3 &p3, glm::vec3 &peg1, glm::vec3 &peg2);
+  void CollideWithChunk(const glm::vec3 &position, int &iClosestChunk, int &iPrevChunk,
+                        glm::vec3 &p0, glm::vec3 &p1, glm::vec3 &p2, glm::vec3 &p3, const glm::vec3 &peg1, const glm::vec3 &peg2);
   void ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const glm::vec3 &up,
                       glm::vec3 &p0, glm::vec3 &p1, glm::vec3 &p2,
-                      glm::vec3 &peg1, glm::vec3 &peg2);
+                      const glm::vec3 &peg1, const glm::vec3 &peg2);
 
   static unsigned int GetSignedBitValueFromInt(int iValue);
   static int GetIntValueFromSignedBit(unsigned int uiValue);

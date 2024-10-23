@@ -224,12 +224,6 @@
     <ClInclude Include="MathHelpers.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DebugTriComponent.h">
-      <Filter>Header Files\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugLineComponent.h">
-      <Filter>Header Files\Entity</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Unmangler.cpp">
@@ -315,12 +309,6 @@
     </ClCompile>
     <ClCompile Include="MathHelpers.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugTriComponent.cpp">
-      <Filter>Source Files\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugLineComponent.cpp">
-      <Filter>Source Files\Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

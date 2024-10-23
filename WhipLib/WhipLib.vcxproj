@@ -257,8 +257,6 @@ exit 1</Command>
     <ClInclude Include="CarHelpers.h" />
     <ClInclude Include="Clock.h" />
     <ClInclude Include="Component.h" />
-    <ClInclude Include="DebugLineComponent.h" />
-    <ClInclude Include="DebugTriComponent.h" />
     <ClInclude Include="DisasmHelpers.h" />
     <ClInclude Include="DriveComponent.h" />
     <ClInclude Include="Entity.h" />
@@ -321,8 +319,6 @@ exit 1</Command>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CarHelpers.cpp" />
     <ClCompile Include="Clock.cpp" />
-    <ClCompile Include="DebugLineComponent.cpp" />
-    <ClCompile Include="DebugTriComponent.cpp" />
     <ClCompile Include="DisasmHelpers.cpp" />
     <ClCompile Include="DriveComponent.cpp" />
     <ClCompile Include="Entity.cpp" />

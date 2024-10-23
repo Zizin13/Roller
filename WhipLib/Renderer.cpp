@@ -139,7 +139,8 @@ CShapeData *CRenderer::MakeCarShape(eWhipModel model)
   pNewCarShape->pPal->LoadPalette(m_sFatDataDir + "/PALETTE.PAL");
   pNewCarShape->pTex = new CTexture();
   pNewCarShape->pTex->LoadTexture(m_sFatDataDir + "/" + sTexName, pNewCarShape->pPal);
-  pNewCarShape->pShapeData = CShapeFactory::GetShapeFactory().MakeModel(m_pShader, pNewCarShape->pTex, model);
+  pNewCarShape->pShapeData = NULL;
+  CShapeFactory::GetShapeFactory().MakeModel(&pNewCarShape->pShapeData, m_pShader, pNewCarShape->pTex, model);
 
   m_carShapeAy.emplace_back(pNewCarShape);
   return pNewCarShape->pShapeData;
@@ -153,7 +154,7 @@ CShapeData *CRenderer::MakeTrackShape(CTrack *pTrack)
     return NULL;
 
   CShapeData *pNewShape = NULL;
-  pNewShape = CShapeFactory::GetShapeFactory().MakeTrackSurface(pNewShape, m_pShader, pTrack, eShapeSection::EXPORT, true);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pNewShape, m_pShader, pTrack, eShapeSection::EXPORT, true);
   m_shapeAy.emplace_back(pNewShape);
   return pNewShape;
 }
@@ -165,7 +166,7 @@ void CRenderer::UpdateTrackShape(CTrack *pTrack, CShapeData *pShape)
   if (!m_pShader)
     return;
 
-  pShape = CShapeFactory::GetShapeFactory().MakeTrackSurface(pShape, m_pShader, pTrack, eShapeSection::EXPORT, true);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pShape, m_pShader, pTrack, eShapeSection::EXPORT, true);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -191,7 +192,7 @@ void CRenderer::MakeEnvirFloor(CTrack *pTrack)
     return;
 
   CShapeData *pNewShape = NULL;
-  pNewShape = CShapeFactory::GetShapeFactory().MakeEnvirFloor(pNewShape, m_pShader, pTrack, 0);
+  CShapeFactory::GetShapeFactory().MakeEnvirFloor(&pNewShape, m_pShader, pTrack, 0);
   if (pNewShape)
     m_shapeAy.emplace_back(pNewShape);
 }

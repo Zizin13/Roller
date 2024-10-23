@@ -22,16 +22,16 @@ public:
   CShapeFactory(CShapeFactory const &) = delete;
   void operator=(CShapeFactory const &) = delete;
 
-  CShapeData *MakeAxes(CShader *pShader);
+  void MakeAxes(CShapeData **pShape, CShader *pShader, CTexture *pTexture);
   void MakeDebugTri(CShapeData **pShape, CShader *pShader, CTexture *pTexture, const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &p2);
   void MakeDebugLine(CShapeData **pShape, CShader *pShader, CTexture *pTexture, const glm::vec3 &p0, const glm::vec3 &p1);
-  CShapeData *MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1);
-  CShapeData *MakeAudioMarker(CShader *pShader, CTexture *pTexture);
-  CShapeData *MakeStuntMarker(CShader *pShader, CTexture *pTexture);
-  CShapeData *MakeTrackSurface(CShapeData *pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false);
-  CShapeData *MakeEnvirFloor(CShapeData *pShape, CShader *pShader, CTrack *pTrack, int iIndex);
-  CShapeData *MakeAILine(CShapeData *pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast);
-  CShapeData *MakeSelectedChunks(CShapeData *pShape, CShader *pShader, CTrack *pTrack, int iStart, int iEnd);
+  void MakeModel(CShapeData **pShape, CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1);
+  void MakeAudioMarker(CShapeData **pShape, CShader *pShader, CTexture *pTexture);
+  void MakeStuntMarker(CShapeData **pShape, CShader *pShader, CTexture *pTexture);
+  void MakeTrackSurface(CShapeData **pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false);
+  void MakeEnvirFloor(CShapeData **pShape, CShader *pShader, CTrack *pTrack, int iIndex);
+  void MakeAILine(CShapeData **pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast);
+  void MakeSelectedChunks(CShapeData **pShape, CShader *pShader, CTrack *pTrack, int iStart, int iEnd);
   void MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CShapeData*> &signAy);
   void MakeAudio(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &audioAy);
   void MakeStunts(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &stuntAy);
@@ -42,9 +42,6 @@ public:
 
 private:
   CShapeFactory();
-
-  tVertex *MakeVertsAxes(uint32 &uiNumVerts);
-  uint32 *MakeIndicesAxes(uint32 &uiNumIndices);
 
   tVertex *MakeModelVerts(uint32 &numVertices, CTexture *pTexture, eWhipModel model, int iSignSurfaceType);
   uint32 *MakeModelIndices(uint32 &numIndices, eWhipModel model);

@@ -150,7 +150,8 @@ WLFUNC bool wlGetModel(uint8 *pBmpBuf,
   uint8 *pBmpData = tex.GenerateBitmapData(iBmpSize);
 
   //generate model
-  CShapeData *pShape = CShapeFactory::GetShapeFactory().MakeModel(NULL, &tex, model);
+  CShapeData *pShape = NULL;
+  CShapeFactory::GetShapeFactory().MakeModel(&pShape, NULL, &tex, model);
   if (!pShape)
     return bSuccess;
 
@@ -180,7 +181,8 @@ WLFUNC int wlLoadTrack(const char *szTrack)
   bSuccess |= pNewTrack->track.LoadTextures();
 
   if (bSuccess) {
-    pNewTrack->pTrackShape = CShapeFactory::GetShapeFactory().MakeTrackSurface(pNewTrack->pTrackShape, NULL, &pNewTrack->track, eShapeSection::EXPORT, true, false);
+    pNewTrack->pTrackShape = NULL;
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pNewTrack->pTrackShape, NULL, &pNewTrack->track, eShapeSection::EXPORT, true, false);
     CShapeFactory::GetShapeFactory().MakeSigns(NULL, &pNewTrack->track, pNewTrack->signAy);
     for (int i = 0; i < (int)pNewTrack->signAy.size(); ++i) {
       pNewTrack->signAy[i]->TransformVertsForExport();

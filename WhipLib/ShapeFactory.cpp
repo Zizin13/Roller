@@ -75,67 +75,44 @@ CShapeFactory::~CShapeFactory()
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeAxes(CShader *pShader)
+void CShapeFactory::MakeAxes(CShapeData **pShape, CShader *pShader, CTexture *pTexture)
 {
-  uint32 uiNumVerts;
-  struct tVertex *vertices = MakeVertsAxes(uiNumVerts);
-  if (!vertices)
-    return NULL;
-
-  uint32 uiNumIndices;
-  uint32 *indices = MakeIndicesAxes(uiNumIndices);
-  GLenum drawType = GL_LINES;
-
-  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
-  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
-  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
-
-  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, NULL, drawType);
-
-  if (vertices)
-    delete[] vertices;
-  if (indices)
-    delete[] indices;
-
-  return pRet;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-tVertex *CShapeFactory::MakeVertsAxes(uint32 &uiNumVerts)
-{
-  uiNumVerts = 4;
+  uint32 uiNumVerts = 4;
   tVertex *vertices = new tVertex[uiNumVerts];
-
-  vertices[0].position = glm::vec3(1, 0, 0);
-  vertices[1].position = glm::vec3(0, 1, 0);
-  vertices[2].position = glm::vec3(0, 0, 1);
+  vertices[0].position = glm::vec3(500, 0, 0);
+  vertices[1].position = glm::vec3(0, 500, 0);
+  vertices[2].position = glm::vec3(0, 0, 500);
   vertices[3].position = glm::vec3(0, 0, 0);
-  //TODO: fix
-  //vertices[0].color = glm::vec4(1, 0, 0, 1);
-  //vertices[1].color = glm::vec4(0, 1, 0, 1);
-  //vertices[2].color = glm::vec4(0, 0, 1, 1);
-  //vertices[3].color = glm::vec4(1, 1, 1, 1);
-
-  return vertices;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-uint32 *CShapeFactory::MakeIndicesAxes(uint32 &uiNumIndices)
-{
-  uiNumIndices = 6;
+  vertices[0].texCoords = pTexture->GetColorCenterCoordinates(0xe7); //red
+  vertices[1].texCoords = pTexture->GetColorCenterCoordinates(0xff); //green
+  vertices[2].texCoords = pTexture->GetColorCenterCoordinates(0xf3); //blue
+  vertices[2].texCoords = pTexture->GetColorCenterCoordinates(0x8f); //white
+  uint32 uiNumIndices = 6;
   uint32 *indices = new uint32[uiNumIndices];
   memset(indices, 0, uiNumIndices * sizeof(uint32));
-
   indices[0] = 3;
   indices[1] = 0;
   indices[2] = 3;
   indices[3] = 1;
   indices[4] = 3;
   indices[5] = 2;
+  GLenum drawType = GL_LINES;
 
-  return indices;
+  if (!*pShape) {
+    CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts, GL_DYNAMIC_DRAW);
+    CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices, GL_DYNAMIC_DRAW);
+    CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+
+    *pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture, drawType);
+  } else {
+    (*pShape)->m_pVertexBuf->Update(vertices, uiNumVerts);
+    (*pShape)->m_pIndexBuf->Update(indices, uiNumIndices);
+  }
+
+  if (vertices)
+    delete[] vertices;
+  if (indices)
+    delete[] indices;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -212,28 +189,34 @@ void CShapeFactory::MakeDebugLine(CShapeData **pShape, CShader *pShader, CTextur
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeModel(CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType)
+void CShapeFactory::MakeModel(CShapeData **pShape, CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeModelVerts(uiNumVerts, pTexture, model, iSignSurfaceType);
-  uint32 uiNumIndices;
-  uint32 *indices = MakeModelIndices(uiNumIndices, model);
+  GLenum drawType = GL_TRIANGLES;
 
-  CShapeData *pRet = NULL;
+  if (vertices) {
+    if (!*pShape) {
+      uint32 uiNumIndices;
+      uint32 *indices = MakeModelIndices(uiNumIndices, model);
 
-  if (vertices && indices) {
-    CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
-    CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
-    CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+      CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts, GL_DYNAMIC_DRAW);
+      CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices, GL_DYNAMIC_DRAW);
+      CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
-    pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture);
-    pRet->m_vertices = vertices;
-    pRet->m_uiNumVerts = uiNumVerts;
-    pRet->m_indices = indices;
-    pRet->m_uiNumIndices = uiNumIndices;
+      *pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture, drawType);
+      (*pShape)->m_vertices = vertices;
+      (*pShape)->m_uiNumVerts = uiNumVerts;
+      (*pShape)->m_indices = indices;
+      (*pShape)->m_uiNumIndices = uiNumIndices;
+    } else {
+      (*pShape)->m_pVertexBuf->Update(vertices, uiNumVerts);
+      if ((*pShape)->m_vertices)
+        delete[](*pShape)->m_vertices;
+      (*pShape)->m_vertices = vertices;
+      (*pShape)->m_uiNumVerts = uiNumVerts;
+    }
   }
-
-  return pRet;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -349,7 +332,7 @@ uint32 *CShapeFactory::MakeModelIndices(uint32 &numIndices, eWhipModel model)
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeAudioMarker(CShader *pShader, CTexture *pTexture)
+void CShapeFactory::MakeAudioMarker(CShapeData **pShape, CShader *pShader, CTexture *pTexture)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVertsAudioMarker(uiNumVerts, pTexture);
@@ -357,19 +340,21 @@ CShapeData *CShapeFactory::MakeAudioMarker(CShader *pShader, CTexture *pTexture)
   uint32 *indices = MakeIndicesAudioMarker(uiNumIndices);
   GLenum drawType = GL_TRIANGLES;
 
-  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
-  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
-  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+  if (vertices && indices) {
+    if (!*pShape) {
+      CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts, GL_DYNAMIC_DRAW);
+      CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices, GL_DYNAMIC_DRAW);
+      CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
-  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture, drawType);
+      *pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture, drawType);
+    } else {
+      (*pShape)->m_pVertexBuf->Update(vertices, uiNumVerts);
+      (*pShape)->m_pIndexBuf->Update(indices, uiNumIndices);
+    }
 
-  if (vertices)
     delete[] vertices;
-  if (indices)
     delete[] indices;
-
-  return pRet;
-
+  }
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -447,7 +432,7 @@ uint32 *CShapeFactory::MakeIndicesAudioMarker(uint32 &uiNumIndices)
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeStuntMarker(CShader *pShader, CTexture *pTexture)
+void CShapeFactory::MakeStuntMarker(CShapeData **pShape, CShader *pShader, CTexture *pTexture)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVertsStuntMarker(uiNumVerts, pTexture);
@@ -455,19 +440,21 @@ CShapeData *CShapeFactory::MakeStuntMarker(CShader *pShader, CTexture *pTexture)
   uint32 *indices = MakeIndicesStuntMarker(uiNumIndices);
   GLenum drawType = GL_TRIANGLES;
 
-  CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts);
-  CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
-  CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+  if (vertices && indices) {
+    if (!*pShape) {
+      CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts, GL_DYNAMIC_DRAW);
+      CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices, GL_DYNAMIC_DRAW);
+      CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
-  CShapeData *pRet = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture, drawType);
+      *pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture, drawType);
+    } else {
+      (*pShape)->m_pVertexBuf->Update(vertices, uiNumVerts);
+      (*pShape)->m_pIndexBuf->Update(indices, uiNumIndices);
+    }
 
-  if (vertices)
     delete[] vertices;
-  if (indices)
     delete[] indices;
-
-  return pRet;
-
+  }
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1274,13 +1261,13 @@ uint32 *CShapeFactory::MakeIndicesSurfaceWireframe(uint32 &numIndices, CTrack *p
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeTrackSurface(CShapeData *pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe)
+void CShapeFactory::MakeTrackSurface(CShapeData **pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = NULL;
   vertices = MakeVerts(uiNumVerts, section, pTrack, pTrack->m_pTex);
   if (!vertices)
-    return NULL;
+    return;
 
   if (bWireframe) {
     for (uint32 i = 0; i < uiNumVerts; ++i) {
@@ -1288,7 +1275,7 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShapeData *pShape, CShader *pShader
     }
   }
 
-  if (!pShape) {
+  if (!(*pShape)) {
     uint32 uiNumIndices;
     uint32 *indices = NULL;
     GLenum drawType = GL_TRIANGLES;
@@ -1306,39 +1293,32 @@ CShapeData *CShapeFactory::MakeTrackSurface(CShapeData *pShape, CShader *pShader
     CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
     CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
-    pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
-    pShape->m_vertices = vertices;
-    pShape->m_uiNumVerts = uiNumVerts;
-    pShape->m_indices = indices;
-    pShape->m_uiNumIndices = uiNumIndices;
+    (*pShape) = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
+    (*pShape)->m_vertices = vertices;
+    (*pShape)->m_uiNumVerts = uiNumVerts;
+    (*pShape)->m_indices = indices;
+    (*pShape)->m_uiNumIndices = uiNumIndices;
 
-    //if (indices)
-    //  delete[] indices;
   } else {
-    pShape->m_pVertexBuf->Update(vertices, uiNumVerts);
-    if (pShape->m_vertices)
-      delete[] pShape->m_vertices;
-    pShape->m_vertices = vertices;
-    pShape->m_uiNumVerts = uiNumVerts;
+    (*pShape)->m_pVertexBuf->Update(vertices, uiNumVerts);
+    if ((*pShape)->m_vertices)
+      delete[](*pShape)->m_vertices;
+    (*pShape)->m_vertices = vertices;
+    (*pShape)->m_uiNumVerts = uiNumVerts;
   }
-
-  //if (vertices)
-  //  delete[] vertices;
-
-  return pShape;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeEnvirFloor(CShapeData *pShape, CShader *pShader, CTrack *pTrack, int iIndex)
+void CShapeFactory::MakeEnvirFloor(CShapeData **pShape, CShader *pShader, CTrack *pTrack, int iIndex)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = NULL;
   vertices = MakeVertsEnvirFloor(uiNumVerts, pTrack, pTrack->m_pTex, iIndex);
   if (!vertices)
-    return NULL;
+    return;
 
-  if (!pShape) {
+  if (!(*pShape)) {
     uint32 uiNumIndices;
     uint32 *indices = NULL;
     GLenum drawType = GL_TRIANGLES;
@@ -1347,28 +1327,26 @@ CShapeData *CShapeFactory::MakeEnvirFloor(CShapeData *pShape, CShader *pShader, 
     CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts, GL_DYNAMIC_DRAW);
     CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
     CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
-    pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
+    (*pShape) = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
 
     if (indices)
       delete[] indices;
   } else {
-    pShape->m_pVertexBuf->Update(vertices, uiNumVerts);
+    (*pShape)->m_pVertexBuf->Update(vertices, uiNumVerts);
   }
 
   if (vertices)
     delete[] vertices;
-
-  return pShape;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeAILine(CShapeData *pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast)
+void CShapeFactory::MakeAILine(CShapeData **pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVerts(uiNumVerts, section, pTrack, pTrack->m_pTex);
   if (!vertices)
-    return NULL;
+    return;
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {
     switch (section) {
@@ -1387,7 +1365,7 @@ CShapeData *CShapeFactory::MakeAILine(CShapeData *pShape, CShader *pShader, CTra
     }
   }
 
-  if (!pShape) {
+  if (!(*pShape)) {
     uint32 uiNumIndices;
     uint32 *indices = MakeIndicesCenterline(uiNumIndices, pTrack, bAttachLast);
     GLenum drawType = GL_LINES;
@@ -1396,28 +1374,26 @@ CShapeData *CShapeFactory::MakeAILine(CShapeData *pShape, CShader *pShader, CTra
     CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices);
     CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
-    pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
+    (*pShape) = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
 
     if (indices)
       delete[] indices;
   } else {
-    pShape->m_pVertexBuf->Update(vertices, uiNumVerts);
+    (*pShape)->m_pVertexBuf->Update(vertices, uiNumVerts);
   }
 
   if (vertices)
     delete[] vertices;
-
-  return pShape;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeSelectedChunks(CShapeData *pShape, CShader *pShader, CTrack *pTrack, int iStart, int iEnd)
+void CShapeFactory::MakeSelectedChunks(CShapeData **pShape, CShader *pShader, CTrack *pTrack, int iStart, int iEnd)
 {
   uint32 uiNumVerts;
   struct tVertex *vertices = MakeVerts(uiNumVerts, eShapeSection::SELECTED, pTrack, pTrack->m_pTex);
   if (!vertices)
-    return NULL;
+    return;
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {
     vertices[i].texCoords = pTrack->m_pTex->GetColorCenterCoordinates(0xDA);
@@ -1427,23 +1403,21 @@ CShapeData *CShapeFactory::MakeSelectedChunks(CShapeData *pShape, CShader *pShad
   uint32 *indices = MakeIndicesSelectedChunks(uiNumIndices, iStart, iEnd, pTrack);
   GLenum drawType = GL_LINES;
 
-  if (!pShape) {
+  if (!(*pShape)) {
     CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts, GL_DYNAMIC_DRAW);
     CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices, GL_DYNAMIC_DRAW);
     CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
-    pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
+    (*pShape) = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
   } else {
-    pShape->m_pVertexBuf->Update(vertices, uiNumVerts);
-    pShape->m_pIndexBuf->Update(indices, uiNumIndices);
+    (*pShape)->m_pVertexBuf->Update(vertices, uiNumVerts);
+    (*pShape)->m_pIndexBuf->Update(indices, uiNumIndices);
   }
 
   if (vertices)
     delete[] vertices;
   if (indices)
     delete[] indices;
-
-  return pShape;
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -1455,7 +1429,8 @@ void CShapeFactory::MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CSha
       continue; //no signs in this chunk
 
     //make sign
-    CShapeData *pNewSign = MakeModel(pShader, pTrack->m_pBld, g_signAy[pTrack->m_chunkAy[i].iSignType].modelType, pTrack->m_chunkAy[i].iSignTexture);
+    CShapeData *pNewSign = NULL;
+    MakeModel(&pNewSign, pShader, pTrack->m_pBld, g_signAy[pTrack->m_chunkAy[i].iSignType].modelType, pTrack->m_chunkAy[i].iSignTexture);
     if (!pNewSign)
       continue;
 
@@ -1506,7 +1481,8 @@ void CShapeFactory::MakeAudio(CShader *pShader, CTrack *pTrack, std::vector<CSha
       continue; //no audio in this chunk
 
     //make marker
-    CShapeData *pNewMarker = MakeAudioMarker(pShader, pTrack->m_pTex);
+    CShapeData *pNewMarker = NULL;
+    MakeAudioMarker(&pNewMarker, pShader, pTrack->m_pTex);
 
     float fHeight = (float)1000.0f * -1.0f;
     glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[i].math.centerStunt);
@@ -1535,7 +1511,8 @@ void CShapeFactory::MakeStunts(CShader *pShader, CTrack *pTrack, std::vector<CSh
     }
 
     //make marker
-    CShapeData *pNewMarker = MakeStuntMarker(pShader, pTrack->m_pTex);
+    CShapeData *pNewMarker = NULL;
+    MakeStuntMarker(&pNewMarker, pShader, pTrack->m_pTex);
 
     float fHeight = (float)1000.0f * -1.0f;
     glm::mat4 translateMat = glm::translate(pTrack->m_chunkAy[it->first].math.centerStunt);

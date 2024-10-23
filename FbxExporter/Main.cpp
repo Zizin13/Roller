@@ -42,7 +42,8 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir)
   printf("...\n");
 
   //create shape data
-  CShapeData *pCar = CShapeFactory::GetShapeFactory().MakeModel(NULL, &carTex, carModel);
+  CShapeData *pCar = NULL;
+  CShapeFactory::GetShapeFactory().MakeModel(&pCar, NULL, &carTex, carModel);
   if (!pCar)
     return false;
 
@@ -91,11 +92,12 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir)
   //generate models
   CShapeData *pExportTrack = NULL;
   std::vector<CShapeData *> signAy;
-  pExportTrack = CShapeFactory::GetShapeFactory().MakeTrackSurface(pExportTrack,
-                                                                   NULL,
-                                                                   pTrack,
-                                                                   eShapeSection::EXPORT,
-                                                                   true);
+  pExportTrack = NULL;
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pExportTrack,
+                                                    NULL,
+                                                    pTrack,
+                                                    eShapeSection::EXPORT,
+                                                    true);
   CShapeFactory::GetShapeFactory().MakeSigns(NULL, pTrack, signAy);
   //signs need to be moved to the right position on track, this is normally done in the shader
   for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)

@@ -140,7 +140,7 @@ uint32 *CShapeFactory::MakeIndicesAxes(uint32 &uiNumIndices)
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CShapeFactory::MakeDebugTri(CShapeData *pShape, CShader *pShader, CTexture *pTexture, const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &p2)
+void CShapeFactory::MakeDebugTri(CShapeData **pShape, CShader *pShader, CTexture *pTexture, const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &p2)
 {
   uint32 uiNumVerts = 3;
   struct tVertex *vertices = new tVertex[uiNumVerts];
@@ -160,23 +160,54 @@ CShapeData *CShapeFactory::MakeDebugTri(CShapeData *pShape, CShader *pShader, CT
   indices[5] = 0;
   GLenum drawType = GL_LINES;
 
-  if (!pShape) {
+  if (!*pShape) {
     CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts, GL_DYNAMIC_DRAW);
     CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices, GL_DYNAMIC_DRAW);
     CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
-    pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture, drawType);
+    *pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture, drawType);
   } else {
-    pShape->m_pVertexBuf->Update(vertices, uiNumVerts);
-    pShape->m_pIndexBuf->Update(indices, uiNumIndices);
+    (*pShape)->m_pVertexBuf->Update(vertices, uiNumVerts);
+    (*pShape)->m_pIndexBuf->Update(indices, uiNumIndices);
   }
 
   if (vertices)
     delete[] vertices;
   if (indices)
     delete[] indices;
+}
 
-  return pShape;
+//-------------------------------------------------------------------------------------------------
+
+void CShapeFactory::MakeDebugLine(CShapeData **pShape, CShader *pShader, CTexture *pTexture, const glm::vec3 &p0, const glm::vec3 &p1)
+{
+  uint32 uiNumVerts = 2;
+  struct tVertex *vertices = new tVertex[uiNumVerts];
+  vertices[0].position = p0;
+  vertices[1].position = p1;
+  vertices[0].texCoords = pTexture->GetColorCenterCoordinates(0xb7);
+  vertices[1].texCoords = pTexture->GetColorCenterCoordinates(0xb7);
+  uint32 uiNumIndices = 2;
+  uint32 *indices = new uint32[uiNumIndices];
+  indices[0] = 0;
+  indices[1] = 1;
+  GLenum drawType = GL_LINES;
+
+  if (!*pShape) {
+    CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts, GL_DYNAMIC_DRAW);
+    CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices, GL_DYNAMIC_DRAW);
+    CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
+
+    *pShape = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTexture, drawType);
+  } else {
+    (*pShape)->m_pVertexBuf->Update(vertices, uiNumVerts);
+    (*pShape)->m_pIndexBuf->Update(indices, uiNumIndices);
+  }
+
+  if (vertices)
+    delete[] vertices;
+  if (indices)
+    delete[] indices;
 }
 
 //-------------------------------------------------------------------------------------------------

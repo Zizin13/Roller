@@ -1,4 +1,4 @@
-#include "DebugTriComponent.h"
+#include "DebugLineComponent.h"
 #include "Renderer.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -6,24 +6,23 @@
 #endif
 //-------------------------------------------------------------------------------------------------
 
-CDebugTriComponent::CDebugTriComponent()
+CDebugLineComponent::CDebugLineComponent()
   : m_pShapeData(NULL)
   , m_pTex(NULL)
   , m_pRenderer(NULL)
-  , p0(0, 0, 0)
-  , p1(0, 5000, 0)
-  , p2(0, 0, 5000)
+  , p0(100, 0, 0)
+  , p1(100, 5000, 0)
 {
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CDebugTriComponent::Update()
+void CDebugLineComponent::Update()
 {
   if (!m_pRenderer || !m_pTex)
     return;
 
-  m_pRenderer->MakeDebugTri(&m_pShapeData, m_pTex, p0, p1, p2);
+  m_pRenderer->MakeDebugLine(&m_pShapeData, m_pTex, p0, p1);
 }
 
 //-------------------------------------------------------------------------------------------------

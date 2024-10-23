@@ -198,17 +198,30 @@ void CRenderer::MakeEnvirFloor(CTrack *pTrack)
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CRenderer::MakeDebugTri(CShapeData *pShape, CTexture *pTexture,
-                                    const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &p2)
+void CRenderer::MakeDebugTri(CShapeData **pShape, CTexture *pTexture,
+                             const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &p2)
 {
   if (!m_pShader || !pTexture)
-    return NULL;
+    return;
 
-  bool bNew = !pShape;
-  pShape = CShapeFactory::GetShapeFactory().MakeDebugTri(pShape, m_pShader, pTexture, p0, p1, p2);
+  bool bNew = !(*pShape);
+  CShapeFactory::GetShapeFactory().MakeDebugTri(pShape, m_pShader, pTexture, p0, p1, p2);
   if (bNew)
-    m_shapeAy.emplace_back(pShape);
-  return pShape;
+    m_shapeAy.emplace_back((*pShape));
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CRenderer::MakeDebugLine(CShapeData **pShape, CTexture *pTexture,
+                             const glm::vec3 &p0, const glm::vec3 &p1)
+{
+  if (!m_pShader || !pTexture)
+    return;
+
+  bool bNew = !(*pShape);
+  CShapeFactory::GetShapeFactory().MakeDebugLine(pShape, m_pShader, pTexture, p0, p1);
+  if (bNew)
+    m_shapeAy.emplace_back((*pShape));
 }
 
 //-------------------------------------------------------------------------------------------------

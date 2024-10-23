@@ -31,8 +31,10 @@ public:
   void UpdateTrackShape(CTrack *pTrack, CShapeData *pShape);
   void MakeSigns(CTrack *pTrack);
   void MakeEnvirFloor(CTrack *pTrack);
-  CShapeData *MakeDebugTri(CShapeData *pShape, CTexture *pTexture,
-                           const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &p2);
+  void MakeDebugTri(CShapeData **pShape, CTexture *pTexture,
+                    const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &p2);
+  void MakeDebugLine(CShapeData **pShape, CTexture *pTexture,
+                    const glm::vec3 &p0, const glm::vec3 &p1);
 
 private:
   std::string m_sFatDataDir;

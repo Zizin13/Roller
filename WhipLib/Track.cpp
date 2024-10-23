@@ -1374,53 +1374,36 @@ void CTrack::ProjectToTrack(glm::vec3 &position, glm::mat4 &rotationMat, const g
 {
   float fMinDist = FLT_MAX;
   int iClosestChunk = 0;
-  glm::vec3 p1, p2, p3;
-  for (int i = 1; i < (int)m_chunkAy.size() - 1; ++i) {
+  int iPrevChunk = 0;
+  for (int i = 0; i < (int)m_chunkAy.size(); ++i) {
+    int iPrevIndex = (int)m_chunkAy.size() - 1;
+    if (i > 0)
+      iPrevIndex = i - 1;
+
     float fDist = MathHelpers::Dist(position, m_chunkAy[i].math.lLane) +
       MathHelpers::Dist(position, m_chunkAy[i].math.rLane) +
-      MathHelpers::Dist(position, m_chunkAy[i - 1].math.lLane);
+      MathHelpers::Dist(position, m_chunkAy[iPrevIndex].math.lLane) +
+      MathHelpers::Dist(position, m_chunkAy[iPrevIndex].math.rLane);
     if (fDist < fMinDist) {
       fMinDist = fDist;
       iClosestChunk = i;
-      p1 = m_chunkAy[i].math.lLane;
-      p2 = m_chunkAy[i].math.rLane;
-      p3 = m_chunkAy[i - 1].math.lLane;
-    }
-    fDist = MathHelpers::Dist(position, m_chunkAy[i].math.rLane) +
-      MathHelpers::Dist(position, m_chunkAy[i - 1].math.lLane) +
-      MathHelpers::Dist(position, m_chunkAy[i - 1].math.rLane);
-    if (fDist < fMinDist) {
-      fMinDist = fDist;
-      iClosestChunk = i;
-      p1 = m_chunkAy[i].math.rLane;
-      p2 = m_chunkAy[i - 1].math.rLane;
-      p3 = m_chunkAy[i - 1].math.lLane;
+      iPrevChunk = iPrevIndex;
     }
   }
-  glm::vec3 projectedPoint = MathHelpers::ProjectPointOntoPlane(position, p1, p2, p3);
+
+  //project entity pos to plane
+  glm::vec3 projectedPoint = MathHelpers::ProjectPointOntoPlane(position, 
+                                                                m_chunkAy[iPrevChunk].math.center,
+                                                                m_chunkAy[iClosestChunk].math.center,
+                                                                m_chunkAy[iClosestChunk].math.rLane);
   position = projectedPoint;
 
   //get percentage into chunk
-  glm::vec3 endMinusBegin = m_chunkAy[iClosestChunk].math.center - m_chunkAy[iClosestChunk - 1].math.center;
-  glm::vec3 posMinusBegin = projectedPoint - m_chunkAy[iClosestChunk - 1].math.center;
-  float fScalarProjection = glm::dot(posMinusBegin, glm::normalize(endMinusBegin));
-  //float fL1 = glm::length(projectedPosMinusBegin);
-  float fL2 = glm::length(endMinusBegin);
-  float fPercentIntoChunk = fScalarProjection / fL2;
-  //char szOut[100];
-  //snprintf(szOut, sizeof(szOut), "Chunk %d, Percent: %.2f, SProj: %.2f, Len: %.2f\n", iClosestChunk, fPercentIntoChunk, fScalarProjection, fL2);
-  //OutputDebugString(szOut);
+  float fPercentIntoChunk = MathHelpers::GetProjectionPercentageAlongSegment(position,
+                                                                             m_chunkAy[iPrevChunk].math.center,
+                                                                             m_chunkAy[iClosestChunk].math.center);
 
-  ////find track normal
-  //glm::vec3 tl1 = m_chunkAy[iClosestChunk - 1].math.lLane - m_chunkAy[iClosestChunk].math.lLane;
-  //glm::vec3 tl2 = m_chunkAy[iClosestChunk].math.rLane - m_chunkAy[iClosestChunk].math.lLane;
-  //glm::vec3 normal1 = glm::normalize(glm::cross(tl1, tl2));
-  //
-  //glm::vec3 tl3 = m_chunkAy[iClosestChunk].math.lLane - m_chunkAy[iClosestChunk+1].math.lLane;
-  //glm::vec3 tl4 = m_chunkAy[iClosestChunk+1].math.rLane - m_chunkAy[iClosestChunk+1].math.lLane;
-  //glm::vec3 normal2 = glm::normalize(glm::cross(tl3, tl4));
-
-  glm::vec3 normal = glm::mix(m_chunkAy[iClosestChunk].math.normal, m_chunkAy[iClosestChunk + 1].math.normal, fPercentIntoChunk);
+  glm::vec3 normal = glm::mix(m_chunkAy[iPrevChunk].math.normal, m_chunkAy[iClosestChunk].math.normal, fPercentIntoChunk);
 
   //find rotation axis
   glm::vec3 rotationAxis = glm::normalize(glm::cross(normal, up));

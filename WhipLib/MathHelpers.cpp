@@ -41,3 +41,15 @@ glm::vec3 MathHelpers::ProjectPointOntoPlane(const glm::vec3 &pos, const glm::ve
 }
 
 //-------------------------------------------------------------------------------------------------
+
+float MathHelpers::GetProjectionPercentageAlongSegment(const glm::vec3 &pos, const glm::vec3 &begin, const glm::vec3 &end)
+{
+  glm::vec3 endMinusBegin = end - begin;
+  glm::vec3 posMinusBegin = pos - begin;
+  float fScalarProjection = glm::dot(posMinusBegin, glm::normalize(endMinusBegin));
+  float fL2 = glm::length(endMinusBegin);
+  float fPercent = fScalarProjection / fL2;
+  return fPercent;
+}
+
+//-------------------------------------------------------------------------------------------------

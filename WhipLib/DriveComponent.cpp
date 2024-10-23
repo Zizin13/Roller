@@ -4,7 +4,6 @@
 #include "Entity.h"
 #include "MathHelpers.h"
 #include "Track.h"
-#include "glm.hpp"
 #include "gtx\transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -26,33 +25,36 @@ void CDriveComponent::Update()
   if (!m_pContainingEntity->m_bAcceptControls)
     return;
 
+  glm::vec3 newPos = m_pContainingEntity->m_position;
   if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_FORWARD)
-    MoveForward();
+    MoveForward(newPos);
   if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_LEFT)
     TurnLeft();
   if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_BACKWARD)
-    MoveBackward();
+    MoveBackward(newPos);
   if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_RIGHT)
     TurnRight();
+
+  m_pContainingEntity->m_position += (newPos - m_pContainingEntity->m_position) * 0.9f;// 300.0f * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CDriveComponent::MoveForward()
+void CDriveComponent::MoveForward(glm::vec3 &newPos)
 {
-  m_pContainingEntity->m_position += m_fMovementSpeed * m_pContainingEntity->GetOrientation() * CGameClock::GetGameClock().DeltaTimeLastFrame();
+  newPos += m_fMovementSpeed * m_pContainingEntity->GetOrientation() * CGameClock::GetGameClock().DeltaTimeLastFrame();
   if (m_pTrack) {
-    m_pTrack->ProjectToTrack(m_pContainingEntity->m_position, m_pContainingEntity->m_rotationMat, m_pContainingEntity->GetUp());
+    m_pTrack->ProjectToTrack(newPos, m_pContainingEntity->m_rotationMat, m_pContainingEntity->GetUp());
   }
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CDriveComponent::MoveBackward()
+void CDriveComponent::MoveBackward(glm::vec3 &newPos)
 {
-  m_pContainingEntity->m_position -= m_fMovementSpeed * m_pContainingEntity->GetOrientation() * CGameClock::GetGameClock().DeltaTimeLastFrame();
+  newPos -= m_fMovementSpeed * m_pContainingEntity->GetOrientation() * CGameClock::GetGameClock().DeltaTimeLastFrame();
   if (m_pTrack) {
-    m_pTrack->ProjectToTrack(m_pContainingEntity->m_position, m_pContainingEntity->m_rotationMat, m_pContainingEntity->GetUp());
+    m_pTrack->ProjectToTrack(newPos, m_pContainingEntity->m_rotationMat, m_pContainingEntity->GetUp());
   }
 }
 

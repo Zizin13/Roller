@@ -2,6 +2,7 @@
 #define _WHIPLIB_DRIVECOMPONENT_H
 //-------------------------------------------------------------------------------------------------
 #include "Component.h"
+#include "glm.hpp"
 //-------------------------------------------------------------------------------------------------
 class CTrack;
 //-------------------------------------------------------------------------------------------------
@@ -18,8 +19,8 @@ public:
   CTrack *m_pTrack;
 
 private:
-  void MoveForward();
-  void MoveBackward();
+  void MoveForward(glm::vec3 &newPos);
+  void MoveBackward(glm::vec3 &newPos);
   void TurnLeft();
   void TurnRight();
 };

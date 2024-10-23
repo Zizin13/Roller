@@ -2298,10 +2298,10 @@ uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSectio
     if (!bAttachLast && i == 0)
       continue;
 
-    indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 3 + 4;
-    indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 2 + 4;
-    indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 0 + 4;
-    indices[i * uiNumIndicesPerChunk + 3] = (i * uiNumVertsPerChunk) + 3 + 4;
+    indices[i * uiNumIndicesPerChunk + 0] = (i * uiNumVertsPerChunk) + 2 + 4;
+    indices[i * uiNumIndicesPerChunk + 1] = (i * uiNumVertsPerChunk) + 1 + 4;
+    indices[i * uiNumIndicesPerChunk + 2] = (i * uiNumVertsPerChunk) + 3 + 4;
+    indices[i * uiNumIndicesPerChunk + 3] = (i * uiNumVertsPerChunk) + 2 + 4;
     indices[i * uiNumIndicesPerChunk + 4] = (i * uiNumVertsPerChunk) + 0 + 4;
     indices[i * uiNumIndicesPerChunk + 5] = (i * uiNumVertsPerChunk) + 1 + 4;
 
@@ -2336,10 +2336,10 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
     int iIndicesRunner = 0;
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::CENTER))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::CENTER))) {
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 4;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 4;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 4;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 4;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 4;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 4;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 4;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 4;
 
@@ -2352,10 +2352,10 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LSHOULDER))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LSHOULDER))) {
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 12;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 12;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 12;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 12;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 12;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 12;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 12;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 12;
 
@@ -2368,10 +2368,10 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RSHOULDER))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RSHOULDER))) {
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 20;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 20;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 20;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 20;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 20;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 20;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 20;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 20;
 
@@ -2384,10 +2384,10 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LWALL))) {
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 28;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 28;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 28;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 28;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 28;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 28;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 28;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 28;
 
@@ -2400,10 +2400,10 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RWALL))) {
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 36;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 36;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 36;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 36;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 36;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 36;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 36;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 36;
 
@@ -2416,10 +2416,10 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::ROOF))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::ROOF))) {
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 44;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 44;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 44;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 44;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 44;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 44;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 44;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 44;
 
@@ -2432,10 +2432,10 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::OWALLFLOOR))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::OWALLFLOOR))) {
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 52;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 52;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 52;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 52;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 52;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 52;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 52;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 52;
 
@@ -2448,10 +2448,10 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LLOWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LLOWALL))) {
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 60;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 60;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 60;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 60;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 60;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 60;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 60;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 60;
 
@@ -2464,10 +2464,10 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RLOWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RLOWALL))) {
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 68;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 68;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 68;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 68;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 68;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 68;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 68;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 68;
 
@@ -2480,26 +2480,26 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack)
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LUOWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LUOWALL))) {
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 76;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 76;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 76;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 76;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 76;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 76;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 76;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 76;
 
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 72;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 72;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 72;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 72;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 72;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 72;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 72;
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RUOWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RUOWALL))) {
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 84;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 84;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 84;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + 84;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 84;
-      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + 84;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + 84;
       indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + 84;
 

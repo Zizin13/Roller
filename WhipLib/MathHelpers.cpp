@@ -52,3 +52,41 @@ float MathHelpers::GetProjectionPercentageAlongSegment(const glm::vec3 &pos, con
 }
 
 //-------------------------------------------------------------------------------------------------
+
+bool MathHelpers::RayCollisionTriangle(const glm::vec3 &pos1, const glm::vec3 &pos2, const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &p2)
+{
+  constexpr float fEpsilon = std::numeric_limits<float>::epsilon();
+  glm::vec3 edge1;
+  glm::vec3 edge2;
+  glm::vec3 p, q, tv;
+  float det, invDet, u, v, t;
+
+  edge1 = p1 - p0;
+  edge2 = p2 - p0;
+  p = glm::cross(pos2, edge2);
+  det = glm::dot(edge1, p);
+
+  //parallel to triangle
+  if ((det > -fEpsilon) && (det < fEpsilon)) return false;
+
+  invDet = 1.0f / det;
+  //distance from p0 to ray origin
+  tv = pos2 - p1;
+  u = glm::dot(tv, p) * invDet;
+  //not in triangle
+  if ((u < 0.0f) || (u > 1.0f)) return false;
+
+  q = glm::cross(tv, edge1);
+  v = glm::dot(pos2, q) * invDet;
+  //intersects but outside triangle
+  if ((v < 0.0f) || ((u + v) > 1.0f)) return false;
+
+  t = glm::dot(edge2, q) * invDet;
+  if (t > fEpsilon) {
+    //ray intersection
+    return true;
+  }
+  //line intersection but not ray intersection
+  return false;
+}
+//-------------------------------------------------------------------------------------------------

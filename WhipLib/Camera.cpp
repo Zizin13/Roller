@@ -7,8 +7,6 @@
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
 //-------------------------------------------------------------------------------------------------
-#define CAMERA_TIMER 0.024f
-//-------------------------------------------------------------------------------------------------
 const glm::vec3 CCamera::s_UP(0.0f, 1.0f, 0.0f);
 //-------------------------------------------------------------------------------------------------
 CCamera::CCamera()
@@ -23,19 +21,13 @@ CCamera::CCamera()
 
 void CCamera::Update()
 {
-  //m_fTimer += CGameClock::GetGameClock().DeltaTimeLastFrame();
-  //
-  //if (m_fTimer > CAMERA_TIMER) {
-  //  m_fTimer = m_fTimer - CAMERA_TIMER;
+  glm::vec3 desiredViewDirection = m_pContainingEntity->GetOrientation();
+  glm::mat4 translateMat = glm::translate(m_pContainingEntity->m_position);
+  glm::vec3 useOffset = glm::vec4(m_offset, 1.0f) * m_pContainingEntity->m_rotationMat;
+  glm::vec3 desiredPosition = m_pContainingEntity->m_position + useOffset;\
 
-    glm::vec3 desiredViewDirection = m_pContainingEntity->GetOrientation();
-    glm::mat4 translateMat = glm::translate(m_pContainingEntity->m_position);
-    glm::vec3 useOffset = glm::vec4(m_offset, 1.0f) * m_pContainingEntity->m_rotationMat;
-    glm::vec3 desiredPosition = m_pContainingEntity->m_position + useOffset;
-
-    m_viewDirection = 0.9f * m_viewDirection + 0.1f * desiredViewDirection;
-    m_position = 0.9f * m_position + 0.1f * desiredPosition;
-  //}
+  m_viewDirection += (desiredViewDirection - m_viewDirection) * 25.0f * CGameClock::GetGameClock().DeltaTimeLastFrame();
+  m_position += (desiredPosition - m_position) * 25.0f * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------

@@ -51,6 +51,7 @@ Whiplash/Fatal Racing track editor, FBX resource converter, and DLL for loading 
 - TRACK20: has the green walls too
 - TRACK22: end of tunnel walls are gone facing backwards (335)
 - TRACK24: moving pothole animates too quickly (27)
+- create separate model for transparent track sections to be drawn last
 - outer floor at ends of corkscrews
 - z fighting is annoying
 - mission car lacks pink color changing

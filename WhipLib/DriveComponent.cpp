@@ -53,8 +53,8 @@ void CDriveComponent::MoveForward(glm::vec3 &newPos)
 
     //make peg
     glm::mat4 translateMat = glm::translate(m_pContainingEntity->m_position);
-    peg1 = glm::vec3(translateMat * glm::vec4(m_pContainingEntity->GetUp() * 1000.0f, 1.0f));
-    peg2 = glm::vec3(translateMat * glm::vec4(m_pContainingEntity->GetUp() * -1000.0f, 1.0f));
+    peg1 = glm::vec3(translateMat * glm::vec4(m_pContainingEntity->GetUp() * 500.0f, 1.0f));
+    peg2 = glm::vec3(translateMat * glm::vec4(m_pContainingEntity->GetUp() * -500.0f, 1.0f));
 
     //project
     m_pTrack->ProjectToTrack(newPos, m_pContainingEntity->m_rotationMat, m_pContainingEntity->GetUp(), p0, p1, p2, peg1, peg2);
@@ -77,8 +77,8 @@ void CDriveComponent::MoveBackward(glm::vec3 &newPos)
 
     //make peg
     glm::mat4 translateMat = glm::translate(m_pContainingEntity->m_position);
-    peg1 = glm::vec3(translateMat * glm::vec4(m_pContainingEntity->GetUp() * 1000.0f, 1.0f));
-    peg2 = glm::vec3(translateMat * glm::vec4(m_pContainingEntity->GetUp() * -1000.0f, 1.0f));
+    peg1 = glm::vec3(translateMat * glm::vec4(m_pContainingEntity->GetUp() * 500.0f, 1.0f));
+    peg2 = glm::vec3(translateMat * glm::vec4(m_pContainingEntity->GetUp() * -500.0f, 1.0f));
 
     //project
     m_pTrack->ProjectToTrack(newPos, m_pContainingEntity->m_rotationMat, m_pContainingEntity->GetUp(), p0, p1, p2, peg1, peg2);

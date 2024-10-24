@@ -125,7 +125,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\external\glew\lib\Debug\x64;..\external\FBX\lib\x64\debug</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Advapi32.lib;Shlwapi.lib;libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;glew32sd.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalDependencies>user32.lib;Advapi32.lib;Shlwapi.lib;libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;glew32sd.lib;opengl32.lib</AdditionalDependencies>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Lib>
@@ -211,7 +211,7 @@ exit 1</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\external\glew\lib\Release\x64;..\external\FBX\lib\x64\release</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Advapi32.lib;Shlwapi.lib;libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;glew32s.lib;opengl32.lib</AdditionalDependencies>
+      <AdditionalDependencies>user32.lib;Advapi32.lib;Shlwapi.lib;libfbxsdk-mt.lib;libxml2-mt.lib;zlib-mt.lib;glew32s.lib;opengl32.lib</AdditionalDependencies>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Lib>

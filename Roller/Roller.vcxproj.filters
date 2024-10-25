@@ -54,6 +54,9 @@
     <ClCompile Include="..\external\imgui\backends\imgui_impl_opengl3.cpp">
       <Filter>Source Files\imgui\backends</Filter>
     </ClCompile>
+    <ClCompile Include="DebugGui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GlfwKeyMapper.h">
@@ -88,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="..\external\imgui\backends\imgui_impl_opengl3_loader.h">
       <Filter>Header Files\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugGui.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

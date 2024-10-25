@@ -215,6 +215,7 @@ exit 1</Command>
     <ClCompile Include="..\external\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\external\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\external\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="DebugGui.cpp" />
     <ClCompile Include="GlfwKeyMapper.cpp" />
     <ClCompile Include="Roller.cpp" />
   </ItemGroup>
@@ -228,6 +229,7 @@ exit 1</Command>
     <ClInclude Include="..\external\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\external\imgui\imstb_textedit.h" />
     <ClInclude Include="..\external\imgui\imstb_truetype.h" />
+    <ClInclude Include="DebugGui.h" />
     <ClInclude Include="GlfwKeyMapper.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

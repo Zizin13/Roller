@@ -32,6 +32,7 @@ Whiplash/Fatal Racing track editor, FBX resource converter, and DLL for loading 
 
 ## External dependencies used:
 * Qt 5.15.2: https://download.qt.io/archive/qt/5.15/5.15.2/single/qt-everywhere-src-5.15.2.zip.mirrorlist
+* imgui 1.91.4: https://github.com/ocornut/imgui
 * Glew 2.1.0: https://sourceforge.net/projects/glew/files/glew/2.1.0/
 * GLM 1.0.1: https://github.com/g-truc/glm
 * GLFW 3.4: https://www.glfw.org/

@@ -112,7 +112,7 @@
       <PreprocessorDefinitions>GLM_ENABLE_EXPERIMENTAL;GLEW_STATIC;IS_WINDOWS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>../WhipLib;../external/glm;../external/glew/include/GL;../external/glfw/include/GLFW;../external/stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../WhipLib;../external/glm;../external/glew/include/GL;../external/glfw/include/GLFW;../external/stb;../external/imgui;../external/imgui/backends;../external/glfw/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -134,6 +134,7 @@ echo f | xcopy ..\external\glew\GLEW_License.txt .\$(OutDir)GLEW_License.txt /R 
 echo f | xcopy ..\external\glm\copying.txt .\$(OutDir)GLM_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\FBX\FBX_LICENSE.rtf .\$(OutDir)FBX_License.rtf /R /Y /d /i &gt; null
 echo f | xcopy ..\external\stb\LICENSE.txt .\$(OutDir)STB_License.txt /R /Y /d /i &gt; null
+echo f | xcopy ..\external\imgui\LICENSE.txt .\$(OutDir)IMGUI_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\Roller_LicensedLibs.txt .\$(OutDir)LicensedLibs.txt /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
@@ -162,7 +163,7 @@ exit 1</Command>
       <PreprocessorDefinitions>GLM_ENABLE_EXPERIMENTAL;GLEW_STATIC;IS_WINDOWS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>../WhipLib;../external/glm;../external/glew/include/GL;../external/glfw/include/GLFW;../external/stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../WhipLib;../external/glm;../external/glew/include/GL;../external/glfw/include/GLFW;../external/stb;../external/imgui;../external/imgui/backends;../external/glfw/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -186,6 +187,7 @@ echo f | xcopy ..\external\glew\GLEW_License.txt .\$(OutDir)GLEW_License.txt /R 
 echo f | xcopy ..\external\glm\copying.txt .\$(OutDir)GLM_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\FBX\FBX_LICENSE.rtf .\$(OutDir)FBX_License.rtf /R /Y /d /i &gt; null
 echo f | xcopy ..\external\stb\LICENSE.txt .\$(OutDir)STB_License.txt /R /Y /d /i &gt; null
+echo f | xcopy ..\external\imgui\LICENSE.txt .\$(OutDir)IMGUI_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\Roller_LicensedLibs.txt .\$(OutDir)LicensedLibs.txt /R /Y /d /i &gt; null
 if %errorlevel% NEQ 0 goto Failed
 
@@ -206,10 +208,26 @@ exit 1</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\external\imgui\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\external\imgui\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\external\imgui\imgui.cpp" />
+    <ClCompile Include="..\external\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\external\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\external\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\external\imgui\imgui_widgets.cpp" />
     <ClCompile Include="GlfwKeyMapper.cpp" />
     <ClCompile Include="Roller.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\external\imgui\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="..\external\imgui\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\external\imgui\backends\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="..\external\imgui\imconfig.h" />
+    <ClInclude Include="..\external\imgui\imgui.h" />
+    <ClInclude Include="..\external\imgui\imgui_internal.h" />
+    <ClInclude Include="..\external\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\external\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\external\imgui\imstb_truetype.h" />
     <ClInclude Include="GlfwKeyMapper.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

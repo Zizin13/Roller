@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\imgui">
+      <UniqueIdentifier>{15353e60-b1d9-482c-b7b3-b6506f1ecfd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\imgui">
+      <UniqueIdentifier>{a5ed6505-1a3b-4590-81b0-a6a956759cd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\imgui\backends">
+      <UniqueIdentifier>{6ff385f2-c6f7-4302-86a4-53fa668244e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\imgui\backends">
+      <UniqueIdentifier>{02302af1-50d9-4f22-b732-a3d788f95e83}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Roller.cpp">
@@ -21,6 +33,27 @@
     <ClCompile Include="GlfwKeyMapper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\external\imgui\imgui.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\imgui\imgui_demo.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\imgui\imgui_draw.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\imgui\imgui_tables.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\imgui\imgui_widgets.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\imgui\backends\imgui_impl_glfw.cpp">
+      <Filter>Source Files\imgui\backends</Filter>
+    </ClCompile>
+    <ClCompile Include="..\external\imgui\backends\imgui_impl_opengl3.cpp">
+      <Filter>Source Files\imgui\backends</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GlfwKeyMapper.h">
@@ -28,6 +61,33 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\imgui\imconfig.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\imgui\imgui.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\imgui\imgui_internal.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\imgui\imstb_rectpack.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\imgui\imstb_textedit.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\imgui\imstb_truetype.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\imgui\backends\imgui_impl_glfw.h">
+      <Filter>Header Files\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\imgui\backends\imgui_impl_opengl3.h">
+      <Filter>Header Files\imgui\backends</Filter>
+    </ClInclude>
+    <ClInclude Include="..\external\imgui\backends\imgui_impl_opengl3_loader.h">
+      <Filter>Header Files\imgui\backends</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -73,28 +73,8 @@ int main(int argc, char *argv[])
   CDebugGui debugGui;
   debugGui.Init(pWindow);
 
-#if defined(_DEBUG)
-  //init framerate test
-  float fTimer = 0.0f;
-  int iNumFrames = 0;
-#endif
-
   //Loop until the user closes the window
   while (!glfwWindowShouldClose(pWindow)) {
-#if defined(_DEBUG)
-    //calculate framerate
-    fTimer += CGameClock::GetGameClock().DeltaTimeLastFrame();
-    ++iNumFrames;
-    if (fTimer >= 1.0f) {
-      char szFramerate[100];
-      float fTest = CGameClock::GetGameClock().DeltaTimeLastFrame();
-      snprintf(szFramerate, sizeof(szFramerate), "%d fps, dt = %.2f\n", iNumFrames, fTest);
-      //OutputDebugString(szFramerate);
-      fTimer = 0.0f;
-      iNumFrames = 0;
-    }
-#endif
-
     //get window size
     int iWidth, iHeight = 0;
     glfwGetWindowSize(pWindow, &iWidth, &iHeight);

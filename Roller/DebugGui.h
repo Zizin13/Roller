@@ -17,6 +17,9 @@ private:
   float GetDpi();
 
   GLFWwindow *m_pWindow;
+  float m_fTimer;
+  int m_iNumFrames;
+  int m_iFramerate;
 };
 
 //-------------------------------------------------------------------------------------------------

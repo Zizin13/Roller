@@ -3,6 +3,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "GameClock.h"
 #ifdef IS_WINDOWS
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
@@ -16,6 +17,9 @@
 
 CDebugGui::CDebugGui()
   : m_pWindow(NULL)
+  , m_fTimer(0.0f)
+  , m_iNumFrames(0)
+  , m_iFramerate(0)
 {
 
 }
@@ -70,6 +74,15 @@ void CDebugGui::Update()
     return;
   }
 
+  //calculate framerate
+  m_fTimer += CGameClock::GetGameClock().DeltaTimeLastFrame();
+  ++m_iNumFrames;
+  if (m_fTimer >= 1.0f) {
+    m_iFramerate = m_iNumFrames;
+    m_fTimer = 0.0f;
+    m_iNumFrames = 0;
+  }
+
   //imgui
   //if (glfwGetWindowAttrib(m_pWindow, GLFW_ICONIFIED) != 0) {
   //  ImGui_ImplGlfw_Sleep(10);
@@ -78,8 +91,8 @@ void CDebugGui::Update()
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
-  ImGui::Begin("Hello, world!");
-  ImGui::Text("This is some useful text.");
+  ImGui::Begin("Debug Menu");
+  ImGui::Text("%d fps", m_iFramerate);
   ImGui::End();
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

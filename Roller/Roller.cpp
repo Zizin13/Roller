@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
   //init test scene
   CScene testScene;
   testScene.Init("C:\\WHIP\\WHIPLASH\\FATDATA");
-  testScene.LoadTrack("TRACK8.TRK");
+  testScene.LoadTrack("TRACK7.TRK");
   testScene.SpawnCar(eWhipModel::CAR_XDESILVA);
 
   //init imgui

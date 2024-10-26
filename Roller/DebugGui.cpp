@@ -3,6 +3,11 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#ifdef IS_WINDOWS
+#define GLFW_EXPOSE_NATIVE_WIN32
+#include <GLFW/glfw3native.h>
+#include <ShellScalingApi.h>
+#endif
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -40,6 +45,12 @@ void CDebugGui::Init(GLFWwindow *pWindow)
   ImGui::StyleColorsDark();
   // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
   ImGuiStyle &style = ImGui::GetStyle();
+  float fScale = GetDpi();
+  style.ScaleAllSizes(fScale);
+  io.Fonts->Clear();
+#ifdef IS_WINDOWS
+  ImFont *font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msyh.ttc", 16.0f * fScale);
+#endif
   if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
     style.WindowRounding = 0.0f;
     style.Colors[ImGuiCol_WindowBg].w = 1.0f;
@@ -88,6 +99,25 @@ void CDebugGui::Shutdown()
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+float CDebugGui::GetDpi()
+{
+  float fScale = 1.0f;
+#ifdef IS_WINDOWS
+  HWND hwnd = glfwGetWin32Window(m_pWindow);
+  if (hwnd == nullptr)
+    return fScale;
+
+  HMONITOR monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+  unsigned int uiDpiX;
+  unsigned int uiDpiY;
+  GetDpiForMonitor(monitor, MDT_EFFECTIVE_DPI, &uiDpiX, &uiDpiY);
+  fScale = uiDpiX / 96.0f;
+#endif
+  return fScale;
 }
 
 //-------------------------------------------------------------------------------------------------

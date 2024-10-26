@@ -14,6 +14,8 @@ public:
   void Shutdown();
 
 private:
+  float GetDpi();
+
   GLFWwindow *m_pWindow;
 };
 

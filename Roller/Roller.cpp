@@ -9,7 +9,7 @@
 #include "GameInput.h"
 #include "GlfwKeyMapper.h"
 #include "DebugGui.h"
-#include "Scene.h"
+#include "SceneManager.h"
 #include "stb_image.h"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -62,12 +62,7 @@ int main(int argc, char *argv[])
   CGameClock::GetGameClock().Init();
   CGlfwKeyMapper::GetGlfwKeyMapper().Init(pWindow);
   CGameInput::GetGameInput().Init(&CGlfwKeyMapper::GetGlfwKeyMapper());
-
-  //init test scene
-  CScene testScene;
-  testScene.Init("C:\\WHIP\\WHIPLASH\\FATDATA");
-  testScene.LoadTrack("TRACK7.TRK");
-  testScene.SpawnCar(eWhipModel::CAR_XDESILVA);
+  CSceneManager::GetSceneManager().Init();
 
   //init imgui
   CDebugGui debugGui;
@@ -82,7 +77,7 @@ int main(int argc, char *argv[])
     //update game
     CGameClock::GetGameClock().NewFrame();
     CGameInput::GetGameInput().Update();
-    testScene.Update(iWidth, iHeight);
+    CSceneManager::GetSceneManager().Update(iWidth, iHeight);
 
     //update imgui
     debugGui.Update();
@@ -95,7 +90,7 @@ int main(int argc, char *argv[])
 
   //shutdown
   debugGui.Shutdown();
-  testScene.Shutdown();
+  CSceneManager::GetSceneManager().Shutdown();
   glfwTerminate();
 
   return 0;

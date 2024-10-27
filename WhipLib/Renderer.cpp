@@ -142,31 +142,26 @@ CShapeData *CRenderer::MakeCarShape(eWhipModel model)
   pNewCarShape->pShapeData = NULL;
   CShapeFactory::GetShapeFactory().MakeModel(&pNewCarShape->pShapeData, m_pShader, pNewCarShape->pTex, model);
 
-  m_carShapeAy.emplace_back(pNewCarShape);
-  return pNewCarShape->pShapeData;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-CShapeData *CRenderer::MakeTrackShape(CTrack *pTrack)
-{
-  if (!m_pShader)
+  if (pNewCarShape->pShapeData) {
+    m_carShapeAy.emplace_back(pNewCarShape);
+    return pNewCarShape->pShapeData;
+  } else {
+    delete pNewCarShape;
     return NULL;
-
-  CShapeData *pNewShape = NULL;
-  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pNewShape, m_pShader, pTrack, eShapeSection::EXPORT, true);
-  m_shapeAy.emplace_back(pNewShape);
-  return pNewShape;
+  }
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CRenderer::UpdateTrackShape(CTrack *pTrack, CShapeData *pShape)
+void CRenderer::MakeTrackShape(CShapeData **pShape, CTrack *pTrack)
 {
   if (!m_pShader)
     return;
 
-  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pShape, m_pShader, pTrack, eShapeSection::EXPORT, true);
+  bool bNew = !(*pShape);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(pShape, m_pShader, pTrack, eShapeSection::EXPORT, true);
+  if (bNew && *pShape)
+    m_shapeAy.emplace_back(*pShape);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -193,7 +188,7 @@ void CRenderer::MakeEnvirFloor(CTrack *pTrack)
 
   CShapeData *pNewShape = NULL;
   CShapeFactory::GetShapeFactory().MakeEnvirFloor(&pNewShape, m_pShader, pTrack, 0);
-  if (pNewShape)
+  if (pNewShape && pNewShape)
     m_shapeAy.emplace_back(pNewShape);
 }
 
@@ -207,7 +202,7 @@ void CRenderer::MakeDebugTri(CShapeData **pShape, CTexture *pTexture,
 
   bool bNew = !(*pShape);
   CShapeFactory::GetShapeFactory().MakeDebugTri(pShape, m_pShader, pTexture, p0, p1, p2);
-  if (bNew)
+  if (bNew && *pShape)
     m_shapeAy.emplace_back((*pShape));
 }
 
@@ -221,7 +216,7 @@ void CRenderer::MakeDebugLine(CShapeData **pShape, CTexture *pTexture,
 
   bool bNew = !(*pShape);
   CShapeFactory::GetShapeFactory().MakeDebugLine(pShape, m_pShader, pTexture, p0, p1);
-  if (bNew)
+  if (bNew && *pShape)
     m_shapeAy.emplace_back((*pShape));
 }
 

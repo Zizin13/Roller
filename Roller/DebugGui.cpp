@@ -4,6 +4,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "GameClock.h"
+#include "SceneManager.h"
 #ifdef IS_WINDOWS
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
@@ -13,6 +14,14 @@
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
+//-------------------------------------------------------------------------------------------------
+
+static int FatdataDirCbStatic(ImGuiInputTextCallbackData *pData)
+{
+  CSceneManager::GetSceneManager().SetFatDataDir(pData->Buf);
+  return 0;
+}
+
 //-------------------------------------------------------------------------------------------------
 
 CDebugGui::CDebugGui()
@@ -83,6 +92,10 @@ void CDebugGui::Update()
     m_iNumFrames = 0;
   }
 
+  //get data for gui
+  char szFatdataDir[1024];
+  snprintf(szFatdataDir, sizeof(szFatdataDir), CSceneManager::GetSceneManager().GetFatDataDir().c_str());
+
   //imgui
   //if (glfwGetWindowAttrib(m_pWindow, GLFW_ICONIFIED) != 0) {
   //  ImGui_ImplGlfw_Sleep(10);
@@ -93,6 +106,9 @@ void CDebugGui::Update()
   ImGui::NewFrame();
   ImGui::Begin("Debug Menu");
   ImGui::Text("%d fps", m_iFramerate);
+  ImGui::InputText("FATDATA directory", szFatdataDir, sizeof(szFatdataDir),
+                   ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_EnterReturnsTrue,
+                   FatdataDirCbStatic);
   ImGui::End();
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

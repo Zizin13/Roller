@@ -27,8 +27,7 @@ public:
   void Draw(int iWindowWidth, int iWindowHeight, CCamera *pCamera);
 
   CShapeData *MakeCarShape(eWhipModel model);
-  CShapeData *MakeTrackShape(CTrack *pTrack);
-  void UpdateTrackShape(CTrack *pTrack, CShapeData *pShape);
+  void MakeTrackShape(CShapeData **pShape, CTrack *pTrack);
   void MakeSigns(CTrack *pTrack);
   void MakeEnvirFloor(CTrack *pTrack);
   void MakeDebugTri(CShapeData **pShape, CTexture *pTexture,

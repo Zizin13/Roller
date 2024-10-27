@@ -38,7 +38,7 @@ void CTrackComponent::Update()
     CShapeComponent *pTrackShapeComponent = m_pContainingEntity->GetComponent<CShapeComponent>();
     if (pTrackShapeComponent) {
       m_pTrack->UpdateStunts();
-      m_pRenderer->UpdateTrackShape(m_pTrack, pTrackShapeComponent->m_pShapeData);
+      m_pRenderer->MakeTrackShape(&pTrackShapeComponent->m_pShapeData, m_pTrack);
     }
   }
 }

@@ -18,7 +18,8 @@
 
 static int FatdataDirCbStatic(ImGuiInputTextCallbackData *pData)
 {
-  CSceneManager::GetSceneManager().SetFatDataDir(pData->Buf);
+  CDebugGui *pDebugGui = (CDebugGui *)pData->UserData;
+  pDebugGui->SetFatdataDir(pData->Buf);
   return 0;
 }
 
@@ -29,6 +30,7 @@ CDebugGui::CDebugGui()
   , m_fTimer(0.0f)
   , m_iNumFrames(0)
   , m_iFramerate(0)
+  , m_bEditFatdata(false)
 {
 
 }
@@ -72,6 +74,8 @@ void CDebugGui::Init(GLFWwindow *pWindow)
   ImGui_ImplGlfw_InitForOpenGL(pWindow, true);
   const char *glsl_version = "#version 130";
   ImGui_ImplOpenGL3_Init(glsl_version);
+
+  snprintf(m_szFatdataDir, sizeof(m_szFatdataDir), CSceneManager::GetSceneManager().GetFatDataDir().c_str());
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -92,10 +96,6 @@ void CDebugGui::Update()
     m_iNumFrames = 0;
   }
 
-  //get data for gui
-  char szFatdataDir[1024];
-  snprintf(szFatdataDir, sizeof(szFatdataDir), CSceneManager::GetSceneManager().GetFatDataDir().c_str());
-
   //imgui
   //if (glfwGetWindowAttrib(m_pWindow, GLFW_ICONIFIED) != 0) {
   //  ImGui_ImplGlfw_Sleep(10);
@@ -106,9 +106,16 @@ void CDebugGui::Update()
   ImGui::NewFrame();
   ImGui::Begin("Debug Menu");
   ImGui::Text("%d fps", m_iFramerate);
-  ImGui::InputText("FATDATA directory", szFatdataDir, sizeof(szFatdataDir),
-                   ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_EnterReturnsTrue,
-                   FatdataDirCbStatic);
+  if (m_bEditFatdata) {
+    ImGui::InputText("FATDATA directory", m_szFatdataDir, sizeof(m_szFatdataDir), ImGuiInputTextFlags_CallbackEdit, FatdataDirCbStatic, this);
+    if (ImGui::Button("Apply FATDATA directory")) {
+      m_bEditFatdata = false;
+      CSceneManager::GetSceneManager().SetFatDataDir(m_szFatdataDir);
+    }
+  } else {
+    ImGui::Text("FATDATA directory: %s", m_szFatdataDir);
+    m_bEditFatdata = ImGui::Button("Edit FATDATA directory");
+  }
   ImGui::End();
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -128,6 +135,13 @@ void CDebugGui::Shutdown()
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CDebugGui::SetFatdataDir(const char *szFatdataDir)
+{
+  strncpy_s(m_szFatdataDir, szFatdataDir, sizeof(m_szFatdataDir));
 }
 
 //-------------------------------------------------------------------------------------------------

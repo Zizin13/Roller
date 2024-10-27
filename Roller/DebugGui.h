@@ -12,6 +12,7 @@ public:
   void Init(GLFWwindow *pWindow);
   void Update();
   void Shutdown();
+  void SetFatdataDir(const char *szFatdataDir);
 
 private:
   float GetDpi();
@@ -20,6 +21,8 @@ private:
   float m_fTimer;
   int m_iNumFrames;
   int m_iFramerate;
+  bool m_bEditFatdata;
+  char m_szFatdataDir[1024];
 };
 
 //-------------------------------------------------------------------------------------------------

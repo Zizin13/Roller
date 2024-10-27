@@ -113,6 +113,7 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalIncludeDirectories>../WhipLib;../external/glm;../external/glew/include/GL;../external/glfw/include/GLFW;../external/stb;../external/imgui;../external/imgui/backends;../external/glfw/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -164,6 +165,7 @@ exit 1</Command>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalIncludeDirectories>../WhipLib;../external/glm;../external/glew/include/GL;../external/glfw/include/GLFW;../external/stb;../external/imgui;../external/imgui/backends;../external/glfw/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

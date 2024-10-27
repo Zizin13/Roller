@@ -7,6 +7,7 @@
 #include "TrackComponent.h"
 #include "ShapeComponent.h"
 #include "DriveComponent.h"
+#include "SceneManager.h"
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
@@ -30,7 +31,6 @@ public:
     m_renderer.Shutdown();
   };
 
-  std::string m_sFatDataDir;
   CRenderer m_renderer;
   CEntity *m_pPlayer;
 
@@ -74,8 +74,7 @@ bool CScene::Init(const std::string &sFatDataDir)
   Shutdown();
   p = new CScenePrivate;
 
-  p->m_sFatDataDir = sFatDataDir;
-  bSuccess |= p->m_renderer.Init(p->m_sFatDataDir);
+  bSuccess |= p->m_renderer.Init(CSceneManager::GetSceneManager().GetFatDataDir());
   bSuccess |= p->m_noClip.Init();
   bSuccess |= p->m_defaultCamera.Init();
   bSuccess |= p->m_defaultEntity.Init();
@@ -152,7 +151,7 @@ void CScene::LoadTrack(const std::string &sTrackFile)
     return;
 
   //load track
-  p->m_track.LoadTrack(p->m_sFatDataDir + "/" + sTrackFile);
+  p->m_track.LoadTrack(sTrackFile);
   p->m_track.LoadTextures();
 
   //make shapes

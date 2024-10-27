@@ -36,7 +36,6 @@ public:
                     const glm::vec3 &p0, const glm::vec3 &p1);
 
 private:
-  std::string m_sFatDataDir;
   CShader *m_pShader;
   CCarShapeAy m_carShapeAy;
   CShapeAy m_shapeAy;

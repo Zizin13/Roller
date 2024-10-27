@@ -5,6 +5,8 @@
 #include "imgui_impl_opengl3.h"
 #include "GameClock.h"
 #include "SceneManager.h"
+#include "Scene.h"
+#include <filesystem>
 #ifdef IS_WINDOWS
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
@@ -31,8 +33,9 @@ CDebugGui::CDebugGui()
   , m_iNumFrames(0)
   , m_iFramerate(0)
   , m_bEditFatdata(false)
+  , m_iSelectedTrack(0)
 {
-
+  *m_szFatdataDir = '\0';
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -75,7 +78,7 @@ void CDebugGui::Init(GLFWwindow *pWindow)
   const char *glsl_version = "#version 130";
   ImGui_ImplOpenGL3_Init(glsl_version);
 
-  snprintf(m_szFatdataDir, sizeof(m_szFatdataDir), CSceneManager::GetSceneManager().GetFatDataDir().c_str());
+  SetFatdataDir(CSceneManager::GetSceneManager().GetFatDataDir().c_str());
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -96,16 +99,16 @@ void CDebugGui::Update()
     m_iNumFrames = 0;
   }
 
-  //imgui
-  //if (glfwGetWindowAttrib(m_pWindow, GLFW_ICONIFIED) != 0) {
-  //  ImGui_ImplGlfw_Sleep(10);
-  //  continue;
-  //}
+  //init frame
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();
   ImGui::Begin("Debug Menu");
+
+  //framerate
   ImGui::Text("%d fps", m_iFramerate);
+
+  //fatdata directory
   if (m_bEditFatdata) {
     ImGui::InputText("FATDATA directory", m_szFatdataDir, sizeof(m_szFatdataDir), ImGuiInputTextFlags_CallbackEdit, FatdataDirCbStatic, this);
     if (ImGui::Button("Apply FATDATA directory")) {
@@ -116,6 +119,27 @@ void CDebugGui::Update()
     ImGui::Text("FATDATA directory: %s", m_szFatdataDir);
     m_bEditFatdata = ImGui::Button("Edit FATDATA directory");
   }
+
+  //load track
+  if (m_iSelectedTrack < (int)m_trackAy.size()) {
+    if (ImGui::BeginCombo("Track", m_trackAy[m_iSelectedTrack].c_str())) {
+      for (int i = 0; i < (int)m_trackAy.size(); i++) {
+        const bool bIsSelected = (m_iSelectedTrack == i);
+        if (ImGui::Selectable(m_trackAy[i].c_str(), bIsSelected)) {
+          m_iSelectedTrack = i;
+          CScene *pScene = CSceneManager::GetSceneManager().GetCurrentScene();
+          pScene->LoadTrack(CSceneManager::GetSceneManager().GetFatDataDir() + "/" + m_trackAy[m_iSelectedTrack]);
+        }
+        if (bIsSelected)
+          ImGui::SetItemDefaultFocus();
+      }
+      ImGui::EndCombo();
+    }
+  } else {
+    assert(0);
+  }
+
+  //render imgui
   ImGui::End();
   ImGui::Render();
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -142,6 +166,21 @@ void CDebugGui::Shutdown()
 void CDebugGui::SetFatdataDir(const char *szFatdataDir)
 {
   strncpy_s(m_szFatdataDir, szFatdataDir, sizeof(m_szFatdataDir));
+
+  //load all tracks in dir
+  m_trackAy.clear();
+  m_iSelectedTrack = 0;
+  for (const auto &entry : std::filesystem::directory_iterator(m_szFatdataDir)) {
+    std::string sEntry = entry.path().string();
+    size_t pos = sEntry.find_last_of('.');
+    if (pos != std::string::npos) {
+      //see if file is TRK file
+      std::string sExtension = sEntry.substr(pos, sEntry.size() - pos);
+      if (sExtension.compare(".TRK") == 0) {
+        m_trackAy.push_back(entry.path().filename().string());
+      }
+    }
+  }
 }
 
 //-------------------------------------------------------------------------------------------------

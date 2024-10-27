@@ -38,8 +38,8 @@ void CSceneManager::Init()
 
   m_pScene = new CScene();
   m_pScene->Init(m_sFatDataDir);
-  std::string sTrackFile = "TRACK7.TRK";
-  m_pScene->LoadTrack(sTrackFile);
+  std::string sTrackFile = "/TRACK7.TRK";
+  m_pScene->LoadTrack(m_sFatDataDir + sTrackFile);
   m_pScene->SpawnCar(eWhipModel::CAR_XDESILVA);
 }
 
@@ -69,6 +69,13 @@ void CSceneManager::SetFatDataDir(const std::string &sFatDataDir)
   m_sFatDataDir = sFatDataDir;
   Shutdown();
   Init();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+CScene *CSceneManager::GetCurrentScene()
+{
+  return m_pScene;
 }
 
 //-------------------------------------------------------------------------------------------------

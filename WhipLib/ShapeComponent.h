@@ -18,6 +18,7 @@ public:
   void Update() override;
 
   CShapeData *m_pShapeData;
+  int m_iShapeKey;
   glm::mat4 m_rotationOffset;
 };
 

@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "CarHelpers.h"
 #include "OpenGLDebug.h"
+#include "SceneManager.h"
 #include <glm.hpp>
 #include "gtc/matrix_transform.hpp"
 #include "gtx/transform.hpp"
@@ -47,7 +48,6 @@ struct tCarShape
 
 CRenderer::CRenderer()
   : m_pShader(NULL)
-  , m_sFatDataDir("")
 {
   m_carShapeAy.reserve(16);
 }
@@ -75,7 +75,6 @@ bool CRenderer::Init(const std::string &sFatDataDir)
   glAlphaFunc(GL_GREATER, 0.24f);
   glLineWidth(3.0f);
 
-  m_sFatDataDir = sFatDataDir;
   if (!m_pShader) {
     m_pShader = new CShader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");
     return true;
@@ -136,9 +135,9 @@ CShapeData *CRenderer::MakeCarShape(eWhipModel model)
 
   tCarShape *pNewCarShape = new tCarShape;
   pNewCarShape->pPal = new CPalette();
-  pNewCarShape->pPal->LoadPalette(m_sFatDataDir + "/PALETTE.PAL");
+  pNewCarShape->pPal->LoadPalette(CSceneManager::GetSceneManager().GetFatDataDir() + "/PALETTE.PAL");
   pNewCarShape->pTex = new CTexture();
-  pNewCarShape->pTex->LoadTexture(m_sFatDataDir + "/" + sTexName, pNewCarShape->pPal);
+  pNewCarShape->pTex->LoadTexture(CSceneManager::GetSceneManager().GetFatDataDir() + "/" + sTexName, pNewCarShape->pPal);
   pNewCarShape->pShapeData = NULL;
   CShapeFactory::GetShapeFactory().MakeModel(&pNewCarShape->pShapeData, m_pShader, pNewCarShape->pTex, model);
 

@@ -14,6 +14,7 @@
 
 CShapeComponent::CShapeComponent()
   : m_pShapeData(NULL)
+  , m_iShapeKey(-1)
   , m_rotationOffset(glm::mat4(1))
 {
 

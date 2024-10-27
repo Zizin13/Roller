@@ -127,8 +127,8 @@ void CDebugGui::Update()
         const bool bIsSelected = (m_iSelectedTrack == i);
         if (ImGui::Selectable(m_trackAy[i].c_str(), bIsSelected)) {
           m_iSelectedTrack = i;
-          CScene *pScene = CSceneManager::GetSceneManager().GetCurrentScene();
-          pScene->LoadTrack(CSceneManager::GetSceneManager().GetFatDataDir() + "/" + m_trackAy[m_iSelectedTrack]);
+          //CScene *pScene = CSceneManager::GetSceneManager().GetCurrentScene();
+          //pScene->LoadTrack(CSceneManager::GetSceneManager().GetFatDataDir() + "/" + m_trackAy[m_iSelectedTrack]);
         }
         if (bIsSelected)
           ImGui::SetItemDefaultFocus();

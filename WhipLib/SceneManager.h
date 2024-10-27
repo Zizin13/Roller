@@ -19,7 +19,6 @@ public:
   void Shutdown();
   void SetFatDataDir(const std::string &sFatDataDir);
   const std::string &GetFatDataDir() { return m_sFatDataDir; };
-  CScene *GetCurrentScene();
 
 private:
   CSceneManager();

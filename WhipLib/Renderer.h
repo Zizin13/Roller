@@ -22,7 +22,7 @@ public:
   CRenderer();
   ~CRenderer();
 
-  bool Init(const std::string &sFatDataDir);
+  bool Init();
   bool Shutdown();
   void Draw(int iWindowWidth, int iWindowHeight, CCamera *pCamera);
 

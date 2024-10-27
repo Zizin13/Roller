@@ -61,7 +61,7 @@ CRenderer::~CRenderer()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CRenderer::Init(const std::string &sFatDataDir)
+bool CRenderer::Init()
 {
   if (glewInit() != GLEW_OK)
     return false;

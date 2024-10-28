@@ -192,7 +192,7 @@ void CScene::LoadTrack(const std::string &sTrackFile)
 
 bool CScene::SetPlayer(CEntity *pEntity)
 {
-  if (!pEntity)
+  if (!pEntity || !p)
     return false;
   
   //can't make an entity a player without a camera
@@ -208,6 +208,16 @@ bool CScene::SetPlayer(CEntity *pEntity)
   p->m_pPlayer = pEntity;
   pEntity->m_bAcceptControls = true;
   return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+const std::string &CScene::GetCurrentTrack()
+{
+  if (!p)
+    return "";
+
+  return p->m_track.m_sTrackFile;
 }
 
 //-------------------------------------------------------------------------------------------------

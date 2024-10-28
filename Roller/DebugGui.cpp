@@ -59,7 +59,7 @@ CDebugGui::CDebugGui()
   , m_iFramerate(0)
   , m_bEditFatdata(false)
   , m_iSelectedTrack(0)
-  , m_iSelectedCar(0)
+  , m_iSelectedCar(15) //YZIZIN
 {
   *m_szFatdataDir = '\0';
 }
@@ -211,6 +211,22 @@ void CDebugGui::SetFatdataDir(const char *szFatdataDir)
 {
   strncpy_s(m_szFatdataDir, szFatdataDir, sizeof(m_szFatdataDir));
 
+  //get current track
+  std::string sCurrentTrack = "";
+  CScene *pScene = CSceneManager::GetSceneManager().GetCurrentScene();
+  if (pScene) {
+    sCurrentTrack = pScene->GetCurrentTrack();
+    size_t posWin = sCurrentTrack.find_last_of("\\");
+    size_t posUnix = sCurrentTrack.find_last_of("/");
+    size_t pos = posWin;
+    if (pos == std::string::npos || posUnix > posWin)
+      pos = posUnix;
+
+    if (pos != std::string::npos) {
+      sCurrentTrack = sCurrentTrack.substr(pos + 1, sCurrentTrack.size() + 1 - pos);
+    }
+  }
+
   //load all tracks in dir
   m_trackAy.clear();
   m_iSelectedTrack = 0;
@@ -221,6 +237,11 @@ void CDebugGui::SetFatdataDir(const char *szFatdataDir)
       //see if file is TRK file
       std::string sExtension = sEntry.substr(pos, sEntry.size() - pos);
       if (sExtension.compare(".TRK") == 0) {
+        //select current track
+        if (sCurrentTrack.compare(entry.path().filename().string()) == 0) {
+          m_iSelectedTrack = (int)m_trackAy.size();
+        }
+
         m_trackAy.push_back(entry.path().filename().string());
       }
     }

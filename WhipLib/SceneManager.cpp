@@ -38,9 +38,9 @@ void CSceneManager::Init()
 
   m_pScene = new CScene();
   m_pScene->Init();
-  std::string sTrackFile = "/TRACK7.TRK";
+  std::string sTrackFile = "/TRACK8.TRK";
   m_pScene->LoadTrack(m_sFatDataDir + sTrackFile);
-  m_pScene->SpawnCar(eWhipModel::CAR_XDESILVA);
+  m_pScene->SpawnCar(eWhipModel::CAR_YZIZIN);
 }
 
 //-------------------------------------------------------------------------------------------------

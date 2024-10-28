@@ -21,6 +21,7 @@ public:
   void UpdateCarModel(eWhipModel model);
   void LoadTrack(const std::string &sTrackFile);
   bool SetPlayer(CEntity *pEntity);
+  const std::string &GetCurrentTrack();
 
 private:
   CScenePrivate *p;

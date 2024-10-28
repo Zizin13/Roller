@@ -42,7 +42,7 @@ void CGlfwKeyMapper::Init(GLFWwindow *pWindow)
   glfwSetKeyCallback(pWindow, KeyCallbackCbStatic);
   if (glfwRawMouseMotionSupported())
     glfwSetInputMode(m_pWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
-  SetMouseCaptured(true);
+  SetMouseCaptured(false);
 }
 
 //-------------------------------------------------------------------------------------------------

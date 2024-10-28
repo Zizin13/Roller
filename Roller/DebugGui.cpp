@@ -183,6 +183,12 @@ void CDebugGui::Update()
     ImGui::EndCombo();
   }
 
+  //toggle player
+  if (ImGui::Button("Toggle Player")) {
+    CScene *pScene = CSceneManager::GetSceneManager().GetCurrentScene();
+    pScene->TogglePlayer();
+  }
+
   //render imgui
   ImGui::End();
   ImGui::Render();

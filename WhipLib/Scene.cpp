@@ -16,6 +16,8 @@
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
 #endif
 //-------------------------------------------------------------------------------------------------
+static std::string sEmpty = "";
+//-------------------------------------------------------------------------------------------------
 
 class CScenePrivate
 {
@@ -212,10 +214,23 @@ bool CScene::SetPlayer(CEntity *pEntity)
 
 //-------------------------------------------------------------------------------------------------
 
+void CScene::TogglePlayer()
+{
+  if (!p)
+    return;
+
+  if (p->m_pPlayer == &p->m_defaultEntity)
+    SetPlayer(&p->m_car);
+  else
+    SetPlayer(&p->m_defaultEntity);
+}
+
+//-------------------------------------------------------------------------------------------------
+
 const std::string &CScene::GetCurrentTrack()
 {
   if (!p)
-    return "";
+    return sEmpty;
 
   return p->m_track.m_sTrackFile;
 }

@@ -27,10 +27,12 @@ void CGlfwKeyMapper::Update(uint64 &ullActionsPressed, glm::vec2 &mousePos)
 {
   ullActionsPressed = m_ullActionsPressed;
 
-  double dX, dY = 0.0;
-  glfwGetCursorPos(m_pWindow, &dX, &dY);
-  mousePos.x = (float)dX;
-  mousePos.y = (float)dY;
+  if (m_bMouseCaptured) {
+    double dX, dY = 0.0;
+    glfwGetCursorPos(m_pWindow, &dX, &dY);
+    mousePos.x = (float)dX;
+    mousePos.y = (float)dY;
+  }
 }
 
 //-------------------------------------------------------------------------------------------------

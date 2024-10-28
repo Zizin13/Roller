@@ -18,6 +18,7 @@ public:
   bool Shutdown();
   void Update(int iWindowWidth, int iWindowHeight);
   void SpawnCar(eWhipModel model);
+  void UpdateCarModel(eWhipModel model);
   void LoadTrack(const std::string &sTrackFile);
   bool SetPlayer(CEntity *pEntity);
 

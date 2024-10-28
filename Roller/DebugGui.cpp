@@ -6,6 +6,7 @@
 #include "GameClock.h"
 #include "SceneManager.h"
 #include "Scene.h"
+#include "CarHelpers.h"
 #include <filesystem>
 #ifdef IS_WINDOWS
 #define GLFW_EXPOSE_NATIVE_WIN32
@@ -27,6 +28,30 @@ static int FatdataDirCbStatic(ImGuiInputTextCallbackData *pData)
 
 //-------------------------------------------------------------------------------------------------
 
+static eWhipModel s_carAy[] = {
+  eWhipModel::CAR_F1WACK,
+  eWhipModel::CAR_XAUTO,
+  eWhipModel::CAR_XDESILVA,
+  eWhipModel::CAR_XPULSE,
+  eWhipModel::CAR_XGLOBAL,
+  eWhipModel::CAR_XMILLION,
+  eWhipModel::CAR_XMISSION,
+  eWhipModel::CAR_XZIZIN,
+  eWhipModel::CAR_XREISE,
+  eWhipModel::CAR_YAUTO,
+  eWhipModel::CAR_YDESILVA,
+  eWhipModel::CAR_YPULSE,
+  eWhipModel::CAR_YGLOBAL,
+  eWhipModel::CAR_YMILLION,
+  eWhipModel::CAR_YMISSION,
+  eWhipModel::CAR_YZIZIN,
+  eWhipModel::CAR_YREISE,
+  eWhipModel::CAR_DEATH
+};
+static int s_carAyCount = sizeof(s_carAy) / sizeof(eWhipModel);
+
+//-------------------------------------------------------------------------------------------------
+
 CDebugGui::CDebugGui()
   : m_pWindow(NULL)
   , m_fTimer(0.0f)
@@ -34,6 +59,7 @@ CDebugGui::CDebugGui()
   , m_iFramerate(0)
   , m_bEditFatdata(false)
   , m_iSelectedTrack(0)
+  , m_iSelectedCar(0)
 {
   *m_szFatdataDir = '\0';
 }
@@ -131,7 +157,7 @@ void CDebugGui::Update()
           pScene->Shutdown();
           pScene->Init();
           pScene->LoadTrack(CSceneManager::GetSceneManager().GetFatDataDir() + "/" + m_trackAy[m_iSelectedTrack]);
-          pScene->SpawnCar(eWhipModel::CAR_XDESILVA);
+          pScene->SpawnCar(s_carAy[m_iSelectedCar]);
         }
         if (bIsSelected)
           ImGui::SetItemDefaultFocus();
@@ -140,6 +166,21 @@ void CDebugGui::Update()
     }
   } else {
     assert(0);
+  }
+
+  //select car
+  if (ImGui::BeginCombo("Car", CarHelpers::GetCarNameFromModel(s_carAy[m_iSelectedCar]).c_str())) {
+    for (int i = 0; i < s_carAyCount; ++i) {
+      const bool bIsSelected = (m_iSelectedCar == i);
+      if (ImGui::Selectable(CarHelpers::GetCarNameFromModel(s_carAy[i]).c_str(), bIsSelected)) {
+        m_iSelectedCar = i;
+        CScene *pScene = CSceneManager::GetSceneManager().GetCurrentScene();
+        pScene->UpdateCarModel(s_carAy[m_iSelectedCar]);
+      }
+      if (bIsSelected)
+        ImGui::SetItemDefaultFocus();
+    }
+    ImGui::EndCombo();
   }
 
   //render imgui

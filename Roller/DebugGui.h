@@ -28,6 +28,7 @@ private:
   char m_szFatdataDir[1024];
   std::vector<std::string> m_trackAy;
   int m_iSelectedTrack;
+  int m_iSelectedCar;
 };
 
 //-------------------------------------------------------------------------------------------------

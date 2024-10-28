@@ -8,6 +8,7 @@
 namespace CarHelpers
 {
   extern std::string GetCarNameFromModel(eWhipModel model);
+  extern eWhipModel GetCarModelFromName(const std::string &sName);
   extern std::string GetCarTextureFromModel(eWhipModel model);
   extern void RemapColor(eWhipModel model, uint32 &uiTex);
 }

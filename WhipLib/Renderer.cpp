@@ -48,8 +48,8 @@ struct tCarShape
 
 CRenderer::CRenderer()
   : m_pShader(NULL)
+  , m_iNextCarShapeKey(0)
 {
-  m_carShapeAy.reserve(16);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -90,10 +90,10 @@ bool CRenderer::Shutdown()
     delete m_pShader;
     m_pShader = NULL;
   }
-  for (CCarShapeAy::iterator it = m_carShapeAy.begin(); it != m_carShapeAy.end(); ++it) {
-    delete *it;
+  for (CCarShapeMap::iterator it = m_carShapeMap.begin(); it != m_carShapeMap.end(); ++it) {
+    delete it->second;
   }
-  m_carShapeAy.clear();
+  m_carShapeMap.clear();
   for (CShapeAy::iterator it = m_shapeAy.begin(); it != m_shapeAy.end(); ++it) {
     delete *it;
   }
@@ -116,8 +116,8 @@ void CRenderer::Draw(int iWindowWidth, int iWindowHeight, CCamera *pCamera)
   glm::mat4 worldToViewMatrix = pCamera->GetWorldToViewMatrix();
   glm::mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
-  for (CCarShapeAy::iterator it = m_carShapeAy.begin(); it != m_carShapeAy.end(); ++it) {
-    (*it)->pShapeData->Draw(worldToProjectionMatrix, pCamera->GetPosition());
+  for (CCarShapeMap::iterator it = m_carShapeMap.begin(); it != m_carShapeMap.end(); ++it) {
+    it->second->pShapeData->Draw(worldToProjectionMatrix, pCamera->GetPosition());
   }
   for (CShapeAy::iterator it = m_shapeAy.begin(); it != m_shapeAy.end(); ++it) {
     (*it)->Draw(worldToProjectionMatrix, pCamera->GetPosition());
@@ -126,28 +126,45 @@ void CRenderer::Draw(int iWindowWidth, int iWindowHeight, CCamera *pCamera)
 
 //-------------------------------------------------------------------------------------------------
 
-CShapeData *CRenderer::MakeCarShape(eWhipModel model)
+int CRenderer::MakeCarShape(CShapeData **pShape, eWhipModel model)
 {
   if (!m_pShader)
-    return NULL;
+    return -1;
 
-  std::string sTexName = CarHelpers::GetCarTextureFromModel(model);
+  bool bNew = !(*pShape);
+  if (bNew) {
+    std::string sTexName = CarHelpers::GetCarTextureFromModel(model);
+    tCarShape *pNewCarShape = new tCarShape;
+    pNewCarShape->pPal = new CPalette();
+    pNewCarShape->pPal->LoadPalette(CSceneManager::GetSceneManager().GetFatDataDir() + "/PALETTE.PAL");
+    pNewCarShape->pTex = new CTexture();
+    pNewCarShape->pTex->LoadTexture(CSceneManager::GetSceneManager().GetFatDataDir() + "/" + sTexName, pNewCarShape->pPal);
+    CShapeFactory::GetShapeFactory().MakeModel(pShape, m_pShader, pNewCarShape->pTex, model);
 
-  tCarShape *pNewCarShape = new tCarShape;
-  pNewCarShape->pPal = new CPalette();
-  pNewCarShape->pPal->LoadPalette(CSceneManager::GetSceneManager().GetFatDataDir() + "/PALETTE.PAL");
-  pNewCarShape->pTex = new CTexture();
-  pNewCarShape->pTex->LoadTexture(CSceneManager::GetSceneManager().GetFatDataDir() + "/" + sTexName, pNewCarShape->pPal);
-  pNewCarShape->pShapeData = NULL;
-  CShapeFactory::GetShapeFactory().MakeModel(&pNewCarShape->pShapeData, m_pShader, pNewCarShape->pTex, model);
-
-  if (pNewCarShape->pShapeData) {
-    m_carShapeAy.emplace_back(pNewCarShape);
-    return pNewCarShape->pShapeData;
+    if (pShape) {
+      pNewCarShape->pShapeData = *pShape;
+      m_carShapeMap[++m_iNextCarShapeKey] = pNewCarShape;
+      return m_iNextCarShapeKey;
+    } else {
+      delete pNewCarShape;
+    }
   } else {
-    delete pNewCarShape;
-    return NULL;
+    assert(0);//not yet supported
   }
+  return -1;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CRenderer::DeleteCarShape(int iKey)
+{
+  CCarShapeMap::iterator it = m_carShapeMap.find(iKey);
+  if (it != m_carShapeMap.end()) {
+    delete it->second;
+    m_carShapeMap.erase(it);
+    return true;
+  }
+  return false;
 }
 
 //-------------------------------------------------------------------------------------------------

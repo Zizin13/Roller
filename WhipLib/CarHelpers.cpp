@@ -73,6 +73,52 @@ std::string CarHelpers::GetCarNameFromModel(eWhipModel model)
 
 //-------------------------------------------------------------------------------------------------
 
+eWhipModel CarHelpers::GetCarModelFromName(const std::string &sName)
+{
+  if (sName.compare("F1WACK") == 0)
+    return eWhipModel::CAR_F1WACK;
+  if (sName.compare("XAUTO") == 0)
+    return eWhipModel::CAR_XAUTO;
+  if (sName.compare("XDESILVA") == 0)
+    return eWhipModel::CAR_XDESILVA;
+  if (sName.compare("XPULSE") == 0)
+    return eWhipModel::CAR_XPULSE;
+  if (sName.compare("XGLOBAL") == 0)
+    return eWhipModel::CAR_XGLOBAL;
+  if (sName.compare("XMILLION") == 0)
+    return eWhipModel::CAR_XMILLION;
+  if (sName.compare("XMISSION") == 0)
+    return eWhipModel::CAR_XMISSION;
+  if (sName.compare("XZIZIN") == 0)
+    return eWhipModel::CAR_XZIZIN;
+  if (sName.compare("XREISE") == 0)
+    return eWhipModel::CAR_XREISE;
+  if (sName.compare("YAUTO") == 0)
+    return eWhipModel::CAR_YAUTO;
+  if (sName.compare("YDESILVA") == 0)
+    return eWhipModel::CAR_YDESILVA;
+  if (sName.compare("YPULSE") == 0)
+    return eWhipModel::CAR_YPULSE;
+  if (sName.compare("YGLOBAL") == 0)
+    return eWhipModel::CAR_YGLOBAL;
+  if (sName.compare("YMILLION") == 0)
+    return eWhipModel::CAR_YMILLION;
+  if (sName.compare("YMISSION") == 0)
+    return eWhipModel::CAR_YMISSION;
+  if (sName.compare("YZIZIN") == 0)
+    return eWhipModel::CAR_YZIZIN;
+  if (sName.compare("YREISE") == 0)
+    return eWhipModel::CAR_YREISE;
+  if (sName.compare("DEATH") == 0)
+    return eWhipModel::CAR_DEATH;
+  else {
+    assert(0);
+    return eWhipModel::CAR_F1WACK;
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
 std::string CarHelpers::GetCarTextureFromModel(eWhipModel model)
 {
   if (model == eWhipModel::CAR_F1WACK)

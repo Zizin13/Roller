@@ -119,10 +119,12 @@ void CScene::SpawnCar(eWhipModel model)
     return;
 
   //make shape
-  CShapeData *pCarShape = p->m_renderer.MakeCarShape(model);
+  CShapeData *pCarShape = NULL;
+  int iShapeKey = p->m_renderer.MakeCarShape(&pCarShape, model);
 
   //setup components
   p->m_carShapeComponent.m_pShapeData = pCarShape;
+  p->m_carShapeComponent.m_iShapeKey = iShapeKey;
   p->m_carShapeComponent.m_rotationOffset = glm::rotate(glm::radians(-90.0f), glm::vec3(0, 0, 1)) * //car starts on its side
     glm::rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0)); //entity starts facing z positive, car starts facing x positive
   p->m_carShapeComponent.Init();
@@ -142,6 +144,22 @@ void CScene::SpawnCar(eWhipModel model)
   SetPlayer(&p->m_car);
 }
 
+//-------------------------------------------------------------------------------------------------
+
+void CScene::UpdateCarModel(eWhipModel model)
+{
+  if (!p)
+    return;
+
+  p->m_renderer.DeleteCarShape(p->m_carShapeComponent.m_iShapeKey);
+
+  //make shape
+  CShapeData *pCarShape = NULL;
+  int iShapeKey = p->m_renderer.MakeCarShape(&pCarShape, model);
+  //setup components
+  p->m_carShapeComponent.m_pShapeData = pCarShape;
+  p->m_carShapeComponent.m_iShapeKey = iShapeKey;
+}
 
 //-------------------------------------------------------------------------------------------------
 

@@ -4,6 +4,7 @@
 #include "Types.h"
 #include "glm.hpp"
 #include <vector>
+#include <map>
 //-------------------------------------------------------------------------------------------------
 class CShader;
 class CShapeData;
@@ -12,7 +13,7 @@ class CTrack;
 class CTexture;
 struct tCarShape;
 //-------------------------------------------------------------------------------------------------
-typedef std::vector<tCarShape *> CCarShapeAy;
+typedef std::map<int, tCarShape *> CCarShapeMap;
 typedef std::vector<CShapeData *> CShapeAy;
 //-------------------------------------------------------------------------------------------------
 
@@ -26,7 +27,8 @@ public:
   bool Shutdown();
   void Draw(int iWindowWidth, int iWindowHeight, CCamera *pCamera);
 
-  CShapeData *MakeCarShape(eWhipModel model);
+  int MakeCarShape(CShapeData **pShape, eWhipModel model);
+  bool DeleteCarShape(int iKey);
   void MakeTrackShape(CShapeData **pShape, CTrack *pTrack);
   void MakeSigns(CTrack *pTrack);
   void MakeEnvirFloor(CTrack *pTrack);
@@ -37,7 +39,8 @@ public:
 
 private:
   CShader *m_pShader;
-  CCarShapeAy m_carShapeAy;
+  CCarShapeMap m_carShapeMap;
+  int m_iNextCarShapeKey;
   CShapeAy m_shapeAy;
 };
 

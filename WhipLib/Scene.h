@@ -14,7 +14,7 @@ public:
   CScene();
   ~CScene();
 
-  bool Init(const std::string &sFatDataDir);
+  bool Init();
   bool Shutdown();
   void Update(int iWindowWidth, int iWindowHeight);
   void SpawnCar(eWhipModel model);

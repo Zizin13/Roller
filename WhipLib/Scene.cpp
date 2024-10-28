@@ -68,7 +68,7 @@ CScene::~CScene()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CScene::Init(const std::string &sFatDataDir)
+bool CScene::Init()
 {
   bool bSuccess = false;
   Shutdown();

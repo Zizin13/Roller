@@ -127,8 +127,11 @@ void CDebugGui::Update()
         const bool bIsSelected = (m_iSelectedTrack == i);
         if (ImGui::Selectable(m_trackAy[i].c_str(), bIsSelected)) {
           m_iSelectedTrack = i;
-          //CScene *pScene = CSceneManager::GetSceneManager().GetCurrentScene();
-          //pScene->LoadTrack(CSceneManager::GetSceneManager().GetFatDataDir() + "/" + m_trackAy[m_iSelectedTrack]);
+          CScene *pScene = CSceneManager::GetSceneManager().GetCurrentScene();
+          pScene->Shutdown();
+          pScene->Init();
+          pScene->LoadTrack(CSceneManager::GetSceneManager().GetFatDataDir() + "/" + m_trackAy[m_iSelectedTrack]);
+          pScene->SpawnCar(eWhipModel::CAR_XDESILVA);
         }
         if (bIsSelected)
           ImGui::SetItemDefaultFocus();

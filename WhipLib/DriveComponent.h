@@ -4,11 +4,6 @@
 #include "Component.h"
 #include "glm.hpp"
 //-------------------------------------------------------------------------------------------------
-class CTrack;
-class CRenderer;
-class CTexture;
-class CShapeData;
-//-------------------------------------------------------------------------------------------------
 
 class CDriveComponent : public IComponent
 {
@@ -19,21 +14,13 @@ public:
 
   float m_fMovementSpeed;
   float m_fRotateSpeed;
-  CTrack *m_pTrack;
-
-  //for debugging
-  CRenderer *m_pRenderer;
-  CTexture *m_pTex;
 
 private:
-  void MoveForward(glm::vec3 &newPos);
-  void MoveBackward(glm::vec3 &newPos);
+  void MoveForward();
+  void MoveBackward();
+  void Coast();
   void TurnLeft();
   void TurnRight();
-
-  //for debugging
-  CShapeData *m_pDebugTri;
-  CShapeData *m_pDebugLine;
 };
 
 //-------------------------------------------------------------------------------------------------

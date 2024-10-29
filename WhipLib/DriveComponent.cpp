@@ -3,8 +3,7 @@
 #include "GameInput.h"
 #include "Entity.h"
 #include "MathHelpers.h"
-#include "Track.h"
-#include "Renderer.h"
+#include "PhysicsComponent.h"
 #include "gtx\transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -15,11 +14,6 @@
 CDriveComponent::CDriveComponent()
   : m_fMovementSpeed(15000.0f)
   , m_fRotateSpeed(100.0f)
-  , m_pTrack(NULL)
-  , m_pRenderer(NULL)
-  , m_pTex(NULL)
-  , m_pDebugLine(NULL)
-  , m_pDebugTri(NULL)
 {
 }
 
@@ -30,64 +24,46 @@ void CDriveComponent::Update()
   if (!m_pContainingEntity->m_bAcceptControls)
     return;
 
-  glm::vec3 newPos = m_pContainingEntity->m_position;
-  if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_FORWARD)
-    MoveForward(newPos);
+  if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_BACKWARD)
+    MoveBackward();
+  else if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_FORWARD)
+    MoveForward();
+  else
+    Coast();
+
   if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_LEFT)
     TurnLeft();
-  if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_BACKWARD)
-    MoveBackward(newPos);
   if (CGameInput::GetGameInput().GetActionsPressed() & ACTION_RIGHT)
     TurnRight();
-
-  m_pContainingEntity->m_position += (newPos - m_pContainingEntity->m_position) * 0.9f;// 300.0f * CGameClock::GetGameClock().DeltaTimeLastFrame();
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CDriveComponent::MoveForward(glm::vec3 &newPos)
+void CDriveComponent::MoveForward()
 {
-  newPos += m_fMovementSpeed * m_pContainingEntity->GetOrientation() * CGameClock::GetGameClock().DeltaTimeLastFrame();
-  if (m_pTrack) {
-    glm::vec3 p0, p1, p2, peg1, peg2;
-
-    //make peg
-    glm::mat4 translateMat = glm::translate(m_pContainingEntity->m_position);
-    peg1 = glm::vec3(translateMat * glm::vec4(m_pContainingEntity->GetUp() * 500.0f, 1.0f));
-    peg2 = glm::vec3(translateMat * glm::vec4(m_pContainingEntity->GetUp() * -500.0f, 1.0f));
-
-    //project
-    m_pTrack->ProjectToTrack(newPos, m_pContainingEntity->m_rotationMat, m_pContainingEntity->GetUp(), p0, p1, p2, peg1, peg2);
-
-    //update debug visualizations
-    if (m_pRenderer && m_pTex) {
-      m_pRenderer->MakeDebugTri(&m_pDebugTri, m_pTex, p0, p1, p2);
-      m_pRenderer->MakeDebugLine(&m_pDebugLine, m_pTex, peg1, peg2);
-    }
+  CPhysicsComponent *pPhysicsComponent = m_pContainingEntity->GetComponent<CPhysicsComponent>();
+  if (pPhysicsComponent) {
+    pPhysicsComponent->m_fLinearAccel = 2000.0f;
   }
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CDriveComponent::MoveBackward(glm::vec3 &newPos)
+void CDriveComponent::MoveBackward()
 {
-  newPos -= m_fMovementSpeed * m_pContainingEntity->GetOrientation() * CGameClock::GetGameClock().DeltaTimeLastFrame();
-  if (m_pTrack) {
-    glm::vec3 p0, p1, p2, peg1, peg2;
+  CPhysicsComponent *pPhysicsComponent = m_pContainingEntity->GetComponent<CPhysicsComponent>();
+  if (pPhysicsComponent) {
+    pPhysicsComponent->m_fLinearAccel = -2000.0f;
+  }
+}
 
-    //make peg
-    glm::mat4 translateMat = glm::translate(m_pContainingEntity->m_position);
-    peg1 = glm::vec3(translateMat * glm::vec4(m_pContainingEntity->GetUp() * 500.0f, 1.0f));
-    peg2 = glm::vec3(translateMat * glm::vec4(m_pContainingEntity->GetUp() * -500.0f, 1.0f));
+//-------------------------------------------------------------------------------------------------
 
-    //project
-    m_pTrack->ProjectToTrack(newPos, m_pContainingEntity->m_rotationMat, m_pContainingEntity->GetUp(), p0, p1, p2, peg1, peg2);
-
-    //update debug visualizations
-    if (m_pRenderer && m_pTex) {
-      m_pRenderer->MakeDebugTri(&m_pDebugTri, m_pTex, p0, p1, p2);
-      m_pRenderer->MakeDebugLine(&m_pDebugLine, m_pTex, peg1, peg2);
-    }
+void CDriveComponent::Coast()
+{
+  CPhysicsComponent *pPhysicsComponent = m_pContainingEntity->GetComponent<CPhysicsComponent>();
+  if (pPhysicsComponent) {
+    pPhysicsComponent->m_fLinearAccel = -500.0f;
   }
 }
 

@@ -267,6 +267,7 @@ exit 1</Command>
     <ClInclude Include="Logging.h" />
     <ClInclude Include="MathHelpers.h" />
     <ClInclude Include="NoclipComponent.h" />
+    <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
@@ -329,6 +330,7 @@ exit 1</Command>
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="MathHelpers.cpp" />
     <ClCompile Include="NoclipComponent.cpp" />
+    <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />

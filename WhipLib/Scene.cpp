@@ -7,6 +7,7 @@
 #include "TrackComponent.h"
 #include "ShapeComponent.h"
 #include "DriveComponent.h"
+#include "PhysicsComponent.h"
 #include "SceneManager.h"
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
@@ -50,6 +51,7 @@ public:
   //car entity
   CEntity m_car;
   CDriveComponent m_driveComponent;
+  CPhysicsComponent m_physicsComponent;
   CShapeComponent m_carShapeComponent;
   CCamera m_carCamera;
 };
@@ -130,19 +132,20 @@ void CScene::SpawnCar(eWhipModel model)
   p->m_carShapeComponent.m_rotationOffset = glm::rotate(glm::radians(-90.0f), glm::vec3(0, 0, 1)) * //car starts on its side
     glm::rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0)); //entity starts facing z positive, car starts facing x positive
   p->m_carShapeComponent.Init();
-  p->m_driveComponent.m_pRenderer = &p->m_renderer;
-  p->m_driveComponent.m_pTex = p->m_track.m_pTex;
+  p->m_physicsComponent.m_pRenderer = &p->m_renderer;
+  p->m_physicsComponent.m_pTex = p->m_track.m_pTex;
   p->m_carCamera.m_offset = glm::vec3(0.0f, 800.0f, -3000.0f);
   p->m_carCamera.Init();
-  p->m_driveComponent.m_pTrack = &p->m_track;
+  p->m_physicsComponent.m_pTrack = &p->m_track;
   p->m_driveComponent.Init();
+  p->m_physicsComponent.Init();
 
   //setup car entity
   p->m_car.AddComponent(&p->m_driveComponent);
+  p->m_car.AddComponent(&p->m_physicsComponent);
   p->m_car.AddComponent(&p->m_carShapeComponent);
   p->m_car.AddComponent(&p->m_carCamera);
   p->m_car.Init();
-  //p->m_car.m_bAcceptControls = true;
   SetPlayer(&p->m_car);
 }
 
@@ -186,7 +189,7 @@ void CScene::LoadTrack(const std::string &sTrackFile)
 
   //setup track entity
   p->m_trackEntity.AddComponent(&p->m_trackShapeComponent);
-  //p->m_trackEntity.AddComponent(&p->m_trackComponent);
+  p->m_trackEntity.AddComponent(&p->m_trackComponent);
   p->m_trackEntity.Init();
 }
 

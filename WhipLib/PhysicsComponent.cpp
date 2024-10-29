@@ -23,10 +23,10 @@ CPhysicsComponent::CPhysicsComponent()
 }
 
 //-------------------------------------------------------------------------------------------------
-#define DRAG_CONSTANT 0.0f;//-0.01f;
-#define ROLLING_RESISTANCE -.018f;
-#define CAR_MASS 1.0f;
-#define CORNERING_STIFFNESS = 1.0f;
+#define DRAG_CONSTANT 0.0f
+#define ROLLING_RESISTANCE -.018f
+#define CAR_MASS 1.0f
+#define CORNERING_STIFFNESS 1.0f
 
 void CPhysicsComponent::Update()
 {

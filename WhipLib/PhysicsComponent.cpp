@@ -23,14 +23,29 @@ CPhysicsComponent::CPhysicsComponent()
 }
 
 //-------------------------------------------------------------------------------------------------
+#define DRAG_CONSTANT 0.0f;//-0.01f;
+#define ROLLING_RESISTANCE -.018f;
+#define CAR_MASS 1.0f;
+#define CORNERING_STIFFNESS = 1.0f;
 
 void CPhysicsComponent::Update()
 {
   float fDeltaTime = CGameClock::GetGameClock().DeltaTimeLastFrame();
   glm::vec3 orientation = m_pContainingEntity->GetOrientation();
-  if (m_fLinearAccel > 0) {
-    m_linearVelocity += orientation * (m_fLinearAccel * fDeltaTime);
-  }
+  glm::vec3 traction = orientation * m_fLinearAccel;
+  glm::vec3 drag = m_linearVelocity * glm::length(m_linearVelocity) * DRAG_CONSTANT;
+  glm::vec3 rollingResistance = m_linearVelocity * ROLLING_RESISTANCE;
+  glm::vec3 longitudinal = traction + drag + rollingResistance;
+  glm::vec3 accel = longitudinal / CAR_MASS;
+  m_linearVelocity += accel * fDeltaTime;
+
+  float fCosTheta = glm::dot(glm::normalize(m_linearVelocity), glm::normalize(m_pContainingEntity->GetOrientation()));
+  if (fCosTheta > 1.0f)
+    fCosTheta = 1.0f;
+  float fTheta = glm::acos(fCosTheta);
+  glm::vec3 lateralVel = m_linearVelocity * glm::sin(fTheta);
+  if (!glm::any(glm::isnan(lateralVel)))
+    m_linearVelocity -= lateralVel * fDeltaTime;
 
   glm::vec3 newPos = m_pContainingEntity->m_position + m_linearVelocity * fDeltaTime;
   if (m_pTrack) {

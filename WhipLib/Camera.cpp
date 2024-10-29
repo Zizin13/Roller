@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "Entity.h"
 #include "GameClock.h"
+#include "PhysicsComponent.h"
 #include "gtx\transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
@@ -22,6 +23,7 @@ CCamera::CCamera()
 void CCamera::Update()
 {
   glm::vec3 desiredViewDirection = m_pContainingEntity->GetOrientation();
+
   glm::vec3 useOffset = glm::vec4(m_offset, 1.0f) * m_pContainingEntity->m_rotationMat;
   glm::vec3 desiredPosition = m_pContainingEntity->m_position + useOffset;
 

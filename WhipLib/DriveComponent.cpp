@@ -43,7 +43,7 @@ void CDriveComponent::MoveForward()
 {
   CPhysicsComponent *pPhysicsComponent = m_pContainingEntity->GetComponent<CPhysicsComponent>();
   if (pPhysicsComponent) {
-    pPhysicsComponent->m_fLinearAccel = 2000.0f;
+    pPhysicsComponent->m_fLinearAccel = 10000.0f;
   }
 }
 
@@ -53,7 +53,7 @@ void CDriveComponent::MoveBackward()
 {
   CPhysicsComponent *pPhysicsComponent = m_pContainingEntity->GetComponent<CPhysicsComponent>();
   if (pPhysicsComponent) {
-    pPhysicsComponent->m_fLinearAccel = -2000.0f;
+    pPhysicsComponent->m_fLinearAccel = -10000.0f;
   }
 }
 
@@ -63,7 +63,7 @@ void CDriveComponent::Coast()
 {
   CPhysicsComponent *pPhysicsComponent = m_pContainingEntity->GetComponent<CPhysicsComponent>();
   if (pPhysicsComponent) {
-    pPhysicsComponent->m_fLinearAccel = -500.0f;
+    pPhysicsComponent->m_fLinearAccel = 0.0f;
   }
 }
 

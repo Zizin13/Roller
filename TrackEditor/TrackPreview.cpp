@@ -712,20 +712,63 @@ bool CTrackPreview::ExportFBX()
   p->m_track.m_pBld->ExportToPngFile(sSignTexFile.toLatin1().constData());
 
   //generate models
-  CShapeData *pExportTrack = NULL;
   std::vector<CShapeData *> signAy;
-  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pExportTrack,
-                                                    p->m_pShader,
-                                                    &p->m_track,
-                                                    eShapeSection::EXPORT,
-                                                    true);
+  std::vector<CShapeData *> trackSectionAy;
+  if (exportWizard.m_bExportSeparate) {
+    //CShapeData *pCenterLine = NULL;
+    CShapeData *pCenterSurf = NULL;
+    CShapeData *pLShoulderSurf = NULL;
+    CShapeData *pRShoulderSurf = NULL;
+    CShapeData *pLWallSurf = NULL;
+    CShapeData *pRWallSurf = NULL;
+    CShapeData *pRoofSurf = NULL;
+    CShapeData *pOWallFloorSurf = NULL;
+    CShapeData *pLLOWallSurf = NULL;
+    CShapeData *pRLOWallSurf = NULL;
+    CShapeData *pLUOWallSurf = NULL;
+    CShapeData *pRUOWallSurf = NULL;
+
+    //CShapeFactory::GetShapeFactory().MakeTrackSurface(&pCenterLine,      p->m_pShader, &p->m_track, eShapeSection::CENTERLINE, true);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pCenterSurf,      p->m_pShader, &p->m_track, eShapeSection::CENTER,     true);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLShoulderSurf,   p->m_pShader, &p->m_track, eShapeSection::LSHOULDER,  true);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRShoulderSurf,   p->m_pShader, &p->m_track, eShapeSection::RSHOULDER,  true);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLWallSurf,       p->m_pShader, &p->m_track, eShapeSection::LWALL,      true);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRWallSurf,       p->m_pShader, &p->m_track, eShapeSection::RWALL,      true);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRoofSurf,        p->m_pShader, &p->m_track, eShapeSection::ROOF,       true);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pOWallFloorSurf,  p->m_pShader, &p->m_track, eShapeSection::OWALLFLOOR, true);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLLOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::LLOWALL,    true);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRLOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::RLOWALL,    true);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLUOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::LUOWALL,    true);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRUOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::RUOWALL,    true);
+
+    //trackSectionAy.push_back(pCenterLine);
+    trackSectionAy.push_back(pCenterSurf);
+    trackSectionAy.push_back(pLShoulderSurf);
+    trackSectionAy.push_back(pRShoulderSurf);
+    trackSectionAy.push_back(pLWallSurf);
+    trackSectionAy.push_back(pRWallSurf);
+    trackSectionAy.push_back(pRoofSurf);
+    trackSectionAy.push_back(pOWallFloorSurf);
+    trackSectionAy.push_back(pLLOWallSurf);
+    trackSectionAy.push_back(pRLOWallSurf);
+    trackSectionAy.push_back(pLUOWallSurf);
+    trackSectionAy.push_back(pRUOWallSurf);
+  } else {
+    CShapeData *pExportTrack = NULL;
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pExportTrack,
+                                                      p->m_pShader,
+                                                      &p->m_track,
+                                                      eShapeSection::EXPORT,
+                                                      true);
+    trackSectionAy.push_back(pExportTrack);
+  }
   CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signAy);
   //signs need to be moved to the right position on track, this is normally done in the shader
   for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
     (*it)->TransformVertsForExport();
 
   //export
-  bool bExported = CFBXExporter::GetFBXExporter().ExportTrack(pExportTrack,
+  bool bExported = CFBXExporter::GetFBXExporter().ExportTrack(trackSectionAy,
                                                               signAy,
                                                               sName.toLatin1().constData(),
                                                               sFilename.toLatin1().constData(),
@@ -733,8 +776,8 @@ bool CTrackPreview::ExportFBX()
                                                               sSignTexFile.toLatin1().constData());
 
   //cleanup
-  if (pExportTrack)
-    delete pExportTrack;
+  for (std::vector<CShapeData *>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it)
+    delete *it;
   for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
     delete *it;
 

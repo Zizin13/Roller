@@ -34,7 +34,8 @@ enum class eShapeSection
   AILINE2,
   AILINE3,
   AILINE4,
-  EXPORT
+  EXPORT,
+  CENTERLINE
 };
 
 //-------------------------------------------------------------------------------------------------

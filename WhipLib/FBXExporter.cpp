@@ -92,14 +92,14 @@ bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szName, const
 
 //-------------------------------------------------------------------------------------------------
 
-bool CFBXExporter::ExportTrack(CShapeData *pTrackShape,
+bool CFBXExporter::ExportTrack(std::vector<CShapeData *> trackSectionAy,
                                std::vector<CShapeData *> signAy,
                                const char *szName,
                                const char *szFile,
                                const char *szTextureFile,
                                const char *szSignTextureFile)
 {
-  if (!pTrackShape || !szFile || !szTextureFile || !szSignTextureFile)
+  if (!szFile || !szTextureFile || !szSignTextureFile)
     return false;
 
   FbxScene *pScene = FbxScene::Create(g_pFbxManager, "Export Scene");
@@ -122,10 +122,13 @@ bool CFBXExporter::ExportTrack(CShapeData *pTrackShape,
     return false;
   }
 
-  FlipTexCoordsForExport(pTrackShape->m_vertices, pTrackShape->m_uiNumVerts); //OpenGL expects texture data in reverse order
+  for (int i = 0; i < (int)trackSectionAy.size(); ++i) {
+    std::string sSectionName = std::string(szName) + std::string(" ") + std::to_string(i);
+    FlipTexCoordsForExport(trackSectionAy[i]->m_vertices, trackSectionAy[i]->m_uiNumVerts); //OpenGL expects texture data in reverse order
+    FbxNode *pTrackMesh = CreateShapeMesh(trackSectionAy[i], sSectionName.c_str(), szTextureFile, pScene);
+    pScene->GetRootNode()->AddChild(pTrackMesh);
+  }
 
-  FbxNode *pTrackMesh = CreateShapeMesh(pTrackShape, szName, szTextureFile, pScene);
-  pScene->GetRootNode()->AddChild(pTrackMesh);
   for (int i = 0; i < (int)signAy.size(); ++i) {
     std::string sSignName = "Sign " + std::to_string(i);
     FlipTexCoordsForExport(signAy[i]->m_vertices, signAy[i]->m_uiNumVerts); //OpenGL expects texture data in reverse order

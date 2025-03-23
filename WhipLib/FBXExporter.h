@@ -29,7 +29,7 @@ public:
   void operator=(CFBXExporter const &) = delete;
 
   bool ExportShape(CShapeData *pShapeData, const char *szName, const char *szFile, const char *szTextureFile);
-  bool ExportTrack(CShapeData *pTrackShape,
+  bool ExportTrack(std::vector<CShapeData *> trackSectionAy,
                    std::vector<CShapeData *> signAy,
                    const char *szName,
                    const char *szFile,

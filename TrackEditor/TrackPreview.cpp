@@ -715,7 +715,7 @@ bool CTrackPreview::ExportFBX()
   std::vector<CShapeData *> signAy;
   std::vector<CShapeData *> trackSectionAy;
   if (exportWizard.m_bExportSeparate) {
-    //CShapeData *pCenterLine = NULL;
+    CShapeData *pCenterLine = NULL;
     CShapeData *pCenterSurf = NULL;
     CShapeData *pLShoulderSurf = NULL;
     CShapeData *pRShoulderSurf = NULL;
@@ -728,7 +728,7 @@ bool CTrackPreview::ExportFBX()
     CShapeData *pLUOWallSurf = NULL;
     CShapeData *pRUOWallSurf = NULL;
 
-    //CShapeFactory::GetShapeFactory().MakeTrackSurface(&pCenterLine,      p->m_pShader, &p->m_track, eShapeSection::CENTERLINE, true);
+    CShapeFactory::GetShapeFactory().MakeAILine(      &pCenterLine,      p->m_pShader, &p->m_track, eShapeSection::CENTERLINE, true);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pCenterSurf,      p->m_pShader, &p->m_track, eShapeSection::CENTER,     true);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLShoulderSurf,   p->m_pShader, &p->m_track, eShapeSection::LSHOULDER,  true);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRShoulderSurf,   p->m_pShader, &p->m_track, eShapeSection::RSHOULDER,  true);
@@ -741,7 +741,7 @@ bool CTrackPreview::ExportFBX()
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLUOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::LUOWALL,    true);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRUOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::RUOWALL,    true);
 
-    //trackSectionAy.push_back(pCenterLine);
+    trackSectionAy.push_back(pCenterLine);
     trackSectionAy.push_back(pCenterSurf);
     trackSectionAy.push_back(pLShoulderSurf);
     trackSectionAy.push_back(pRShoulderSurf);

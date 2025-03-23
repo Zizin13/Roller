@@ -1350,6 +1350,9 @@ void CShapeFactory::MakeAILine(CShapeData **pShape, CShader *pShader, CTrack *pT
 
   for (uint32 i = 0; i < uiNumVerts; ++i) {
     switch (section) {
+      case eShapeSection::CENTERLINE:
+        vertices[i].texCoords = pTrack->m_pTex->GetColorCenterCoordinates(0xAB);
+        break;
       case eShapeSection::AILINE1:
         vertices[i].texCoords = pTrack->m_pTex->GetColorCenterCoordinates(0xE6);
         break;
@@ -1611,6 +1614,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
   if (section == eShapeSection::SELECTED) uiNumVertsPerChunk = 8;
   if (section >= eShapeSection::AILINE1 && section <= eShapeSection::AILINE4) uiNumVertsPerChunk = 1;
   if (section == eShapeSection::EXPORT) uiNumVertsPerChunk = 44 * 2;
+  if (section == eShapeSection::CENTERLINE) uiNumVertsPerChunk = 1;
 
   numVertices = (uint32)pTrack->m_chunkAy.size() * uiNumVertsPerChunk;
   tVertex *vertices = new tVertex[numVertices];
@@ -2272,6 +2276,9 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
                             vertices[i * uiNumVertsPerChunk + 0 + 84],
                             vertices[i * uiNumVertsPerChunk + 3 + 84],
                             vertices[i * uiNumVertsPerChunk + 1 + 84]);
+        break;
+      case eShapeSection::CENTERLINE:
+        vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.center;
         break;
       default:
         assert(0); //shape not implemented

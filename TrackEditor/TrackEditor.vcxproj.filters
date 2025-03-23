@@ -118,6 +118,12 @@
     <ClCompile Include="moc\moc_DebugChunkData.cpp">
       <Filter>Qt Generated Files\Moc Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ExportWizard.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="moc\moc_ExportWizard.cpp">
+      <Filter>Qt Generated Files\Moc Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TrackEditor.h">
@@ -175,6 +181,9 @@
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_DebugChunkData.h">
+      <Filter>Qt Generated Files\Ui Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_ExportWizard.h">
       <Filter>Qt Generated Files\Ui Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -283,6 +292,12 @@
     </CustomBuild>
     <CustomBuild Include="AssignBacksDialog.ui">
       <Filter>Resources</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ExportWizard.ui">
+      <Filter>Resources</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ExportWizard.h">
+      <Filter>Headers</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>

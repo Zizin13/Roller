@@ -17,6 +17,7 @@
 #include "CarHelpers.h"
 #include "Entity.h"
 #include "NoclipComponent.h"
+#include "ExportWizard.h"
 #include "qevent.h"
 #include "qdir.h"
 #include "qmessagebox.h"
@@ -691,6 +692,10 @@ bool CTrackPreview::SaveTrackAs()
 
 bool CTrackPreview::ExportFBX()
 {
+  //get export settings
+  CExportWizard exportWizard(this);
+  exportWizard.exec();
+
   //save track
   QString sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
     this, "Export Track As", p->m_track.m_sTrackFileFolder.c_str(), "FBX Files (*.fbx)"));

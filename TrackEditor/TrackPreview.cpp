@@ -713,7 +713,7 @@ bool CTrackPreview::ExportFBX()
 
   //generate models
   std::vector<CShapeData *> signAy;
-  std::vector<CShapeData *> trackSectionAy;
+  std::vector<std::pair<std::string, CShapeData *>> trackSectionAy;
   if (exportWizard.m_bExportSeparate) {
     CShapeData *pCenterLine = NULL;
     CShapeData *pCenterSurf = NULL;
@@ -741,18 +741,18 @@ bool CTrackPreview::ExportFBX()
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLUOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::LUOWALL,    true);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRUOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::RUOWALL,    true);
 
-    trackSectionAy.push_back(pCenterLine);
-    trackSectionAy.push_back(pCenterSurf);
-    trackSectionAy.push_back(pLShoulderSurf);
-    trackSectionAy.push_back(pRShoulderSurf);
-    trackSectionAy.push_back(pLWallSurf);
-    trackSectionAy.push_back(pRWallSurf);
-    trackSectionAy.push_back(pRoofSurf);
-    trackSectionAy.push_back(pOWallFloorSurf);
-    trackSectionAy.push_back(pLLOWallSurf);
-    trackSectionAy.push_back(pRLOWallSurf);
-    trackSectionAy.push_back(pLUOWallSurf);
-    trackSectionAy.push_back(pRUOWallSurf);
+    trackSectionAy.push_back(std::make_pair("Centerline", pCenterLine));
+    trackSectionAy.push_back(std::make_pair("Center", pCenterSurf));
+    trackSectionAy.push_back(std::make_pair("Left Shoulder", pLShoulderSurf));
+    trackSectionAy.push_back(std::make_pair("Right Shoulder", pRShoulderSurf));
+    trackSectionAy.push_back(std::make_pair("Left Wall", pLWallSurf));
+    trackSectionAy.push_back(std::make_pair("Right Wall", pRWallSurf));
+    trackSectionAy.push_back(std::make_pair("Roof", pRoofSurf));
+    trackSectionAy.push_back(std::make_pair("Outer Wall Floor", pOWallFloorSurf));
+    trackSectionAy.push_back(std::make_pair("Left Lower Outer Wall", pLLOWallSurf));
+    trackSectionAy.push_back(std::make_pair("Right Lower Outer Wall", pRLOWallSurf));
+    trackSectionAy.push_back(std::make_pair("Left Upper Outer Wall", pLUOWallSurf));
+    trackSectionAy.push_back(std::make_pair("Right Upper Outer Wall", pRUOWallSurf));
   } else {
     CShapeData *pExportTrack = NULL;
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pExportTrack,
@@ -760,7 +760,7 @@ bool CTrackPreview::ExportFBX()
                                                       &p->m_track,
                                                       eShapeSection::EXPORT,
                                                       true);
-    trackSectionAy.push_back(pExportTrack);
+    trackSectionAy.push_back(std::make_pair("Track", pExportTrack));
   }
   CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signAy);
   //signs need to be moved to the right position on track, this is normally done in the shader
@@ -776,8 +776,8 @@ bool CTrackPreview::ExportFBX()
                                                               sSignTexFile.toLatin1().constData());
 
   //cleanup
-  for (std::vector<CShapeData *>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it)
-    delete *it;
+  for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it)
+    delete it->second;
   for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
     delete *it;
 

@@ -150,6 +150,7 @@ if %errorlevel% NEQ 0 goto Failed
 
 echo Copying License Files...
 echo f | xcopy ..\LICENSE.md ..\bin\WhipLib /R /Y /d /i &gt; null
+echo f | xcopy ..\LICENSE.GPLv3 .\$(OutDir) /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glew\GLEW_License.txt ..\bin\WhipLib\GLEW_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glm\copying.txt ..\bin\WhipLib\GLM_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\FBX\FBX_LICENSE.rtf ..\bin\WhipLib\FBX_License.rtf /R /Y /d /i &gt; null
@@ -236,6 +237,7 @@ if %errorlevel% NEQ 0 goto Failed
 
 echo Copying License Files...
 echo f | xcopy ..\LICENSE.md ..\bin\WhipLib /R /Y /d /i &gt; null
+echo f | xcopy ..\LICENSE.GPLv3 .\$(OutDir) /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glew\GLEW_License.txt ..\bin\WhipLib\GLEW_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glm\copying.txt ..\bin\WhipLib\GLM_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\FBX\FBX_LICENSE.rtf ..\bin\WhipLib\FBX_License.rtf /R /Y /d /i &gt; null

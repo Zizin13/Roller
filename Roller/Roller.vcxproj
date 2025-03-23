@@ -130,6 +130,7 @@ if %errorlevel% NEQ 0 goto Failed
 
 echo Copying License Files...
 echo f | xcopy ..\LICENSE.md .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\LICENSE.GPLv3 .\$(OutDir) /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glfw\LICENSE.md .\$(OutDir)GLFW_License.md /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glew\GLEW_License.txt .\$(OutDir)GLEW_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glm\copying.txt .\$(OutDir)GLM_License.txt /R /Y /d /i &gt; null
@@ -184,6 +185,7 @@ if %errorlevel% NEQ 0 goto Failed
 
 echo Copying License Files...
 echo f | xcopy ..\LICENSE.md .\$(OutDir) /R /Y /d /i &gt; null
+echo f | xcopy ..\LICENSE.GPLv3 .\$(OutDir) /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glfw\LICENSE.md .\$(OutDir)GLFW_License.md /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glew\GLEW_License.txt .\$(OutDir)GLEW_License.txt /R /Y /d /i &gt; null
 echo f | xcopy ..\external\glm\copying.txt .\$(OutDir)GLM_License.txt /R /Y /d /i &gt; null

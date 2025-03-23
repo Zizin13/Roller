@@ -91,14 +91,14 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir)
 
   //generate models
   CShapeData *pExportTrack = NULL;
-  std::vector<CShapeData *> trackSectionAy;
+  std::vector<std::pair<std::string, CShapeData *>> trackSectionAy;
   std::vector<CShapeData *> signAy;
   CShapeFactory::GetShapeFactory().MakeTrackSurface(&pExportTrack,
                                                     NULL,
                                                     pTrack,
                                                     eShapeSection::EXPORT,
                                                     true);
-  trackSectionAy.push_back(pExportTrack);
+  trackSectionAy.push_back(std::make_pair("Track", pExportTrack));
   CShapeFactory::GetShapeFactory().MakeSigns(NULL, pTrack, signAy);
   //signs need to be moved to the right position on track, this is normally done in the shader
   for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
@@ -117,8 +117,8 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir)
                                                               sSignTexFile.c_str());
 
   //cleanup
-  for (std::vector<CShapeData *>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it)
-    delete *it;
+  for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it)
+    delete it->second;
   for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
     delete *it;
   return bExported;

@@ -30,6 +30,7 @@ public:
   CIndexBuffer *m_pIndexBuf;
   CVertexBuffer *m_pVertexBuf;
   CTexture *m_pTexture; //owned by track or renderer
+  GLenum m_drawType;
 
   uint32 m_uiNumVerts;
   tVertex *m_vertices;
@@ -38,7 +39,6 @@ public:
 
 private:
   CVertexArray *m_pVertexArray;
-  GLenum m_drawType;
   CShader *m_pShader; //owned by renderer
 };
 //-------------------------------------------------------------------------------------------------

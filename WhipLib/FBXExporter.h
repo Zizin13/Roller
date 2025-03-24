@@ -39,6 +39,7 @@ public:
 private:
   CFBXExporter();
   fbxsdk::FbxNode *CreateShapeMesh(CShapeData *pShapeData, const char *szName, const char *szTextureFile, fbxsdk::FbxScene *pScene);
+  fbxsdk::FbxNode *CreateShapeLine(CShapeData *pShapeData, const char *szName, const char *szTextureFile, fbxsdk::FbxScene *pScene);
   fbxsdk::FbxSurfacePhong *CreateTextureMaterial(const char *szTextureFile, fbxsdk::FbxScene *pScene);
   fbxsdk::FbxFileTexture *CreateFileTexture(const char *szTextureFile, fbxsdk::FbxScene *pScene);
   void FlipTexCoordsForExport(tVertex *vertices, uint32 uiNumVerts);

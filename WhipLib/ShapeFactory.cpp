@@ -1378,15 +1378,17 @@ void CShapeFactory::MakeAILine(CShapeData **pShape, CShader *pShader, CTrack *pT
     CVertexArray *pVertexArray = new CVertexArray(pVertexBuf);
 
     (*pShape) = new CShapeData(pVertexBuf, pIndexBuf, pVertexArray, pShader, pTrack->m_pTex, drawType);
-
-    if (indices)
-      delete[] indices;
+    (*pShape)->m_vertices = vertices;
+    (*pShape)->m_uiNumVerts = uiNumVerts;
+    (*pShape)->m_indices = indices;
+    (*pShape)->m_uiNumIndices = uiNumIndices;
   } else {
     (*pShape)->m_pVertexBuf->Update(vertices, uiNumVerts);
+    if ((*pShape)->m_vertices)
+      delete[](*pShape)->m_vertices;
+    (*pShape)->m_vertices = vertices;
+    (*pShape)->m_uiNumVerts = uiNumVerts;
   }
-
-  if (vertices)
-    delete[] vertices;
 }
 
 //-------------------------------------------------------------------------------------------------

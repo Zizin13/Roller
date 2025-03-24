@@ -124,8 +124,12 @@ bool CFBXExporter::ExportTrack(std::vector<std::pair<std::string, CShapeData *>>
 
   for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it) {
     FlipTexCoordsForExport(it->second->m_vertices, it->second->m_uiNumVerts); //OpenGL expects texture data in reverse order
-    FbxNode *pTrackMesh = CreateShapeMesh(it->second, it->first.c_str(), szTextureFile, pScene);
-    pScene->GetRootNode()->AddChild(pTrackMesh);
+    FbxNode *pTrackSectionNode = NULL;
+    if (it->second->m_drawType == GL_TRIANGLES)
+      pTrackSectionNode = CreateShapeMesh(it->second, it->first.c_str(), szTextureFile, pScene);
+    else
+      pTrackSectionNode = CreateShapeLine(it->second, it->first.c_str(), szTextureFile, pScene);
+    pScene->GetRootNode()->AddChild(pTrackSectionNode);
   }
 
   for (int i = 0; i < (int)signAy.size(); ++i) {
@@ -151,7 +155,7 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
   int iNumPols = (int)pShapeData->m_uiNumIndices / 3;
 
   //create mesh object
-  FbxMesh *pMesh = FbxMesh::Create(pScene, szName);
+  fbxsdk::FbxMesh *pMesh = fbxsdk::FbxMesh::Create(pScene, szName);
 
   //create vertices
   pMesh->InitControlPoints((int)pShapeData->m_uiNumVerts);
@@ -214,6 +218,43 @@ FbxNode *CFBXExporter::CreateShapeMesh(CShapeData *pShapeData, const char *szNam
     //texture is always the first material added
     pMaterialElement->GetIndexArray().SetAt(i, 0);
   }
+
+  return pNode;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+fbxsdk::FbxNode *CFBXExporter::CreateShapeLine(CShapeData *pShapeData, const char *szName, const char *szTextureFile, fbxsdk::FbxScene *pScene)
+{
+  //create mesh object
+  fbxsdk::FbxLine *pLine = fbxsdk::FbxLine::Create(pScene, szName);
+
+  //create vertices
+  pLine->InitControlPoints((int)pShapeData->m_uiNumVerts);
+  FbxVector4 *controlPointsAy = pLine->GetControlPoints();
+  for (int i = 0; i < (int)pShapeData->m_uiNumVerts; ++i) {
+    FbxVector4 controlPoint(pShapeData->m_vertices[i].position.x, pShapeData->m_vertices[i].position.y, pShapeData->m_vertices[i].position.z);
+    controlPointsAy[i] = controlPoint;
+  }
+
+  //pLine->SetIndexArraySize(pShapeData->m_uiNumIndices);
+  pLine->SetIndexArraySize((int)pShapeData->m_uiNumVerts);
+  //FbxArray<int> *indexAy = pLine->GetIndexArray();
+  for (int i = 0; i < (int)pShapeData->m_uiNumVerts; ++i) {
+    //indexAy[i] = pShapeData->m_indices[i];
+    //bool bEndPoint = (i == pShapeData->m_uiNumIndices - 1);
+    //pLine->AddPointIndex(i);
+    pLine->SetPointIndexAt(i, i);
+  }
+
+  pLine->AddEndPoint(pShapeData->m_uiNumVerts - 1);
+  pLine->Color = FbxDouble3(1.0, 0.0, 0.0);
+  pLine->Renderable = true;
+
+  // create a FbxNode
+  FbxNode *pNode = FbxNode::Create(pScene, szName);
+  pNode->SetNodeAttribute(pLine);
+  pNode->SetShadingMode(FbxNode::eWireFrame);
 
   return pNode;
 }

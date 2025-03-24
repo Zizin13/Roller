@@ -60,7 +60,7 @@ bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szName, const
     return false;
   }
 
-  FbxExporter *pExporter = FbxExporter::Create(g_pFbxManager, "Exporter");
+  fbxsdk::FbxExporter *pExporter = fbxsdk::FbxExporter::Create(g_pFbxManager, "Exporter");
   if (!pExporter) {
     Logging::LogMessage("Error: Could not create FBX exporter");
     pScene->Destroy();
@@ -108,7 +108,7 @@ bool CFBXExporter::ExportTrack(std::vector<std::pair<std::string, CShapeData *>>
     return false;
   }
 
-  FbxExporter *pExporter = FbxExporter::Create(g_pFbxManager, "Exporter");
+  fbxsdk::FbxExporter *pExporter = fbxsdk::FbxExporter::Create(g_pFbxManager, "Exporter");
   if (!pExporter) {
     Logging::LogMessage("Error: Could not create FBX exporter");
     pScene->Destroy();

@@ -18,6 +18,7 @@ public:
   bool ExportShape(CShapeData *pShapeData, const char *szFile);
   bool ExportTrack(std::vector<std::pair<std::string, CShapeData *>> trackSectionAy,
                    std::vector<CShapeData *> signAy,
+                   const char *szFolder,
                    const char *szName);
 
 private:

@@ -811,6 +811,7 @@ bool CTrackPreview::Export(eExportType exportType)
     case eExportType::EXPORT_OBJ:
       bExported = CObjExporter::GetObjExporter().ExportTrack(trackSectionAy,
                                                              signAy,
+                                                             sFolder.toLatin1().constData(),
                                                              sName.toLatin1().constData());
       break;
   }

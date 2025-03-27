@@ -2,6 +2,7 @@
 #define _TRACKEDITOR_EXPORTWIZARD_H
 //-------------------------------------------------------------------------------------------------
 #include "ui_ExportWizard.h"
+#include "TrackPreview.h"
 //-------------------------------------------------------------------------------------------------
 
 class CExportWizard : public QDialog, private Ui::ExportWizard
@@ -9,14 +10,21 @@ class CExportWizard : public QDialog, private Ui::ExportWizard
   Q_OBJECT
 
 public:
-  CExportWizard(QWidget *pParent);
+  CExportWizard(QWidget *pParent, eExportType exportType);
   ~CExportWizard();
 
   bool m_bExportSeparate;
+  bool m_bExportSigns;
 
 protected slots:
   void OnSingleObject();
   void OnSeparate();
+  void OnSignsChecked(bool bChecked);
+
+private:
+  void UpdateSignsCheckbox();
+
+  eExportType m_exportType;
 };
 
 //-------------------------------------------------------------------------------------------------

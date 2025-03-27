@@ -28,10 +28,7 @@ CObjExporter::~CObjExporter()
 
 bool CObjExporter::ExportTrack(std::vector<std::pair<std::string, CShapeData *>> trackSectionAy,
                                std::vector<CShapeData *> signAy,
-                               const char *szName,
-                               const char *szFile,
-                               const char *szTextureFile,
-                               const char *szSignTextureFile)
+                               const char *szFile)
 {
   return false;
 }

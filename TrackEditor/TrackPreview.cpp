@@ -694,8 +694,9 @@ bool CTrackPreview::SaveTrackAs()
 bool CTrackPreview::Export(eExportType exportType)
 {
   //get export settings
-  CExportWizard exportWizard(this);
-  exportWizard.exec();
+  CExportWizard exportWizard(this, exportType);
+  if (!exportWizard.exec())
+    return false;
 
   //save track
   QString sFilter = "";
@@ -784,10 +785,13 @@ bool CTrackPreview::Export(eExportType exportType)
                                                       true);
     trackSectionAy.push_back(std::make_pair("Track", pExportTrack));
   }
-  CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signAy);
-  //signs need to be moved to the right position on track, this is normally done in the shader
-  for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
-    (*it)->TransformVertsForExport();
+
+  if (exportWizard.m_bExportSigns) {
+    CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signAy);
+    //signs need to be moved to the right position on track, this is normally done in the shader
+    for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
+      (*it)->TransformVertsForExport();
+  }
 
   //export
   bool bExported = false;
@@ -803,10 +807,7 @@ bool CTrackPreview::Export(eExportType exportType)
     case eExportType::EXPORT_OBJ:
       bExported = CObjExporter::GetObjExporter().ExportTrack(trackSectionAy,
                                                              signAy,
-                                                             sName.toLatin1().constData(),
-                                                             sFilename.toLatin1().constData(),
-                                                             sTexFile.toLatin1().constData(),
-                                                             sSignTexFile.toLatin1().constData());
+                                                             sFilename.toLatin1().constData());
       break;
   }
 

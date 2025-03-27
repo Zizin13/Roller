@@ -65,7 +65,7 @@ bool CObjExporter::ExportShape(CShapeData *pShapeData, const char *szFile)
     for (int i = 0; i < iNumPols; ++i) {
       out << "f ";
       for (int j = 0; j < 3; ++j) {
-        std::string sIndex = std::to_string(pShapeData->m_indices[i * 3 + j]);
+        std::string sIndex = std::to_string(pShapeData->m_indices[i * 3 + j] + 1);
         out << sIndex << "/" << sIndex << "/" << sIndex;
         if (j != 2)
           out << " ";

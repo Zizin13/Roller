@@ -42,9 +42,9 @@ bool CObjExporter::ExportShape(CShapeData *pShapeData, const char *szFile)
   out << "#vertices\n";
   for (int i = 0; i < (int)pShapeData->m_uiNumVerts; ++i) {
     out << "v " 
-      << std::to_string(pShapeData->m_vertices[i].position.x) << " " 
-      << std::to_string(pShapeData->m_vertices[i].position.y) << " "
-      << std::to_string(pShapeData->m_vertices[i].position.z) << "\n";
+      << std::to_string(pShapeData->m_vertices[i].position.x / 100.0f) << " " 
+      << std::to_string(pShapeData->m_vertices[i].position.y / 100.0f) << " "
+      << std::to_string(pShapeData->m_vertices[i].position.z / 100.0f) << "\n";
   }
   out << "#tex coords\n";
   for (int i = 0; i < (int)pShapeData->m_uiNumVerts; ++i) {
@@ -66,7 +66,9 @@ bool CObjExporter::ExportShape(CShapeData *pShapeData, const char *szFile)
       out << "f ";
       for (int j = 0; j < 3; ++j) {
         std::string sIndex = std::to_string(pShapeData->m_indices[i * 3 + j]);
-        out << sIndex << "/" << sIndex << "/" << sIndex << " ";
+        out << sIndex << "/" << sIndex << "/" << sIndex;
+        if (j != 2)
+          out << " ";
       }
       out << "\n";
     }

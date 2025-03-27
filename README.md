@@ -20,11 +20,11 @@ Whiplash/Fatal Racing track editor, OBJ and FBX resource converter, and DLL for 
 
 ![alt text](https://github.com/Zizin13/Roller/blob/master/TrackEditor/images/screenshot.png)
 
-## FbxExporter Features:
+## ModelExporter Features:
 * Included with Track Editor releases
-* Exports all Whiplash tracks and cars to FBX format
+* Exports all Whiplash tracks and cars to OBJ or FBX format
 
-![alt text](https://github.com/Zizin13/Roller/blob/master/FbxExporter/images/blender.png)
+![alt text](https://github.com/Zizin13/Roller/blob/master/ModelExporter/images/blender.png)
 
 ## WhipLib DLL Features:
 * Loads Whiplash textures and models for use in other applications

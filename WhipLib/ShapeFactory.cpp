@@ -1354,15 +1354,19 @@ void CShapeFactory::MakeAILine(CShapeData **pShape, CShader *pShader, CTrack *pT
         vertices[i].texCoords = pTrack->m_pTex->GetColorCenterCoordinates(0xAB);
         break;
       case eShapeSection::AILINE1:
+      case eShapeSection::CARLINE1:
         vertices[i].texCoords = pTrack->m_pTex->GetColorCenterCoordinates(0xE6);
         break;
       case eShapeSection::AILINE2:
+      case eShapeSection::CARLINE2:
         vertices[i].texCoords = pTrack->m_pTex->GetColorCenterCoordinates(0xFF);
         break;
       case eShapeSection::AILINE3:
+      case eShapeSection::CARLINE3:
         vertices[i].texCoords = pTrack->m_pTex->GetColorCenterCoordinates(0xF3);
         break;
       case eShapeSection::AILINE4:
+      case eShapeSection::CARLINE4:
         vertices[i].texCoords = pTrack->m_pTex->GetColorCenterCoordinates(0xCF);
         break;
     }
@@ -1614,7 +1618,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
 
   uint32 uiNumVertsPerChunk = 4 * 2;
   if (section == eShapeSection::SELECTED) uiNumVertsPerChunk = 8;
-  if (section >= eShapeSection::AILINE1 && section <= eShapeSection::AILINE4) uiNumVertsPerChunk = 1;
+  if (section >= eShapeSection::AILINE1 && section <= eShapeSection::CARLINE4) uiNumVertsPerChunk = 1;
   if (section == eShapeSection::EXPORT) uiNumVertsPerChunk = 44 * 2;
   if (section == eShapeSection::CENTERLINE) uiNumVertsPerChunk = 1;
 
@@ -1945,6 +1949,18 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         break;
       case eShapeSection::AILINE4:
         vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.aiLine4;
+        break;
+      case eShapeSection::CARLINE1:
+        vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.carLine1;
+        break;
+      case eShapeSection::CARLINE2:
+        vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.carLine2;
+        break;
+      case eShapeSection::CARLINE3:
+        vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.carLine3;
+        break;
+      case eShapeSection::CARLINE4:
+        vertices[i * uiNumVertsPerChunk + 0].position = pTrack->m_chunkAy[i].math.carLine4;
         break;
       case eShapeSection::EXPORT:
         //center

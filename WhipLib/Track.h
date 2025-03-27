@@ -58,11 +58,11 @@ struct tChunkMath
   glm::vec3 rloWallBottomAttach;
   glm::vec3 luoWall;
   glm::vec3 ruoWall;
-  glm::vec3 aiLine1;
+  glm::vec3 aiLine1; //visualized AI lines positioned above track
   glm::vec3 aiLine2;
   glm::vec3 aiLine3;
   glm::vec3 aiLine4;
-  glm::vec3 carLine1;
+  glm::vec3 carLine1; //actual AI lines at track surface level
   glm::vec3 carLine2;
   glm::vec3 carLine3;
   glm::vec3 carLine4;

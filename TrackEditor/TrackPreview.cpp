@@ -744,10 +744,10 @@ bool CTrackPreview::Export(eExportType exportType)
     CShapeData *pRUOWallSurf = NULL;
 
     CShapeFactory::GetShapeFactory().MakeAILine(      &pCenterLine,      p->m_pShader, &p->m_track, eShapeSection::CENTERLINE, true);
-    CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine1,         p->m_pShader, &p->m_track, eShapeSection::AILINE1,    true);
-    CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine2,         p->m_pShader, &p->m_track, eShapeSection::AILINE2,    true);
-    CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine3,         p->m_pShader, &p->m_track, eShapeSection::AILINE3,    true);
-    CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine4,         p->m_pShader, &p->m_track, eShapeSection::AILINE4,    true);
+    CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine1,         p->m_pShader, &p->m_track, eShapeSection::CARLINE1,   true);
+    CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine2,         p->m_pShader, &p->m_track, eShapeSection::CARLINE2,   true);
+    CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine3,         p->m_pShader, &p->m_track, eShapeSection::CARLINE3,   true);
+    CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine4,         p->m_pShader, &p->m_track, eShapeSection::CARLINE4,   true);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pCenterSurf,      p->m_pShader, &p->m_track, eShapeSection::CENTER,     true);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLShoulderSurf,   p->m_pShader, &p->m_track, eShapeSection::LSHOULDER,  true);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRShoulderSurf,   p->m_pShader, &p->m_track, eShapeSection::RSHOULDER,  true);

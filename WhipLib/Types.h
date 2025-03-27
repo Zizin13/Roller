@@ -30,10 +30,14 @@ enum class eShapeSection
   LUOWALL,
   RUOWALL,
   SELECTED,
-  AILINE1,
+  AILINE1, //visualized AI lines positioned above track
   AILINE2,
   AILINE3,
   AILINE4,
+  CARLINE1, //actual AI lines at track surface level
+  CARLINE2,
+  CARLINE3,
+  CARLINE4,
   EXPORT,
   CENTERLINE
 };

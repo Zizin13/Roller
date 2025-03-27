@@ -1,5 +1,6 @@
 #include "ShapeFactory.h"
 #include "FBXExporter.h"
+#include "ObjExporter.h"
 #include "ShapeData.h"
 #include "Texture.h"
 #include "Palette.h"
@@ -19,7 +20,7 @@ static void LogMessageCbStatic(const char *szMsg, int iLen)
 
 //-------------------------------------------------------------------------------------------------
 
-bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir)
+bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir, bool bObj)
 {
   std::string sCarName = CarHelpers::GetCarNameFromModel(carModel);
   std::string sTex = CarHelpers::GetCarTextureFromModel(carModel);
@@ -48,11 +49,19 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir)
     return false;
   pCar->FlipTexCoordsForExport();
 
-  std::string sFilename = sOutDir + std::string("\\") + sCarName + std::string(".fbx");
+  std::string sExtension = ".fbx";
+  if (bObj)
+    sExtension = ".obj";
+  std::string sFilename = sOutDir + std::string("\\") + sCarName + sExtension;
   printf("Exporting ");
   printf(sFilename.c_str());
   printf("...\n");
-  bool bSuccess = CFBXExporter::GetFBXExporter().ExportShape(pCar, sCarName.c_str(), sFilename.c_str(), sTexFile.c_str());
+  bool bSuccess = false;
+  if (bObj) {
+    bSuccess = CObjExporter::GetObjExporter().ExportShape(pCar, sFilename.c_str());
+  } else {
+    bSuccess = CFBXExporter::GetFBXExporter().ExportShape(pCar, sCarName.c_str(), sFilename.c_str(), sTexFile.c_str());
+  }
 
   delete pCar;
   return bSuccess;
@@ -60,7 +69,7 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir)
 
 //-------------------------------------------------------------------------------------------------
 
-bool ExportTrack(CTrack *pTrack, std::string sOutDir)
+bool ExportTrack(CTrack *pTrack, std::string sOutDir, bool bObj)
 {
   if (!pTrack || !pTrack->m_pTex || !pTrack->m_pBld)
     return false;
@@ -100,7 +109,8 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir)
                                                     eShapeSection::EXPORT,
                                                     true);
   trackSectionAy.push_back(std::make_pair("Track", pExportTrack));
-  CShapeFactory::GetShapeFactory().MakeSigns(NULL, pTrack, signAy);
+  if (!bObj)
+    CShapeFactory::GetShapeFactory().MakeSigns(NULL, pTrack, signAy);
 
   for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it)
     it->second->FlipTexCoordsForExport();
@@ -111,16 +121,27 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir)
   }
 
   //export
-  std::string sFilename = sOutDir + std::string("\\") + sTrackName + std::string(".fbx");
+  std::string sExtension = ".fbx";
+  if (bObj)
+    sExtension = ".obj";
+  std::string sFilename = sOutDir + std::string("\\") + sTrackName + sExtension;
   printf("Exporting ");
   printf(sFilename.c_str());
   printf("...\n");
-  bool bExported = CFBXExporter::GetFBXExporter().ExportTrack(trackSectionAy,
-                                                              signAy,
-                                                              sTrackName.c_str(),
-                                                              sFilename.c_str(),
-                                                              sTexFile.c_str(),
-                                                              sSignTexFile.c_str());
+  bool bExported = false;
+  if (bObj) {
+    bExported = CObjExporter::GetObjExporter().ExportTrack(trackSectionAy,
+                                                           signAy,
+                                                           sOutDir.c_str(),
+                                                           sTrackName.c_str());
+  } else {
+    bExported = CFBXExporter::GetFBXExporter().ExportTrack(trackSectionAy,
+                                                           signAy,
+                                                           sTrackName.c_str(),
+                                                           sFilename.c_str(),
+                                                           sTexFile.c_str(),
+                                                           sSignTexFile.c_str());
+  }
 
   //cleanup
   for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it)
@@ -135,10 +156,10 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir)
 int main(int argc, char *argv[])
 {
   //not enough arguments
-  if (argc < 3) {
-    printf("Converts all whiplash car models and tracks to FBX format\n");
-    printf("Usage: FbxExporter whiplash_dir output_dir\n");
-    printf("       ex: FbxExporter C:\\WHIP\\WHIPLASH\\FATDATA C:\\WHIP\\output\n");
+  if (argc < 4) {
+    printf("Converts all whiplash car models and tracks to OBJ or FBX format\n");
+    printf("Usage: ModelExporter whiplash_dir output_dir type\n");
+    printf("       ex: ModelExporter C:\\WHIP\\WHIPLASH\\FATDATA C:\\WHIP\\output FBX\n");
     return -1;
   }
 
@@ -146,27 +167,37 @@ int main(int argc, char *argv[])
   Logging::SetWhipLibLoggingCallback(LogMessageCbStatic);
   std::string sWhipDir = argv[1];
   std::string sOutDir = argv[2];
+  std::string sType = argv[3];
+  bool bObj = false;
+  if (sType.compare("fbx") == 0 || sType.compare("FBX") == 0) {
+    bObj = false;
+  } else if (sType.compare("obj") == 0 || sType.compare("OBJ") == 0) {
+    bObj = true;
+  } else {
+    printf("type must be OBJ or FBX\n");
+    return -1;
+  }
   CShapeFactory::GetShapeFactory().m_bOglRunning = false;
 
   //export cars
-  ExportCar(eWhipModel::CAR_F1WACK, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_XAUTO, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_XDESILVA, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_XPULSE, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_XGLOBAL, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_XMILLION, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_XMISSION, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_XZIZIN, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_XREISE, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_YAUTO, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_YDESILVA, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_YPULSE, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_YGLOBAL, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_YMILLION, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_YMISSION, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_YZIZIN, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_YREISE, sWhipDir, sOutDir);
-  ExportCar(eWhipModel::CAR_DEATH, sWhipDir, sOutDir);
+  ExportCar(eWhipModel::CAR_F1WACK, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_XAUTO, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_XDESILVA, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_XPULSE, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_XGLOBAL, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_XMILLION, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_XMISSION, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_XZIZIN, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_XREISE, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_YAUTO, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_YDESILVA, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_YPULSE, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_YGLOBAL, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_YMILLION, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_YMISSION, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_YZIZIN, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_YREISE, sWhipDir, sOutDir, bObj);
+  ExportCar(eWhipModel::CAR_DEATH, sWhipDir, sOutDir, bObj);
 
   //load all tracks in dir
   std::vector<CTrack *> trackAy;
@@ -191,7 +222,7 @@ int main(int argc, char *argv[])
   //export tracks
   for (std::vector<CTrack *>::iterator it = trackAy.begin(); it != trackAy.end(); ++it) {
     CTrack *pTrack = *it;
-    ExportTrack(pTrack, sOutDir);
+    ExportTrack(pTrack, sOutDir, bObj);
     delete pTrack;
   }
 

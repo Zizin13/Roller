@@ -65,7 +65,8 @@ bool CObjExporter::ExportShape(CShapeData *pShapeData, const char *szFile)
     for (int i = 0; i < iNumPols; ++i) {
       out << "f ";
       for (int j = 0; j < 3; ++j) {
-        out << std::to_string(pShapeData->m_indices[i * 3 + j]) << " ";
+        std::string sIndex = std::to_string(pShapeData->m_indices[i * 3 + j]);
+        out << sIndex << "/" << sIndex << "/" << sIndex << " ";
       }
       out << "\n";
     }
@@ -91,11 +92,11 @@ bool CObjExporter::ExportTrack(std::vector<std::pair<std::string, CShapeData *>>
 {
   bool bSuccess = true;
   for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it) {
-    std::string sFilename = std::string (szFolder) + std::string("\\") + std::string(szName) + std::string("_") + it->first + std::string(".obj");
+    std::string sFilename = std::string (szFolder) + std::string("\\") + std::string(szName) + std::string(" ") + it->first + std::string(".obj");
     bSuccess &= ExportShape(it->second, sFilename.c_str());
   }
   for (int i = 0; i < (int)signAy.size(); ++i) {
-    std::string sFilename = std::string(szFolder) + std::string("\\") + std::string(szName) + std::string("_Sign_") + std::to_string(i) + std::string(".obj");
+    std::string sFilename = std::string(szFolder) + std::string("\\") + std::string(szName) + std::string(" Sign ") + std::to_string(i) + std::string(".obj");
     bSuccess &= ExportShape(signAy[i], sFilename.c_str());
   }
   return bSuccess;

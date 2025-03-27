@@ -46,6 +46,7 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir)
   CShapeFactory::GetShapeFactory().MakeModel(&pCar, NULL, &carTex, carModel);
   if (!pCar)
     return false;
+  pCar->FlipTexCoordsForExport();
 
   std::string sFilename = sOutDir + std::string("\\") + sCarName + std::string(".fbx");
   printf("Exporting ");
@@ -100,9 +101,14 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir)
                                                     true);
   trackSectionAy.push_back(std::make_pair("Track", pExportTrack));
   CShapeFactory::GetShapeFactory().MakeSigns(NULL, pTrack, signAy);
+
+  for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it)
+    it->second->FlipTexCoordsForExport();
   //signs need to be moved to the right position on track, this is normally done in the shader
-  for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
+  for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it) {
     (*it)->TransformVertsForExport();
+    (*it)->FlipTexCoordsForExport();
+  }
 
   //export
   std::string sFilename = sOutDir + std::string("\\") + sTrackName + std::string(".fbx");

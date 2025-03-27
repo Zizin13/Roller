@@ -786,11 +786,15 @@ bool CTrackPreview::Export(eExportType exportType)
     trackSectionAy.push_back(std::make_pair("Track", pExportTrack));
   }
 
+  for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it)
+    it->second->FlipTexCoordsForExport();
+
   if (exportWizard.m_bExportSigns) {
     CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signAy);
-    //signs need to be moved to the right position on track, this is normally done in the shader
-    for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it)
-      (*it)->TransformVertsForExport();
+    for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it) {
+      (*it)->TransformVertsForExport(); //signs need to be moved to the right position on track, this is normally done in the shader
+      (*it)->FlipTexCoordsForExport();
+    }
   }
 
   //export
@@ -807,7 +811,7 @@ bool CTrackPreview::Export(eExportType exportType)
     case eExportType::EXPORT_OBJ:
       bExported = CObjExporter::GetObjExporter().ExportTrack(trackSectionAy,
                                                              signAy,
-                                                             sFilename.toLatin1().constData());
+                                                             sName.toLatin1().constData());
       break;
   }
 

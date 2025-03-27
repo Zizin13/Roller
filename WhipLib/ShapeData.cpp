@@ -86,7 +86,16 @@ void CShapeData::TransformVertsForExport()
 {
   for (uint32 i = 0; i < m_uiNumVerts; ++i) {
     m_vertices[i].position = glm::vec3(m_modelToWorldMatrix * glm::vec4(m_vertices[i].position, 1.0f));
-    //vtfVertexPositionWorld = vec3(modelToWorldMatrix * vertexPositionModel);
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CShapeData::FlipTexCoordsForExport()
+{
+  //OpenGL expects texture data in reverse order
+  for (uint32 i = 0; i < m_uiNumVerts; ++i) {
+    m_vertices[i].texCoords.y = 1.0f - m_vertices[i].texCoords.y;
   }
 }
 

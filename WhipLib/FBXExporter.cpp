@@ -74,9 +74,6 @@ bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szName, const
     return false;
   }
 
-  //OpenGL expects texture data in reverse order
-  FlipTexCoordsForExport(pShapeData->m_vertices, pShapeData->m_uiNumVerts);
-
   FbxNode *pShapeMesh = CreateShapeMesh(pShapeData, szName, szTextureFile, pScene);
   pShapeMesh->SetGeometricRotation(FbxNode::eSourcePivot, FbxVector4(-90.0f, 0.0f, 0.0f));
   pScene->GetRootNode()->AddChild(pShapeMesh);
@@ -123,7 +120,6 @@ bool CFBXExporter::ExportTrack(std::vector<std::pair<std::string, CShapeData *>>
   }
 
   for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it) {
-    FlipTexCoordsForExport(it->second->m_vertices, it->second->m_uiNumVerts); //OpenGL expects texture data in reverse order
     FbxNode *pTrackSectionNode = NULL;
     if (it->second->m_drawType == GL_TRIANGLES)
       pTrackSectionNode = CreateShapeMesh(it->second, it->first.c_str(), szTextureFile, pScene);
@@ -134,7 +130,6 @@ bool CFBXExporter::ExportTrack(std::vector<std::pair<std::string, CShapeData *>>
 
   for (int i = 0; i < (int)signAy.size(); ++i) {
     std::string sSignName = "Sign " + std::to_string(i);
-    FlipTexCoordsForExport(signAy[i]->m_vertices, signAy[i]->m_uiNumVerts); //OpenGL expects texture data in reverse order
     FbxNode *pSignMesh = CreateShapeMesh(signAy[i], sSignName.c_str(), szSignTextureFile, pScene);
     pScene->GetRootNode()->AddChild(pSignMesh);
   }
@@ -322,15 +317,6 @@ FbxFileTexture *CFBXExporter::CreateFileTexture(const char *szTextureFile, FbxSc
   pFileTexture->SetRotation(0.0, 0.0);
 
   return pFileTexture;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CFBXExporter::FlipTexCoordsForExport(tVertex *vertices, uint32 uiNumVerts)
-{
-  for (uint32 i = 0; i < uiNumVerts; ++i) {
-    vertices[i].texCoords.y = 1.0f - vertices[i].texCoords.y;
-  }
 }
 
 //-------------------------------------------------------------------------------------------------

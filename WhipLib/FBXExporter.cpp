@@ -237,16 +237,13 @@ fbxsdk::FbxNode *CFBXExporter::CreateShapeLine(CShapeData *pShapeData, const cha
     controlPointsAy[i] = controlPoint;
   }
 
-  //pLine->SetIndexArraySize(pShapeData->m_uiNumIndices);
+  //create indices
   pLine->SetIndexArraySize((int)pShapeData->m_uiNumVerts);
-  //FbxArray<int> *indexAy = pLine->GetIndexArray();
   for (int i = 0; i < (int)pShapeData->m_uiNumVerts; ++i) {
-    //indexAy[i] = pShapeData->m_indices[i];
-    //bool bEndPoint = (i == pShapeData->m_uiNumIndices - 1);
-    //pLine->AddPointIndex(i);
     pLine->SetPointIndexAt(i, i);
   }
 
+  //ensure line has an end point
   pLine->AddEndPoint(pShapeData->m_uiNumVerts - 1);
   pLine->Color = FbxDouble3(1.0, 0.0, 0.0);
   pLine->Renderable = true;

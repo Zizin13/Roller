@@ -209,6 +209,7 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   connect(actSave, &QAction::triggered, this, &CMainWindow::OnSaveTrack);
   connect(actSaveAs, &QAction::triggered, this, &CMainWindow::OnSaveTrackAs);
   connect(actExportFBX, &QAction::triggered, this, &CMainWindow::OnExportFBX);
+  connect(actExportOBJ, &QAction::triggered, this, &CMainWindow::OnExportOBJ);
   connect(actUndo, &QAction::triggered, this, &CMainWindow::OnUndo);
   connect(actRedo, &QAction::triggered, this, &CMainWindow::OnRedo);
   connect(actCut, &QAction::triggered, this, &CMainWindow::OnCut);
@@ -371,7 +372,15 @@ void CMainWindow::OnSaveTrackAs()
 void CMainWindow::OnExportFBX()
 {
   if (GetCurrentPreview())
-    GetCurrentPreview()->ExportFBX();
+    GetCurrentPreview()->Export(eExportType::EXPORT_FBX);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CMainWindow::OnExportOBJ()
+{
+  if (GetCurrentPreview())
+    GetCurrentPreview()->Export(eExportType::EXPORT_OBJ);
 }
 
 //-------------------------------------------------------------------------------------------------

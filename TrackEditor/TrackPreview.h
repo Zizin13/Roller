@@ -12,6 +12,12 @@ struct tTrackHistory
 };
 typedef std::vector<tTrackHistory> CHistoryAy;
 //-------------------------------------------------------------------------------------------------
+enum eExportType
+{
+  EXPORT_FBX = 0,
+  EXPORT_OBJ
+};
+//-------------------------------------------------------------------------------------------------
 class CTrackPreviewPrivate;
 class CTrack;
 //-------------------------------------------------------------------------------------------------
@@ -33,7 +39,7 @@ public:
   bool SaveChangesAndContinue();
   bool SaveTrack();
   bool SaveTrackAs();
-  bool ExportFBX();
+  bool Export(eExportType exportType);
   QString GetTitle(bool bFullPath);
   const QString &GetFilename() { return m_sTrackFile; };
   void UpdateGeometrySelection();

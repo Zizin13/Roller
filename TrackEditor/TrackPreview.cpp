@@ -14,6 +14,7 @@
 #include "ShapeFactory.h"
 #include "Texture.h"
 #include "FBXExporter.h"
+#include "ObjExporter.h"
 #include "CarHelpers.h"
 #include "Entity.h"
 #include "NoclipComponent.h"
@@ -690,15 +691,24 @@ bool CTrackPreview::SaveTrackAs()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CTrackPreview::ExportFBX()
+bool CTrackPreview::Export(eExportType exportType)
 {
   //get export settings
   CExportWizard exportWizard(this);
   exportWizard.exec();
 
   //save track
+  QString sFilter = "";
+  switch (exportType) {
+    case eExportType::EXPORT_FBX:
+      sFilter = "FBX Files (*.fbx)";
+      break;
+    case eExportType::EXPORT_OBJ:
+      sFilter = "OBJ Files (*.obj)";
+      break;
+  }
   QString sFilename = QDir::toNativeSeparators(QFileDialog::getSaveFileName(
-    this, "Export Track As", p->m_track.m_sTrackFileFolder.c_str(), "FBX Files (*.fbx)"));
+    this, "Export Track As", p->m_track.m_sTrackFileFolder.c_str(), sFilter));
   QString sFolder = sFilename.left(sFilename.lastIndexOf(QDir::separator()));
   QString sName = sFilename.right(sFilename.size() - sFilename.lastIndexOf(QDir::separator()) - 1);
   sName = sName.left(sName.lastIndexOf('.'));
@@ -716,6 +726,10 @@ bool CTrackPreview::ExportFBX()
   std::vector<std::pair<std::string, CShapeData *>> trackSectionAy;
   if (exportWizard.m_bExportSeparate) {
     CShapeData *pCenterLine = NULL;
+    CShapeData *pAILine1 = NULL;
+    CShapeData *pAILine2 = NULL;
+    CShapeData *pAILine3 = NULL;
+    CShapeData *pAILine4 = NULL;
     CShapeData *pCenterSurf = NULL;
     CShapeData *pLShoulderSurf = NULL;
     CShapeData *pRShoulderSurf = NULL;
@@ -729,6 +743,10 @@ bool CTrackPreview::ExportFBX()
     CShapeData *pRUOWallSurf = NULL;
 
     CShapeFactory::GetShapeFactory().MakeAILine(      &pCenterLine,      p->m_pShader, &p->m_track, eShapeSection::CENTERLINE, true);
+    CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine1,         p->m_pShader, &p->m_track, eShapeSection::AILINE1,    true);
+    CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine2,         p->m_pShader, &p->m_track, eShapeSection::AILINE2,    true);
+    CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine3,         p->m_pShader, &p->m_track, eShapeSection::AILINE3,    true);
+    CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine4,         p->m_pShader, &p->m_track, eShapeSection::AILINE4,    true);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pCenterSurf,      p->m_pShader, &p->m_track, eShapeSection::CENTER,     true);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLShoulderSurf,   p->m_pShader, &p->m_track, eShapeSection::LSHOULDER,  true);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRShoulderSurf,   p->m_pShader, &p->m_track, eShapeSection::RSHOULDER,  true);
@@ -742,6 +760,10 @@ bool CTrackPreview::ExportFBX()
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRUOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::RUOWALL,    true);
 
     trackSectionAy.push_back(std::make_pair("Centerline", pCenterLine));
+    trackSectionAy.push_back(std::make_pair("AI Line 1", pAILine1));
+    trackSectionAy.push_back(std::make_pair("AI Line 2", pAILine2));
+    trackSectionAy.push_back(std::make_pair("AI Line 3", pAILine3));
+    trackSectionAy.push_back(std::make_pair("AI Line 4", pAILine4));
     trackSectionAy.push_back(std::make_pair("Center", pCenterSurf));
     trackSectionAy.push_back(std::make_pair("Left Shoulder", pLShoulderSurf));
     trackSectionAy.push_back(std::make_pair("Right Shoulder", pRShoulderSurf));
@@ -768,12 +790,25 @@ bool CTrackPreview::ExportFBX()
     (*it)->TransformVertsForExport();
 
   //export
-  bool bExported = CFBXExporter::GetFBXExporter().ExportTrack(trackSectionAy,
-                                                              signAy,
-                                                              sName.toLatin1().constData(),
-                                                              sFilename.toLatin1().constData(),
-                                                              sTexFile.toLatin1().constData(),
-                                                              sSignTexFile.toLatin1().constData());
+  bool bExported = false;
+  switch (exportType) {
+    case eExportType::EXPORT_FBX:
+      bExported = CFBXExporter::GetFBXExporter().ExportTrack(trackSectionAy,
+                                                             signAy,
+                                                             sName.toLatin1().constData(),
+                                                             sFilename.toLatin1().constData(),
+                                                             sTexFile.toLatin1().constData(),
+                                                             sSignTexFile.toLatin1().constData());
+      break;
+    case eExportType::EXPORT_OBJ:
+      bExported = CObjExporter::GetObjExporter().ExportTrack(trackSectionAy,
+                                                             signAy,
+                                                             sName.toLatin1().constData(),
+                                                             sFilename.toLatin1().constData(),
+                                                             sTexFile.toLatin1().constData(),
+                                                             sSignTexFile.toLatin1().constData());
+      break;
+  }
 
   //cleanup
   for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it)

@@ -230,6 +230,9 @@
     <ClInclude Include="PhysicsComponent.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="ObjExporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Unmangler.cpp">
@@ -321,6 +324,9 @@
     </ClCompile>
     <ClCompile Include="PhysicsComponent.cpp">
       <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjExporter.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

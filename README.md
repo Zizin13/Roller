@@ -1,9 +1,10 @@
 # Roller
-Whiplash/Fatal Racing track editor, FBX resource converter, and DLL for loading Whiplash assets
+Whiplash/Fatal Racing track editor, OBJ and FBX resource converter, and DLL for loading Whiplash assets
 
 ## Track Editor Features: 
 * Open, render, edit, and save Whiplash tracks
 * Multiple tracks open at once in tabs
+* Export tracks to OBJ format
 * Export tracks to FBX format
 * Track geometry data can be edited and track chunks can be added and removed
 * Additional surface data such as grip level and AI data can be edited

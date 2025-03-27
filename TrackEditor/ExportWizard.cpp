@@ -7,7 +7,7 @@
 
 CExportWizard::CExportWizard(QWidget *pParent, eExportType exportType)
   : QDialog(pParent)
-  , m_bExportSeparate(false)
+  , m_bExportSeparate(true)
   , m_bExportSigns(true)
   , m_exportType(exportType)
 {
@@ -23,8 +23,6 @@ CExportWizard::CExportWizard(QWidget *pParent, eExportType exportType)
   connect(ckSigns, &QCheckBox::toggled, this, &CExportWizard::OnSignsChecked);
   connect(pbCancel, &QPushButton::clicked, this, &CExportWizard::close);
   connect(pbExport, &QPushButton::clicked, this, &CExportWizard::accept);
-
-  UpdateSignsCheckbox();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -40,7 +38,6 @@ void CExportWizard::OnSingleObject()
 {
   m_bExportSeparate = false;
   rbSeparate->setChecked(m_bExportSeparate);
-  UpdateSignsCheckbox();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -49,7 +46,6 @@ void CExportWizard::OnSeparate()
 {
   m_bExportSeparate = true;
   rbSingle->setChecked(!m_bExportSeparate);
-  UpdateSignsCheckbox();
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -57,20 +53,6 @@ void CExportWizard::OnSeparate()
 void CExportWizard::OnSignsChecked(bool bChecked)
 {
   m_bExportSigns = bChecked;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CExportWizard::UpdateSignsCheckbox()
-{
-  if (m_exportType == eExportType::EXPORT_OBJ) {
-    if (!m_bExportSeparate) {
-      ckSigns->setChecked(false);
-      ckSigns->setEnabled(false);
-    } else {
-      ckSigns->setEnabled(true);
-    }
-  }
 }
 
 //-------------------------------------------------------------------------------------------------

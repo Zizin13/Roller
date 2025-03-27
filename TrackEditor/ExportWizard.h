@@ -22,8 +22,6 @@ protected slots:
   void OnSignsChecked(bool bChecked);
 
 private:
-  void UpdateSignsCheckbox();
-
   eExportType m_exportType;
 };
 

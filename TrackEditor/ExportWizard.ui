@@ -17,16 +17,16 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QRadioButton" name="rbSingle">
+      <widget class="QRadioButton" name="rbSeparate">
        <property name="text">
-        <string>Export track as single object</string>
+        <string>Export track sections separately</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="rbSeparate">
+      <widget class="QRadioButton" name="rbSingle">
        <property name="text">
-        <string>Export track sections separately</string>
+        <string>Export track as single object</string>
        </property>
       </widget>
      </item>

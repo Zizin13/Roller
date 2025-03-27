@@ -15,7 +15,8 @@ public:
   CObjExporter(CObjExporter const &) = delete;
   void operator=(CObjExporter const &) = delete;
 
-  bool ExportShape(CShapeData *pShapeData, const char *szFile);
+  bool ExportMaterial(const char *szFolder, const char *szName);
+  bool ExportShape(CShapeData *pShapeData, const char *szFile, const char *szMaterial);
   bool ExportTrack(std::vector<std::pair<std::string, CShapeData *>> trackSectionAy,
                    std::vector<CShapeData *> signAy,
                    const char *szFolder,

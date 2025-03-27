@@ -58,7 +58,10 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir, b
   printf("...\n");
   bool bSuccess = false;
   if (bObj) {
-    bSuccess = CObjExporter::GetObjExporter().ExportShape(pCar, sFilename.c_str());
+    //export material
+    CObjExporter::GetObjExporter().ExportMaterial(sOutDir.c_str(), sCarName.c_str());
+
+    bSuccess = CObjExporter::GetObjExporter().ExportShape(pCar, sFilename.c_str(), sCarName.c_str());
   } else {
     bSuccess = CFBXExporter::GetFBXExporter().ExportShape(pCar, sCarName.c_str(), sFilename.c_str(), sTexFile.c_str());
   }

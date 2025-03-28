@@ -30,19 +30,21 @@ CObjExporter::~CObjExporter()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CObjExporter::ExportMaterial(const char *szFolder, const char *szName)
+bool CObjExporter::ExportMaterial(const std::string &sFile, const std::vector<std::string> &texAy)
 {
   //open output file
-  std::string sOutFile = std::string(szFolder) + std::string("\\") + std::string(szName) + std::string(".mtl");
-  std::ofstream out(sOutFile.c_str());
+  std::ofstream out(sFile);
   if (!out.is_open()) {
-    Logging::LogMessage("Error: Could not open output file %s", sOutFile.c_str());
+    Logging::LogMessage("Error: Could not open output file %s", sFile.c_str());
     return false;
   }
 
-  out << "newmtl " << szName << "\n";
-  out << "map_Kd " << szName << ".png\n";
-  out << "map_d " << szName << ".png\n";
+  //write materials
+  for (int i = 0; i < (int)texAy.size(); ++i) {
+    out << "newmtl " << texAy[i] << "\n";
+    out << "map_Kd " << texAy[i] << ".png\n";
+    out << "map_d " << texAy[i] << ".png\n";
+  }
 
   out.close();
   return true;
@@ -50,21 +52,72 @@ bool CObjExporter::ExportMaterial(const char *szFolder, const char *szName)
 
 //-------------------------------------------------------------------------------------------------
 
-bool CObjExporter::ExportShape(CShapeData *pShapeData, const char *szFile, const char *szMaterial)
+bool CObjExporter::ExportShape(CShapeData *pShapeData, const std::string &sFile, const std::string &sName, const std::string &sMtlFile, const std::string &sMtlName)
 {
   //open output file
-  std::ofstream out(szFile);
+  std::ofstream out(sFile);
   if (!out.is_open()) {
-    Logging::LogMessage("Error: Could not open output file %s", szFile);
+    Logging::LogMessage("Error: Could not open output file %s", sFile.c_str());
     return false;
   }
 
-  out << "mtllib " << szMaterial << ".mtl\n";
+  out << "mtllib " << sMtlFile << "\n";
 
+  int iOffset = 0;
+  ExportShape_Internal(out, iOffset, pShapeData, sName, sMtlName);
+
+  out.close();
+  return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+bool CObjExporter::ExportTrack(std::vector<std::pair<std::string, CShapeData *>> trackSectionAy,
+                               std::vector<CShapeData *> signAy,
+                               const std::string &sFolder,
+                               const std::string &sName,
+                               const std::string &sFile)
+{
+  //create material file
+  std::string sBld = sName + std::string("_BLD");
+  std::vector<std::string> texAy;
+  texAy.push_back(sName); //TEX
+  texAy.push_back(sBld); //BLD
+  std::string sMtlFile = sFolder + std::string("\\") + sName + std::string(".mtl");
+  ExportMaterial(sMtlFile.c_str(), texAy);
+
+  //open output file
+  std::ofstream out(sFile);
+  if (!out.is_open()) {
+    Logging::LogMessage("Error: Could not open output file %s", sFile.c_str());
+    return false;
+  }
+
+  bool bSuccess = true;
+  int iOffset = 0;
+  for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it) {
+    std::string sFilename = sFolder + std::string("\\") + sName + std::string(" ") + it->first + std::string(".obj");
+   ExportShape_Internal(out, iOffset, it->second, it->first, sName);
+  }
+  for (int i = 0; i < (int)signAy.size(); ++i) {
+    std::string sSignName = "Sign " + std::to_string(i);
+    std::string sFilename = sFolder + std::string("\\") + sName + std::string(" Sign ") + std::to_string(i) + std::string(".obj");
+    ExportShape_Internal(out, iOffset, signAy[i], sSignName, sBld);
+  }
+
+  out.close();
+  return true;
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CObjExporter::ExportShape_Internal(std::ofstream &out, int &iOffset, CShapeData *pShapeData, const std::string &sName, const std::string &sMtlName)
+{
+  out << "o " << sName << "\n";
   out << "#vertices\n";
   for (int i = 0; i < (int)pShapeData->m_uiNumVerts; ++i) {
-    out << "v " 
-      << std::to_string(pShapeData->m_vertices[i].position.x / 100.0f) << " " 
+    out << "v "
+      << std::to_string(pShapeData->m_vertices[i].position.x / 100.0f) << " "
       << std::to_string(pShapeData->m_vertices[i].position.y / 100.0f) << " "
       << std::to_string(pShapeData->m_vertices[i].position.z / 100.0f) << "\n";
   }
@@ -81,14 +134,14 @@ bool CObjExporter::ExportShape(CShapeData *pShapeData, const char *szFile, const
       << std::to_string(pShapeData->m_vertices[i].normal.y) << " "
       << std::to_string(pShapeData->m_vertices[i].normal.z) << "\n";
   }
-  out << "usemtl " << szMaterial << "\n";
+  out << "usemtl " << sMtlName << "\n";
   if (pShapeData->m_drawType == GL_TRIANGLES) {
     out << "#pols\n";
     int iNumPols = (int)pShapeData->m_uiNumIndices / 3;
     for (int i = 0; i < iNumPols; ++i) {
       out << "f ";
       for (int j = 0; j < 3; ++j) {
-        std::string sIndex = std::to_string(pShapeData->m_indices[i * 3 + j] + 1);
+        std::string sIndex = std::to_string(pShapeData->m_indices[i * 3 + j] + iOffset + 1);
         out << sIndex << "/" << sIndex << "/" << sIndex;
         if (j != 2)
           out << " ";
@@ -103,31 +156,8 @@ bool CObjExporter::ExportShape(CShapeData *pShapeData, const char *szFile, const
     }
     out << "\n";
   }
-
-  out.close();
-  return true;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-bool CObjExporter::ExportTrack(std::vector<std::pair<std::string, CShapeData *>> trackSectionAy,
-                               std::vector<CShapeData *> signAy,
-                               const char *szFolder,
-                               const char *szName)
-{
-  std::string sBld = std::string(szName) + std::string("_BLD");
-  ExportMaterial(szFolder, szName);
-  ExportMaterial(szFolder, sBld.c_str());
-  bool bSuccess = true;
-  for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it) {
-    std::string sFilename = std::string (szFolder) + std::string("\\") + std::string(szName) + std::string(" ") + it->first + std::string(".obj");
-    bSuccess &= ExportShape(it->second, sFilename.c_str(), szName);
-  }
-  for (int i = 0; i < (int)signAy.size(); ++i) {
-    std::string sFilename = std::string(szFolder) + std::string("\\") + std::string(szName) + std::string(" Sign ") + std::to_string(i) + std::string(".obj");
-    bSuccess &= ExportShape(signAy[i], sFilename.c_str(), sBld.c_str());
-  }
-  return bSuccess;
+  //update offset
+  iOffset += pShapeData->m_uiNumVerts;
 }
 
 //-------------------------------------------------------------------------------------------------

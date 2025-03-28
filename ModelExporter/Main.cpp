@@ -59,9 +59,12 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir, b
   bool bSuccess = false;
   if (bObj) {
     //export material
-    CObjExporter::GetObjExporter().ExportMaterial(sOutDir.c_str(), sCarName.c_str());
+    std::vector<std::string> texAy;
+    texAy.push_back(sCarName);
+    std::string sMtlFile = sOutDir + std::string("\\") + sCarName + std::string(".mtl");
+    CObjExporter::GetObjExporter().ExportMaterial(sMtlFile, texAy);
 
-    bSuccess = CObjExporter::GetObjExporter().ExportShape(pCar, sFilename.c_str(), sCarName.c_str());
+    bSuccess = CObjExporter::GetObjExporter().ExportShape(pCar, sFilename, sCarName, sMtlFile, sCarName);
   } else {
     bSuccess = CFBXExporter::GetFBXExporter().ExportShape(pCar, sCarName.c_str(), sFilename.c_str(), sTexFile.c_str());
   }
@@ -103,17 +106,61 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir, bool bObj)
   pTrack->GenerateTrackMath();
 
   //generate models
-  CShapeData *pExportTrack = NULL;
   std::vector<std::pair<std::string, CShapeData *>> trackSectionAy;
   std::vector<CShapeData *> signAy;
-  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pExportTrack,
-                                                    NULL,
-                                                    pTrack,
-                                                    eShapeSection::EXPORT,
-                                                    true);
-  trackSectionAy.push_back(std::make_pair("Track", pExportTrack));
-  if (!bObj)
-    CShapeFactory::GetShapeFactory().MakeSigns(NULL, pTrack, signAy);
+
+  CShapeData *pCenterLine = NULL;
+  CShapeData *pAILine1 = NULL;
+  CShapeData *pAILine2 = NULL;
+  CShapeData *pAILine3 = NULL;
+  CShapeData *pAILine4 = NULL;
+  CShapeData *pCenterSurf = NULL;
+  CShapeData *pLShoulderSurf = NULL;
+  CShapeData *pRShoulderSurf = NULL;
+  CShapeData *pLWallSurf = NULL;
+  CShapeData *pRWallSurf = NULL;
+  CShapeData *pRoofSurf = NULL;
+  CShapeData *pOWallFloorSurf = NULL;
+  CShapeData *pLLOWallSurf = NULL;
+  CShapeData *pRLOWallSurf = NULL;
+  CShapeData *pLUOWallSurf = NULL;
+  CShapeData *pRUOWallSurf = NULL;
+
+  CShapeFactory::GetShapeFactory().MakeAILine(&pCenterLine, NULL, pTrack, eShapeSection::CENTERLINE, true);
+  CShapeFactory::GetShapeFactory().MakeAILine(&pAILine1, NULL, pTrack, eShapeSection::CARLINE1, true);
+  CShapeFactory::GetShapeFactory().MakeAILine(&pAILine2, NULL, pTrack, eShapeSection::CARLINE2, true);
+  CShapeFactory::GetShapeFactory().MakeAILine(&pAILine3, NULL, pTrack, eShapeSection::CARLINE3, true);
+  CShapeFactory::GetShapeFactory().MakeAILine(&pAILine4, NULL, pTrack, eShapeSection::CARLINE4, true);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pCenterSurf, NULL, pTrack, eShapeSection::CENTER, true);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLShoulderSurf, NULL, pTrack, eShapeSection::LSHOULDER, true);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRShoulderSurf, NULL, pTrack, eShapeSection::RSHOULDER, true);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLWallSurf, NULL, pTrack, eShapeSection::LWALL, true);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRWallSurf, NULL, pTrack, eShapeSection::RWALL, true);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRoofSurf, NULL, pTrack, eShapeSection::ROOF, true);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pOWallFloorSurf, NULL, pTrack, eShapeSection::OWALLFLOOR, true);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLLOWallSurf, NULL, pTrack, eShapeSection::LLOWALL, true);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRLOWallSurf, NULL, pTrack, eShapeSection::RLOWALL, true);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLUOWallSurf, NULL, pTrack, eShapeSection::LUOWALL, true);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRUOWallSurf, NULL, pTrack, eShapeSection::RUOWALL, true);
+
+  trackSectionAy.push_back(std::make_pair("Centerline", pCenterLine));
+  trackSectionAy.push_back(std::make_pair("AI Line 1", pAILine1));
+  trackSectionAy.push_back(std::make_pair("AI Line 2", pAILine2));
+  trackSectionAy.push_back(std::make_pair("AI Line 3", pAILine3));
+  trackSectionAy.push_back(std::make_pair("AI Line 4", pAILine4));
+  trackSectionAy.push_back(std::make_pair("Center", pCenterSurf));
+  trackSectionAy.push_back(std::make_pair("Left Shoulder", pLShoulderSurf));
+  trackSectionAy.push_back(std::make_pair("Right Shoulder", pRShoulderSurf));
+  trackSectionAy.push_back(std::make_pair("Left Wall", pLWallSurf));
+  trackSectionAy.push_back(std::make_pair("Right Wall", pRWallSurf));
+  trackSectionAy.push_back(std::make_pair("Roof", pRoofSurf));
+  trackSectionAy.push_back(std::make_pair("Outer Wall Floor", pOWallFloorSurf));
+  trackSectionAy.push_back(std::make_pair("Left Lower Outer Wall", pLLOWallSurf));
+  trackSectionAy.push_back(std::make_pair("Right Lower Outer Wall", pRLOWallSurf));
+  trackSectionAy.push_back(std::make_pair("Left Upper Outer Wall", pLUOWallSurf));
+  trackSectionAy.push_back(std::make_pair("Right Upper Outer Wall", pRUOWallSurf));
+
+  CShapeFactory::GetShapeFactory().MakeSigns(NULL, pTrack, signAy);
 
   for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it)
     it->second->FlipTexCoordsForExport();
@@ -135,8 +182,9 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir, bool bObj)
   if (bObj) {
     bExported = CObjExporter::GetObjExporter().ExportTrack(trackSectionAy,
                                                            signAy,
-                                                           sOutDir.c_str(),
-                                                           sTrackName.c_str());
+                                                           sOutDir,
+                                                           sTrackName,
+                                                           sFilename);
   } else {
     bExported = CFBXExporter::GetFBXExporter().ExportTrack(trackSectionAy,
                                                            signAy,

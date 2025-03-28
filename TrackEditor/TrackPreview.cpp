@@ -295,6 +295,8 @@ CTrackPreview::CTrackPreview(QWidget *pParent, const QString &sTrackFile)
   if (!sTrackFile.isEmpty()) {
     p->m_track.m_sTrackFileFolder = sTrackFile.left(sTrackFile.lastIndexOf(QDir::separator()) + 1).toLatin1().constData();
   }
+
+  setFocus();
 }
 
 //-------------------------------------------------------------------------------------------------

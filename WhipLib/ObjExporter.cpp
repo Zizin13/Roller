@@ -152,8 +152,9 @@ void CObjExporter::ExportShape_Internal(std::ofstream &out, int &iOffset, CShape
     out << "#lines\n";
     out << "l ";
     for (int i = 0; i < (int)pShapeData->m_uiNumVerts; ++i) {
-      out << std::to_string(i) << " ";
+      out << std::to_string(i + 1 + iOffset) << " ";
     }
+    out << std::to_string(iOffset + 1);
     out << "\n";
   }
   //update offset

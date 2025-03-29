@@ -36,7 +36,7 @@ public:
 
   void LogMessage(const QString &sMsg);
   void SaveHistory(const QString &sDescription);
-  void UpdateWindow();
+  void UpdateWindow(bool bUpdatingTextures = false);
   void InsertUIUpdate(int iInsertVal);
   int GetSelFrom();
   int GetSelTo();

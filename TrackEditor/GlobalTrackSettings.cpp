@@ -111,7 +111,7 @@ void CGlobalTrackSettings::OnApplyInfoClicked()
 
   g_pMainWindow->SaveHistory("Applied global track settings");
   g_pMainWindow->GetCurrentTrack()->LoadTextures();
-  g_pMainWindow->UpdateWindow();
+  g_pMainWindow->UpdateWindow(true);
 }
 
 //-------------------------------------------------------------------------------------------------

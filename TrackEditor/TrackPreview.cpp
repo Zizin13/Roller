@@ -338,6 +338,16 @@ bool CTrackPreview::LoadTrack(const QString &sFilename)
 
 //-------------------------------------------------------------------------------------------------
 
+void CTrackPreview::DeleteEnvirFloor()
+{
+  if (p->m_pEnvirFloor) {
+    delete p->m_pEnvirFloor;
+    p->m_pEnvirFloor = NULL;
+  }
+}
+
+//-------------------------------------------------------------------------------------------------
+
 void CTrackPreview::UpdateTrack(bool bUpdatingStunt)
 {
   if (!bUpdatingStunt)

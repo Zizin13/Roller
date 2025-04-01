@@ -76,7 +76,6 @@ private:
   int GetBacksCount(eWhipModel model);
 
   tVertex *MakeVerts(uint32 &numVertices, eShapeSection section, CTrack *pTrack, CTexture *pTexture, eBackModeling backModeling = FRONTS_AND_BACKS);
-  void ApplyNormalsAndTexCoords(int i, int iChunkIndex, tVertex *vertices, uint32 uiNumVertsPerChunk, CTrack *pTrack, CTexture *pTexture, int iSurfaceType, eVertOrder vertOrder, int iOffset = 0);
   tVertex *MakeVertsEnvirFloor(uint32 &numVertices, CTrack *pTrack, CTexture *pTexture, int iIndex);
 
   uint32 *MakeIndicesEnvirFloor(uint32 &numIndices);
@@ -94,6 +93,7 @@ private:
                                   const glm::vec3 &v1,
                                   const glm::vec3 &v2,
                                   const glm::vec3 &v3);
+  void ApplyNormalsAndTexCoords(int i, int iChunkIndex, tVertex *vertices, uint32 uiNumVertsPerChunk, CTrack *pTrack, CTexture *pTexture, int iSurfaceType, eVertOrder vertOrder, int iOffset = 0);
   void MakeNormals(tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight);
 
   static CShapeFactory s_shapeFactory;

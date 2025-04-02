@@ -189,16 +189,16 @@ void CShapeFactory::MakeDebugLine(CShapeData **pShape, CShader *pShader, CTextur
 
 //-------------------------------------------------------------------------------------------------
 
-void CShapeFactory::MakeModel(CShapeData **pShape, CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType)
+void CShapeFactory::MakeModel(CShapeData **pShape, CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType, eBackModeling backModeling)
 {
   uint32 uiNumVerts;
-  struct tVertex *vertices = MakeModelVerts(uiNumVerts, pTexture, model, iSignSurfaceType);
+  struct tVertex *vertices = MakeModelVerts(uiNumVerts, pTexture, model, iSignSurfaceType, backModeling);
   GLenum drawType = GL_TRIANGLES;
 
   if (vertices) {
     if (!*pShape) {
       uint32 uiNumIndices;
-      uint32 *indices = MakeModelIndices(uiNumIndices, model);
+      uint32 *indices = MakeModelIndices(uiNumIndices, model, backModeling);
 
       CVertexBuffer *pVertexBuf = new CVertexBuffer(vertices, uiNumVerts, GL_DYNAMIC_DRAW);
       CIndexBuffer *pIndexBuf = new CIndexBuffer(indices, uiNumIndices, GL_DYNAMIC_DRAW);
@@ -221,7 +221,7 @@ void CShapeFactory::MakeModel(CShapeData **pShape, CShader *pShader, CTexture *p
 
 //-------------------------------------------------------------------------------------------------
 
-tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, eWhipModel model, int iSignSurfaceType)
+tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, eWhipModel model, int iSignSurfaceType, eBackModeling backModeling)
 {
   if (!pTexture)
     return NULL;
@@ -238,25 +238,25 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
   }
 
   //then get vertices for polygons
-  numVertices = GetPolsCount(model) * 8;
+  int iNumVertsPerPol = 4;
+  numVertices = GetPolsCount(model) * iNumVertsPerPol;
   tVertex *vertices = new tVertex[numVertices];
   for (int i = 0; i < GetPolsCount(model); ++i) {
-    vertices[i * 8 + 0] = coordAy[GetPols(model)[i].byVert1];
-    vertices[i * 8 + 1] = coordAy[GetPols(model)[i].byVert2];
-    vertices[i * 8 + 2] = coordAy[GetPols(model)[i].byVert3];
-    vertices[i * 8 + 3] = coordAy[GetPols(model)[i].byVert4];
-    vertices[i * 8 + 4] = coordAy[GetPols(model)[i].byVert1];
-    vertices[i * 8 + 5] = coordAy[GetPols(model)[i].byVert2];
-    vertices[i * 8 + 6] = coordAy[GetPols(model)[i].byVert3];
-    vertices[i * 8 + 7] = coordAy[GetPols(model)[i].byVert4];
-    MakeNormals(vertices[i * 8 + 1],
-                vertices[i * 8 + 0],
-                vertices[i * 8 + 2],
-                vertices[i * 8 + 3]);
-    MakeNormals(vertices[i * 8 + 0 + 4],
-                vertices[i * 8 + 1 + 4],
-                vertices[i * 8 + 3 + 4],
-                vertices[i * 8 + 2 + 4]);
+    vertices[i * iNumVertsPerPol + 0] = coordAy[GetPols(model)[i].byVert1];
+    vertices[i * iNumVertsPerPol + 1] = coordAy[GetPols(model)[i].byVert2];
+    vertices[i * iNumVertsPerPol + 2] = coordAy[GetPols(model)[i].byVert3];
+    vertices[i * iNumVertsPerPol + 3] = coordAy[GetPols(model)[i].byVert4];
+    if (backModeling == eBackModeling::FRONTS) {
+      MakeNormals(vertices[i * iNumVertsPerPol + 1],
+                  vertices[i * iNumVertsPerPol + 0],
+                  vertices[i * iNumVertsPerPol + 2],
+                  vertices[i * iNumVertsPerPol + 3]);
+    } else {
+      MakeNormals(vertices[i * iNumVertsPerPol + 0],
+                  vertices[i * iNumVertsPerPol + 1],
+                  vertices[i * iNumVertsPerPol + 3],
+                  vertices[i * iNumVertsPerPol + 2]);
+    }
 
     uint32 uiUseTex = GetPols(model)[i].uiTex;
     if (uiUseTex & SURFACE_FLAG_ANMS_LOOKUP && GetAnms(model)) {
@@ -273,25 +273,28 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
       }
     }
     CarHelpers::RemapColor(model, uiUseTex);
-    pTexture->GetTextureCoordinates(uiUseTex,
-                                    vertices[i * 8 + 1],
-                                    vertices[i * 8 + 0],
-                                    vertices[i * 8 + 2],
-                                    vertices[i * 8 + 3]);
-    pTexture->GetTextureCoordinates(uiUseTex,
-                                    vertices[i * 8 + 1 + 4],
-                                    vertices[i * 8 + 0 + 4],
-                                    vertices[i * 8 + 2 + 4],
-                                    vertices[i * 8 + 3 + 4]);
-
-    if (GetBacks(model)) {
-      uint32 uiBackTex = GetBacks(model)[i];
-      if (uiBackTex) {
-        pTexture->GetTextureCoordinates(uiBackTex,
-                                        vertices[i * 8 + 0 + 4],
-                                        vertices[i * 8 + 1 + 4],
-                                        vertices[i * 8 + 3 + 4],
-                                        vertices[i * 8 + 2 + 4]);
+    if (backModeling == eBackModeling::FRONTS) {
+      pTexture->GetTextureCoordinates(uiUseTex,
+                                      vertices[i * iNumVertsPerPol + 1],
+                                      vertices[i * iNumVertsPerPol + 0],
+                                      vertices[i * iNumVertsPerPol + 2],
+                                      vertices[i * iNumVertsPerPol + 3]);
+    } else {
+      //default back is the same as the front
+      pTexture->GetTextureCoordinates(uiUseTex,
+                                      vertices[i * iNumVertsPerPol + 1],
+                                      vertices[i * iNumVertsPerPol + 0],
+                                      vertices[i * iNumVertsPerPol + 2],
+                                      vertices[i * iNumVertsPerPol + 3]);
+      if (GetBacks(model)) {
+        uint32 uiBackTex = GetBacks(model)[i];
+        if (uiBackTex) {
+          pTexture->GetTextureCoordinates(uiBackTex,
+                                          vertices[i * iNumVertsPerPol + 0],
+                                          vertices[i * iNumVertsPerPol + 1],
+                                          vertices[i * iNumVertsPerPol + 3],
+                                          vertices[i * iNumVertsPerPol + 2]);
+        }
       }
     }
   }
@@ -302,29 +305,31 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
 
 //-------------------------------------------------------------------------------------------------
 
-uint32 *CShapeFactory::MakeModelIndices(uint32 &numIndices, eWhipModel model)
+uint32 *CShapeFactory::MakeModelIndices(uint32 &numIndices, eWhipModel model, eBackModeling backModeling)
 {
-  int iNumIndicesPerPol = 12;
-  int iNumVertsPerPol = 8;
+  int iNumIndicesPerPol = 6;
+  int iNumVertsPerPol = 4;
   numIndices = GetPolsCount(model) * iNumIndicesPerPol;
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
   int i = 0;
   for (; i < GetPolsCount(model); i++) {
-    indices[i * iNumIndicesPerPol + 0] = (i * iNumVertsPerPol) + 0 + 4;
-    indices[i * iNumIndicesPerPol + 1] = (i * iNumVertsPerPol) + 3 + 4;
-    indices[i * iNumIndicesPerPol + 2] = (i * iNumVertsPerPol) + 2 + 4;
-    indices[i * iNumIndicesPerPol + 3] = (i * iNumVertsPerPol) + 0 + 4;
-    indices[i * iNumIndicesPerPol + 4] = (i * iNumVertsPerPol) + 2 + 4;
-    indices[i * iNumIndicesPerPol + 5] = (i * iNumVertsPerPol) + 1 + 4;
-
-    indices[i * iNumIndicesPerPol + 6]  = (i * iNumVertsPerPol) + 0;
-    indices[i * iNumIndicesPerPol + 7]  = (i * iNumVertsPerPol) + 1;
-    indices[i * iNumIndicesPerPol + 8]  = (i * iNumVertsPerPol) + 2;
-    indices[i * iNumIndicesPerPol + 9]  = (i * iNumVertsPerPol) + 0;
-    indices[i * iNumIndicesPerPol + 10] = (i * iNumVertsPerPol) + 2;
-    indices[i * iNumIndicesPerPol + 11] = (i * iNumVertsPerPol) + 3;
+    if (backModeling == eBackModeling::FRONTS) {
+      indices[i * iNumIndicesPerPol + 0] = (i * iNumVertsPerPol) + 0;
+      indices[i * iNumIndicesPerPol + 1] = (i * iNumVertsPerPol) + 1;
+      indices[i * iNumIndicesPerPol + 2] = (i * iNumVertsPerPol) + 2;
+      indices[i * iNumIndicesPerPol + 3] = (i * iNumVertsPerPol) + 0;
+      indices[i * iNumIndicesPerPol + 4] = (i * iNumVertsPerPol) + 2;
+      indices[i * iNumIndicesPerPol + 5] = (i * iNumVertsPerPol) + 3;
+    } else {
+      indices[i * iNumIndicesPerPol + 0] = (i * iNumVertsPerPol) + 0;
+      indices[i * iNumIndicesPerPol + 1] = (i * iNumVertsPerPol) + 3;
+      indices[i * iNumIndicesPerPol + 2] = (i * iNumVertsPerPol) + 2;
+      indices[i * iNumIndicesPerPol + 3] = (i * iNumVertsPerPol) + 0;
+      indices[i * iNumIndicesPerPol + 4] = (i * iNumVertsPerPol) + 2;
+      indices[i * iNumIndicesPerPol + 5] = (i * iNumVertsPerPol) + 1;
+    }
   }
 
   return indices;

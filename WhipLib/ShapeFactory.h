@@ -38,7 +38,7 @@ public:
   void MakeAxes(CShapeData **pShape, CShader *pShader, CTexture *pTexture);
   void MakeDebugTri(CShapeData **pShape, CShader *pShader, CTexture *pTexture, const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &p2);
   void MakeDebugLine(CShapeData **pShape, CShader *pShader, CTexture *pTexture, const glm::vec3 &p0, const glm::vec3 &p1);
-  void MakeModel(CShapeData **pShape, CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1);
+  void MakeModel(CShapeData **pShape, CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1, eBackModeling backModeling = FRONTS);
   void MakeAudioMarker(CShapeData **pShape, CShader *pShader, CTexture *pTexture);
   void MakeStuntMarker(CShapeData **pShape, CShader *pShader, CTexture *pTexture);
   void MakeTrackSurface(CShapeData **pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false, eBackModeling backModeling = FRONTS);
@@ -56,8 +56,8 @@ public:
 private:
   CShapeFactory();
 
-  tVertex *MakeModelVerts(uint32 &numVertices, CTexture *pTexture, eWhipModel model, int iSignSurfaceType);
-  uint32 *MakeModelIndices(uint32 &numIndices, eWhipModel model);
+  tVertex *MakeModelVerts(uint32 &numVertices, CTexture *pTexture, eWhipModel model, int iSignSurfaceType, eBackModeling backModeling);
+  uint32 *MakeModelIndices(uint32 &numIndices, eWhipModel model, eBackModeling backModeling);
 
   tVertex *MakeVertsAudioMarker(uint32 &uiNumVerts, CTexture *pTexture);
   uint32 *MakeIndicesAudioMarker(uint32 &uiNumIndices);

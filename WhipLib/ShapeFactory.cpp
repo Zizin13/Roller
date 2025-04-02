@@ -1759,15 +1759,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rLane;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lLane;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rLane;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lLane;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rLane;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lLane;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rLane;
         //lshoulder
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lShoulder;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lLane;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lShoulder;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lLane;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lShoulder;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lLane;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lShoulder;
@@ -1777,15 +1769,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rShoulder;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rLane;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rShoulder;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rLane;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rShoulder;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rLane;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rShoulder;
         //lwall
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lWallBottomAttach;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lWallBottomAttach;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lWall;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lWallBottomAttach;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lWall;
@@ -1795,15 +1779,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rWall;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rWallBottomAttach;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rWallBottomAttach;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rWallBottomAttach;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rWall;
         //roof
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lWall;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rWall;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lWall;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rWall;
@@ -1813,15 +1789,7 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rFloor;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lFloor;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rFloor;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lFloor;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rFloor;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lFloor;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rFloor;
         //llowall
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lloWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lloWallBottomAttach;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lloWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lloWallBottomAttach;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lloWall;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lloWallBottomAttach;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lloWall;
@@ -1831,24 +1799,12 @@ tVertex *CShapeFactory::MakeVerts(uint32 &numVertices, eShapeSection section, CT
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rloWall;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rloWallBottomAttach;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rloWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rloWallBottomAttach;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rloWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rloWallBottomAttach;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rloWall;
         //luowall
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.luoWall;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lloWall;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.luoWall;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lloWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.luoWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.lloWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.luoWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.lloWall;
         //ruowall
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rloWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.ruoWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rloWall;
-        vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.ruoWall;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.rloWall;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[i].math.ruoWall;
         vertices[i * uiNumVertsPerChunk + iVertRunner++].position = pTrack->m_chunkAy[iChunkIndex].math.rloWall;

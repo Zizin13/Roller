@@ -924,12 +924,11 @@ bool CTrackPreview::Export(eExportType exportType)
     trackSectionAy.push_back(std::make_pair("Right Upper Outer Wall (Back)", pRUOWallBack));
   } else {
     CShapeData *pExportTrack = NULL;
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pExportTrack,
-                                                      p->m_pShader,
-                                                      &p->m_track,
-                                                      eShapeSection::EXPORT,
-                                                      true);
+    CShapeData *pExportBacks = NULL;
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pExportTrack, p->m_pShader, &p->m_track, eShapeSection::EXPORT,true);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pExportBacks, p->m_pShader, &p->m_track, eShapeSection::EXPORT, true, false, eBackModeling::BACKS_ALL_FACES);
     trackSectionAy.push_back(std::make_pair("Track", pExportTrack));
+    trackSectionAy.push_back(std::make_pair("Track (Back)", pExportBacks));
   }
 
   for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it)

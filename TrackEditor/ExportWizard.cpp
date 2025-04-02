@@ -20,6 +20,9 @@ CExportWizard::CExportWizard(QWidget *pParent, eExportType exportType)
   ckSigns->setChecked(m_bExportSigns);
   rbBacksAll->setChecked(!m_bDefinedBacksOnly);
   rbBacksDefined->setChecked(m_bDefinedBacksOnly);
+  rbBacksAll->hide();
+  rbBacksDefined->hide();
+  lineBacks->hide();
 
   setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
   connect(rbSingle,       &QRadioButton::toggled, this, &CExportWizard::OnSingleObject);

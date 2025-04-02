@@ -15,10 +15,9 @@ struct tPolygon;
 //-------------------------------------------------------------------------------------------------
 enum eBackModeling
 {
-  FRONTS_AND_BACKS = 0,
-  FRONTS_ONLY,
-  BACKS_ONLY_ALL_FACES,
-  BACKS_ONLY_DEFINED_ONLY
+  FRONTS = 0,
+  BACKS_ALL_FACES,
+  BACKS_DEFINED_ONLY
 };
 enum eVertOrder
 {
@@ -43,7 +42,7 @@ public:
   void MakeModel(CShapeData **pShape, CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1);
   void MakeAudioMarker(CShapeData **pShape, CShader *pShader, CTexture *pTexture);
   void MakeStuntMarker(CShapeData **pShape, CShader *pShader, CTexture *pTexture);
-  void MakeTrackSurface(CShapeData **pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false, eBackModeling backModeling = FRONTS_AND_BACKS);
+  void MakeTrackSurface(CShapeData **pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false, eBackModeling backModeling = FRONTS);
   void MakeEnvirFloor(CShapeData **pShape, CShader *pShader, CTrack *pTrack, int iIndex);
   void MakeAILine(CShapeData **pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast);
   void MakeSelectedChunks(CShapeData **pShape, CShader *pShader, CTrack *pTrack, int iStart, int iEnd);
@@ -75,7 +74,7 @@ private:
   uint32 *GetBacks(eWhipModel model);
   int GetBacksCount(eWhipModel model);
 
-  tVertex *MakeVerts(uint32 &numVertices, eShapeSection section, CTrack *pTrack, CTexture *pTexture, eBackModeling backModeling = FRONTS_AND_BACKS);
+  tVertex *MakeVerts(uint32 &numVertices, eShapeSection section, CTrack *pTrack, CTexture *pTexture, eBackModeling backModeling = FRONTS);
   tVertex *MakeVertsEnvirFloor(uint32 &numVertices, CTrack *pTrack, CTexture *pTexture, int iIndex);
 
   uint32 *MakeIndicesEnvirFloor(uint32 &numIndices);
@@ -93,7 +92,16 @@ private:
                                   const glm::vec3 &v1,
                                   const glm::vec3 &v2,
                                   const glm::vec3 &v3);
-  void ApplyNormalsAndTexCoords(int i, int iChunkIndex, tVertex *vertices, uint32 uiNumVertsPerChunk, CTrack *pTrack, CTexture *pTexture, int iSurfaceType, eVertOrder vertOrder, int iOffset = 0);
+  void ApplyNormalsAndTexCoords(int i,
+                                int iChunkIndex,
+                                tVertex *vertices,
+                                uint32 uiNumVertsPerChunk,
+                                CTrack *pTrack,
+                                CTexture *pTexture,
+                                int iSurfaceType,
+                                eVertOrder vertOrder,
+                                eBackModeling backModeling,
+                                int iOffset = 0);
   void MakeNormals(tVertex &topLeft, tVertex &topRight, tVertex &bottomLeft, tVertex &bottomRight);
 
   static CShapeFactory s_shapeFactory;

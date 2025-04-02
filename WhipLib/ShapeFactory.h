@@ -16,7 +16,8 @@ struct tPolygon;
 enum eBackModeling
 {
   FRONTS = 0,
-  BACKS
+  BACKS,
+  FRONTS_AND_BACKS
 };
 enum eVertOrder
 {
@@ -38,14 +39,14 @@ public:
   void MakeAxes(CShapeData **pShape, CShader *pShader, CTexture *pTexture);
   void MakeDebugTri(CShapeData **pShape, CShader *pShader, CTexture *pTexture, const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &p2);
   void MakeDebugLine(CShapeData **pShape, CShader *pShader, CTexture *pTexture, const glm::vec3 &p0, const glm::vec3 &p1);
-  void MakeModel(CShapeData **pShape, CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1, eBackModeling backModeling = FRONTS);
+  void MakeModel(CShapeData **pShape, CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1, eBackModeling backModeling = FRONTS_AND_BACKS);
   void MakeAudioMarker(CShapeData **pShape, CShader *pShader, CTexture *pTexture);
   void MakeStuntMarker(CShapeData **pShape, CShader *pShader, CTexture *pTexture);
   void MakeTrackSurface(CShapeData **pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false, eBackModeling backModeling = FRONTS);
   void MakeEnvirFloor(CShapeData **pShape, CShader *pShader, CTrack *pTrack, int iIndex);
   void MakeAILine(CShapeData **pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast);
   void MakeSelectedChunks(CShapeData **pShape, CShader *pShader, CTrack *pTrack, int iStart, int iEnd);
-  void MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CShapeData*> &signAy);
+  void MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CShapeData*> &signAy, bool bBacksSeparate = false);
   void MakeAudio(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &audioAy);
   void MakeStunts(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &stuntAy);
   CShapeData *MakeNormalsTest(const CShapeData &data, CShader *pShader);

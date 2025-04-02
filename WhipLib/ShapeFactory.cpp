@@ -239,23 +239,50 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
 
   //then get vertices for polygons
   int iNumVertsPerPol = 4;
+  if (backModeling == eBackModeling::FRONTS_AND_BACKS)
+    iNumVertsPerPol = 8;
   numVertices = GetPolsCount(model) * iNumVertsPerPol;
   tVertex *vertices = new tVertex[numVertices];
   for (int i = 0; i < GetPolsCount(model); ++i) {
-    vertices[i * iNumVertsPerPol + 0] = coordAy[GetPols(model)[i].byVert1];
-    vertices[i * iNumVertsPerPol + 1] = coordAy[GetPols(model)[i].byVert2];
-    vertices[i * iNumVertsPerPol + 2] = coordAy[GetPols(model)[i].byVert3];
-    vertices[i * iNumVertsPerPol + 3] = coordAy[GetPols(model)[i].byVert4];
-    if (backModeling == eBackModeling::FRONTS) {
-      MakeNormals(vertices[i * iNumVertsPerPol + 1],
-                  vertices[i * iNumVertsPerPol + 0],
-                  vertices[i * iNumVertsPerPol + 2],
-                  vertices[i * iNumVertsPerPol + 3]);
-    } else {
-      MakeNormals(vertices[i * iNumVertsPerPol + 0],
-                  vertices[i * iNumVertsPerPol + 1],
-                  vertices[i * iNumVertsPerPol + 3],
-                  vertices[i * iNumVertsPerPol + 2]);
+    switch (backModeling) {
+      case eBackModeling::FRONTS:
+        vertices[i * iNumVertsPerPol + 0] = coordAy[GetPols(model)[i].byVert1];
+        vertices[i * iNumVertsPerPol + 1] = coordAy[GetPols(model)[i].byVert2];
+        vertices[i * iNumVertsPerPol + 2] = coordAy[GetPols(model)[i].byVert3];
+        vertices[i * iNumVertsPerPol + 3] = coordAy[GetPols(model)[i].byVert4];
+        MakeNormals(vertices[i * iNumVertsPerPol + 1],
+                    vertices[i * iNumVertsPerPol + 0],
+                    vertices[i * iNumVertsPerPol + 2],
+                    vertices[i * iNumVertsPerPol + 3]);
+        break;
+      case eBackModeling::BACKS:
+        vertices[i * iNumVertsPerPol + 0] = coordAy[GetPols(model)[i].byVert1];
+        vertices[i * iNumVertsPerPol + 1] = coordAy[GetPols(model)[i].byVert2];
+        vertices[i * iNumVertsPerPol + 2] = coordAy[GetPols(model)[i].byVert3];
+        vertices[i * iNumVertsPerPol + 3] = coordAy[GetPols(model)[i].byVert4];
+        MakeNormals(vertices[i * iNumVertsPerPol + 0],
+                    vertices[i * iNumVertsPerPol + 1],
+                    vertices[i * iNumVertsPerPol + 3],
+                    vertices[i * iNumVertsPerPol + 2]);
+        break;
+      case eBackModeling::FRONTS_AND_BACKS:
+        vertices[i * iNumVertsPerPol + 0] = coordAy[GetPols(model)[i].byVert1];
+        vertices[i * iNumVertsPerPol + 1] = coordAy[GetPols(model)[i].byVert2];
+        vertices[i * iNumVertsPerPol + 2] = coordAy[GetPols(model)[i].byVert3];
+        vertices[i * iNumVertsPerPol + 3] = coordAy[GetPols(model)[i].byVert4];
+        vertices[i * iNumVertsPerPol + 4] = coordAy[GetPols(model)[i].byVert1];
+        vertices[i * iNumVertsPerPol + 5] = coordAy[GetPols(model)[i].byVert2];
+        vertices[i * iNumVertsPerPol + 6] = coordAy[GetPols(model)[i].byVert3];
+        vertices[i * iNumVertsPerPol + 7] = coordAy[GetPols(model)[i].byVert4];
+        MakeNormals(vertices[i * iNumVertsPerPol + 1],
+                    vertices[i * iNumVertsPerPol + 0],
+                    vertices[i * iNumVertsPerPol + 2],
+                    vertices[i * iNumVertsPerPol + 3]);
+        MakeNormals(vertices[i * iNumVertsPerPol + 0 + 4],
+                    vertices[i * iNumVertsPerPol + 1 + 4],
+                    vertices[i * iNumVertsPerPol + 3 + 4],
+                    vertices[i * iNumVertsPerPol + 2 + 4]);
+        break;
     }
 
     uint32 uiUseTex = GetPols(model)[i].uiTex;
@@ -273,29 +300,55 @@ tVertex *CShapeFactory::MakeModelVerts(uint32 &numVertices, CTexture *pTexture, 
       }
     }
     CarHelpers::RemapColor(model, uiUseTex);
-    if (backModeling == eBackModeling::FRONTS) {
-      pTexture->GetTextureCoordinates(uiUseTex,
-                                      vertices[i * iNumVertsPerPol + 1],
-                                      vertices[i * iNumVertsPerPol + 0],
-                                      vertices[i * iNumVertsPerPol + 2],
-                                      vertices[i * iNumVertsPerPol + 3]);
-    } else {
-      //default back is the same as the front
-      pTexture->GetTextureCoordinates(uiUseTex,
-                                      vertices[i * iNumVertsPerPol + 1],
-                                      vertices[i * iNumVertsPerPol + 0],
-                                      vertices[i * iNumVertsPerPol + 2],
-                                      vertices[i * iNumVertsPerPol + 3]);
-      if (GetBacks(model)) {
-        uint32 uiBackTex = GetBacks(model)[i];
-        if (uiBackTex) {
-          pTexture->GetTextureCoordinates(uiBackTex,
-                                          vertices[i * iNumVertsPerPol + 0],
-                                          vertices[i * iNumVertsPerPol + 1],
-                                          vertices[i * iNumVertsPerPol + 3],
-                                          vertices[i * iNumVertsPerPol + 2]);
+    switch (backModeling) {
+      case eBackModeling::FRONTS:
+        pTexture->GetTextureCoordinates(uiUseTex,
+                                        vertices[i * iNumVertsPerPol + 1],
+                                        vertices[i * iNumVertsPerPol + 0],
+                                        vertices[i * iNumVertsPerPol + 2],
+                                        vertices[i * iNumVertsPerPol + 3]);
+        break;
+      case eBackModeling::BACKS:
+        //default back is the same as the front
+        pTexture->GetTextureCoordinates(uiUseTex,
+                                        vertices[i * iNumVertsPerPol + 1],
+                                        vertices[i * iNumVertsPerPol + 0],
+                                        vertices[i * iNumVertsPerPol + 2],
+                                        vertices[i * iNumVertsPerPol + 3]);
+        if (GetBacks(model)) {
+          uint32 uiBackTex = GetBacks(model)[i];
+          if (uiBackTex) {
+            pTexture->GetTextureCoordinates(uiBackTex,
+                                            vertices[i * iNumVertsPerPol + 0],
+                                            vertices[i * iNumVertsPerPol + 1],
+                                            vertices[i * iNumVertsPerPol + 3],
+                                            vertices[i * iNumVertsPerPol + 2]);
+          }
         }
-      }
+        break;
+      case eBackModeling::FRONTS_AND_BACKS:
+        pTexture->GetTextureCoordinates(uiUseTex,
+                                        vertices[i * iNumVertsPerPol + 1],
+                                        vertices[i * iNumVertsPerPol + 0],
+                                        vertices[i * iNumVertsPerPol + 2],
+                                        vertices[i * iNumVertsPerPol + 3]);
+        pTexture->GetTextureCoordinates(uiUseTex,
+                                        vertices[i * iNumVertsPerPol + 1 + 4],
+                                        vertices[i * iNumVertsPerPol + 0 + 4],
+                                        vertices[i * iNumVertsPerPol + 2 + 4],
+                                        vertices[i * iNumVertsPerPol + 3 + 4]);
+
+        if (GetBacks(model)) {
+          uint32 uiBackTex = GetBacks(model)[i];
+          if (uiBackTex) {
+            pTexture->GetTextureCoordinates(uiBackTex,
+                                            vertices[i * iNumVertsPerPol + 0 + 4],
+                                            vertices[i * iNumVertsPerPol + 1 + 4],
+                                            vertices[i * iNumVertsPerPol + 3 + 4],
+                                            vertices[i * iNumVertsPerPol + 2 + 4]);
+          }
+        }
+        break;
     }
   }
 
@@ -309,26 +362,48 @@ uint32 *CShapeFactory::MakeModelIndices(uint32 &numIndices, eWhipModel model, eB
 {
   int iNumIndicesPerPol = 6;
   int iNumVertsPerPol = 4;
+  if (backModeling == eBackModeling::FRONTS_AND_BACKS) {
+    iNumVertsPerPol = 8;
+    iNumIndicesPerPol = 12;
+  }
   numIndices = GetPolsCount(model) * iNumIndicesPerPol;
   uint32 *indices = new uint32[numIndices];
   memset(indices, 0, numIndices * sizeof(uint32));
 
   int i = 0;
   for (; i < GetPolsCount(model); i++) {
-    if (backModeling == eBackModeling::FRONTS) {
-      indices[i * iNumIndicesPerPol + 0] = (i * iNumVertsPerPol) + 0;
-      indices[i * iNumIndicesPerPol + 1] = (i * iNumVertsPerPol) + 1;
-      indices[i * iNumIndicesPerPol + 2] = (i * iNumVertsPerPol) + 2;
-      indices[i * iNumIndicesPerPol + 3] = (i * iNumVertsPerPol) + 0;
-      indices[i * iNumIndicesPerPol + 4] = (i * iNumVertsPerPol) + 2;
-      indices[i * iNumIndicesPerPol + 5] = (i * iNumVertsPerPol) + 3;
-    } else {
-      indices[i * iNumIndicesPerPol + 0] = (i * iNumVertsPerPol) + 0;
-      indices[i * iNumIndicesPerPol + 1] = (i * iNumVertsPerPol) + 3;
-      indices[i * iNumIndicesPerPol + 2] = (i * iNumVertsPerPol) + 2;
-      indices[i * iNumIndicesPerPol + 3] = (i * iNumVertsPerPol) + 0;
-      indices[i * iNumIndicesPerPol + 4] = (i * iNumVertsPerPol) + 2;
-      indices[i * iNumIndicesPerPol + 5] = (i * iNumVertsPerPol) + 1;
+    switch (backModeling) {
+      case eBackModeling::FRONTS:
+        indices[i * iNumIndicesPerPol + 0] = (i * iNumVertsPerPol) + 0;
+        indices[i * iNumIndicesPerPol + 1] = (i * iNumVertsPerPol) + 1;
+        indices[i * iNumIndicesPerPol + 2] = (i * iNumVertsPerPol) + 2;
+        indices[i * iNumIndicesPerPol + 3] = (i * iNumVertsPerPol) + 0;
+        indices[i * iNumIndicesPerPol + 4] = (i * iNumVertsPerPol) + 2;
+        indices[i * iNumIndicesPerPol + 5] = (i * iNumVertsPerPol) + 3;
+        break;
+      case eBackModeling::BACKS:
+        indices[i * iNumIndicesPerPol + 0] = (i * iNumVertsPerPol) + 0;
+        indices[i * iNumIndicesPerPol + 1] = (i * iNumVertsPerPol) + 3;
+        indices[i * iNumIndicesPerPol + 2] = (i * iNumVertsPerPol) + 2;
+        indices[i * iNumIndicesPerPol + 3] = (i * iNumVertsPerPol) + 0;
+        indices[i * iNumIndicesPerPol + 4] = (i * iNumVertsPerPol) + 2;
+        indices[i * iNumIndicesPerPol + 5] = (i * iNumVertsPerPol) + 1;
+        break;
+      case eBackModeling::FRONTS_AND_BACKS:
+        indices[i * iNumIndicesPerPol + 0] = (i * iNumVertsPerPol) + 0 + 4;
+        indices[i * iNumIndicesPerPol + 1] = (i * iNumVertsPerPol) + 3 + 4;
+        indices[i * iNumIndicesPerPol + 2] = (i * iNumVertsPerPol) + 2 + 4;
+        indices[i * iNumIndicesPerPol + 3] = (i * iNumVertsPerPol) + 0 + 4;
+        indices[i * iNumIndicesPerPol + 4] = (i * iNumVertsPerPol) + 2 + 4;
+        indices[i * iNumIndicesPerPol + 5] = (i * iNumVertsPerPol) + 1 + 4;
+
+        indices[i * iNumIndicesPerPol + 6] = (i * iNumVertsPerPol) + 0;
+        indices[i * iNumIndicesPerPol + 7] = (i * iNumVertsPerPol) + 1;
+        indices[i * iNumIndicesPerPol + 8] = (i * iNumVertsPerPol) + 2;
+        indices[i * iNumIndicesPerPol + 9] = (i * iNumVertsPerPol) + 0;
+        indices[i * iNumIndicesPerPol + 10] = (i * iNumVertsPerPol) + 2;
+        indices[i * iNumIndicesPerPol + 11] = (i * iNumVertsPerPol) + 3;
+        break;
     }
   }
 
@@ -1436,7 +1511,7 @@ void CShapeFactory::MakeSelectedChunks(CShapeData **pShape, CShader *pShader, CT
 
 //-------------------------------------------------------------------------------------------------
 
-void CShapeFactory::MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &signAy)
+void CShapeFactory::MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &signAy, bool bBacksSeparate)
 {
   for (int i = 0; i < (int)pTrack->m_chunkAy.size(); ++i) {
     if (pTrack->m_chunkAy[i].iSignType < 0 || pTrack->m_chunkAy[i].iSignType >= g_signAyCount)
@@ -1444,7 +1519,11 @@ void CShapeFactory::MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CSha
 
     //make sign
     CShapeData *pNewSign = NULL;
-    MakeModel(&pNewSign, pShader, pTrack->m_pBld, g_signAy[pTrack->m_chunkAy[i].iSignType].modelType, pTrack->m_chunkAy[i].iSignTexture);
+    if (bBacksSeparate) {
+
+    } else {
+      MakeModel(&pNewSign, pShader, pTrack->m_pBld, g_signAy[pTrack->m_chunkAy[i].iSignType].modelType, pTrack->m_chunkAy[i].iSignTexture, eBackModeling::FRONTS_AND_BACKS);
+    }
     if (!pNewSign)
       continue;
 
@@ -1994,20 +2073,26 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack, eBa
 
 void CShapeFactory::MakeIndicesHelper(uint32 *indices, uint32 i, uint32 uiNumIndicesPerChunk, int &iIndicesRunner, uint32 uiNumVertsPerChunk, int iPos, eBackModeling backModeling)
 {
-  if (backModeling == eBackModeling::FRONTS) {
-    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + iPos;
-    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + iPos;
-    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + iPos;
-    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + iPos;
-    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + iPos;
-    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + iPos;
-  } else {
-    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + iPos;
-    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + iPos;
-    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + iPos;
-    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + iPos;
-    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + iPos;
-    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + iPos;
+  switch (backModeling) {
+    case eBackModeling::FRONTS:
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + iPos;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + iPos;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + iPos;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + iPos;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + iPos;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + iPos;
+      break;
+    case eBackModeling::BACKS:
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + iPos;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + iPos;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + iPos;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + iPos;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + iPos;
+      indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + iPos;
+      break;
+    case eBackModeling::FRONTS_AND_BACKS:
+      assert(0);
+      break;
   }
 }
 
@@ -2168,106 +2253,124 @@ void CShapeFactory::ApplyNormalsAndTexCoords(int i,
 {
   switch (vertOrder) {
     case eVertOrder::SURFACE:
-      if (backModeling == eBackModeling::FRONTS) {
-        MakeNormals(vertices[i * uiNumVertsPerChunk + 0 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 1 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 2 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 3 + iOffset]);
-        pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(iSurfaceType),
-                            vertices[i * uiNumVertsPerChunk + 0 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 1 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 2 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 3 + iOffset]);
-      } else {
-        MakeNormals(vertices[i * uiNumVertsPerChunk + 1 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 0 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 3 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 2 + iOffset]);
-        pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(iSurfaceType),
-                            vertices[i * uiNumVertsPerChunk + 0 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 1 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 2 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 3 + iOffset]);
-        if (CTrack::GetSignedBitValueFromInt(iSurfaceType) & SURFACE_FLAG_BACK) {
-          uint32 uiTexIdx = CTrack::GetSignedBitValueFromInt(iSurfaceType) & SURFACE_MASK_TEXTURE_INDEX;
-          CSignMap::iterator it = pTrack->m_backsMap.find(uiTexIdx);
-          if (it != pTrack->m_backsMap.end()) {
-            pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(it->second),
-                                vertices[i * uiNumVertsPerChunk + 1 + iOffset],
-                                vertices[i * uiNumVertsPerChunk + 0 + iOffset],
-                                vertices[i * uiNumVertsPerChunk + 3 + iOffset],
-                                vertices[i * uiNumVertsPerChunk + 2 + iOffset]);
+      switch (backModeling) {
+        case eBackModeling::FRONTS:
+          MakeNormals(vertices[i * uiNumVertsPerChunk + 0 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 1 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 2 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 3 + iOffset]);
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(iSurfaceType),
+                              vertices[i * uiNumVertsPerChunk + 0 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 1 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 2 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 3 + iOffset]);
+          break;
+        case eBackModeling::BACKS:
+          MakeNormals(vertices[i * uiNumVertsPerChunk + 1 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 0 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 3 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 2 + iOffset]);
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(iSurfaceType),
+                              vertices[i * uiNumVertsPerChunk + 0 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 1 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 2 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 3 + iOffset]);
+          if (CTrack::GetSignedBitValueFromInt(iSurfaceType) & SURFACE_FLAG_BACK) {
+            uint32 uiTexIdx = CTrack::GetSignedBitValueFromInt(iSurfaceType) & SURFACE_MASK_TEXTURE_INDEX;
+            CSignMap::iterator it = pTrack->m_backsMap.find(uiTexIdx);
+            if (it != pTrack->m_backsMap.end()) {
+              pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(it->second),
+                                  vertices[i * uiNumVertsPerChunk + 1 + iOffset],
+                                  vertices[i * uiNumVertsPerChunk + 0 + iOffset],
+                                  vertices[i * uiNumVertsPerChunk + 3 + iOffset],
+                                  vertices[i * uiNumVertsPerChunk + 2 + iOffset]);
+            }
           }
-        }
+          break;
+        case eBackModeling::FRONTS_AND_BACKS:
+          assert(0);
+          break;
       }
       break;
     case eVertOrder::LWALL:
     case eVertOrder::OWALL:
-      if (backModeling == eBackModeling::FRONTS) {
-        MakeNormals(vertices[i * uiNumVertsPerChunk + 2 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 0 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 3 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 1 + iOffset]);
-        pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(iSurfaceType),
-                            vertices[i * uiNumVertsPerChunk + 2 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 0 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 3 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 1 + iOffset]);
-      } else {
-        MakeNormals(vertices[i * uiNumVertsPerChunk + 0 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 2 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 1 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 3 + iOffset]);
-        pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(iSurfaceType),
-                            vertices[i * uiNumVertsPerChunk + 2 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 0 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 3 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 1 + iOffset]);
-        if (CTrack::GetSignedBitValueFromInt(iSurfaceType) & SURFACE_FLAG_BACK) {
-          uint32 uiTexIdx = CTrack::GetSignedBitValueFromInt(iSurfaceType) & SURFACE_MASK_TEXTURE_INDEX;
-          CSignMap::iterator it = pTrack->m_backsMap.find(uiTexIdx);
-          if (it != pTrack->m_backsMap.end()) {
-            pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(it->second),
-                                vertices[i * uiNumVertsPerChunk + 0 + iOffset],
-                                vertices[i * uiNumVertsPerChunk + 2 + iOffset],
-                                vertices[i * uiNumVertsPerChunk + 1 + iOffset],
-                                vertices[i * uiNumVertsPerChunk + 3 + iOffset]);
+      switch (backModeling) {
+        case eBackModeling::FRONTS:
+          MakeNormals(vertices[i * uiNumVertsPerChunk + 2 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 0 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 3 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 1 + iOffset]);
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(iSurfaceType),
+                              vertices[i * uiNumVertsPerChunk + 2 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 0 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 3 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 1 + iOffset]);
+          break;
+        case eBackModeling::BACKS:
+          MakeNormals(vertices[i * uiNumVertsPerChunk + 0 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 2 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 1 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 3 + iOffset]);
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(iSurfaceType),
+                              vertices[i * uiNumVertsPerChunk + 2 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 0 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 3 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 1 + iOffset]);
+          if (CTrack::GetSignedBitValueFromInt(iSurfaceType) & SURFACE_FLAG_BACK) {
+            uint32 uiTexIdx = CTrack::GetSignedBitValueFromInt(iSurfaceType) & SURFACE_MASK_TEXTURE_INDEX;
+            CSignMap::iterator it = pTrack->m_backsMap.find(uiTexIdx);
+            if (it != pTrack->m_backsMap.end()) {
+              pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(it->second),
+                                  vertices[i * uiNumVertsPerChunk + 0 + iOffset],
+                                  vertices[i * uiNumVertsPerChunk + 2 + iOffset],
+                                  vertices[i * uiNumVertsPerChunk + 1 + iOffset],
+                                  vertices[i * uiNumVertsPerChunk + 3 + iOffset]);
+            }
           }
-        }
+          break;
+        case eBackModeling::FRONTS_AND_BACKS:
+          assert(0);
+          break;
       }
       break;
     case eVertOrder::RWALL:
-      if (backModeling == eBackModeling::FRONTS) {
-        MakeNormals(vertices[i * uiNumVertsPerChunk + 1 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 3 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 0 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 2 + iOffset]);
-        pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(iSurfaceType),
-                            vertices[i * uiNumVertsPerChunk + 1 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 3 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 0 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 2 + iOffset]);
-      } else {
-        MakeNormals(vertices[i * uiNumVertsPerChunk + 3 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 1 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 2 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 0 + iOffset]);
-        pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(iSurfaceType),
-                            vertices[i * uiNumVertsPerChunk + 1 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 3 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 0 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 2 + iOffset]);
-        if (CTrack::GetSignedBitValueFromInt(iSurfaceType) & SURFACE_FLAG_BACK) {
-          uint32 uiTexIdx = CTrack::GetSignedBitValueFromInt(iSurfaceType) & SURFACE_MASK_TEXTURE_INDEX;
-          CSignMap::iterator it = pTrack->m_backsMap.find(uiTexIdx);
-          if (it != pTrack->m_backsMap.end()) {
-            pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(it->second),
-                                vertices[i * uiNumVertsPerChunk + 3 + iOffset],
-                                vertices[i * uiNumVertsPerChunk + 1 + iOffset],
-                                vertices[i * uiNumVertsPerChunk + 2 + iOffset],
-                                vertices[i * uiNumVertsPerChunk + 0 + iOffset]);
+      switch (backModeling) {
+        case eBackModeling::FRONTS:
+          MakeNormals(vertices[i * uiNumVertsPerChunk + 1 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 3 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 0 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 2 + iOffset]);
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(iSurfaceType),
+                              vertices[i * uiNumVertsPerChunk + 1 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 3 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 0 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 2 + iOffset]);
+          break;
+        case eBackModeling::BACKS:
+          MakeNormals(vertices[i * uiNumVertsPerChunk + 3 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 1 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 2 + iOffset],
+                      vertices[i * uiNumVertsPerChunk + 0 + iOffset]);
+          pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(iSurfaceType),
+                              vertices[i * uiNumVertsPerChunk + 1 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 3 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 0 + iOffset],
+                              vertices[i * uiNumVertsPerChunk + 2 + iOffset]);
+          if (CTrack::GetSignedBitValueFromInt(iSurfaceType) & SURFACE_FLAG_BACK) {
+            uint32 uiTexIdx = CTrack::GetSignedBitValueFromInt(iSurfaceType) & SURFACE_MASK_TEXTURE_INDEX;
+            CSignMap::iterator it = pTrack->m_backsMap.find(uiTexIdx);
+            if (it != pTrack->m_backsMap.end()) {
+              pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(it->second),
+                                  vertices[i * uiNumVertsPerChunk + 3 + iOffset],
+                                  vertices[i * uiNumVertsPerChunk + 1 + iOffset],
+                                  vertices[i * uiNumVertsPerChunk + 2 + iOffset],
+                                  vertices[i * uiNumVertsPerChunk + 0 + iOffset]);
+            }
           }
-        }
+          break;
+        case eBackModeling::FRONTS_AND_BACKS:
+          assert(0);
+          break;
       }
       break;
   }

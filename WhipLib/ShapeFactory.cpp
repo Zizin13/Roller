@@ -1955,7 +1955,7 @@ uint32 *CShapeFactory::MakeIndicesSingleSection(uint32 &numIndices, eShapeSectio
     if (!bAttachLast && i == 0)
       continue;
 
-    MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 0);
+    MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 0, backModeling);
   }
 
   return indices;
@@ -1981,47 +1981,47 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack, eBa
     int iIndicesRunner = 0;
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::CENTER))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::CENTER))) {
-      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 0);
+      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 0, backModeling);
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LSHOULDER))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LSHOULDER))) {
-      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 4);
+      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 4, backModeling);
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RSHOULDER))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RSHOULDER))) {
-      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 8);
+      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 8, backModeling);
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LWALL))) {
-      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 12);
+      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 12, backModeling);
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RWALL))) {
-      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 16);
+      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 16, backModeling);
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::ROOF))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::ROOF))) {
-      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 20);
+      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 20, backModeling);
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::OWALLFLOOR))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::OWALLFLOOR))) {
-      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 24);
+      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 24, backModeling);
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LLOWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LLOWALL))) {
-      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 28);
+      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 28, backModeling);
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RLOWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RLOWALL))) {
-      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 32);
+      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 32, backModeling);
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::LUOWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::LUOWALL))) {
-      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 36);
+      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 36, backModeling);
     }
     if (!(i > 0 && !pTrack->ShouldShowChunkSection(i - 1, eShapeSection::RUOWALL))
       && !(i == 0 && !pTrack->ShouldShowChunkSection(((int)pTrack->m_chunkAy.size() - 1), eShapeSection::RUOWALL))) {
-      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 40);
+      MakeIndicesHelper(indices, i, uiNumIndicesPerChunk, iIndicesRunner, uiNumVertsPerChunk, 40, backModeling);
     }
   }
 
@@ -2031,14 +2031,23 @@ uint32 *CShapeFactory::MakeIndicesExport(uint32 &numIndices, CTrack *pTrack, eBa
 
 //-------------------------------------------------------------------------------------------------
 
-void CShapeFactory::MakeIndicesHelper(uint32 *indices, uint32 i, uint32 uiNumIndicesPerChunk, int &iIndicesRunner, uint32 uiNumVertsPerChunk, int iPos)
+void CShapeFactory::MakeIndicesHelper(uint32 *indices, uint32 i, uint32 uiNumIndicesPerChunk, int &iIndicesRunner, uint32 uiNumVertsPerChunk, int iPos, eBackModeling backModeling)
 {
-  indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + iPos;
-  indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + iPos;
-  indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + iPos;
-  indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + iPos;
-  indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + iPos;
-  indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + iPos;
+  if (backModeling == eBackModeling::FRONTS) {
+    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + iPos;
+    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + iPos;
+    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + iPos;
+    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + iPos;
+    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + iPos;
+    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + iPos;
+  } else {
+    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + iPos;
+    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + iPos;
+    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 3 + iPos;
+    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 2 + iPos;
+    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 0 + iPos;
+    indices[i * uiNumIndicesPerChunk + iIndicesRunner++] = (i * uiNumVertsPerChunk) + 1 + iPos;
+  }
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -2209,24 +2218,24 @@ void CShapeFactory::ApplyNormalsAndTexCoords(int i,
                             vertices[i * uiNumVertsPerChunk + 2 + iOffset],
                             vertices[i * uiNumVertsPerChunk + 3 + iOffset]);
       } else {
-        MakeNormals(vertices[i * uiNumVertsPerChunk + 1 + 4 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 0 + 4 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 3 + 4 + iOffset],
-                    vertices[i * uiNumVertsPerChunk + 2 + 4 + iOffset]);
+        MakeNormals(vertices[i * uiNumVertsPerChunk + 1 + iOffset],
+                    vertices[i * uiNumVertsPerChunk + 0 + iOffset],
+                    vertices[i * uiNumVertsPerChunk + 3 + iOffset],
+                    vertices[i * uiNumVertsPerChunk + 2 + iOffset]);
         pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(iSurfaceType),
-                            vertices[i * uiNumVertsPerChunk + 1 + 4 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 0 + 4 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 3 + 4 + iOffset],
-                            vertices[i * uiNumVertsPerChunk + 2 + 4 + iOffset]);
+                            vertices[i * uiNumVertsPerChunk + 0 + iOffset],
+                            vertices[i * uiNumVertsPerChunk + 1 + iOffset],
+                            vertices[i * uiNumVertsPerChunk + 2 + iOffset],
+                            vertices[i * uiNumVertsPerChunk + 3 + iOffset]);
         if (CTrack::GetSignedBitValueFromInt(iSurfaceType) & SURFACE_FLAG_BACK) {
           uint32 uiTexIdx = CTrack::GetSignedBitValueFromInt(iSurfaceType) & SURFACE_MASK_TEXTURE_INDEX;
           CSignMap::iterator it = pTrack->m_backsMap.find(uiTexIdx);
           if (it != pTrack->m_backsMap.end()) {
             pTexture->GetTextureCoordinates(CTrack::GetSignedBitValueFromInt(it->second),
-                                vertices[i * uiNumVertsPerChunk + 1 + 4 + iOffset],
-                                vertices[i * uiNumVertsPerChunk + 0 + 4 + iOffset],
-                                vertices[i * uiNumVertsPerChunk + 3 + 4 + iOffset],
-                                vertices[i * uiNumVertsPerChunk + 2 + 4 + iOffset]);
+                                vertices[i * uiNumVertsPerChunk + 1 + iOffset],
+                                vertices[i * uiNumVertsPerChunk + 0 + iOffset],
+                                vertices[i * uiNumVertsPerChunk + 3 + iOffset],
+                                vertices[i * uiNumVertsPerChunk + 2 + iOffset]);
           }
         }
       }

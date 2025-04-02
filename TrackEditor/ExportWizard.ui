@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>233</width>
-    <height>148</height>
+    <height>213</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -21,12 +21,21 @@
        <property name="text">
         <string>Export track sections separately</string>
        </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+       <property name="autoExclusive">
+        <bool>false</bool>
+       </property>
       </widget>
      </item>
      <item>
       <widget class="QRadioButton" name="rbSingle">
        <property name="text">
         <string>Export track as single object</string>
+       </property>
+       <property name="autoExclusive">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -38,9 +47,42 @@
       </widget>
      </item>
      <item>
+      <widget class="QRadioButton" name="rbBacksDefined">
+       <property name="text">
+        <string>Export only defined backs</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+       <property name="autoExclusive">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="rbBacksAll">
+       <property name="text">
+        <string>Export backs for all surfaces</string>
+       </property>
+       <property name="autoExclusive">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QCheckBox" name="ckSigns">
        <property name="text">
         <string>Export Signs</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

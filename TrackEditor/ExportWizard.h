@@ -15,14 +15,11 @@ public:
 
   bool m_bExportSeparate;
   bool m_bExportSigns;
-  bool m_bDefinedBacksOnly;
 
 protected slots:
   void OnSingleObject(bool bChecked);
   void OnSeparate(bool bChecked);
   void OnSignsChecked(bool bChecked);
-  void OnDefinedBacksOnly(bool bChecked);
-  void OnAllBacks(bool bChecked);
 
 private:
   eExportType m_exportType;

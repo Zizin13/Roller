@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>233</width>
-    <height>213</height>
+    <height>145</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,36 +41,6 @@
      </item>
      <item>
       <widget class="Line" name="line">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="rbBacksDefined">
-       <property name="text">
-        <string>Export only defined backs</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-       <property name="autoExclusive">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QRadioButton" name="rbBacksAll">
-       <property name="text">
-        <string>Export backs for all surfaces</string>
-       </property>
-       <property name="autoExclusive">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="lineBacks">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>

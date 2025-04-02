@@ -16,8 +16,7 @@ struct tPolygon;
 enum eBackModeling
 {
   FRONTS = 0,
-  BACKS_ALL_FACES,
-  BACKS_DEFINED_ONLY
+  BACKS
 };
 enum eVertOrder
 {

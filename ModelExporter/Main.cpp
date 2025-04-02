@@ -125,6 +125,17 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir, bool bObj)
   CShapeData *pRLOWallSurf = NULL;
   CShapeData *pLUOWallSurf = NULL;
   CShapeData *pRUOWallSurf = NULL;
+  CShapeData *pCenterBack = NULL;
+  CShapeData *pLShoulderBack = NULL;
+  CShapeData *pRShoulderBack = NULL;
+  CShapeData *pLWallBack = NULL;
+  CShapeData *pRWallBack = NULL;
+  CShapeData *pRoofBack = NULL;
+  CShapeData *pOWallFloorBack = NULL;
+  CShapeData *pLLOWallBack = NULL;
+  CShapeData *pRLOWallBack = NULL;
+  CShapeData *pLUOWallBack = NULL;
+  CShapeData *pRUOWallBack = NULL;
 
   CShapeFactory::GetShapeFactory().MakeAILine(&pCenterLine, NULL, pTrack, eShapeSection::CENTERLINE, true);
   CShapeFactory::GetShapeFactory().MakeAILine(&pAILine1, NULL, pTrack, eShapeSection::CARLINE1, true);
@@ -142,6 +153,17 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir, bool bObj)
   CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRLOWallSurf, NULL, pTrack, eShapeSection::RLOWALL, true);
   CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLUOWallSurf, NULL, pTrack, eShapeSection::LUOWALL, true);
   CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRUOWallSurf, NULL, pTrack, eShapeSection::RUOWALL, true);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pCenterBack, NULL, pTrack, eShapeSection::CENTER, true, false, eBackModeling::BACKS);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLShoulderBack, NULL, pTrack, eShapeSection::LSHOULDER, true, false, eBackModeling::BACKS);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRShoulderBack, NULL, pTrack, eShapeSection::RSHOULDER, true, false, eBackModeling::BACKS);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLWallBack, NULL, pTrack, eShapeSection::LWALL, true, false, eBackModeling::BACKS);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRWallBack, NULL, pTrack, eShapeSection::RWALL, true, false, eBackModeling::BACKS);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRoofBack, NULL, pTrack, eShapeSection::ROOF, true, false, eBackModeling::BACKS);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pOWallFloorBack, NULL, pTrack, eShapeSection::OWALLFLOOR, true, false, eBackModeling::BACKS);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLLOWallBack, NULL, pTrack, eShapeSection::LLOWALL, true, false, eBackModeling::BACKS);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRLOWallBack, NULL, pTrack, eShapeSection::RLOWALL, true, false, eBackModeling::BACKS);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLUOWallBack, NULL, pTrack, eShapeSection::LUOWALL, true, false, eBackModeling::BACKS);
+  CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRUOWallBack, NULL, pTrack, eShapeSection::RUOWALL, true, false, eBackModeling::BACKS);
 
   trackSectionAy.push_back(std::make_pair("Centerline", pCenterLine));
   trackSectionAy.push_back(std::make_pair("AI Line 1", pAILine1));
@@ -159,6 +181,17 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir, bool bObj)
   trackSectionAy.push_back(std::make_pair("Right Lower Outer Wall", pRLOWallSurf));
   trackSectionAy.push_back(std::make_pair("Left Upper Outer Wall", pLUOWallSurf));
   trackSectionAy.push_back(std::make_pair("Right Upper Outer Wall", pRUOWallSurf));
+  trackSectionAy.push_back(std::make_pair("Center (Back)", pCenterBack));
+  trackSectionAy.push_back(std::make_pair("Left Shoulder (Back)", pLShoulderBack));
+  trackSectionAy.push_back(std::make_pair("Right Shoulder (Back)", pRShoulderBack));
+  trackSectionAy.push_back(std::make_pair("Left Wall (Back)", pLWallBack));
+  trackSectionAy.push_back(std::make_pair("Right Wall (Back)", pRWallBack));
+  trackSectionAy.push_back(std::make_pair("Roof (Back)", pRoofBack));
+  trackSectionAy.push_back(std::make_pair("Outer Wall Floor (Back)", pOWallFloorBack));
+  trackSectionAy.push_back(std::make_pair("Left Lower Outer Wall (Back)", pLLOWallBack));
+  trackSectionAy.push_back(std::make_pair("Right Lower Outer Wall (Back)", pRLOWallBack));
+  trackSectionAy.push_back(std::make_pair("Left Upper Outer Wall (Back)", pLUOWallBack));
+  trackSectionAy.push_back(std::make_pair("Right Upper Outer Wall (Back)", pRUOWallBack));
 
   CShapeFactory::GetShapeFactory().MakeSigns(NULL, pTrack, signAy);
 

@@ -38,37 +38,26 @@ public:
   CTrackPreviewPrivate()
     : m_pShader(NULL)
     , m_pCenterSurf(NULL)
-    , m_pCenterBack(NULL)
     , m_pCenterWire(NULL)
     , m_pLShoulderSurf(NULL)
-    , m_pLShoulderBack(NULL)
     , m_pLShoulderWire(NULL)
     , m_pRShoulderSurf(NULL)
-    , m_pRShoulderBack(NULL)
     , m_pRShoulderWire(NULL)
     , m_pLWallSurf(NULL)
-    , m_pLWallBack(NULL)
     , m_pLWallWire(NULL)
     , m_pRWallSurf(NULL)
-    , m_pRWallBack(NULL)
     , m_pRWallWire(NULL)
     , m_pRoofSurf(NULL)
-    , m_pRoofBack(NULL)
     , m_pRoofWire(NULL)
     , m_pOWallFloorSurf(NULL)
-    , m_pOWallFloorBack(NULL)
     , m_pOWallFloorWire(NULL)
     , m_pLLOWallSurf(NULL)
-    , m_pLLOWallBack(NULL)
     , m_pLLOWallWire(NULL)
     , m_pRLOWallSurf(NULL)
-    , m_pRLOWallBack(NULL)
     , m_pRLOWallWire(NULL)
     , m_pLUOWallSurf(NULL)
-    , m_pLUOWallBack(NULL)
     , m_pLUOWallWire(NULL)
     , m_pRUOWallSurf(NULL)
-    , m_pRUOWallBack(NULL)
     , m_pRUOWallWire(NULL)
     , m_pSelection(NULL)
     , m_pAILine1(NULL)
@@ -120,10 +109,6 @@ public:
       delete m_pCenterSurf;
       m_pCenterSurf = NULL;
     }
-    if (m_pCenterBack) {
-      delete m_pCenterBack;
-      m_pCenterBack = NULL;
-    }
     if (m_pCenterWire) {
       delete m_pCenterWire;
       m_pCenterWire = NULL;
@@ -131,10 +116,6 @@ public:
     if (m_pLShoulderSurf) {
       delete m_pLShoulderSurf;
       m_pLShoulderSurf = NULL;
-    }
-    if (m_pLShoulderBack) {
-      delete m_pLShoulderBack;
-      m_pLShoulderBack = NULL;
     }
     if (m_pLShoulderWire) {
       delete m_pLShoulderWire;
@@ -144,10 +125,6 @@ public:
       delete m_pRShoulderSurf;
       m_pRShoulderSurf = NULL;
     }
-    if (m_pRShoulderBack) {
-      delete m_pRShoulderBack;
-      m_pRShoulderBack = NULL;
-    }
     if (m_pRShoulderWire) {
       delete m_pRShoulderWire;
       m_pRShoulderWire = NULL;
@@ -155,10 +132,6 @@ public:
     if (m_pLWallSurf) {
       delete m_pLWallSurf;
       m_pLWallSurf = NULL;
-    }
-    if (m_pLWallBack) {
-      delete m_pLWallBack;
-      m_pLWallBack = NULL;
     }
     if (m_pLWallWire) {
       delete m_pLWallWire;
@@ -168,10 +141,6 @@ public:
       delete m_pRWallSurf;
       m_pRWallSurf = NULL;
     }
-    if (m_pRWallBack) {
-      delete m_pRWallBack;
-      m_pRWallBack = NULL;
-    }
     if (m_pRWallWire) {
       delete m_pRWallWire;
       m_pRWallWire = NULL;
@@ -179,10 +148,6 @@ public:
     if (m_pRoofSurf) {
       delete m_pRoofSurf;
       m_pRoofSurf = NULL;
-    }
-    if (m_pRoofBack) {
-      delete m_pRoofBack;
-      m_pRoofBack = NULL;
     }
     if (m_pRoofWire) {
       delete m_pRoofWire;
@@ -192,10 +157,6 @@ public:
       delete m_pOWallFloorSurf;
       m_pOWallFloorSurf = NULL;
     }
-    if (m_pOWallFloorBack) {
-      delete m_pOWallFloorBack;
-      m_pOWallFloorBack = NULL;
-    }
     if (m_pOWallFloorWire) {
       delete m_pOWallFloorWire;
       m_pOWallFloorWire = NULL;
@@ -203,10 +164,6 @@ public:
     if (m_pLLOWallSurf) {
       delete m_pLLOWallSurf;
       m_pLLOWallSurf = NULL;
-    }
-    if (m_pLLOWallBack) {
-      delete m_pLLOWallBack;
-      m_pLLOWallBack = NULL;
     }
     if (m_pLLOWallWire) {
       delete m_pLLOWallWire;
@@ -216,10 +173,6 @@ public:
       delete m_pRLOWallSurf;
       m_pRLOWallSurf = NULL;
     }
-    if (m_pRLOWallBack) {
-      delete m_pRLOWallBack;
-      m_pRLOWallBack = NULL;
-    }
     if (m_pRLOWallWire) {
       delete m_pRLOWallWire;
       m_pRLOWallWire = NULL;
@@ -228,10 +181,6 @@ public:
       delete m_pLUOWallSurf;
       m_pLUOWallSurf = NULL;
     }
-    if (m_pLUOWallBack) {
-      delete m_pLUOWallBack;
-      m_pLUOWallBack = NULL;
-    }
     if (m_pLUOWallWire) {
       delete m_pLUOWallWire;
       m_pLUOWallWire = NULL;
@@ -239,10 +188,6 @@ public:
     if (m_pRUOWallSurf) {
       delete m_pRUOWallSurf;
       m_pRUOWallSurf = NULL;
-    }
-    if (m_pRUOWallBack) {
-      delete m_pRUOWallBack;
-      m_pRUOWallBack = NULL;
     }
     if (m_pRUOWallWire) {
       delete m_pRUOWallWire;
@@ -283,37 +228,26 @@ public:
   }
 
   CShapeData *m_pCenterSurf;
-  CShapeData *m_pCenterBack;
   CShapeData *m_pCenterWire;
   CShapeData *m_pLShoulderSurf;
-  CShapeData *m_pLShoulderBack;
   CShapeData *m_pLShoulderWire;
   CShapeData *m_pRShoulderSurf;
-  CShapeData *m_pRShoulderBack;
   CShapeData *m_pRShoulderWire;
   CShapeData *m_pLWallSurf;
-  CShapeData *m_pLWallBack;
   CShapeData *m_pLWallWire;
   CShapeData *m_pRWallSurf;
-  CShapeData *m_pRWallBack;
   CShapeData *m_pRWallWire;
   CShapeData *m_pRoofSurf;
-  CShapeData *m_pRoofBack;
   CShapeData *m_pRoofWire;
   CShapeData *m_pOWallFloorSurf;
-  CShapeData *m_pOWallFloorBack;
   CShapeData *m_pOWallFloorWire;
   CShapeData *m_pLLOWallSurf;
-  CShapeData *m_pLLOWallBack;
   CShapeData *m_pLLOWallWire;
   CShapeData *m_pRLOWallSurf;
-  CShapeData *m_pRLOWallBack;
   CShapeData *m_pRLOWallWire;
   CShapeData *m_pLUOWallSurf;
-  CShapeData *m_pLUOWallBack;
   CShapeData *m_pLUOWallWire;
   CShapeData *m_pRUOWallSurf;
-  CShapeData *m_pRUOWallBack;
   CShapeData *m_pRUOWallWire;
   CShapeData *m_pSelection;
   CShapeData *m_pAILine1;
@@ -421,22 +355,16 @@ void CTrackPreview::UpdateTrack(bool bUpdatingStunt)
 
   if (!p->m_track.m_chunkAy.empty()) {
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pCenterSurf, p->m_pShader, &p->m_track, eShapeSection::CENTER, m_bAttachLast);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pCenterBack, p->m_pShader, &p->m_track, eShapeSection::CENTER, m_bAttachLast, false, eBackModeling::BACKS);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pCenterWire, p->m_pShader, &p->m_track, eShapeSection::CENTER, m_bAttachLast, true);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pLShoulderSurf, p->m_pShader, &p->m_track, eShapeSection::LSHOULDER, m_bAttachLast);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pLShoulderBack, p->m_pShader, &p->m_track, eShapeSection::LSHOULDER, m_bAttachLast, false, eBackModeling::BACKS);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pLShoulderWire, p->m_pShader, &p->m_track, eShapeSection::LSHOULDER, m_bAttachLast, true);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pRShoulderSurf, p->m_pShader, &p->m_track, eShapeSection::RSHOULDER, m_bAttachLast);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pRShoulderBack, p->m_pShader, &p->m_track, eShapeSection::RSHOULDER, m_bAttachLast, false, eBackModeling::BACKS);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pRShoulderWire, p->m_pShader, &p->m_track, eShapeSection::RSHOULDER, m_bAttachLast, true);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pLWallSurf, p->m_pShader, &p->m_track, eShapeSection::LWALL, m_bAttachLast);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pLWallBack, p->m_pShader, &p->m_track, eShapeSection::LWALL, m_bAttachLast, false, eBackModeling::BACKS);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pLWallWire, p->m_pShader, &p->m_track, eShapeSection::LWALL, m_bAttachLast, true);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pRWallSurf, p->m_pShader, &p->m_track, eShapeSection::RWALL, m_bAttachLast);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pRWallBack, p->m_pShader, &p->m_track, eShapeSection::RWALL, m_bAttachLast, false, eBackModeling::BACKS);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pRWallWire, p->m_pShader, &p->m_track, eShapeSection::RWALL, m_bAttachLast, true);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pRoofSurf, p->m_pShader, &p->m_track, eShapeSection::ROOF, m_bAttachLast);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pRoofBack, p->m_pShader, &p->m_track, eShapeSection::ROOF, m_bAttachLast, false, eBackModeling::BACKS);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pRoofWire, p->m_pShader, &p->m_track, eShapeSection::ROOF, m_bAttachLast, true);
     CShapeFactory::GetShapeFactory().MakeAILine(&p->m_pAILine1, p->m_pShader, &p->m_track, eShapeSection::AILINE1, m_bAttachLast);
     CShapeFactory::GetShapeFactory().MakeAILine(&p->m_pAILine2, p->m_pShader, &p->m_track, eShapeSection::AILINE2, m_bAttachLast);
@@ -444,19 +372,14 @@ void CTrackPreview::UpdateTrack(bool bUpdatingStunt)
     CShapeFactory::GetShapeFactory().MakeAILine(&p->m_pAILine4, p->m_pShader, &p->m_track, eShapeSection::AILINE4, m_bAttachLast);
     if (!bUpdatingStunt) {
       CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pOWallFloorSurf, p->m_pShader, &p->m_track, eShapeSection::OWALLFLOOR, m_bAttachLast);
-      CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pOWallFloorBack, p->m_pShader, &p->m_track, eShapeSection::OWALLFLOOR, m_bAttachLast, false, eBackModeling::BACKS);
       CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pOWallFloorWire, p->m_pShader, &p->m_track, eShapeSection::OWALLFLOOR, m_bAttachLast, true);
       CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pLLOWallSurf, p->m_pShader, &p->m_track, eShapeSection::LLOWALL, m_bAttachLast);
-      CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pLLOWallBack, p->m_pShader, &p->m_track, eShapeSection::LLOWALL, m_bAttachLast, false, eBackModeling::BACKS);
       CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pLLOWallWire, p->m_pShader, &p->m_track, eShapeSection::LLOWALL, m_bAttachLast, true);
       CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pRLOWallSurf, p->m_pShader, &p->m_track, eShapeSection::RLOWALL, m_bAttachLast);
-      CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pRLOWallBack, p->m_pShader, &p->m_track, eShapeSection::RLOWALL, m_bAttachLast, false, eBackModeling::BACKS);
       CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pRLOWallWire, p->m_pShader, &p->m_track, eShapeSection::RLOWALL, m_bAttachLast, true);
       CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pLUOWallSurf, p->m_pShader, &p->m_track, eShapeSection::LUOWALL, m_bAttachLast);
-      CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pLUOWallBack, p->m_pShader, &p->m_track, eShapeSection::LUOWALL, m_bAttachLast, false, eBackModeling::BACKS);
       CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pLUOWallWire, p->m_pShader, &p->m_track, eShapeSection::LUOWALL, m_bAttachLast, true);
       CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pRUOWallSurf, p->m_pShader, &p->m_track, eShapeSection::RUOWALL, m_bAttachLast);
-      CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pRUOWallBack, p->m_pShader, &p->m_track, eShapeSection::RUOWALL, m_bAttachLast, false, eBackModeling::BACKS);
       CShapeFactory::GetShapeFactory().MakeTrackSurface(&p->m_pRUOWallWire, p->m_pShader, &p->m_track, eShapeSection::RUOWALL, m_bAttachLast, true);
       CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, p->m_signAy);
       CShapeFactory::GetShapeFactory().MakeAudio(p->m_pShader, &p->m_track, p->m_audioAy);
@@ -623,69 +546,58 @@ void CTrackPreview::paintGL()
   //so we draw it first then clear depth buffer bit
   glClear(GL_DEPTH_BUFFER_BIT);
 
-  if (m_uiShowModels & SHOW_CENTER_SURF_MODEL && p->m_pCenterSurf && p->m_pCenterBack) {
+  if (m_uiShowModels & SHOW_CENTER_SURF_MODEL && p->m_pCenterSurf) {
     p->m_pCenterSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-    p->m_pCenterBack->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   }
   if (m_uiShowModels & SHOW_CENTER_WIRE_MODEL && p->m_pCenterWire)
     p->m_pCenterWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-  if (m_uiShowModels & SHOW_LSHOULDER_SURF_MODEL && p->m_pLShoulderSurf && p->m_pLShoulderBack) {
+  if (m_uiShowModels & SHOW_LSHOULDER_SURF_MODEL && p->m_pLShoulderSurf) {
     p->m_pLShoulderSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-    p->m_pLShoulderBack->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   }
   if (m_uiShowModels & SHOW_LSHOULDER_WIRE_MODEL && p->m_pLShoulderWire)
     p->m_pLShoulderWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-  if (m_uiShowModels & SHOW_RSHOULDER_SURF_MODEL && p->m_pRShoulderSurf && p->m_pRShoulderBack) {
+  if (m_uiShowModels & SHOW_RSHOULDER_SURF_MODEL && p->m_pRShoulderSurf) {
     p->m_pRShoulderSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-    p->m_pRShoulderBack->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   }
   if (m_uiShowModels & SHOW_RSHOULDER_WIRE_MODEL && p->m_pRShoulderWire)
     p->m_pRShoulderWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-  if (m_uiShowModels & SHOW_LWALL_SURF_MODEL && p->m_pLWallSurf && p->m_pLWallBack) {
+  if (m_uiShowModels & SHOW_LWALL_SURF_MODEL && p->m_pLWallSurf) {
     p->m_pLWallSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-    p->m_pLWallBack->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   }
   if (m_uiShowModels & SHOW_LWALL_WIRE_MODEL && p->m_pLWallWire)
     p->m_pLWallWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-  if (m_uiShowModels & SHOW_RWALL_SURF_MODEL && p->m_pRWallSurf && p->m_pRWallBack) {
+  if (m_uiShowModels & SHOW_RWALL_SURF_MODEL && p->m_pRWallSurf) {
     p->m_pRWallSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-    p->m_pRWallBack->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   }
   if (m_uiShowModels & SHOW_RWALL_WIRE_MODEL && p->m_pRWallWire)
     p->m_pRWallWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-  if (m_uiShowModels & SHOW_ROOF_SURF_MODEL && p->m_pRoofSurf && p->m_pRoofBack) {
+  if (m_uiShowModels & SHOW_ROOF_SURF_MODEL && p->m_pRoofSurf) {
     p->m_pRoofSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-    p->m_pRoofBack->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   }
   if (m_uiShowModels & SHOW_ROOF_WIRE_MODEL && p->m_pRoofWire)
     p->m_pRoofWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-  if (m_uiShowModels & SHOW_OWALLFLOOR_SURF_MODEL && p->m_pOWallFloorSurf && p->m_pOWallFloorBack) {
+  if (m_uiShowModels & SHOW_OWALLFLOOR_SURF_MODEL && p->m_pOWallFloorSurf) {
     p->m_pOWallFloorSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-    p->m_pOWallFloorBack->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   }
   if (m_uiShowModels & SHOW_OWALLFLOOR_WIRE_MODEL && p->m_pOWallFloorWire)
     p->m_pOWallFloorWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-  if (m_uiShowModels & SHOW_LLOWALL_SURF_MODEL && p->m_pLLOWallSurf && p->m_pLLOWallBack) {
+  if (m_uiShowModels & SHOW_LLOWALL_SURF_MODEL && p->m_pLLOWallSurf) {
     p->m_pLLOWallSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-    p->m_pLLOWallBack->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   }
   if (m_uiShowModels & SHOW_LLOWALL_WIRE_MODEL && p->m_pLLOWallWire)
     p->m_pLLOWallWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-  if (m_uiShowModels & SHOW_RLOWALL_SURF_MODEL && p->m_pRLOWallSurf && p->m_pRLOWallBack) {
+  if (m_uiShowModels & SHOW_RLOWALL_SURF_MODEL && p->m_pRLOWallSurf) {
     p->m_pRLOWallSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-    p->m_pRLOWallBack->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   }
   if (m_uiShowModels & SHOW_RLOWALL_WIRE_MODEL && p->m_pRLOWallWire)
     p->m_pRLOWallWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-  if (m_uiShowModels & SHOW_LUOWALL_SURF_MODEL && p->m_pLUOWallSurf && p->m_pLUOWallBack) {
+  if (m_uiShowModels & SHOW_LUOWALL_SURF_MODEL && p->m_pLUOWallSurf) {
     p->m_pLUOWallSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-    p->m_pLUOWallBack->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   }
   if (m_uiShowModels & SHOW_LUOWALL_WIRE_MODEL && p->m_pLUOWallWire)
     p->m_pLUOWallWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-  if (m_uiShowModels & SHOW_RUOWALL_SURF_MODEL && p->m_pRUOWallSurf && p->m_pRUOWallBack) {
+  if (m_uiShowModels & SHOW_RUOWALL_SURF_MODEL && p->m_pRUOWallSurf) {
     p->m_pRUOWallSurf->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
-    p->m_pRUOWallBack->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
   }
   if (m_uiShowModels & SHOW_RUOWALL_WIRE_MODEL && p->m_pRUOWallWire)
     p->m_pRUOWallWire->Draw(worldToProjectionMatrix, p->m_camera.GetPosition());
@@ -871,17 +783,17 @@ bool CTrackPreview::Export(eExportType exportType)
     CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine2,         p->m_pShader, &p->m_track, eShapeSection::CARLINE2,   true);
     CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine3,         p->m_pShader, &p->m_track, eShapeSection::CARLINE3,   true);
     CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine4,         p->m_pShader, &p->m_track, eShapeSection::CARLINE4,   true);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pCenterSurf,      p->m_pShader, &p->m_track, eShapeSection::CENTER,     true);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLShoulderSurf,   p->m_pShader, &p->m_track, eShapeSection::LSHOULDER,  true);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRShoulderSurf,   p->m_pShader, &p->m_track, eShapeSection::RSHOULDER,  true);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLWallSurf,       p->m_pShader, &p->m_track, eShapeSection::LWALL,      true);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRWallSurf,       p->m_pShader, &p->m_track, eShapeSection::RWALL,      true);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRoofSurf,        p->m_pShader, &p->m_track, eShapeSection::ROOF,       true);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pOWallFloorSurf,  p->m_pShader, &p->m_track, eShapeSection::OWALLFLOOR, true);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLLOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::LLOWALL,    true);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRLOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::RLOWALL,    true);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLUOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::LUOWALL,    true);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRUOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::RUOWALL,    true);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pCenterSurf,      p->m_pShader, &p->m_track, eShapeSection::CENTER,     true, false, eBackModeling::FRONTS);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLShoulderSurf,   p->m_pShader, &p->m_track, eShapeSection::LSHOULDER,  true, false, eBackModeling::FRONTS);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRShoulderSurf,   p->m_pShader, &p->m_track, eShapeSection::RSHOULDER,  true, false, eBackModeling::FRONTS);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLWallSurf,       p->m_pShader, &p->m_track, eShapeSection::LWALL,      true, false, eBackModeling::FRONTS);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRWallSurf,       p->m_pShader, &p->m_track, eShapeSection::RWALL,      true, false, eBackModeling::FRONTS);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRoofSurf,        p->m_pShader, &p->m_track, eShapeSection::ROOF,       true, false, eBackModeling::FRONTS);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pOWallFloorSurf,  p->m_pShader, &p->m_track, eShapeSection::OWALLFLOOR, true, false, eBackModeling::FRONTS);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLLOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::LLOWALL,    true, false, eBackModeling::FRONTS);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRLOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::RLOWALL,    true, false, eBackModeling::FRONTS);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLUOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::LUOWALL,    true, false, eBackModeling::FRONTS);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRUOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::RUOWALL,    true, false, eBackModeling::FRONTS);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pCenterBack,      p->m_pShader, &p->m_track, eShapeSection::CENTER,     true, false, eBackModeling::BACKS);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLShoulderBack,   p->m_pShader, &p->m_track, eShapeSection::LSHOULDER,  true, false, eBackModeling::BACKS);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRShoulderBack,   p->m_pShader, &p->m_track, eShapeSection::RSHOULDER,  true, false, eBackModeling::BACKS);
@@ -926,7 +838,7 @@ bool CTrackPreview::Export(eExportType exportType)
   } else {
     CShapeData *pExportTrack = NULL;
     CShapeData *pExportBacks = NULL;
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pExportTrack, p->m_pShader, &p->m_track, eShapeSection::EXPORT,true);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pExportTrack, p->m_pShader, &p->m_track, eShapeSection::EXPORT, true, false, eBackModeling::FRONTS);
     CShapeFactory::GetShapeFactory().MakeTrackSurface(&pExportBacks, p->m_pShader, &p->m_track, eShapeSection::EXPORT, true, false, eBackModeling::BACKS);
     trackSectionAy.push_back(std::make_pair("Track", pExportTrack));
     trackSectionAy.push_back(std::make_pair("Track (Back)", pExportBacks));

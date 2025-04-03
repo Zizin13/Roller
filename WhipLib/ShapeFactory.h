@@ -42,7 +42,7 @@ public:
   void MakeModel(CShapeData **pShape, CShader *pShader, CTexture *pTexture, eWhipModel model, int iSignSurfaceType = -1, eBackModeling backModeling = FRONTS_AND_BACKS);
   void MakeAudioMarker(CShapeData **pShape, CShader *pShader, CTexture *pTexture);
   void MakeStuntMarker(CShapeData **pShape, CShader *pShader, CTexture *pTexture);
-  void MakeTrackSurface(CShapeData **pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false, eBackModeling backModeling = FRONTS);
+  void MakeTrackSurface(CShapeData **pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast, bool bWireframe = false, eBackModeling backModeling = FRONTS_AND_BACKS);
   void MakeEnvirFloor(CShapeData **pShape, CShader *pShader, CTrack *pTrack, int iIndex);
   void MakeAILine(CShapeData **pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast);
   void MakeSelectedChunks(CShapeData **pShape, CShader *pShader, CTrack *pTrack, int iStart, int iEnd);
@@ -91,7 +91,9 @@ private:
                                   const glm::vec3 &v0,
                                   const glm::vec3 &v1,
                                   const glm::vec3 &v2,
-                                  const glm::vec3 &v3);
+                                  const glm::vec3 &v3,
+                                  eBackModeling backModeling,
+                                  int iOffset = 0);
   void ApplyNormalsAndTexCoords(int i,
                                 int iChunkIndex,
                                 tVertex *vertices,

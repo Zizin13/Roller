@@ -941,7 +941,7 @@ bool CTrackPreview::Export(eExportType exportType)
       (*it)->TransformVertsForExport(); //signs need to be moved to the right position on track, this is normally done in the shader
       (*it)->FlipTexCoordsForExport();
     }
-    CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signBackAy, eBackModeling::FRONTS);
+    CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signBackAy, eBackModeling::BACKS);
     for (std::vector<CShapeData *>::iterator it = signBackAy.begin(); it != signBackAy.end(); ++it) {
       (*it)->TransformVertsForExport(); //signs need to be moved to the right position on track, this is normally done in the shader
       (*it)->FlipTexCoordsForExport();

@@ -44,10 +44,13 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir, b
 
   //create shape data
   CShapeData *pCar = NULL;
-  CShapeFactory::GetShapeFactory().MakeModel(&pCar, NULL, &carTex, carModel);
-  if (!pCar)
+  CShapeData *pCarBack = NULL;
+  CShapeFactory::GetShapeFactory().MakeModel(&pCar, NULL, &carTex, carModel, -1, eBackModeling::FRONTS);
+  CShapeFactory::GetShapeFactory().MakeModel(&pCarBack, NULL, &carTex, carModel, -1, eBackModeling::BACKS);
+  if (!pCar || !pCarBack)
     return false;
   pCar->FlipTexCoordsForExport();
+  pCarBack->FlipTexCoordsForExport();
 
   std::string sExtension = ".fbx";
   if (bObj)
@@ -57,6 +60,10 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir, b
   printf(sFilename.c_str());
   printf("...\n");
   bool bSuccess = false;
+  std::string sBackName = sCarName + " (Back)";
+  std::vector<std::pair<std::string, CShapeData *>> shapeAy;
+  shapeAy.push_back(std::make_pair(sCarName, pCar));
+  shapeAy.push_back(std::make_pair(sBackName, pCarBack));
   if (bObj) {
     //export material
     std::vector<std::string> texAy;
@@ -64,12 +71,13 @@ bool ExportCar(eWhipModel carModel, std::string sWhipDir, std::string sOutDir, b
     std::string sMtlFile = sOutDir + std::string("\\") + sCarName + std::string(".mtl");
     CObjExporter::GetObjExporter().ExportMaterial(sMtlFile, texAy);
 
-    bSuccess = CObjExporter::GetObjExporter().ExportShape(pCar, sFilename, sCarName, sMtlFile, sCarName);
+    bSuccess = CObjExporter::GetObjExporter().ExportShapes(shapeAy, sFilename, sMtlFile, sCarName);
   } else {
-    bSuccess = CFBXExporter::GetFBXExporter().ExportShape(pCar, sCarName.c_str(), sFilename.c_str(), sTexFile.c_str());
+    bSuccess = CFBXExporter::GetFBXExporter().ExportShapes(shapeAy, sFilename.c_str(), sTexFile.c_str());
   }
 
   delete pCar;
+  delete pCarBack;
   return bSuccess;
 }
 
@@ -193,7 +201,7 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir, bool bObj)
   trackSectionAy.push_back(std::make_pair("Left Upper Outer Wall (Back)", pLUOWallBack));
   trackSectionAy.push_back(std::make_pair("Right Upper Outer Wall (Back)", pRUOWallBack));
 
-  CShapeFactory::GetShapeFactory().MakeSigns(NULL, pTrack, signAy);
+  CShapeFactory::GetShapeFactory().MakeSigns(NULL, pTrack, signAy, true);
 
   for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it)
     it->second->FlipTexCoordsForExport();

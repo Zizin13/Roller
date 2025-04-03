@@ -52,7 +52,7 @@ bool CObjExporter::ExportMaterial(const std::string &sFile, const std::vector<st
 
 //-------------------------------------------------------------------------------------------------
 
-bool CObjExporter::ExportShape(CShapeData *pShapeData, const std::string &sFile, const std::string &sName, const std::string &sMtlFile, const std::string &sMtlName)
+bool CObjExporter::ExportShapes(std::vector<std::pair<std::string, CShapeData *>> shapeAy, const std::string &sFile, const std::string &sMtlFile, const std::string &sMtlName)
 {
   //open output file
   std::ofstream out(sFile);
@@ -64,7 +64,9 @@ bool CObjExporter::ExportShape(CShapeData *pShapeData, const std::string &sFile,
   out << "mtllib " << sMtlFile << "\n";
 
   int iOffset = 0;
-  ExportShape_Internal(out, iOffset, pShapeData, sName, sMtlName);
+  for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = shapeAy.begin(); it != shapeAy.end(); ++it) {
+    ExportShape_Internal(out, iOffset, it->second, it->first, sMtlName);
+  }
 
   out.close();
   return true;

@@ -935,7 +935,7 @@ bool CTrackPreview::Export(eExportType exportType)
     it->second->FlipTexCoordsForExport();
 
   if (exportWizard.m_bExportSigns) {
-    CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signAy);
+    CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signAy, true);
     for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it) {
       (*it)->TransformVertsForExport(); //signs need to be moved to the right position on track, this is normally done in the shader
       (*it)->FlipTexCoordsForExport();

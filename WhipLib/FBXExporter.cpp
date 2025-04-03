@@ -49,9 +49,9 @@ CFBXExporter::~CFBXExporter()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szName, const char *szFile, const char *szTextureFile)
+bool CFBXExporter::ExportShapes(std::vector<std::pair<std::string, CShapeData *>> shapeAy, const char *szFile, const char *szTextureFile)
 {
-  if (!pShapeData || !szFile || !szTextureFile)
+  if (!szFile || !szTextureFile)
     return false;
 
   FbxScene *pScene = FbxScene::Create(g_pFbxManager, "Export Scene");
@@ -74,9 +74,11 @@ bool CFBXExporter::ExportShape(CShapeData *pShapeData, const char *szName, const
     return false;
   }
 
-  FbxNode *pShapeMesh = CreateShapeMesh(pShapeData, szName, szTextureFile, pScene);
-  pShapeMesh->SetGeometricRotation(FbxNode::eSourcePivot, FbxVector4(-90.0f, 0.0f, 0.0f));
-  pScene->GetRootNode()->AddChild(pShapeMesh);
+  for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = shapeAy.begin(); it != shapeAy.end(); ++it) {
+    FbxNode *pShapeMesh = CreateShapeMesh(it->second, it->first.c_str(), szTextureFile, pScene);
+    pShapeMesh->SetGeometricRotation(FbxNode::eSourcePivot, FbxVector4(-90.0f, 0.0f, 0.0f));
+    pScene->GetRootNode()->AddChild(pShapeMesh);
+  }
 
   //g_pFbxManager->GetIOSettings()->SetBoolProp(EXP_FBX_EMBEDDED, true);
 

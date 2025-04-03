@@ -116,6 +116,7 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir, bool bObj)
   //generate models
   std::vector<std::pair<std::string, CShapeData *>> trackSectionAy;
   std::vector<CShapeData *> signAy;
+  std::vector<CShapeData *> signBackAy;
 
   CShapeData *pCenterLine = NULL;
   CShapeData *pAILine1 = NULL;
@@ -201,12 +202,17 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir, bool bObj)
   trackSectionAy.push_back(std::make_pair("Left Upper Outer Wall (Back)", pLUOWallBack));
   trackSectionAy.push_back(std::make_pair("Right Upper Outer Wall (Back)", pRUOWallBack));
 
-  CShapeFactory::GetShapeFactory().MakeSigns(NULL, pTrack, signAy, true);
+  CShapeFactory::GetShapeFactory().MakeSigns(NULL, pTrack, signAy, eBackModeling::FRONTS);
+  CShapeFactory::GetShapeFactory().MakeSigns(NULL, pTrack, signBackAy, eBackModeling::BACKS);
 
   for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it)
     it->second->FlipTexCoordsForExport();
   //signs need to be moved to the right position on track, this is normally done in the shader
   for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it) {
+    (*it)->TransformVertsForExport();
+    (*it)->FlipTexCoordsForExport();
+  }
+  for (std::vector<CShapeData *>::iterator it = signBackAy.begin(); it != signBackAy.end(); ++it) {
     (*it)->TransformVertsForExport();
     (*it)->FlipTexCoordsForExport();
   }
@@ -223,12 +229,14 @@ bool ExportTrack(CTrack *pTrack, std::string sOutDir, bool bObj)
   if (bObj) {
     bExported = CObjExporter::GetObjExporter().ExportTrack(trackSectionAy,
                                                            signAy,
+                                                           signBackAy,
                                                            sOutDir,
                                                            sTrackName,
                                                            sFilename);
   } else {
     bExported = CFBXExporter::GetFBXExporter().ExportTrack(trackSectionAy,
                                                            signAy,
+                                                           signBackAy,
                                                            sTrackName.c_str(),
                                                            sFilename.c_str(),
                                                            sTexFile.c_str(),

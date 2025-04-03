@@ -93,6 +93,7 @@ bool CFBXExporter::ExportShapes(std::vector<std::pair<std::string, CShapeData *>
 
 bool CFBXExporter::ExportTrack(std::vector<std::pair<std::string, CShapeData *>> trackSectionAy,
                                std::vector<CShapeData *> signAy,
+                               std::vector<CShapeData *> signBackAy,
                                const char *szName,
                                const char *szFile,
                                const char *szTextureFile,
@@ -133,6 +134,12 @@ bool CFBXExporter::ExportTrack(std::vector<std::pair<std::string, CShapeData *>>
   for (int i = 0; i < (int)signAy.size(); ++i) {
     std::string sSignName = "Sign " + std::to_string(i);
     FbxNode *pSignMesh = CreateShapeMesh(signAy[i], sSignName.c_str(), szSignTextureFile, pScene);
+    pScene->GetRootNode()->AddChild(pSignMesh);
+  }
+
+  for (int i = 0; i < (int)signBackAy.size(); ++i) {
+    std::string sSignName = "Sign " + std::to_string(i) + " (Back)";
+    FbxNode *pSignMesh = CreateShapeMesh(signBackAy[i], sSignName.c_str(), szSignTextureFile, pScene);
     pScene->GetRootNode()->AddChild(pSignMesh);
   }
 

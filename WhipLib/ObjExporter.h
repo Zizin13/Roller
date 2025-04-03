@@ -19,6 +19,7 @@ public:
   bool ExportShapes(std::vector<std::pair<std::string, CShapeData *>> shapeAy, const std::string &sFile, const std::string &sMtlFile, const std::string &sMtlName);
   bool ExportTrack(std::vector<std::pair<std::string, CShapeData *>> trackSectionAy,
                    std::vector<CShapeData *> signAy,
+                   std::vector<CShapeData *> signBackAy,
                    const std::string &sFolder,
                    const std::string &sName,
                    const std::string &sFile);

@@ -835,6 +835,7 @@ bool CTrackPreview::Export(eExportType exportType)
 
   //generate models
   std::vector<CShapeData *> signAy;
+  std::vector<CShapeData *> signBackAy;
   std::vector<std::pair<std::string, CShapeData *>> trackSectionAy;
   if (exportWizard.m_bExportSeparate) {
     CShapeData *pCenterLine = NULL;
@@ -935,8 +936,13 @@ bool CTrackPreview::Export(eExportType exportType)
     it->second->FlipTexCoordsForExport();
 
   if (exportWizard.m_bExportSigns) {
-    CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signAy, true);
+    CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signAy, eBackModeling::FRONTS);
     for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it) {
+      (*it)->TransformVertsForExport(); //signs need to be moved to the right position on track, this is normally done in the shader
+      (*it)->FlipTexCoordsForExport();
+    }
+    CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signBackAy, eBackModeling::FRONTS);
+    for (std::vector<CShapeData *>::iterator it = signBackAy.begin(); it != signBackAy.end(); ++it) {
       (*it)->TransformVertsForExport(); //signs need to be moved to the right position on track, this is normally done in the shader
       (*it)->FlipTexCoordsForExport();
     }
@@ -948,6 +954,7 @@ bool CTrackPreview::Export(eExportType exportType)
     case eExportType::EXPORT_FBX:
       bExported = CFBXExporter::GetFBXExporter().ExportTrack(trackSectionAy,
                                                              signAy,
+                                                             signBackAy,
                                                              sName.toLatin1().constData(),
                                                              sFilename.toLatin1().constData(),
                                                              sTexFile.toLatin1().constData(),
@@ -956,6 +963,7 @@ bool CTrackPreview::Export(eExportType exportType)
     case eExportType::EXPORT_OBJ:
       bExported = CObjExporter::GetObjExporter().ExportTrack(trackSectionAy,
                                                              signAy,
+                                                             signBackAy,
                                                              sFolder.toLatin1().constData(),
                                                              sName.toLatin1().constData(),
                                                              sFilename.toLatin1().constData());

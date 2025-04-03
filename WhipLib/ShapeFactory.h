@@ -46,7 +46,7 @@ public:
   void MakeEnvirFloor(CShapeData **pShape, CShader *pShader, CTrack *pTrack, int iIndex);
   void MakeAILine(CShapeData **pShape, CShader *pShader, CTrack *pTrack, eShapeSection section, bool bAttachLast);
   void MakeSelectedChunks(CShapeData **pShape, CShader *pShader, CTrack *pTrack, int iStart, int iEnd);
-  void MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CShapeData*> &signAy, bool bBacksSeparate = false);
+  void MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CShapeData*> &signAy, eBackModeling backModeling = FRONTS_AND_BACKS);
   void MakeAudio(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &audioAy);
   void MakeStunts(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &stuntAy);
   CShapeData *MakeNormalsTest(const CShapeData &data, CShader *pShader);

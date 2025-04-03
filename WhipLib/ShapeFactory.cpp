@@ -1511,7 +1511,7 @@ void CShapeFactory::MakeSelectedChunks(CShapeData **pShape, CShader *pShader, CT
 
 //-------------------------------------------------------------------------------------------------
 
-void CShapeFactory::MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &signAy, bool bBacksSeparate)
+void CShapeFactory::MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CShapeData *> &signAy, eBackModeling backModeling)
 {
   for (int i = 0; i < (int)pTrack->m_chunkAy.size(); ++i) {
     if (pTrack->m_chunkAy[i].iSignType < 0 || pTrack->m_chunkAy[i].iSignType >= g_signAyCount)
@@ -1519,13 +1519,7 @@ void CShapeFactory::MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CSha
 
     //make sign
     CShapeData *pNewSign = NULL;
-    CShapeData *pNewSignBack = NULL;
-    if (bBacksSeparate) {
-      MakeModel(&pNewSign, pShader, pTrack->m_pBld, g_signAy[pTrack->m_chunkAy[i].iSignType].modelType, pTrack->m_chunkAy[i].iSignTexture, eBackModeling::FRONTS);
-      MakeModel(&pNewSignBack, pShader, pTrack->m_pBld, g_signAy[pTrack->m_chunkAy[i].iSignType].modelType, pTrack->m_chunkAy[i].iSignTexture, eBackModeling::BACKS);
-    } else {
-      MakeModel(&pNewSign, pShader, pTrack->m_pBld, g_signAy[pTrack->m_chunkAy[i].iSignType].modelType, pTrack->m_chunkAy[i].iSignTexture, eBackModeling::FRONTS_AND_BACKS);
-    }
+    MakeModel(&pNewSign, pShader, pTrack->m_pBld, g_signAy[pTrack->m_chunkAy[i].iSignType].modelType, pTrack->m_chunkAy[i].iSignTexture, backModeling);
     if (!pNewSign)
       continue;
 
@@ -1560,16 +1554,9 @@ void CShapeFactory::MakeSigns(CShader *pShader, CTrack *pTrack, std::vector<CSha
       signRollMat * signPitchMat * (bBillboarded ? pTrack->m_chunkAy[i].math.yawMat : signYawMat) *
       glm::rotate(glm::radians(-90.0f), glm::vec3(0, 0, 1)) * //sign starts on its side
       glm::rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0)); //track starts facing z positive, sign starts facing x positive
-    if (pNewSignBack)
-      pNewSignBack->m_modelToWorldMatrix = glm::translate(signPosTranslated) *
-      signRollMat * signPitchMat * (bBillboarded ? pTrack->m_chunkAy[i].math.yawMat : signYawMat) *
-      glm::rotate(glm::radians(-90.0f), glm::vec3(0, 0, 1)) * //sign starts on its side
-      glm::rotate(glm::radians(-90.0f), glm::vec3(0, 1, 0)); //track starts facing z positive, sign starts facing x positive
     
     //add sign to array
     signAy.push_back(pNewSign);
-    if (pNewSignBack)
-      signAy.push_back(pNewSignBack);
   }
 }
 

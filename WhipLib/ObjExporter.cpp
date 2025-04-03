@@ -76,6 +76,7 @@ bool CObjExporter::ExportShapes(std::vector<std::pair<std::string, CShapeData *>
 
 bool CObjExporter::ExportTrack(std::vector<std::pair<std::string, CShapeData *>> trackSectionAy,
                                std::vector<CShapeData *> signAy,
+                               std::vector<CShapeData *> signBackAy,
                                const std::string &sFolder,
                                const std::string &sName,
                                const std::string &sFile)
@@ -98,13 +99,15 @@ bool CObjExporter::ExportTrack(std::vector<std::pair<std::string, CShapeData *>>
   bool bSuccess = true;
   int iOffset = 0;
   for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it) {
-    std::string sFilename = sFolder + std::string("\\") + sName + std::string(" ") + it->first + std::string(".obj");
    ExportShape_Internal(out, iOffset, it->second, it->first, sName);
   }
   for (int i = 0; i < (int)signAy.size(); ++i) {
     std::string sSignName = "Sign " + std::to_string(i);
-    std::string sFilename = sFolder + std::string("\\") + sName + std::string(" Sign ") + std::to_string(i) + std::string(".obj");
     ExportShape_Internal(out, iOffset, signAy[i], sSignName, sBld);
+  }
+  for (int i = 0; i < (int)signBackAy.size(); ++i) {
+    std::string sSignName = "Sign " + std::to_string(i) + " (Back)";
+    ExportShape_Internal(out, iOffset, signBackAy[i], sSignName, sBld);
   }
 
   out.close();

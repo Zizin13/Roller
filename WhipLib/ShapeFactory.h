@@ -88,6 +88,7 @@ private:
   uint32 *MakeIndicesSingleSectionWireframe(uint32 &numIndices, eShapeSection section, CTrack *pTrack, bool bAttachLast);
 
   void ApplyVerticesSingleSection(int i, tVertex *vertices,
+                                  uint32 uiNumVertsPerChunk,
                                   const glm::vec3 &v0,
                                   const glm::vec3 &v1,
                                   const glm::vec3 &v2,

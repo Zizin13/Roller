@@ -9,21 +9,22 @@
 CExportWizard::CExportWizard(QWidget *pParent, eExportType exportType)
   : QDialog(pParent)
   , m_bExportSeparate(true)
+  , m_bExportBacks(true)
   , m_bExportSigns(true)
   , m_exportType(exportType)
 {
   setupUi(this);
 
-  rbSeparate->setChecked(m_bExportSeparate);
-  rbSingle->setChecked(!m_bExportSeparate);
+  ckSections->setChecked(m_bExportSeparate);
+  ckBacks->setChecked(m_bExportBacks);
   ckSigns->setChecked(m_bExportSigns);
 
   setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
-  connect(rbSingle,       &QRadioButton::toggled, this, &CExportWizard::OnSingleObject);
-  connect(rbSeparate,     &QRadioButton::toggled, this, &CExportWizard::OnSeparate);
-  connect(ckSigns,        &QCheckBox::toggled,    this, &CExportWizard::OnSignsChecked);
-  connect(pbCancel,       &QPushButton::clicked,  this, &CExportWizard::close);
-  connect(pbExport,       &QPushButton::clicked,  this, &CExportWizard::accept);
+  connect(ckSections, &QCheckBox::toggled,    this, &CExportWizard::OnSeparateChecked);
+  connect(ckBacks,    &QCheckBox::toggled,    this, &CExportWizard::OnBacksChecked);
+  connect(ckSigns,    &QCheckBox::toggled,    this, &CExportWizard::OnSignsChecked);
+  connect(pbCancel,   &QPushButton::clicked,  this, &CExportWizard::close);
+  connect(pbExport,   &QPushButton::clicked,  this, &CExportWizard::accept);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -35,18 +36,16 @@ CExportWizard::~CExportWizard()
 
 //-------------------------------------------------------------------------------------------------
 
-void CExportWizard::OnSingleObject(bool bChecked)
+void CExportWizard::OnSeparateChecked(bool bChecked)
 {
-  m_bExportSeparate = !bChecked;
-  BLOCK_SIG_AND_DO(rbSeparate, setChecked(!bChecked));
+  m_bExportSeparate = bChecked;
 }
 
 //-------------------------------------------------------------------------------------------------
 
-void CExportWizard::OnSeparate(bool bChecked)
+void CExportWizard::OnBacksChecked(bool bChecked)
 {
-  m_bExportSeparate = bChecked;
-  BLOCK_SIG_AND_DO(rbSingle, setChecked(!bChecked));
+  m_bExportBacks = bChecked;
 }
 
 //-------------------------------------------------------------------------------------------------

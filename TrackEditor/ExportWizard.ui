@@ -17,39 +17,29 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QRadioButton" name="rbSeparate">
+      <widget class="QCheckBox" name="ckSections">
        <property name="text">
         <string>Export track sections separately</string>
        </property>
        <property name="checked">
         <bool>true</bool>
        </property>
-       <property name="autoExclusive">
-        <bool>false</bool>
-       </property>
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="rbSingle">
+      <widget class="QCheckBox" name="ckBacks">
        <property name="text">
-        <string>Export track as single object</string>
+        <string>Export backfaces as separate models</string>
        </property>
-       <property name="autoExclusive">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="Line" name="line">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QCheckBox" name="ckSigns">
        <property name="text">
-        <string>Export Signs</string>
+        <string>Include signs</string>
        </property>
        <property name="checked">
         <bool>true</bool>

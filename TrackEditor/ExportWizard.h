@@ -14,11 +14,12 @@ public:
   ~CExportWizard();
 
   bool m_bExportSeparate;
+  bool m_bExportBacks;
   bool m_bExportSigns;
 
 protected slots:
-  void OnSingleObject(bool bChecked);
-  void OnSeparate(bool bChecked);
+  void OnSeparateChecked(bool bChecked);
+  void OnBacksChecked(bool bChecked);
   void OnSignsChecked(bool bChecked);
 
 private:

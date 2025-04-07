@@ -745,6 +745,11 @@ bool CTrackPreview::Export(eExportType exportType)
   QString sSignTexFile = sFolder + "\\" + sName + "_BLD.png";
   p->m_track.m_pBld->ExportToPngFile(sSignTexFile.toLatin1().constData());
 
+  //main models will have fronts only if backs are separate only
+  eBackModeling backModeling = eBackModeling::FRONTS_AND_BACKS;
+  if (exportWizard.m_bExportBacks)
+    backModeling = eBackModeling::FRONTS;
+
   //generate models
   std::vector<CShapeData *> signAy;
   std::vector<CShapeData *> signBackAy;
@@ -783,30 +788,30 @@ bool CTrackPreview::Export(eExportType exportType)
     CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine2,         p->m_pShader, &p->m_track, eShapeSection::CARLINE2,   true);
     CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine3,         p->m_pShader, &p->m_track, eShapeSection::CARLINE3,   true);
     CShapeFactory::GetShapeFactory().MakeAILine(      &pAILine4,         p->m_pShader, &p->m_track, eShapeSection::CARLINE4,   true);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pCenterSurf,      p->m_pShader, &p->m_track, eShapeSection::CENTER,     true, false, eBackModeling::FRONTS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLShoulderSurf,   p->m_pShader, &p->m_track, eShapeSection::LSHOULDER,  true, false, eBackModeling::FRONTS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRShoulderSurf,   p->m_pShader, &p->m_track, eShapeSection::RSHOULDER,  true, false, eBackModeling::FRONTS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLWallSurf,       p->m_pShader, &p->m_track, eShapeSection::LWALL,      true, false, eBackModeling::FRONTS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRWallSurf,       p->m_pShader, &p->m_track, eShapeSection::RWALL,      true, false, eBackModeling::FRONTS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRoofSurf,        p->m_pShader, &p->m_track, eShapeSection::ROOF,       true, false, eBackModeling::FRONTS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pOWallFloorSurf,  p->m_pShader, &p->m_track, eShapeSection::OWALLFLOOR, true, false, eBackModeling::FRONTS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLLOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::LLOWALL,    true, false, eBackModeling::FRONTS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRLOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::RLOWALL,    true, false, eBackModeling::FRONTS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLUOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::LUOWALL,    true, false, eBackModeling::FRONTS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRUOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::RUOWALL,    true, false, eBackModeling::FRONTS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pCenterBack,      p->m_pShader, &p->m_track, eShapeSection::CENTER,     true, false, eBackModeling::BACKS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLShoulderBack,   p->m_pShader, &p->m_track, eShapeSection::LSHOULDER,  true, false, eBackModeling::BACKS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRShoulderBack,   p->m_pShader, &p->m_track, eShapeSection::RSHOULDER,  true, false, eBackModeling::BACKS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLWallBack,       p->m_pShader, &p->m_track, eShapeSection::LWALL,      true, false, eBackModeling::BACKS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRWallBack,       p->m_pShader, &p->m_track, eShapeSection::RWALL,      true, false, eBackModeling::BACKS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRoofBack,        p->m_pShader, &p->m_track, eShapeSection::ROOF,       true, false, eBackModeling::BACKS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pOWallFloorBack,  p->m_pShader, &p->m_track, eShapeSection::OWALLFLOOR, true, false, eBackModeling::BACKS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLLOWallBack,     p->m_pShader, &p->m_track, eShapeSection::LLOWALL,    true, false, eBackModeling::BACKS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRLOWallBack,     p->m_pShader, &p->m_track, eShapeSection::RLOWALL,    true, false, eBackModeling::BACKS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLUOWallBack,     p->m_pShader, &p->m_track, eShapeSection::LUOWALL,    true, false, eBackModeling::BACKS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRUOWallBack,     p->m_pShader, &p->m_track, eShapeSection::RUOWALL,    true, false, eBackModeling::BACKS);
-
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRWallBack, p->m_pShader, &p->m_track, eShapeSection::RWALL, true, false, eBackModeling::BACKS);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pCenterSurf,      p->m_pShader, &p->m_track, eShapeSection::CENTER,     true, false, backModeling);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLShoulderSurf,   p->m_pShader, &p->m_track, eShapeSection::LSHOULDER,  true, false, backModeling);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRShoulderSurf,   p->m_pShader, &p->m_track, eShapeSection::RSHOULDER,  true, false, backModeling);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLWallSurf,       p->m_pShader, &p->m_track, eShapeSection::LWALL,      true, false, backModeling);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRWallSurf,       p->m_pShader, &p->m_track, eShapeSection::RWALL,      true, false, backModeling);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRoofSurf,        p->m_pShader, &p->m_track, eShapeSection::ROOF,       true, false, backModeling);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pOWallFloorSurf,  p->m_pShader, &p->m_track, eShapeSection::OWALLFLOOR, true, false, backModeling);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLLOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::LLOWALL,    true, false, backModeling);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRLOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::RLOWALL,    true, false, backModeling);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLUOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::LUOWALL,    true, false, backModeling);
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRUOWallSurf,     p->m_pShader, &p->m_track, eShapeSection::RUOWALL,    true, false, backModeling);
+    if (exportWizard.m_bExportBacks) {
+      CShapeFactory::GetShapeFactory().MakeTrackSurface(&pCenterBack,      p->m_pShader, &p->m_track, eShapeSection::CENTER,     true, false, eBackModeling::BACKS);
+      CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLShoulderBack,   p->m_pShader, &p->m_track, eShapeSection::LSHOULDER,  true, false, eBackModeling::BACKS);
+      CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRShoulderBack,   p->m_pShader, &p->m_track, eShapeSection::RSHOULDER,  true, false, eBackModeling::BACKS);
+      CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLWallBack,       p->m_pShader, &p->m_track, eShapeSection::LWALL,      true, false, eBackModeling::BACKS);
+      CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRWallBack,       p->m_pShader, &p->m_track, eShapeSection::RWALL,      true, false, eBackModeling::BACKS);
+      CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRoofBack,        p->m_pShader, &p->m_track, eShapeSection::ROOF,       true, false, eBackModeling::BACKS);
+      CShapeFactory::GetShapeFactory().MakeTrackSurface(&pOWallFloorBack,  p->m_pShader, &p->m_track, eShapeSection::OWALLFLOOR, true, false, eBackModeling::BACKS);
+      CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLLOWallBack,     p->m_pShader, &p->m_track, eShapeSection::LLOWALL,    true, false, eBackModeling::BACKS);
+      CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRLOWallBack,     p->m_pShader, &p->m_track, eShapeSection::RLOWALL,    true, false, eBackModeling::BACKS);
+      CShapeFactory::GetShapeFactory().MakeTrackSurface(&pLUOWallBack,     p->m_pShader, &p->m_track, eShapeSection::LUOWALL,    true, false, eBackModeling::BACKS);
+      CShapeFactory::GetShapeFactory().MakeTrackSurface(&pRUOWallBack,     p->m_pShader, &p->m_track, eShapeSection::RUOWALL,    true, false, eBackModeling::BACKS);
+    }
 
     trackSectionAy.push_back(std::make_pair("Centerline", pCenterLine));
     trackSectionAy.push_back(std::make_pair("AI Line 1", pAILine1));
@@ -824,39 +829,47 @@ bool CTrackPreview::Export(eExportType exportType)
     trackSectionAy.push_back(std::make_pair("Right Lower Outer Wall", pRLOWallSurf));
     trackSectionAy.push_back(std::make_pair("Left Upper Outer Wall", pLUOWallSurf));
     trackSectionAy.push_back(std::make_pair("Right Upper Outer Wall", pRUOWallSurf));
-    trackSectionAy.push_back(std::make_pair("Center (Back)", pCenterBack));
-    trackSectionAy.push_back(std::make_pair("Left Shoulder (Back)", pLShoulderBack));
-    trackSectionAy.push_back(std::make_pair("Right Shoulder (Back)", pRShoulderBack));
-    trackSectionAy.push_back(std::make_pair("Left Wall (Back)", pLWallBack));
-    trackSectionAy.push_back(std::make_pair("Right Wall (Back)", pRWallBack));
-    trackSectionAy.push_back(std::make_pair("Roof (Back)", pRoofBack));
-    trackSectionAy.push_back(std::make_pair("Outer Wall Floor (Back)", pOWallFloorBack));
-    trackSectionAy.push_back(std::make_pair("Left Lower Outer Wall (Back)", pLLOWallBack));
-    trackSectionAy.push_back(std::make_pair("Right Lower Outer Wall (Back)", pRLOWallBack));
-    trackSectionAy.push_back(std::make_pair("Left Upper Outer Wall (Back)", pLUOWallBack));
-    trackSectionAy.push_back(std::make_pair("Right Upper Outer Wall (Back)", pRUOWallBack));
+    if (exportWizard.m_bExportBacks) {
+      trackSectionAy.push_back(std::make_pair("Center (Back)", pCenterBack));
+      trackSectionAy.push_back(std::make_pair("Left Shoulder (Back)", pLShoulderBack));
+      trackSectionAy.push_back(std::make_pair("Right Shoulder (Back)", pRShoulderBack));
+      trackSectionAy.push_back(std::make_pair("Left Wall (Back)", pLWallBack));
+      trackSectionAy.push_back(std::make_pair("Right Wall (Back)", pRWallBack));
+      trackSectionAy.push_back(std::make_pair("Roof (Back)", pRoofBack));
+      trackSectionAy.push_back(std::make_pair("Outer Wall Floor (Back)", pOWallFloorBack));
+      trackSectionAy.push_back(std::make_pair("Left Lower Outer Wall (Back)", pLLOWallBack));
+      trackSectionAy.push_back(std::make_pair("Right Lower Outer Wall (Back)", pRLOWallBack));
+      trackSectionAy.push_back(std::make_pair("Left Upper Outer Wall (Back)", pLUOWallBack));
+      trackSectionAy.push_back(std::make_pair("Right Upper Outer Wall (Back)", pRUOWallBack));
+    }
   } else {
     CShapeData *pExportTrack = NULL;
     CShapeData *pExportBacks = NULL;
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pExportTrack, p->m_pShader, &p->m_track, eShapeSection::EXPORT, true, false, eBackModeling::FRONTS);
-    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pExportBacks, p->m_pShader, &p->m_track, eShapeSection::EXPORT, true, false, eBackModeling::BACKS);
+
+    CShapeFactory::GetShapeFactory().MakeTrackSurface(&pExportTrack, p->m_pShader, &p->m_track, eShapeSection::EXPORT, true, false, backModeling);
     trackSectionAy.push_back(std::make_pair("Track", pExportTrack));
-    trackSectionAy.push_back(std::make_pair("Track (Back)", pExportBacks));
+
+    if (exportWizard.m_bExportBacks) {
+      CShapeFactory::GetShapeFactory().MakeTrackSurface(&pExportBacks, p->m_pShader, &p->m_track, eShapeSection::EXPORT, true, false, eBackModeling::BACKS);
+      trackSectionAy.push_back(std::make_pair("Track (Back)", pExportBacks));
+    }
   }
 
   for (std::vector<std::pair<std::string, CShapeData *>>::iterator it = trackSectionAy.begin(); it != trackSectionAy.end(); ++it)
     it->second->FlipTexCoordsForExport();
 
   if (exportWizard.m_bExportSigns) {
-    CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signAy, eBackModeling::FRONTS);
+    CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signAy, backModeling);
     for (std::vector<CShapeData *>::iterator it = signAy.begin(); it != signAy.end(); ++it) {
       (*it)->TransformVertsForExport(); //signs need to be moved to the right position on track, this is normally done in the shader
       (*it)->FlipTexCoordsForExport();
     }
-    CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signBackAy, eBackModeling::BACKS);
-    for (std::vector<CShapeData *>::iterator it = signBackAy.begin(); it != signBackAy.end(); ++it) {
-      (*it)->TransformVertsForExport(); //signs need to be moved to the right position on track, this is normally done in the shader
-      (*it)->FlipTexCoordsForExport();
+    if (exportWizard.m_bExportBacks) {
+      CShapeFactory::GetShapeFactory().MakeSigns(p->m_pShader, &p->m_track, signBackAy, eBackModeling::BACKS);
+      for (std::vector<CShapeData *>::iterator it = signBackAy.begin(); it != signBackAy.end(); ++it) {
+        (*it)->TransformVertsForExport(); //signs need to be moved to the right position on track, this is normally done in the shader
+        (*it)->FlipTexCoordsForExport();
+      }
     }
   }
 

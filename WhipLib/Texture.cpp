@@ -10,7 +10,7 @@
 #include <fstream>
 #include "Logging.h"
 #if defined(IS_WINDOWS)
-  include <Windows.h>
+#include <Windows.h>
 #endif
 //-------------------------------------------------------------------------------------------------
 #define STB_IMAGE_WRITE_IMPLEMENTATION

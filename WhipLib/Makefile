@@ -1,8 +1,12 @@
-LIBS = 	../external/glew/lib/libGLEW.a \
+LIBS = 	-lGL \
+		../external/glew/lib/libGLEW.a \
 		../external/FBX/lib/release/libalembic.a \
-		../external/FBX/lib/release/libfbxsdk.a
+		../external/FBX/lib/release/libfbxsdk.a \
+		-lxml2 \
+		-lz
 
 INCLUDES = 	-I. \
+			-I/usr/include/libxml2 \
 			-I../external/glew/include \
 			-I../external/glew/include/GL \
 			-I../external/glm \
@@ -19,8 +23,8 @@ endif
 
 ARCH = x64
 ARCHFLAGS = -m64
-OUTPUTDIR = ./lib
-TARGET = ./lib/WhipLib
+OUTPUTDIR = ../lib
+TARGET = ../lib/WhipLib
 
 FULLCONFIG=$(BUILDCONFIG)-$(ARCH)
 CXXFLAGS = -g $(DEBUGFLAGS) $(INCLUDES) -fPIC -D GLM_ENABLE_EXPERIMENTAL
@@ -65,7 +69,7 @@ debug: clean
 release: clean
 	make -j 4 build BUILDCONFIG=release
 
-build: WhipLib
+build: WhipLib.a
 
 obj/$(FULLCONFIG)/%.o: %.cpp
 	$(CXX) $(ARCHFLAGS) $(CXXFLAGS) -c -o $@ $<
@@ -77,10 +81,11 @@ CREATE_OBJ_DIR:
 	mkdir -p obj
 	mkdir -p obj/$(FULLCONFIG)
 
-WhipLib: $(OBJ) Makefile
+WhipLib.a: $(OBJ) Makefile
 	mkdir -p $(OUTPUTDIR)
-	$(CXX) $(ARCHFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $(OUTPUTDIR)/$@ $(OBJ) $(LIBS)
+	ar rc $(OUTPUTDIR)/$@ $(OBJ)
+	ranlib $(OUTPUTDIR)/$@
 
 clean:
-	rm -f ./lib/WhipLib
+	rm -f ../lib/WhipLib
 	rm -f obj/*/*.o

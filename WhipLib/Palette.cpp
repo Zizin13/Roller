@@ -1,6 +1,7 @@
 #include "Palette.h"
 #include <fstream>
 #include <sstream>
+#include <string.h>
 #include "Unmangler.h"
 #include "Logging.h"
 //-------------------------------------------------------------------------------------------------

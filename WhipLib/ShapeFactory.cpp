@@ -12,6 +12,7 @@
 #include "Track.h"
 #include "SignType.h"
 #include "CarHelpers.h"
+#include <string.h>
 //-------------------------------------------------------------------------------------------------
 #include "AutoPlans.h"
 #include "DesilvaPlans.h"

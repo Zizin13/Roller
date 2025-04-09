@@ -2,7 +2,7 @@
 #include "Entity.h"
 #include "GameClock.h"
 #include "PhysicsComponent.h"
-#include "gtx\transform.hpp"
+#include "gtx/transform.hpp"
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)

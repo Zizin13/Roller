@@ -3,9 +3,16 @@
 #include <fstream>
 #include <assert.h>
 #include "Logging.h"
-#include <Windows.h>
-#include <Shlwapi.h>
 #include <iostream>
+#include <mutex>
+#if defined(IS_WINDOWS)
+  #include <Windows.h>
+  #include <Shlwapi.h>
+#else
+  #ifndef MAX_PATH
+    #define MAX_PATH PATH_MAX
+  #endif
+#endif
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
@@ -147,10 +154,13 @@ std::string CShader::GetExecutableDir()
   static std::string executableDir;
   static std::once_flag flag;
 
+
   std::call_once(flag, []() {
     char path[MAX_PATH];
+#if defined(IS_WINDOWS)
     GetModuleFileName(NULL, path, MAX_PATH);
     PathRemoveFileSpec(path);
+#endif
     executableDir = std::string(path);
   });
 
@@ -161,12 +171,14 @@ std::string CShader::GetExecutableDir()
 
 std::string CShader::GetAbsoluteShaderPath(const char *filename)
 {
+#if defined(IS_WINDOWS)
   if (PathIsRelative(filename)) {
     char absolutePath[MAX_PATH];
     PathCombine(absolutePath, CShader::GetExecutableDir().c_str(), filename);
 
     return std::string(absolutePath);
   }
+#endif
 
   return std::string(filename);
 }

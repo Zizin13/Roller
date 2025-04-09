@@ -7,9 +7,11 @@
 #include "OpenGLDebug.h"
 #include "Vertex.h"
 #include "ShapeFactory.h"
-#include <Windows.h>
 #include <fstream>
 #include "Logging.h"
+#if defined(IS_WINDOWS)
+  include <Windows.h>
+#endif
 //-------------------------------------------------------------------------------------------------
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"

@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <fstream>
 #include <sstream>
+#include <string.h>
 #include "Texture.h"
 #include "Palette.h"
 #include "glm.hpp"
@@ -12,7 +13,9 @@
 #include "Logging.h"
 #include "SignType.h"
 #include "MathHelpers.h"
-#include "Windows.h"
+#if defined(IS_WINDOWS)
+  #include "Windows.h"
+#endif
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)

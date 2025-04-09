@@ -7,7 +7,12 @@
 #include "Logging.h"
 #include "ShapeFactory.h"
 //-------------------------------------------------------------------------------------------------
+#if defined(IS_WINDOWS)
 #define ASSERT(x) if (!(x)) __debugbreak();
+#else
+#define ASSERT(x)
+#endif
+
 #define GLCALL(x) if (CShapeFactory::GetShapeFactory().m_bOglRunning) {\
   GLClearError();\
   x;\

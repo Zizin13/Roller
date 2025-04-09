@@ -1,6 +1,6 @@
 #include "Entity.h"
 #include "Component.h"
-#include "gtx\transform.hpp"
+#include "gtx/transform.hpp"
 #include <assert.h>
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)

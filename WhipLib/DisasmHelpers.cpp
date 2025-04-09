@@ -1,4 +1,6 @@
 #include "DisasmHelpers.h"
+#include <string.h>
+#include <algorithm>
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)

@@ -1,7 +1,7 @@
 #ifndef _TRACKEDITOR_DEBUGSLIDER_H
 #define _TRACKEDITOR_DEBUGSLIDER_H
 //-------------------------------------------------------------------------------------------------
-#include <qwidget>
+#include <qwidget.h>
 //-------------------------------------------------------------------------------------------------
 class QSlider;
 class QLabel;

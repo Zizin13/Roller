@@ -1,7 +1,7 @@
 #include "DebugSlider.h"
-#include <qvboxlayout>
-#include <qslider>
-#include <qlabel>
+#include <QVBoxLayout>
+#include <qslider.h>
+#include <qlabel.h>
 //-------------------------------------------------------------------------------------------------
 #if defined(_DEBUG) && defined(IS_WINDOWS)
 #define new new(_CLIENT_BLOCK, __FILE__, __LINE__)

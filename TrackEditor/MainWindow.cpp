@@ -94,7 +94,9 @@ public:
   QAction *m_pDebugAction;
   std::vector<CTrackPreview *> m_previewAy;
   CChunkAy m_clipBoard;
+#if defined (IS_WINDOWS)
   CWinUserKeyMapper m_keyMapper;
+#endif
 };
 
 //-------------------------------------------------------------------------------------------------
@@ -118,7 +120,10 @@ CMainWindow::CMainWindow(const QString &sAppPath, float fDesktopScale)
   lblChunkWarning->hide();
   lblStuntWarning->hide();
   CGameClock::GetGameClock().Init();
+
+#if defined (IS_WINDOWS)
   CGameInput::GetGameInput().Init(&p->m_keyMapper);
+#endif
 
   //setup dock widgets
   p->m_pDebugDataDockWidget = new QDockWidget("Debug Chunk Data", this);

@@ -1,7 +1,7 @@
 #ifndef _TRACKEDITOR_TRACKPREVIEW_H
 #define _TRACKEDITOR_TRACKPREVIEW_H
 //-------------------------------------------------------------------------------------------------
-#include <QtOpenGL\qgl.h>
+#include <QGL>
 #include "Types.h"
 //-------------------------------------------------------------------------------------------------
 #define DEFAULT_HISTORY_MAX_SIZE 256 //approx 200KB per saved track

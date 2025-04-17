@@ -13,7 +13,7 @@ do
 done
 
 QTPATH=../external/Qt5/g++13.3.0-x64-a
-TARGET=../bin64/TrackEditor/TrackEditor
+TARGET=../bin/TrackEditor/TrackEditor
 BUILDSPEC=linux-g++-64
 
 QMAKE=${QTPATH}/bin/qmake

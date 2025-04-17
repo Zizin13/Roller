@@ -19,8 +19,8 @@ endif
 
 ARCH = x64
 ARCHFLAGS = -m64
-OUTPUTDIR = ../bin64/TrackEditor
-TARGET = ../bin64/TrackEditor/ModelExporter
+OUTPUTDIR = ../bin/TrackEditor
+TARGET = ../bin/TrackEditor/ModelExporter
 
 FULLCONFIG=$(BUILDCONFIG)-$(ARCH)
 CXXFLAGS = -g $(DEBUGFLAGS) $(INCLUDES) -fPIC -D GLM_ENABLE_EXPERIMENTAL
@@ -53,5 +53,5 @@ ModelExporter: $(OBJ) Makefile
 	$(CXX) $(ARCHFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $(OUTPUTDIR)/$@ $(OBJ) $(LIBS)
 
 clean:
-	rm -f ../bin64/TrackEditor/ModelExporter
+	rm -f ../bin/TrackEditor/ModelExporter
 	rm -f obj/*/*.o

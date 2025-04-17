@@ -389,3 +389,11 @@ FodyWeavers.xsd
 /bin/Roller
 /Roller/null
 /Roller/imgui.ini
+/TrackEditor/.qmake.stash
+/TrackEditor/Makefile
+/TrackEditor/TrackEditor.pro
+/TrackEditor/lmoc
+/TrackEditor/lui
+/TrackEditor/qrc_resource.cpp
+/TrackEditor/trackeditor_plugin_import.cpp
+/lib

@@ -938,8 +938,11 @@ void CTrackPreview::initializeGL()
   glAlphaFunc(GL_GREATER, 0.24f);
   glLineWidth(3.0f);
 
-  if (!p->m_pShader)
-    p->m_pShader = new CShader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");
+  if (!p->m_pShader) {
+    std::string sVertexShader = std::string(g_pMainWindow->GetAppPath().toLatin1().constData()) + std::string("/Shaders/WhiplashVertexShader.glsl");
+    std::string sFragmentShader = std::string(g_pMainWindow->GetAppPath().toLatin1().constData()) + std::string("/Shaders/WhiplashFragmentShader.glsl");
+    p->m_pShader = new CShader(sVertexShader, sFragmentShader);
+  }
 
   //p->m_pAxes = DebugShapes::MakeAxes(p->m_pShader);
   UpdateCar(m_carModel, m_carAILine, m_bMillionPlus);

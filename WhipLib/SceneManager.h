@@ -14,7 +14,7 @@ public:
   CSceneManager(CSceneManager const &) = delete;
   void operator=(CSceneManager const &) = delete;
   
-  void Init();
+  void Init(const std::string &sAppPath);
   void Update(int iWindowWidth, int iWindowHeight);
   void Shutdown();
   void SetFatDataDir(const std::string &sFatDataDir);
@@ -26,6 +26,7 @@ private:
 
   CScene *m_pScene; //only one scene for now
   std::string m_sFatDataDir;
+  std::string m_sAppPath;
 };
 
 //-------------------------------------------------------------------------------------------------

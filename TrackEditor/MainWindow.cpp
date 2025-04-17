@@ -1406,7 +1406,7 @@ CTrack *CMainWindow::GetCurrentTrack()
 
 CTrackPreview *CMainWindow::GetCurrentPreview()
 {
-  if (p->m_previewAy.empty() || twViewer->currentIndex() >= (int)p->m_previewAy.size()) return NULL;
+  if (p->m_previewAy.empty() || twViewer->count() == 0 || twViewer->currentIndex() >= (int)p->m_previewAy.size()) return NULL;
   return p->m_previewAy[twViewer->currentIndex()];
 }
 

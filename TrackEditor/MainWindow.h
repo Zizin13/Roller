@@ -34,6 +34,7 @@ public:
   CMainWindow(const QString &sAppPath, float fDesktopScale);
   ~CMainWindow();
 
+  const QString &GetAppPath() { return m_sAppPath; };
   void LogMessage(const QString &sMsg);
   void SaveHistory(const QString &sDescription);
   void UpdateWindow(bool bUpdatingTextures = false);

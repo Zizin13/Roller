@@ -61,7 +61,7 @@ CRenderer::~CRenderer()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CRenderer::Init()
+bool CRenderer::Init(const std::string &sAppPath)
 {
   if (glewInit() != GLEW_OK)
     return false;
@@ -76,7 +76,9 @@ bool CRenderer::Init()
   glLineWidth(3.0f);
 
   if (!m_pShader) {
-    m_pShader = new CShader("Shaders/WhiplashVertexShader.glsl", "Shaders/WhiplashFragmentShader.glsl");
+    std::string sVertexShader = sAppPath + std::string("/Shaders/WhiplashVertexShader.glsl");
+    std::string sFragmentShader = sAppPath + std::string("/Shaders/WhiplashFragmentShader.glsl");
+    m_pShader = new CShader(sVertexShader, sFragmentShader);
     return true;
   }
   return false;

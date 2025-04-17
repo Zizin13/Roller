@@ -18,6 +18,7 @@ CSceneManager &CSceneManager::GetSceneManager()
 CSceneManager::CSceneManager()
   : m_pScene(NULL)
   , m_sFatDataDir("C:\\WHIP\\WHIPLASH\\FATDATA")
+  , m_sAppPath("")
 {
 
 }
@@ -31,13 +32,14 @@ CSceneManager::~CSceneManager()
 
 //-------------------------------------------------------------------------------------------------
 
-void CSceneManager::Init()
+void CSceneManager::Init(const std::string &sAppPath)
 {
   if (m_pScene)
     return;
 
+  m_sAppPath = sAppPath;
   m_pScene = new CScene();
-  m_pScene->Init();
+  m_pScene->Init(sAppPath);
   std::string sTrackFile = "/TRACK8.TRK";
   m_pScene->LoadTrack(m_sFatDataDir + sTrackFile);
   m_pScene->SpawnCar(eWhipModel::CAR_YZIZIN);
@@ -68,7 +70,7 @@ void CSceneManager::SetFatDataDir(const std::string &sFatDataDir)
 {
   m_sFatDataDir = sFatDataDir;
   Shutdown();
-  Init();
+  Init(m_sAppPath);
 }
 
 //-------------------------------------------------------------------------------------------------

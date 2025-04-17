@@ -29,9 +29,7 @@ private:
                    GLenum statusType);
   bool CheckShaderStatus(GLuint shaderId);
   bool CheckProgramStatus(GLuint programId);
-  std::string GetExecutableDir();
-  std::string GetAbsoluteShaderPath(const char *filename);
-  std::string ReadShaderCode(const char *filename);
+  std::string ReadShaderCode(const char *szFile);
   void InstallShaders(GLuint &programId, const char *szVertexShader, const char *szFragmentShader);
 
   uint32 m_uiId;

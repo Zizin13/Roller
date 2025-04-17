@@ -72,13 +72,13 @@ CScene::~CScene()
 
 //-------------------------------------------------------------------------------------------------
 
-bool CScene::Init()
+bool CScene::Init(const std::string &sAppPath)
 {
   bool bSuccess = false;
   Shutdown();
   p = new CScenePrivate;
 
-  bSuccess |= p->m_renderer.Init();
+  bSuccess |= p->m_renderer.Init(sAppPath);
   bSuccess |= p->m_noClip.Init();
   bSuccess |= p->m_defaultCamera.Init();
   bSuccess |= p->m_defaultEntity.Init();

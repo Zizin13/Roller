@@ -60,6 +60,7 @@ CDebugGui::CDebugGui()
   , m_bEditFatdata(false)
   , m_iSelectedTrack(0)
   , m_iSelectedCar(15) //YZIZIN
+  , m_sAppPath("")
 {
   *m_szFatdataDir = '\0';
 }
@@ -73,8 +74,9 @@ CDebugGui::~CDebugGui()
 
 //-------------------------------------------------------------------------------------------------
 
-void CDebugGui::Init(GLFWwindow *pWindow)
+void CDebugGui::Init(GLFWwindow *pWindow, const std::string &sAppPath)
 {
+  m_sAppPath = sAppPath;
   m_pWindow = pWindow;
 
   // Setup Dear ImGui context
@@ -155,7 +157,7 @@ void CDebugGui::Update()
           m_iSelectedTrack = i;
           CScene *pScene = CSceneManager::GetSceneManager().GetCurrentScene();
           pScene->Shutdown();
-          pScene->Init();
+          pScene->Init(m_sAppPath);
           pScene->LoadTrack(CSceneManager::GetSceneManager().GetFatDataDir() + "/" + m_trackAy[m_iSelectedTrack]);
           pScene->SpawnCar(s_carAy[m_iSelectedCar]);
         }

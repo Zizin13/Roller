@@ -149,45 +149,9 @@ bool CShader::CheckProgramStatus(GLuint programId)
 
 //-------------------------------------------------------------------------------------------------
 
-std::string CShader::GetExecutableDir()
+std::string CShader::ReadShaderCode(const char *szFile)
 {
-  static std::string executableDir;
-  static std::once_flag flag;
-
-
-  std::call_once(flag, []() {
-    char path[MAX_PATH];
-#if defined(IS_WINDOWS)
-    GetModuleFileName(NULL, path, MAX_PATH);
-    PathRemoveFileSpec(path);
-#endif
-    executableDir = std::string(path);
-  });
-
-  return executableDir;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-std::string CShader::GetAbsoluteShaderPath(const char *filename)
-{
-#if defined(IS_WINDOWS)
-  if (PathIsRelative(filename)) {
-    char absolutePath[MAX_PATH];
-    PathCombine(absolutePath, CShader::GetExecutableDir().c_str(), filename);
-
-    return std::string(absolutePath);
-  }
-#endif
-
-  return std::string(filename);
-}
-
-//-------------------------------------------------------------------------------------------------
-
-std::string CShader::ReadShaderCode(const char *filename)
-{
-  std::ifstream stream(CShader::GetAbsoluteShaderPath(filename));
+  std::ifstream stream(szFile);
   if (!stream.good()) {
     assert(0);
   }

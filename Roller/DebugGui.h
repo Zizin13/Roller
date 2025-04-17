@@ -12,7 +12,7 @@ class CDebugGui
 public:
   CDebugGui();
   ~CDebugGui();
-  void Init(GLFWwindow *pWindow);
+  void Init(GLFWwindow *pWindow, const std::string &sAppPath);
   void Update();
   void Shutdown();
   void SetFatdataDir(const char *szFatdataDir);
@@ -29,6 +29,7 @@ private:
   std::vector<std::string> m_trackAy;
   int m_iSelectedTrack;
   int m_iSelectedCar;
+  std::string m_sAppPath;
 };
 
 //-------------------------------------------------------------------------------------------------

@@ -34,6 +34,12 @@ int main(int argc, char *argv[])
   _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
+  std::string sAppPath = argv[0];
+  size_t pos = sAppPath.find_last_of("/");
+  if (pos == std::string::npos)
+    pos = sAppPath.find_last_of("\\");
+  sAppPath = sAppPath.substr(0, pos + 1);
+
   //init glfw
   if (!glfwInit())
     return -1;
@@ -62,11 +68,11 @@ int main(int argc, char *argv[])
   CGameClock::GetGameClock().Init();
   CGlfwKeyMapper::GetGlfwKeyMapper().Init(pWindow);
   CGameInput::GetGameInput().Init(&CGlfwKeyMapper::GetGlfwKeyMapper());
-  CSceneManager::GetSceneManager().Init();
+  CSceneManager::GetSceneManager().Init(sAppPath);
 
   //init imgui
   CDebugGui debugGui;
-  debugGui.Init(pWindow);
+  debugGui.Init(pWindow, sAppPath);
 
   //Loop until the user closes the window
   while (!glfwWindowShouldClose(pWindow)) {

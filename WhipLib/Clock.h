@@ -15,8 +15,9 @@ public:
   float DeltaTimeLastFrame() const;
 
 private:
-  int64 m_llLastFrameTimeCounter;
-  int64 m_llCpuTimerFrequency;
+  uint64 m_ullStart;
+  uint64 m_ullLastFrameTimeCounter;
+  uint64 m_ullCpuTimerFrequency;
   float m_fDeltaTime;
 };
 //-------------------------------------------------------------------------------------------------

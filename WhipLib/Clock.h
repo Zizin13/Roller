@@ -1,6 +1,7 @@
 #ifndef _WHIPLIB_CLOCK_H
 #define _WHIPLIB_CLOCK_H
 //-------------------------------------------------------------------------------------------------
+#include "Types.h"
 #if defined(IS_WINDOWS)
 #include <Windows.h>
 #endif
@@ -14,10 +15,8 @@ public:
   float DeltaTimeLastFrame() const;
 
 private:
-#if defined(IS_WINDOWS)
-  LARGE_INTEGER m_lastFrameTimeCounter;
-  LARGE_INTEGER m_cpuTimerFrequency;
-#endif
+  int64 m_llLastFrameTimeCounter;
+  int64 m_llCpuTimerFrequency;
   float m_fDeltaTime;
 };
 //-------------------------------------------------------------------------------------------------

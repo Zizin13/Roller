@@ -40,7 +40,7 @@ void CClock::NewFrame()
   QueryPerformanceCounter(&now);
 
   LARGE_INTEGER delta;
-  delta.QuadPart = now.QuadPart - m_lastFrameTimeCounter.QuadPart;
+  delta.QuadPart = now.QuadPart - m_llLastFrameTimeCounter;
   m_fDeltaTime = ((float)delta.QuadPart) / m_llCpuTimerFrequency;
 
   m_llLastFrameTimeCounter = now.QuadPart;

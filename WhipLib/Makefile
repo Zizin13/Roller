@@ -42,6 +42,7 @@ SRC = 	Camera.cpp \
 		GameClock.cpp \
 		GameInput.cpp \
 		IndexBuffer.cpp \
+		LinuxUserKeyMapper.cpp \
 		Logging.cpp \
 		MathHelpers.cpp \
 		NoclipComponent.cpp \

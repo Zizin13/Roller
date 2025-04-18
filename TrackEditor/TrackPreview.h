@@ -56,8 +56,11 @@ public:
 protected:
   void initializeGL();
   void paintGL();
-  void mouseClickEvent(QMouseEvent *pEvent);
-  void mouseMoveEvent(QMouseEvent *pEvent);
+  void mousePressEvent(QMouseEvent *pEvent) override;
+  void mouseReleaseEvent(QMouseEvent *pEvent) override;
+  void mouseMoveEvent(QMouseEvent *pEvent) override;
+  void keyPressEvent(QKeyEvent *pEvent) override;
+  void keyReleaseEvent(QKeyEvent *pEvent) override;
 
 private:
   void LoadHistory(const tTrackHistory *pHistory);

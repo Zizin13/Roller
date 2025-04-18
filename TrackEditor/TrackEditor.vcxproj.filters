@@ -124,6 +124,9 @@
     <ClCompile Include="moc\moc_ExportWizard.cpp">
       <Filter>Qt Generated Files\Moc Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="QtUserKeyMapper.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TrackEditor.h">
@@ -185,6 +188,9 @@
     </ClInclude>
     <ClInclude Include="ui\ui_ExportWizard.h">
       <Filter>Qt Generated Files\Ui Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QtUserKeyMapper.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

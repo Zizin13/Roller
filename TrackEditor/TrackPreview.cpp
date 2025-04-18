@@ -951,10 +951,17 @@ void CTrackPreview::initializeGL()
 
 //-------------------------------------------------------------------------------------------------
 
-void CTrackPreview::mouseClickEvent(QMouseEvent *pEvent)
+void CTrackPreview::mousePressEvent(QMouseEvent *pEvent)
 {
-  (void)(pEvent);
+  g_pMainWindow->m_keyMapper.QtMousePressEvent(pEvent);
   setFocus();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::mouseReleaseEvent(QMouseEvent *pEvent)
+{
+  g_pMainWindow->m_keyMapper.QtMouseReleaseEvent(pEvent);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -963,6 +970,20 @@ void CTrackPreview::mouseMoveEvent(QMouseEvent *pEvent)
 {
   (void)(pEvent);
   setFocus();
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::keyPressEvent(QKeyEvent *pEvent)
+{
+  g_pMainWindow->m_keyMapper.QtKeyPressEvent(pEvent);
+}
+
+//-------------------------------------------------------------------------------------------------
+
+void CTrackPreview::keyReleaseEvent(QKeyEvent *pEvent)
+{
+  g_pMainWindow->m_keyMapper.QtKeyReleaseEvent(pEvent);
 }
 
 //-------------------------------------------------------------------------------------------------

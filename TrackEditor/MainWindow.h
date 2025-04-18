@@ -2,6 +2,7 @@
 #define _TRACKEDITOR_MAINWINDOW_H
 //-------------------------------------------------------------------------------------------------
 #include "ui_MainWindow.h"
+#include "QtUserKeyMapper.h"
 //-------------------------------------------------------------------------------------------------
 class CMainWindowPrivate;
 class CTrack;
@@ -46,6 +47,7 @@ public:
   CTrackPreview *GetCurrentPreview();
 
   QString m_sLastTrackFilesFolder;
+  CQtUserKeyMapper m_keyMapper;
   tPreferences m_preferences;
 
 protected:
